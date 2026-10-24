@@ -22,21 +22,37 @@ func (e *ValidationError) Error() string {
 	return fmt.Sprintf("invalid value for %s: %s", e.Field, e.Msg)
 }
 
-// IsForbiddenField reports whether a field ID would store an authentication secret.
+// reCredentialWord matches a field-name word that names a login secret
+// (pin, pin1, puk2, password, otp, ...).
+var reCredentialWord = regexp.MustCompile(`^(pin[0-9]*|puk[0-9]*|password|passwd|pwd|passcode|otp|totp)$`)
+
+// IsForbiddenField reports whether a field ID would store an authentication
+// secret: anything in the spid or cieid categories, and any credential word
+// (pin, puk, password, otp, ...) in a field that is about SPID or the CIE,
+// e.g. cie.pin1, identity.spid_password, documents.cie_pin.
 func IsForbiddenField(id string) bool {
-	parts := strings.SplitN(id, ".", 2)
+	parts := strings.SplitN(strings.ToLower(id), ".", 2)
 	if len(parts) != 2 {
 		return false
 	}
-	category, name := strings.ToLower(parts[0]), strings.ToLower(parts[1])
-	switch category {
-	case "spid":
+	category, name := parts[0], parts[1]
+	if category == "spid" || category == "cieid" {
 		return true
-	case "cie":
-		for _, secret := range []string{"pin", "puk"} {
-			if name == secret || strings.HasPrefix(name, secret+"_") || strings.HasSuffix(name, "_"+secret) {
-				return true
-			}
+	}
+
+	words := strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' })
+	aboutIdentity := category == "cie"
+	for _, w := range words {
+		if w == "spid" || w == "cie" || w == "cieid" {
+			aboutIdentity = true
+		}
+	}
+	if !aboutIdentity {
+		return false
+	}
+	for _, w := range words {
+		if reCredentialWord.MatchString(w) {
+			return true
 		}
 	}
 	return false
@@ -50,10 +66,11 @@ var (
 )
 
 // NormalizeAndValidate applies Italian format rules to a field value based on
-// its ID. It returns the normalized value (e.g. upper-cased codice fiscale) or
-// a *ValidationError. Fields without a rule are returned unchanged.
+// its ID (matched case-insensitively). It returns the normalized value (e.g.
+// upper-cased codice fiscale) or a *ValidationError. Fields without a rule
+// are returned unchanged.
 func NormalizeAndValidate(id, value string) (string, error) {
-	parts := strings.SplitN(id, ".", 2)
+	parts := strings.SplitN(strings.ToLower(id), ".", 2)
 	if len(parts) != 2 {
 		return value, nil
 	}

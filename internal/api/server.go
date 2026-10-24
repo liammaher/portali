@@ -22,15 +22,37 @@ func newRateLimiter(max int, window time.Duration) *rateLimiter {
 	return &rateLimiter{max: max, window: window}
 }
 
-// allow returns true if the request is within the rate limit.
+// allow returns true if the request is within the rate limit, counting it.
 func (rl *rateLimiter) allow() bool {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
-	now := time.Now()
-	cutoff := now.Add(-rl.window)
+	if rl.fullLocked() {
+		return false
+	}
+	rl.attempts = append(rl.attempts, time.Now())
+	return true
+}
 
-	// Remove expired attempts
+// blocked reports whether the limit is reached, without counting a request.
+// Pair with recordFailure to limit only failed attempts.
+func (rl *rateLimiter) blocked() bool {
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
+	return rl.fullLocked()
+}
+
+// recordFailure counts one failed attempt.
+func (rl *rateLimiter) recordFailure() {
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
+	rl.attempts = append(rl.attempts, time.Now())
+}
+
+// fullLocked drops expired attempts and reports whether the limit is reached.
+// Caller must hold rl.mu.
+func (rl *rateLimiter) fullLocked() bool {
+	cutoff := time.Now().Add(-rl.window)
 	valid := rl.attempts[:0]
 	for _, t := range rl.attempts {
 		if t.After(cutoff) {
@@ -38,12 +60,7 @@ func (rl *rateLimiter) allow() bool {
 		}
 	}
 	rl.attempts = valid
-
-	if len(rl.attempts) >= rl.max {
-		return false
-	}
-	rl.attempts = append(rl.attempts, now)
-	return true
+	return len(rl.attempts) >= rl.max
 }
 
 // Server is the HTTP API server for the vault.

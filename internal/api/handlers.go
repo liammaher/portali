@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -18,30 +19,44 @@ func sensitivityDenied(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "sensitivity_exceeded", "token is not allowed to access fields at this sensitivity tier")
 }
 
-// fieldTierAllowed checks an existing field's tier against the caller's cap.
-// Missing fields are allowed so callers can return their usual 404 or create them.
-func (s *Server) fieldTierAllowed(r *http.Request, id string) (bool, error) {
+// requireFieldTier checks an existing field's tier against the caller's cap
+// and writes the error response if access is denied. Missing fields pass so
+// callers can return their usual 404 or create them.
+func (s *Server) requireFieldTier(w http.ResponseWriter, r *http.Request, id string) bool {
 	maxTier := maxTierFromRequest(r)
 	if maxTier == "critical" {
-		return true, nil
+		return true
 	}
 	meta, err := s.vault.FieldMeta(id)
-	if err != nil || meta == nil {
-		return true, err
+	if err != nil {
+		handleVaultError(w, err)
+		return false
 	}
-	return vault.TierAllows(maxTier, meta.Sensitivity), nil
+	if meta != nil && !vault.TierAllows(maxTier, meta.Sensitivity) {
+		sensitivityDenied(w)
+		return false
+	}
+	return true
 }
 
-// filterByTier drops fields above the caller's sensitivity cap.
-func filterByTier(r *http.Request, fields []vault.FieldInfo) []vault.FieldInfo {
-	maxTier := maxTierFromRequest(r)
-	allowed := make([]vault.FieldInfo, 0, len(fields))
-	for _, f := range fields {
-		if vault.TierAllows(maxTier, f.Sensitivity) {
-			allowed = append(allowed, f)
-		}
+// callerFilter limits bulk reads to fields within the caller's scope and
+// sensitivity cap, so nothing else is decrypted.
+func callerFilter(r *http.Request) vault.FieldFilter {
+	scope, maxTier := scopeFromRequest(r), maxTierFromRequest(r)
+	return func(id, sensitivity string) bool {
+		return vault.ScopeAllows(scope, id) && vault.TierAllows(maxTier, sensitivity)
 	}
-	return allowed
+}
+
+// requireJSON rejects bodies not sent as application/json. Browsers cannot
+// send that cross-origin without a CORS preflight, which this server never
+// grants, so web pages cannot hit credential endpoints.
+func requireJSON(w http.ResponseWriter, r *http.Request) bool {
+	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
+		writeError(w, http.StatusUnsupportedMediaType, "invalid_request", "Content-Type must be application/json")
+		return false
+	}
+	return true
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {
@@ -56,6 +71,9 @@ func writeError(w http.ResponseWriter, status int, constraint, msg string) {
 
 // POST /vault/unlock
 func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
+	if !requireJSON(w, r) {
+		return
+	}
 	if !s.unlockLimit.allow() {
 		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many unlock attempts, try again later")
 		return
@@ -93,12 +111,17 @@ func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
 }
 
 // POST /vault/session
-// Exchanges the password and secret key for a short-lived session-level token
-// on an already unlocked vault. The CLI calls this per command instead of
-// storing a reusable token on disk.
+// Exchanges the password (and optionally the secret key) for a short-lived
+// session-level token on an already unlocked vault. The CLI calls this per
+// command and the onboarding page on load, instead of storing or passing a
+// reusable token. Only failed attempts count toward the rate limit, so normal
+// use never locks the user out.
 func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
-	if !s.grantLimit.allow() {
-		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many attempts, try again later")
+	if !requireJSON(w, r) {
+		return
+	}
+	if s.grantLimit.blocked() {
+		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many failed attempts, try again later")
 		return
 	}
 
@@ -111,8 +134,8 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
 		return
 	}
-	if req.Password == "" || req.SecretKey == "" {
-		writeError(w, http.StatusBadRequest, "invalid_request", "password and secret_key required")
+	if req.Password == "" {
+		writeError(w, http.StatusBadRequest, "invalid_request", "password required")
 		return
 	}
 	ttl := 2 * time.Minute
@@ -128,6 +151,7 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	token, expires, err := s.vault.CreateSessionGrant(req.Password, req.SecretKey, ttl)
 	if err != nil {
 		if err == vault.ErrWrongPassword {
+			s.grantLimit.recordFailure()
 			writeError(w, http.StatusUnauthorized, "unauthenticated", "wrong password or secret key")
 			return
 		}
@@ -188,11 +212,7 @@ func (s *Server) handleGetField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if ok, err := s.fieldTierAllowed(r, id); err != nil {
-		handleVaultError(w, err)
-		return
-	} else if !ok {
-		sensitivityDenied(w)
+	if !s.requireFieldTier(w, r, id) {
 		return
 	}
 	field, err := s.vault.Get(id)
@@ -218,11 +238,7 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if ok, err := s.fieldTierAllowed(r, id); err != nil {
-		handleVaultError(w, err)
-		return
-	} else if !ok {
-		sensitivityDenied(w)
+	if !s.requireFieldTier(w, r, id) {
 		return
 	}
 	var req struct {
@@ -238,10 +254,8 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Apply schema default sensitivity when none provided
-	if req.Sensitivity == "" {
-		req.Sensitivity = vault.DefaultSensitivity(id)
-	}
+	// An empty tier keeps an existing field's tier, or uses the schema
+	// default for a new field (see Vault.Set).
 
 	if err := s.vault.Set(id, req.Value, req.Sensitivity); err != nil {
 		handleVaultError(w, err)
@@ -271,11 +285,7 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if ok, err := s.fieldTierAllowed(r, id); err != nil {
-		handleVaultError(w, err)
-		return
-	} else if !ok {
-		sensitivityDenied(w)
+	if !s.requireFieldTier(w, r, id) {
 		return
 	}
 	if err := s.vault.Delete(id); err != nil {
@@ -297,48 +307,20 @@ func (s *Server) handleGetByCategory(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	fields, err := s.vault.GetByCategory(category)
+	fields, err := s.vault.GetByCategory(category, callerFilter(r))
 	if err != nil {
 		handleVaultError(w, err)
 		return
 	}
-	// Filter to only fields allowed by scope (handles exact field patterns)
-	allowed := make([]vault.FieldInfo, 0, len(fields))
-	for _, f := range fields {
-		if vault.ScopeAllows(scope, f.ID) {
-			allowed = append(allowed, f)
-		}
-	}
-	writeJSON(w, http.StatusOK, filterByTier(r, allowed))
+	writeJSON(w, http.StatusOK, fields)
 }
 
 // GET /vault/context
 func (s *Server) handleGetContext(w http.ResponseWriter, r *http.Request) {
-	ctx, err := s.vault.GetContext()
+	ctx, err := s.vault.GetContext(callerFilter(r))
 	if err != nil {
 		handleVaultError(w, err)
 		return
-	}
-	scope := scopeFromRequest(r)
-	if scope != "*" {
-		filtered := &vault.ContextBundle{Categories: make(map[string][]vault.FieldInfo)}
-		for cat, fields := range ctx.Categories {
-			for _, f := range fields {
-				if vault.ScopeAllows(scope, f.ID) {
-					filtered.Categories[cat] = append(filtered.Categories[cat], f)
-				}
-			}
-		}
-		ctx = filtered
-	}
-	if maxTierFromRequest(r) != "critical" {
-		for cat, fields := range ctx.Categories {
-			if kept := filterByTier(r, fields); len(kept) > 0 {
-				ctx.Categories[cat] = kept
-			} else {
-				delete(ctx.Categories, cat)
-			}
-		}
 	}
 	writeJSON(w, http.StatusOK, ctx)
 }

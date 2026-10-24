@@ -21,7 +21,7 @@ pvault unlock         # Start server at localhost:7200, prompts for password
 
 Save your secret key somewhere safe. You need both the profile password and the secret key to unlock the vault.
 
-While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory (`pvault ui` gets a 15-minute one). No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password.
+While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory. `pvault ui` opens the onboarding page, which asks for the password itself and gets a 15-minute grant, so no token ever appears on a command line or in browser history. No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password (lock stops the server it started; for a server run with `pvault serve`, lock asks for the password). Only wrong passwords count toward the 10-per-minute limit.
 
 ## Fields
 
@@ -59,7 +59,7 @@ pvault set-sensitivity financial.ssn critical
 pvault set-sensitivity preferences.timezone public
 ```
 
-Default is `standard` for new fields. The recommended schema provides sensible defaults — use `pvault schema` to see them.
+New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
 
 ## Service Tokens
 
@@ -88,7 +88,7 @@ The vault runs at `http://127.0.0.1:7200`. All protected endpoints require `Auth
 GET  /vault/status                       # { initialized, locked, field_count, categories }
 GET  /vault/schema                       # Recommended field names and sensitivity tiers
 POST /vault/unlock                       # { password, secret_key } → { token }
-POST /vault/session                      # { password, secret_key, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
+POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
 ```
 
 ### Fields

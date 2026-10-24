@@ -102,15 +102,6 @@ func (d *DB) ListTokensByUsage(usage string) ([]Token, error) {
 	return tokens, rows.Err()
 }
 
-// DeleteTokenByPrefix removes a token matching the given prefix.
-func (d *DB) DeleteTokenByPrefix(prefix string) (int64, error) {
-	result, err := d.conn.Exec("DELETE FROM vault_tokens WHERE token LIKE ?", prefix+"%")
-	if err != nil {
-		return 0, err
-	}
-	return result.RowsAffected()
-}
-
 // maxSensitivityOrDefault returns the restrictive default for tokens created
 // without an explicit tier.
 func maxSensitivityOrDefault(tier string) string {

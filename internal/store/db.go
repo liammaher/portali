@@ -3,9 +3,14 @@ package store
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
+
+// legacyTokenMaxTTL caps tokens created before max_sensitivity existed
+// (which defaulted to full scope for a year) at the current 90-day maximum.
+const legacyTokenMaxTTL = 90 * 24 * time.Hour
 
 const createSchema = `
 CREATE TABLE IF NOT EXISTS vault_fields (
@@ -90,13 +95,37 @@ func migrate(conn *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	if !has {
-		// Existing tokens get the restrictive default: no access to critical fields.
-		if _, err := conn.Exec(`ALTER TABLE vault_tokens ADD COLUMN max_sensitivity TEXT NOT NULL DEFAULT 'sensitive'`); err != nil {
-			return err
+	if has {
+		return nil
+	}
+	if err := addTokenMaxSensitivity(conn); err != nil {
+		// Another process may have migrated between the check and the ALTER.
+		if has, herr := hasColumn(conn, "vault_tokens", "max_sensitivity"); herr == nil && has {
+			return nil
 		}
+		return err
 	}
 	return nil
+}
+
+// addTokenMaxSensitivity adds the max_sensitivity column and caps legacy
+// token lifetimes in one transaction, so a crash cannot leave one without
+// the other. Existing tokens get the restrictive default: no critical fields.
+func addTokenMaxSensitivity(conn *sql.DB) error {
+	tx, err := conn.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if _, err := tx.Exec(`ALTER TABLE vault_tokens ADD COLUMN max_sensitivity TEXT NOT NULL DEFAULT 'sensitive'`); err != nil {
+		return err
+	}
+	maxExpiry := time.Now().Add(legacyTokenMaxTTL).UTC().Format(time.RFC3339)
+	if _, err := tx.Exec(`UPDATE vault_tokens SET expires_at = ? WHERE expires_at > ?`, maxExpiry, maxExpiry); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func hasColumn(conn *sql.DB, table, column string) (bool, error) {

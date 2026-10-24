@@ -2,7 +2,6 @@ package vault
 
 import (
 	"crypto/rand"
-	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/hex"
 	"sync"
@@ -23,6 +22,9 @@ type Session struct {
 	// re-enters their password, keyed by SHA-256 of the token. They live only
 	// in memory and are dropped on lock.
 	grants map[string]time.Time
+	// secretKey is kept while unlocked so a grant can be requested with the
+	// password alone (e.g. from the onboarding page). Zeroed on lock.
+	secretKey []byte
 }
 
 // NewSession creates a session with the given vault key and auto-lock callback.
@@ -76,11 +78,32 @@ func (s *Session) ValidateToken(token string) bool {
 	if subtle.ConstantTimeCompare([]byte(s.token), []byte(token)) == 1 {
 		return true
 	}
-	expires, ok := s.grants[hashGrant(token)]
+	expires, ok := s.grants[hashToken(token)]
 	return ok && time.Now().Before(expires)
 }
 
-// AddGrant issues a short-lived session-level token. Returns "" if the
+// setSecretKey stores a copy of the secret key for password-only grants.
+func (s *Session) setSecretKey(sk []byte) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.secretKey = make([]byte, len(sk))
+	copy(s.secretKey, sk)
+	lockMemory(s.secretKey)
+}
+
+// SecretKey returns a copy of the secret key, or nil if destroyed or unset.
+func (s *Session) SecretKey() []byte {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.secretKey == nil {
+		return nil
+	}
+	cp := make([]byte, len(s.secretKey))
+	copy(cp, s.secretKey)
+	return cp
+}
+
+// AddGrant issues a short-lived session-level token. Returns ErrLocked if the
 // session has been destroyed.
 func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
 	tokenBytes := make([]byte, 32)
@@ -93,7 +116,7 @@ func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.token == "" {
-		return "", time.Time{}, nil
+		return "", time.Time{}, ErrLocked
 	}
 	now := time.Now()
 	for k, exp := range s.grants {
@@ -104,13 +127,8 @@ func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
 	if s.grants == nil {
 		s.grants = make(map[string]time.Time)
 	}
-	s.grants[hashGrant(token)] = expires
+	s.grants[hashToken(token)] = expires
 	return token, expires, nil
-}
-
-func hashGrant(token string) string {
-	h := sha256.Sum256([]byte(token))
-	return hex.EncodeToString(h[:])
 }
 
 // Touch resets the auto-lock timer.
@@ -155,4 +173,9 @@ func (s *Session) zeroKey() {
 		s.vaultKey[i] = 0
 	}
 	s.vaultKey = nil
+	unlockMemory(s.secretKey)
+	for i := range s.secretKey {
+		s.secretKey[i] = 0
+	}
+	s.secretKey = nil
 }

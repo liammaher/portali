@@ -64,7 +64,13 @@ Profile Password + Secret Key (128-bit)
 - Session token: 32 bytes crypto/rand, constant-time comparison; never written to disk
 - CLI auth: each command re-enters the password (interactive TTY only) and
   exchanges it via `POST /vault/session` for an in-memory grant (2m CLI,
-  15m UI, max 1h), cleared on lock. Rate-limited to 10/min.
+  15m UI, max 1h), cleared on lock. Only failed attempts count toward the
+  10/min limit. The secret key is held in memory while unlocked, so the
+  onboarding page asks for the password alone; no token is ever put in a URL.
+- Credential endpoints (`/vault/unlock`, `/vault/session`) require
+  `Content-Type: application/json` so web pages can't call them cross-origin
+- Writing a field without a tier keeps its existing tier (schema default for
+  new fields), so overwrites never silently downgrade sensitivity
 - Secret key at `~/.pvault/secret.key` (0600), never in database
 - Service tokens: explicit scope required, TTL 24h default / 90d max,
   `max_sensitivity` cap (default `sensitive`), cannot change tiers,

@@ -110,6 +110,11 @@ func requestGrant(password, secretKey, ttl string) (string, error) {
 // The password can only be typed in an interactive terminal, so an agent
 // running pvault through a shell tool cannot authenticate as the user.
 func promptGrant(ttl string) (string, error) {
+	// Check the server first so the user isn't asked for a password that
+	// can't be used.
+	if err := requireUnlockedServer(); err != nil {
+		return "", err
+	}
 	if !term.IsTerminal(int(syscall.Stdin)) {
 		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal")
 	}
@@ -122,6 +127,25 @@ func promptGrant(ttl string) (string, error) {
 		return "", err
 	}
 	return requestGrant(pw, sk, ttl)
+}
+
+// requireUnlockedServer returns an error unless the vault server is running
+// and unlocked.
+func requireUnlockedServer() error {
+	resp, err := publicRequest("GET", "/vault/status", nil)
+	if err != nil {
+		return fmt.Errorf("vault server not running — run 'pvault unlock'")
+	}
+	var status struct {
+		Locked bool `json:"locked"`
+	}
+	if err := apiResult(resp, &status); err != nil {
+		return err
+	}
+	if status.Locked {
+		return fmt.Errorf("vault is locked — run 'pvault unlock'")
+	}
+	return nil
 }
 
 // sessionToken returns this process's session grant, prompting once.

@@ -107,13 +107,15 @@ func TestNormalizeAndValidate_Rejects(t *testing.T) {
 }
 
 func TestIsForbiddenField(t *testing.T) {
-	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin"}
+	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
+		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password"}
 	for _, id := range forbidden {
 		if !IsForbiddenField(id) {
 			t.Errorf("IsForbiddenField(%q) = false, want true", id)
 		}
 	}
-	allowed := []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid"}
+	allowed := []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
+		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin"}
 	for _, id := range allowed {
 		if IsForbiddenField(id) {
 			t.Errorf("IsForbiddenField(%q) = true, want false", id)
@@ -186,5 +188,18 @@ func TestVaultSet_ItalianValidation(t *testing.T) {
 	}
 	if f, _ := v.Get("spid.password"); f != nil {
 		t.Error("forbidden field was stored")
+	}
+}
+
+func TestNormalizeAndValidate_CaseInsensitiveRules(t *testing.T) {
+	if _, err := NormalizeAndValidate("Identity.Codice_Fiscale", "garbage"); err == nil {
+		t.Error("mixed-case codice_fiscale field should still be validated")
+	}
+	got, err := NormalizeAndValidate("CIE.numero", "ca12345ab")
+	if err != nil || got != "CA12345AB" {
+		t.Errorf("CIE.numero: got %q, %v", got, err)
+	}
+	if got := DefaultSensitivity("Nucleo_Familiare.MEMBRO1_CODICE_FISCALE"); got != "sensitive" {
+		t.Errorf("mixed-case member codice fiscale sensitivity = %q", got)
 	}
 }

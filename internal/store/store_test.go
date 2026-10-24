@@ -336,4 +336,16 @@ func TestOpen_MigratesTokenMaxSensitivity(t *testing.T) {
 	if tok.MaxSensitivity != "sensitive" {
 		t.Fatalf("legacy token max_sensitivity = %q, want sensitive", tok.MaxSensitivity)
 	}
+	// The year-long legacy expiry is capped at the 90-day maximum.
+	if max := time.Now().Add(legacyTokenMaxTTL + time.Minute); tok.ExpiresAt.After(max) {
+		t.Fatalf("legacy expiry not capped: %v", tok.ExpiresAt)
+	}
+
+	// Reopening an already migrated database is a no-op.
+	db.Close()
+	db2, err := Open(path)
+	if err != nil {
+		t.Fatalf("reopen: %v", err)
+	}
+	db2.Close()
 }

@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "1",
+	Version: "2",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -189,7 +189,7 @@ func DefaultSensitivity(id string) string {
 	if f, ok := schemaIndex[id]; ok {
 		return f.Sensitivity
 	}
-	if parts := strings.SplitN(id, ".", 2); len(parts) == 2 && hasFieldSuffix(parts[1], "codice_fiscale") {
+	if parts := strings.SplitN(strings.ToLower(id), ".", 2); len(parts) == 2 && hasFieldSuffix(parts[1], "codice_fiscale") {
 		return "sensitive"
 	}
 	return "standard"

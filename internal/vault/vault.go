@@ -156,7 +156,11 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 		return "", ErrAlreadyUnlocked
 	}
 
-	vaultKey, salt, err := v.verifyCredentials(password, secretKeyHex)
+	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
+	if err != nil {
+		return "", ErrWrongPassword
+	}
+	vaultKey, salt, err := v.verifyCredentials(password, sk)
 	if err != nil {
 		return "", err
 	}
@@ -173,11 +177,15 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 	if err != nil {
 		return "", err
 	}
+	session.setSecretKey(sk)
 	v.session = session
 
-	// Zero local copy of vault key
+	// Zero local copies of the vault key and secret key
 	for i := range vaultKey {
 		vaultKey[i] = 0
+	}
+	for i := range sk {
+		sk[i] = 0
 	}
 
 	// Log access
@@ -186,9 +194,26 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 	return session.Token(), nil
 }
 
+// CheckCredentials reports whether the password and secret key unlock this
+// vault (ErrWrongPassword if not) without creating a session.
+func (v *Vault) CheckCredentials(password, secretKeyHex string) error {
+	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
+	if err != nil {
+		return ErrWrongPassword
+	}
+	vaultKey, _, err := v.verifyCredentials(password, sk)
+	if err != nil {
+		return err
+	}
+	for i := range vaultKey {
+		vaultKey[i] = 0
+	}
+	return nil
+}
+
 // verifyCredentials checks the password and secret key and returns the
 // derived vault key and salt. The caller must zero the key.
-func (v *Vault) verifyCredentials(password, secretKeyHex string) (vaultKey, salt []byte, err error) {
+func (v *Vault) verifyCredentials(password string, sk []byte) (vaultKey, salt []byte, err error) {
 	init, err := v.db.IsInitialized()
 	if err != nil {
 		return nil, nil, err
@@ -205,12 +230,6 @@ func (v *Vault) verifyCredentials(password, secretKeyHex string) (vaultKey, salt
 	salt, err = base64.StdEncoding.DecodeString(saltB64)
 	if err != nil {
 		return nil, nil, fmt.Errorf("decode salt: %w", err)
-	}
-
-	// Decode secret key
-	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
-	if err != nil {
-		return nil, nil, ErrWrongPassword
 	}
 
 	// Verify secret key hash
@@ -241,10 +260,11 @@ func (v *Vault) verifyCredentials(password, secretKeyHex string) (vaultKey, salt
 	return vaultKey, salt, nil
 }
 
-// CreateSessionGrant re-checks the user's password and secret key against an
-// unlocked vault and issues a short-lived session-level token. This is how
-// the CLI authenticates each command, so no reusable token is stored on disk
-// where an agent with shell access could read it.
+// CreateSessionGrant re-checks the user's password (and secret key, if given;
+// otherwise the one held since unlock) against an unlocked vault and issues a
+// short-lived session-level token. The CLI and the onboarding page
+// authenticate this way, so no reusable token is stored on disk or passed on
+// a command line where an agent with shell access could read it.
 func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Duration) (string, time.Time, error) {
 	if ttl <= 0 || ttl > MaxSessionGrantTTL {
 		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxSessionGrantTTL)}
@@ -256,7 +276,21 @@ func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Durat
 		return "", time.Time{}, ErrLocked
 	}
 
-	vaultKey, _, err := v.verifyCredentials(password, secretKeyHex)
+	var sk []byte
+	if strings.TrimSpace(secretKeyHex) == "" {
+		if sk = session.SecretKey(); sk == nil {
+			return "", time.Time{}, ErrLocked
+		}
+	} else {
+		var err error
+		if sk, err = hex.DecodeString(strings.TrimSpace(secretKeyHex)); err != nil {
+			return "", time.Time{}, ErrWrongPassword
+		}
+	}
+	vaultKey, _, err := v.verifyCredentials(password, sk)
+	for i := range sk {
+		sk[i] = 0
+	}
 	if err != nil {
 		return "", time.Time{}, err
 	}
@@ -267,9 +301,6 @@ func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Durat
 	token, expires, err := session.AddGrant(ttl)
 	if err != nil {
 		return "", time.Time{}, err
-	}
-	if token == "" {
-		return "", time.Time{}, ErrLocked
 	}
 	session.Touch()
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()})
@@ -348,8 +379,19 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 		return fmt.Errorf("encrypt: %w", err)
 	}
 
+	// With no explicit tier, keep an existing field's tier (so overwriting a
+	// value never silently downgrades it) and use the schema default for new
+	// fields.
 	if sensitivity == "" {
-		sensitivity = "standard"
+		existing, err := v.db.GetField(id)
+		if err != nil {
+			return err
+		}
+		if existing != nil {
+			sensitivity = existing.Sensitivity
+		} else {
+			sensitivity = DefaultSensitivity(id)
+		}
 	}
 	if !validTiers[sensitivity] {
 		return ErrInvalidTier
@@ -479,8 +521,16 @@ func (v *Vault) ListByCategory(category string) ([]FieldInfo, error) {
 	return result, nil
 }
 
-// GetByCategory returns all decrypted fields for a category.
-func (v *Vault) GetByCategory(category string) ([]FieldInfo, error) {
+// FieldFilter reports whether a caller may receive a field. Fields it rejects
+// are skipped before decryption. A nil filter allows every field.
+type FieldFilter func(id, sensitivity string) bool
+
+func (allow FieldFilter) allows(f store.Field) bool {
+	return allow == nil || allow(f.ID, f.Sensitivity)
+}
+
+// GetByCategory returns the decrypted fields of a category that allow accepts.
+func (v *Vault) GetByCategory(category string, allow FieldFilter) ([]FieldInfo, error) {
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
@@ -496,13 +546,16 @@ func (v *Vault) GetByCategory(category string) ([]FieldInfo, error) {
 		return nil, err
 	}
 
-	result := make([]FieldInfo, len(fields))
-	for i, f := range fields {
+	result := make([]FieldInfo, 0, len(fields))
+	for _, f := range fields {
+		if !allow.allows(f) {
+			continue
+		}
 		plaintext, err := crypto.DecryptFromBase64(subkey, f.Value)
 		if err != nil {
 			return nil, fmt.Errorf("decrypt %s: %w", f.ID, err)
 		}
-		result[i] = FieldInfo{
+		result = append(result, FieldInfo{
 			ID:          f.ID,
 			Category:    f.Category,
 			FieldName:   f.FieldName,
@@ -510,15 +563,15 @@ func (v *Vault) GetByCategory(category string) ([]FieldInfo, error) {
 			Sensitivity: f.Sensitivity,
 			UpdatedAt:   f.UpdatedAt,
 			Version:     f.Version,
-		}
+		})
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: category + ".*", Action: "read"})
 	return result, nil
 }
 
-// GetContext returns all decrypted fields grouped by category.
-func (v *Vault) GetContext() (*ContextBundle, error) {
+// GetContext returns the decrypted fields allow accepts, grouped by category.
+func (v *Vault) GetContext(allow FieldFilter) (*ContextBundle, error) {
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
@@ -533,6 +586,9 @@ func (v *Vault) GetContext() (*ContextBundle, error) {
 	subkeys := make(map[string][]byte)
 
 	for _, f := range fields {
+		if !allow.allows(f) {
+			continue
+		}
 		sk, ok := subkeys[f.Category]
 		if !ok {
 			sk, err = crypto.DeriveSubkey(vaultKey, v.salt, f.Category)
@@ -602,8 +658,9 @@ func (v *Vault) ValidateToken(token string) bool {
 	return v.session.ValidateToken(token)
 }
 
-// hashServiceToken returns the hex-encoded SHA-256 hash of a token.
-func hashServiceToken(token string) string {
+// hashToken returns the hex-encoded SHA-256 hash of a token. Service tokens
+// and session grants are stored and looked up by this hash.
+func hashToken(token string) string {
 	h := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(h[:])
 }
@@ -636,7 +693,7 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 	tokenStr := hex.EncodeToString(tokenBytes)
 
 	t := store.Token{
-		TokenStr:       hashServiceToken(tokenStr),
+		TokenStr:       hashToken(tokenStr),
 		Consumer:       consumer,
 		Scope:          scope,
 		ExpiresAt:      time.Now().Add(ttl),
@@ -660,7 +717,7 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 
 // ValidateServiceToken checks a service token by hashing it and looking up the hash.
 func (v *Vault) ValidateServiceToken(token string) (*store.Token, bool) {
-	t, err := v.db.GetToken(hashServiceToken(token))
+	t, err := v.db.GetToken(hashToken(token))
 	if err != nil || t == nil {
 		return nil, false
 	}
@@ -710,7 +767,7 @@ func (v *Vault) resolveServiceToken(ref string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fullHash := hashServiceToken(ref)
+	fullHash := hashToken(ref)
 	for _, t := range tokens {
 		if t.TokenStr == fullHash {
 			return fullHash, nil

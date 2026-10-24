@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
-	"os/exec"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func cmdUnlock() {
@@ -43,68 +42,32 @@ func cmdUnlock() {
 		fatal("%v", err)
 	}
 
-	// Start background server
-	exe, err := os.Executable()
+	// Check the password here so a typo gets a clear error instead of a
+	// server that silently fails to start.
+	if err := checkCredentials(pw, sk); err != nil {
+		fatal("%v", err)
+	}
+
+	verified, err := startBackgroundServer(vaultDir(), pw, sk)
 	if err != nil {
-		fatal("finding executable: %v", err)
+		fatal("%v", err)
 	}
+	if !verified {
+		fmt.Println("Vault server started (could not verify status).")
+		return
+	}
+	fmt.Println("Vault unlocked. Server running on", serverAddr())
+}
 
-	cmd := exec.Command(exe, "serve", "--password-stdin")
-	detachFromTerminal(cmd)
-	cmd.Env = append(os.Environ(),
-		fmt.Sprintf("VAULT_DIR=%s", vaultDir()),
-	)
-
-	// Pass credentials via stdin pipe
-	stdin, err := cmd.StdinPipe()
+// checkCredentials verifies the password and secret key against the vault
+// database without starting a server.
+func checkCredentials(pw, sk string) error {
+	v, err := vault.Open(vaultDir())
 	if err != nil {
-		fatal("creating stdin pipe: %v", err)
+		return fmt.Errorf("open vault: %w", err)
 	}
-
-	cmd.Stdout = nil
-	cmd.Stderr = nil
-
-	if err := cmd.Start(); err != nil {
-		fatal("starting server: %v", err)
-	}
-
-	// Write credentials and close pipe
-	fmt.Fprintf(stdin, "%s\n%s\n", pw, sk)
-	stdin.Close()
-
-	writePID(cmd.Process.Pid)
-
-	// Wait briefly for server to be ready
-	time.Sleep(500 * time.Millisecond)
-
-	// Verify it's running AND unlocked
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Println("Vault server started (could not verify status).")
-			return
-		default:
-			resp, err := publicRequest("GET", "/vault/status", nil)
-			if err == nil {
-				var status struct {
-					Locked bool `json:"locked"`
-				}
-				json.NewDecoder(resp.Body).Decode(&status)
-				resp.Body.Close()
-				if !status.Locked {
-					fmt.Println("Vault unlocked. Server running on", serverAddr())
-					return
-				}
-				// Server responded but vault is locked — our spawn likely
-				// failed and a stale server answered. Kill it and retry.
-				fatal("server on %s is not the one we started (vault still locked) — run 'pvault lock' then 'pvault unlock'", serverAddr())
-			}
-			time.Sleep(100 * time.Millisecond)
-		}
-	}
+	defer v.Close()
+	return v.CheckCredentials(pw, sk)
 }
 
 // portHasVault probes the server address with GET /vault/status.

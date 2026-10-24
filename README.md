@@ -104,7 +104,7 @@ The vault runs at `http://127.0.0.1:7200`. Protected endpoints require `Authoriz
 GET    /vault/status                    # Vault status (public)
 GET    /ui                              # Onboarding form (public)
 POST   /vault/unlock                    # Unlock → session token
-POST   /vault/session                   # { password, secret_key, ttl? } → short-lived session grant (max 1h)
+POST   /vault/session                   # { password, secret_key?, ttl? } → short-lived session grant (max 1h)
 
 GET    /vault/fields                    # List field metadata
 GET    /vault/fields/{id}               # Get field with decrypted value
@@ -156,7 +156,7 @@ pvault set-sensitivity identity.ssn critical
 pvault set-sensitivity preferences.timezone public
 ```
 
-Default is `standard` for new fields.
+New fields get the schema default tier (`standard` if not in the schema). Overwriting a field without giving a tier keeps its current tier, so a tier you raised is never silently lowered.
 
 ## Architecture
 
@@ -167,7 +167,7 @@ Default is `standard` for new fields.
 └── pvault.pid     # PID of running server
 ```
 
-No session token is stored on disk. Each CLI command asks for your profile password and gets a 2-minute grant from the running server, held only in memory. Agents running `pvault` through a shell tool cannot type the password, so they can't use your session. `pvault status` and `pvault lock` work without it.
+No session token is stored on disk. Each CLI command asks for your profile password and gets a 2-minute grant from the running server, held only in memory. Agents running `pvault` through a shell tool cannot type the password, so they can't use your session. `pvault ui` opens the onboarding page, which asks for the password itself, so no token ever appears in a URL or on a command line. `pvault status` and `pvault lock` work without it.
 
 Pure Go. No CGO. Single binary. Runs on localhost. SQLite via [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite).
 

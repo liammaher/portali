@@ -7,20 +7,13 @@ import (
 )
 
 func cmdUI() {
-	// Verify vault is reachable before asking for the password
-	resp, err := publicRequest("GET", "/vault/status", nil)
-	if err != nil {
-		fatal("cannot reach vault server — is it running? Try 'pvault unlock'")
-	}
-	resp.Body.Close()
-
-	// The page gets its own short-lived grant; rerun 'pvault ui' after it expires.
-	token, err := promptGrant("15m")
-	if err != nil {
+	if err := requireUnlockedServer(); err != nil {
 		fatal("%v", err)
 	}
 
-	url := serverAddr() + "/ui#token=" + token
+	// The page asks for the profile password itself, so no token is ever put
+	// on a command line or in browser history where other processes can see it.
+	url := serverAddr() + "/ui"
 
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
@@ -34,7 +27,7 @@ func cmdUI() {
 
 	if cmd != nil {
 		if err := cmd.Start(); err == nil {
-			fmt.Println("Opened vault UI in your browser.")
+			fmt.Println("Opened vault UI in your browser — enter your profile password there.")
 			return
 		}
 	}

@@ -2,13 +2,9 @@ package main
 
 import (
 	"bufio"
-	"context"
-	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
-	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -62,61 +58,13 @@ func cmdOnboard() {
 	fmt.Printf("  %s\n", sk)
 	fmt.Println()
 
-	// Start background server (same pattern as cmdUnlock)
-	exe, err := os.Executable()
+	verified, err := startBackgroundServer(dir, pw, sk)
 	if err != nil {
-		fatal("finding executable: %v", err)
+		fatal("%v", err)
 	}
-
-	cmd := exec.Command(exe, "serve", "--password-stdin")
-	detachFromTerminal(cmd)
-	cmd.Env = append(os.Environ(), fmt.Sprintf("VAULT_DIR=%s", dir))
-
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		fatal("creating stdin pipe: %v", err)
-	}
-	cmd.Stdout = nil
-	cmd.Stderr = nil
-
-	if err := cmd.Start(); err != nil {
-		fatal("starting server: %v", err)
-	}
-
-	fmt.Fprintf(stdin, "%s\n%s\n", pw, sk)
-	stdin.Close()
-
-	writePID(cmd.Process.Pid)
-
-	// Wait for server to be ready
-	time.Sleep(500 * time.Millisecond)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	ready := false
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Println("Vault server started (could not verify status).")
-			return
-		default:
-			resp, err := publicRequest("GET", "/vault/status", nil)
-			if err == nil {
-				var status struct {
-					Locked bool `json:"locked"`
-				}
-				json.NewDecoder(resp.Body).Decode(&status)
-				resp.Body.Close()
-				if !status.Locked {
-					ready = true
-				}
-			}
-		}
-		if ready {
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
+	if !verified {
+		fmt.Println("Vault server started (could not verify status).")
+		return
 	}
 
 	fmt.Printf("Vault unlocked. Server running on %s\n", serverAddr())

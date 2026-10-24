@@ -187,7 +187,7 @@ func TestGetByCategory(t *testing.T) {
 	v.Set("identity.name", "Jane", "")
 	v.Set("identity.dob", "1990-01-01", "")
 
-	fields, err := v.GetByCategory("identity")
+	fields, err := v.GetByCategory("identity", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -208,7 +208,7 @@ func TestGetContext(t *testing.T) {
 	v.Set("identity.dob", "1990-01-01", "")
 	v.Set("financial.income", "100k", "")
 
-	ctx, err := v.GetContext()
+	ctx, err := v.GetContext(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -454,7 +454,7 @@ func TestCreateServiceToken_Validation(t *testing.T) {
 func TestRevokeServiceToken_ByHashPrefix(t *testing.T) {
 	v, _ := tmpVault(t)
 	token, _ := v.CreateServiceToken("life", "*", time.Hour, "")
-	prefix := hashServiceToken(token)[:12]
+	prefix := hashToken(token)[:12]
 
 	n, err := v.RevokeServiceToken(prefix + "...")
 	if err != nil || n != 1 {
@@ -540,5 +540,85 @@ func TestSessionGrant_ClearedOnLock(t *testing.T) {
 	}
 	if v.ValidateToken(token) {
 		t.Fatal("grant from before lock must not survive unlock")
+	}
+}
+
+func TestSet_OverwriteKeepsTier(t *testing.T) {
+	v, _ := tmpVault(t)
+	if err := v.Set("identity.codice_fiscale", "RSSMRA85T10A562S", ""); err != nil {
+		t.Fatal(err)
+	}
+	f, _ := v.Get("identity.codice_fiscale")
+	if f.Sensitivity != "sensitive" {
+		t.Fatalf("new field should use schema default, got %s", f.Sensitivity)
+	}
+	v.SetSensitivity("identity.codice_fiscale", "critical")
+	if err := v.Set("identity.codice_fiscale", "CCCFBA85D03L219P", ""); err != nil {
+		t.Fatal(err)
+	}
+	f, _ = v.Get("identity.codice_fiscale")
+	if f.Sensitivity != "critical" || f.Value != "CCCFBA85D03L219P" {
+		t.Fatalf("overwrite without tier: got %s / %s, want critical / new value", f.Sensitivity, f.Value)
+	}
+	// An explicit tier still applies.
+	v.Set("identity.codice_fiscale", "CCCFBA85D03L219P", "standard")
+	f, _ = v.Get("identity.codice_fiscale")
+	if f.Sensitivity != "standard" {
+		t.Fatalf("explicit tier: got %s", f.Sensitivity)
+	}
+}
+
+func TestCreateSessionGrant_PasswordOnly(t *testing.T) {
+	v, _ := tmpVault(t)
+	token, _, err := v.CreateSessionGrant(testPassword, "", time.Minute)
+	if err != nil {
+		t.Fatalf("password-only grant: %v", err)
+	}
+	if !v.ValidateToken(token) {
+		t.Fatal("password-only grant should validate")
+	}
+	if _, _, err := v.CreateSessionGrant("wrong", "", time.Minute); err != ErrWrongPassword {
+		t.Fatalf("wrong password: got %v", err)
+	}
+	v.Lock()
+	if _, _, err := v.CreateSessionGrant(testPassword, "", time.Minute); err != ErrLocked {
+		t.Fatalf("after lock: got %v", err)
+	}
+}
+
+func TestCheckCredentials(t *testing.T) {
+	v, sk := tmpVault(t)
+	if err := v.CheckCredentials(testPassword, sk); err != nil {
+		t.Fatalf("correct credentials: %v", err)
+	}
+	if err := v.CheckCredentials("nope", sk); err != ErrWrongPassword {
+		t.Fatalf("wrong password: %v", err)
+	}
+	if err := v.CheckCredentials(testPassword, "zz"); err != ErrWrongPassword {
+		t.Fatalf("malformed secret key: %v", err)
+	}
+}
+
+func TestGetContext_FilterSkipsFields(t *testing.T) {
+	v, _ := tmpVault(t)
+	v.Set("identity.full_name", "Mario", "")
+	v.Set("payment.card_number", "4111", "")
+	var seen []string
+	ctx, err := v.GetContext(func(id, tier string) bool {
+		seen = append(seen, id)
+		return tier != "critical"
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := ctx.Categories["payment"]; ok {
+		t.Fatal("filtered category returned")
+	}
+	if len(seen) != 2 {
+		t.Fatalf("filter should see every field once, saw %v", seen)
+	}
+	fields, _ := v.GetByCategory("payment", func(id, tier string) bool { return false })
+	if len(fields) != 0 {
+		t.Fatalf("GetByCategory filter ignored: %v", fields)
 	}
 }

@@ -205,6 +205,22 @@ body::before{
 .field .status.saving{color:var(--text-muted);opacity:1}
 .field .status.error{color:var(--danger);opacity:1}
 .field .status.idle{opacity:0}
+.container.locked .section,.container.locked .footer{display:none}
+.container:not(.locked) .gate{display:none}
+.gate{margin:0 0 64px}
+.gate p{color:var(--text-muted);margin-bottom:24px}
+.gate-btn{
+  background:var(--gold);
+  color:var(--bg);
+  border:none;
+  font-family:var(--font-sans);
+  font-size:14px;
+  font-weight:500;
+  padding:10px 22px;
+  margin-top:8px;
+  cursor:pointer;
+}
+.gate-error{color:var(--danger);margin-top:16px;min-height:1.2em}
 
 /* Error banner */
 .error-banner{
@@ -244,15 +260,25 @@ body::before{
 
 <div class="progress-bar" id="progress" style="width:0%"></div>
 
-<div class="error-banner" id="errorBanner">Session expired. Please run <code>pvault ui</code> again.</div>
+<div class="error-banner" id="errorBanner">Session expired. Reload this page to sign in again.</div>
 
 <nav class="nav-dots" id="navDots"></nav>
 
-<div class="container">
+<div class="container locked">
   <div class="header">
     <h1>Your Vault</h1>
     <p>Everything stored here is encrypted end-to-end. Fill what you need, skip the rest.</p>
   </div>
+
+  <form class="gate" id="gate" autocomplete="off">
+    <p>Enter your profile password to open your vault in this tab. Access lasts 15 minutes.</p>
+    <div class="field">
+      <label for="gatePassword">Profile password</label>
+      <input type="password" id="gatePassword" autocomplete="current-password" autofocus>
+    </div>
+    <button type="submit" class="gate-btn">Open vault</button>
+    <p class="gate-error" id="gateError" role="alert"></p>
+  </form>
 
   <!-- 01 Identity -->
   <section class="section" data-section="0">
@@ -476,6 +502,106 @@ body::before{
     </div>
   </section>
 
+  <!-- 07 Italia -->
+  <section class="section" data-section="6">
+    <div class="section-number">07</div>
+    <h2>Documenti italiani</h2>
+    <p class="subtitle">Codice fiscale, CIE, residenza and partita IVA — validated as you save</p>
+
+    <div class="field">
+      <label>Codice fiscale</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="identity.codice_fiscale" placeholder="RSSMRA85T10A562S" autocapitalize="characters" spellcheck="false">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Sesso</label>
+        <span class="status idle"></span>
+        <select data-field="identity.sex">
+          <option value=""></option>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Cittadinanza</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="identity.citizenship" placeholder="italiana">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Comune di nascita</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="identity.birth_comune" placeholder="Napoli">
+      </div>
+      <div class="field">
+        <label>Provincia di nascita</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="identity.birth_province" placeholder="NA" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Numero CIE</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="cie.numero" placeholder="CA12345AB" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Scadenza CIE</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="cie.data_scadenza">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Residenza — via</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="residenza.indirizzo" placeholder="Via Toledo" autocomplete="address-line1">
+      </div>
+      <div class="field">
+        <label>Civico</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="residenza.civico" placeholder="256">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>CAP</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="residenza.cap" placeholder="80132" inputmode="numeric" maxlength="5" autocomplete="postal-code">
+      </div>
+      <div class="field">
+        <label>Comune</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="residenza.comune" placeholder="Napoli" autocomplete="address-level2">
+      </div>
+      <div class="field">
+        <label>Provincia</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="residenza.provincia" placeholder="NA" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Partita IVA</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.partita_iva" placeholder="01234567890" inputmode="numeric" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>PEC</label>
+        <span class="status idle"></span>
+        <input type="email" data-field="business.pec" placeholder="nome@pec.it">
+      </div>
+    </div>
+  </section>
+
   <div class="footer">
     <span class="count" id="filledCount">0</span> of <span id="totalCount">0</span> fields filled
   </div>
@@ -485,19 +611,41 @@ body::before{
 (function() {
   'use strict';
 
-  // Extract token from URL fragment
-  const hash = window.location.hash;
+  // The page asks for the profile password and exchanges it for its own
+  // short-lived grant, so no token is ever passed in the URL.
   let token = '';
-  if (hash.startsWith('#token=')) {
-    token = hash.slice(7);
-    history.replaceState(null, '', window.location.pathname);
+  const container = document.querySelector('.container');
+  const gate = document.getElementById('gate');
+  const gateError = document.getElementById('gateError');
+
+  gate.addEventListener('submit', function(e) {
+    e.preventDefault();
+    gateError.textContent = '';
+    const pw = document.getElementById('gatePassword');
+    fetch(window.location.origin + '/vault/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw.value, ttl: '15m' })
+    }).then(readJSON).then(function(body) {
+      pw.value = '';
+      token = body.token;
+      container.classList.remove('locked');
+      init();
+    }).catch(function(err) {
+      gateError.textContent = err.message;
+    });
+  });
+
+  // readJSON parses a response and turns error statuses into exceptions
+  // carrying the server's message.
+  function readJSON(r) {
+    return r.json().catch(function() { return {}; }).then(function(body) {
+      if (!r.ok) throw new Error(body.error || ('HTTP ' + r.status));
+      return body;
+    });
   }
 
-  if (!token) {
-    showError('No session token. Run pvault ui to open this page.');
-    return;
-  }
-
+  function init() {
   const BASE = window.location.origin;
   const inputs = document.querySelectorAll('[data-field]');
   const totalCount = inputs.length;
@@ -506,7 +654,7 @@ body::before{
   document.getElementById('totalCount').textContent = totalCount;
 
   // Categories to load
-  const categories = ['identity', 'addresses', 'employment', 'financial', 'payment', 'preferences'];
+  const categories = ['identity', 'addresses', 'employment', 'financial', 'payment', 'preferences', 'cie', 'residenza', 'business'];
 
   // --- API ---
 
@@ -520,11 +668,11 @@ body::before{
     };
     if (body) opts.body = JSON.stringify(body);
     return fetch(BASE + path, opts).then(function(r) {
-      if (r.status === 401 || r.status === 403) {
-        showError('Session expired. Please run pvault ui again.');
+      if (r.status === 401) {
+        showError('Session expired. Reload this page to sign in again.');
         throw new Error('unauthorized');
       }
-      return r.json();
+      return readJSON(r);
     });
   }
 
@@ -561,12 +709,20 @@ body::before{
       api('PUT', '/vault/fields/' + fieldId, { value: val })
         .then(function() {
           lastSaved = val;
+          // Show the stored form (e.g. an upper-cased codice fiscale)
+          api('GET', '/vault/fields/' + fieldId).then(function(f) {
+            if (f && f.value && document.activeElement !== input) {
+              input.value = f.value;
+              lastSaved = f.value;
+            }
+          }).catch(function() {});
           setStatus(statusEl, 'saved');
           updateProgress();
           setTimeout(function() { setStatus(statusEl, 'idle'); }, 2000);
         })
-        .catch(function() {
-          setStatus(statusEl, 'error');
+        .catch(function(err) {
+          // e.g. an invalid codice fiscale: show the server's reason
+          setStatus(statusEl, 'error', err.message.replace(/^invalid value for [^:]+: /, ''));
         });
     });
 
@@ -593,10 +749,11 @@ body::before{
 
   // --- Status indicator ---
 
-  function setStatus(el, state) {
+  function setStatus(el, state, message) {
     el.className = 'status ' + state;
     var labels = { saved: 'Saved', saving: 'Saving...', error: 'Error', idle: '' };
-    el.textContent = labels[state] || '';
+    el.textContent = message || labels[state] || '';
+    el.title = message || '';
   }
 
   // --- Progress ---
@@ -652,6 +809,8 @@ body::before{
       btn.textContent = isPassword ? 'hide' : 'show';
     });
   });
+
+  } // end init
 
   // --- Error banner ---
 

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"net/http/httptest"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -276,4 +277,50 @@ func setupWithSecretKey(t *testing.T) (*testEnv, string) {
 		t.Fatal(err)
 	}
 	return &testEnv{server: New(v, ":0"), vault: v, token: token}, sk
+}
+
+func TestSetField_OverwriteKeepsRaisedTier(t *testing.T) {
+	env, _ := setupWithSecretKey(t)
+	env.doRequest(t, "PUT", "/vault/fields/identity.codice_fiscale", map[string]string{"value": "RSSMRA85T10A562S"}, true)
+	env.doRequest(t, "PUT", "/vault/sensitivity/identity.codice_fiscale", map[string]string{"tier": "critical"}, true)
+	env.doRequest(t, "PUT", "/vault/fields/identity.codice_fiscale", map[string]string{"value": "CCCFBA85D03L219P"}, true)
+
+	token := createScopedToken(t, env, "agent", "*")
+	w := env.doRequestWithToken(t, "GET", "/vault/fields/identity.codice_fiscale", nil, token)
+	if w.Code != 403 {
+		t.Fatalf("raised tier was lost on overwrite: agent got %d %s", w.Code, w.Body.String())
+	}
+}
+
+func TestSessionGrant_PasswordOnly_API(t *testing.T) {
+	env, _ := setupWithSecretKey(t)
+	w := env.doRequest(t, "POST", "/vault/session", map[string]string{"password": testPassword, "ttl": "15m"}, false)
+	if w.Code != 200 {
+		t.Fatalf("password-only grant: expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+}
+
+func TestSessionGrant_SuccessesDoNotCount(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	for i := 0; i < 15; i++ {
+		w := env.doRequest(t, "POST", "/vault/session", map[string]string{"password": testPassword, "secret_key": sk}, false)
+		if w.Code != 200 {
+			t.Fatalf("grant %d: expected 200, got %d: %s", i+1, w.Code, w.Body.String())
+		}
+	}
+}
+
+func TestCredentialEndpoints_RequireJSON(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	body := `{"password":"` + testPassword + `","secret_key":"` + sk + `"}`
+	for _, path := range []string{"/vault/session", "/vault/unlock"} {
+		// A cross-site form or fetch without preflight can only send text/plain.
+		req := httptest.NewRequest("POST", path, strings.NewReader(body))
+		req.Header.Set("Content-Type", "text/plain")
+		w := httptest.NewRecorder()
+		env.server.handler.ServeHTTP(w, req)
+		if w.Code != 415 {
+			t.Errorf("%s with text/plain: expected 415, got %d", path, w.Code)
+		}
+	}
 }
