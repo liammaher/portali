@@ -1,236 +1,141 @@
-<h1 align="center">Personal Vault</h1>
+<h1 align="center">Personal Vault — Italia</h1>
 
-**An encrypted vault for personal context. You hold the keys. The reference implementation of the [Personal Context Protocol](https://github.com/lovincyrus/personal-context-protocol).**
+**A local, encrypted vault for the personal data Italian bureaucracy keeps asking for — codice fiscale, CIE, residenza, permesso di soggiorno, document scans — with scoped, read-only-by-default access for AI agents that fill in forms for you.**
 
 ---
 
-You fill out your life once. Every AI agent starts with context, not a blank slate.
+You enter your details and scan your documents once. Agents that prepare forms (TARI, residenza, INPS, Agenzia delle Entrate…) read exactly the fields you allow, for as long as you allow, and never see your SPID or CIE credentials.
 
-Personal Vault stores your identity, documents, relationships, financial data, addresses, and preferences — encrypted per-field with keys derived from your profile password. Agents request scoped access. You approve. The token expires. Your keys never leave your device.
+- **Local-first.** One SQLite database and an encrypted `documents/` folder in `~/.pvault/`. No cloud, no account.
+- **Encrypted per field and per file.** Argon2id → AES-256-GCM with per-category keys; filenames are encrypted too.
+- **Italian-aware.** Validates codice fiscale (incl. omocodia), partita IVA, CIE number, CAP and provincia; normalizes dates; tracks document expiry.
+- **Agent-safe by design.** Service tokens are scoped, short-lived, capped by sensitivity, and **read-only unless you say otherwise**. SPID credentials and CIE PIN/PUK are refused outright.
 
-## Usage
+> Fork of [lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault) (MIT), extended with the Italian schema, document storage and a hardened agent access model.
 
-```sh
-curl -fsSL https://www.personalvault.dev/install.sh | sh
-pvault onboard
-```
+## Quick start
 
-Save your secret key somewhere safe. You need both the profile password and the secret key to unlock.
-
-<details>
-<summary>Alternative: build from source</summary>
+Requires Go 1.26+.
 
 ```sh
-git clone https://github.com/lovincyrus/personal-vault.git
-cd personal-vault && make build && make install
-pvault onboard
-```
-</details>
+git clone https://github.com/liammaher/personal-vault-italia.git
+cd personal-vault-italia
+make build                      # → bin/pvault
+ln -s "$PWD/bin/pvault" /opt/homebrew/bin/pvault   # or: sudo make install
 
-<details>
-<summary>Alternative: install with Go</summary>
+pvault init      # choose a profile password; save the secret key it prints
+pvault unlock    # starts the local server on 127.0.0.1:7200
+pvault ui        # opens the onboarding form in your browser
+```
+
+You need both the profile password and the secret key to unlock. While unlocked, every CLI command that reads or changes data asks for your password again (interactive terminal only), so an agent running shell commands can't use your session.
+
+## What it stores
+
+| Category | Fields (examples) |
+|---|---|
+| `identity` | name, `codice_fiscale` (validated), date/place of birth, sex, citizenship |
+| `cie` | `numero` (CA12345AB, validated), issue/expiry date, issuing comune |
+| `residenza` / `domicilio` | via, civico, CAP, comune, provincia |
+| `nucleo_familiare` | members as `membro<N>_nome`, `membro<N>_codice_fiscale`, … |
+| `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA |
+| `permesso_soggiorno` | numero, tipo, questura, issue/expiry date |
+| `passaporto`, `patente`, `tessera_sanitaria` | numero, issuing authority/country, expiry date |
+
+`pvault schema` lists every recommended field. You can add any `category.field` of your own.
 
 ```sh
-go install github.com/lovincyrus/personal-vault/cmd/pvault@latest
-pvault onboard
+pvault set identity.codice_fiscale "RSSMRA85T10A562S"
+pvault set permesso_soggiorno.data_scadenza 15/12/2026     # stored as 2026-12-15
+pvault set spid.password hunter2                           # refused — logins never go in the vault
 ```
-</details>
 
-### Browser UI
+## Document scans
 
 ```sh
-pvault unlock
-pvault ui                            # Opens onboarding form in your browser
+pvault doc add permesso_soggiorno ~/Desktop/permesso.pdf   # encrypted, max 20 MB
+pvault doc list
+pvault doc get <id> --out /tmp/permesso.pdf                # decrypted copy, owner-only, never overwrites
+pvault doc delete <id>
 ```
 
-Fill in your details — each field auto-saves as you go.
+After importing, delete or securely archive the unencrypted originals.
 
-### Manual setup
+## Expiry tracking
 
 ```sh
-pvault init                          # Create vault, set profile password + secret key
-pvault unlock                        # Start server at localhost:7200
-pvault set identity.full_name "Cool Cucumber"
-pvault set addresses.current.city "Seattle"
-pvault set financial.filing_status "single"
-pvault get identity.full_name        # Cool Cucumber
-pvault list                          # All fields
-pvault lock                          # Stop server, zero keys from memory
+pvault expiring          # expired or expiring in the next 90 days
+pvault expiring 365
 ```
 
-## How it works
-
 ```
-Profile Password + Secret Key (128-bit)
-  → Argon2id KDF (64MB, 3 iterations)
-  → Vault Key (256-bit, in-memory only)
-  → HKDF per category → Category Subkeys
-  → AES-256-GCM per field (12-byte random nonce)
+passaporto           2026-09-30  EXPIRED 24 days ago
+permesso_soggiorno   2026-12-15  in 52 days
 ```
 
-The profile password is never stored. The secret key lives on your device. The vault key exists only in memory while unlocked. Each field is encrypted individually. If someone steals the database, they get ciphertext.
+## Giving an agent access
 
-## CLI
-
-```sh
-pvault init                              # Create a new vault
-pvault unlock                            # Unlock (starts background server)
-pvault lock                              # Lock (stops server, zeroes keys)
-pvault status                            # Show vault status
-
-pvault set <id> <value>                  # Set a field
-pvault get <id>                          # Get a field
-pvault list [category]                   # List fields
-pvault delete <id>                       # Delete a field
-pvault export                            # Export all fields as JSON
-
-pvault set-sensitivity <id> <tier>       # Set sensitivity tier
-pvault expiring [days]                   # Documents expired or expiring soon (default 90 days)
-pvault doc add <category> <file>         # Encrypt and store a scan/PDF (max 20 MB)
-pvault doc list [category]               # List stored documents
-pvault doc get <id> [--out path]         # Decrypt to a file (owner-only, never overwrites)
-pvault doc delete <id>                   # Delete a stored document
-pvault audit                             # Show access log
-
-pvault ui                               # Open onboarding form in browser
-
-pvault create-service-token <consumer> --scope <patterns>  # Create a scoped agent token
-pvault list-service-tokens               # List active tokens
-pvault revoke-service-token <prefix>     # Revoke by listed prefix or full token
-```
-
-Fields use dot notation: `identity.full_name`, `addresses.current.city`, `financial.filing_status`. You can use any category and field name.
-
-## HTTP API
-
-The vault runs at `http://127.0.0.1:7200`. Protected endpoints require `Authorization: Bearer <token>`.
-
-```
-GET    /vault/status                    # Vault status (public)
-GET    /ui                              # Onboarding form (public)
-POST   /vault/unlock                    # Unlock → session token
-POST   /vault/session                   # { password, secret_key?, ttl? } → short-lived session grant (max 1h)
-GET    /vault/expiring?days=90          # Expired / soon-to-expire documents (*data_scadenza fields)
-POST   /vault/documents?category=&name= # Upload a document (raw body, max 20 MB)
-GET    /vault/documents                 # List documents (metadata)
-GET    /vault/documents/{id}            # Download (always as an attachment)
-DELETE /vault/documents/{id}            # Delete a document
-
-GET    /vault/fields                    # List field metadata
-GET    /vault/fields/{id}               # Get field with decrypted value
-PUT    /vault/fields/{id}               # Set field
-DELETE /vault/fields/{id}               # Delete field
-GET    /vault/fields/category/{name}    # All fields in a category
-
-GET    /vault/context                   # Full decrypted dump by category
-
-PUT    /vault/sensitivity/{id}          # Update sensitivity tier
-
-POST   /vault/tokens/service            # Create service token
-GET    /vault/tokens/service            # List service tokens
-DELETE /vault/tokens/service/{prefix}   # Revoke service token
-
-POST   /vault/lock                      # Lock vault
-GET    /vault/audit                     # Access audit log
-```
-
-## Service tokens
-
-Service tokens give agents scoped, time-limited, sensitivity-capped access.
+Create a token for each agent, scoped to what it needs:
 
 ```sh
 pvault create-service-token tari-agent --scope "identity.*,residenza.*" --ttl 2h
-pvault create-service-token archiver --scope "residenza.*" --access append   # may add receipts, never delete
-pvault create-service-token checkout --scope "payment.*" --max-sensitivity critical --ttl 1h
+pvault create-service-token archiver   --scope "residenza.*" --access append
 pvault list-service-tokens
-pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list
+pvault revoke-service-token <token_prefix>
 ```
 
-- `--scope` is required. Pass `"*"` explicitly if you really want full scope.
-- `--ttl` defaults to `24h`; the maximum is `2160h` (90 days).
-- `--max-sensitivity` defaults to `sensitive`, so agents cannot read `critical` fields unless you opt in.
-- `--access` defaults to `read`: agents can only read. `append` also lets them add new fields and documents (e.g. archive a downloaded receipt) but never overwrite or delete; `write` allows everything. Tokens created before this option existed are read-only.
-- Only your own activity (session token) resets the 30-minute auto-lock timer. Agent requests do not, so an agent cannot keep the vault unlocked.
+| Option | Default | Meaning |
+|---|---|---|
+| `--scope` | required | `category.*`, exact `category.field`, `category.documents`, or `*` |
+| `--access` | `read` | `append` = may add new fields/documents but never overwrite or delete; `write` = full |
+| `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in |
+| `--ttl` | `24h` | maximum 90 days |
 
-## Sensitivity tiers
+Agent activity never keeps the vault unlocked: it auto-locks after 30 minutes without *your* activity.
 
-| Tier | Examples |
-|------|----------|
-| `public` | Timezone, language |
-| `standard` | Name, comune, employer |
-| `sensitive` | DOB, codice fiscale, CIE number, street address |
-| `critical` | SSN, payment card |
-
-Each service token has a maximum tier (`--max-sensitivity`, default `sensitive`). Fields above it are hidden from context and category reads, and direct reads, writes and deletes return `403 sensitivity_exceeded`. Only the session token can change a field's tier.
+### MCP server (Claude and other MCP clients)
 
 ```sh
-pvault set-sensitivity identity.ssn critical
-pvault set-sensitivity preferences.timezone public
+cd mcp && npm install
 ```
 
-New fields get the schema default tier (`standard` if not in the schema). Overwriting a field without giving a tier keeps its current tier, so a tier you raised is never silently lowered.
-
-## Architecture
-
-```
-~/.pvault/
-├── vault.db       # SQLite (encrypted fields, audit log)
-├── secret.key     # 128-bit secret key (mode 0600)
-├── documents/     # Encrypted scans, one <id>.enc per document (mode 0600)
-└── pvault.pid     # PID of running server
-```
-
-No session token is stored on disk. Each CLI command asks for your profile password and gets a 2-minute grant from the running server, held only in memory. Agents running `pvault` through a shell tool cannot type the password, so they can't use your session. `pvault ui` opens the onboarding page, which asks for the password itself, so no token ever appears in a URL or on a command line. `pvault status` and `pvault lock` work without it.
-
-Pure Go. No CGO. Single binary. Runs on localhost. SQLite via [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite).
-
-## Tests
-
-```sh
-make test    # 76 tests, race detector enabled
+```json
+{
+  "mcpServers": {
+    "vault": {
+      "command": "npx",
+      "args": ["tsx", "/path/to/personal-vault-italia/mcp/src/index.ts"],
+      "env": { "VAULT_TOKEN": "<token from pvault create-service-token>" }
+    }
+  }
+}
 ```
 
-## MCP server
+Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_expiring`, `vault_documents`, `vault_document_get`, `vault_document_add`. The MCP server only ever uses the token you give it, and `vault_document_add` only reads files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
 
-The vault ships with a TypeScript [MCP](https://modelcontextprotocol.io/) server so AI agents can access your personal context.
+## Security model
 
-```sh
-claude mcp add vault -- npx -y personal-vault-mcp@latest
+```
+Profile password + 128-bit secret key
+  → Argon2id (64 MB, 3 iterations) → vault key (memory only, zeroed on lock)
+  → HKDF per category → AES-256-GCM per field, and per document (bound to its ID)
 ```
 
-| Tool | Description |
-|------|-------------|
-| `vault_status` | Check if the vault is running and unlocked |
-| `vault_get` | Get a single decrypted field by ID |
-| `vault_list` | List all field metadata (no values) |
-| `vault_context` | Get all decrypted fields grouped by category |
-| `vault_set` | Set an encrypted field value in the vault |
+- The server listens on 127.0.0.1 only and rejects non-loopback `Host` headers (DNS rebinding).
+- No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password. Wrong passwords are rate-limited.
+- Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
+- SPID credentials and CIE PIN/PUK are rejected under any field name.
 
-See [mcp/README.md](./mcp/README.md) for authentication, environment variables, and error messages.
+**What it can't protect against:** malware or an agent running as your macOS user can still stop the vault, read `~/.pvault/secret.key` (useless without your password), or tamper with the `pvault` binary to capture your password. Keep the vault locked when you're not using it.
 
-## Shopping demo
+**On automating government portals:** the vault prepares data; it doesn't log in for you. SPID and CIE credentials are strictly personal — authenticate yourself, and use each portal's official delegation (e.g. Agenzia delle Entrate intermediaries) for anything done on someone else's behalf.
 
-A self-contained demo showing two MCP servers working together: the vault provides personal context, a mock shop handles orders. One sentence in, order confirmation out — no questions asked.
+## More
 
-```sh
-cd examples/shopping-demo && npm install
-claude mcp add shop -- npx tsx examples/shopping-demo/src/index.ts
-```
-
-> Test the shopping demo — order a t-shirt using my vault data.
-
-The agent reads your name, email, and address from the vault, browses the shop, and places the order. If it discovers missing information (like t-shirt size), it asks you and offers to save it to the vault for next time.
-
-See [examples/shopping-demo/README.md](./examples/shopping-demo/README.md) for full setup instructions.
-
-## The protocol
-
-This is the reference implementation of the **[Personal Context Protocol](https://github.com/lovincyrus/personal-context-protocol)** — an open protocol for AI agents to access personal context. Read the [specification](https://github.com/lovincyrus/personal-context-protocol/blob/main/specification.md).
-
-## Full documentation
-
-See [docs/usage.md](./docs/usage.md) for the complete API reference, environment variables, and integration guide.
+- [docs/usage.md](docs/usage.md) — full CLI and HTTP API reference
+- [mcp/README.md](mcp/README.md) — MCP server setup and errors
+- `make test` — run the test suite (race detector on)
 
 ## License
 
-[MIT](./LICENSE)
+MIT — see [LICENSE](LICENSE). Original work © Cyrus Goh ([lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault)); Italian extensions and security changes © Liam Maher.
