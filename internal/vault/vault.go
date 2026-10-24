@@ -241,6 +241,13 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 	if err := ValidateFieldID(id); err != nil {
 		return err
 	}
+	if IsForbiddenField(id) {
+		return ErrForbiddenField
+	}
+	value, err := NormalizeAndValidate(id, value)
+	if err != nil {
+		return err
+	}
 
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {

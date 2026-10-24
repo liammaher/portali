@@ -63,9 +63,37 @@ var synonyms = map[string]string{
 	"role":     "title",
 
 	// preferences
-	"tz":   "timezone",
-	"lang": "language",
+	"tz":     "timezone",
+	"lang":   "language",
 	"locale": "language",
+
+	// italian identity and documents
+	"cf":            "codice_fiscale",
+	"tax_code":      "codice_fiscale",
+	"fiscal_code":   "codice_fiscale",
+	"codicefiscale": "codice_fiscale",
+	"gender":        "sex",
+	"sesso":         "sex",
+	"cittadinanza":  "citizenship",
+	"nationality":   "citizenship",
+	"number":        "numero",
+	"numero_carta":  "numero",
+	"scadenza":      "data_scadenza",
+	"rilascio":      "data_rilascio",
+
+	// residenza / domicilio
+	"via":             "indirizzo",
+	"numero_civico":   "civico",
+	"codice_postale":  "cap",
+	"sigla_provincia": "provincia",
+
+	// business
+	"piva":            "partita_iva",
+	"p_iva":           "partita_iva",
+	"vat":             "partita_iva",
+	"vat_number":      "partita_iva",
+	"ateco":           "codice_ateco",
+	"ragione_sociale": "denominazione",
 }
 
 // SuggestCanonical returns a suggestion if the given field ID is not canonical

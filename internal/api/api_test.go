@@ -982,3 +982,35 @@ func TestRevokeServiceToken_API(t *testing.T) {
 		t.Fatalf("revoked token: expected 401, got %d", rec.Code)
 	}
 }
+
+func TestSetField_ItalianValidation(t *testing.T) {
+	env := setup(t)
+
+	w := env.doRequest(t, "PUT", "/vault/fields/identity.codice_fiscale", map[string]string{
+		"value": "cccfba85d03l219p",
+	}, true)
+	if w.Code != 200 {
+		t.Fatalf("valid codice fiscale: expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+
+	w = env.doRequest(t, "GET", "/vault/fields/identity.codice_fiscale", nil, true)
+	var field vault.FieldInfo
+	json.NewDecoder(w.Body).Decode(&field)
+	if field.Value != "CCCFBA85D03L219P" || field.Sensitivity != "sensitive" {
+		t.Fatalf("got value %q sensitivity %q", field.Value, field.Sensitivity)
+	}
+
+	w = env.doRequest(t, "PUT", "/vault/fields/identity.codice_fiscale", map[string]string{
+		"value": "CCCFBA85D03L219A",
+	}, true)
+	if w.Code != 400 || !strings.Contains(w.Body.String(), "invalid_value") {
+		t.Fatalf("invalid codice fiscale: expected 400 invalid_value, got %d: %s", w.Code, w.Body.String())
+	}
+
+	w = env.doRequest(t, "PUT", "/vault/fields/spid.password", map[string]string{
+		"value": "hunter2",
+	}, true)
+	if w.Code != 400 || !strings.Contains(w.Body.String(), "forbidden_field") {
+		t.Fatalf("spid.password: expected 400 forbidden_field, got %d: %s", w.Code, w.Body.String())
+	}
+}

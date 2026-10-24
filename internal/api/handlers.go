@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -397,7 +398,14 @@ func (s *Server) handleRevokeServiceToken(w http.ResponseWriter, r *http.Request
 }
 
 func handleVaultError(w http.ResponseWriter, err error) {
+	var verr *vault.ValidationError
+	if errors.As(err, &verr) {
+		writeError(w, http.StatusBadRequest, "invalid_value", verr.Error())
+		return
+	}
 	switch err {
+	case vault.ErrForbiddenField:
+		writeError(w, http.StatusBadRequest, "forbidden_field", err.Error())
 	case vault.ErrLocked:
 		writeError(w, http.StatusForbidden, "vault_locked", "vault is locked")
 	case vault.ErrAlreadyUnlocked:
