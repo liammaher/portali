@@ -3,7 +3,9 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"mime"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -12,7 +14,7 @@ import (
 
 func (e *testEnv) upload(t *testing.T, token, query, contentType string, body []byte) *httptest.ResponseRecorder {
 	t.Helper()
-	req := httptest.NewRequest("POST", "/vault/documents?"+query, bytes.NewReader(body))
+	req := newTestRequest("POST", "/vault/documents?"+query, bytes.NewReader(body))
 	req.Header.Set("Content-Type", contentType)
 	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
@@ -129,5 +131,47 @@ func TestExpiring_API(t *testing.T) {
 	}
 	if w := env.doRequest(t, "PUT", "/vault/fields/patente.data_scadenza", map[string]string{"value": "31/02/2030"}, true); w.Code != 400 {
 		t.Fatalf("impossible date: %d", w.Code)
+	}
+}
+
+func TestDocuments_FilenameEncodingAndMeta(t *testing.T) {
+	env := setup(t)
+	for _, name := range []string{"permesso;scan.pdf", "Mario's ID (fronte).pdf", "carta d'identità.pdf"} {
+		var doc vault.DocumentInfo
+		json.NewDecoder(env.upload(t, env.token, "category=passaporto&name="+url.QueryEscape(name), "application/pdf", []byte("x")).Body).Decode(&doc)
+		w := env.doRequest(t, "GET", "/vault/documents/"+doc.ID, nil, true)
+		_, params, err := mime.ParseMediaType(w.Header().Get("Content-Disposition"))
+		if err != nil || params["filename"] != name {
+			t.Errorf("filename %q round-tripped as %q (%v)", name, params["filename"], err)
+		}
+	}
+	if w := env.upload(t, env.token, "category=passaporto&name=..", "application/pdf", []byte("x")); w.Code != 400 {
+		t.Errorf("name '..' accepted: %d", w.Code)
+	}
+}
+
+func TestDocuments_ListCategoryFilter(t *testing.T) {
+	env := setup(t)
+	env.upload(t, env.token, "category=passaporto&name=p.pdf", "application/pdf", []byte("p"))
+	env.upload(t, env.token, "category=patente&name=l.pdf", "application/pdf", []byte("l"))
+	w := env.doRequest(t, "GET", "/vault/documents?category=patente", nil, true)
+	var list []vault.DocumentInfo
+	json.NewDecoder(w.Body).Decode(&list)
+	if len(list) != 1 || list[0].Category != "patente" {
+		t.Fatalf("category filter: %+v", list)
+	}
+}
+
+func TestDocuments_ConcurrentUploadsCapped(t *testing.T) {
+	env := setup(t)
+	for i := 0; i < maxConcurrentUploads; i++ {
+		env.server.uploadSlots <- struct{}{}
+	}
+	if w := env.upload(t, env.token, "category=passaporto&name=p.pdf", "application/pdf", []byte("p")); w.Code != 429 {
+		t.Fatalf("expected 429 with all upload slots busy, got %d", w.Code)
+	}
+	<-env.server.uploadSlots
+	if w := env.upload(t, env.token, "category=passaporto&name=p.pdf", "application/pdf", []byte("p")); w.Code != 200 {
+		t.Fatalf("expected 200 once a slot frees, got %d", w.Code)
 	}
 }

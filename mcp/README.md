@@ -54,6 +54,7 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 |----------|---------|-------------|
 | `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address |
 | `VAULT_TOKEN` | — | **Required.** Service token from `pvault create-service-token` |
+| `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` may read from (hidden files always refused) |
 | `VAULT_SCOPE` | `*` | Optional extra filter applied in the MCP layer (the server enforces the token's own scope regardless) |
 
 ## Error Messages

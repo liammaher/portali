@@ -573,6 +573,17 @@ func (v *Vault) GetByCategory(category string, allow FieldFilter) ([]FieldInfo, 
 
 // GetContext returns the decrypted fields allow accepts, grouped by category.
 func (v *Vault) GetContext(allow FieldFilter) (*ContextBundle, error) {
+	bundle, err := v.decryptFields(allow)
+	if err != nil {
+		return nil, err
+	}
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "context"})
+	return bundle, nil
+}
+
+// decryptFields decrypts the fields allow accepts, grouped by category,
+// without writing an audit entry (callers log what they actually did).
+func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
@@ -615,7 +626,6 @@ func (v *Vault) GetContext(allow FieldFilter) (*ContextBundle, error) {
 		})
 	}
 
-	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "context"})
 	return bundle, nil
 }
 

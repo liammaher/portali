@@ -3,8 +3,8 @@ package api
 import (
 	"errors"
 	"io"
+	"mime"
 	"net/http"
-	"net/url"
 	"strconv"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -21,6 +21,14 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 	}
 	if !vault.ScopeAllows(scopeFromRequest(r), vault.DocumentScopeID(category)) {
 		scopeDenied(w)
+		return
+	}
+
+	select {
+	case s.uploadSlots <- struct{}{}:
+		defer func() { <-s.uploadSlots }()
+	default:
+		writeError(w, http.StatusTooManyRequests, "busy", "another upload is in progress, try again shortly")
 		return
 	}
 
@@ -45,19 +53,17 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 
 // GET /vault/documents[?category=passaporto]
 func (s *Server) handleListDocuments(w http.ResponseWriter, r *http.Request) {
-	docs, err := s.vault.ListDocuments(callerFilter(r))
+	allow := callerFilter(r)
+	if category := r.URL.Query().Get("category"); category != "" {
+		scoped := allow
+		allow = func(id, sensitivity string) bool {
+			return id == vault.DocumentScopeID(category) && scoped(id, sensitivity)
+		}
+	}
+	docs, err := s.vault.ListDocuments(allow)
 	if err != nil {
 		handleVaultError(w, err)
 		return
-	}
-	if category := r.URL.Query().Get("category"); category != "" {
-		filtered := docs[:0]
-		for _, d := range docs {
-			if d.Category == category {
-				filtered = append(filtered, d)
-			}
-		}
-		docs = filtered
 	}
 	writeJSON(w, http.StatusOK, docs)
 }
@@ -81,7 +87,11 @@ func (s *Server) handleGetDocument(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", info.ContentType)
 	w.Header().Set("Content-Length", strconv.Itoa(len(data)))
-	w.Header().Set("Content-Disposition", "attachment; filename*=UTF-8''"+url.PathEscape(info.Name))
+	disposition := mime.FormatMediaType("attachment", map[string]string{"filename": info.Name})
+	if disposition == "" {
+		disposition = "attachment"
+	}
+	w.Header().Set("Content-Disposition", disposition)
 	w.Header().Set("Content-Security-Policy", "sandbox")
 	w.Header().Set("X-Document-Category", info.Category)
 	w.WriteHeader(http.StatusOK)

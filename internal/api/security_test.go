@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -315,12 +316,76 @@ func TestCredentialEndpoints_RequireJSON(t *testing.T) {
 	body := `{"password":"` + testPassword + `","secret_key":"` + sk + `"}`
 	for _, path := range []string{"/vault/session", "/vault/unlock"} {
 		// A cross-site form or fetch without preflight can only send text/plain.
-		req := httptest.NewRequest("POST", path, strings.NewReader(body))
+		req := newTestRequest("POST", path, strings.NewReader(body))
 		req.Header.Set("Content-Type", "text/plain")
 		w := httptest.NewRecorder()
 		env.server.handler.ServeHTTP(w, req)
 		if w.Code != 415 {
 			t.Errorf("%s with text/plain: expected 415, got %d", path, w.Code)
 		}
+	}
+}
+
+func TestHostHeader_RebindingRejected(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	body := `{"password":"` + testPassword + `","secret_key":"` + sk + `"}`
+	for _, host := range []string{"evil.example", "attacker.com:7200", "127.0.0.1.nip.io"} {
+		req := httptest.NewRequest("POST", "/vault/session", strings.NewReader(body))
+		req.Host = host
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		env.server.handler.ServeHTTP(w, req)
+		if w.Code != 403 {
+			t.Errorf("Host %q: expected 403, got %d", host, w.Code)
+		}
+	}
+	for _, host := range []string{"127.0.0.1:7200", "localhost:7200", "[::1]:7200", "localhost"} {
+		req := httptest.NewRequest("GET", "/vault/status", nil)
+		req.Host = host
+		w := httptest.NewRecorder()
+		env.server.handler.ServeHTTP(w, req)
+		if w.Code != 200 {
+			t.Errorf("Host %q: expected 200, got %d", host, w.Code)
+		}
+	}
+}
+
+func TestSessionGrant_ConcurrentFailuresBounded(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	const n = 30
+	codes := make(chan int, n)
+	var wg sync.WaitGroup
+	for i := 0; i < n; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			codes <- env.doRequest(t, "POST", "/vault/session", map[string]string{"password": "wrong", "secret_key": sk}, false).Code
+		}()
+	}
+	wg.Wait()
+	close(codes)
+	evaluated := 0
+	for c := range codes {
+		if c == 401 {
+			evaluated++
+		}
+	}
+	if evaluated > 10 {
+		t.Fatalf("%d concurrent wrong passwords were evaluated, want at most 10", evaluated)
+	}
+	// Successes are refunded, so a correct password still works after the
+	// window clears; within it, the limit holds.
+	if w := env.doRequest(t, "POST", "/vault/session", map[string]string{"password": testPassword, "secret_key": sk}, false); w.Code != 429 {
+		t.Fatalf("expected 429 while limited, got %d", w.Code)
+	}
+}
+
+func TestSessionGrant_NonCredentialErrorsDoNotCount(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	for i := 0; i < 12; i++ {
+		env.doRequest(t, "POST", "/vault/session", map[string]string{"password": testPassword, "secret_key": sk, "ttl": "24h"}, false)
+	}
+	if w := env.doRequest(t, "POST", "/vault/session", map[string]string{"password": testPassword, "secret_key": sk}, false); w.Code != 200 {
+		t.Fatalf("invalid-ttl requests consumed the limit: %d", w.Code)
 	}
 }

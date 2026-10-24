@@ -4,6 +4,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/store"
 )
 
 // ExpiryInfo describes a document expiry date found in the vault.
@@ -20,7 +22,7 @@ type ExpiryInfo struct {
 // accepts are decrypted. Values that are not valid dates (e.g. written by an
 // older version) are skipped.
 func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time) ([]ExpiryInfo, error) {
-	ctx, err := v.GetContext(func(id, sensitivity string) bool {
+	ctx, err := v.decryptFields(func(id, sensitivity string) bool {
 		parts := strings.SplitN(id, ".", 2)
 		return len(parts) == 2 && IsExpiryField(parts[1]) && (allow == nil || allow(id, sensitivity))
 	})
@@ -52,5 +54,6 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 		}
 	}
 	sort.Slice(result, func(i, j int) bool { return result[i].ExpiresOn < result[j].ExpiresOn })
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*.data_scadenza", Action: "expiring"})
 	return result, nil
 }

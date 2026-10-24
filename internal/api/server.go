@@ -34,19 +34,15 @@ func (rl *rateLimiter) allow() bool {
 	return true
 }
 
-// blocked reports whether the limit is reached, without counting a request.
-// Pair with recordFailure to limit only failed attempts.
-func (rl *rateLimiter) blocked() bool {
+// refund uncounts one attempt previously admitted by allow. Pairing the two
+// limits only failed attempts while still counting in-flight ones, so
+// concurrent requests can't all slip past the limit before any fails.
+func (rl *rateLimiter) refund() {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
-	return rl.fullLocked()
-}
-
-// recordFailure counts one failed attempt.
-func (rl *rateLimiter) recordFailure() {
-	rl.mu.Lock()
-	defer rl.mu.Unlock()
-	rl.attempts = append(rl.attempts, time.Now())
+	if n := len(rl.attempts); n > 0 {
+		rl.attempts = rl.attempts[:n-1]
+	}
 }
 
 // fullLocked drops expired attempts and reports whether the limit is reached.
@@ -71,7 +67,11 @@ type Server struct {
 	server      *http.Server
 	unlockLimit *rateLimiter
 	grantLimit  *rateLimiter
+	uploadSlots chan struct{} // bounds concurrent document uploads
 }
+
+// maxConcurrentUploads caps memory used by in-flight document uploads.
+const maxConcurrentUploads = 2
 
 // New creates a new API server.
 func New(v *vault.Vault, addr string) *Server {
@@ -79,10 +79,11 @@ func New(v *vault.Vault, addr string) *Server {
 		vault:       v,
 		unlockLimit: newRateLimiter(5, time.Minute),
 		grantLimit:  newRateLimiter(10, time.Minute),
+		uploadSlots: make(chan struct{}, maxConcurrentUploads),
 	}
 	s.mux = http.NewServeMux()
 	s.registerRoutes()
-	s.handler = securityHeadersMiddleware(bodySizeMiddleware(s.mux))
+	s.handler = localHostMiddleware(securityHeadersMiddleware(bodySizeMiddleware(s.mux)))
 	s.server = &http.Server{
 		Addr:    addr,
 		Handler: s.handler,

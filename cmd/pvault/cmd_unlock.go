@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -62,6 +64,11 @@ func cmdUnlock() {
 // checkCredentials verifies the password and secret key against the vault
 // database without starting a server.
 func checkCredentials(pw, sk string) error {
+	// vault.Open creates a missing database, which would make a later
+	// 'pvault init' refuse; check first.
+	if _, err := os.Stat(filepath.Join(vaultDir(), "vault.db")); err != nil {
+		return fmt.Errorf("no vault found in %s — run 'pvault init' first", vaultDir())
+	}
 	v, err := vault.Open(vaultDir())
 	if err != nil {
 		return fmt.Errorf("open vault: %w", err)

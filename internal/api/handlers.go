@@ -120,10 +120,17 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	if !requireJSON(w, r) {
 		return
 	}
-	if s.grantLimit.blocked() {
+	if !s.grantLimit.allow() {
 		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many failed attempts, try again later")
 		return
 	}
+	// The attempt is counted up front; only a wrong password keeps it.
+	wrongPassword := false
+	defer func() {
+		if !wrongPassword {
+			s.grantLimit.refund()
+		}
+	}()
 
 	var req struct {
 		Password  string `json:"password"`
@@ -151,7 +158,7 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	token, expires, err := s.vault.CreateSessionGrant(req.Password, req.SecretKey, ttl)
 	if err != nil {
 		if err == vault.ErrWrongPassword {
-			s.grantLimit.recordFailure()
+			wrongPassword = true
 			writeError(w, http.StatusUnauthorized, "unauthenticated", "wrong password or secret key")
 			return
 		}

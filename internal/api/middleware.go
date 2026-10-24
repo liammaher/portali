@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"strings"
 
@@ -42,6 +43,25 @@ func isSessionAuth(r *http.Request) bool {
 
 func sessionRequired(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "session_required", "this operation requires a session token, not a service token")
+}
+
+// localHostMiddleware rejects requests whose Host header isn't a loopback
+// name. The server only listens on 127.0.0.1, but a DNS-rebinding web page
+// can still reach it under its own domain and would otherwise be treated as
+// same-origin (sending JSON to /vault/session without a CORS preflight).
+func localHostMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		host := r.Host
+		if h, _, err := net.SplitHostPort(host); err == nil {
+			host = h
+		}
+		switch strings.Trim(strings.ToLower(host), "[]") {
+		case "127.0.0.1", "localhost", "::1":
+			next.ServeHTTP(w, r)
+		default:
+			writeError(w, http.StatusForbidden, "invalid_host", "requests must use 127.0.0.1 or localhost")
+		}
+	})
 }
 
 // securityHeadersMiddleware sets standard security headers on all responses.

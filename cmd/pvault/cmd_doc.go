@@ -179,14 +179,15 @@ func detectContentType(f *os.File) string {
 }
 
 // filenameFromDisposition extracts a safe base filename from the server's
-// Content-Disposition header.
+// Content-Disposition header. Leading dots are stripped so a stored name
+// (possibly chosen by an agent) can never create a dotfile such as .zshrc.
 func filenameFromDisposition(header string) string {
 	_, params, err := mime.ParseMediaType(header)
 	if err != nil {
 		return ""
 	}
-	name := filepath.Base(params["filename"])
-	if name == "." || name == "/" || name == ".." {
+	name := strings.TrimLeft(filepath.Base(params["filename"]), ".")
+	if name == "" || name == "/" {
 		return ""
 	}
 	return name

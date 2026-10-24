@@ -68,7 +68,11 @@ Profile Password + Secret Key (128-bit)
   10/min limit. The secret key is held in memory while unlocked, so the
   onboarding page asks for the password alone; no token is ever put in a URL.
 - Credential endpoints (`/vault/unlock`, `/vault/session`) require
-  `Content-Type: application/json` so web pages can't call them cross-origin
+  `Content-Type: application/json` so web pages can't call them cross-origin,
+  and every request must carry a loopback Host (127.0.0.1/localhost/::1) to
+  block DNS rebinding. Grant attempts are counted on entry and refunded unless
+  the password was wrong, so concurrent guesses can't bypass the limit.
+  API tests build requests with `newTestRequest` (loopback Host)
 - Writing a field without a tier keeps its existing tier (schema default for
   new fields), so overwrites never silently downgrade sensitivity
 - Secret key at `~/.pvault/secret.key` (0600), never in database
@@ -78,7 +82,8 @@ Profile Password + Secret Key (128-bit)
 - MCP server uses only `VAULT_TOKEN`
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID credentials and CIE PIN/PUK are rejected. Fields named with the word
-  `data`/`date` must be real dates, stored as YYYY-MM-DD (`dates.go`)
+  shape `data_<x>`, `date_of_<x>` or `<x>_date` must be real dates, stored as
+  YYYY-MM-DD (`dates.go`)
 - Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,
   AAD bound to the document ID; encrypted filename; files at
   `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.

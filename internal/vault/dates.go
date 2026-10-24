@@ -10,11 +10,19 @@ import (
 const dateLayout = "2006-01-02"
 
 // IsDateField reports whether a field name holds a calendar date by
-// convention: any underscore-separated word "data" or "date", e.g.
-// data_scadenza, membro1_data_nascita, date_of_birth.
+// convention: Italian data_<x> (data_scadenza, membro1_data_nascita) or
+// English date_of_<x> / <x>_date (date_of_birth, start_date). Names such as
+// date_format are not dates. Hyphens count as underscores.
 func IsDateField(name string) bool {
-	for _, w := range strings.Split(strings.ToLower(name), "_") {
-		if w == "data" || w == "date" {
+	words := fieldWords(name)
+	for i, w := range words {
+		last := i == len(words)-1
+		switch {
+		case w == "data" && !last:
+			return true
+		case w == "date" && last && i > 0:
+			return true
+		case w == "date" && !last && words[i+1] == "of":
 			return true
 		}
 	}
@@ -23,7 +31,12 @@ func IsDateField(name string) bool {
 
 // IsExpiryField reports whether a field records a document's expiry date.
 func IsExpiryField(name string) bool {
-	return hasFieldSuffix(strings.ToLower(name), "data_scadenza")
+	return hasFieldSuffix(strings.Join(fieldWords(name), "_"), "data_scadenza")
+}
+
+// fieldWords splits a lower-cased field name on underscores and hyphens.
+func fieldWords(name string) []string {
+	return strings.FieldsFunc(strings.ToLower(name), func(r rune) bool { return r == '_' || r == '-' })
 }
 
 // NormalizeDate accepts YYYY-MM-DD or the Italian day-first forms

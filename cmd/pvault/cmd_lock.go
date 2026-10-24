@@ -12,17 +12,10 @@ import (
 )
 
 func cmdLock() {
-	if !portHasVault() {
-		// Nothing to lock. Clean up files a crashed server may have left.
-		removeLegacySessionFile()
-		removePID()
-		fmt.Println("Vault is already locked (server not running).")
-		return
-	}
-
 	// Stopping our own server locks the vault and zeroes the key. Locking is
 	// always safe, so this path needs no password. The PID is only trusted
-	// if it still belongs to a pvault process, never a reused PID.
+	// if it still belongs to a pvault process, never a reused PID, and it is
+	// tried before probing so a slow server can't be mistaken for a stopped one.
 	if pid, err := readPID(); err == nil && isVaultServerProcess(pid) {
 		if p, err := os.FindProcess(pid); err == nil && p.Signal(syscall.SIGTERM) == nil {
 			waitForServerExit(3 * time.Second)
@@ -33,6 +26,13 @@ func cmdLock() {
 		}
 	}
 	removePID()
+
+	if !portHasVault() {
+		// Nothing to lock. Clean up files a crashed server may have left.
+		removeLegacySessionFile()
+		fmt.Println("Vault is already locked (server not running).")
+		return
+	}
 
 	// The running server wasn't started by 'pvault unlock' (e.g. 'pvault
 	// serve'), so lock it through the API instead.

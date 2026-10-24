@@ -120,20 +120,27 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	return &DocumentInfo{ID: id, Category: category, Name: name, ContentType: contentType, Size: doc.Size, Sensitivity: sensitivity, CreatedAt: doc.CreatedAt}, nil
 }
 
-// DocumentMeta returns decrypted metadata for a document, or nil if missing.
+// DocumentMeta returns a document's category, type, size and tier for access
+// checks, without decrypting the filename (Name is empty). Nil if missing.
 func (v *Vault) DocumentMeta(id string) (*DocumentInfo, error) {
 	if !reDocumentID.MatchString(id) {
 		return nil, nil
 	}
-	vaultKey, err := v.requireUnlocked()
-	if err != nil {
+	if _, err := v.requireUnlocked(); err != nil {
 		return nil, err
 	}
 	doc, err := v.db.GetDocument(id)
 	if err != nil || doc == nil {
 		return nil, err
 	}
-	return v.decryptDocumentInfo(vaultKey, *doc)
+	return &DocumentInfo{
+		ID:          doc.ID,
+		Category:    doc.Category,
+		ContentType: doc.ContentType,
+		Size:        doc.Size,
+		Sensitivity: doc.Sensitivity,
+		CreatedAt:   doc.CreatedAt,
+	}, nil
 }
 
 // ListDocuments returns metadata for the documents allow accepts (checked
@@ -209,11 +216,13 @@ func (v *Vault) DeleteDocument(id string) (bool, error) {
 	if err != nil || doc == nil {
 		return false, err
 	}
-	if err := os.Remove(v.documentPath(id)); err != nil && !errors.Is(err, os.ErrNotExist) {
-		return false, fmt.Errorf("remove document file: %w", err)
-	}
+	// Remove the row first: if removing the file then fails, only an
+	// unreadable encrypted orphan remains, never a listed document without content.
 	if _, err := v.db.DeleteDocument(id); err != nil {
 		return false, err
+	}
+	if err := os.Remove(v.documentPath(id)); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return false, fmt.Errorf("remove document file: %w", err)
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: DocumentScopeID(doc.Category), Action: "document_delete"})
 	return true, nil
@@ -286,7 +295,7 @@ func documentNameAAD(id string) []byte { return []byte("document-name:" + id) }
 // cleanDocumentName keeps only the base filename and rejects control characters.
 func cleanDocumentName(name string) (string, error) {
 	name = strings.TrimSpace(filepath.Base(strings.ReplaceAll(name, "\\", "/")))
-	if name == "" || name == "." || name == "/" {
+	if name == "/" || strings.Trim(name, ".") == "" {
 		return "", &ValidationError{Field: "name", Msg: "filename is required"}
 	}
 	if len(name) > 255 {

@@ -2,8 +2,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { readFile, stat } from "node:fs/promises";
-import { basename, extname } from "node:path";
+import { readFile, realpath, stat } from "node:fs/promises";
+import { homedir } from "node:os";
+import { basename, extname, join, relative, isAbsolute, sep } from "node:path";
 import {
   getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
   getExpiring, listDocuments, addDocument, getDocument,
@@ -213,11 +214,41 @@ const MIME_BY_EXT: Record<string, string> = {
   ".txt": "text/plain",
 };
 
+// Folders vault_document_add may read from. Without this limit an agent that
+// only has this MCP server could archive any local file (SSH keys, the vault's
+// own secret.key) and read it back with vault_document_get.
+const IMPORT_DIRS = (process.env.VAULT_IMPORT_DIRS ?? join(homedir(), "Downloads"))
+  .split(":")
+  .filter((d) => d.trim() !== "");
+
+/** Resolve path and confirm it is a non-hidden file inside an import folder. */
+async function resolveImportPath(path: string): Promise<string> {
+  if (!isAbsolute(path)) throw new Error("path must be absolute");
+  const real = await realpath(path);
+  for (const dir of IMPORT_DIRS) {
+    let root: string;
+    try {
+      root = await realpath(dir);
+    } catch {
+      continue;
+    }
+    const rel = relative(root, real);
+    if (rel === "" || rel.startsWith("..") || isAbsolute(rel)) continue;
+    if (rel.split(sep).some((part) => part.startsWith("."))) {
+      throw new Error("hidden files and folders can't be imported");
+    }
+    return real;
+  }
+  throw new Error(
+    `only files inside ${IMPORT_DIRS.join(", ")} can be imported (set VAULT_IMPORT_DIRS to change this)`
+  );
+}
+
 server.registerTool(
   "vault_document_add",
   {
     description:
-      "Encrypt and archive a local file (e.g. a receipt, protocol confirmation or certificate you just downloaded from a government portal) in the user's vault. Ask the user before archiving, and suggest deleting the unencrypted original afterwards.",
+      "Encrypt and archive a local file (e.g. a receipt, protocol confirmation or certificate you just downloaded from a government portal) in the user's vault. Only files inside the import folders (default ~/Downloads, set by VAULT_IMPORT_DIRS) can be archived. Ask the user before archiving, and suggest deleting the unencrypted original afterwards.",
     inputSchema: {
       path: z.string().describe("Absolute path of the local file to store"),
       category: z.string().describe("Category, e.g. permesso_soggiorno, passaporto, residenza, business"),
@@ -229,10 +260,11 @@ server.registerTool(
       return err(`scope denied: ${category}.documents is not in VAULT_SCOPE`);
     }
     try {
-      const info = await stat(path);
+      const real = await resolveImportPath(path);
+      const info = await stat(real);
       if (!info.isFile()) return err(`${path} is not a file`);
       if (info.size > MAX_DOCUMENT_BYTES) return err(`${path} is larger than 20 MB`);
-      const data = await readFile(path);
+      const data = await readFile(real);
       const type = MIME_BY_EXT[extname(path).toLowerCase()] ?? "application/octet-stream";
       const doc = await addDocument(category, basename(path), type, data, sensitivity);
       return ok(`Stored ${doc.name} as document ${doc.id} in ${doc.category} [${doc.sensitivity}]`);

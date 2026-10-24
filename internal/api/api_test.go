@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -13,6 +14,12 @@ import (
 )
 
 const testPassword = "test-password-123"
+
+// newTestRequest builds a request addressed to the loopback host the server
+// accepts (httptest's default Host, example.com, is rejected).
+func newTestRequest(method, target string, body io.Reader) *http.Request {
+	return httptest.NewRequest(method, "http://127.0.0.1:7200"+target, body)
+}
 
 type testEnv struct {
 	server *Server
@@ -49,7 +56,7 @@ func (e *testEnv) doRequest(t *testing.T, method, path string, body any, auth bo
 	if body != nil {
 		json.NewEncoder(&buf).Encode(body)
 	}
-	req := httptest.NewRequest(method, path, &buf)
+	req := newTestRequest(method, path, &buf)
 	req.Header.Set("Content-Type", "application/json")
 	if auth {
 		req.Header.Set("Authorization", "Bearer "+e.token)
@@ -145,7 +152,7 @@ func TestConstraint_InvalidRequest(t *testing.T) {
 	env := setup(t)
 
 	// Invalid JSON body
-	req := httptest.NewRequest("PUT", "/vault/fields/identity.name", strings.NewReader("{bad json"))
+	req := newTestRequest("PUT", "/vault/fields/identity.name", strings.NewReader("{bad json"))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+env.token)
 	w := httptest.NewRecorder()
@@ -190,7 +197,7 @@ func TestConstraint_Unauthenticated_MissingAuth(t *testing.T) {
 func TestConstraint_Unauthenticated_InvalidToken(t *testing.T) {
 	env := setup(t)
 
-	req := httptest.NewRequest("GET", "/vault/fields", nil)
+	req := newTestRequest("GET", "/vault/fields", nil)
 	req.Header.Set("Authorization", "Bearer invalid-token")
 	w := httptest.NewRecorder()
 	env.server.handler.ServeHTTP(w, req)
@@ -221,7 +228,7 @@ func TestConstraint_Unauthenticated_WrongPassword(t *testing.T) {
 	s := New(v, ":0")
 	w := httptest.NewRecorder()
 	body, _ := json.Marshal(map[string]string{"password": "wrong", "secret_key": sk})
-	req := httptest.NewRequest("POST", "/vault/unlock", bytes.NewReader(body))
+	req := newTestRequest("POST", "/vault/unlock", bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	s.handler.ServeHTTP(w, req)
 
@@ -378,7 +385,7 @@ func TestAuth_MissingToken(t *testing.T) {
 
 func TestAuth_InvalidToken(t *testing.T) {
 	env := setup(t)
-	req := httptest.NewRequest("GET", "/vault/fields", nil)
+	req := newTestRequest("GET", "/vault/fields", nil)
 	req.Header.Set("Authorization", "Bearer invalid-token")
 	w := httptest.NewRecorder()
 	env.server.mux.ServeHTTP(w, req)
@@ -456,7 +463,7 @@ func TestServiceTokenAuth(t *testing.T) {
 	env.doRequest(t, "PUT", "/vault/fields/identity.name", map[string]string{"value": "Jane"}, true)
 
 	// Use service token to access context
-	req := httptest.NewRequest("GET", "/vault/context", nil)
+	req := newTestRequest("GET", "/vault/context", nil)
 	req.Header.Set("Authorization", "Bearer "+createResp.Token)
 	rec := httptest.NewRecorder()
 	env.server.handler.ServeHTTP(rec, req)
@@ -499,7 +506,7 @@ func (e *testEnv) doRequestWithToken(t *testing.T, method, path string, body any
 	if body != nil {
 		json.NewEncoder(&buf).Encode(body)
 	}
-	req := httptest.NewRequest(method, path, &buf)
+	req := newTestRequest(method, path, &buf)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
@@ -771,7 +778,7 @@ func TestSetField_DefaultSensitivity(t *testing.T) {
 func TestFieldID_Validation_Rejects_Spaces(t *testing.T) {
 	env := setup(t)
 	// Spaces in field name — use raw request to avoid URL encoding
-	req := httptest.NewRequest("GET", "/vault/fields/identity.full%20name", nil)
+	req := newTestRequest("GET", "/vault/fields/identity.full%20name", nil)
 	req.Header.Set("Authorization", "Bearer "+env.token)
 	w := httptest.NewRecorder()
 	env.server.mux.ServeHTTP(w, req)
@@ -783,7 +790,7 @@ func TestFieldID_Validation_Rejects_Spaces(t *testing.T) {
 func TestFieldID_Validation_Rejects_Slashes(t *testing.T) {
 	env := setup(t)
 	// Slash in field name
-	req := httptest.NewRequest("GET", "/vault/fields/identity.name%2Fevil", nil)
+	req := newTestRequest("GET", "/vault/fields/identity.name%2Fevil", nil)
 	req.Header.Set("Authorization", "Bearer "+env.token)
 	w := httptest.NewRecorder()
 	env.server.mux.ServeHTTP(w, req)
@@ -794,7 +801,7 @@ func TestFieldID_Validation_Rejects_Slashes(t *testing.T) {
 
 func TestFieldID_Validation_Rejects_NullByte(t *testing.T) {
 	env := setup(t)
-	req := httptest.NewRequest("GET", "/vault/fields/identity.name%00evil", nil)
+	req := newTestRequest("GET", "/vault/fields/identity.name%00evil", nil)
 	req.Header.Set("Authorization", "Bearer "+env.token)
 	w := httptest.NewRecorder()
 	env.server.mux.ServeHTTP(w, req)
@@ -813,7 +820,7 @@ func TestFieldID_Validation_Accepts_Valid(t *testing.T) {
 
 func TestCategory_Validation_Rejects_SpecialChars(t *testing.T) {
 	env := setup(t)
-	req := httptest.NewRequest("GET", "/vault/fields/category/evil%24cat", nil)
+	req := newTestRequest("GET", "/vault/fields/category/evil%24cat", nil)
 	req.Header.Set("Authorization", "Bearer "+env.token)
 	w := httptest.NewRecorder()
 	env.server.mux.ServeHTTP(w, req)
@@ -975,7 +982,7 @@ func TestRevokeServiceToken_API(t *testing.T) {
 	}
 
 	// Verify revoked token no longer works
-	req := httptest.NewRequest("GET", "/vault/fields", nil)
+	req := newTestRequest("GET", "/vault/fields", nil)
 	req.Header.Set("Authorization", "Bearer "+createResp.Token)
 	rec := httptest.NewRecorder()
 	env.server.handler.ServeHTTP(rec, req)

@@ -145,7 +145,15 @@ func TestDates(t *testing.T) {
 			t.Errorf("IsDateField(%q) = false", name)
 		}
 	}
-	for _, name := range []string{"metadata", "numero", "update_note", "card_expiry", "codice_fiscale"} {
+	for _, name := range []string{"data-scadenza", "start_date", "membro2-data-nascita"} {
+		if !IsDateField(name) {
+			t.Errorf("IsDateField(%q) = false", name)
+		}
+	}
+	if !IsExpiryField("data-scadenza") {
+		t.Error("hyphenated expiry field not recognized")
+	}
+	for _, name := range []string{"metadata", "numero", "update_note", "card_expiry", "codice_fiscale", "date_format", "data", "date", "update"} {
 		if IsDateField(name) {
 			t.Errorf("IsDateField(%q) = true", name)
 		}
@@ -201,5 +209,32 @@ func TestExpiring(t *testing.T) {
 	capped, _ := v.Expiring(90*24*time.Hour, func(id, tier string) bool { return tier != "critical" }, now)
 	if len(capped) != 3 {
 		t.Fatalf("filter ignored: %+v", capped)
+	}
+}
+
+func TestDocumentMeta_NoNameAndDeleteOrder(t *testing.T) {
+	v, _ := tmpVault(t)
+	doc, _ := v.AddDocument("passaporto", "p.pdf", "application/pdf", []byte("p"), "")
+	meta, err := v.DocumentMeta(doc.ID)
+	if err != nil || meta.Name != "" || meta.Category != "passaporto" || meta.Sensitivity != "sensitive" {
+		t.Fatalf("DocumentMeta = %+v, %v", meta, err)
+	}
+	// If the file is already gone, delete still removes the listing.
+	os.Remove(v.documentPath(doc.ID))
+	if ok, err := v.DeleteDocument(doc.ID); !ok || err != nil {
+		t.Fatalf("delete with missing file: %v %v", ok, err)
+	}
+	if list, _ := v.ListDocuments(nil); len(list) != 0 {
+		t.Fatalf("listing remains: %+v", list)
+	}
+}
+
+func TestExpiring_AuditEntry(t *testing.T) {
+	v, _ := tmpVault(t)
+	v.Set("passaporto.data_scadenza", "2000-01-01", "")
+	v.Expiring(24*time.Hour, nil, time.Now())
+	entries, _ := v.AuditLog(1)
+	if len(entries) != 1 || entries[0].Action != "expiring" {
+		t.Fatalf("latest audit entry = %+v, want action expiring", entries)
 	}
 }
