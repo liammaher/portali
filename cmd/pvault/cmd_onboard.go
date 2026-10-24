@@ -69,6 +69,7 @@ func cmdOnboard() {
 	}
 
 	cmd := exec.Command(exe, "serve", "--password-stdin")
+	detachFromTerminal(cmd)
 	cmd.Env = append(os.Environ(), fmt.Sprintf("VAULT_DIR=%s", dir))
 
 	stdin, err := cmd.StdinPipe()

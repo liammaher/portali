@@ -50,6 +50,7 @@ func cmdUnlock() {
 	}
 
 	cmd := exec.Command(exe, "serve", "--password-stdin")
+	detachFromTerminal(cmd)
 	cmd.Env = append(os.Environ(),
 		fmt.Sprintf("VAULT_DIR=%s", vaultDir()),
 	)
