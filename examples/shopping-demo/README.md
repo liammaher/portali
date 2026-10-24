@@ -49,7 +49,7 @@ pvault set addresses.home_country "US"
 Payment fields are `critical`, so the token has to opt in explicitly:
 
 ```sh
-pvault create-service-token shopping-demo --scope "identity.*,addresses.*,payment.*" --max-sensitivity critical --ttl 2h
+pvault create-service-token shopping-demo --scope "identity.*,addresses.*,payment.*" --max-sensitivity critical --access append --ttl 2h
 ```
 
 Paste the printed token into `VAULT_TOKEN` in `.mcp.json`.

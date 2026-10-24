@@ -65,6 +65,19 @@ const (
 	MaxSessionGrantTTL = time.Hour
 )
 
+// Token access levels. Read-only is the default: agents must be explicitly
+// allowed to add data (append) or to overwrite and delete it (write).
+const (
+	AccessRead   = "read"   // read fields and documents only
+	AccessAppend = "append" // also add new fields and documents; no overwrite or delete
+	AccessWrite  = "write"  // also overwrite and delete
+)
+
+var validAccess = map[string]bool{AccessRead: true, AccessAppend: true, AccessWrite: true}
+
+// ErrInvalidAccess is returned for an unknown token access level.
+var ErrInvalidAccess = errors.New("invalid access: must be read, append, or write")
+
 // Vault is the main entry point for vault operations.
 type Vault struct {
 	mu      sync.RWMutex
@@ -680,7 +693,7 @@ func hashToken(token string) string {
 // be explicit, ttl must be between zero and MaxServiceTokenTTL, and the token
 // can only read fields up to maxSensitivity (default "sensitive").
 // The raw token is returned to the caller; only the SHA-256 hash is stored.
-func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, maxSensitivity string) (string, error) {
+func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, maxSensitivity, access string) (string, error) {
 	if _, err := v.requireUnlocked(); err != nil {
 		return "", err
 	}
@@ -695,6 +708,12 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 	}
 	if !validTiers[maxSensitivity] {
 		return "", ErrInvalidTier
+	}
+	if access == "" {
+		access = AccessRead
+	}
+	if !validAccess[access] {
+		return "", ErrInvalidAccess
 	}
 
 	tokenBytes := make([]byte, 32)
@@ -711,6 +730,7 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 		Usage:          "service",
 		CreatedAt:      time.Now(),
 		MaxSensitivity: maxSensitivity,
+		Access:         access,
 	}
 	if err := v.db.CreateToken(t); err != nil {
 		return "", err
@@ -720,7 +740,7 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 		Consumer: "vault",
 		Scope:    scope,
 		Action:   "create_service_token",
-		Purpose:  "consumer: " + consumer + ", max_sensitivity: " + maxSensitivity,
+		Purpose:  "consumer: " + consumer + ", max_sensitivity: " + maxSensitivity + ", access: " + access,
 	})
 
 	return tokenStr, nil

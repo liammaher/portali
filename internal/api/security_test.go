@@ -11,6 +11,26 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
+// createTokenWithAccess creates a service token with the given access level
+// (read, append or write) and the default sensitivity cap.
+func createTokenWithAccess(t *testing.T, env *testEnv, scope, access string) string {
+	t.Helper()
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
+		"consumer": "agent",
+		"scope":    scope,
+		"ttl":      "1h",
+		"access":   access,
+	}, true)
+	if w.Code != 200 {
+		t.Fatalf("create token: expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	var resp struct {
+		Token string `json:"token"`
+	}
+	json.NewDecoder(w.Body).Decode(&resp)
+	return resp.Token
+}
+
 func createTokenWithTier(t *testing.T, env *testEnv, scope, maxSensitivity string) string {
 	t.Helper()
 	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
@@ -105,7 +125,7 @@ func TestServiceToken_CriticalOptIn(t *testing.T) {
 func TestServiceToken_CannotOverwriteOrDeleteAboveTier(t *testing.T) {
 	env := setup(t)
 	seedTiers(t, env)
-	token := createScopedToken(t, env, "agent", "*")
+	token := createTokenWithAccess(t, env, "*", "write")
 
 	w := env.doRequestWithToken(t, "PUT", "/vault/fields/payment.card_number", map[string]string{"value": "4111"}, token)
 	if w.Code != 403 {
@@ -387,5 +407,98 @@ func TestSessionGrant_NonCredentialErrorsDoNotCount(t *testing.T) {
 	}
 	if w := env.doRequest(t, "POST", "/vault/session", map[string]string{"password": testPassword, "secret_key": sk}, false); w.Code != 200 {
 		t.Fatalf("invalid-ttl requests consumed the limit: %d", w.Code)
+	}
+}
+
+func TestServiceToken_DefaultIsReadOnly(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Napoli"}, true)
+	var doc vault.DocumentInfo
+	json.NewDecoder(env.upload(t, env.token, "category=residenza&name=r.pdf", "application/pdf", []byte("r")).Body).Decode(&doc)
+
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "a", "scope": "residenza.*"}, true)
+	var created map[string]string
+	json.NewDecoder(w.Body).Decode(&created)
+	if created["access"] != "read" {
+		t.Fatalf("default access = %q, want read", created["access"])
+	}
+	token := created["token"]
+
+	if w := env.doRequestWithToken(t, "GET", "/vault/fields/residenza.comune", nil, token); w.Code != 200 {
+		t.Fatalf("read: %d", w.Code)
+	}
+	checks := []struct {
+		name string
+		code int
+	}{
+		{"new field", env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.cap", map[string]string{"value": "80121"}, token).Code},
+		{"overwrite", env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Roma"}, token).Code},
+		{"delete field", env.doRequestWithToken(t, "DELETE", "/vault/fields/residenza.comune", nil, token).Code},
+		{"upload", env.upload(t, token, "category=residenza&name=x.pdf", "application/pdf", []byte("x")).Code},
+		{"delete document", env.doRequestWithToken(t, "DELETE", "/vault/documents/"+doc.ID, nil, token).Code},
+	}
+	for _, c := range checks {
+		if c.code != 403 {
+			t.Errorf("read-only token %s: expected 403, got %d", c.name, c.code)
+		}
+	}
+	w = env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.cap", map[string]string{"value": "80121"}, token)
+	if !strings.Contains(w.Body.String(), "read_only") {
+		t.Errorf("expected read_only constraint, got %s", w.Body.String())
+	}
+}
+
+func TestServiceToken_AppendAccess(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Napoli"}, true)
+	token := createTokenWithAccess(t, env, "residenza.*", "append")
+
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.cap", map[string]string{"value": "80121"}, token); w.Code != 200 {
+		t.Fatalf("append new field: %d %s", w.Code, w.Body.String())
+	}
+	w := env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Roma"}, token)
+	if w.Code != 403 || !strings.Contains(w.Body.String(), "append_only") {
+		t.Fatalf("append overwrite: expected 403 append_only, got %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/residenza.cap", nil, token); w.Code != 403 {
+		t.Fatalf("append delete field: %d", w.Code)
+	}
+	w = env.upload(t, token, "category=residenza&name=receipt.pdf", "application/pdf", []byte("r"))
+	if w.Code != 200 {
+		t.Fatalf("append upload: %d %s", w.Code, w.Body.String())
+	}
+	var doc vault.DocumentInfo
+	json.NewDecoder(w.Body).Decode(&doc)
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/documents/"+doc.ID, nil, token); w.Code != 403 {
+		t.Fatalf("append delete document: %d", w.Code)
+	}
+	// The original value is untouched.
+	w = env.doRequest(t, "GET", "/vault/fields/residenza.comune", nil, true)
+	var f vault.FieldInfo
+	json.NewDecoder(w.Body).Decode(&f)
+	if f.Value != "Napoli" {
+		t.Fatalf("value changed to %q", f.Value)
+	}
+}
+
+func TestServiceToken_WriteAccessAndValidation(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Napoli"}, true)
+	token := createTokenWithAccess(t, env, "residenza.*", "write")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Roma"}, token); w.Code != 200 {
+		t.Fatalf("write overwrite: %d", w.Code)
+	}
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/residenza.comune", nil, token); w.Code != 200 {
+		t.Fatalf("write delete: %d", w.Code)
+	}
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "a", "scope": "*", "access": "admin"}, true)
+	if w.Code != 400 {
+		t.Fatalf("invalid access: expected 400, got %d", w.Code)
+	}
+	w = env.doRequest(t, "GET", "/vault/tokens/service", nil, true)
+	var list []map[string]string
+	json.NewDecoder(w.Body).Decode(&list)
+	if len(list) != 1 || list[0]["access"] != "write" {
+		t.Fatalf("list should show access: %+v", list)
 	}
 }

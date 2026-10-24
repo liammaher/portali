@@ -134,7 +134,7 @@ server.registerTool(
   "vault_set",
   {
     description:
-      "Save a field to the user's encrypted vault. Creates or updates a field. Use this when the user provides personal information that isn't already in the vault (e.g. t-shirt size, dietary preferences). Always ask the user for confirmation before saving: 'Want me to save M as your t-shirt size for next time?' Call vault_schema first to discover recommended field names.",
+      "Save a field to the user's encrypted vault. Creates or updates a field. Needs a token with append access (new fields) or write access (updating existing ones); read-only tokens are refused. Use this when the user provides personal information that isn't already in the vault (e.g. t-shirt size, dietary preferences). Always ask the user for confirmation before saving: 'Want me to save M as your t-shirt size for next time?' Call vault_schema first to discover recommended field names.",
     inputSchema: {
       id: z
         .string()
@@ -248,7 +248,7 @@ server.registerTool(
   "vault_document_add",
   {
     description:
-      "Encrypt and archive a local file (e.g. a receipt, protocol confirmation or certificate you just downloaded from a government portal) in the user's vault. Only files inside the import folders (default ~/Downloads, set by VAULT_IMPORT_DIRS) can be archived. Ask the user before archiving, and suggest deleting the unencrypted original afterwards.",
+      "Encrypt and archive a local file (e.g. a receipt, protocol confirmation or certificate you just downloaded from a government portal) in the user's vault. Only files inside the import folders (default ~/Downloads, set by VAULT_IMPORT_DIRS) can be archived. Needs a token with append or write access. Ask the user before archiving, and suggest deleting the unencrypted original afterwards.",
     inputSchema: {
       path: z.string().describe("Absolute path of the local file to store"),
       category: z.string().describe("Category, e.g. permesso_soggiorno, passaporto, residenza, business"),

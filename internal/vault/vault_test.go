@@ -317,7 +317,7 @@ func TestSetSensitivity(t *testing.T) {
 func TestCreateServiceToken(t *testing.T) {
 	v, _ := tmpVault(t)
 
-	token, err := v.CreateServiceToken("life", "*", 24*time.Hour, "")
+	token, err := v.CreateServiceToken("life", "*", 24*time.Hour, "", "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -332,7 +332,7 @@ func TestCreateServiceToken(t *testing.T) {
 func TestValidateServiceToken(t *testing.T) {
 	v, _ := tmpVault(t)
 
-	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour, "")
+	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour, "", "")
 
 	svcToken, ok := v.ValidateServiceToken(token)
 	if !ok {
@@ -367,8 +367,8 @@ func TestValidateServiceToken_SessionTokenNotAccepted(t *testing.T) {
 
 func TestListServiceTokens(t *testing.T) {
 	v, _ := tmpVault(t)
-	v.CreateServiceToken("life", "*", 24*time.Hour, "")
-	v.CreateServiceToken("other-app", "identity.*", 24*time.Hour, "")
+	v.CreateServiceToken("life", "*", 24*time.Hour, "", "")
+	v.CreateServiceToken("other-app", "identity.*", 24*time.Hour, "", "")
 
 	tokens, err := v.ListServiceTokens()
 	if err != nil {
@@ -381,7 +381,7 @@ func TestListServiceTokens(t *testing.T) {
 
 func TestRevokeServiceToken(t *testing.T) {
 	v, _ := tmpVault(t)
-	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour, "")
+	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour, "", "")
 
 	n, err := v.RevokeServiceToken(token)
 	if err != nil {
@@ -401,7 +401,7 @@ func TestServiceToken_RequiresUnlocked(t *testing.T) {
 	v, _ := tmpVault(t)
 	v.Lock()
 
-	_, err := v.CreateServiceToken("life", "*", 24*time.Hour, "")
+	_, err := v.CreateServiceToken("life", "*", 24*time.Hour, "", "")
 	if err != ErrLocked {
 		t.Fatalf("expected ErrLocked, got %v", err)
 	}
@@ -429,19 +429,19 @@ func TestAutoLock_NotResetByFieldAccess(t *testing.T) {
 
 func TestCreateServiceToken_Validation(t *testing.T) {
 	v, _ := tmpVault(t)
-	if _, err := v.CreateServiceToken("a", "", time.Hour, ""); err == nil {
+	if _, err := v.CreateServiceToken("a", "", time.Hour, "", ""); err == nil {
 		t.Error("empty scope should be rejected")
 	}
-	if _, err := v.CreateServiceToken("a", "identity.*,", time.Hour, ""); err == nil {
+	if _, err := v.CreateServiceToken("a", "identity.*,", time.Hour, "", ""); err == nil {
 		t.Error("trailing empty pattern should be rejected")
 	}
-	if _, err := v.CreateServiceToken("a", "*", 0, ""); err == nil {
+	if _, err := v.CreateServiceToken("a", "*", 0, "", ""); err == nil {
 		t.Error("zero ttl should be rejected")
 	}
-	if _, err := v.CreateServiceToken("a", "*", MaxServiceTokenTTL+time.Hour, ""); err == nil {
+	if _, err := v.CreateServiceToken("a", "*", MaxServiceTokenTTL+time.Hour, "", ""); err == nil {
 		t.Error("ttl above max should be rejected")
 	}
-	token, err := v.CreateServiceToken("a", "identity.*,residenza.comune", time.Hour, "")
+	token, err := v.CreateServiceToken("a", "identity.*,residenza.comune", time.Hour, "", "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -453,7 +453,7 @@ func TestCreateServiceToken_Validation(t *testing.T) {
 
 func TestRevokeServiceToken_ByHashPrefix(t *testing.T) {
 	v, _ := tmpVault(t)
-	token, _ := v.CreateServiceToken("life", "*", time.Hour, "")
+	token, _ := v.CreateServiceToken("life", "*", time.Hour, "", "")
 	prefix := hashToken(token)[:12]
 
 	n, err := v.RevokeServiceToken(prefix + "...")
@@ -620,5 +620,28 @@ func TestGetContext_FilterSkipsFields(t *testing.T) {
 	fields, _ := v.GetByCategory("payment", func(id, tier string) bool { return false })
 	if len(fields) != 0 {
 		t.Fatalf("GetByCategory filter ignored: %v", fields)
+	}
+}
+
+func TestCreateServiceToken_Access(t *testing.T) {
+	v, _ := tmpVault(t)
+	token, err := v.CreateServiceToken("a", "*", time.Hour, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if svc, _ := v.ValidateServiceToken(token); svc.Access != AccessRead {
+		t.Fatalf("default access = %q, want read", svc.Access)
+	}
+	for _, access := range []string{AccessAppend, AccessWrite} {
+		tok, err := v.CreateServiceToken("a", "*", time.Hour, "", access)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if svc, _ := v.ValidateServiceToken(tok); svc.Access != access {
+			t.Fatalf("access = %q, want %q", svc.Access, access)
+		}
+	}
+	if _, err := v.CreateServiceToken("a", "*", time.Hour, "", "admin"); err != ErrInvalidAccess {
+		t.Fatalf("invalid access: got %v", err)
 	}
 }

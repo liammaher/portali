@@ -76,7 +76,8 @@ Profile Password + Secret Key (128-bit)
 - Writing a field without a tier keeps its existing tier (schema default for
   new fields), so overwrites never silently downgrade sensitivity
 - Secret key at `~/.pvault/secret.key` (0600), never in database
-- Service tokens: explicit scope required, TTL 24h default / 90d max,
+- Service tokens: access `read` (default) / `append` (add new fields and
+  documents, no overwrite or delete) / `write`; explicit scope required, TTL 24h default / 90d max,
   `max_sensitivity` cap (default `sensitive`), cannot change tiers,
   and never reset the auto-lock timer (only session activity does)
 - MCP server uses only `VAULT_TOKEN`

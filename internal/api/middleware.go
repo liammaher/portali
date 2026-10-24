@@ -16,6 +16,7 @@ const (
 	scopeKey       contextKey = "scope"
 	sessionAuthKey contextKey = "session_auth"
 	maxTierKey     contextKey = "max_tier"
+	accessKey      contextKey = "access"
 )
 
 // scopeFromRequest returns the token scope. Session tokens get "*" (full access).
@@ -33,6 +34,15 @@ func maxTierFromRequest(r *http.Request) string {
 		return t
 	}
 	return "public"
+}
+
+// accessFromRequest returns the caller's access level. Session tokens get
+// write; requests without auth context get read.
+func accessFromRequest(r *http.Request) string {
+	if a, ok := r.Context().Value(accessKey).(string); ok {
+		return a
+	}
+	return vault.AccessRead
 }
 
 // isSessionAuth returns true if the request was authenticated with a session token.
@@ -109,6 +119,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 			ctx := context.WithValue(r.Context(), scopeKey, "*")
 			ctx = context.WithValue(ctx, sessionAuthKey, true)
 			ctx = context.WithValue(ctx, maxTierKey, "critical")
+			ctx = context.WithValue(ctx, accessKey, vault.AccessWrite)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
@@ -124,6 +135,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 			ctx := context.WithValue(r.Context(), scopeKey, svcToken.Scope)
 			ctx = context.WithValue(ctx, sessionAuthKey, false)
 			ctx = context.WithValue(ctx, maxTierKey, svcToken.MaxSensitivity)
+			ctx = context.WithValue(ctx, accessKey, svcToken.Access)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}

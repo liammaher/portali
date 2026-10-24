@@ -341,6 +341,10 @@ func TestOpen_MigratesTokenMaxSensitivity(t *testing.T) {
 		t.Fatalf("legacy expiry not capped: %v", tok.ExpiresAt)
 	}
 
+	if tok.Access != "read" {
+		t.Fatalf("legacy token access = %q, want read", tok.Access)
+	}
+
 	// Reopening an already migrated database is a no-op.
 	db.Close()
 	db2, err := Open(path)

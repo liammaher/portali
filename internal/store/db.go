@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS vault_tokens (
 	expires_at TEXT NOT NULL,
 	usage      TEXT NOT NULL DEFAULT 'multi',
 	created_at TEXT NOT NULL,
-	max_sensitivity TEXT NOT NULL DEFAULT 'sensitive'
+	max_sensitivity TEXT NOT NULL DEFAULT 'sensitive',
+	access     TEXT NOT NULL DEFAULT 'read'
 );
 
 CREATE TABLE IF NOT EXISTS vault_documents (
@@ -102,21 +103,33 @@ func Open(path string) (*DB, error) {
 
 // migrate upgrades databases created by older versions in place.
 func migrate(conn *sql.DB) error {
-	has, err := hasColumn(conn, "vault_tokens", "max_sensitivity")
-	if err != nil {
+	if err := ensureColumn(conn, "vault_tokens", "max_sensitivity", addTokenMaxSensitivity); err != nil {
 		return err
 	}
-	if has {
-		return nil
+	return ensureColumn(conn, "vault_tokens", "access", addTokenAccess)
+}
+
+// ensureColumn runs add if table lacks column, tolerating another process
+// adding it between the check and the ALTER.
+func ensureColumn(conn *sql.DB, table, column string, add func(*sql.DB) error) error {
+	has, err := hasColumn(conn, table, column)
+	if err != nil || has {
+		return err
 	}
-	if err := addTokenMaxSensitivity(conn); err != nil {
-		// Another process may have migrated between the check and the ALTER.
-		if has, herr := hasColumn(conn, "vault_tokens", "max_sensitivity"); herr == nil && has {
+	if err := add(conn); err != nil {
+		if has, herr := hasColumn(conn, table, column); herr == nil && has {
 			return nil
 		}
 		return err
 	}
 	return nil
+}
+
+// addTokenAccess adds the access column. Existing tokens become read-only:
+// write access must now be granted explicitly.
+func addTokenAccess(conn *sql.DB) error {
+	_, err := conn.Exec(`ALTER TABLE vault_tokens ADD COLUMN access TEXT NOT NULL DEFAULT 'read'`)
+	return err
 }
 
 // addTokenMaxSensitivity adds the max_sensitivity column and caps legacy

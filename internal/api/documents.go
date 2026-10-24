@@ -23,6 +23,10 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
+	// Uploads always create a new document, so append access is enough.
+	if !requireAccess(w, r, false) {
+		return
+	}
 
 	select {
 	case s.uploadSlots <- struct{}{}:
@@ -102,6 +106,9 @@ func (s *Server) handleGetDocument(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleDeleteDocument(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	if !s.requireDocumentAccess(w, r, id) {
+		return
+	}
+	if !requireAccess(w, r, true) {
 		return
 	}
 	deleted, err := s.vault.DeleteDocument(id)

@@ -14,15 +14,16 @@ type Token struct {
 	Usage          string
 	CreatedAt      time.Time
 	MaxSensitivity string // highest sensitivity tier the token may read
+	Access         string // read, append or write
 }
 
 // CreateToken inserts a new session token.
 func (d *DB) CreateToken(t Token) error {
 	_, err := d.conn.Exec(
-		`INSERT INTO vault_tokens (token, consumer, scope, expires_at, usage, created_at, max_sensitivity)
-		 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		`INSERT INTO vault_tokens (token, consumer, scope, expires_at, usage, created_at, max_sensitivity, access)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
 		t.TokenStr, t.Consumer, t.Scope, t.ExpiresAt.UTC().Format(time.RFC3339),
-		t.Usage, t.CreatedAt.UTC().Format(time.RFC3339), maxSensitivityOrDefault(t.MaxSensitivity),
+		t.Usage, t.CreatedAt.UTC().Format(time.RFC3339), maxSensitivityOrDefault(t.MaxSensitivity), accessOrDefault(t.Access),
 	)
 	return err
 }
@@ -32,9 +33,9 @@ func (d *DB) GetToken(token string) (*Token, error) {
 	var t Token
 	var expiresAt, createdAt string
 	err := d.conn.QueryRow(
-		"SELECT token, consumer, scope, expires_at, usage, created_at, max_sensitivity FROM vault_tokens WHERE token = ?",
+		"SELECT token, consumer, scope, expires_at, usage, created_at, max_sensitivity, access FROM vault_tokens WHERE token = ?",
 		token,
-	).Scan(&t.TokenStr, &t.Consumer, &t.Scope, &expiresAt, &t.Usage, &createdAt, &t.MaxSensitivity)
+	).Scan(&t.TokenStr, &t.Consumer, &t.Scope, &expiresAt, &t.Usage, &createdAt, &t.MaxSensitivity, &t.Access)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -80,7 +81,7 @@ func (d *DB) DeleteAllTokens() (int64, error) {
 // ListTokensByUsage returns tokens with the given usage type.
 func (d *DB) ListTokensByUsage(usage string) ([]Token, error) {
 	rows, err := d.conn.Query(
-		"SELECT token, consumer, scope, expires_at, usage, created_at, max_sensitivity FROM vault_tokens WHERE usage = ? ORDER BY created_at DESC",
+		"SELECT token, consumer, scope, expires_at, usage, created_at, max_sensitivity, access FROM vault_tokens WHERE usage = ? ORDER BY created_at DESC",
 		usage,
 	)
 	if err != nil {
@@ -92,7 +93,7 @@ func (d *DB) ListTokensByUsage(usage string) ([]Token, error) {
 	for rows.Next() {
 		var t Token
 		var expiresAt, createdAt string
-		if err := rows.Scan(&t.TokenStr, &t.Consumer, &t.Scope, &expiresAt, &t.Usage, &createdAt, &t.MaxSensitivity); err != nil {
+		if err := rows.Scan(&t.TokenStr, &t.Consumer, &t.Scope, &expiresAt, &t.Usage, &createdAt, &t.MaxSensitivity, &t.Access); err != nil {
 			return nil, err
 		}
 		t.ExpiresAt, _ = time.Parse(time.RFC3339, expiresAt)
@@ -109,4 +110,12 @@ func maxSensitivityOrDefault(tier string) string {
 		return "sensitive"
 	}
 	return tier
+}
+
+// accessOrDefault returns read-only access for tokens created without one.
+func accessOrDefault(access string) string {
+	if access == "" {
+		return "read"
+	}
+	return access
 }

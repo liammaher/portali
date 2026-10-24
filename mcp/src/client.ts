@@ -73,6 +73,16 @@ function mapError(status: number, body: string): VaultError {
         "vault: this item's sensitivity tier is above what this token may access"
       );
     }
+    if (constraint === "read_only") {
+      return new VaultError(
+        "vault: this token is read-only — ask the user for a token created with --access append (to add) or --access write (to change or delete)"
+      );
+    }
+    if (constraint === "append_only") {
+      return new VaultError(
+        "vault: this token can add new items but not overwrite or delete — that needs a token created with --access write"
+      );
+    }
     if (constraint === "scope_exceeded") {
       return new VaultError("vault: this is outside the token's scope");
     }

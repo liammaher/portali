@@ -15,6 +15,22 @@ func scopeDenied(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "scope_exceeded", "token scope does not allow access to this field")
 }
 
+// requireAccess checks the caller may make a change. Adding something new
+// needs append or write; overwriting or deleting needs write.
+func requireAccess(w http.ResponseWriter, r *http.Request, overwrite bool) bool {
+	switch access := accessFromRequest(r); {
+	case access == vault.AccessWrite:
+		return true
+	case access == vault.AccessAppend && !overwrite:
+		return true
+	case access == vault.AccessAppend:
+		writeError(w, http.StatusForbidden, "append_only", "this token can add new fields and documents but not overwrite or delete them")
+	default:
+		writeError(w, http.StatusForbidden, "read_only", "this token is read-only")
+	}
+	return false
+}
+
 func sensitivityDenied(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "sensitivity_exceeded", "token is not allowed to access fields at this sensitivity tier")
 }
@@ -248,6 +264,16 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 	if !s.requireFieldTier(w, r, id) {
 		return
 	}
+	if accessFromRequest(r) != vault.AccessWrite {
+		existing, err := s.vault.FieldMeta(id)
+		if err != nil {
+			handleVaultError(w, err)
+			return
+		}
+		if !requireAccess(w, r, existing != nil) {
+			return
+		}
+	}
 	var req struct {
 		Value       string `json:"value"`
 		Sensitivity string `json:"sensitivity"`
@@ -293,6 +319,9 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !s.requireFieldTier(w, r, id) {
+		return
+	}
+	if !requireAccess(w, r, true) {
 		return
 	}
 	if err := s.vault.Delete(id); err != nil {
@@ -423,6 +452,7 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		Scope          string `json:"scope"`
 		TTL            string `json:"ttl"`
 		MaxSensitivity string `json:"max_sensitivity"`
+		Access         string `json:"access"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
@@ -435,6 +465,9 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 	if req.MaxSensitivity == "" {
 		req.MaxSensitivity = vault.DefaultServiceTokenMaxSensitivity
 	}
+	if req.Access == "" {
+		req.Access = vault.AccessRead
+	}
 
 	ttl := vault.DefaultServiceTokenTTL
 	if req.TTL != "" {
@@ -446,7 +479,7 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		ttl = parsed
 	}
 
-	token, err := s.vault.CreateServiceToken(req.Consumer, req.Scope, ttl, req.MaxSensitivity)
+	token, err := s.vault.CreateServiceToken(req.Consumer, req.Scope, ttl, req.MaxSensitivity, req.Access)
 	if err != nil {
 		handleVaultError(w, err)
 		return
@@ -456,6 +489,7 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		"token":           token,
 		"scope":           req.Scope,
 		"max_sensitivity": req.MaxSensitivity,
+		"access":          req.Access,
 		"expires_at":      time.Now().Add(ttl).UTC().Format(time.RFC3339),
 	})
 }
@@ -477,6 +511,7 @@ func (s *Server) handleListServiceTokens(w http.ResponseWriter, r *http.Request)
 		Consumer       string `json:"consumer"`
 		Scope          string `json:"scope"`
 		MaxSensitivity string `json:"max_sensitivity"`
+		Access         string `json:"access"`
 		ExpiresAt      string `json:"expires_at"`
 		CreatedAt      string `json:"created_at"`
 	}
@@ -493,6 +528,7 @@ func (s *Server) handleListServiceTokens(w http.ResponseWriter, r *http.Request)
 			Consumer:       t.Consumer,
 			Scope:          t.Scope,
 			MaxSensitivity: t.MaxSensitivity,
+			Access:         t.Access,
 			ExpiresAt:      t.ExpiresAt.UTC().Format(time.RFC3339),
 			CreatedAt:      t.CreatedAt.UTC().Format(time.RFC3339),
 		}
@@ -541,7 +577,7 @@ func handleVaultError(w http.ResponseWriter, err error) {
 		writeError(w, http.StatusConflict, "conflict", "vault is already unlocked")
 	case vault.ErrNotInitialized:
 		writeError(w, http.StatusPreconditionFailed, "not_initialized", "vault is not initialized")
-	case vault.ErrInvalidTier:
+	case vault.ErrInvalidTier, vault.ErrInvalidAccess:
 		writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
 	default:
 		writeError(w, http.StatusInternalServerError, "internal", "internal error")

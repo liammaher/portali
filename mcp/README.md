@@ -34,6 +34,8 @@ claude mcp add vault -- npx -y personal-vault-mcp@latest
 | `vault_document_add` | Encrypt and archive a local file (e.g. a downloaded receipt) |
 | `vault_document_get` | Read a stored document (images inline, others as an embedded resource, max 10 MB) |
 
+Tokens are read-only unless created with `--access append` (also add new fields and documents, never overwrite or delete) or `--access write` (full). `vault_set` and `vault_document_add` need append or write.
+
 Documents follow the same token rules as fields: scope pattern `<category>.documents` (or `<category>.*`) and the token's sensitivity cap (documents default to `sensitive`).
 
 ## Authentication
@@ -66,6 +68,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `vault: vault is locked` | Run `pvault unlock` to decrypt |
 | `vault: this item's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field or document |
 | `vault: this is outside the token's scope` | Not covered by the token's `--scope` |
+| `vault: this token is read-only` | Create a token with `--access append` or `--access write` |
+| `vault: this token can add new items but not overwrite or delete` | Overwriting or deleting needs `--access write` |
 | `vault: not found` | Field ID doesn't exist |
 | `vault: no service token` | Set `VAULT_TOKEN` in the MCP server config |
 

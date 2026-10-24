@@ -96,6 +96,7 @@ pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list, or t
 - `--ttl` defaults to `24h`, maximum `2160h` (90 days).
 - `--max-sensitivity` defaults to `sensitive`; `critical` fields are hidden unless you opt in.
 - Service tokens cannot change sensitivity tiers.
+- `--access` defaults to `read` (read only). `append` also allows adding new fields and documents but never overwriting or deleting them; `write` allows everything. Tokens created before this option existed are read-only.
 - Service tokens do **not** reset the 30-minute auto-lock timer; only your session does.
 
 ## HTTP API
@@ -149,7 +150,7 @@ PUT /vault/sensitivity/{id}              # { tier } — update sensitivity
 ### Service Tokens
 
 ```
-POST   /vault/tokens/service             # { consumer, scope, ttl?, max_sensitivity? } → { token, scope, max_sensitivity, expires_at }
+POST   /vault/tokens/service             # { consumer, scope, ttl?, max_sensitivity?, access? } → { token, scope, max_sensitivity, access, expires_at }
 GET    /vault/tokens/service             # List active tokens (hash prefixes only)
 DELETE /vault/tokens/service/{ref}       # Revoke by listed hash prefix (≥8 chars) or full token
 ```

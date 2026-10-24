@@ -140,6 +140,7 @@ Service tokens give agents scoped, time-limited, sensitivity-capped access.
 
 ```sh
 pvault create-service-token tari-agent --scope "identity.*,residenza.*" --ttl 2h
+pvault create-service-token archiver --scope "residenza.*" --access append   # may add receipts, never delete
 pvault create-service-token checkout --scope "payment.*" --max-sensitivity critical --ttl 1h
 pvault list-service-tokens
 pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list
@@ -148,6 +149,7 @@ pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list
 - `--scope` is required. Pass `"*"` explicitly if you really want full scope.
 - `--ttl` defaults to `24h`; the maximum is `2160h` (90 days).
 - `--max-sensitivity` defaults to `sensitive`, so agents cannot read `critical` fields unless you opt in.
+- `--access` defaults to `read`: agents can only read. `append` also lets them add new fields and documents (e.g. archive a downloaded receipt) but never overwrite or delete; `write` allows everything. Tokens created before this option existed are read-only.
 - Only your own activity (session token) resets the 30-minute auto-lock timer. Agent requests do not, so an agent cannot keep the vault unlocked.
 
 ## Sensitivity tiers

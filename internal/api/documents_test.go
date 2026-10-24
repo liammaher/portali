@@ -64,7 +64,7 @@ func TestDocuments_ServiceTokenScopeAndTier(t *testing.T) {
 	json.NewDecoder(env.upload(t, env.token, "category=passaporto&name=p.pdf", "application/pdf", []byte("p")).Body).Decode(&pass)
 	json.NewDecoder(env.upload(t, env.token, "category=patente&name=l.pdf&sensitivity=critical", "application/pdf", []byte("l")).Body).Decode(&lic)
 
-	token := createScopedToken(t, env, "agent", "passaporto.*,patente.*") // default cap: sensitive
+	token := createTokenWithAccess(t, env, "passaporto.*,patente.*", "append") // default cap: sensitive
 	if w := env.doRequestWithToken(t, "GET", "/vault/documents/"+pass.ID, nil, token); w.Code != 200 {
 		t.Fatalf("in-scope sensitive doc: %d", w.Code)
 	}

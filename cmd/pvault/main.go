@@ -88,8 +88,8 @@ Commands:
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
   ui                               Open vault onboarding form in browser
-  create-service-token <consumer> --scope <patterns>
-                                   Create a scoped agent token (24h default, 90d max)
+  create-service-token <consumer> --scope <patterns> [--access read|append|write]
+                                   Create a scoped agent token (read-only by default; 24h default, 90d max)
   list-service-tokens              List active service tokens
   revoke-service-token <prefix>    Revoke a service token by listed prefix or full token`)
 }
