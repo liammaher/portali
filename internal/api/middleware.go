@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/lovincyrus/personal-vault/internal/store"
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 type contextKey string
@@ -56,10 +57,15 @@ func securityHeadersMiddleware(next http.Handler) http.Handler {
 const maxBodySize = 1 << 20 // 1 MB
 
 // bodySizeMiddleware limits request body size to prevent memory exhaustion.
+// Document uploads get a larger limit than JSON requests.
 func bodySizeMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Body != nil {
-			r.Body = http.MaxBytesReader(w, r.Body, maxBodySize)
+			limit := int64(maxBodySize)
+			if r.Method == http.MethodPost && r.URL.Path == "/vault/documents" {
+				limit = vault.MaxDocumentSize
+			}
+			r.Body = http.MaxBytesReader(w, r.Body, limit)
 		}
 		next.ServeHTTP(w, r)
 	})

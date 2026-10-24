@@ -70,11 +70,11 @@ function mapError(status: number, body: string): VaultError {
     }
     if (constraint === "sensitivity_exceeded") {
       return new VaultError(
-        "vault: this field's sensitivity tier is above what this token may access"
+        "vault: this item's sensitivity tier is above what this token may access"
       );
     }
     if (constraint === "scope_exceeded") {
-      return new VaultError("vault: this field is outside the token's scope");
+      return new VaultError("vault: this is outside the token's scope");
     }
     return new VaultError(`vault: forbidden — ${body}`);
   }
@@ -189,4 +189,76 @@ export async function setField(
   }>;
 }
 
-export type { VaultStatus, FieldInfo, ContextBundle };
+interface ExpiryInfo {
+  field_id: string;
+  document: string;
+  expires_on: string;
+  days_left: number;
+  expired: boolean;
+}
+
+interface DocumentInfo {
+  id: string;
+  category: string;
+  name: string;
+  content_type: string;
+  size: number;
+  sensitivity: string;
+  created_at: string;
+}
+
+export async function getExpiring(days: number): Promise<ExpiryInfo[]> {
+  return apiRequest("GET", `/vault/expiring?days=${days}`) as Promise<ExpiryInfo[]>;
+}
+
+export async function listDocuments(category?: string): Promise<DocumentInfo[]> {
+  const q = category ? `?category=${encodeURIComponent(category)}` : "";
+  return apiRequest("GET", `/vault/documents${q}`) as Promise<DocumentInfo[]>;
+}
+
+/** Upload raw bytes as an encrypted document. */
+export async function addDocument(
+  category: string,
+  name: string,
+  contentType: string,
+  data: Uint8Array,
+  sensitivity?: string,
+): Promise<DocumentInfo> {
+  const q = new URLSearchParams({ category, name });
+  if (sensitivity) q.set("sensitivity", sensitivity);
+  const resp = await rawFetch(`/vault/documents?${q}`, {
+    method: "POST",
+    headers: { "Content-Type": contentType },
+    body: new Blob([new Uint8Array(data)]),
+  });
+  return (await resp.json()) as DocumentInfo;
+}
+
+/** Download and decrypt a document. */
+export async function getDocument(
+  id: string,
+): Promise<{ contentType: string; category: string; data: Buffer }> {
+  const resp = await rawFetch(`/vault/documents/${encodeURIComponent(id)}`, { method: "GET" });
+  return {
+    contentType: resp.headers.get("Content-Type") ?? "application/octet-stream",
+    category: resp.headers.get("X-Document-Category") ?? "",
+    data: Buffer.from(await resp.arrayBuffer()),
+  };
+}
+
+async function rawFetch(path: string, init: RequestInit): Promise<Response> {
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bearer ${resolveToken()}`);
+  let resp: Response;
+  try {
+    resp = await fetch(`${serverAddr()}${path}`, { ...init, headers });
+  } catch {
+    throw new VaultError("vault: server not running — run 'pvault unlock'");
+  }
+  if (!resp.ok) {
+    throw mapError(resp.status, await resp.text());
+  }
+  return resp;
+}
+
+export type { VaultStatus, FieldInfo, ContextBundle, ExpiryInfo, DocumentInfo };

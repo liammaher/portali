@@ -602,6 +602,74 @@ body::before{
     </div>
   </section>
 
+  <!-- 08 Documenti -->
+  <section class="section" data-section="7">
+    <div class="section-number">08</div>
+    <h2>Altri documenti</h2>
+    <p class="subtitle">Numbers and expiry dates — run <code>pvault expiring</code> to see what needs renewing. Store scans with <code>pvault doc add</code>.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Permesso di soggiorno — numero</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="permesso_soggiorno.numero" placeholder="" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Tipo / motivo</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="permesso_soggiorno.tipo" placeholder="Art. 50 TUE">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Questura di rilascio</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="permesso_soggiorno.questura_rilascio" placeholder="Napoli" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Scadenza permesso</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="permesso_soggiorno.data_scadenza">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Passaporto — numero</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="passaporto.numero" placeholder="" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Scadenza passaporto</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="passaporto.data_scadenza">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Tessera sanitaria — numero</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="tessera_sanitaria.numero" placeholder="" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Scadenza tessera sanitaria</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="tessera_sanitaria.data_scadenza">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Patente — numero</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="patente.numero" placeholder="" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Scadenza patente</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="patente.data_scadenza">
+      </div>
+    </div>
+  </section>
+
   <div class="footer">
     <span class="count" id="filledCount">0</span> of <span id="totalCount">0</span> fields filled
   </div>
@@ -654,7 +722,8 @@ body::before{
   document.getElementById('totalCount').textContent = totalCount;
 
   // Categories to load
-  const categories = ['identity', 'addresses', 'employment', 'financial', 'payment', 'preferences', 'cie', 'residenza', 'business'];
+  const categories = ['identity', 'addresses', 'employment', 'financial', 'payment', 'preferences', 'cie', 'residenza', 'business',
+    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente'];
 
   // --- API ---
 

@@ -175,6 +175,22 @@ func publicRequest(method, path string, body any) (*http.Response, error) {
 	return doRequest(method, path, body, "")
 }
 
+// apiRawRequest makes an authenticated request with a raw (non-JSON) body,
+// e.g. a document upload.
+func apiRawRequest(method, path, contentType string, body io.Reader) (*http.Response, error) {
+	token, err := sessionToken()
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequest(method, serverAddr()+path, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", contentType)
+	req.Header.Set("Authorization", "Bearer "+token)
+	return http.DefaultClient.Do(req)
+}
+
 func doRequest(method, path string, body any, token string) (*http.Response, error) {
 	var bodyReader io.Reader
 	if body != nil {

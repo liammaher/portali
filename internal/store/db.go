@@ -42,12 +42,23 @@ CREATE TABLE IF NOT EXISTS vault_tokens (
 	max_sensitivity TEXT NOT NULL DEFAULT 'sensitive'
 );
 
+CREATE TABLE IF NOT EXISTS vault_documents (
+	id           TEXT PRIMARY KEY,
+	category     TEXT NOT NULL,
+	name         TEXT NOT NULL,
+	content_type TEXT NOT NULL,
+	size         INTEGER NOT NULL,
+	sensitivity  TEXT NOT NULL DEFAULT 'sensitive',
+	created_at   TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS vault_meta (
 	key   TEXT PRIMARY KEY,
 	value TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_fields_category ON vault_fields(category);
+CREATE INDEX IF NOT EXISTS idx_documents_category ON vault_documents(category);
 CREATE INDEX IF NOT EXISTS idx_fields_sensitivity ON vault_fields(sensitivity);
 CREATE INDEX IF NOT EXISTS idx_tokens_expires ON vault_tokens(expires_at);
 CREATE INDEX IF NOT EXISTS idx_access_log_created ON vault_access_log(created_at);

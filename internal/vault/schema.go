@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "2",
+	Version: "3",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -98,6 +98,50 @@ var RecommendedSchema = Schema{
 				{ID: "business.pec", Description: "PEC (certified email) address", Sensitivity: "standard"},
 				{ID: "business.rea", Description: "REA number (e.g. NA-123456)", Sensitivity: "standard"},
 				{ID: "business.data_apertura", Description: "Date the partita IVA was opened (YYYY-MM-DD)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "permesso_soggiorno",
+			Description: "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement). Attach scans with 'pvault doc add permesso_soggiorno <file>'.",
+			Fields: []SchemaField{
+				{ID: "permesso_soggiorno.numero", Description: "Document number printed on the card", Sensitivity: "sensitive"},
+				{ID: "permesso_soggiorno.tipo", Description: "Type or reason (e.g. Art. 50 TUE, lavoro subordinato, soggiornante di lungo periodo)", Sensitivity: "standard"},
+				{ID: "permesso_soggiorno.data_rilascio", Description: "Issue date (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "permesso_soggiorno.data_scadenza", Description: "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
+				{ID: "permesso_soggiorno.questura_rilascio", Description: "Issuing Questura (e.g. Napoli)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "passaporto",
+			Description: "Passport (Italian or foreign)",
+			Fields: []SchemaField{
+				{ID: "passaporto.numero", Description: "Passport number", Sensitivity: "sensitive"},
+				{ID: "passaporto.paese_rilascio", Description: "Issuing country (e.g. Regno Unito)", Sensitivity: "standard"},
+				{ID: "passaporto.data_rilascio", Description: "Issue date (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "passaporto.data_scadenza", Description: "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
+				{ID: "passaporto.autorita_rilascio", Description: "Issuing authority (e.g. Questura di Napoli, HM Passport Office)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "tessera_sanitaria",
+			Description: "Tessera sanitaria / TEAM card (also shows the codice fiscale)",
+			Fields: []SchemaField{
+				{ID: "tessera_sanitaria.numero", Description: "Card identification number on the back", Sensitivity: "sensitive"},
+				{ID: "tessera_sanitaria.data_scadenza", Description: "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
+				{ID: "tessera_sanitaria.regione", Description: "Region / ASL of enrolment in the SSN", Sensitivity: "standard"},
+				{ID: "tessera_sanitaria.medico_base", Description: "Medico di base (GP) name", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "patente",
+			Description: "Driving licence (Italian or foreign)",
+			Fields: []SchemaField{
+				{ID: "patente.numero", Description: "Licence number", Sensitivity: "sensitive"},
+				{ID: "patente.categorie", Description: "Categories (e.g. B, A2)", Sensitivity: "standard"},
+				{ID: "patente.paese_rilascio", Description: "Issuing country", Sensitivity: "standard"},
+				{ID: "patente.data_rilascio", Description: "Issue date (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "patente.data_scadenza", Description: "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
+				{ID: "patente.autorita_rilascio", Description: "Issuing authority (e.g. MIT-UCO, DVLA)", Sensitivity: "standard"},
 			},
 		},
 		{

@@ -2,7 +2,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured } from "./client.js";
+import { readFile, stat } from "node:fs/promises";
+import { basename, extname } from "node:path";
+import {
+  getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
+  getExpiring, listDocuments, addDocument, getDocument,
+} from "./client.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { getScope, scopeAllows, scopeAllowsCategory } from "./scope.js";
 
@@ -100,7 +105,7 @@ server.registerTool(
   "vault_context",
   {
     description:
-      "Retrieve all decrypted fields grouped by category. Returns the full personal context bundle. Note: this returns ALL fields including sensitive and critical tiers. All data passes through the LLM provider's inference pipeline.",
+      "Retrieve all decrypted fields this token may read, grouped by category. Fields outside the token's scope or above its sensitivity cap are omitted. All returned data passes through the LLM provider's inference pipeline.",
   },
   async (): Promise<CallToolResult> => {
     try {
@@ -149,6 +154,119 @@ server.registerTool(
     try {
       await setField(id, value, sensitivity);
       return ok(`Saved ${id}`);
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_expiring",
+  {
+    description:
+      "List the user's documents (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that have expired or expire within the given number of days, soonest first. Use this to remind the user to renew documents in time.",
+    inputSchema: {
+      days: z.number().int().min(0).max(3650).optional().describe("Look-ahead window in days (default 90)"),
+    },
+  },
+  async ({ days }): Promise<CallToolResult> => {
+    try {
+      return ok(JSON.stringify(await getExpiring(days ?? 90), null, 2));
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_documents",
+  {
+    description:
+      "List encrypted document scans stored in the vault (id, category, filename, type, size). Use vault_document_get to read one.",
+    inputSchema: {
+      category: z.string().optional().describe("Only this category, e.g. permesso_soggiorno"),
+    },
+  },
+  async ({ category }): Promise<CallToolResult> => {
+    try {
+      const docs = await listDocuments(category);
+      return ok(JSON.stringify(docs.filter((d) => scopeAllows(scope, `${d.category}.documents`)), null, 2));
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+const MAX_DOCUMENT_BYTES = 20 * 1024 * 1024;
+const MAX_INLINE_BYTES = 10 * 1024 * 1024;
+const MIME_BY_EXT: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".heic": "image/heic",
+  ".webp": "image/webp",
+  ".tif": "image/tiff",
+  ".tiff": "image/tiff",
+  ".p7m": "application/pkcs7-mime",
+  ".xml": "application/xml",
+  ".txt": "text/plain",
+};
+
+server.registerTool(
+  "vault_document_add",
+  {
+    description:
+      "Encrypt and archive a local file (e.g. a receipt, protocol confirmation or certificate you just downloaded from a government portal) in the user's vault. Ask the user before archiving, and suggest deleting the unencrypted original afterwards.",
+    inputSchema: {
+      path: z.string().describe("Absolute path of the local file to store"),
+      category: z.string().describe("Category, e.g. permesso_soggiorno, passaporto, residenza, business"),
+      sensitivity: z.enum(["public", "standard", "sensitive", "critical"]).optional().describe("Sensitivity tier (default: sensitive)"),
+    },
+  },
+  async ({ path, category, sensitivity }): Promise<CallToolResult> => {
+    if (!scopeAllows(scope, `${category}.documents`)) {
+      return err(`scope denied: ${category}.documents is not in VAULT_SCOPE`);
+    }
+    try {
+      const info = await stat(path);
+      if (!info.isFile()) return err(`${path} is not a file`);
+      if (info.size > MAX_DOCUMENT_BYTES) return err(`${path} is larger than 20 MB`);
+      const data = await readFile(path);
+      const type = MIME_BY_EXT[extname(path).toLowerCase()] ?? "application/octet-stream";
+      const doc = await addDocument(category, basename(path), type, data, sensitivity);
+      return ok(`Stored ${doc.name} as document ${doc.id} in ${doc.category} [${doc.sensitivity}]`);
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_document_get",
+  {
+    description:
+      "Read an encrypted document from the vault by id. Images are returned as images; other files (e.g. PDFs) as an embedded resource. The content passes through the LLM provider's inference pipeline.",
+    inputSchema: {
+      id: z.string().describe("Document id from vault_documents"),
+    },
+  },
+  async ({ id }): Promise<CallToolResult> => {
+    try {
+      const doc = await getDocument(id);
+      if (!scopeAllows(scope, `${doc.category}.documents`)) {
+        return err(`scope denied: ${doc.category}.documents is not in VAULT_SCOPE`);
+      }
+      if (doc.data.length > MAX_INLINE_BYTES) {
+        return err("document is larger than 10 MB and can't be returned inline");
+      }
+      const blob = doc.data.toString("base64");
+      if (doc.contentType.startsWith("image/")) {
+        return { content: [{ type: "image", data: blob, mimeType: doc.contentType }] };
+      }
+      return {
+        content: [{ type: "resource", resource: { uri: `vault://documents/${id}`, mimeType: doc.contentType, blob } }],
+      };
     } catch (e) {
       return err((e as Error).message);
     }

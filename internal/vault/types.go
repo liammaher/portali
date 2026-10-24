@@ -7,6 +7,7 @@ type VaultStatus struct {
 	Initialized bool           `json:"initialized"`
 	Locked      bool           `json:"locked"`
 	FieldCount  int            `json:"field_count"`
+	Documents   int            `json:"documents"`
 	Categories  map[string]int `json:"categories"`
 }
 

@@ -29,6 +29,12 @@ claude mcp add vault -- npx -y personal-vault-mcp@latest
 | `vault_list` | List all field metadata (no values) |
 | `vault_context` | Get all decrypted fields grouped by category |
 | `vault_set` | Set an encrypted field value in the vault |
+| `vault_expiring` | Documents expired or expiring within N days (default 90) |
+| `vault_documents` | List encrypted document scans the token may access |
+| `vault_document_add` | Encrypt and archive a local file (e.g. a downloaded receipt) |
+| `vault_document_get` | Read a stored document (images inline, others as an embedded resource, max 10 MB) |
+
+Documents follow the same token rules as fields: scope pattern `<category>.documents` (or `<category>.*`) and the token's sensitivity cap (documents default to `sensitive`).
 
 ## Authentication
 
@@ -57,8 +63,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `vault: server not running` | Run `pvault unlock` to start the server |
 | `vault: service token invalid, expired or revoked` | Create a new token and update `VAULT_TOKEN` |
 | `vault: vault is locked` | Run `pvault unlock` to decrypt |
-| `vault: this field's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field |
-| `vault: this field is outside the token's scope` | Field is not covered by the token's `--scope` |
+| `vault: this item's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field or document |
+| `vault: this is outside the token's scope` | Not covered by the token's `--scope` |
 | `vault: not found` | Field ID doesn't exist |
 | `vault: no service token` | Set `VAULT_TOKEN` in the MCP server config |
 

@@ -44,6 +44,10 @@ func main() {
 		cmdListServiceTokens()
 	case "revoke-service-token":
 		cmdRevokeServiceToken()
+	case "doc":
+		cmdDoc()
+	case "expiring":
+		cmdExpiring()
 	case "onboard":
 		cmdOnboard()
 	case "ui":
@@ -77,6 +81,12 @@ Commands:
   set-sensitivity <id> <tier>      Set field sensitivity (public|standard|sensitive|critical)
   export                           Export all decrypted fields as JSON
   audit                            Show access audit log
+  expiring [days]                  Show documents expired or expiring within days (default 90)
+  doc add <category> <file> [--sensitivity tier]
+                                   Encrypt and store a document scan (max 20 MB)
+  doc list [category]              List stored documents
+  doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
+  doc delete <id>                  Delete a stored document
   ui                               Open vault onboarding form in browser
   create-service-token <consumer> --scope <patterns>
                                    Create a scoped agent token (24h default, 90d max)

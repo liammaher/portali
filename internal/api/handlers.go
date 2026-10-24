@@ -325,6 +325,26 @@ func (s *Server) handleGetContext(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, ctx)
 }
 
+// GET /vault/expiring?days=90
+// Lists document expiry dates that have passed or fall within the window.
+func (s *Server) handleExpiring(w http.ResponseWriter, r *http.Request) {
+	days := 90
+	if d := r.URL.Query().Get("days"); d != "" {
+		n, err := strconv.Atoi(d)
+		if err != nil || n < 0 || n > 3650 {
+			writeError(w, http.StatusBadRequest, "invalid_request", "days must be between 0 and 3650")
+			return
+		}
+		days = n
+	}
+	items, err := s.vault.Expiring(time.Duration(days)*24*time.Hour, callerFilter(r), time.Now())
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, items)
+}
+
 // GET /vault/audit
 func (s *Server) handleAuditLog(w http.ResponseWriter, r *http.Request) {
 	if !isSessionAuth(r) {

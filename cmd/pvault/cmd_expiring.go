@@ -1,0 +1,43 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"strconv"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
+)
+
+func cmdExpiring() {
+	days := 90
+	if len(os.Args) >= 3 {
+		n, err := strconv.Atoi(os.Args[2])
+		if err != nil || n < 0 {
+			fatal("usage: pvault expiring [days]")
+		}
+		days = n
+	}
+
+	resp, err := apiRequest("GET", "/vault/expiring?days="+strconv.Itoa(days), nil)
+	if err != nil {
+		fatal("request failed: %v", err)
+	}
+	var items []vault.ExpiryInfo
+	if err := apiResult(resp, &items); err != nil {
+		fatal("%v", err)
+	}
+	if len(items) == 0 {
+		fmt.Printf("Nothing expired or expiring in the next %d days.\n", days)
+		return
+	}
+	for _, it := range items {
+		when := fmt.Sprintf("in %d days", it.DaysLeft)
+		switch {
+		case it.Expired:
+			when = fmt.Sprintf("EXPIRED %d days ago", -it.DaysLeft)
+		case it.DaysLeft == 0:
+			when = "expires TODAY"
+		}
+		fmt.Printf("%-20s %s  %s\n", it.Document, it.ExpiresOn, when)
+	}
+}

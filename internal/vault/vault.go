@@ -341,6 +341,7 @@ func (v *Vault) Status() (*VaultStatus, error) {
 		status.FieldCount = count
 		cats, _ := v.db.CategoryCounts()
 		status.Categories = cats
+		status.Documents, _ = v.db.DocumentCount()
 	}
 
 	return status, nil

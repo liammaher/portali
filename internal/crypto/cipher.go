@@ -14,6 +14,12 @@ const nonceLen = 12 // 96-bit nonce for GCM
 // Encrypt encrypts plaintext with AES-256-GCM using a random 12-byte nonce.
 // Returns nonce || ciphertext+tag as a single byte slice.
 func Encrypt(key, plaintext []byte) ([]byte, error) {
+	return EncryptWithAAD(key, plaintext, nil)
+}
+
+// EncryptWithAAD is Encrypt with additional authenticated data: the result
+// only decrypts with the same aad, which binds a ciphertext to its record.
+func EncryptWithAAD(key, plaintext, aad []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, fmt.Errorf("creating cipher: %w", err)
@@ -29,7 +35,7 @@ func Encrypt(key, plaintext []byte) ([]byte, error) {
 		return nil, fmt.Errorf("generating nonce: %w", err)
 	}
 
-	ciphertext := aead.Seal(nil, nonce, plaintext, nil)
+	ciphertext := aead.Seal(nil, nonce, plaintext, aad)
 
 	// nonce || ciphertext+tag
 	result := make([]byte, nonceLen+len(ciphertext))
@@ -40,6 +46,11 @@ func Encrypt(key, plaintext []byte) ([]byte, error) {
 
 // Decrypt decrypts data produced by Encrypt. Expects nonce || ciphertext+tag.
 func Decrypt(key, data []byte) ([]byte, error) {
+	return DecryptWithAAD(key, data, nil)
+}
+
+// DecryptWithAAD decrypts data produced by EncryptWithAAD with the same aad.
+func DecryptWithAAD(key, data, aad []byte) ([]byte, error) {
 	if len(data) < nonceLen+1 {
 		return nil, errors.New("ciphertext too short")
 	}
@@ -57,7 +68,7 @@ func Decrypt(key, data []byte) ([]byte, error) {
 	nonce := data[:nonceLen]
 	ciphertext := data[nonceLen:]
 
-	plaintext, err := aead.Open(nil, nonce, ciphertext, nil)
+	plaintext, err := aead.Open(nil, nonce, ciphertext, aad)
 	if err != nil {
 		return nil, fmt.Errorf("decryption failed: %w", err)
 	}

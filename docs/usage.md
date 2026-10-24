@@ -59,6 +59,24 @@ pvault set-sensitivity financial.ssn critical
 pvault set-sensitivity preferences.timezone public
 ```
 
+## Dates and expiry tracking
+
+Any field whose name contains the word `data` or `date` (e.g. `cie.data_scadenza`, `nucleo_familiare.membro1_data_nascita`, `identity.date_of_birth`) must be a real calendar date. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
+
+`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first.
+
+## Document scans
+
+```sh
+pvault doc add permesso_soggiorno ~/Desktop/permesso.pdf     # encrypt and store (max 20 MB)
+pvault doc add patente patente-fronte.jpg --sensitivity critical
+pvault doc list
+pvault doc get <id> --out /tmp/permesso.pdf                  # decrypted copy, mode 0600
+pvault doc delete <id>
+```
+
+Each file is encrypted with AES-256-GCM using the category's documents subkey and bound to its document ID (so encrypted files can't be swapped between records); the original filename is encrypted too. Files live in `~/.pvault/documents/<id>.enc`. Service tokens reach documents through the scope pattern `<category>.documents` (or `<category>.*`) and their sensitivity cap; documents default to `sensitive`. After storing a scan, delete or securely archive the unencrypted original.
+
 New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
 
 ## Service Tokens

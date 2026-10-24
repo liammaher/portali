@@ -85,6 +85,11 @@ pvault delete <id>                       # Delete a field
 pvault export                            # Export all fields as JSON
 
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
+pvault expiring [days]                   # Documents expired or expiring soon (default 90 days)
+pvault doc add <category> <file>         # Encrypt and store a scan/PDF (max 20 MB)
+pvault doc list [category]               # List stored documents
+pvault doc get <id> [--out path]         # Decrypt to a file (owner-only, never overwrites)
+pvault doc delete <id>                   # Delete a stored document
 pvault audit                             # Show access log
 
 pvault ui                               # Open onboarding form in browser
@@ -105,6 +110,11 @@ GET    /vault/status                    # Vault status (public)
 GET    /ui                              # Onboarding form (public)
 POST   /vault/unlock                    # Unlock → session token
 POST   /vault/session                   # { password, secret_key?, ttl? } → short-lived session grant (max 1h)
+GET    /vault/expiring?days=90          # Expired / soon-to-expire documents (*data_scadenza fields)
+POST   /vault/documents?category=&name= # Upload a document (raw body, max 20 MB)
+GET    /vault/documents                 # List documents (metadata)
+GET    /vault/documents/{id}            # Download (always as an attachment)
+DELETE /vault/documents/{id}            # Delete a document
 
 GET    /vault/fields                    # List field metadata
 GET    /vault/fields/{id}               # Get field with decrypted value
@@ -164,6 +174,7 @@ New fields get the schema default tier (`standard` if not in the schema). Overwr
 ~/.pvault/
 ├── vault.db       # SQLite (encrypted fields, audit log)
 ├── secret.key     # 128-bit secret key (mode 0600)
+├── documents/     # Encrypted scans, one <id>.enc per document (mode 0600)
 └── pvault.pid     # PID of running server
 ```
 

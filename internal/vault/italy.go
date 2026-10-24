@@ -108,6 +108,12 @@ func NormalizeAndValidate(id, value string) (string, error) {
 			return "", &ValidationError{Field: id, Msg: "provincia must be a 2-letter sigla (e.g. NA)"}
 		}
 		return v, nil
+	case IsDateField(name):
+		d, err := NormalizeDate(value)
+		if err != nil {
+			return "", &ValidationError{Field: id, Msg: err.Error()}
+		}
+		return d, nil
 	}
 	return value, nil
 }

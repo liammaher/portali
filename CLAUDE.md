@@ -77,7 +77,13 @@ Profile Password + Secret Key (128-bit)
   and never reset the auto-lock timer (only session activity does)
 - MCP server uses only `VAULT_TOKEN`
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
-  SPID credentials and CIE PIN/PUK are rejected
+  SPID credentials and CIE PIN/PUK are rejected. Fields named with the word
+  `data`/`date` must be real dates, stored as YYYY-MM-DD (`dates.go`)
+- Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,
+  AAD bound to the document ID; encrypted filename; files at
+  `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.
+  Token access uses scope ID `<category>.documents` plus the tier cap.
+  Downloads are served as attachments with `Content-Security-Policy: sandbox`
 
 ## Conventions
 
