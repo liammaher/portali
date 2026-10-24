@@ -280,241 +280,35 @@ body::before{
     <p class="gate-error" id="gateError" role="alert"></p>
   </form>
 
-  <!-- 01 Identity -->
+  <!-- 01 Identità -->
   <section class="section" data-section="0">
     <div class="section-number">01</div>
     <h2>Who are you?</h2>
-    <p class="subtitle">Core identity information</p>
+    <p class="subtitle">As on your documents — the codice fiscale is validated as you save</p>
 
     <div class="field-row">
       <div class="field">
-        <label>First Name</label>
+        <label>Nome</label>
         <span class="status idle"></span>
-        <input type="text" data-field="identity.first_name" placeholder="Jane" autocomplete="given-name">
+        <input type="text" data-field="identity.first_name" placeholder="Mario" autocomplete="given-name">
       </div>
       <div class="field">
-        <label>Last Name</label>
+        <label>Cognome</label>
         <span class="status idle"></span>
-        <input type="text" data-field="identity.last_name" placeholder="Smith" autocomplete="family-name">
+        <input type="text" data-field="identity.last_name" placeholder="Rossi" autocomplete="family-name">
       </div>
     </div>
-
-    <div class="field">
-      <label>Full Name</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="identity.full_name" placeholder="Jane Smith" autocomplete="name">
-    </div>
-
-    <div class="field">
-      <label>Email</label>
-      <span class="status idle"></span>
-      <input type="email" data-field="identity.email" placeholder="jane@example.com" autocomplete="email">
-    </div>
-
-    <div class="field">
-      <label>Phone</label>
-      <span class="status idle"></span>
-      <input type="tel" data-field="identity.phone" placeholder="+1 555 123 4567" autocomplete="tel">
-    </div>
-
-    <div class="field">
-      <label>Date of Birth</label>
-      <span class="status idle"></span>
-      <input type="date" data-field="identity.date_of_birth" autocomplete="bday">
-    </div>
-
-  </section>
-
-  <!-- 02 Addresses -->
-  <section class="section" data-section="1">
-    <div class="section-number">02</div>
-    <h2>Where do you live?</h2>
-    <p class="subtitle">Your home address</p>
-
-    <div class="field">
-      <label>Street Address</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="addresses.home_street" placeholder="123 Main St" autocomplete="street-address">
-    </div>
-
-    <div class="field-row">
-      <div class="field">
-        <label>City</label>
-        <span class="status idle"></span>
-        <input type="text" data-field="addresses.home_city" placeholder="San Francisco" autocomplete="address-level2">
-      </div>
-      <div class="field">
-        <label>State</label>
-        <span class="status idle"></span>
-        <input type="text" data-field="addresses.home_state" placeholder="CA" autocomplete="address-level1">
-      </div>
-    </div>
-
-    <div class="field-row">
-      <div class="field">
-        <label>ZIP Code</label>
-        <span class="status idle"></span>
-        <input type="text" data-field="addresses.home_zip" placeholder="94105" autocomplete="postal-code">
-      </div>
-      <div class="field">
-        <label>Country</label>
-        <span class="status idle"></span>
-        <input type="text" data-field="addresses.home_country" placeholder="US" autocomplete="country">
-      </div>
-    </div>
-  </section>
-
-  <!-- 03 Employment -->
-  <section class="section" data-section="2">
-    <div class="section-number">03</div>
-    <h2>What do you do?</h2>
-    <p class="subtitle">Your work details</p>
-
-    <div class="field">
-      <label>Employer</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="employment.employer" placeholder="Acme Corp" autocomplete="organization">
-    </div>
-
-    <div class="field">
-      <label>Title</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="employment.title" placeholder="Software Engineer" autocomplete="organization-title">
-    </div>
-  </section>
-
-  <!-- 04 Financial -->
-  <section class="section" data-section="3">
-    <div class="section-number">04</div>
-    <h2>Tax information</h2>
-    <p class="subtitle">Sensitive &mdash; encrypted with critical-tier protection</p>
-
-    <div class="field">
-      <label>Filing Status</label>
-      <span class="status idle"></span>
-      <select data-field="financial.filing_status">
-        <option value="">-</option>
-        <option value="single">Single</option>
-        <option value="married_joint">Married Filing Jointly</option>
-        <option value="married_separate">Married Filing Separately</option>
-        <option value="head_of_household">Head of Household</option>
-        <option value="qualifying_widow">Qualifying Widow(er)</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>SSN</label>
-      <span class="status idle"></span>
-      <div class="input-wrap">
-        <input type="password" data-field="financial.ssn" placeholder="***-**-****" autocomplete="off">
-        <button type="button" class="toggle-vis" data-toggle>show</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 Payment -->
-  <section class="section" data-section="4">
-    <div class="section-number">05</div>
-    <h2>Payment details</h2>
-    <p class="subtitle">Your default payment card</p>
-
-    <div class="field">
-      <label>Card Number</label>
-      <span class="status idle"></span>
-      <div class="input-wrap">
-        <input type="password" data-field="payment.card_number" placeholder="**** **** **** ****" autocomplete="off">
-        <button type="button" class="toggle-vis" data-toggle>show</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Expiry</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="payment.card_expiry" placeholder="MM/YY" autocomplete="cc-exp">
-    </div>
-
-    <div class="field">
-      <label>Cardholder Name</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="payment.cardholder_name" placeholder="Jane Smith" autocomplete="cc-name">
-    </div>
-
-    <div class="field">
-      <label>Card Brand</label>
-      <span class="status idle"></span>
-      <select data-field="payment.card_brand">
-        <option value="">-</option>
-        <option value="Visa">Visa</option>
-        <option value="Mastercard">Mastercard</option>
-        <option value="Amex">American Express</option>
-        <option value="Discover">Discover</option>
-      </select>
-    </div>
-  </section>
-
-  <!-- 06 Preferences -->
-  <section class="section" data-section="5">
-    <div class="section-number">06</div>
-    <h2>Preferences</h2>
-    <p class="subtitle">How you like things set up</p>
-
-    <div class="field">
-      <label>Timezone</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="preferences.timezone" list="tz-list" placeholder="America/New_York" autocomplete="off">
-      <datalist id="tz-list">
-        <option value="America/New_York">
-        <option value="America/Chicago">
-        <option value="America/Denver">
-        <option value="America/Los_Angeles">
-        <option value="America/Anchorage">
-        <option value="Pacific/Honolulu">
-        <option value="America/Toronto">
-        <option value="America/Vancouver">
-        <option value="Europe/London">
-        <option value="Europe/Paris">
-        <option value="Europe/Berlin">
-        <option value="Europe/Amsterdam">
-        <option value="Europe/Rome">
-        <option value="Europe/Madrid">
-        <option value="Europe/Zurich">
-        <option value="Asia/Tokyo">
-        <option value="Asia/Shanghai">
-        <option value="Asia/Hong_Kong">
-        <option value="Asia/Singapore">
-        <option value="Asia/Seoul">
-        <option value="Asia/Kolkata">
-        <option value="Asia/Dubai">
-        <option value="Australia/Sydney">
-        <option value="Australia/Melbourne">
-        <option value="Pacific/Auckland">
-        <option value="America/Sao_Paulo">
-        <option value="America/Mexico_City">
-        <option value="Africa/Johannesburg">
-        <option value="Africa/Lagos">
-      </datalist>
-    </div>
-
-    <div class="field">
-      <label>Language</label>
-      <span class="status idle"></span>
-      <input type="text" data-field="preferences.language" placeholder="en" autocomplete="language">
-    </div>
-  </section>
-
-  <!-- 07 Italia -->
-  <section class="section" data-section="6">
-    <div class="section-number">07</div>
-    <h2>Documenti italiani</h2>
-    <p class="subtitle">Codice fiscale, CIE, residenza and partita IVA — validated as you save</p>
-
     <div class="field">
       <label>Codice fiscale</label>
       <span class="status idle"></span>
       <input type="text" data-field="identity.codice_fiscale" placeholder="RSSMRA85T10A562S" autocapitalize="characters" spellcheck="false">
     </div>
-
     <div class="field-row">
+      <div class="field">
+        <label>Data di nascita</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="identity.date_of_birth" autocomplete="bday">
+      </div>
       <div class="field">
         <label>Sesso</label>
         <span class="status idle"></span>
@@ -524,57 +318,49 @@ body::before{
           <option value="F">F</option>
         </select>
       </div>
-      <div class="field">
-        <label>Cittadinanza</label>
-        <span class="status idle"></span>
-        <input type="text" data-field="identity.citizenship" placeholder="italiana">
-      </div>
     </div>
-
     <div class="field-row">
       <div class="field">
-        <label>Comune di nascita</label>
+        <label>Comune (o Stato estero) di nascita</label>
         <span class="status idle"></span>
         <input type="text" data-field="identity.birth_comune" placeholder="Napoli">
       </div>
       <div class="field">
         <label>Provincia di nascita</label>
         <span class="status idle"></span>
-        <input type="text" data-field="identity.birth_province" placeholder="NA" maxlength="2" autocapitalize="characters">
+        <input type="text" data-field="identity.birth_province" placeholder="NA — EE if born abroad" maxlength="2" autocapitalize="characters">
       </div>
     </div>
+    <div class="field">
+      <label>Cittadinanza</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="identity.citizenship" placeholder="italiana">
+    </div>
+  </section>
+
+  <!-- 02 Residenza -->
+  <section class="section" data-section="1">
+    <div class="section-number">02</div>
+    <h2>Where do you live?</h2>
+    <p class="subtitle">Your residenza anagrafica as registered with the Comune (ANPR). Fill the domicilio only if you live somewhere else.</p>
 
     <div class="field-row">
       <div class="field">
-        <label>Numero CIE</label>
-        <span class="status idle"></span>
-        <input type="text" data-field="cie.numero" placeholder="CA12345AB" autocapitalize="characters" spellcheck="false">
-      </div>
-      <div class="field">
-        <label>Scadenza CIE</label>
-        <span class="status idle"></span>
-        <input type="date" data-field="cie.data_scadenza">
-      </div>
-    </div>
-
-    <div class="field-row">
-      <div class="field">
-        <label>Residenza — via</label>
+        <label>Via / piazza</label>
         <span class="status idle"></span>
         <input type="text" data-field="residenza.indirizzo" placeholder="Via Toledo" autocomplete="address-line1">
       </div>
       <div class="field">
         <label>Civico</label>
         <span class="status idle"></span>
-        <input type="text" data-field="residenza.civico" placeholder="256">
+        <input type="text" data-field="residenza.civico" placeholder="256, scala B, int. 4">
       </div>
     </div>
-
     <div class="field-row">
       <div class="field">
         <label>CAP</label>
         <span class="status idle"></span>
-        <input type="text" data-field="residenza.cap" placeholder="80132" inputmode="numeric" maxlength="5" autocomplete="postal-code">
+        <input type="text" data-field="residenza.cap" placeholder="80134" inputmode="numeric" maxlength="5" autocomplete="postal-code">
       </div>
       <div class="field">
         <label>Comune</label>
@@ -587,7 +373,90 @@ body::before{
         <input type="text" data-field="residenza.provincia" placeholder="NA" maxlength="2" autocapitalize="characters">
       </div>
     </div>
+    <div class="field">
+      <label>Residente dal</label>
+      <span class="status idle"></span>
+      <input type="date" data-field="residenza.data_inizio">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Domicilio — via / piazza</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="domicilio.indirizzo" placeholder="only if different">
+      </div>
+      <div class="field">
+        <label>Civico</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="domicilio.civico">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>CAP</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="domicilio.cap" inputmode="numeric" maxlength="5">
+      </div>
+      <div class="field">
+        <label>Comune</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="domicilio.comune">
+      </div>
+      <div class="field">
+        <label>Provincia</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="domicilio.provincia" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+  </section>
 
+  <!-- 03 Contatti e banca -->
+  <section class="section" data-section="2">
+    <div class="section-number">03</div>
+    <h2>How can you be reached?</h2>
+    <p class="subtitle">Contact details and the IBAN used for refunds (730, INPS) and payments</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Email</label>
+        <span class="status idle"></span>
+        <input type="email" data-field="identity.email" placeholder="mario.rossi@gmail.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Cellulare</label>
+        <span class="status idle"></span>
+        <input type="tel" data-field="identity.phone" placeholder="+39 333 123 4567" autocomplete="tel">
+      </div>
+    </div>
+    <div class="field">
+      <label>PEC personale</label>
+      <span class="status idle"></span>
+      <input type="email" data-field="identity.pec" placeholder="mario.rossi@pec.it">
+    </div>
+    <div class="field">
+      <label>IBAN</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="financial.iban" placeholder="IT60 X054 2811 1010 0000 0123 456" autocapitalize="characters" spellcheck="false">
+    </div>
+  </section>
+
+  <!-- 04 Lavoro -->
+  <section class="section" data-section="3">
+    <div class="section-number">04</div>
+    <h2>What do you do?</h2>
+    <p class="subtitle">Employment, or your partita IVA if you are self-employed</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Datore di lavoro</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="employment.employer" placeholder="Azienda S.r.l." autocomplete="organization">
+      </div>
+      <div class="field">
+        <label>Qualifica / mansione</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="employment.title" placeholder="Impiegato" autocomplete="organization-title">
+      </div>
+    </div>
     <div class="field-row">
       <div class="field">
         <label>Partita IVA</label>
@@ -595,16 +464,65 @@ body::before{
         <input type="text" data-field="business.partita_iva" placeholder="01234567890" inputmode="numeric" spellcheck="false">
       </div>
       <div class="field">
-        <label>PEC</label>
+        <label>Regime fiscale</label>
         <span class="status idle"></span>
-        <input type="email" data-field="business.pec" placeholder="nome@pec.it">
+        <select data-field="business.regime_fiscale">
+          <option value=""></option>
+          <option value="forfettario">Forfettario</option>
+          <option value="ordinario">Ordinario</option>
+          <option value="semplificato">Semplificato</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Codice ATECO</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.codice_ateco" placeholder="62.01.00">
+      </div>
+      <div class="field">
+        <label>PEC aziendale</label>
+        <span class="status idle"></span>
+        <input type="email" data-field="business.pec" placeholder="azienda@pec.it">
       </div>
     </div>
   </section>
 
-  <!-- 08 Documenti -->
-  <section class="section" data-section="7">
-    <div class="section-number">08</div>
+  <!-- 05 CIE -->
+  <section class="section" data-section="4">
+    <div class="section-number">05</div>
+    <h2>Carta d'identità</h2>
+    <p class="subtitle">Electronic identity card. Never enter the PIN or PUK — the vault refuses them.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Numero CIE</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="cie.numero" placeholder="CA12345AB" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Comune di rilascio</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="cie.comune_rilascio" placeholder="Napoli">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Data di rilascio</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="cie.data_rilascio">
+      </div>
+      <div class="field">
+        <label>Scadenza</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="cie.data_scadenza">
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 Documenti -->
+  <section class="section" data-section="5">
+    <div class="section-number">06</div>
     <h2>Altri documenti</h2>
     <p class="subtitle">Numbers and expiry dates — run <code>pvault expiring</code> to see what needs renewing. Store scans with <code>pvault doc add</code>.</p>
 
@@ -670,6 +588,79 @@ body::before{
     </div>
   </section>
 
+  <!-- 07 Pagamento -->
+  <section class="section" data-section="6">
+    <div class="section-number">07</div>
+    <h2>Payment card</h2>
+    <p class="subtitle">Optional — e.g. for pagoPA payments. Critical tier: agents can't read it unless you allow it.</p>
+
+      <div class="field">
+        <label>Numero carta</label>
+        <span class="status idle"></span>
+        <div class="input-wrap">
+          <input type="password" data-field="payment.card_number" placeholder="**** **** **** ****" autocomplete="off">
+          <button type="button" class="toggle-vis" data-toggle>show</button>
+        </div>
+      </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Scadenza</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="payment.card_expiry" placeholder="MM/AA" autocomplete="cc-exp">
+      </div>
+      <div class="field">
+        <label>Intestatario</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="payment.cardholder_name" placeholder="Mario Rossi" autocomplete="cc-name">
+      </div>
+    </div>
+      <div class="field">
+        <label>Circuito</label>
+        <span class="status idle"></span>
+        <select data-field="payment.card_brand">
+          <option value=""></option>
+          <option value="Visa">Visa</option>
+          <option value="Mastercard">Mastercard</option>
+          <option value="Maestro">Maestro</option>
+          <option value="Amex">American Express</option>
+          <option value="Postepay">Postepay</option>
+        </select>
+      </div>
+  </section>
+
+  <!-- 08 Preferenze -->
+  <section class="section" data-section="7">
+    <div class="section-number">08</div>
+    <h2>Preferences</h2>
+    <p class="subtitle">How you like things set up</p>
+
+    <div class="field">
+      <label>Fuso orario</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="preferences.timezone" list="tz-list" placeholder="Europe/Rome" autocomplete="off">
+      <datalist id="tz-list">
+        <option value="Europe/Rome">
+        <option value="Europe/London">
+        <option value="Europe/Paris">
+        <option value="Europe/Berlin">
+        <option value="Europe/Madrid">
+        <option value="Europe/Zurich">
+        <option value="Europe/Amsterdam">
+        <option value="America/New_York">
+        <option value="America/Los_Angeles">
+        <option value="Asia/Dubai">
+        <option value="Asia/Tokyo">
+        <option value="Australia/Sydney">
+      </datalist>
+    </div>
+
+    <div class="field">
+      <label>Lingua</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="preferences.language" placeholder="it" autocomplete="language">
+    </div>
+  </section>
+
   <div class="footer">
     <span class="count" id="filledCount">0</span> of <span id="totalCount">0</span> fields filled
   </div>
@@ -722,8 +713,8 @@ body::before{
   document.getElementById('totalCount').textContent = totalCount;
 
   // Categories to load
-  const categories = ['identity', 'addresses', 'employment', 'financial', 'payment', 'preferences', 'cie', 'residenza', 'business',
-    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente'];
+  const categories = ['identity', 'residenza', 'domicilio', 'financial', 'employment', 'business', 'cie',
+    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'payment', 'preferences'];
 
   // --- API ---
 

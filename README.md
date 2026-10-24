@@ -36,7 +36,8 @@ You need both the profile password and the secret key to unlock. While unlocked,
 |---|---|
 | `identity` | name, `codice_fiscale` (validated), date/place of birth, sex, citizenship |
 | `cie` | `numero` (CA12345AB, validated), issue/expiry date, issuing comune |
-| `residenza` / `domicilio` | via, civico, CAP, comune, provincia |
+| `residenza` / `domicilio` | via, civico, CAP, comune, provincia, residente dal |
+| contacts & bank | `identity.phone` (+39…), `identity.pec`, `financial.iban` (validated) |
 | `nucleo_familiare` | members as `membro<N>_nome`, `membro<N>_codice_fiscale`, … |
 | `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA |
 | `permesso_soggiorno` | numero, tipo, questura, issue/expiry date |

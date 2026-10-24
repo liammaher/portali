@@ -203,3 +203,36 @@ func TestNormalizeAndValidate_CaseInsensitiveRules(t *testing.T) {
 		t.Errorf("mixed-case member codice fiscale sensitivity = %q", got)
 	}
 }
+
+// Vectors cross-checked with an independent mod-97 implementation.
+func TestIBAN(t *testing.T) {
+	ok := map[string]string{
+		"IT60 X054 2811 1010 0000 0123 456": "IT60X0542811101000000123456",
+		"it60x0542811101000000123456":       "IT60X0542811101000000123456",
+		"GB82 WEST 1234 5698 7654 32":       "GB82WEST12345698765432",
+	}
+	for in, want := range ok {
+		got, err := NormalizeAndValidate("financial.iban", in)
+		if err != nil || got != want {
+			t.Errorf("IBAN %q: got %q, %v; want %q", in, got, err, want)
+		}
+	}
+	for _, in := range []string{
+		"IT60X0542811101000000123457", // wrong check digits
+		"IT60X054281110100000012345",  // Italian IBAN too short
+		"60X0542811101000000123456",   // no country code
+		"IT60-X054",                   // too short
+	} {
+		if _, err := NormalizeAndValidate("financial.iban", in); err == nil {
+			t.Errorf("IBAN %q should be rejected", in)
+		}
+	}
+	if got := DefaultSensitivity("financial.iban"); got != "sensitive" {
+		t.Errorf("iban sensitivity = %q", got)
+	}
+	for id, want := range map[string]string{"identity.cellulare": "identity.phone", "financial.conto_corrente": "financial.iban"} {
+		if s := SuggestCanonical(id); s == nil || s.Canonical != want {
+			t.Errorf("SuggestCanonical(%q) = %+v, want %s", id, s, want)
+		}
+	}
+}

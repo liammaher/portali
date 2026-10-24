@@ -87,6 +87,13 @@ var synonyms = map[string]string{
 	"codice_postale":  "cap",
 	"sigla_provincia": "provincia",
 
+	// contacts and bank
+	"cellulare":         "phone",
+	"telefono":          "phone",
+	"posta_certificata": "pec",
+	"conto_corrente":    "iban",
+	"iban_code":         "iban",
+
 	// business
 	"piva":            "partita_iva",
 	"p_iva":           "partita_iva",

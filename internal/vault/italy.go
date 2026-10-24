@@ -63,6 +63,7 @@ var (
 	reCAP        = regexp.MustCompile(`^[0-9]{5}$`)
 	reProvincia  = regexp.MustCompile(`^[A-Z]{2}$`)
 	rePartitaIVA = regexp.MustCompile(`^[0-9]{11}$`)
+	reIBAN       = regexp.MustCompile(`^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$`)
 )
 
 // NormalizeAndValidate applies Italian format rules to a field value based on
@@ -89,6 +90,12 @@ func NormalizeAndValidate(id, value string) (string, error) {
 			return "", &ValidationError{Field: id, Msg: err.Error()}
 		}
 		return piva, nil
+	case hasFieldSuffix(name, "iban"):
+		iban := normalizeCode(value)
+		if err := ValidateIBAN(iban); err != nil {
+			return "", &ValidationError{Field: id, Msg: err.Error()}
+		}
+		return iban, nil
 	case category == "cie" && name == "numero":
 		n := normalizeCode(value)
 		if !reCIENumber.MatchString(n) {
@@ -245,6 +252,34 @@ func ValidatePartitaIVA(piva string) error {
 	}
 	if check := (10 - sum%10) % 10; check != int(piva[10]-'0') {
 		return errors.New("partita IVA check digit does not match")
+	}
+	return nil
+}
+
+// ValidateIBAN checks a normalized IBAN's format, Italian length (27) and
+// ISO 13616 mod-97 check digits.
+func ValidateIBAN(iban string) error {
+	if !reIBAN.MatchString(iban) {
+		return errors.New("IBAN must be a country code, 2 check digits and the account number (e.g. IT60X0542811101000000123456)")
+	}
+	if strings.HasPrefix(iban, "IT") && len(iban) != 27 {
+		return fmt.Errorf("an Italian IBAN has 27 characters, got %d", len(iban))
+	}
+	// Move the first four characters to the end, map letters to 10..35 and
+	// compute the remainder mod 97 digit by digit.
+	rearranged := iban[4:] + iban[:4]
+	rem := 0
+	for i := 0; i < len(rearranged); i++ {
+		c := rearranged[i]
+		if c >= 'A' && c <= 'Z' {
+			v := int(c-'A') + 10
+			rem = (rem*100 + v) % 97
+		} else {
+			rem = (rem*10 + int(c-'0')) % 97
+		}
+	}
+	if rem != 1 {
+		return errors.New("IBAN check digits do not match — check for a typo")
 	}
 	return nil
 }

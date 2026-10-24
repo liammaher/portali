@@ -13,13 +13,16 @@ var onboardFields = []struct {
 	prompt  string
 	fieldID string
 }{
-	{"Full name", "identity.full_name"},
+	{"Nome", "identity.first_name"},
+	{"Cognome", "identity.last_name"},
+	{"Codice fiscale", "identity.codice_fiscale"},
 	{"Email", "identity.email"},
-	{"City", "addresses.home_city"},
-	{"State", "addresses.home_state"},
-	{"ZIP", "addresses.home_zip"},
-	{"Country", "addresses.home_country"},
-	{"Timezone", "preferences.timezone"},
+	{"Cellulare (+39 ...)", "identity.phone"},
+	{"Residenza — via / piazza", "residenza.indirizzo"},
+	{"Civico", "residenza.civico"},
+	{"CAP", "residenza.cap"},
+	{"Comune", "residenza.comune"},
+	{"Provincia (sigla, e.g. NA)", "residenza.provincia"},
 }
 
 func cmdOnboard() {
@@ -97,9 +100,8 @@ func cmdOnboard() {
 			fmt.Fprintf(os.Stderr, "  Warning: could not save %s: %v\n", f.fieldID, err)
 			continue
 		}
-		resp.Body.Close()
-		if resp.StatusCode >= 400 {
-			fmt.Fprintf(os.Stderr, "  Warning: could not save %s (HTTP %d)\n", f.fieldID, resp.StatusCode)
+		if err := apiResult(resp, nil); err != nil {
+			fmt.Fprintf(os.Stderr, "  Warning: could not save %s: %v\n", f.fieldID, err)
 			continue
 		}
 		saved++

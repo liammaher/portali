@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "3",
+	Version: "4",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -34,7 +34,8 @@ var RecommendedSchema = Schema{
 				{ID: "identity.last_name", Description: "Last/family name", Sensitivity: "standard"},
 				{ID: "identity.full_name", Description: "Full display name", Sensitivity: "standard"},
 				{ID: "identity.email", Description: "Primary email address", Sensitivity: "standard"},
-				{ID: "identity.phone", Description: "Phone number", Sensitivity: "sensitive"},
+				{ID: "identity.phone", Description: "Mobile number with country code (e.g. +39 333 123 4567)", Sensitivity: "sensitive"},
+				{ID: "identity.pec", Description: "Personal PEC (posta elettronica certificata) address", Sensitivity: "standard"},
 				{ID: "identity.date_of_birth", Description: "Date of birth", Sensitivity: "sensitive"},
 				{ID: "identity.codice_fiscale", Description: "Italian codice fiscale (16 characters, validated)", Sensitivity: "sensitive"},
 				{ID: "identity.sex", Description: "Sex as on Italian documents (M or F)", Sensitivity: "standard"},
@@ -146,21 +147,22 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "addresses",
-			Description: "Physical addresses",
+			Description: "Other or foreign addresses (e.g. a previous address abroad). For your Italian address use residenza and domicilio.",
 			Fields: []SchemaField{
 				{ID: "addresses.home_street", Description: "Home street address", Sensitivity: "sensitive"},
 				{ID: "addresses.home_city", Description: "Home city", Sensitivity: "standard"},
-				{ID: "addresses.home_state", Description: "Home state or province", Sensitivity: "standard"},
-				{ID: "addresses.home_zip", Description: "Home ZIP or postal code", Sensitivity: "standard"},
-				{ID: "addresses.home_country", Description: "Home country code (e.g. US)", Sensitivity: "standard"},
+				{ID: "addresses.home_state", Description: "Region, county or state", Sensitivity: "standard"},
+				{ID: "addresses.home_zip", Description: "Postal code", Sensitivity: "standard"},
+				{ID: "addresses.home_country", Description: "Country code (e.g. GB)", Sensitivity: "standard"},
 			},
 		},
 		{
 			Name:        "financial",
 			Description: "Financial and tax information",
 			Fields: []SchemaField{
-				{ID: "financial.filing_status", Description: "Tax filing status", Sensitivity: "sensitive"},
-				{ID: "financial.ssn", Description: "Social Security Number", Sensitivity: "critical"},
+				{ID: "financial.iban", Description: "IBAN for refunds (730, INPS) and payments (validated; spaces removed)", Sensitivity: "sensitive"},
+				{ID: "financial.filing_status", Description: "US tax filing status (US taxpayers only)", Sensitivity: "sensitive"},
+				{ID: "financial.ssn", Description: "US Social Security Number (US taxpayers only)", Sensitivity: "critical"},
 			},
 		},
 		{
@@ -177,8 +179,8 @@ var RecommendedSchema = Schema{
 			Name:        "preferences",
 			Description: "User preferences",
 			Fields: []SchemaField{
-				{ID: "preferences.timezone", Description: "Preferred timezone (e.g. America/New_York)", Sensitivity: "public"},
-				{ID: "preferences.language", Description: "Preferred language (e.g. en)", Sensitivity: "public"},
+				{ID: "preferences.timezone", Description: "Preferred timezone (e.g. Europe/Rome)", Sensitivity: "public"},
+				{ID: "preferences.language", Description: "Preferred language (e.g. it, en)", Sensitivity: "public"},
 			},
 		},
 		{
