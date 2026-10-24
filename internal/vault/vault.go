@@ -61,6 +61,8 @@ const (
 	DefaultServiceTokenMaxSensitivity = "sensitive"
 	// minTokenPrefixLen is the shortest hash prefix accepted for revocation.
 	minTokenPrefixLen = 8
+	// MaxSessionGrantTTL caps password-gated session grants.
+	MaxSessionGrantTTL = time.Hour
 )
 
 // Vault is the main entry point for vault operations.
@@ -154,54 +156,9 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 		return "", ErrAlreadyUnlocked
 	}
 
-	init, err := v.db.IsInitialized()
+	vaultKey, salt, err := v.verifyCredentials(password, secretKeyHex)
 	if err != nil {
 		return "", err
-	}
-	if !init {
-		return "", ErrNotInitialized
-	}
-
-	// Load salt
-	saltB64, err := v.db.GetMeta("salt")
-	if err != nil {
-		return "", err
-	}
-	salt, err := base64.StdEncoding.DecodeString(saltB64)
-	if err != nil {
-		return "", fmt.Errorf("decode salt: %w", err)
-	}
-
-	// Decode secret key
-	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
-	if err != nil {
-		return "", fmt.Errorf("decode secret key: %w", err)
-	}
-
-	// Verify secret key hash
-	storedHash, err := v.db.GetMeta("secret_key_hash")
-	if err != nil {
-		return "", err
-	}
-	actualHash := hex.EncodeToString(crypto.HashSecretKey(sk))
-	if subtle.ConstantTimeCompare([]byte(storedHash), []byte(actualHash)) != 1 {
-		return "", ErrWrongPassword
-	}
-
-	// Derive vault key
-	vaultKey := crypto.DeriveVaultKey([]byte(password), sk, salt)
-
-	// Verify with stored ciphertext
-	verifyCipher, err := v.db.GetMeta("verification")
-	if err != nil {
-		return "", err
-	}
-	plaintext, err := crypto.DecryptFromBase64(vaultKey, verifyCipher)
-	if err != nil {
-		return "", ErrWrongPassword
-	}
-	if string(plaintext) != "personal-vault-verification" {
-		return "", ErrWrongPassword
 	}
 
 	// Store salt for HKDF subkey derivation
@@ -227,6 +184,96 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "unlock"})
 
 	return session.Token(), nil
+}
+
+// verifyCredentials checks the password and secret key and returns the
+// derived vault key and salt. The caller must zero the key.
+func (v *Vault) verifyCredentials(password, secretKeyHex string) (vaultKey, salt []byte, err error) {
+	init, err := v.db.IsInitialized()
+	if err != nil {
+		return nil, nil, err
+	}
+	if !init {
+		return nil, nil, ErrNotInitialized
+	}
+
+	// Load salt
+	saltB64, err := v.db.GetMeta("salt")
+	if err != nil {
+		return nil, nil, err
+	}
+	salt, err = base64.StdEncoding.DecodeString(saltB64)
+	if err != nil {
+		return nil, nil, fmt.Errorf("decode salt: %w", err)
+	}
+
+	// Decode secret key
+	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
+	if err != nil {
+		return nil, nil, ErrWrongPassword
+	}
+
+	// Verify secret key hash
+	storedHash, err := v.db.GetMeta("secret_key_hash")
+	if err != nil {
+		return nil, nil, err
+	}
+	actualHash := hex.EncodeToString(crypto.HashSecretKey(sk))
+	if subtle.ConstantTimeCompare([]byte(storedHash), []byte(actualHash)) != 1 {
+		return nil, nil, ErrWrongPassword
+	}
+
+	// Derive vault key
+	vaultKey = crypto.DeriveVaultKey([]byte(password), sk, salt)
+
+	// Verify with stored ciphertext
+	verifyCipher, err := v.db.GetMeta("verification")
+	if err != nil {
+		return nil, nil, err
+	}
+	plaintext, err := crypto.DecryptFromBase64(vaultKey, verifyCipher)
+	if err != nil || string(plaintext) != "personal-vault-verification" {
+		for i := range vaultKey {
+			vaultKey[i] = 0
+		}
+		return nil, nil, ErrWrongPassword
+	}
+	return vaultKey, salt, nil
+}
+
+// CreateSessionGrant re-checks the user's password and secret key against an
+// unlocked vault and issues a short-lived session-level token. This is how
+// the CLI authenticates each command, so no reusable token is stored on disk
+// where an agent with shell access could read it.
+func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Duration) (string, time.Time, error) {
+	if ttl <= 0 || ttl > MaxSessionGrantTTL {
+		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxSessionGrantTTL)}
+	}
+	v.mu.RLock()
+	session := v.session
+	v.mu.RUnlock()
+	if session == nil {
+		return "", time.Time{}, ErrLocked
+	}
+
+	vaultKey, _, err := v.verifyCredentials(password, secretKeyHex)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	for i := range vaultKey {
+		vaultKey[i] = 0
+	}
+
+	token, expires, err := session.AddGrant(ttl)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	if token == "" {
+		return "", time.Time{}, ErrLocked
+	}
+	session.Touch()
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()})
+	return token, expires, nil
 }
 
 // Lock destroys the session and zeroes the vault key.

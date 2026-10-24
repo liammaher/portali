@@ -92,6 +92,54 @@ func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"token": token})
 }
 
+// POST /vault/session
+// Exchanges the password and secret key for a short-lived session-level token
+// on an already unlocked vault. The CLI calls this per command instead of
+// storing a reusable token on disk.
+func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
+	if !s.grantLimit.allow() {
+		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many attempts, try again later")
+		return
+	}
+
+	var req struct {
+		Password  string `json:"password"`
+		SecretKey string `json:"secret_key"`
+		TTL       string `json:"ttl"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+		return
+	}
+	if req.Password == "" || req.SecretKey == "" {
+		writeError(w, http.StatusBadRequest, "invalid_request", "password and secret_key required")
+		return
+	}
+	ttl := 2 * time.Minute
+	if req.TTL != "" {
+		parsed, err := time.ParseDuration(req.TTL)
+		if err != nil {
+			writeError(w, http.StatusBadRequest, "invalid_request", "invalid ttl duration")
+			return
+		}
+		ttl = parsed
+	}
+
+	token, expires, err := s.vault.CreateSessionGrant(req.Password, req.SecretKey, ttl)
+	if err != nil {
+		if err == vault.ErrWrongPassword {
+			writeError(w, http.StatusUnauthorized, "unauthenticated", "wrong password or secret key")
+			return
+		}
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{
+		"token":      token,
+		"expires_at": expires.UTC().Format(time.RFC3339),
+	})
+}
+
 // POST /vault/lock
 func (s *Server) handleLock(w http.ResponseWriter, r *http.Request) {
 	if !isSessionAuth(r) {

@@ -30,7 +30,9 @@ func serverAddr() string {
 	return "http://127.0.0.1:7200"
 }
 
-func sessionPath() string {
+// legacySessionPath is where older versions stored the session token.
+// It is no longer written; any leftover file is removed on serve and lock.
+func legacySessionPath() string {
 	return filepath.Join(vaultDir(), ".session")
 }
 
@@ -42,20 +44,8 @@ func secretKeyPath() string {
 	return filepath.Join(vaultDir(), "secret.key")
 }
 
-func readSessionToken() (string, error) {
-	data, err := os.ReadFile(sessionPath())
-	if err != nil {
-		return "", fmt.Errorf("vault is not unlocked (no session file)")
-	}
-	return strings.TrimSpace(string(data)), nil
-}
-
-func writeSessionToken(token string) error {
-	return os.WriteFile(sessionPath(), []byte(token+"\n"), 0600)
-}
-
-func removeSessionToken() {
-	os.Remove(sessionPath())
+func removeLegacySessionFile() {
+	os.Remove(legacySessionPath())
 }
 
 func readSecretKey() (string, error) {
@@ -92,8 +82,76 @@ func promptPassword(prompt string) (string, error) {
 	return string(pw), nil
 }
 
-// apiRequest makes an authenticated HTTP request to the vault server.
+// cliToken caches this process's session grant so multi-step commands
+// (e.g. onboard) only ask for the password once. It is never written to disk.
+var cliToken string
+
+// requestGrant exchanges the password and secret key for a short-lived
+// session-level token from the running vault server.
+func requestGrant(password, secretKey, ttl string) (string, error) {
+	resp, err := publicRequest("POST", "/vault/session", map[string]string{
+		"password":   password,
+		"secret_key": secretKey,
+		"ttl":        ttl,
+	})
+	if err != nil {
+		return "", fmt.Errorf("cannot reach vault server — run 'pvault unlock'")
+	}
+	var result struct {
+		Token string `json:"token"`
+	}
+	if err := apiResult(resp, &result); err != nil {
+		return "", err
+	}
+	return result.Token, nil
+}
+
+// promptGrant asks for the profile password and returns a session grant.
+// The password can only be typed in an interactive terminal, so an agent
+// running pvault through a shell tool cannot authenticate as the user.
+func promptGrant(ttl string) (string, error) {
+	if !term.IsTerminal(int(syscall.Stdin)) {
+		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal")
+	}
+	pw, err := promptPassword("Profile password: ")
+	if err != nil {
+		return "", fmt.Errorf("reading password: %w", err)
+	}
+	sk, err := readSecretKey()
+	if err != nil {
+		return "", err
+	}
+	return requestGrant(pw, sk, ttl)
+}
+
+// sessionToken returns this process's session grant, prompting once.
+func sessionToken() (string, error) {
+	if cliToken == "" {
+		token, err := promptGrant("2m")
+		if err != nil {
+			return "", err
+		}
+		cliToken = token
+	}
+	return cliToken, nil
+}
+
+// apiRequest makes an authenticated HTTP request to the vault server,
+// asking for the profile password if this process has no grant yet.
 func apiRequest(method, path string, body any) (*http.Response, error) {
+	token, err := sessionToken()
+	if err != nil {
+		return nil, err
+	}
+	return doRequest(method, path, body, token)
+}
+
+// publicRequest makes an unauthenticated HTTP request (status, unlock, session).
+func publicRequest(method, path string, body any) (*http.Response, error) {
+	return doRequest(method, path, body, "")
+}
+
+func doRequest(method, path string, body any, token string) (*http.Response, error) {
 	var bodyReader io.Reader
 	if body != nil {
 		buf, _ := json.Marshal(body)
@@ -107,8 +165,7 @@ func apiRequest(method, path string, body any) (*http.Response, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	token, err := readSessionToken()
-	if err == nil {
+	if token != "" {
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
 

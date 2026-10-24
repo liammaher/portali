@@ -2,6 +2,7 @@ package vault
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/hex"
 	"sync"
@@ -18,6 +19,10 @@ type Session struct {
 	timer    *time.Timer
 	lockFn   func()
 	ttl      time.Duration
+	// grants are short-lived session-level tokens issued after the user
+	// re-enters their password, keyed by SHA-256 of the token. They live only
+	// in memory and are dropped on lock.
+	grants map[string]time.Time
 }
 
 // NewSession creates a session with the given vault key and auto-lock callback.
@@ -61,14 +66,51 @@ func (s *Session) VaultKey() []byte {
 	return cp
 }
 
-// ValidateToken checks a token using constant-time comparison.
+// ValidateToken checks the unlock token (constant-time) or an unexpired grant.
 func (s *Session) ValidateToken(token string) bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.token == "" {
 		return false
 	}
-	return subtle.ConstantTimeCompare([]byte(s.token), []byte(token)) == 1
+	if subtle.ConstantTimeCompare([]byte(s.token), []byte(token)) == 1 {
+		return true
+	}
+	expires, ok := s.grants[hashGrant(token)]
+	return ok && time.Now().Before(expires)
+}
+
+// AddGrant issues a short-lived session-level token. Returns "" if the
+// session has been destroyed.
+func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
+	tokenBytes := make([]byte, 32)
+	if _, err := rand.Read(tokenBytes); err != nil {
+		return "", time.Time{}, err
+	}
+	token := hex.EncodeToString(tokenBytes)
+	expires := time.Now().Add(ttl)
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.token == "" {
+		return "", time.Time{}, nil
+	}
+	now := time.Now()
+	for k, exp := range s.grants {
+		if now.After(exp) {
+			delete(s.grants, k)
+		}
+	}
+	if s.grants == nil {
+		s.grants = make(map[string]time.Time)
+	}
+	s.grants[hashGrant(token)] = expires
+	return token, expires, nil
+}
+
+func hashGrant(token string) string {
+	h := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(h[:])
 }
 
 // Touch resets the auto-lock timer.
@@ -86,6 +128,7 @@ func (s *Session) Destroy() {
 	defer s.mu.Unlock()
 	s.zeroKey()
 	s.token = ""
+	s.grants = nil
 	if s.timer != nil {
 		s.timer.Stop()
 		s.timer = nil
@@ -96,6 +139,7 @@ func (s *Session) autoLock() {
 	s.mu.Lock()
 	s.zeroKey()
 	s.token = ""
+	s.grants = nil
 	s.timer = nil
 	lockFn := s.lockFn
 	s.mu.Unlock()

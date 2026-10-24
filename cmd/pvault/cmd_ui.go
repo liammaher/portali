@@ -7,17 +7,18 @@ import (
 )
 
 func cmdUI() {
-	token, err := readSessionToken()
-	if err != nil {
-		fatal("vault is not unlocked — run 'pvault unlock' first")
-	}
-
-	// Verify vault is reachable and unlocked
-	resp, err := apiRequest("GET", "/vault/status", nil)
+	// Verify vault is reachable before asking for the password
+	resp, err := publicRequest("GET", "/vault/status", nil)
 	if err != nil {
 		fatal("cannot reach vault server — is it running? Try 'pvault unlock'")
 	}
 	resp.Body.Close()
+
+	// The page gets its own short-lived grant; rerun 'pvault ui' after it expires.
+	token, err := promptGrant("15m")
+	if err != nil {
+		fatal("%v", err)
+	}
 
 	url := serverAddr() + "/ui#token=" + token
 

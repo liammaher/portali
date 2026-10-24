@@ -55,10 +55,12 @@ func cmdServe() {
 		}
 	}
 
-	token, err := v.Unlock(pw, sk)
-	if err != nil {
+	// The unlock token stays in this process only. CLI commands get their
+	// own password-gated grants, so nothing reusable is written to disk.
+	if _, err := v.Unlock(pw, sk); err != nil {
 		fatal("unlock: %v", err)
 	}
+	removeLegacySessionFile()
 
 	// Note: Go strings are immutable; setting pw="" does not zero heap memory.
 	// Accept this limitation — use []byte for passwords if zeroing is critical.
@@ -74,13 +76,6 @@ func cmdServe() {
 		fatal("start server: %v", err)
 	}
 
-	// Write session token only after server binds successfully.
-	// Writing before srv.Start() causes token mismatch if the port is occupied
-	// by a stale process — the file gets a new token while the old server
-	// still holds the previous one.
-	if err := writeSessionToken(token); err != nil {
-		fatal("write session: %v", err)
-	}
 	fmt.Fprintf(os.Stderr, "Vault server listening on %s\n", ln.Addr())
 
 	// Wait for signal
@@ -91,6 +86,6 @@ func cmdServe() {
 	fmt.Fprintln(os.Stderr, "\nShutting down...")
 	v.Lock()
 	srv.Stop(context.Background())
-	removeSessionToken()
+	removeLegacySessionFile()
 	removePID()
 }

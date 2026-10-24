@@ -14,3 +14,6 @@ mcp/node_modules/
 mcp/dist/
 examples/*/node_modules/
 .vercel
+
+# Built binaries belong in bin/ (make build), never in the repo root
+/pvault

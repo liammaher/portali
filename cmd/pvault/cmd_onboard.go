@@ -100,7 +100,7 @@ func cmdOnboard() {
 			fmt.Println("Vault server started (could not verify status).")
 			return
 		default:
-			resp, err := apiRequest("GET", "/vault/status", nil)
+			resp, err := publicRequest("GET", "/vault/status", nil)
 			if err == nil {
 				var status struct {
 					Locked bool `json:"locked"`
@@ -120,6 +120,13 @@ func cmdOnboard() {
 
 	fmt.Printf("Vault unlocked. Server running on %s\n", serverAddr())
 	fmt.Println()
+
+	// Reuse the credentials just entered for a grant covering the prompts below.
+	token, err := requestGrant(pw, sk, "10m")
+	if err != nil {
+		fatal("authenticating: %v", err)
+	}
+	cliToken = token
 
 	// Prompt for common fields
 	fmt.Println("Let's add some basics (press Enter to skip any):")

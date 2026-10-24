@@ -53,6 +53,7 @@ type Server struct {
 	handler     http.Handler // full chain: bodySizeMiddleware → mux
 	server      *http.Server
 	unlockLimit *rateLimiter
+	grantLimit  *rateLimiter
 }
 
 // New creates a new API server.
@@ -60,6 +61,7 @@ func New(v *vault.Vault, addr string) *Server {
 	s := &Server{
 		vault:       v,
 		unlockLimit: newRateLimiter(5, time.Minute),
+		grantLimit:  newRateLimiter(10, time.Minute),
 	}
 	s.mux = http.NewServeMux()
 	s.registerRoutes()
@@ -78,6 +80,7 @@ func (s *Server) registerRoutes() {
 		http.Redirect(w, r, "/ui", http.StatusMovedPermanently)
 	})
 	s.mux.HandleFunc("POST /vault/unlock", s.handleUnlock)
+	s.mux.HandleFunc("POST /vault/session", s.handleSessionGrant)
 	s.mux.HandleFunc("GET /vault/status", s.handleStatus)
 	s.mux.HandleFunc("GET /vault/schema", s.handleSchema)
 

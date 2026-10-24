@@ -21,6 +21,8 @@ pvault unlock         # Start server at localhost:7200, prompts for password
 
 Save your secret key somewhere safe. You need both the profile password and the secret key to unlock the vault.
 
+While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory (`pvault ui` gets a 15-minute one). No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password.
+
 ## Fields
 
 Fields use dot notation: `category.field_name`.
@@ -86,6 +88,7 @@ The vault runs at `http://127.0.0.1:7200`. All protected endpoints require `Auth
 GET  /vault/status                       # { initialized, locked, field_count, categories }
 GET  /vault/schema                       # Recommended field names and sensitivity tiers
 POST /vault/unlock                       # { password, secret_key } → { token }
+POST /vault/session                      # { password, secret_key, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
 ```
 
 ### Fields
@@ -173,6 +176,5 @@ Profile Password + Secret Key (128-bit)
 ~/.pvault/
 ├── vault.db       # SQLite database (encrypted fields)
 ├── secret.key     # 128-bit secret key (mode 0600)
-├── .session       # Session token (created on unlock)
 └── pvault.pid     # PID of running server
 ```

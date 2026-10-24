@@ -86,7 +86,7 @@ func cmdUnlock() {
 			fmt.Println("Vault server started (could not verify status).")
 			return
 		default:
-			resp, err := apiRequest("GET", "/vault/status", nil)
+			resp, err := publicRequest("GET", "/vault/status", nil)
 			if err == nil {
 				var status struct {
 					Locked bool `json:"locked"`
@@ -119,7 +119,7 @@ func portHasVault() bool {
 }
 
 func isVaultUnlocked() bool {
-	resp, err := apiRequest("GET", "/vault/status", nil)
+	resp, err := publicRequest("GET", "/vault/status", nil)
 	if err != nil {
 		return false
 	}
@@ -138,7 +138,7 @@ func reUnlock(password, secretKey string) {
 		"password":   password,
 		"secret_key": secretKey,
 	}
-	resp, err := apiRequest("POST", "/vault/unlock", body)
+	resp, err := publicRequest("POST", "/vault/unlock", body)
 	if err != nil {
 		fatal("re-unlock request: %v", err)
 	}
@@ -153,12 +153,7 @@ func reUnlock(password, secretKey string) {
 	if resp.StatusCode >= 400 {
 		fatal("unlock failed: %s", result.Error)
 	}
-	if result.Token == "" {
-		fatal("unlock returned no token")
-	}
-
-	if err := writeSessionToken(result.Token); err != nil {
-		fatal("write session: %v", err)
-	}
+	// The unlock token is deliberately discarded: CLI commands authenticate
+	// with a fresh password-gated grant instead of a stored token.
 	fmt.Println("Vault unlocked. Server running on", serverAddr())
 }

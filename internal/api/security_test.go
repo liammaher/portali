@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -196,4 +197,83 @@ func TestRevokeServiceToken_ShortPrefixRejected(t *testing.T) {
 	if w.Code != 404 {
 		t.Fatalf("short prefix: expected 404, got %d: %s", w.Code, w.Body.String())
 	}
+}
+
+func TestSessionGrant_API(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+
+	w := env.doRequest(t, "POST", "/vault/session", map[string]string{
+		"password": testPassword, "secret_key": sk, "ttl": "1m",
+	}, false)
+	if w.Code != 200 {
+		t.Fatalf("expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	var resp map[string]string
+	json.NewDecoder(w.Body).Decode(&resp)
+	grant := resp["token"]
+	if grant == "" || resp["expires_at"] == "" {
+		t.Fatalf("missing token or expiry: %v", resp)
+	}
+
+	// A grant has full session rights, e.g. creating service tokens.
+	w = env.doRequestWithToken(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "a", "scope": "*"}, grant)
+	if w.Code != 200 {
+		t.Fatalf("grant as session: expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+
+	w = env.doRequest(t, "POST", "/vault/session", map[string]string{
+		"password": "wrong", "secret_key": sk,
+	}, false)
+	if w.Code != 401 {
+		t.Fatalf("wrong password: expected 401, got %d", w.Code)
+	}
+	w = env.doRequest(t, "POST", "/vault/session", map[string]string{
+		"password": testPassword, "secret_key": sk, "ttl": "24h",
+	}, false)
+	if w.Code != 400 {
+		t.Fatalf("ttl above max: expected 400, got %d", w.Code)
+	}
+}
+
+func TestSessionGrant_Locked(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	env.vault.Lock()
+	w := env.doRequest(t, "POST", "/vault/session", map[string]string{
+		"password": testPassword, "secret_key": sk,
+	}, false)
+	if w.Code != 403 {
+		t.Fatalf("locked: expected 403, got %d: %s", w.Code, w.Body.String())
+	}
+}
+
+func TestSessionGrant_RateLimited(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	var last int
+	for i := 0; i < 11; i++ {
+		last = env.doRequest(t, "POST", "/vault/session", map[string]string{
+			"password": "wrong", "secret_key": sk,
+		}, false).Code
+	}
+	if last != 429 {
+		t.Fatalf("expected 429 after 10 attempts, got %d", last)
+	}
+}
+
+func setupWithSecretKey(t *testing.T) (*testEnv, string) {
+	t.Helper()
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	sk, err := vault.Init(dir, testPassword)
+	if err != nil {
+		t.Fatal(err)
+	}
+	v, err := vault.Open(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { v.Close() })
+	token, err := v.Unlock(testPassword, sk)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return &testEnv{server: New(v, ":0"), vault: v, token: token}, sk
 }

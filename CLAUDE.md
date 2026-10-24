@@ -61,12 +61,15 @@ Profile Password + Secret Key (128-bit)
 - App-layer encryption: encrypt before INSERT, decrypt after SELECT
 - Vault key exists only in memory while unlocked
 - Auto-lock after 30 min idle
-- Session token: 32 bytes crypto/rand, constant-time comparison
+- Session token: 32 bytes crypto/rand, constant-time comparison; never written to disk
+- CLI auth: each command re-enters the password (interactive TTY only) and
+  exchanges it via `POST /vault/session` for an in-memory grant (2m CLI,
+  15m UI, max 1h), cleared on lock. Rate-limited to 10/min.
 - Secret key at `~/.pvault/secret.key` (0600), never in database
 - Service tokens: explicit scope required, TTL 24h default / 90d max,
   `max_sensitivity` cap (default `sensitive`), cannot change tiers,
   and never reset the auto-lock timer (only session activity does)
-- MCP server uses only `VAULT_TOKEN`; it never reads `.session`
+- MCP server uses only `VAULT_TOKEN`
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID credentials and CIE PIN/PUK are rejected
 

@@ -487,3 +487,58 @@ func TestTierAllows(t *testing.T) {
 		}
 	}
 }
+
+func TestCreateSessionGrant(t *testing.T) {
+	v, sk := tmpVault(t)
+
+	token, expires, err := v.CreateSessionGrant(testPassword, sk, time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !v.ValidateToken(token) {
+		t.Fatal("grant should validate as a session token")
+	}
+	if time.Until(expires) > time.Minute {
+		t.Fatalf("expiry too far out: %v", expires)
+	}
+	if _, ok := v.ValidateServiceToken(token); ok {
+		t.Fatal("grant must not validate as a service token")
+	}
+
+	if _, _, err := v.CreateSessionGrant("wrong-password", sk, time.Minute); err != ErrWrongPassword {
+		t.Fatalf("wrong password: got %v", err)
+	}
+	if _, _, err := v.CreateSessionGrant(testPassword, "00", time.Minute); err != ErrWrongPassword {
+		t.Fatalf("wrong secret key: got %v", err)
+	}
+	if _, _, err := v.CreateSessionGrant(testPassword, sk, 2*time.Hour); err == nil {
+		t.Fatal("ttl above max should be rejected")
+	}
+}
+
+func TestSessionGrant_Expires(t *testing.T) {
+	v, sk := tmpVault(t)
+	token, _, err := v.CreateSessionGrant(testPassword, sk, 50*time.Millisecond)
+	if err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(100 * time.Millisecond)
+	if v.ValidateToken(token) {
+		t.Fatal("expired grant should not validate")
+	}
+}
+
+func TestSessionGrant_ClearedOnLock(t *testing.T) {
+	v, sk := tmpVault(t)
+	token, _, _ := v.CreateSessionGrant(testPassword, sk, time.Minute)
+	v.Lock()
+	if _, _, err := v.CreateSessionGrant(testPassword, sk, time.Minute); err != ErrLocked {
+		t.Fatalf("grant on locked vault: got %v", err)
+	}
+	if _, err := v.Unlock(testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	if v.ValidateToken(token) {
+		t.Fatal("grant from before lock must not survive unlock")
+	}
+}

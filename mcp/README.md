@@ -38,7 +38,7 @@ The MCP server only uses a service token you create and pass in `VAULT_TOKEN`:
 pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h
 ```
 
-It never reads `~/.pvault/.session`. That token has full, uncapped access, so using it would bypass the scope and sensitivity limits. The server refuses to start without `VAULT_TOKEN`.
+It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start without `VAULT_TOKEN`.
 
 The token keeps working across vault lock/unlock cycles until it expires or is revoked.
 

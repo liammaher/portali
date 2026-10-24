@@ -104,6 +104,7 @@ The vault runs at `http://127.0.0.1:7200`. Protected endpoints require `Authoriz
 GET    /vault/status                    # Vault status (public)
 GET    /ui                              # Onboarding form (public)
 POST   /vault/unlock                    # Unlock → session token
+POST   /vault/session                   # { password, secret_key, ttl? } → short-lived session grant (max 1h)
 
 GET    /vault/fields                    # List field metadata
 GET    /vault/fields/{id}               # Get field with decrypted value
@@ -163,9 +164,10 @@ Default is `standard` for new fields.
 ~/.pvault/
 ├── vault.db       # SQLite (encrypted fields, audit log)
 ├── secret.key     # 128-bit secret key (mode 0600)
-├── .session       # Session token (created on unlock)
 └── pvault.pid     # PID of running server
 ```
+
+No session token is stored on disk. Each CLI command asks for your profile password and gets a 2-minute grant from the running server, held only in memory. Agents running `pvault` through a shell tool cannot type the password, so they can't use your session. `pvault status` and `pvault lock` work without it.
 
 Pure Go. No CGO. Single binary. Runs on localhost. SQLite via [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite).
 

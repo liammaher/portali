@@ -7,7 +7,7 @@ import (
 )
 
 func cmdStatus() {
-	resp, err := apiRequest("GET", "/vault/status", nil)
+	resp, err := publicRequest("GET", "/vault/status", nil)
 	if err != nil {
 		fmt.Println("Vault is locked (server not running).")
 		return
