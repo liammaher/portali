@@ -7,13 +7,19 @@ import (
 )
 
 func cmdCreateServiceToken() {
+	const usage = "usage: pvault create-service-token <consumer> --scope <patterns> [--ttl duration] [--max-sensitivity tier]\n" +
+		"  example: pvault create-service-token tari-agent --scope \"identity.*,residenza.*\" --ttl 2h\n" +
+		"  --scope is required; pass \"*\" explicitly for full access.\n" +
+		"  --ttl defaults to 24h (max 2160h = 90 days).\n" +
+		"  --max-sensitivity defaults to sensitive; use critical only for agents that must read critical fields."
 	if len(os.Args) < 3 {
-		fatal("usage: pvault create-service-token <consumer> [--scope categories] [--ttl duration]")
+		fatal(usage)
 	}
 
 	consumer := os.Args[2]
-	scope := "*"
-	ttl := "8760h" // 1 year
+	scope := ""
+	ttl := "24h"
+	maxSensitivity := ""
 
 	for i := 3; i < len(os.Args); i++ {
 		switch os.Args[i] {
@@ -27,30 +33,41 @@ func cmdCreateServiceToken() {
 				ttl = os.Args[i+1]
 				i++
 			}
+		case "--max-sensitivity":
+			if i+1 < len(os.Args) {
+				maxSensitivity = os.Args[i+1]
+				i++
+			}
 		}
+	}
+	if scope == "" {
+		fatal(usage)
 	}
 
 	resp, err := apiRequest("POST", "/vault/tokens/service", map[string]string{
-		"consumer": consumer,
-		"scope":    scope,
-		"ttl":      ttl,
+		"consumer":        consumer,
+		"scope":           scope,
+		"ttl":             ttl,
+		"max_sensitivity": maxSensitivity,
 	})
 	if err != nil {
 		fatal("request failed: %v", err)
 	}
 
 	var result struct {
-		Token     string `json:"token"`
-		ExpiresAt string `json:"expires_at"`
+		Token          string `json:"token"`
+		MaxSensitivity string `json:"max_sensitivity"`
+		ExpiresAt      string `json:"expires_at"`
 	}
 	if err := apiResult(resp, &result); err != nil {
 		fatal("%v", err)
 	}
 
 	fmt.Printf("Service token created for %q\n", consumer)
-	fmt.Printf("Token:   %s\n", result.Token)
-	fmt.Printf("Scope:   %s\n", scope)
-	fmt.Printf("Expires: %s\n", result.ExpiresAt)
+	fmt.Printf("Token:           %s\n", result.Token)
+	fmt.Printf("Scope:           %s\n", scope)
+	fmt.Printf("Max sensitivity: %s\n", result.MaxSensitivity)
+	fmt.Printf("Expires:         %s\n", result.ExpiresAt)
 	fmt.Println("\nSave this token — it cannot be displayed again.")
 }
 
@@ -61,11 +78,12 @@ func cmdListServiceTokens() {
 	}
 
 	var tokens []struct {
-		TokenPrefix string `json:"token_prefix"`
-		Consumer    string `json:"consumer"`
-		Scope       string `json:"scope"`
-		ExpiresAt   string `json:"expires_at"`
-		CreatedAt   string `json:"created_at"`
+		TokenPrefix    string `json:"token_prefix"`
+		Consumer       string `json:"consumer"`
+		Scope          string `json:"scope"`
+		MaxSensitivity string `json:"max_sensitivity"`
+		ExpiresAt      string `json:"expires_at"`
+		CreatedAt      string `json:"created_at"`
 	}
 	if err := apiResult(resp, &tokens); err != nil {
 		fatal("%v", err)
@@ -83,7 +101,7 @@ func cmdListServiceTokens() {
 
 func cmdRevokeServiceToken() {
 	if len(os.Args) < 3 {
-		fatal("usage: pvault revoke-service-token <prefix>")
+		fatal("usage: pvault revoke-service-token <token-or-prefix>\n  prefix: the token_prefix shown by list-service-tokens (at least 8 characters)")
 	}
 	token := os.Args[2]
 

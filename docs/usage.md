@@ -61,16 +61,20 @@ Default is `standard` for new fields. The recommended schema provides sensible d
 
 ## Service Tokens
 
-Service tokens let applications authenticate with the vault using long-lived credentials. They follow the 1Password service account pattern.
+Service tokens let agents authenticate with scoped, time-limited, sensitivity-capped credentials. They follow the 1Password service account pattern.
 
 ```sh
-pvault create-service-token myapp --scope "*" --ttl 8760h
 pvault create-service-token tax-agent --scope "identity.*,financial.*" --ttl 1h
+pvault create-service-token checkout --scope "payment.*" --max-sensitivity critical --ttl 1h
 pvault list-service-tokens
-pvault revoke-service-token abc123    # Revoke by token prefix
+pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list, or the full token
 ```
 
-Service tokens keep the vault alive. Each authenticated request resets the 30-minute auto-lock timer, so the vault stays unlocked as long as a consumer is active.
+- `--scope` is required (`"*"` must be passed explicitly).
+- `--ttl` defaults to `24h`, maximum `2160h` (90 days).
+- `--max-sensitivity` defaults to `sensitive`; `critical` fields are hidden unless you opt in.
+- Service tokens cannot change sensitivity tiers.
+- Service tokens do **not** reset the 30-minute auto-lock timer; only your session does.
 
 ## HTTP API
 
@@ -122,9 +126,9 @@ PUT /vault/sensitivity/{id}              # { tier } — update sensitivity
 ### Service Tokens
 
 ```
-POST   /vault/tokens/service             # { consumer, scope, ttl } → { token, expires_at }
-GET    /vault/tokens/service             # List active tokens (values truncated)
-DELETE /vault/tokens/service/{prefix}    # Revoke by prefix
+POST   /vault/tokens/service             # { consumer, scope, ttl?, max_sensitivity? } → { token, scope, max_sensitivity, expires_at }
+GET    /vault/tokens/service             # List active tokens (hash prefixes only)
+DELETE /vault/tokens/service/{ref}       # Revoke by listed hash prefix (≥8 chars) or full token
 ```
 
 ### Session

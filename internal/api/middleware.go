@@ -11,8 +11,9 @@ import (
 type contextKey string
 
 const (
-	scopeKey      contextKey = "scope"
+	scopeKey       contextKey = "scope"
 	sessionAuthKey contextKey = "session_auth"
+	maxTierKey     contextKey = "max_tier"
 )
 
 // scopeFromRequest returns the token scope. Session tokens get "*" (full access).
@@ -21,6 +22,15 @@ func scopeFromRequest(r *http.Request) string {
 		return s
 	}
 	return "*"
+}
+
+// maxTierFromRequest returns the highest sensitivity tier the caller may read.
+// Session tokens get "critical"; requests without auth context get "public".
+func maxTierFromRequest(r *http.Request) string {
+	if t, ok := r.Context().Value(maxTierKey).(string); ok {
+		return t
+	}
+	return "public"
 }
 
 // isSessionAuth returns true if the request was authenticated with a session token.
@@ -66,18 +76,20 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 		}
 		token := strings.TrimPrefix(auth, "Bearer ")
 
-		// Try session token first — full access
+		// Try session token first — full access. Only user activity resets
+		// the auto-lock timer.
 		if s.vault.ValidateToken(token) {
 			s.vault.TouchSession()
 			ctx := context.WithValue(r.Context(), scopeKey, "*")
 			ctx = context.WithValue(ctx, sessionAuthKey, true)
+			ctx = context.WithValue(ctx, maxTierKey, "critical")
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
-		// Try service token — scoped access
+		// Try service token — scoped access, capped sensitivity, and no
+		// auto-lock reset so an agent cannot keep the vault open.
 		if svcToken, ok := s.vault.ValidateServiceToken(token); ok {
-			s.vault.TouchSession()
 			s.vault.LogAccess(store.AuditEntry{
 				Consumer: svcToken.Consumer,
 				Scope:    svcToken.Scope,
@@ -85,6 +97,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 			})
 			ctx := context.WithValue(r.Context(), scopeKey, svcToken.Scope)
 			ctx = context.WithValue(ctx, sessionAuthKey, false)
+			ctx = context.WithValue(ctx, maxTierKey, svcToken.MaxSensitivity)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}

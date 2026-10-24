@@ -4,8 +4,7 @@
       "command": "npx",
       "args": ["tsx", "../../mcp/src/index.ts"],
       "env": {
-        "VAULT_SCOPE": "identity.*,addresses.*,payment.*",
-        "VAULT_CONSUMER": "shopping-demo"
+        "VAULT_TOKEN": "<paste token from step 3>"
       }
     },
     "shop": {

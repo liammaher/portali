@@ -1,6 +1,7 @@
 package store
 
 import (
+	"database/sql"
 	"os"
 	"path/filepath"
 	"testing"
@@ -302,5 +303,37 @@ func TestCleanup(t *testing.T) {
 	db.Close()
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		t.Fatal("db should exist before cleanup")
+	}
+}
+
+func TestOpen_MigratesTokenMaxSensitivity(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "old.db")
+
+	// Simulate a vault created before max_sensitivity existed.
+	old, err := sql.Open("sqlite", path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = old.Exec(`CREATE TABLE vault_tokens (
+		token TEXT PRIMARY KEY, consumer TEXT NOT NULL, scope TEXT NOT NULL,
+		expires_at TEXT NOT NULL, usage TEXT NOT NULL DEFAULT 'multi', created_at TEXT NOT NULL);
+		INSERT INTO vault_tokens VALUES ('h', 'legacy', '*', '2999-01-01T00:00:00Z', 'service', '2026-01-01T00:00:00Z');`)
+	old.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	db, err := Open(path)
+	if err != nil {
+		t.Fatalf("open with migration: %v", err)
+	}
+	defer db.Close()
+
+	tok, err := db.GetToken("h")
+	if err != nil || tok == nil {
+		t.Fatalf("GetToken after migration: %v %v", tok, err)
+	}
+	if tok.MaxSensitivity != "sensitive" {
+		t.Fatalf("legacy token max_sensitivity = %q, want sensitive", tok.MaxSensitivity)
 	}
 }

@@ -445,6 +445,7 @@ func TestServiceTokenAuth(t *testing.T) {
 	// Create a service token
 	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
 		"consumer": "life",
+		"scope":    "*",
 	}, true)
 	var createResp struct {
 		Token string `json:"token"`
@@ -474,8 +475,8 @@ func TestServiceTokenAuth(t *testing.T) {
 func TestListServiceTokens_API(t *testing.T) {
 	env := setup(t)
 
-	env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "life"}, true)
-	env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "other"}, true)
+	env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "life", "scope": "*"}, true)
+	env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "other", "scope": "identity.*"}, true)
 
 	w := env.doRequest(t, "GET", "/vault/tokens/service", nil, true)
 	if w.Code != 200 {
@@ -961,7 +962,7 @@ func TestRevokeServiceToken_API(t *testing.T) {
 	env := setup(t)
 
 	// Create
-	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "life"}, true)
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "life", "scope": "*"}, true)
 	var createResp struct {
 		Token string `json:"token"`
 	}

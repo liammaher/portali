@@ -14,6 +14,36 @@ func scopeDenied(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "scope_exceeded", "token scope does not allow access to this field")
 }
 
+func sensitivityDenied(w http.ResponseWriter) {
+	writeError(w, http.StatusForbidden, "sensitivity_exceeded", "token is not allowed to access fields at this sensitivity tier")
+}
+
+// fieldTierAllowed checks an existing field's tier against the caller's cap.
+// Missing fields are allowed so callers can return their usual 404 or create them.
+func (s *Server) fieldTierAllowed(r *http.Request, id string) (bool, error) {
+	maxTier := maxTierFromRequest(r)
+	if maxTier == "critical" {
+		return true, nil
+	}
+	meta, err := s.vault.FieldMeta(id)
+	if err != nil || meta == nil {
+		return true, err
+	}
+	return vault.TierAllows(maxTier, meta.Sensitivity), nil
+}
+
+// filterByTier drops fields above the caller's sensitivity cap.
+func filterByTier(r *http.Request, fields []vault.FieldInfo) []vault.FieldInfo {
+	maxTier := maxTierFromRequest(r)
+	allowed := make([]vault.FieldInfo, 0, len(fields))
+	for _, f := range fields {
+		if vault.TierAllows(maxTier, f.Sensitivity) {
+			allowed = append(allowed, f)
+		}
+	}
+	return allowed
+}
+
 func writeJSON(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
@@ -110,6 +140,13 @@ func (s *Server) handleGetField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
+	if ok, err := s.fieldTierAllowed(r, id); err != nil {
+		handleVaultError(w, err)
+		return
+	} else if !ok {
+		sensitivityDenied(w)
+		return
+	}
 	field, err := s.vault.Get(id)
 	if err != nil {
 		handleVaultError(w, err)
@@ -131,6 +168,13 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 	}
 	if !vault.ScopeAllows(scopeFromRequest(r), id) {
 		scopeDenied(w)
+		return
+	}
+	if ok, err := s.fieldTierAllowed(r, id); err != nil {
+		handleVaultError(w, err)
+		return
+	} else if !ok {
+		sensitivityDenied(w)
 		return
 	}
 	var req struct {
@@ -179,6 +223,13 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
+	if ok, err := s.fieldTierAllowed(r, id); err != nil {
+		handleVaultError(w, err)
+		return
+	} else if !ok {
+		sensitivityDenied(w)
+		return
+	}
 	if err := s.vault.Delete(id); err != nil {
 		handleVaultError(w, err)
 		return
@@ -210,7 +261,7 @@ func (s *Server) handleGetByCategory(w http.ResponseWriter, r *http.Request) {
 			allowed = append(allowed, f)
 		}
 	}
-	writeJSON(w, http.StatusOK, allowed)
+	writeJSON(w, http.StatusOK, filterByTier(r, allowed))
 }
 
 // GET /vault/context
@@ -231,6 +282,15 @@ func (s *Server) handleGetContext(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ctx = filtered
+	}
+	if maxTierFromRequest(r) != "critical" {
+		for cat, fields := range ctx.Categories {
+			if kept := filterByTier(r, fields); len(kept) > 0 {
+				ctx.Categories[cat] = kept
+			} else {
+				delete(ctx.Categories, cat)
+			}
+		}
 	}
 	writeJSON(w, http.StatusOK, ctx)
 }
@@ -261,7 +321,12 @@ func (s *Server) handleAuditLog(w http.ResponseWriter, r *http.Request) {
 }
 
 // PUT /vault/sensitivity/{id...}
+// Session only: a service token that could lower a tier could read past its cap.
 func (s *Server) handleSetSensitivity(w http.ResponseWriter, r *http.Request) {
+	if !isSessionAuth(r) {
+		sessionRequired(w)
+		return
+	}
 	id := r.PathValue("id")
 	if err := vault.ValidateFieldID(id); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
@@ -297,9 +362,10 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		return
 	}
 	var req struct {
-		Consumer string `json:"consumer"`
-		Scope    string `json:"scope"`
-		TTL      string `json:"ttl"`
+		Consumer       string `json:"consumer"`
+		Scope          string `json:"scope"`
+		TTL            string `json:"ttl"`
+		MaxSensitivity string `json:"max_sensitivity"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
@@ -309,11 +375,11 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		writeError(w, http.StatusBadRequest, "invalid_request", "consumer required")
 		return
 	}
-	if req.Scope == "" {
-		req.Scope = "*"
+	if req.MaxSensitivity == "" {
+		req.MaxSensitivity = vault.DefaultServiceTokenMaxSensitivity
 	}
 
-	ttl := 365 * 24 * time.Hour // default 1 year
+	ttl := vault.DefaultServiceTokenTTL
 	if req.TTL != "" {
 		parsed, err := time.ParseDuration(req.TTL)
 		if err != nil {
@@ -323,15 +389,17 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		ttl = parsed
 	}
 
-	token, err := s.vault.CreateServiceToken(req.Consumer, req.Scope, ttl)
+	token, err := s.vault.CreateServiceToken(req.Consumer, req.Scope, ttl, req.MaxSensitivity)
 	if err != nil {
 		handleVaultError(w, err)
 		return
 	}
 
 	writeJSON(w, http.StatusOK, map[string]string{
-		"token":      token,
-		"expires_at": time.Now().Add(ttl).UTC().Format(time.RFC3339),
+		"token":           token,
+		"scope":           req.Scope,
+		"max_sensitivity": req.MaxSensitivity,
+		"expires_at":      time.Now().Add(ttl).UTC().Format(time.RFC3339),
 	})
 }
 
@@ -348,26 +416,28 @@ func (s *Server) handleListServiceTokens(w http.ResponseWriter, r *http.Request)
 	}
 
 	type tokenInfo struct {
-		TokenPrefix string `json:"token_prefix"`
-		Consumer    string `json:"consumer"`
-		Scope       string `json:"scope"`
-		ExpiresAt   string `json:"expires_at"`
-		CreatedAt   string `json:"created_at"`
+		TokenPrefix    string `json:"token_prefix"`
+		Consumer       string `json:"consumer"`
+		Scope          string `json:"scope"`
+		MaxSensitivity string `json:"max_sensitivity"`
+		ExpiresAt      string `json:"expires_at"`
+		CreatedAt      string `json:"created_at"`
 	}
 
 	result := make([]tokenInfo, len(tokens))
 	for i, t := range tokens {
-		// TokenStr is now a hash; show first 8 chars for identification
+		// TokenStr is a hash; its prefix identifies the token for revocation
 		hashPrefix := t.TokenStr
-		if len(hashPrefix) > 8 {
-			hashPrefix = hashPrefix[:8] + "..."
+		if len(hashPrefix) > 12 {
+			hashPrefix = hashPrefix[:12] + "..."
 		}
 		result[i] = tokenInfo{
-			TokenPrefix: hashPrefix,
-			Consumer:    t.Consumer,
-			Scope:       t.Scope,
-			ExpiresAt:   t.ExpiresAt.UTC().Format(time.RFC3339),
-			CreatedAt:   t.CreatedAt.UTC().Format(time.RFC3339),
+			TokenPrefix:    hashPrefix,
+			Consumer:       t.Consumer,
+			Scope:          t.Scope,
+			MaxSensitivity: t.MaxSensitivity,
+			ExpiresAt:      t.ExpiresAt.UTC().Format(time.RFC3339),
+			CreatedAt:      t.CreatedAt.UTC().Format(time.RFC3339),
 		}
 	}
 	writeJSON(w, http.StatusOK, result)
@@ -379,13 +449,13 @@ func (s *Server) handleRevokeServiceToken(w http.ResponseWriter, r *http.Request
 		sessionRequired(w)
 		return
 	}
-	prefix := r.PathValue("token")
-	if prefix == "" {
-		writeError(w, http.StatusBadRequest, "invalid_request", "token prefix required")
+	ref := r.PathValue("token")
+	if ref == "" {
+		writeError(w, http.StatusBadRequest, "invalid_request", "token or token prefix required")
 		return
 	}
 
-	n, err := s.vault.RevokeServiceToken(prefix)
+	n, err := s.vault.RevokeServiceToken(ref)
 	if err != nil {
 		handleVaultError(w, err)
 		return
@@ -406,6 +476,8 @@ func handleVaultError(w http.ResponseWriter, err error) {
 	switch err {
 	case vault.ErrForbiddenField:
 		writeError(w, http.StatusBadRequest, "forbidden_field", err.Error())
+	case vault.ErrAmbiguousToken:
+		writeError(w, http.StatusConflict, "ambiguous_token", err.Error())
 	case vault.ErrLocked:
 		writeError(w, http.StatusForbidden, "vault_locked", "vault is locked")
 	case vault.ErrAlreadyUnlocked:

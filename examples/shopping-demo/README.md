@@ -44,7 +44,17 @@ pvault set addresses.home_zip "98101"
 pvault set addresses.home_country "US"
 ```
 
-### 3. Install the MCP servers
+### 3. Create a service token for the demo
+
+Payment fields are `critical`, so the token has to opt in explicitly:
+
+```sh
+pvault create-service-token shopping-demo --scope "identity.*,addresses.*,payment.*" --max-sensitivity critical --ttl 2h
+```
+
+Paste the printed token into `VAULT_TOKEN` in `.mcp.json`.
+
+### 4. Install the MCP servers
 
 ```sh
 # Vault MCP
@@ -56,7 +66,7 @@ cd ../examples/shopping-demo
 npm install
 ```
 
-### 4. Connect both MCP servers to Claude Code
+### 5. Connect both MCP servers to Claude Code
 
 From the project root:
 
@@ -65,7 +75,7 @@ claude mcp add vault -- npx tsx mcp/src/index.ts
 claude mcp add shop -- npx tsx examples/shopping-demo/src/index.ts
 ```
 
-### 5. Run the demo
+### 6. Run the demo
 
 Open Claude Code in this directory and type:
 
@@ -87,7 +97,7 @@ The vault MCP server reads your encrypted personal context and makes it availabl
 
 **"vault: server not running"** — Run `pvault unlock` to start the vault server.
 
-**"vault: session expired"** — The vault auto-locks after 30 minutes of inactivity. Run `pvault unlock` again.
+**"vault: service token invalid, expired or revoked"** — Create a new token (step 3) and update `.mcp.json`.
 
 **"vault: vault is locked"** — Same as above. Run `pvault unlock`.
 

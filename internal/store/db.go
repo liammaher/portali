@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS vault_tokens (
 	scope      TEXT NOT NULL,
 	expires_at TEXT NOT NULL,
 	usage      TEXT NOT NULL DEFAULT 'multi',
-	created_at TEXT NOT NULL
+	created_at TEXT NOT NULL,
+	max_sensitivity TEXT NOT NULL DEFAULT 'sensitive'
 );
 
 CREATE TABLE IF NOT EXISTS vault_meta (
@@ -75,7 +76,45 @@ func Open(path string) (*DB, error) {
 		return nil, fmt.Errorf("creating schema: %w", err)
 	}
 
+	if err := migrate(conn); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("migrating schema: %w", err)
+	}
+
 	return &DB{conn: conn}, nil
+}
+
+// migrate upgrades databases created by older versions in place.
+func migrate(conn *sql.DB) error {
+	has, err := hasColumn(conn, "vault_tokens", "max_sensitivity")
+	if err != nil {
+		return err
+	}
+	if !has {
+		// Existing tokens get the restrictive default: no access to critical fields.
+		if _, err := conn.Exec(`ALTER TABLE vault_tokens ADD COLUMN max_sensitivity TEXT NOT NULL DEFAULT 'sensitive'`); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func hasColumn(conn *sql.DB, table, column string) (bool, error) {
+	rows, err := conn.Query("SELECT name FROM pragma_table_info(?)", table)
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return false, err
+		}
+		if name == column {
+			return true, nil
+		}
+	}
+	return false, rows.Err()
 }
 
 // Close closes the database connection.

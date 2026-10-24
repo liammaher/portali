@@ -63,6 +63,12 @@ Profile Password + Secret Key (128-bit)
 - Auto-lock after 30 min idle
 - Session token: 32 bytes crypto/rand, constant-time comparison
 - Secret key at `~/.pvault/secret.key` (0600), never in database
+- Service tokens: explicit scope required, TTL 24h default / 90d max,
+  `max_sensitivity` cap (default `sensitive`), cannot change tiers,
+  and never reset the auto-lock timer (only session activity does)
+- MCP server uses only `VAULT_TOKEN`; it never reads `.session`
+- Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
+  SPID credentials and CIE PIN/PUK are rejected
 
 ## Conventions
 

@@ -2,7 +2,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { getStatus, getSchema, getField, listFields, getContext, setField, provisionServiceToken } from "./client.js";
+import { getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured } from "./client.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { getScope, scopeAllows, scopeAllowsCategory } from "./scope.js";
 
@@ -156,11 +156,8 @@ server.registerTool(
 );
 
 async function main() {
-  // When scoped, provision a service token so the audit log reflects the scope
-  if (scope !== "*") {
-    const consumer = process.env.VAULT_CONSUMER ?? "mcp";
-    await provisionServiceToken(consumer, scope);
-  }
+  // Fail fast: the server never falls back to the full-access session token.
+  assertTokenConfigured();
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

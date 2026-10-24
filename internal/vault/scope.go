@@ -72,3 +72,27 @@ func ScopeAllowsCategory(scope, category string) bool {
 	}
 	return false
 }
+
+// ValidateScope checks that every comma-separated pattern in a token scope is
+// "*", "category.*", or an exact field ID. Empty scopes are rejected so that
+// full access always has to be requested explicitly.
+func ValidateScope(scope string) error {
+	if strings.TrimSpace(scope) == "" {
+		return fmt.Errorf("scope is required (e.g. \"identity.*,residenza.*\", or \"*\" for full access)")
+	}
+	for _, p := range strings.Split(scope, ",") {
+		p = strings.TrimSpace(p)
+		switch {
+		case p == "*":
+		case strings.HasSuffix(p, ".*"):
+			if !ValidCategoryName(strings.TrimSuffix(p, ".*")) {
+				return fmt.Errorf("invalid scope pattern %q", p)
+			}
+		default:
+			if err := ValidateFieldID(p); err != nil {
+				return fmt.Errorf("invalid scope pattern %q: %w", p, err)
+			}
+		}
+	}
+	return nil
+}

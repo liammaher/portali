@@ -89,9 +89,9 @@ pvault audit                             # Show access log
 
 pvault ui                               # Open onboarding form in browser
 
-pvault create-service-token <consumer>   # Create a long-lived token
+pvault create-service-token <consumer> --scope <patterns>  # Create a scoped agent token
 pvault list-service-tokens               # List active tokens
-pvault revoke-service-token <prefix>     # Revoke a token by prefix
+pvault revoke-service-token <prefix>     # Revoke by listed prefix or full token
 ```
 
 Fields use dot notation: `identity.full_name`, `addresses.current.city`, `financial.filing_status`. You can use any category and field name.
@@ -125,25 +125,30 @@ GET    /vault/audit                     # Access audit log
 
 ## Service tokens
 
-Service tokens let applications authenticate with the vault using long-lived, scoped credentials.
+Service tokens give agents scoped, time-limited, sensitivity-capped access.
 
 ```sh
-pvault create-service-token tax-agent --scope "identity.*,financial.*" --ttl 1h
-pvault create-service-token life --scope "*" --ttl 8760h
+pvault create-service-token tari-agent --scope "identity.*,residenza.*" --ttl 2h
+pvault create-service-token checkout --scope "payment.*" --max-sensitivity critical --ttl 1h
 pvault list-service-tokens
-pvault revoke-service-token abc123
+pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list
 ```
 
-Each authenticated request resets the 30-minute auto-lock timer.
+- `--scope` is required. Pass `"*"` explicitly if you really want full scope.
+- `--ttl` defaults to `24h`; the maximum is `2160h` (90 days).
+- `--max-sensitivity` defaults to `sensitive`, so agents cannot read `critical` fields unless you opt in.
+- Only your own activity (session token) resets the 30-minute auto-lock timer. Agent requests do not, so an agent cannot keep the vault unlocked.
 
 ## Sensitivity tiers
 
-| Tier | Examples | Behavior |
-|------|----------|----------|
-| `public` | Name, timezone | Auto-shared with authorized consumers |
-| `standard` | Address, employer | Shared on request, logged |
-| `sensitive` | DOB, passport number | Requires explicit approval |
-| `critical` | SSN, bank routing | Requires approval + verification |
+| Tier | Examples |
+|------|----------|
+| `public` | Timezone, language |
+| `standard` | Name, comune, employer |
+| `sensitive` | DOB, codice fiscale, CIE number, street address |
+| `critical` | SSN, payment card |
+
+Each service token has a maximum tier (`--max-sensitivity`, default `sensitive`). Fields above it are hidden from context and category reads, and direct reads, writes and deletes return `403 sensitivity_exceeded`. Only the session token can change a field's tier.
 
 ```sh
 pvault set-sensitivity identity.ssn critical

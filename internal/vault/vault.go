@@ -19,17 +19,49 @@ import (
 )
 
 var (
-	ErrLocked         = errors.New("vault is locked")
+	ErrLocked          = errors.New("vault is locked")
 	ErrAlreadyUnlocked = errors.New("vault is already unlocked")
-	ErrNotInitialized = errors.New("vault is not initialized")
-	ErrAlreadyInit    = errors.New("vault is already initialized")
-	ErrWrongPassword  = errors.New("wrong password or secret key")
-	ErrInvalidTier    = errors.New("invalid sensitivity tier: must be public, standard, sensitive, or critical")
+	ErrNotInitialized  = errors.New("vault is not initialized")
+	ErrAlreadyInit     = errors.New("vault is already initialized")
+	ErrWrongPassword   = errors.New("wrong password or secret key")
+	ErrInvalidTier     = errors.New("invalid sensitivity tier: must be public, standard, sensitive, or critical")
+	ErrAmbiguousToken  = errors.New("token prefix matches more than one service token; use a longer prefix")
 )
 
 var validTiers = map[string]bool{
 	"public": true, "standard": true, "sensitive": true, "critical": true,
 }
+
+// tierRank orders sensitivity tiers from least to most sensitive.
+var tierRank = map[string]int{
+	"public": 0, "standard": 1, "sensitive": 2, "critical": 3,
+}
+
+// TierAllows reports whether a token limited to maxTier may access a field
+// with the given tier. Unknown tiers are treated as critical.
+func TierAllows(maxTier, fieldTier string) bool {
+	maxRank, ok := tierRank[maxTier]
+	if !ok {
+		return false
+	}
+	fieldRank, ok := tierRank[fieldTier]
+	if !ok {
+		fieldRank = tierRank["critical"]
+	}
+	return fieldRank <= maxRank
+}
+
+const (
+	// DefaultServiceTokenTTL is used when no TTL is requested.
+	DefaultServiceTokenTTL = 24 * time.Hour
+	// MaxServiceTokenTTL caps how long an agent token can live.
+	MaxServiceTokenTTL = 90 * 24 * time.Hour
+	// DefaultServiceTokenMaxSensitivity keeps critical fields away from agents
+	// unless the user opts in when creating the token.
+	DefaultServiceTokenMaxSensitivity = "sensitive"
+	// minTokenPrefixLen is the shortest hash prefix accepted for revocation.
+	minTokenPrefixLen = 8
+)
 
 // Vault is the main entry point for vault operations.
 type Vault struct {
@@ -330,6 +362,26 @@ func (v *Vault) Get(id string) (*FieldInfo, error) {
 	}, nil
 }
 
+// FieldMeta returns a field's metadata without decrypting its value.
+// Returns nil if the field does not exist.
+func (v *Vault) FieldMeta(id string) (*FieldInfo, error) {
+	if _, err := v.requireUnlocked(); err != nil {
+		return nil, err
+	}
+	f, err := v.db.GetField(id)
+	if err != nil || f == nil {
+		return nil, err
+	}
+	return &FieldInfo{
+		ID:          f.ID,
+		Category:    f.Category,
+		FieldName:   f.FieldName,
+		Sensitivity: f.Sensitivity,
+		UpdatedAt:   f.UpdatedAt,
+		Version:     f.Version,
+	}, nil
+}
+
 // List returns all field metadata (no values).
 func (v *Vault) List() ([]FieldInfo, error) {
 	if _, err := v.requireUnlocked(); err != nil {
@@ -509,11 +561,25 @@ func hashServiceToken(token string) string {
 	return hex.EncodeToString(h[:])
 }
 
-// CreateServiceToken generates a long-lived service token for a consumer.
+// CreateServiceToken generates a service token for a consumer. The scope must
+// be explicit, ttl must be between zero and MaxServiceTokenTTL, and the token
+// can only read fields up to maxSensitivity (default "sensitive").
 // The raw token is returned to the caller; only the SHA-256 hash is stored.
-func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration) (string, error) {
+func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, maxSensitivity string) (string, error) {
 	if _, err := v.requireUnlocked(); err != nil {
 		return "", err
+	}
+	if err := ValidateScope(scope); err != nil {
+		return "", &ValidationError{Field: "scope", Msg: err.Error()}
+	}
+	if ttl <= 0 || ttl > MaxServiceTokenTTL {
+		return "", &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxServiceTokenTTL)}
+	}
+	if maxSensitivity == "" {
+		maxSensitivity = DefaultServiceTokenMaxSensitivity
+	}
+	if !validTiers[maxSensitivity] {
+		return "", ErrInvalidTier
 	}
 
 	tokenBytes := make([]byte, 32)
@@ -523,12 +589,13 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration) (s
 	tokenStr := hex.EncodeToString(tokenBytes)
 
 	t := store.Token{
-		TokenStr:  hashServiceToken(tokenStr),
-		Consumer:  consumer,
-		Scope:     scope,
-		ExpiresAt: time.Now().Add(ttl),
-		Usage:     "service",
-		CreatedAt: time.Now(),
+		TokenStr:       hashServiceToken(tokenStr),
+		Consumer:       consumer,
+		Scope:          scope,
+		ExpiresAt:      time.Now().Add(ttl),
+		Usage:          "service",
+		CreatedAt:      time.Now(),
+		MaxSensitivity: maxSensitivity,
 	}
 	if err := v.db.CreateToken(t); err != nil {
 		return "", err
@@ -538,7 +605,7 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration) (s
 		Consumer: "vault",
 		Scope:    scope,
 		Action:   "create_service_token",
-		Purpose:  "consumer: " + consumer,
+		Purpose:  "consumer: " + consumer + ", max_sensitivity: " + maxSensitivity,
 	})
 
 	return tokenStr, nil
@@ -564,12 +631,18 @@ func (v *Vault) ListServiceTokens() ([]store.Token, error) {
 	return v.db.ListTokensByUsage("service")
 }
 
-// RevokeServiceToken removes a service token by its hash.
-func (v *Vault) RevokeServiceToken(token string) (int64, error) {
+// RevokeServiceToken removes a service token. ref is either the raw token or
+// a prefix (at least 8 hex characters) of its stored hash, as shown by
+// ListServiceTokens. A prefix must match exactly one token.
+func (v *Vault) RevokeServiceToken(ref string) (int64, error) {
 	if _, err := v.requireUnlocked(); err != nil {
 		return 0, err
 	}
-	n, err := v.db.DeleteToken(hashServiceToken(token))
+	hash, err := v.resolveServiceToken(ref)
+	if err != nil || hash == "" {
+		return 0, err
+	}
+	n, err := v.db.DeleteToken(hash)
 	if err != nil {
 		return 0, err
 	}
@@ -583,7 +656,38 @@ func (v *Vault) RevokeServiceToken(token string) (int64, error) {
 	return n, nil
 }
 
-// TouchSession resets the auto-lock timer.
+// resolveServiceToken maps a raw token or hash prefix to the stored hash.
+// Returns "" if nothing matches.
+func (v *Vault) resolveServiceToken(ref string) (string, error) {
+	tokens, err := v.db.ListTokensByUsage("service")
+	if err != nil {
+		return "", err
+	}
+	fullHash := hashServiceToken(ref)
+	for _, t := range tokens {
+		if t.TokenStr == fullHash {
+			return fullHash, nil
+		}
+	}
+
+	prefix := strings.ToLower(strings.TrimSuffix(strings.TrimSpace(ref), "..."))
+	if len(prefix) < minTokenPrefixLen || strings.Trim(prefix, "0123456789abcdef") != "" {
+		return "", nil
+	}
+	var match string
+	for _, t := range tokens {
+		if strings.HasPrefix(t.TokenStr, prefix) {
+			if match != "" {
+				return "", ErrAmbiguousToken
+			}
+			match = t.TokenStr
+		}
+	}
+	return match, nil
+}
+
+// TouchSession resets the auto-lock timer. Only call this for activity by the
+// user (session token), so agent traffic cannot keep the vault unlocked.
 func (v *Vault) TouchSession() {
 	v.mu.RLock()
 	defer v.mu.RUnlock()
@@ -609,7 +713,6 @@ func (v *Vault) requireUnlocked() ([]byte, error) {
 	if v.session == nil {
 		return nil, ErrLocked
 	}
-	v.session.Touch()
 	key := v.session.VaultKey()
 	if key == nil {
 		return nil, ErrLocked

@@ -317,7 +317,7 @@ func TestSetSensitivity(t *testing.T) {
 func TestCreateServiceToken(t *testing.T) {
 	v, _ := tmpVault(t)
 
-	token, err := v.CreateServiceToken("life", "*", 24*time.Hour)
+	token, err := v.CreateServiceToken("life", "*", 24*time.Hour, "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -332,7 +332,7 @@ func TestCreateServiceToken(t *testing.T) {
 func TestValidateServiceToken(t *testing.T) {
 	v, _ := tmpVault(t)
 
-	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour)
+	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour, "")
 
 	svcToken, ok := v.ValidateServiceToken(token)
 	if !ok {
@@ -367,8 +367,8 @@ func TestValidateServiceToken_SessionTokenNotAccepted(t *testing.T) {
 
 func TestListServiceTokens(t *testing.T) {
 	v, _ := tmpVault(t)
-	v.CreateServiceToken("life", "*", 24*time.Hour)
-	v.CreateServiceToken("other-app", "identity", 24*time.Hour)
+	v.CreateServiceToken("life", "*", 24*time.Hour, "")
+	v.CreateServiceToken("other-app", "identity.*", 24*time.Hour, "")
 
 	tokens, err := v.ListServiceTokens()
 	if err != nil {
@@ -381,7 +381,7 @@ func TestListServiceTokens(t *testing.T) {
 
 func TestRevokeServiceToken(t *testing.T) {
 	v, _ := tmpVault(t)
-	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour)
+	token, _ := v.CreateServiceToken("life", "*", 24*time.Hour, "")
 
 	n, err := v.RevokeServiceToken(token)
 	if err != nil {
@@ -401,8 +401,89 @@ func TestServiceToken_RequiresUnlocked(t *testing.T) {
 	v, _ := tmpVault(t)
 	v.Lock()
 
-	_, err := v.CreateServiceToken("life", "*", 24*time.Hour)
+	_, err := v.CreateServiceToken("life", "*", 24*time.Hour, "")
 	if err != ErrLocked {
 		t.Fatalf("expected ErrLocked, got %v", err)
+	}
+}
+
+func TestAutoLock_NotResetByFieldAccess(t *testing.T) {
+	v, _ := tmpVault(t)
+	v.Set("identity.name", "Jane", "")
+
+	v.session.mu.Lock()
+	v.session.ttl = 100 * time.Millisecond
+	v.session.timer.Reset(100 * time.Millisecond)
+	v.session.mu.Unlock()
+
+	// Continuous reads (e.g. by an agent) must not keep the vault unlocked.
+	deadline := time.Now().Add(300 * time.Millisecond)
+	for time.Now().Before(deadline) {
+		v.Get("identity.name")
+		time.Sleep(10 * time.Millisecond)
+	}
+	if _, err := v.Get("identity.name"); err != ErrLocked {
+		t.Fatalf("expected ErrLocked, got %v", err)
+	}
+}
+
+func TestCreateServiceToken_Validation(t *testing.T) {
+	v, _ := tmpVault(t)
+	if _, err := v.CreateServiceToken("a", "", time.Hour, ""); err == nil {
+		t.Error("empty scope should be rejected")
+	}
+	if _, err := v.CreateServiceToken("a", "identity.*,", time.Hour, ""); err == nil {
+		t.Error("trailing empty pattern should be rejected")
+	}
+	if _, err := v.CreateServiceToken("a", "*", 0, ""); err == nil {
+		t.Error("zero ttl should be rejected")
+	}
+	if _, err := v.CreateServiceToken("a", "*", MaxServiceTokenTTL+time.Hour, ""); err == nil {
+		t.Error("ttl above max should be rejected")
+	}
+	token, err := v.CreateServiceToken("a", "identity.*,residenza.comune", time.Hour, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	svc, ok := v.ValidateServiceToken(token)
+	if !ok || svc.MaxSensitivity != "sensitive" {
+		t.Fatalf("expected default max_sensitivity sensitive, got %+v", svc)
+	}
+}
+
+func TestRevokeServiceToken_ByHashPrefix(t *testing.T) {
+	v, _ := tmpVault(t)
+	token, _ := v.CreateServiceToken("life", "*", time.Hour, "")
+	prefix := hashServiceToken(token)[:12]
+
+	n, err := v.RevokeServiceToken(prefix + "...")
+	if err != nil || n != 1 {
+		t.Fatalf("revoke by prefix: n=%d err=%v", n, err)
+	}
+	if _, ok := v.ValidateServiceToken(token); ok {
+		t.Fatal("revoked token should not validate")
+	}
+	if n, _ := v.RevokeServiceToken("zz"); n != 0 {
+		t.Fatal("non-matching ref should revoke nothing")
+	}
+}
+
+func TestTierAllows(t *testing.T) {
+	tests := []struct {
+		max, field string
+		want       bool
+	}{
+		{"critical", "critical", true},
+		{"sensitive", "critical", false},
+		{"sensitive", "sensitive", true},
+		{"standard", "sensitive", false},
+		{"public", "public", true},
+		{"sensitive", "bogus", false}, // unknown field tier treated as critical
+		{"bogus", "public", false},    // unknown cap allows nothing
+	}
+	for _, tt := range tests {
+		if got := TierAllows(tt.max, tt.field); got != tt.want {
+			t.Errorf("TierAllows(%q, %q) = %v, want %v", tt.max, tt.field, got, tt.want)
+		}
 	}
 }

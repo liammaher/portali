@@ -32,30 +32,35 @@ claude mcp add vault -- npx -y personal-vault-mcp@latest
 
 ## Authentication
 
-The MCP server authenticates with the vault automatically:
+The MCP server only uses a service token you create and pass in `VAULT_TOKEN`:
 
-1. `VAULT_TOKEN` env var — use with service tokens for always-on agents
-2. `~/.pvault/.session` — session token from `pvault unlock`
+```sh
+pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h
+```
 
-Token is resolved on each request, so the server survives vault lock/unlock cycles.
+It never reads `~/.pvault/.session`. That token has full, uncapped access, so using it would bypass the scope and sensitivity limits. The server refuses to start without `VAULT_TOKEN`.
+
+The token keeps working across vault lock/unlock cycles until it expires or is revoked.
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address |
-| `VAULT_DIR` | `~/.pvault` | Vault directory (for session file) |
-| `VAULT_TOKEN` | — | Service token (overrides session file) |
+| `VAULT_TOKEN` | — | **Required.** Service token from `pvault create-service-token` |
+| `VAULT_SCOPE` | `*` | Optional extra filter applied in the MCP layer (the server enforces the token's own scope regardless) |
 
 ## Error Messages
 
 | Error | Meaning |
 |-------|---------|
 | `vault: server not running` | Run `pvault unlock` to start the server |
-| `vault: session expired` | Run `pvault unlock` to refresh the session |
+| `vault: service token invalid, expired or revoked` | Create a new token and update `VAULT_TOKEN` |
 | `vault: vault is locked` | Run `pvault unlock` to decrypt |
+| `vault: this field's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field |
+| `vault: this field is outside the token's scope` | Field is not covered by the token's `--scope` |
 | `vault: not found` | Field ID doesn't exist |
-| `vault: not configured` | No token available — run `pvault unlock` or set `VAULT_TOKEN` |
+| `vault: no service token` | Set `VAULT_TOKEN` in the MCP server config |
 
 ## Demo
 

@@ -1,7 +1,3 @@
-import { readFileSync } from "fs";
-import { join } from "path";
-import { homedir } from "os";
-
 interface VaultStatus {
   initialized: boolean;
   locked: boolean;
@@ -30,82 +26,57 @@ class VaultError extends Error {
   }
 }
 
-function vaultDir(): string {
-  return process.env.VAULT_DIR ?? join(homedir(), ".pvault");
-}
-
 function serverAddr(): string {
   return process.env.VAULT_ADDR ?? "http://127.0.0.1:7200";
 }
 
-let serviceToken: string | null = null;
-
-function resolveToken(): string | null {
-  // 1. Auto-provisioned service token (set by provisionServiceToken)
-  if (serviceToken) {
-    return serviceToken;
-  }
-
-  // 2. VAULT_TOKEN env var (pre-configured service tokens)
-  if (process.env.VAULT_TOKEN) {
-    return process.env.VAULT_TOKEN;
-  }
-
-  // 3. Session file
-  try {
-    const sessionPath = join(vaultDir(), ".session");
-    return readFileSync(sessionPath, "utf-8").trim();
-  } catch {
-    return null;
-  }
-}
+const MISSING_TOKEN_HELP =
+  "vault: no service token — create one with " +
+  "`pvault create-service-token <name> --scope \"identity.*,...\"` " +
+  "and set it as VAULT_TOKEN in this MCP server's env";
 
 /**
- * Provision a scoped service token using the session token.
- * Called once at startup when VAULT_SCOPE is set.
+ * The MCP server only ever uses a scoped service token supplied by the user
+ * via VAULT_TOKEN. It never reads ~/.pvault/.session: that token has full,
+ * uncapped access and would bypass the scope and sensitivity limits.
  */
-export async function provisionServiceToken(
-  consumer: string,
-  scope: string,
-): Promise<void> {
-  const sessionPath = join(vaultDir(), ".session");
-  let sessionTok: string;
-  try {
-    sessionTok = readFileSync(sessionPath, "utf-8").trim();
-  } catch {
-    throw new VaultError("vault: no session — run 'pvault unlock'");
+function resolveToken(): string {
+  const token = process.env.VAULT_TOKEN?.trim();
+  if (!token) {
+    throw new VaultError(MISSING_TOKEN_HELP);
   }
+  return token;
+}
 
-  const url = `${serverAddr()}/vault/tokens/service`;
-  let resp: Response;
-  try {
-    resp = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionTok}`,
-      },
-      body: JSON.stringify({ consumer, scope, ttl: "24h" }),
-    });
-  } catch {
-    throw new VaultError("vault: server not running — run 'pvault unlock'");
-  }
-
-  if (!resp.ok) {
-    const text = await resp.text();
-    throw new VaultError(`vault: failed to provision service token — ${text}`);
-  }
-
-  const result = (await resp.json()) as { token: string };
-  serviceToken = result.token;
+export function assertTokenConfigured(): void {
+  resolveToken();
 }
 
 function mapError(status: number, body: string): VaultError {
   if (status === 401) {
-    return new VaultError("vault: session expired — run 'pvault unlock'");
+    return new VaultError(
+      "vault: service token invalid, expired or revoked — create a new one with `pvault create-service-token`"
+    );
   }
   if (status === 403) {
-    return new VaultError("vault: vault is locked — run 'pvault unlock'");
+    let constraint = "";
+    try {
+      constraint = JSON.parse(body).constraint ?? "";
+    } catch {
+      // not JSON
+    }
+    if (constraint === "vault_locked") {
+      return new VaultError("vault: vault is locked — ask the user to run 'pvault unlock'");
+    }
+    if (constraint === "sensitivity_exceeded") {
+      return new VaultError(
+        "vault: this field's sensitivity tier is above what this token may access"
+      );
+    }
+    if (constraint === "scope_exceeded") {
+      return new VaultError("vault: this field is outside the token's scope");
+    }
+    return new VaultError(`vault: forbidden — ${body}`);
   }
   if (status === 404) {
     return new VaultError(`vault: not found — ${body}`);
@@ -134,11 +105,8 @@ async function apiRequest(
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   };
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
 
   let resp: Response;
   try {
