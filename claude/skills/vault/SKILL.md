@@ -65,8 +65,10 @@ run from Bash show a fingerprint prompt on the user's Mac, worded from the exact
 request (e.g. "read spid.password from your vault for 2 minutes"). The approval covers
 only that command and expires within 2 minutes.
 - Before running one, say in chat what the prompt will ask, so the user knows it's you.
-- Ask for the least: `pvault get <id>` for one field, `pvault list <category>` for a
-  category. `export`, `expiring`, `doc get` and `doc delete` ask for the whole vault,
+- Ask for the least: `pvault get <id>` for one field, `pvault get <id> <id> ...` (up to
+  10) for the exact fields a task needs, `pvault list <category>` for a category. Gather
+  the IDs first and read them in one `get`, so the user approves once instead of per
+  field. Several IDs print a JSON object, with `null` for fields that don't exist. `export`, `expiring`, `doc get` and `doc delete` ask for the whole vault,
   and `audit`, `set-sensitivity` and token commands ask for full access; avoid them
   unless the task needs them.
 - Writes: `pvault set <id> <value>` (pipe secrets: `printf '%s\n' "$v" | pvault set <id>`)

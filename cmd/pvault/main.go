@@ -77,7 +77,7 @@ Commands:
   status                           Show vault status
   schema                           Show recommended field names (--json for raw JSON)
   set <id> [value]                 Set a field; leave out the value to type it hidden (for secrets)
-  get <id>                         Get a field value
+  get <id> [<id>...]               Get field values (up to 10; several print as JSON)
   list [category]                  List fields
   delete <id>                      Delete a field
   set-sensitivity <id> <tier>      Set field sensitivity (public|standard|sensitive|critical|personal)
