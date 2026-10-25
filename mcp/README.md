@@ -44,11 +44,12 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 | Tool | Description |
 |------|-------------|
 | `vault_status` | Check if the vault is running and unlocked |
+| `vault_schema` | Recommended field IDs with descriptions and default tiers, plus the pratiche campi, stati and canali |
 | `vault_get` | Get a single decrypted field by ID |
 | `vault_list` | List all field metadata (no values) |
 | `vault_context` | Get all decrypted fields grouped by category |
 | `vault_set` | Set an encrypted field value in the vault |
-| `vault_expiring` | Documents expired or expiring within N days (default 90) |
+| `vault_expiring` | Documents expired or expiring within N days (default 90), plus open pratiche deadlines |
 | `vault_documents` | List encrypted document scans the token may access |
 | `vault_document_add` | Encrypt and archive a local file (e.g. a downloaded receipt) |
 | `vault_document_get` | Read a stored document (images inline, others as an embedded resource, max 10 MB) |
@@ -135,18 +136,13 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | Error | Meaning |
 |-------|---------|
 | `vault: server not running` | Run `pvault unlock` to start the server |
-| `vault: no service token` | Create one; the message gives the exact `--keychain` command when using `VAULT_KEYCHAIN_SERVICE` |
-| `vault: service token invalid, expired or revoked` | Create a new token (`--keychain` replaces and revokes the stored one) or update `VAULT_TOKEN` |
+| `vault: no service token` | With Touch ID on, use `pvault get`/`pvault set` from the shell instead; otherwise create one (the message gives the exact `--keychain` command when using `VAULT_KEYCHAIN_SERVICE`) |
+| `vault: service token invalid, expired or revoked` | Same as above: Touch ID first, else a new token (`--keychain` replaces and revokes the stored one) or an updated `VAULT_TOKEN` |
 | `vault: vault is locked` | Run `pvault unlock` to decrypt |
 | `vault: this item's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field or document |
 | `vault: this is outside the token's scope` | Not covered by the token's `--scope` |
 | `vault: this token is read-only` | Create a token with `--access append` or `--access write` |
 | `vault: this token can add new items but not overwrite or delete` | Overwriting or deleting needs `--access write` |
 | `vault: not found` | Field ID doesn't exist |
-| `vault: no service token` | Set `VAULT_TOKEN` in the MCP server config |
 | `pec: no password in Keychain service ...` | Store the app password with `security add-generic-password -U -a <address> -s <service> -w` |
 | `pec: login to ... failed` | The app password is wrong or expired; generate a new one and store it again |
-
-## Demo
-
-See [examples/shopping-demo](../examples/shopping-demo/) for a demo using Vault MCP + a mock shop.

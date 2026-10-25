@@ -78,6 +78,8 @@ pvault expiring          # expired or expiring in the next 90 days
 pvault expiring 365
 ```
 
+It lists every `*data_scadenza` field and the deadline of every open pratica (see the pratica skill below).
+
 ```
 passaporto           2026-09-30  EXPIRED 24 days ago
 permesso_soggiorno   2026-12-15  in 52 days
@@ -145,13 +147,13 @@ Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, 
 
 [`claude/`](claude/) has optional pieces that make Claude Code use the vault safely:
 
-- **Vault skill** ([`claude/skills/vault/SKILL.md`](claude/skills/vault/SKILL.md)): how to check the vault, read or change fields through the MCP tools, ask for a narrow short-lived token when it needs one, and send you to the web UI in your own browser rather than one Claude controls. Install it for all projects:
+- **Vault skill** ([`claude/skills/vault/SKILL.md`](claude/skills/vault/SKILL.md)): how to check the vault, read or change fields through the MCP tools, ask for a narrow short-lived token when it needs one, and send you to the web UI in your own browser rather than one Claude controls. Link it for all projects, from your main checkout (not a temporary git worktree, or the link breaks when the worktree is removed), so it stays in step with the code:
 
   ```sh
-  mkdir -p ~/.claude/skills && cp -R claude/skills/vault ~/.claude/skills/
+  mkdir -p ~/.claude/skills && ln -s "$PWD/claude/skills/vault" ~/.claude/skills/vault
   ```
 
-- **Pratica skill** ([`claude/skills/pratica/SKILL.md`](claude/skills/pratica/SKILL.md)): runs an Italian procedure end to end (research, gap check against the vault, filling the form or portal, handing you the login, signature, payment and sending, then tracking the reply). Each procedure gets a playbook in [`claude/skills/pratica/playbooks/`](claude/skills/pratica/playbooks/) after its first run, so later runs follow it. Playbooks hold field IDs, never your data. Open procedures are tracked in the vault as `pratiche.<slug>_<campo>` fields, and their deadlines show in `pvault expiring`. Link it rather than copying it, so new playbooks land in this repo. Run this from your main checkout, not a temporary git worktree, or the link breaks when the worktree is removed:
+- **Pratica skill** ([`claude/skills/pratica/SKILL.md`](claude/skills/pratica/SKILL.md)): runs an Italian procedure end to end (research, gap check against the vault, filling the form or portal, handing you the login, signature, payment and sending, then tracking the reply). Each procedure gets a playbook in [`claude/skills/pratica/playbooks/`](claude/skills/pratica/playbooks/) after its first run, so later runs follow it. Playbooks hold field IDs, never your data. Open procedures are tracked in the vault as `pratiche.<slug>_<campo>` fields, and their deadlines show in `pvault expiring`. Link it the same way, so new playbooks land in this repo:
 
   ```sh
   ln -s "$PWD/claude/skills/pratica" ~/.claude/skills/pratica

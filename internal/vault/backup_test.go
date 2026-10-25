@@ -32,6 +32,17 @@ func backupVault(t *testing.T) (*Vault, string, string) {
 	return v, sk, dir
 }
 
+// backedUpVault is backupVault plus one backup, returning its path.
+func backedUpVault(t *testing.T) (*Vault, string, string) {
+	t.Helper()
+	v, sk, _ := backupVault(t)
+	path, err := v.Backup()
+	if err != nil {
+		t.Fatal(err)
+	}
+	return v, sk, path
+}
+
 func backupFiles(t *testing.T, dir string) []string {
 	t.Helper()
 	entries, err := os.ReadDir(dir)
@@ -48,11 +59,7 @@ func backupFiles(t *testing.T, dir string) []string {
 }
 
 func TestBackupRestoreRoundTrip(t *testing.T) {
-	v, sk, _ := backupVault(t)
-	path, err := v.Backup()
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, sk, path := backedUpVault(t)
 	info, err := os.Stat(path)
 	if err != nil {
 		t.Fatal(err)
@@ -67,7 +74,9 @@ func TestBackupRestoreRoundTrip(t *testing.T) {
 		}
 	}
 
-	check, err := CheckBackup(path, testPassword, sk)
+	// The secret key may be typed as copied by hand.
+	typed := strings.ToUpper(sk[:8]) + " " + sk[8:16] + "-" + sk[16:]
+	check, err := CheckBackup(path, testPassword, typed)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -76,7 +85,7 @@ func TestBackupRestoreRoundTrip(t *testing.T) {
 	}
 
 	dir := filepath.Join(t.TempDir(), "restored")
-	if _, err := RestoreBackup(path, dir, testPassword, sk); err != nil {
+	if _, err := RestoreBackup(path, dir+"/", testPassword, sk); err != nil {
 		t.Fatal(err)
 	}
 	skFile, _ := os.ReadFile(filepath.Join(dir, "secret.key"))
@@ -88,7 +97,7 @@ func TestBackupRestoreRoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer r.Close()
-	if _, err := r.Unlock(testPassword, sk); err != nil {
+	if _, err := r.Unlock(testPassword, typed); err != nil {
 		t.Fatal(err)
 	}
 	for id, want := range map[string]string{"notes.motto": "carpe diem", "notes.secret_word": "pizza"} {
@@ -108,11 +117,7 @@ func TestBackupRestoreRoundTrip(t *testing.T) {
 }
 
 func TestBackupRejectsWrongCredentialsAndDamage(t *testing.T) {
-	v, sk, _ := backupVault(t)
-	path, err := v.Backup()
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, sk, path := backedUpVault(t)
 	if _, err := CheckBackup(path, "wrong-password", sk); !errors.Is(err, ErrBackupUnreadable) {
 		t.Fatalf("wrong password: %v", err)
 	}
@@ -141,11 +146,7 @@ func TestBackupRejectsWrongCredentialsAndDamage(t *testing.T) {
 }
 
 func TestRestoreNeverOverwrites(t *testing.T) {
-	v, sk, _ := backupVault(t)
-	path, err := v.Backup()
-	if err != nil {
-		t.Fatal(err)
-	}
+	v, sk, path := backedUpVault(t)
 	if _, err := RestoreBackup(path, v.dir, testPassword, sk); err == nil {
 		t.Fatal("restore over an existing vault succeeded")
 	}
@@ -327,7 +328,9 @@ func TestBackupFolderInsideVaultIsDetected(t *testing.T) {
 	}
 }
 
-func TestBackupStatusHidesFolder(t *testing.T) {
+// The public status says what went wrong without naming the folder, and
+// says the folder is missing only when it is.
+func TestBackupStatusError(t *testing.T) {
 	v, _, dir := backupVault(t)
 	os.RemoveAll(dir)
 	if _, err := v.Backup(); err == nil {
@@ -337,17 +340,14 @@ func TestBackupStatusHidesFolder(t *testing.T) {
 	if st.Error == "" || strings.Contains(st.Error, dir) {
 		t.Fatalf("status error = %q", st.Error)
 	}
-}
 
-func TestCheckBackupAcceptsHandCopiedKey(t *testing.T) {
-	v, sk, _ := backupVault(t)
-	path, err := v.Backup()
-	if err != nil {
-		t.Fatal(err)
+	dir = t.TempDir()
+	err := &os.PathError{Op: "open", Path: "/vault/documents/x.enc", Err: os.ErrNotExist}
+	if msg := backupStatusError(err, dir); strings.Contains(msg, "folder is missing") {
+		t.Fatalf("existing folder reported missing: %q", msg)
 	}
-	typed := strings.ToUpper(sk[:8]) + " " + sk[8:16] + "-" + sk[16:]
-	if _, err := CheckBackup(path, testPassword, typed); err != nil {
-		t.Fatalf("hand-copied key rejected: %v", err)
+	if msg := backupStatusError(err, filepath.Join(dir, "gone")); !strings.Contains(msg, "folder is missing") {
+		t.Fatalf("missing folder not reported: %q", msg)
 	}
 }
 
@@ -368,49 +368,6 @@ func TestBackupLeavesOutDocumentWithoutFile(t *testing.T) {
 	}
 }
 
-func TestBackupStatusNamesFolderOnlyWhenMissing(t *testing.T) {
-	dir := t.TempDir()
-	err := &os.PathError{Op: "open", Path: "/vault/documents/x.enc", Err: os.ErrNotExist}
-	if msg := backupStatusError(err, dir); strings.Contains(msg, "folder is missing") {
-		t.Fatalf("existing folder reported missing: %q", msg)
-	}
-	if msg := backupStatusError(err, filepath.Join(dir, "gone")); !strings.Contains(msg, "folder is missing") {
-		t.Fatalf("missing folder not reported: %q", msg)
-	}
-}
-
-// A user request during auto-lock's backup must not re-arm the old session's
-// timer, and a stale auto-lock must never drop a later session.
-func TestStaleAutoLockKeepsNewSession(t *testing.T) {
-	v, sk := tmpVault(t)
-	v.mu.RLock()
-	old := v.session
-	v.mu.RUnlock()
-	old.setBeforeAutoLock(old.Touch) // activity while the backup runs
-	old.autoLock()
-	old.mu.Lock()
-	rearmed := old.timer != nil
-	old.mu.Unlock()
-	if rearmed {
-		t.Fatal("touch during auto-lock re-armed the timer")
-	}
-
-	if _, err := v.Unlock(testPassword, sk); err != nil {
-		t.Fatal(err)
-	}
-	v.mu.RLock()
-	current := v.session
-	v.mu.RUnlock()
-	old.autoLock() // a stale firing of the old timer
-	old.lockFn()   // even if it got as far as the vault's callback
-	v.mu.RLock()
-	still := v.session
-	v.mu.RUnlock()
-	if still != current || current.VaultKey() == nil {
-		t.Fatal("stale auto-lock dropped the current session")
-	}
-}
-
 func TestBackupRemovesStaleWorkDir(t *testing.T) {
 	v, _, _ := backupVault(t)
 	stale := filepath.Join(v.dir, ".backup-123456")
@@ -425,17 +382,5 @@ func TestBackupRemovesStaleWorkDir(t *testing.T) {
 	}
 	if _, err := os.Stat(stale); !errors.Is(err, os.ErrNotExist) {
 		t.Errorf("stale work dir still there after a backup (stat: %v)", err)
-	}
-}
-
-func TestRestoreIntoDirWithTrailingSlash(t *testing.T) {
-	v, sk, _ := backupVault(t)
-	path, err := v.Backup()
-	if err != nil {
-		t.Fatal(err)
-	}
-	target := filepath.Join(t.TempDir(), "restored") + "/"
-	if _, err := RestoreBackup(path, target, testPassword, sk); err != nil {
-		t.Errorf("restore into %q: %v", target, err)
 	}
 }

@@ -16,24 +16,22 @@ import (
 // ID to unlock. The PID is recorded only for a server that is actually
 // running, and an early exit is reported instead of claiming success.
 // Returns verified=false if the server is still starting after the timeout.
-func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
+func startBackgroundServer(pw, sk string) (verified bool, err error) {
 	locked := pw == ""
 	exe, err := os.Executable()
 	if err != nil {
 		return false, fmt.Errorf("finding executable: %w", err)
 	}
 
-	cmd := exec.Command(exe, "serve", "--password-stdin")
+	mode := "--password-stdin"
 	if locked {
-		cmd = exec.Command(exe, "serve", "--locked")
+		mode = "--locked"
 	}
+	cmd := exec.Command(exe, "serve", mode)
 	detachFromTerminal(cmd)
-	cmd.Env = append(os.Environ(), fmt.Sprintf("VAULT_DIR=%s", dir))
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		return false, fmt.Errorf("creating stdin pipe: %w", err)
+	if !locked {
+		cmd.Stdin = strings.NewReader(pw + "\n" + sk + "\n")
 	}
-	cmd.Stdout = nil
 	// The server's stderr goes to an unlinked temp file, so an early exit
 	// can report the server's own reason (socket or port) without tying the
 	// long-lived server to a pipe this command closes.
@@ -49,10 +47,6 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 		return false, fmt.Errorf("starting server: %w", err)
 	}
 	os.Remove(logFile.Name())
-	if !locked {
-		fmt.Fprintf(stdin, "%s\n%s\n", pw, sk)
-	}
-	stdin.Close()
 
 	exited := make(chan struct{})
 	go func() {

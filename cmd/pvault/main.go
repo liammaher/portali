@@ -92,7 +92,7 @@ Commands:
   restore <file> [--check] [--ask-key]
                                    Recreate the vault from a backup (needs password + secret key);
                                    --check only verifies it, --ask-key types the key to test your copy
-  expiring [days]                  Show documents expired or expiring within days (default 90)
+  expiring [days]                  Show documents and pratiche deadlines expired or due within days (default 90)
   doc add <category> <file> [--sensitivity tier]
                                    Encrypt and store a document scan (max 20 MB)
   doc list [category]              List stored documents

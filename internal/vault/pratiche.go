@@ -22,10 +22,9 @@ var praticaCampi = []string{
 }
 
 // praticaStati are the stages of a pratica, in order.
-var praticaStati = []string{
+var praticaStati = append([]string{
 	"da_fare", "in_preparazione", "pronta", "inviata", "in_attesa",
-	"completata", "respinta", "annullata",
-}
+}, praticaStatiChiusi...)
 
 // praticaStatiChiusi are the stati that end a pratica; its deadline no longer
 // shows in 'pvault expiring'.
@@ -86,12 +85,11 @@ func normalizePratica(id, category, name, value string) (out string, handled boo
 	fail := func(msg string) (string, bool, error) {
 		return "", true, &ValidationError{Field: id, Msg: msg}
 	}
-	// name is lower-cased by NormalizeAndValidate; IDs are case-sensitive,
-	// so TARI-2026_stato would be a second field for the same pratica.
-	_, campo, ok := splitPraticaField(name)
-	if _, original, _ := strings.Cut(id, "."); original != name {
-		ok = false
-	}
+	// name is lower-cased by NormalizeAndValidate, so split the original:
+	// IDs are case-sensitive, and TARI-2026_stato would be a second field
+	// for the same pratica.
+	_, original, _ := strings.Cut(id, ".")
+	_, campo, ok := splitPraticaField(original)
 	if !ok {
 		return fail("pratiche fields are <slug>_<campo>: a slug of lower-case words joined by hyphens " +
 			"(e.g. tari-iscrizione-2026), then one of " + strings.Join(praticaCampi, ", "))

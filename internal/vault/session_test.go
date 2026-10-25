@@ -64,3 +64,35 @@ func TestSession_AutoLock_MemProtect(t *testing.T) {
 		t.Fatal("expected nil vault key after auto-lock")
 	}
 }
+
+// A user request during auto-lock's backup must not re-arm the old session's
+// timer, and a stale auto-lock must never drop a later session.
+func TestStaleAutoLockKeepsNewSession(t *testing.T) {
+	v, sk := tmpVault(t)
+	v.mu.RLock()
+	old := v.session
+	v.mu.RUnlock()
+	old.setBeforeAutoLock(old.Touch) // activity while the backup runs
+	old.autoLock()
+	old.mu.Lock()
+	rearmed := old.timer != nil
+	old.mu.Unlock()
+	if rearmed {
+		t.Fatal("touch during auto-lock re-armed the timer")
+	}
+
+	if _, err := v.Unlock(testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	v.mu.RLock()
+	current := v.session
+	v.mu.RUnlock()
+	old.autoLock() // a stale firing of the old timer
+	old.lockFn()   // even if it got as far as the vault's callback
+	v.mu.RLock()
+	still := v.session
+	v.mu.RUnlock()
+	if still != current || current.VaultKey() == nil {
+		t.Fatal("stale auto-lock dropped the current session")
+	}
+}

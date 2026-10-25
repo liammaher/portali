@@ -87,16 +87,19 @@ func TestTouchIDHelper_RefusesImpostors(t *testing.T) {
 func TestTouchIDHelper_EnrollChecksServer(t *testing.T) {
 	helper := buildDebugHelper(t)
 	plain := buildPvault(t, false)
-	for _, args := range [][]string{
-		{"enroll"},
-		{"enroll", "--server", "pvault"},
-		{"enroll", "--server", plain},
-		{"enroll", "--server", "/nonexistent/pvault"},
+	for _, c := range []struct {
+		args []string
+		want string
+	}{
+		{[]string{"enroll"}, "usage:"},
+		{[]string{"enroll", "--server", "pvault"}, "usage:"},
+		{[]string{"enroll", "--server", plain}, "not signed with the hardened runtime"},
+		{[]string{"enroll", "--server", "/nonexistent/pvault"}, "not a validly signed pvault"},
 	} {
-		cmd := exec.Command(helper, args...)
+		cmd := exec.Command(helper, c.args...)
 		cmd.Stdin = strings.NewReader("test-password\n")
-		if out, err := cmd.CombinedOutput(); err == nil || strings.Contains(string(out), "enrolled") {
-			t.Errorf("%q accepted: %s", args, out)
+		if out, err := cmd.CombinedOutput(); err == nil || !strings.Contains(string(out), c.want) {
+			t.Errorf("%q: err = %v, want %q in:\n%s", c.args, err, c.want, out)
 		}
 	}
 }

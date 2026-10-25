@@ -81,3 +81,19 @@ func TestTouchIDHelper_RejectsOddScopes(t *testing.T) {
 		}
 	}
 }
+
+// Unknown, repeated or incomplete options are refused, never guessed at.
+func TestTouchIDHelper_RejectsBadGrantArgs(t *testing.T) {
+	helper := buildDebugHelper(t)
+	for _, args := range [][]string{
+		{"--scope", "identity.*", "--scope", "*"},
+		{"--scope"},
+		{"--access", "read"},
+		{"--scope", "identity.*", "--force", "x"},
+	} {
+		out, err := exec.Command(helper, append([]string{"describe-grant"}, args...)...).CombinedOutput()
+		if err == nil {
+			t.Errorf("%q accepted: %s", args, out)
+		}
+	}
+}
