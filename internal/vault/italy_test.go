@@ -109,7 +109,7 @@ func TestNormalizeAndValidate_Rejects(t *testing.T) {
 func TestIsCredentialField(t *testing.T) {
 	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
 		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password",
-		"spid.login", "cieid.username"}
+		"spid.login", "cieid.username", "spid.pass", "spid.pw", "spid.recovery_codes", "cieid.codice", "identity.spid_secret"}
 	for _, id := range forbidden {
 		if !IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = false, want true", id)

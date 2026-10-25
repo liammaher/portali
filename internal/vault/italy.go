@@ -25,7 +25,7 @@ func (e *ValidationError) Error() string {
 
 // reCredentialWord matches a field-name word that names a login secret
 // (pin, pin1, puk2, password, otp, username, ...).
-var reCredentialWord = regexp.MustCompile(`^(pin[0-9]*|puk[0-9]*|password|passwd|pwd|passcode|otp|totp|username|login)$`)
+var reCredentialWord = regexp.MustCompile(`^(pin[0-9]*|puk[0-9]*|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|chiave)$`)
 
 // IsCredentialField reports whether a field holds a login secret: a
 // credential word (pin, puk, password, otp, username, ...) in a field about
@@ -38,9 +38,15 @@ func IsCredentialField(id string) bool {
 		return false
 	}
 	category, name := parts[0], parts[1]
+	// In SPID/CieID categories every field is treated as a credential except
+	// known non-secret details, so a secret stored under an unexpected name
+	// can't be lowered to an agent-visible tier.
+	if IsPersonalCategory(category) {
+		return !isNonSecretAccountField(name)
+	}
 
 	words := strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' })
-	aboutIdentity := category == "cie" || IsPersonalCategory(category)
+	aboutIdentity := category == "cie"
 	for _, w := range words {
 		if w == "spid" || w == "cie" || w == "cieid" {
 			aboutIdentity = true
@@ -55,6 +61,16 @@ func IsCredentialField(id string) bool {
 		}
 	}
 	return false
+}
+
+// isNonSecretAccountField lists SPID/CieID fields that may be lowered from
+// personal: the provider, the level, and dates such as the renewal date.
+func isNonSecretAccountField(name string) bool {
+	switch strings.ToLower(name) {
+	case "provider", "livello", "level":
+		return true
+	}
+	return IsDateField(name)
 }
 
 // IsPersonalCategory reports categories whose fields and documents default to

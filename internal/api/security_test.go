@@ -576,3 +576,33 @@ func TestPersonalTier_InvisibleToAgents(t *testing.T) {
 		t.Errorf("personal cap: expected 400, got %d", w.Code)
 	}
 }
+
+func TestPersonalTier_StatusAndLoweredFields(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Napoli"}, true)
+	env.doRequest(t, "PUT", "/vault/fields/spid.password", map[string]string{"value": "hunter2"}, true)
+	env.doRequest(t, "PUT", "/vault/fields/spid.data_scadenza", map[string]string{"value": "2027-01-31"}, true)
+	env.upload(t, env.token, "category=spid&name=codes.png", "image/png", []byte("x"))
+
+	// Public status must not reveal personal fields or documents.
+	w := env.doRequest(t, "GET", "/vault/status", nil, false)
+	var st vault.VaultStatus
+	json.NewDecoder(w.Body).Decode(&st)
+	if st.FieldCount != 1 || st.Categories["spid"] != 0 || st.Documents != 0 {
+		t.Fatalf("status leaks personal items: %+v", st)
+	}
+
+	// A non-secret SPID detail the user lowered can be maintained by an agent...
+	if w := env.doRequest(t, "PUT", "/vault/sensitivity/spid.data_scadenza", map[string]string{"tier": "standard"}, true); w.Code != 200 {
+		t.Fatalf("lower renewal date: %d %s", w.Code, w.Body.String())
+	}
+	token := createTokenWithAccess(t, env, "spid.*", "write")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/spid.data_scadenza", map[string]string{"value": "2028-01-31"}, token); w.Code != 200 {
+		t.Fatalf("agent update of lowered field: %d %s", w.Code, w.Body.String())
+	}
+	// ...but credentials under any name can't be lowered.
+	env.doRequest(t, "PUT", "/vault/fields/spid.pass", map[string]string{"value": "x"}, true)
+	if w := env.doRequest(t, "PUT", "/vault/sensitivity/spid.pass", map[string]string{"tier": "standard"}, true); w.Code != 400 {
+		t.Fatalf("lowering spid.pass: expected 400, got %d", w.Code)
+	}
+}

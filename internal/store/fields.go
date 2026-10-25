@@ -159,15 +159,17 @@ func (d *DB) SetSensitivity(id, tier string) error {
 }
 
 // FieldCount returns total number of fields.
-func (d *DB) FieldCount() (int, error) {
+// Pass a tier as exclude to leave fields of that tier out ("" counts all).
+func (d *DB) FieldCount(exclude string) (int, error) {
 	var count int
-	err := d.conn.QueryRow("SELECT COUNT(*) FROM vault_fields").Scan(&count)
+	err := d.conn.QueryRow("SELECT COUNT(*) FROM vault_fields WHERE ? = '' OR sensitivity != ?", exclude, exclude).Scan(&count)
 	return count, err
 }
 
 // CategoryCounts returns a map of category -> field count.
-func (d *DB) CategoryCounts() (map[string]int, error) {
-	rows, err := d.conn.Query("SELECT category, COUNT(*) FROM vault_fields GROUP BY category")
+// Pass a tier as exclude to leave fields of that tier out ("" counts all).
+func (d *DB) CategoryCounts(exclude string) (map[string]int, error) {
+	rows, err := d.conn.Query("SELECT category, COUNT(*) FROM vault_fields WHERE ? = '' OR sensitivity != ? GROUP BY category", exclude, exclude)
 	if err != nil {
 		return nil, err
 	}

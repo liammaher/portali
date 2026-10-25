@@ -835,11 +835,12 @@ body::before{
     let lastSaved = '';
 
     input.addEventListener('blur', function() {
-      const val = input.value.trim();
+      // Secrets are saved exactly as typed: a password may start or end with a space.
+      const val = input.type === 'password' ? input.value : input.value.trim();
       const fieldId = input.getAttribute('data-field');
       const statusEl = input.closest('.field').querySelector('.status');
 
-      if (!val || val === lastSaved) return;
+      if (!val.trim() || val === lastSaved) return;
 
       setStatus(statusEl, 'saving');
 
@@ -853,6 +854,9 @@ body::before{
               lastSaved = f.value;
             }
           }).catch(function() {});
+          if (fieldId === 'identity.first_name' || fieldId === 'identity.last_name') {
+            syncFullName();
+          }
           setStatus(statusEl, 'saved');
           updateProgress();
           setTimeout(function() { setStatus(statusEl, 'idle'); }, 2000);
@@ -883,6 +887,16 @@ body::before{
       });
     }
   });
+
+  // Agents look for identity.full_name, so keep it in step with nome + cognome.
+  function syncFullName() {
+    const first = document.querySelector('[data-field="identity.first_name"]').value.trim();
+    const last = document.querySelector('[data-field="identity.last_name"]').value.trim();
+    const full = (first + ' ' + last).trim();
+    if (full) {
+      api('PUT', '/vault/fields/identity.full_name', { value: full }).catch(function() {});
+    }
+  }
 
   // --- Status indicator ---
 

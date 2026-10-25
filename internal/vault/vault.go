@@ -350,11 +350,13 @@ func (v *Vault) Status() (*VaultStatus, error) {
 	v.mu.RUnlock()
 
 	if init {
-		count, _ := v.db.FieldCount()
+		// Status is public, so personal fields and documents are left out of
+		// every count: agents must not even learn that they exist.
+		count, _ := v.db.FieldCount(TierPersonal)
 		status.FieldCount = count
-		cats, _ := v.db.CategoryCounts()
+		cats, _ := v.db.CategoryCounts(TierPersonal)
 		status.Categories = cats
-		status.Documents, _ = v.db.DocumentCount()
+		status.Documents, _ = v.db.DocumentCount(TierPersonal)
 	}
 
 	return status, nil

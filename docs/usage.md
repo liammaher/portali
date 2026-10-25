@@ -94,6 +94,7 @@ pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list, or t
 
 - `--scope` is required (`"*"` must be passed explicitly).
 - `--ttl` defaults to `24h`, maximum `2160h` (90 days).
+- Store secrets with `pvault set <id>` and no value: it prompts hidden (or reads one line from stdin), keeping them out of shell history. `pvault export` omits personal fields unless `--include-personal` is passed.
 - `--max-sensitivity` defaults to `sensitive`; `critical` fields are hidden unless you opt in. It can't be set to `personal`: personal fields and documents (SPID login, CIE PIN/PUK, anything you mark `personal`) are invisible to every agent token — reads and deletes return 404, writes return 403 `personal_only`, and they never appear in lists, context, category reads, expiry reports or document listings.
 - Service tokens cannot change sensitivity tiers.
 - `--access` defaults to `read` (read only). `append` also allows adding new fields and documents but never overwriting or deleting them; `write` allows everything. Tokens created before this option existed are read-only.

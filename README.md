@@ -29,7 +29,9 @@ pvault unlock    # starts the local server on 127.0.0.1:7200
 pvault ui        # opens the onboarding form in your browser
 ```
 
-You need both the profile password and the secret key to unlock. While unlocked, every CLI command that reads or changes data asks for your password again (interactive terminal only), so an agent running shell commands can't use your session.
+You need both the profile password and the secret key to unlock.
+
+For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a value: you'll type it hidden, so it never lands in your shell history. `pvault export` leaves personal fields out unless you add `--include-personal`. While unlocked, every CLI command that reads or changes data asks for your password again (interactive terminal only), so an agent running shell commands can't use your session.
 
 ## What it stores
 
@@ -50,8 +52,8 @@ You need both the profile password and the secret key to unlock. While unlocked,
 ```sh
 pvault set identity.codice_fiscale "RSSMRA85T10A562S"
 pvault set permesso_soggiorno.data_scadenza 15/12/2026     # stored as 2026-12-15
-pvault set spid.password "…"                               # stored as personal: only you can ever read it
-pvault set spid.password "…" sensitive                     # refused — credentials can only be personal
+pvault set spid.password                                   # prompts hidden; stored as personal — only you can read it
+pvault set-sensitivity spid.password sensitive             # refused — credentials can only be personal
 ```
 
 ## Document scans

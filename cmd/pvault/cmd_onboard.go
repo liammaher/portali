@@ -84,6 +84,7 @@ func cmdOnboard() {
 	fmt.Println("Let's add some basics (press Enter to skip any):")
 	reader := bufio.NewReader(os.Stdin)
 	saved := 0
+	entered := map[string]string{}
 
 	for _, f := range onboardFields {
 		fmt.Printf("  %s: ", f.prompt)
@@ -104,7 +105,15 @@ func cmdOnboard() {
 			fmt.Fprintf(os.Stderr, "  Warning: could not save %s: %v\n", f.fieldID, err)
 			continue
 		}
+		entered[f.fieldID] = value
 		saved++
+	}
+
+	// Agents look for identity.full_name, so derive it from nome + cognome.
+	if full := strings.TrimSpace(entered["identity.first_name"] + " " + entered["identity.last_name"]); full != "" {
+		if resp, err := apiRequest("PUT", "/vault/fields/identity.full_name", map[string]string{"value": full}); err == nil {
+			apiResult(resp, nil)
+		}
 	}
 
 	fmt.Println()

@@ -193,7 +193,7 @@ func TestFieldCount(t *testing.T) {
 	db.SetField(Field{ID: "a.1", Category: "a", FieldName: "1", Value: "v", UpdatedAt: time.Now()})
 	db.SetField(Field{ID: "b.2", Category: "b", FieldName: "2", Value: "v", UpdatedAt: time.Now()})
 
-	count, _ := db.FieldCount()
+	count, _ := db.FieldCount("")
 	if count != 2 {
 		t.Fatalf("expected 2, got %d", count)
 	}
@@ -205,7 +205,7 @@ func TestCategoryCounts(t *testing.T) {
 	db.SetField(Field{ID: "a.2", Category: "a", FieldName: "2", Value: "v", UpdatedAt: time.Now()})
 	db.SetField(Field{ID: "b.1", Category: "b", FieldName: "1", Value: "v", UpdatedAt: time.Now()})
 
-	counts, _ := db.CategoryCounts()
+	counts, _ := db.CategoryCounts("")
 	if counts["a"] != 2 || counts["b"] != 1 {
 		t.Fatalf("expected a=2 b=1, got %v", counts)
 	}
