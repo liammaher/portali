@@ -23,7 +23,7 @@ Save your secret key somewhere safe. You need both the profile password and the 
 
 While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory. `pvault ui` opens the onboarding page, which asks for the password itself and gets a 15-minute grant, so no token ever appears on a command line or in browser history. No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password (lock stops the server it started; for a server run with `pvault serve`, lock asks for the password). Only wrong passwords count toward the 10-per-minute limit.
 
-With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs, so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password.
+With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs, so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password. Touch ID only sends your password to the `pvault` build it was enabled with, over the vault's socket (see Security Model), so after rebuilding or moving `pvault` or `pvault-touchid` run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`. `pvault touchid status` shows whether it's on; `pvault touchid disable` removes the saved password.
 
 ## Fields
 
@@ -50,12 +50,15 @@ You can use any category and field name. Run `pvault schema` to see recommended 
 
 Each field has a sensitivity tier that controls how it's shared with consumers.
 
-| Tier | Examples | Behavior |
-|------|----------|----------|
-| `public` | Name, timezone, language | Auto-shared with authorized consumers |
-| `standard` | Address, employer, education | Shared on request, logged |
-| `sensitive` | DOB, phone, tax status | Requires explicit approval |
-| `critical` | SSN, card number, card expiry | Requires approval + verification |
+| Tier | Examples | Who can read it |
+|------|----------|-----------------|
+| `public` | Timezone, language | Any service token whose scope covers it |
+| `standard` | Address, employer | Service tokens with the default cap (`sensitive`) or higher |
+| `sensitive` | Date of birth, phone, rent | Service tokens with the default cap or higher |
+| `critical` | SSN, card number | Only tokens created with `--max-sensitivity critical` |
+| `personal` | SPID login, CIE PIN/PUK | Only you: your own session, or a Touch ID prompt you approve |
+
+A token's `--max-sensitivity` is the highest tier it can see; everything above it is hidden as if it didn't exist.
 
 ```sh
 pvault set-sensitivity financial.ssn critical
@@ -83,6 +86,20 @@ Each file is encrypted with AES-256-GCM using the category's documents subkey an
 The MCP tool `vault_document_add` only reads files inside the folders in `VAULT_IMPORT_DIRS` (default `~/Downloads`), resolving symlinks and refusing hidden files, so an agent can't use it to read arbitrary local files.
 
 New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
+
+## Backups
+
+```sh
+pvault backup --to ~/Library/Mobile\ Documents/com~apple~CloudDocs/pvault-backups  # set the folder and back up now
+pvault backup                           # back up now
+pvault restore <file> --check           # verify the backup unlocks, restore nothing
+pvault restore <file> --check --ask-key # same, typing the secret key you saved (tests your copy)
+pvault restore <file>                   # recreate the vault (only into a missing or empty VAULT_DIR)
+```
+
+A backup is a snapshot of `vault.db` plus the encrypted documents, in a tar encrypted again with chunked AES-256-GCM under a key derived from your vault key, so field names and the audit log are hidden too. Files are named `pvault-<vault id>-<time>.pvbackup` and written with mode 0600. Once a folder is set (an absolute path outside the vault directory), the server backs up a minute after the last change and again before it locks; `pvault lock` waits for that. Pruning keeps this vault's 10 newest backups plus the newest per day for 30 days, and never touches other files. `pvault status` shows when the last backup ran or why it failed, never the folder.
+
+`secret.key` is never in a backup: restoring needs your profile password and the secret key you saved at `pvault init`. Backing up needs your own session (password or Touch ID), not a service token.
 
 ## Service Tokens
 
@@ -114,7 +131,16 @@ GET  /vault/status                       # { initialized, locked, field_count, c
 GET  /vault/schema                       # Recommended field names and sensitivity tiers
 POST /vault/unlock                       # { password, secret_key } → { token }
 POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
-                                         # + { scope, access? } → grant limited to that scope (max 10m), used by Touch ID
+                                         # + { scope, access? } → grant limited to that scope (max 10m), used by Touch ID;
+                                         #   unlike a service token it can reach personal fields in its scope
+```
+
+`/vault/unlock` and `/vault/session` require `Content-Type: application/json`. The CLI sends them over the vault socket (`<VAULT_DIR>/run/pvault.sock`) on macOS and Linux; the same routes are served there and on TCP.
+
+### Expiry
+
+```
+GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fields and open pratiche deadlines
 ```
 
 ### Fields
@@ -125,6 +151,15 @@ GET    /vault/fields/{id}                # Get field with decrypted value
 PUT    /vault/fields/{id}                # { value, sensitivity? } — upsert
 DELETE /vault/fields/{id}                # Delete field
 GET    /vault/fields/category/{name}     # All fields in category with values
+```
+
+### Documents
+
+```
+POST   /vault/documents?category=<c>&name=<file>[&sensitivity=<tier>]   # body: the raw file, Content-Type its type (max 20 MB)
+GET    /vault/documents?category=<c>     # List documents (metadata only)
+GET    /vault/documents/{id}             # Download the decrypted file (attachment, CSP sandbox)
+DELETE /vault/documents/{id}             # Delete
 ```
 
 ### Context
@@ -172,6 +207,12 @@ POST /vault/lock                         # Lock vault, zero keys
 GET /vault/audit?limit=50                # Recent access log
 ```
 
+### Backup
+
+```
+POST /vault/backup                       # { dir? } → { path } (your session only; dir also sets the backup folder)
+```
+
 ## Security Model
 
 ```
@@ -183,7 +224,8 @@ Profile Password + Secret Key (128-bit)
 ```
 
 - Profile password is never stored, unless you turn on Touch ID (`pvault touchid enable`): then it is kept in your login Keychain, readable only by the signed `pvault-touchid` helper
-- Secret key lives at `~/.pvault/secret.key` (mode 0600), never transmitted
+- Secret key lives at `~/.pvault/secret.key` (mode 0600), never in the database or a backup
+- Password and secret key go from the CLI to the server only over the vault socket, after checking the server is this same `pvault` (macOS and Linux)
 - Vault key exists only in memory while unlocked, zeroed on lock
 - Auto-lock after 30 minutes of inactivity
 - Every access logged to `vault_access_log`
@@ -202,5 +244,7 @@ Profile Password + Secret Key (128-bit)
 ~/.pvault/
 ├── vault.db       # SQLite database (encrypted fields)
 ├── secret.key     # 128-bit secret key (mode 0600)
+├── documents/     # Encrypted document files, <id>.enc (mode 0600)
+├── run/           # pvault.sock, the server's credential socket (dir 0700, socket 0600)
 └── pvault.pid     # PID of running server
 ```
