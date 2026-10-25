@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"os"
 	"path/filepath"
@@ -352,4 +353,33 @@ func TestOpen_MigratesTokenMaxSensitivity(t *testing.T) {
 		t.Fatalf("reopen: %v", err)
 	}
 	db2.Close()
+}
+
+// Every pooled connection must wait for a lock instead of failing at once
+// with SQLITE_BUSY, so the settings can't be a one-off PRAGMA on one of them.
+func TestEveryConnectionWaitsForLocks(t *testing.T) {
+	db := tmpDB(t)
+	ctx := context.Background()
+	var conns []*sql.Conn
+	for i := 0; i < 3; i++ {
+		c, err := db.conn.Conn(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer c.Close()
+		conns = append(conns, c)
+	}
+	for i, c := range conns {
+		var timeout int
+		var mode string
+		if err := c.QueryRowContext(ctx, "PRAGMA busy_timeout").Scan(&timeout); err != nil {
+			t.Fatal(err)
+		}
+		if err := c.QueryRowContext(ctx, "PRAGMA journal_mode").Scan(&mode); err != nil {
+			t.Fatal(err)
+		}
+		if timeout != 5000 || mode != "wal" {
+			t.Errorf("connection %d: busy_timeout %d, journal_mode %q; want 5000, wal", i, timeout, mode)
+		}
+	}
 }
