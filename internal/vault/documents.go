@@ -44,6 +44,10 @@ func DocumentScopeID(category string) string {
 	return category + ".documents"
 }
 
+// DefaultDocumentSensitivity is the tier of a document stored without one
+// (outside the SPID/CieID categories, which are always personal).
+const DefaultDocumentSensitivity = "sensitive"
+
 // AddDocument encrypts and stores a file under a category. The content and
 // original filename are encrypted with the category's documents subkey and
 // bound to the document ID, so ciphertexts cannot be swapped between records.
@@ -71,7 +75,7 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	case sensitivity == "" && personalOnly:
 		sensitivity = TierPersonal
 	case sensitivity == "":
-		sensitivity = "sensitive"
+		sensitivity = DefaultDocumentSensitivity
 	case !validTiers[sensitivity]:
 		return nil, ErrInvalidTier
 	case personalOnly && sensitivity != TierPersonal:
