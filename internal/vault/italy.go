@@ -106,6 +106,10 @@ func NormalizeAndValidate(id, value string) (string, error) {
 	}
 	category, name := parts[0], parts[1]
 
+	if v, handled, err := normalizeHousing(id, category, name, value); handled {
+		return v, err
+	}
+
 	switch {
 	case hasFieldSuffix(name, "codice_fiscale"):
 		cf := normalizeCode(value)

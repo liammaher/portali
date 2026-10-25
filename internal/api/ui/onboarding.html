@@ -409,9 +409,236 @@ body::before{
     </div>
   </section>
 
-  <!-- 03 Contatti e banca -->
+  <!-- 03 Casa -->
   <section class="section" data-section="2">
     <div class="section-number">03</div>
+    <h2>La tua casa</h2>
+    <p class="subtitle">The home at the address above. Catasto data is on the visura catastale; TARI, the rental registration and ISEE all ask for it.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Titolo</label>
+        <span class="status idle"></span>
+        <select data-field="abitazione.titolo">
+          <option value=""></option>
+          <option value="locatario">Locatario (affitto)</option>
+          <option value="proprietario">Proprietario</option>
+          <option value="comodatario">Comodatario</option>
+          <option value="usufruttuario">Usufruttuario</option>
+          <option value="ospite">Ospite</option>
+          <option value="altro">Altro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ci abiti dal</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="abitazione.data_inizio">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Sezione</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.catasto_sezione" placeholder="if any" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Foglio</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.catasto_foglio" placeholder="12" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>Particella</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.catasto_particella" placeholder="345" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Subalterno</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.catasto_subalterno" placeholder="7" inputmode="numeric">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Categoria catastale</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.catasto_categoria" placeholder="A/2" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Rendita (€)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.catasto_rendita" placeholder="512,30" inputmode="decimal">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Superficie calpestabile (m²)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.superficie_calpestabile_mq" placeholder="72" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>Superficie catastale (m²)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.superficie_catastale_mq" placeholder="80" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>Vani</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.vani" placeholder="4,5" inputmode="decimal">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Piano</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.piano" placeholder="3">
+      </div>
+      <div class="field">
+        <label>Classe energetica (APE)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="abitazione.classe_energetica" placeholder="E" autocapitalize="characters" spellcheck="false">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>TARI — codice contribuente</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="tari.codice_contribuente" placeholder="on the payment notice" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Dichiarazione TARI presentata il</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="tari.data_dichiarazione">
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Affitto e utenze -->
+  <section class="section" data-section="3">
+    <div class="section-number">04</div>
+    <h2>Affitto e utenze</h2>
+    <p class="subtitle">Skip the contract if you own the home. Registration details are on the RLI receipt; the POD and PDR are on any electricity or gas bill.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Tipo di contratto</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.tipo_contratto" placeholder="4+4 libero, 3+2 concordato, transitorio" list="tipiContratto">
+        <datalist id="tipiContratto">
+          <option value="4+4 libero">
+          <option value="3+2 concordato">
+          <option value="transitorio">
+          <option value="studenti">
+        </datalist>
+      </div>
+      <div class="field">
+        <label>Cedolare secca</label>
+        <span class="status idle"></span>
+        <select data-field="locazione.cedolare_secca">
+          <option value=""></option>
+          <option value="si">Sì</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Decorrenza</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="locazione.data_decorrenza">
+      </div>
+      <div class="field">
+        <label>Scadenza</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="locazione.data_scadenza">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Canone mensile (€)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.canone_mensile" placeholder="750" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>Spese condominiali (€/mese)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.spese_condominiali_mensili" placeholder="50" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>Deposito cauzionale (€)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.deposito_cauzionale" placeholder="1500" inputmode="decimal">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Codice identificativo contratto</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.registrazione_codice_identificativo" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Registrato il</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="locazione.data_registrazione">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Locatore — nome</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.locatore_nome">
+      </div>
+      <div class="field">
+        <label>Locatore — codice fiscale</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locazione.locatore_codice_fiscale" autocapitalize="characters" spellcheck="false">
+      </div>
+    </div>
+    <div class="field">
+      <label>IBAN per l'affitto</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="locazione.locatore_iban" placeholder="IT60 X054 2811 1010 0000 0123 456" autocapitalize="characters" spellcheck="false">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Luce — POD</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="utenze.luce_pod" placeholder="IT001E12345678" autocapitalize="characters" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Fornitore luce</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="utenze.luce_fornitore">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Gas — PDR</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="utenze.gas_pdr" placeholder="14 cifre" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>Fornitore gas</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="utenze.gas_fornitore">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Fornitore acqua</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="utenze.acqua_fornitore" placeholder="ABC Napoli">
+      </div>
+      <div class="field">
+        <label>Fornitore internet</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="utenze.internet_fornitore">
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Contatti e banca -->
+  <section class="section" data-section="4">
+    <div class="section-number">05</div>
     <h2>How can you be reached?</h2>
     <p class="subtitle">Contact details and the IBAN used for refunds (730, INPS) and payments</p>
 
@@ -439,9 +666,9 @@ body::before{
     </div>
   </section>
 
-  <!-- 04 Lavoro -->
-  <section class="section" data-section="3">
-    <div class="section-number">04</div>
+  <!-- 06 Lavoro -->
+  <section class="section" data-section="5">
+    <div class="section-number">06</div>
     <h2>What do you do?</h2>
     <p class="subtitle">Employment, or your partita IVA if you are self-employed</p>
 
@@ -488,9 +715,9 @@ body::before{
     </div>
   </section>
 
-  <!-- 05 CIE -->
-  <section class="section" data-section="4">
-    <div class="section-number">05</div>
+  <!-- 07 CIE -->
+  <section class="section" data-section="6">
+    <div class="section-number">07</div>
     <h2>Carta d'identità</h2>
     <p class="subtitle">Electronic identity card. Never enter the PIN or PUK — the vault refuses them.</p>
 
@@ -520,9 +747,9 @@ body::before{
     </div>
   </section>
 
-  <!-- 06 SPID -->
-  <section class="section" data-section="5">
-    <div class="section-number">06</div>
+  <!-- 08 SPID -->
+  <section class="section" data-section="7">
+    <div class="section-number">08</div>
     <h2>SPID e codici — solo per te</h2>
     <p class="subtitle">Personal tier: stored encrypted and never readable, listable or changeable by any agent, whatever its token. Only you see these, here or with <code>pvault get</code>.</p>
 
@@ -597,9 +824,9 @@ body::before{
     </div>
   </section>
 
-  <!-- 07 Documenti -->
-  <section class="section" data-section="6">
-    <div class="section-number">07</div>
+  <!-- 09 Documenti -->
+  <section class="section" data-section="8">
+    <div class="section-number">09</div>
     <h2>Altri documenti</h2>
     <p class="subtitle">Numbers and expiry dates — run <code>pvault expiring</code> to see what needs renewing. Store scans with <code>pvault doc add</code>.</p>
 
@@ -665,9 +892,9 @@ body::before{
     </div>
   </section>
 
-  <!-- 08 Pagamento -->
-  <section class="section" data-section="7">
-    <div class="section-number">08</div>
+  <!-- 10 Pagamento -->
+  <section class="section" data-section="9">
+    <div class="section-number">10</div>
     <h2>Payment card</h2>
     <p class="subtitle">Optional — e.g. for pagoPA payments. Critical tier: agents can't read it unless you allow it.</p>
 
@@ -705,9 +932,9 @@ body::before{
       </div>
   </section>
 
-  <!-- 09 Preferenze -->
-  <section class="section" data-section="8">
-    <div class="section-number">09</div>
+  <!-- 11 Preferenze -->
+  <section class="section" data-section="10">
+    <div class="section-number">11</div>
     <h2>Preferences</h2>
     <p class="subtitle">How you like things set up</p>
 
@@ -790,7 +1017,7 @@ body::before{
   document.getElementById('totalCount').textContent = totalCount;
 
   // Categories to load
-  const categories = ['identity', 'residenza', 'domicilio', 'financial', 'employment', 'business', 'cie', 'spid',
+  const categories = ['identity', 'residenza', 'domicilio', 'abitazione', 'locazione', 'utenze', 'tari', 'financial', 'employment', 'business', 'cie', 'spid',
     'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'payment', 'preferences'];
 
   // --- API ---

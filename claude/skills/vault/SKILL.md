@@ -64,10 +64,19 @@ Common ones: `residenza.{indirizzo,civico,cap,comune,provincia,data_inizio}`,
 `domicilio.*` (only if different from residenza), `identity.codice_fiscale`,
 `cie.{numero,data_scadenza}`, `permesso_soggiorno.{numero,tipo,data_scadenza}`,
 `tessera_sanitaria.{numero,data_scadenza,medico_base}`.
+Housing (the home at residenza/domicilio; the address itself stays there):
+`abitazione.{titolo,data_inizio,catasto_foglio,catasto_particella,catasto_subalterno,catasto_categoria,superficie_calpestabile_mq}`,
+`locazione.{tipo_contratto,data_decorrenza,data_scadenza,canone_mensile,registrazione_codice_identificativo,locatore_nome,locatore_codice_fiscale}`,
+`utenze.{luce_pod,gas_pdr,<servizio>_fornitore,<servizio>_codice_cliente}`, `tari.{codice_contribuente,data_dichiarazione}`.
+A TARI form needs `identity.*,residenza.*,abitazione.*,tari.*`; leave `locazione.*` out
+unless the task needs the contract (rent and landlord details are sensitive).
 
 Validation done by the vault (expect errors otherwise):
 - Fields named `data_*`, `date_of_*` or `*_date`: real dates as `YYYY-MM-DD`.
 - `cap`: 5 digits. `provincia`: 2-letter sigla (e.g. `NA`).
+- Housing: `catasto_categoria` (A/2), foglio/subalterno digits, `*_mq` and `vani` numbers,
+  euro amounts stored as `1250.50` (Italian `1.250,50` accepted), `luce_pod`
+  (IT001E12345678), `gas_pdr` (14 digits), `cedolare_secca` si/no, `abitazione.titolo` from a fixed list.
 - Writing without a tier keeps the existing tier; don't pass one unless asked.
 
 ## 4. Granting MCP access (per task, on demand)
