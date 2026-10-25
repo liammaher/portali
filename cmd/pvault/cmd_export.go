@@ -16,6 +16,7 @@ func cmdExport() {
 		}
 	}
 
+	needGrant("*", "read")
 	resp, err := apiRequest("GET", "/vault/context", nil)
 	if err != nil {
 		fatal("request failed: %v", err)

@@ -52,6 +52,8 @@ func main() {
 		cmdOnboard()
 	case "ui":
 		cmdUI()
+	case "touchid":
+		cmdTouchID()
 	case "help", "-h", "--help":
 		printUsage()
 	default:
@@ -88,6 +90,7 @@ Commands:
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
   ui                               Open vault onboarding form in browser
+  touchid enable|disable|status    Approve requests with Touch ID instead of typing the password
   create-service-token <consumer> --scope <patterns> [--access read|append|write]
                                    Create a scoped agent token (read-only by default; 24h default, 90d max)
   list-service-tokens              List active service tokens

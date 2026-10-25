@@ -607,6 +607,111 @@ func TestPersonalTier_StatusAndLoweredFields(t *testing.T) {
 	}
 }
 
+func scopedGrant(t *testing.T, env *testEnv, sk, scope, access string) string {
+	t.Helper()
+	w := env.doRequest(t, "POST", "/vault/session", map[string]string{
+		"password": testPassword, "secret_key": sk, "ttl": "2m", "scope": scope, "access": access,
+	}, false)
+	if w.Code != 200 {
+		t.Fatalf("scoped grant: expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	var resp map[string]string
+	json.NewDecoder(w.Body).Decode(&resp)
+	if resp["scope"] != scope || resp["access"] != access {
+		t.Fatalf("grant should echo scope and access, got %v", resp)
+	}
+	return resp["token"]
+}
+
+// A scoped grant (what a Touch ID approval returns) reaches exactly the
+// approved fields, personal ones included, and nothing session-only.
+func TestScopedGrant_API(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	for id, v := range map[string]string{"spid.password": "hunter2", "identity.full_name": "Mario Rossi", "residenza.comune": "Napoli"} {
+		if w := env.doRequest(t, "PUT", "/vault/fields/"+id, map[string]string{"value": v}, true); w.Code != 200 {
+			t.Fatalf("seed %s: %d %s", id, w.Code, w.Body.String())
+		}
+	}
+
+	read := scopedGrant(t, env, sk, "spid.password,identity.*", "read")
+	if w := env.doRequestWithToken(t, "GET", "/vault/fields/spid.password", nil, read); !strings.Contains(w.Body.String(), "hunter2") {
+		t.Errorf("approved personal field: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequestWithToken(t, "GET", "/vault/fields/identity.full_name", nil, read); w.Code != 200 {
+		t.Errorf("approved category: %d", w.Code)
+	}
+	if w := env.doRequestWithToken(t, "GET", "/vault/fields/residenza.comune", nil, read); w.Code != 403 {
+		t.Errorf("field outside scope: expected 403, got %d", w.Code)
+	}
+	if b := env.doRequestWithToken(t, "GET", "/vault/context", nil, read).Body.String(); strings.Contains(b, "Napoli") {
+		t.Errorf("context leaked a field outside scope: %s", b)
+	}
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.full_name", map[string]string{"value": "x"}, read); w.Code != 403 {
+		t.Errorf("write with read grant: expected 403, got %d", w.Code)
+	}
+	for _, req := range []struct{ method, path string }{
+		{"GET", "/vault/audit"}, {"POST", "/vault/lock"}, {"GET", "/vault/tokens/service"},
+	} {
+		if w := env.doRequestWithToken(t, req.method, req.path, nil, read); w.Code != 403 {
+			t.Errorf("%s %s with scoped grant: expected 403, got %d", req.method, req.path, w.Code)
+		}
+	}
+
+	write := scopedGrant(t, env, sk, "residenza.comune", "write")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/residenza.comune", map[string]string{"value": "Roma"}, write); w.Code != 200 {
+		t.Errorf("approved write: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/residenza.comune", nil, write); w.Code != 200 {
+		t.Errorf("approved delete: %d %s", w.Code, w.Body.String())
+	}
+
+	add := scopedGrant(t, env, sk, "identity.*", "append")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.full_name", map[string]string{"value": "x"}, add); w.Code != 403 {
+		t.Errorf("overwrite with append grant: expected 403, got %d", w.Code)
+	}
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.nickname", map[string]string{"value": "Mario"}, add); w.Code != 200 {
+		t.Errorf("new field with append grant: %d %s", w.Code, w.Body.String())
+	}
+
+	for _, body := range []map[string]string{
+		{"password": testPassword, "scope": "identity"},
+		{"password": testPassword, "scope": "identity.*", "ttl": "11m"},
+		{"password": testPassword, "access": "write"},
+	} {
+		if w := env.doRequest(t, "POST", "/vault/session", body, false); w.Code != 400 {
+			t.Errorf("%v: expected 400, got %d", body, w.Code)
+		}
+	}
+}
+
+// Tokens and scoped grants may raise a tier on write but never lower it.
+func TestFieldWrite_TokensCannotLowerTier(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	seedTiers(t, env)
+	svc := createTokenWithAccess(t, env, "*", "write")
+	grant := scopedGrant(t, env, sk, "identity.*", "write")
+	for _, tok := range []string{svc, grant} {
+		w := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.codice_fiscale", map[string]string{"value": "CCCFBA85D03L219P", "sensitivity": "public"}, tok)
+		if w.Code != 403 {
+			t.Errorf("lowering existing tier: expected 403, got %d %s", w.Code, w.Body.String())
+		}
+		w = env.doRequestWithToken(t, "PUT", "/vault/fields/identity.other_codice_fiscale", map[string]string{"value": "CCCFBA85D03L219P", "sensitivity": "public"}, tok)
+		if w.Code != 403 {
+			t.Errorf("new field below schema default: expected 403, got %d %s", w.Code, w.Body.String())
+		}
+	}
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.full_name", map[string]string{"value": "Mario", "sensitivity": "sensitive"}, svc); w.Code != 200 {
+		t.Errorf("raising tier: expected 200, got %d %s", w.Code, w.Body.String())
+	}
+	f, _ := env.vault.Get("identity.codice_fiscale")
+	if f.Sensitivity != "sensitive" {
+		t.Errorf("tier changed to %s", f.Sensitivity)
+	}
+	if w := env.doRequest(t, "PUT", "/vault/fields/identity.full_name", map[string]string{"value": "Mario", "sensitivity": "public"}, true); w.Code != 200 {
+		t.Errorf("session lowering: expected 200, got %d", w.Code)
+	}
+}
+
 // The portal-login flow: the user stores their login method and SPID provider,
 // lowers the provider from personal, and an agent token scoped to just those
 // two fields can read them in their stored spelling.

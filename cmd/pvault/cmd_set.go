@@ -25,6 +25,7 @@ func cmdSet() {
 	if !strings.Contains(id, ".") {
 		fatal("field ID must be category.name (e.g., residenza.comune)")
 	}
+	needGrant(id, "write")
 
 	var value string
 	if len(os.Args) >= 4 {

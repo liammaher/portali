@@ -18,6 +18,7 @@ func cmdExpiring() {
 		days = n
 	}
 
+	needGrant("*", "read")
 	resp, err := apiRequest("GET", "/vault/expiring?days="+strconv.Itoa(days), nil)
 	if err != nil {
 		fatal("request failed: %v", err)

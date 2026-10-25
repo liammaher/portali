@@ -23,6 +23,8 @@ Save your secret key somewhere safe. You need both the profile password and the 
 
 While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory. `pvault ui` opens the onboarding page, which asks for the password itself and gets a 15-minute grant, so no token ever appears on a command line or in browser history. No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password (lock stops the server it started; for a server run with `pvault serve`, lock asks for the password). Only wrong passwords count toward the 10-per-minute limit.
 
+With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. In a terminal, a denied or failed prompt falls back to the password.
+
 ## Fields
 
 Fields use dot notation: `category.field_name`.
@@ -111,6 +113,7 @@ GET  /vault/status                       # { initialized, locked, field_count, c
 GET  /vault/schema                       # Recommended field names and sensitivity tiers
 POST /vault/unlock                       # { password, secret_key } → { token }
 POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
+                                         # + { scope, access? } → grant limited to that scope (max 10m), used by Touch ID
 ```
 
 ### Fields
@@ -178,7 +181,7 @@ Profile Password + Secret Key (128-bit)
   → AES-256-GCM per field (12-byte random nonce)
 ```
 
-- Profile password is never stored
+- Profile password is never stored, unless you turn on Touch ID (`pvault touchid enable`): then it is kept in your login Keychain, readable only by the signed `pvault-touchid` helper
 - Secret key lives at `~/.pvault/secret.key` (mode 0600), never transmitted
 - Vault key exists only in memory while unlocked, zeroed on lock
 - Auto-lock after 30 minutes of inactivity

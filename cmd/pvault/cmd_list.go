@@ -9,8 +9,10 @@ import (
 
 func cmdList() {
 	path := "/vault/fields"
+	needGrant("*", "read")
 	if len(os.Args) >= 3 {
 		path = "/vault/fields/category/" + os.Args[2]
+		needGrant(os.Args[2]+".*", "read")
 	}
 
 	resp, err := apiRequest("GET", path, nil)

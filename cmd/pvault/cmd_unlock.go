@@ -6,7 +6,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"syscall"
 	"time"
+
+	"golang.org/x/term"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -19,20 +22,26 @@ func cmdUnlock() {
 			return
 		}
 		// Server running but vault auto-locked — re-unlock via API
-		pw, err := promptPassword("Profile password: ")
-		if err != nil {
-			fatal("reading password: %v", err)
-		}
-		sk, err := readSecretKey()
-		if err != nil {
-			fatal("%v", err)
-		}
-		reUnlock(pw, sk)
+		unlockRunningServer(false)
 		return
 	}
 
 	// Nothing on the port — clean up any stale PID file
 	removePID()
+
+	// With Touch ID, start the server locked and let the helper unlock it;
+	// the typed password stays the fallback.
+	if touchIDEnrolled() {
+		verified, err := startBackgroundServer(vaultDir(), "", "")
+		if err != nil {
+			fatal("%v", err)
+		}
+		if !verified {
+			fatal("vault server is still starting — run 'pvault unlock' again in a moment")
+		}
+		unlockRunningServer(true)
+		return
+	}
 
 	pw, err := promptPassword("Profile password: ")
 	if err != nil {
@@ -59,6 +68,42 @@ func cmdUnlock() {
 		return
 	}
 	fmt.Println("Vault unlocked. Server running on", serverAddr())
+}
+
+// unlockRunningServer unlocks a running, locked server: with Touch ID when
+// it's on, else (or if that fails in a terminal) with the typed password.
+// When this command just started the server and no one at a terminal can
+// unlock it, the server is stopped again rather than left running locked.
+func unlockRunningServer(startedHere bool) {
+	giveUp := func(msg string, args ...any) {
+		if startedHere {
+			stopOwnServer()
+		}
+		fatal(msg, args...)
+	}
+	if touchIDEnrolled() {
+		_, err := runTouchID("", "unlock")
+		if err == nil {
+			if !isVaultUnlocked() {
+				fatal("vault still locked after Touch ID unlock")
+			}
+			fmt.Println("Vault unlocked with Touch ID. Server running on", serverAddr())
+			return
+		}
+		if !term.IsTerminal(int(syscall.Stdin)) {
+			giveUp("%v", err)
+		}
+		fmt.Fprintf(os.Stderr, "%v — enter your password instead.\n", err)
+	}
+	pw, err := promptPassword("Profile password: ")
+	if err != nil {
+		giveUp("reading password: %v", err)
+	}
+	sk, err := readSecretKey()
+	if err != nil {
+		giveUp("%v", err)
+	}
+	reUnlock(pw, sk)
 }
 
 // checkCredentials verifies the password and secret key against the vault

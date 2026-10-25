@@ -124,6 +124,19 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		// Try a scoped grant — the user approved exactly this scope in
+		// person, so it reaches personal fields, but it is not session auth.
+		// Only the approval itself resets the auto-lock timer, so an agent
+		// can't keep the vault open by polling with it.
+		if scope, access, ok := s.vault.ScopedGrant(token); ok {
+			ctx := context.WithValue(r.Context(), scopeKey, scope)
+			ctx = context.WithValue(ctx, sessionAuthKey, false)
+			ctx = context.WithValue(ctx, maxTierKey, vault.TierPersonal)
+			ctx = context.WithValue(ctx, accessKey, access)
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+
 		// Try service token — scoped access, capped sensitivity, and no
 		// auto-lock reset so an agent cannot keep the vault open.
 		if svcToken, ok := s.vault.ValidateServiceToken(token); ok {

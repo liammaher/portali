@@ -12,7 +12,8 @@
 ## Commands
 
 ```sh
-make build                        # Build binary to bin/pvault
+make build                        # Build bin/pvault (+ bin/pvault-touchid on macOS)
+make touchid                      # Rebuild only the Touch ID helper
 make test                         # Run all tests with race detector
 make clean                        # Remove build artifacts
 go test -race ./internal/crypto/  # Test crypto layer only
@@ -76,6 +77,29 @@ Profile Password + Secret Key (128-bit)
 - Writing a field without a tier keeps its existing tier (schema default for
   new fields), so overwrites never silently downgrade sensitivity
 - Secret key at `~/.pvault/secret.key` (0600), never in database
+- Touch ID (`cmd/pvault-touchid/main.swift`, macOS, ad-hoc signed + hardened runtime):
+  `pvault touchid enable` (TTY only) stores the profile password in a plain login-Keychain
+  item (service `pvault-touchid`, account = vault dir) whose ACL trusts only that exact
+  helper build. Biometric Keychain flags need a paid Apple signature (-34018 otherwise),
+  so the helper checks Touch ID itself (biometrics or Apple Watch, no Mac-password
+  fallback), then talks to the server at the fixed address 127.0.0.1:7200 and returns
+  only a token, never the password. Its prompt is worded from the exact scope it requests.
+  pvault looks for the helper only next to its own binary. CLI commands call
+  `needGrant(scope, access)`; with Touch ID on, the grant is scoped to that (full access
+  if unset), and in a TTY a failed or denied prompt falls back to the typed password.
+  `pvault unlock` with Touch ID starts `pvault serve --locked` and the helper unlocks it.
+  Rebuilding the helper changes its signature, so re-run `pvault touchid enable`.
+  pvault skips Touch ID when its `VAULT_ADDR` differs from the helper's server (`status`
+  prints `server <addr>`), and a `unlock` that started the server stops it again if no one
+  can unlock it. `touchid enable`/`disable` are interactive only.
+  Debug builds (`-D DEBUG`) honor `VAULT_ADDR` and `PVAULT_TOUCHID_TEST_APPROVE=1` for tests
+- Scoped grants: `POST /vault/session` with `scope` (+ `access`) issues a grant limited
+  like a service token (TTL max 10m) that can reach `personal` fields, because the user
+  approved it in person. It is not session auth (no audit, lock, tiers or tokens), and only
+  its creation resets the auto-lock timer.
+- Only session auth may lower a tier: a token or scoped grant writing a field with a
+  `sensitivity` below its current tier (or the schema default) gets 403.
+  Handlers must test `isSessionAuth`, not `maxTier == personal`, to mean "the user's session"
 - Service tokens: access `read` (default) / `append` (add new fields and
   documents, no overwrite or delete) / `write`; explicit scope required, TTL 24h default / 90d max,
   `max_sensitivity` cap (default `sensitive`), cannot change tiers,

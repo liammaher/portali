@@ -18,13 +18,22 @@ type Session struct {
 	timer    *time.Timer
 	lockFn   func()
 	ttl      time.Duration
-	// grants are short-lived session-level tokens issued after the user
-	// re-enters their password, keyed by SHA-256 of the token. They live only
-	// in memory and are dropped on lock.
-	grants map[string]time.Time
+	// grants are short-lived tokens issued after the user re-enters their
+	// password, keyed by SHA-256 of the token. They live only in memory and
+	// are dropped on lock.
+	grants map[string]sessionGrant
 	// secretKey is kept while unlocked so a grant can be requested with the
 	// password alone (e.g. from the onboarding page). Zeroed on lock.
 	secretKey []byte
+}
+
+// sessionGrant is a password-gated grant. An empty scope means full
+// session-level access; otherwise the grant is limited to scope and access,
+// like a service token, but may reach personal fields.
+type sessionGrant struct {
+	expires time.Time
+	scope   string
+	access  string
 }
 
 // NewSession creates a session with the given vault key and auto-lock callback.
@@ -68,7 +77,8 @@ func (s *Session) VaultKey() []byte {
 	return cp
 }
 
-// ValidateToken checks the unlock token (constant-time) or an unexpired grant.
+// ValidateToken checks the unlock token (constant-time) or an unexpired
+// full-access grant. Scoped grants are checked with ScopedGrant.
 func (s *Session) ValidateToken(token string) bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -78,8 +88,22 @@ func (s *Session) ValidateToken(token string) bool {
 	if subtle.ConstantTimeCompare([]byte(s.token), []byte(token)) == 1 {
 		return true
 	}
-	expires, ok := s.grants[hashToken(token)]
-	return ok && time.Now().Before(expires)
+	g, ok := s.grants[hashToken(token)]
+	return ok && g.scope == "" && time.Now().Before(g.expires)
+}
+
+// ScopedGrant returns the scope and access of an unexpired scoped grant.
+func (s *Session) ScopedGrant(token string) (scope, access string, ok bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.token == "" {
+		return "", "", false
+	}
+	g, found := s.grants[hashToken(token)]
+	if !found || g.scope == "" || !time.Now().Before(g.expires) {
+		return "", "", false
+	}
+	return g.scope, g.access, true
 }
 
 // setSecretKey stores a copy of the secret key for password-only grants.
@@ -106,6 +130,15 @@ func (s *Session) SecretKey() []byte {
 // AddGrant issues a short-lived session-level token. Returns ErrLocked if the
 // session has been destroyed.
 func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
+	return s.addGrant(ttl, "", "")
+}
+
+// AddScopedGrant issues a short-lived token limited to scope and access.
+func (s *Session) AddScopedGrant(ttl time.Duration, scope, access string) (string, time.Time, error) {
+	return s.addGrant(ttl, scope, access)
+}
+
+func (s *Session) addGrant(ttl time.Duration, scope, access string) (string, time.Time, error) {
 	tokenBytes := make([]byte, 32)
 	if _, err := rand.Read(tokenBytes); err != nil {
 		return "", time.Time{}, err
@@ -119,15 +152,15 @@ func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
 		return "", time.Time{}, ErrLocked
 	}
 	now := time.Now()
-	for k, exp := range s.grants {
-		if now.After(exp) {
+	for k, g := range s.grants {
+		if now.After(g.expires) {
 			delete(s.grants, k)
 		}
 	}
 	if s.grants == nil {
-		s.grants = make(map[string]time.Time)
+		s.grants = make(map[string]sessionGrant)
 	}
-	s.grants[hashToken(token)] = expires
+	s.grants[hashToken(token)] = sessionGrant{expires: expires, scope: scope, access: access}
 	return token, expires, nil
 }
 

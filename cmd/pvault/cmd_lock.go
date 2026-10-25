@@ -16,14 +16,9 @@ func cmdLock() {
 	// always safe, so this path needs no password. The PID is only trusted
 	// if it still belongs to a pvault process, never a reused PID, and it is
 	// tried before probing so a slow server can't be mistaken for a stopped one.
-	if pid, err := readPID(); err == nil && isVaultServerProcess(pid) {
-		if p, err := os.FindProcess(pid); err == nil && p.Signal(syscall.SIGTERM) == nil {
-			waitForServerExit(3 * time.Second)
-			removeLegacySessionFile()
-			removePID()
-			fmt.Println("Vault locked (server stopped).")
-			return
-		}
+	if stopOwnServer() {
+		fmt.Println("Vault locked (server stopped).")
+		return
 	}
 	removePID()
 
@@ -45,6 +40,23 @@ func cmdLock() {
 	}
 	removeLegacySessionFile()
 	fmt.Println("Vault locked.")
+}
+
+// stopOwnServer stops the server 'pvault unlock' started, if its recorded PID
+// still belongs to a pvault process, and reports whether it did.
+func stopOwnServer() bool {
+	pid, err := readPID()
+	if err != nil || !isVaultServerProcess(pid) {
+		return false
+	}
+	p, err := os.FindProcess(pid)
+	if err != nil || p.Signal(syscall.SIGTERM) != nil {
+		return false
+	}
+	waitForServerExit(3 * time.Second)
+	removeLegacySessionFile()
+	removePID()
+	return true
 }
 
 // isVaultServerProcess reports whether pid is a running pvault process.
