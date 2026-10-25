@@ -97,7 +97,10 @@ Profile Password + Secret Key (128-bit)
   `personal`; `spid`/`cieid` categories default to it. `personal` (rank 4) is
   session-only: service tokens can't be capped at it, and the API hides
   personal items (404 on read/delete, 403 personal_only on write, omitted
-  from every listing). Fields named with the word
+  from every listing). Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
+  `spid.provider` (fixed spellings matching the onboarding select,
+  `TestOnboardingSelectOptionsValidate`) are validated in `access.go`; the provider
+  stays lowerable to `standard` so agents can pick it. Fields named with the word
   shape `data_<x>`, `date_of_<x>` or `<x>_date` must be real dates, stored as
   YYYY-MM-DD (`dates.go`)
 - Housing categories `abitazione`, `locazione`, `utenze`, `tari` describe the home at
