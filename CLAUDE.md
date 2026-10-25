@@ -86,6 +86,12 @@ Profile Password + Secret Key (128-bit)
   via `/usr/bin/security -i` stdin instead of printing it and revokes the token it
   replaces (by hash, so no raw token goes in a URL). `TestStoreInKeychain` and the
   MCP Keychain test touch the real Keychain and only run with `PVAULT_KEYCHAIN_TEST=1`
+- PEC (`mcp/src/pec.ts`): read-only IMAP tools `pec_folders`/`pec_list`/`pec_read`/
+  `pec_attachment`/`pec_save_attachment` (writes into the first import dir, `wx` + 0600), registered only when `PEC_ADDRESS` is set. No SMTP code by design.
+  EXAMINE + BODY.PEEK so nothing is marked read. The app password comes from Keychain
+  (`PEC_KEYCHAIN_SERVICE`, account = the PEC address) per request, never cached.
+  Messages are unwrapped from `postacert.eml` and `daticert.xml` is parsed
+  (mailparser needs `ignoreEmbedded: true` or it splices the inner message into the envelope)
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID/CIE credentials (`IsCredentialField`) can only be stored with tier
   `personal`; `spid`/`cieid` categories default to it. `personal` (rank 4) is
