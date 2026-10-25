@@ -82,20 +82,16 @@ func Open(path string) (*DB, error) {
 		os.Chmod(path+suffix, 0600)
 	}
 
-	conn, err := sql.Open("sqlite", path)
+	// The settings go in the DSN so the driver applies them to every pooled
+	// connection; a PRAGMA run once reaches only one of them, and the others
+	// would fail with SQLITE_BUSY instead of waiting for a lock.
+	conn, err := sql.Open("sqlite", path+"?_pragma=busy_timeout(5000)&_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)")
 	if err != nil {
 		return nil, fmt.Errorf("opening database: %w", err)
 	}
-
-	for _, pragma := range []string{
-		"PRAGMA journal_mode=WAL",
-		"PRAGMA busy_timeout=5000",
-		"PRAGMA synchronous=NORMAL",
-	} {
-		if _, err := conn.Exec(pragma); err != nil {
-			conn.Close()
-			return nil, fmt.Errorf("setting %s: %w", pragma, err)
-		}
+	if err := conn.Ping(); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("opening database: %w", err)
 	}
 
 	if _, err := conn.Exec(createSchema); err != nil {
