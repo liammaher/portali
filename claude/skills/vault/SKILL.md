@@ -46,6 +46,8 @@ curl -s http://127.0.0.1:7200/vault/status
 `vault_document_get`. They use a scoped service token, so a call can fail with
 "scope denied", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
+If a tool says there's no token, or it's expired or revoked, and `pvault touchid status`
+says on, use d instead of asking for a new token.
 Before `vault_set` overwrites an existing value, show old and new value and confirm.
 
 **b. Web UI, in the user's own browser.** Run `pvault ui` from Bash: it opens
@@ -75,6 +77,8 @@ only that command and expires within 2 minutes.
   and `pvault delete <id>`; confirm old and new value with the user first, as with `vault_set`.
 - If the command fails with "not approved", the user said no or wasn't at the Mac.
   Don't retry; ask them.
+- If it fails saying to run `pvault touchid enable` again (the helper was rebuilt, and
+  `touchid status` still says on), ask the user to run that in their own terminal.
 - Personal values you read this way enter the conversation: use them for the task
   and don't repeat them back unless asked.
 
