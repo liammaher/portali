@@ -30,6 +30,10 @@ func cmdExpiring() {
 		fmt.Printf("Nothing expired or expiring in the next %d days.\n", days)
 		return
 	}
+	width := 20
+	for _, it := range items {
+		width = max(width, len(it.Document))
+	}
 	for _, it := range items {
 		when := fmt.Sprintf("in %d days", it.DaysLeft)
 		switch {
@@ -38,6 +42,6 @@ func cmdExpiring() {
 		case it.DaysLeft == 0:
 			when = "expires TODAY"
 		}
-		fmt.Printf("%-20s %s  %s\n", it.Document, it.ExpiresOn, when)
+		fmt.Printf("%-*s %s  %s\n", width, it.Document, it.ExpiresOn, when)
 	}
 }
