@@ -32,7 +32,17 @@ var spidProviders = map[string]string{
 	"infocamere": "InfoCamere", "infocamereid": "InfoCamere",
 }
 
-const spidProviderList = "PosteID, Aruba, InfoCert, Namirial, Sielte, Lepida, Register, TIM id, Intesi Group, EtnaID, TeamSystem or InfoCamere"
+// spidProviderNames are the stored spellings, in the order the error message
+// and the schema list them.
+var spidProviderNames = []string{"PosteID", "Aruba", "InfoCert", "Namirial", "Sielte", "Lepida",
+	"Register", "TIM id", "Intesi Group", "EtnaID", "TeamSystem", "InfoCamere"}
+
+var spidProviderList = orList(spidProviderNames)
+
+// orList joins items as "a, b or c".
+func orList(items []string) string {
+	return strings.Join(items[:len(items)-1], ", ") + " or " + items[len(items)-1]
+}
 
 // normalizeAccess applies the login-method rules. handled is false for every
 // other field, so the generic rules still apply.

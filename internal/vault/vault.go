@@ -199,9 +199,7 @@ func Init(dir, password string) (secretKey string, err error) {
 	}
 
 	// Zero vault key
-	for i := range vaultKey {
-		vaultKey[i] = 0
-	}
+	clear(vaultKey)
 
 	return hex.EncodeToString(sk), nil
 }
@@ -245,12 +243,8 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 	v.session = session
 
 	// Zero local copies of the vault key and secret key
-	for i := range vaultKey {
-		vaultKey[i] = 0
-	}
-	for i := range sk {
-		sk[i] = 0
-	}
+	clear(vaultKey)
+	clear(sk)
 
 	// Log access
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "unlock"})
@@ -269,9 +263,7 @@ func (v *Vault) CheckCredentials(password, secretKeyHex string) error {
 	if err != nil {
 		return err
 	}
-	for i := range vaultKey {
-		vaultKey[i] = 0
-	}
+	clear(vaultKey)
 	return nil
 }
 
@@ -316,9 +308,7 @@ func (v *Vault) verifyCredentials(password string, sk []byte) (vaultKey, salt []
 	}
 	plaintext, err := crypto.DecryptFromBase64(vaultKey, verifyCipher)
 	if err != nil || string(plaintext) != "personal-vault-verification" {
-		for i := range vaultKey {
-			vaultKey[i] = 0
-		}
+		clear(vaultKey)
 		return nil, nil, ErrWrongPassword
 	}
 	return vaultKey, salt, nil
@@ -333,17 +323,8 @@ func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Durat
 	if ttl <= 0 || ttl > MaxSessionGrantTTL {
 		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxSessionGrantTTL)}
 	}
-	session, err := v.checkGrantCredentials(password, secretKeyHex)
-	if err != nil {
-		return "", time.Time{}, err
-	}
-	token, expires, err := session.AddGrant(ttl)
-	if err != nil {
-		return "", time.Time{}, err
-	}
-	session.Touch()
-	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()})
-	return token, expires, nil
+	return v.issueGrant(password, secretKeyHex, ttl, "", "",
+		store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()})
 }
 
 // CreateScopedGrant is CreateSessionGrant limited to scope and access, for
@@ -363,16 +344,23 @@ func (v *Vault) CreateScopedGrant(password, secretKeyHex string, ttl time.Durati
 	if !validAccess[access] {
 		return "", time.Time{}, ErrInvalidAccess
 	}
+	return v.issueGrant(password, secretKeyHex, ttl, scope, access,
+		store.AuditEntry{Consumer: "vault", Scope: scope, Action: "scoped_grant", Purpose: "access: " + access + ", ttl: " + ttl.String()})
+}
+
+// issueGrant checks the credentials, then issues a grant (full access when
+// scope is empty), resets the auto-lock timer and records entry.
+func (v *Vault) issueGrant(password, secretKeyHex string, ttl time.Duration, scope, access string, entry store.AuditEntry) (string, time.Time, error) {
 	session, err := v.checkGrantCredentials(password, secretKeyHex)
 	if err != nil {
 		return "", time.Time{}, err
 	}
-	token, expires, err := session.AddScopedGrant(ttl, scope, access)
+	token, expires, err := session.AddGrant(ttl, scope, access)
 	if err != nil {
 		return "", time.Time{}, err
 	}
 	session.Touch()
-	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: scope, Action: "scoped_grant", Purpose: "access: " + access + ", ttl: " + ttl.String()})
+	v.db.LogAccess(entry)
 	return token, expires, nil
 }
 
@@ -398,15 +386,11 @@ func (v *Vault) checkGrantCredentials(password, secretKeyHex string) (*Session, 
 		}
 	}
 	vaultKey, _, err := v.verifyCredentials(password, sk)
-	for i := range sk {
-		sk[i] = 0
-	}
+	clear(sk)
 	if err != nil {
 		return nil, err
 	}
-	for i := range vaultKey {
-		vaultKey[i] = 0
-	}
+	clear(vaultKey)
 	return session, nil
 }
 

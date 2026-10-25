@@ -27,7 +27,7 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 	if !requireAccess(w, r, false) {
 		return
 	}
-	if maxTierFromRequest(r) != vault.TierPersonal &&
+	if !reachesPersonal(r) &&
 		(q.Get("sensitivity") == vault.TierPersonal || vault.IsPersonalCategory(category)) {
 		personalOnlyDenied(w)
 		return
@@ -148,7 +148,7 @@ func (s *Server) requireDocumentAccess(w http.ResponseWriter, r *http.Request, i
 		return nil, false
 	}
 	// Personal documents don't exist for service tokens.
-	if meta == nil || (meta.Sensitivity == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal) {
+	if meta == nil || (meta.Sensitivity == vault.TierPersonal && !reachesPersonal(r)) {
 		writeError(w, http.StatusNotFound, "not_found", "document not found")
 		return nil, false
 	}

@@ -149,18 +149,8 @@ func portHasVault() bool {
 }
 
 func isVaultUnlocked() bool {
-	resp, err := publicRequest("GET", "/vault/status", nil)
-	if err != nil {
-		return false
-	}
-	defer resp.Body.Close()
-	var status struct {
-		Locked bool `json:"locked"`
-	}
-	if err := json.NewDecoder(resp.Body).Decode(&status); err != nil {
-		return false
-	}
-	return !status.Locked
+	status, err := serverStatus()
+	return err == nil && !status.Locked
 }
 
 func reUnlock(password, secretKey string) error {

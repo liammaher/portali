@@ -27,30 +27,29 @@ var praticaStati = []string{
 	"completata", "respinta", "annullata",
 }
 
-// IsClosedStato reports the stati that end a pratica; its deadline no longer
-// shows in 'pvault expiring'. Values saved before validation (e.g.
-// "Completata ") count too.
-func IsClosedStato(stato string) bool {
-	switch normalizeChoice(stato) {
-	case "completata", "respinta", "annullata":
-		return true
-	}
-	return false
+// praticaStatiChiusi are the stati that end a pratica; its deadline no longer
+// shows in 'pvault expiring'.
+var praticaStatiChiusi = []string{"completata", "respinta", "annullata"}
+
+// isClosedStato reports a stato in praticaStatiChiusi. Values saved before
+// validation (e.g. "Completata ") count too.
+func isClosedStato(stato string) bool {
+	return slices.Contains(praticaStatiChiusi, normalizeChoice(stato))
 }
 
 // praticaCanali are the ways a pratica can be submitted.
 var praticaCanali = []string{"portale", "pec", "email", "sportello", "posta", "app"}
 
-// IsPraticheCategory reports the category that tracks procedures.
-func IsPraticheCategory(category string) bool {
+// isPraticheCategory reports the category that tracks procedures.
+func isPraticheCategory(category string) bool {
 	return strings.EqualFold(category, "pratiche")
 }
 
-// SplitPraticaField splits a pratiche field name into its slug and campo,
+// splitPraticaField splits a pratiche field name into its slug and campo,
 // e.g. "tari-iscrizione-2026_data_invio" into "tari-iscrizione-2026" and
 // "data_invio". ok is false when the name doesn't follow the convention,
 // including any upper-case letter.
-func SplitPraticaField(name string) (slug, campo string, ok bool) {
+func splitPraticaField(name string) (slug, campo string, ok bool) {
 	slug, campo, found := strings.Cut(name, "_")
 	if !found || !rePraticaSlug.MatchString(slug) || !slices.Contains(praticaCampi, campo) {
 		return "", "", false
@@ -58,13 +57,13 @@ func SplitPraticaField(name string) (slug, campo string, ok bool) {
 	return slug, campo, true
 }
 
-// praticaField is SplitPraticaField for a field in the pratiche category;
+// praticaField is splitPraticaField for a field in the pratiche category;
 // ok is false for any other category.
 func praticaField(category, name string) (slug, campo string, ok bool) {
-	if !IsPraticheCategory(category) {
+	if !isPraticheCategory(category) {
 		return "", "", false
 	}
-	return SplitPraticaField(name)
+	return splitPraticaField(name)
 }
 
 // praticheDescription documents the naming convention in the schema.
@@ -74,14 +73,14 @@ func praticheDescription() string {
 		"Campi: " + strings.Join(praticaCampi, ", ") + ". " +
 		"stato is one of " + strings.Join(praticaStati, ", ") + "; " +
 		"canale is one of " + strings.Join(praticaCanali, ", ") + ". " +
-		"data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. " +
+		"data_scadenza is the deadline, tracked by 'pvault expiring' until stato is " + orList(praticaStatiChiusi) + ". " +
 		"playbook names the procedure's playbook file. Attach submitted files with 'pvault doc add pratiche <file>'."
 }
 
 // normalizePratica applies the pratiche rules. handled is false outside the
 // pratiche category, so the generic rules still apply there.
 func normalizePratica(id, category, name, value string) (out string, handled bool, err error) {
-	if !IsPraticheCategory(category) {
+	if !isPraticheCategory(category) {
 		return value, false, nil
 	}
 	fail := func(msg string) (string, bool, error) {
@@ -89,7 +88,7 @@ func normalizePratica(id, category, name, value string) (out string, handled boo
 	}
 	// name is lower-cased by NormalizeAndValidate; IDs are case-sensitive,
 	// so TARI-2026_stato would be a second field for the same pratica.
-	_, campo, ok := SplitPraticaField(name)
+	_, campo, ok := splitPraticaField(name)
 	if _, original, _ := strings.Cut(id, "."); original != name {
 		ok = false
 	}

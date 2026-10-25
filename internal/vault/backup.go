@@ -2,7 +2,6 @@ package vault
 
 import (
 	"archive/tar"
-	"bufio"
 	"bytes"
 	crand "crypto/rand"
 	"crypto/sha256"
@@ -154,7 +153,7 @@ func (v *Vault) backupLocked() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer zero(vaultKey)
+	defer clear(vaultKey)
 
 	dir, err := v.db.GetMeta(metaBackupDir)
 	if err != nil {
@@ -305,24 +304,20 @@ func (v *Vault) writeBackup(vaultKey []byte, dir string, now time.Time) (string,
 	if err != nil {
 		return "", err
 	}
-	defer zero(key)
+	defer clear(key)
 
 	tmp, err := os.CreateTemp(dir, ".pvault-backup-*.tmp")
 	if err != nil {
 		return "", fmt.Errorf("create backup file: %w", err)
 	}
-	defer os.Remove(tmp.Name()) // no-op after a successful rename
-	if err := tmp.Chmod(0600); err != nil {
-		tmp.Close()
-		return "", err
-	}
+	defer os.Remove(tmp.Name()) // no-op after a successful rename (CreateTemp makes it 0600)
 
-	bw := bufio.NewWriter(tmp)
+	// No buffering needed: the stream writer emits whole 64 KiB chunks.
 	err = func() error {
-		if _, err := bw.Write(header); err != nil {
+		if _, err := tmp.Write(header); err != nil {
 			return err
 		}
-		sw, err := crypto.NewStreamWriter(bw, key, header)
+		sw, err := crypto.NewStreamWriter(tmp, key, header)
 		if err != nil {
 			return err
 		}
@@ -339,9 +334,6 @@ func (v *Vault) writeBackup(vaultKey []byte, dir string, now time.Time) (string,
 			return err
 		}
 		if err := sw.Close(); err != nil {
-			return err
-		}
-		if err := bw.Flush(); err != nil {
 			return err
 		}
 		return tmp.Sync()
@@ -525,33 +517,33 @@ func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error
 // restoreInto decrypts a backup into target (created here) and verifies it,
 // writing secret.key there too if writeKey is set.
 func restoreInto(path, target, password, secretKeyHex string, writeKey bool) (*BackupInfo, error) {
-	// Accept the key as copied by hand: any case, spaces or dashes.
-	secretKeyHex = strings.ToLower(strings.NewReplacer(" ", "", "-", "", "\t", "").Replace(secretKeyHex))
+	// Accept the key as copied by hand: any case (hex.DecodeString takes
+	// both), spaces or dashes.
+	secretKeyHex = strings.NewReplacer(" ", "", "-", "", "\t", "").Replace(secretKeyHex)
 	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
 	if err != nil {
 		return nil, ErrBackupUnreadable
 	}
-	defer zero(sk)
+	defer clear(sk)
 
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
-	br := bufio.NewReader(f)
-	hdr, err := readBackupHeader(br)
+	hdr, err := readBackupHeader(f)
 	if err != nil {
 		return nil, err
 	}
 
 	vaultKey := crypto.DeriveVaultKey([]byte(password), sk, hdr.salt)
-	defer zero(vaultKey)
+	defer clear(vaultKey)
 	key, err := crypto.DeriveSubkey(vaultKey, hdr.salt, backupKeyInfo(hdr.fileID))
 	if err != nil {
 		return nil, err
 	}
-	defer zero(key)
-	sr, err := crypto.NewStreamReader(br, key, hdr.raw)
+	defer clear(key)
+	sr, err := crypto.NewStreamReader(f, key, hdr.raw)
 	if err != nil {
 		return nil, err
 	}
@@ -634,10 +626,4 @@ func extractBackup(sr io.Reader, target string) error {
 		return errors.New("backup contains no database")
 	}
 	return nil
-}
-
-func zero(b []byte) {
-	for i := range b {
-		b[i] = 0
-	}
 }

@@ -3,7 +3,6 @@
 package main
 
 import (
-	"errors"
 	"net"
 	"net/http"
 	"os"
@@ -25,8 +24,6 @@ func credentialRequest(method, path string, body any) (*http.Response, error) {
 }
 
 func checkVaultServer() error { return nil }
-
-var errNoVaultSocket = errors.New("this vault's server isn't running")
 
 // isVaultServerProcess reports whether pid is a running pvault process.
 func isVaultServerProcess(pid int) bool {

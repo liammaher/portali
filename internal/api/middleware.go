@@ -36,6 +36,12 @@ func maxTierFromRequest(r *http.Request) string {
 	return "public"
 }
 
+// reachesPersonal reports whether the caller may see personal items: the
+// user's session or a scoped grant they approved, never a service token.
+func reachesPersonal(r *http.Request) bool {
+	return maxTierFromRequest(r) == vault.TierPersonal
+}
+
 // accessFromRequest returns the caller's access level. Session tokens get
 // write; requests without auth context get read.
 func accessFromRequest(r *http.Request) string {
@@ -116,11 +122,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 		// the auto-lock timer.
 		if s.vault.ValidateToken(token) {
 			s.vault.TouchSession()
-			ctx := context.WithValue(r.Context(), scopeKey, "*")
-			ctx = context.WithValue(ctx, sessionAuthKey, true)
-			ctx = context.WithValue(ctx, maxTierKey, vault.TierPersonal)
-			ctx = context.WithValue(ctx, accessKey, vault.AccessWrite)
-			next.ServeHTTP(w, r.WithContext(ctx))
+			serveAuthed(next, w, r, "*", true, vault.TierPersonal, vault.AccessWrite)
 			return
 		}
 
@@ -129,11 +131,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 		// Only the approval itself resets the auto-lock timer, so an agent
 		// can't keep the vault open by polling with it.
 		if scope, access, ok := s.vault.ScopedGrant(token); ok {
-			ctx := context.WithValue(r.Context(), scopeKey, scope)
-			ctx = context.WithValue(ctx, sessionAuthKey, false)
-			ctx = context.WithValue(ctx, maxTierKey, vault.TierPersonal)
-			ctx = context.WithValue(ctx, accessKey, access)
-			next.ServeHTTP(w, r.WithContext(ctx))
+			serveAuthed(next, w, r, scope, false, vault.TierPersonal, access)
 			return
 		}
 
@@ -145,14 +143,20 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 				Scope:    svcToken.Scope,
 				Action:   "api_access",
 			})
-			ctx := context.WithValue(r.Context(), scopeKey, svcToken.Scope)
-			ctx = context.WithValue(ctx, sessionAuthKey, false)
-			ctx = context.WithValue(ctx, maxTierKey, svcToken.MaxSensitivity)
-			ctx = context.WithValue(ctx, accessKey, svcToken.Access)
-			next.ServeHTTP(w, r.WithContext(ctx))
+			serveAuthed(next, w, r, svcToken.Scope, false, svcToken.MaxSensitivity, svcToken.Access)
 			return
 		}
 
 		writeError(w, http.StatusUnauthorized, "unauthenticated", "invalid or expired token")
 	})
+}
+
+// serveAuthed runs next with what the caller may reach: its scope, whether
+// it is the user's own session, its tier cap and its access level.
+func serveAuthed(next http.Handler, w http.ResponseWriter, r *http.Request, scope string, session bool, maxTier, access string) {
+	ctx := context.WithValue(r.Context(), scopeKey, scope)
+	ctx = context.WithValue(ctx, sessionAuthKey, session)
+	ctx = context.WithValue(ctx, maxTierKey, maxTier)
+	ctx = context.WithValue(ctx, accessKey, access)
+	next.ServeHTTP(w, r.WithContext(ctx))
 }

@@ -67,11 +67,11 @@ func TestPraticheRulesScopedToCategory(t *testing.T) {
 }
 
 func TestSplitPraticaField(t *testing.T) {
-	slug, campo, ok := SplitPraticaField("tari-iscrizione-2026_data_scadenza")
+	slug, campo, ok := splitPraticaField("tari-iscrizione-2026_data_scadenza")
 	if !ok || slug != "tari-iscrizione-2026" || campo != "data_scadenza" {
 		t.Errorf("got %q, %q, %v", slug, campo, ok)
 	}
-	if _, _, ok := SplitPraticaField("tari-iscrizione-2026"); ok {
+	if _, _, ok := splitPraticaField("tari-iscrizione-2026"); ok {
 		t.Error("name without campo accepted")
 	}
 }
@@ -151,13 +151,13 @@ func TestPraticheNotCredentials(t *testing.T) {
 
 func TestIsClosedStato(t *testing.T) {
 	for _, s := range []string{"completata", " Completata ", "respinta", "ANNULLATA"} {
-		if !IsClosedStato(s) {
-			t.Errorf("IsClosedStato(%q) = false, want true", s)
+		if !isClosedStato(s) {
+			t.Errorf("isClosedStato(%q) = false, want true", s)
 		}
 	}
 	for _, s := range []string{"in_attesa", "inviata", ""} {
-		if IsClosedStato(s) {
-			t.Errorf("IsClosedStato(%q) = true, want false", s)
+		if isClosedStato(s) {
+			t.Errorf("isClosedStato(%q) = true, want false", s)
 		}
 	}
 }

@@ -133,18 +133,10 @@ func (s *Session) SecretKey() []byte {
 	return cp
 }
 
-// AddGrant issues a short-lived session-level token. Returns ErrLocked if the
+// AddGrant issues a short-lived token limited to scope and access, or a
+// full session-level one when scope is empty. Returns ErrLocked if the
 // session has been destroyed.
-func (s *Session) AddGrant(ttl time.Duration) (string, time.Time, error) {
-	return s.addGrant(ttl, "", "")
-}
-
-// AddScopedGrant issues a short-lived token limited to scope and access.
-func (s *Session) AddScopedGrant(ttl time.Duration, scope, access string) (string, time.Time, error) {
-	return s.addGrant(ttl, scope, access)
-}
-
-func (s *Session) addGrant(ttl time.Duration, scope, access string) (string, time.Time, error) {
+func (s *Session) AddGrant(ttl time.Duration, scope, access string) (string, time.Time, error) {
 	tokenBytes := make([]byte, 32)
 	if _, err := rand.Read(tokenBytes); err != nil {
 		return "", time.Time{}, err
@@ -228,13 +220,9 @@ func (s *Session) autoLock() {
 
 func (s *Session) zeroKey() {
 	unlockMemory(s.vaultKey)
-	for i := range s.vaultKey {
-		s.vaultKey[i] = 0
-	}
+	clear(s.vaultKey)
 	s.vaultKey = nil
 	unlockMemory(s.secretKey)
-	for i := range s.secretKey {
-		s.secretKey[i] = 0
-	}
+	clear(s.secretKey)
 	s.secretKey = nil
 }

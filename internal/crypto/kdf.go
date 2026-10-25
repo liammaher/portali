@@ -23,9 +23,7 @@ func DeriveVaultKey(password, secretKey, salt []byte) []byte {
 	copy(combined, password)
 	copy(combined[len(password):], secretKey)
 	key := argon2.IDKey(combined, salt, argonTime, argonMemory, argonThreads, keyLen)
-	for i := range combined {
-		combined[i] = 0
-	}
+	clear(combined)
 	return key
 }
 
