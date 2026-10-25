@@ -61,6 +61,7 @@ func fakeVaultServer(t *testing.T, fields map[string]string) *httptest.Server {
 	})
 	srv := httptest.NewServer(mux)
 	t.Cleanup(srv.Close)
+	serveOnSocket(t, serveHandler(t, mux))
 	return srv
 }
 
@@ -147,6 +148,7 @@ func TestGet_EndToEnd(t *testing.T) {
 	t.Cleanup(func() { srv.Stop(context.Background()) })
 	addr := "http://" + ln.Addr().String()
 	t.Setenv("VAULT_ADDR", addr)
+	serveOnSocket(t, srv.Serve)
 
 	exe, err := os.Executable()
 	if err != nil {

@@ -136,6 +136,12 @@ func (s *Server) Start() (net.Listener, error) {
 	return ln, nil
 }
 
+// Serve also serves requests from ln, e.g. a Unix socket next to the TCP
+// listener. Stop closes it too.
+func (s *Server) Serve(ln net.Listener) {
+	go s.server.Serve(ln)
+}
+
 // Stop gracefully shuts down the server.
 func (s *Server) Stop(ctx context.Context) error {
 	return s.server.Shutdown(ctx)

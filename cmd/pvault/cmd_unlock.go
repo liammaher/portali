@@ -81,6 +81,11 @@ func unlockRunningServer(startedHere bool) {
 		}
 		fatal(msg, args...)
 	}
+	// Whatever answered on the TCP port, the password only goes to this
+	// vault's own server; check it before asking for anything.
+	if err := checkVaultServer(); err != nil {
+		giveUp("%v", err)
+	}
 	if touchIDEnrolled() {
 		_, err := runTouchID("", "unlock")
 		if err == nil {
@@ -154,7 +159,7 @@ func reUnlock(password, secretKey string) {
 		"password":   password,
 		"secret_key": secretKey,
 	}
-	resp, err := publicRequest("POST", "/vault/unlock", body)
+	resp, err := credentialRequest("POST", "/vault/unlock", body)
 	if err != nil {
 		fatal("re-unlock request: %v", err)
 	}

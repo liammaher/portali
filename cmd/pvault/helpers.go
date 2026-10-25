@@ -87,15 +87,16 @@ func promptPassword(prompt string) (string, error) {
 var cliToken string
 
 // requestGrant exchanges the password and secret key for a short-lived
-// session-level token from the running vault server.
+// session-level token from the running vault server, sent only over the
+// verified socket.
 func requestGrant(password, secretKey, ttl string) (string, error) {
-	resp, err := publicRequest("POST", "/vault/session", map[string]string{
+	resp, err := credentialRequest("POST", "/vault/session", map[string]string{
 		"password":   password,
 		"secret_key": secretKey,
 		"ttl":        ttl,
 	})
 	if err != nil {
-		return "", fmt.Errorf("cannot reach vault server — run 'pvault unlock'")
+		return "", err
 	}
 	var result struct {
 		Token string `json:"token"`
@@ -115,6 +116,11 @@ func promptGrant(ttl string) (string, error) {
 	// Check the server first so the user isn't asked for a password that
 	// can't be used.
 	if err := requireUnlockedServer(); err != nil {
+		return "", err
+	}
+	// The password (typed, or sent by the Touch ID helper) only goes to this
+	// vault's own server; don't ask for it if that's not who answers.
+	if err := checkVaultServer(); err != nil {
 		return "", err
 	}
 	interactive := term.IsTerminal(int(syscall.Stdin))
@@ -205,14 +211,17 @@ func apiRawRequest(method, path, contentType string, body io.Reader) (*http.Resp
 }
 
 func doRequest(method, path string, body any, token string) (*http.Response, error) {
+	return doRequestWith(http.DefaultClient, serverAddr(), method, path, body, token)
+}
+
+func doRequestWith(client *http.Client, base, method, path string, body any, token string) (*http.Response, error) {
 	var bodyReader io.Reader
 	if body != nil {
 		buf, _ := json.Marshal(body)
 		bodyReader = bytes.NewReader(buf)
 	}
 
-	url := serverAddr() + path
-	req, err := http.NewRequest(method, url, bodyReader)
+	req, err := http.NewRequest(method, base+path, bodyReader)
 	if err != nil {
 		return nil, err
 	}
@@ -222,7 +231,7 @@ func doRequest(method, path string, body any, token string) (*http.Response, err
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
 
-	return http.DefaultClient.Do(req)
+	return client.Do(req)
 }
 
 // apiResult decodes a JSON response or returns the error.

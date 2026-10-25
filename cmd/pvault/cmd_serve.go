@@ -78,10 +78,23 @@ func cmdServe() {
 		addr = "127.0.0.1:" + a
 	}
 
+	// The socket comes first: once the TCP port answers, the socket that
+	// credentials go to (socket.go) is already there.
+	sock, err := listenSocket(socketPath())
+	if err != nil {
+		fatal("start server: %v", err)
+	}
+
 	srv := api.New(v, addr)
 	ln, err := srv.Start()
 	if err != nil {
+		if sock != nil {
+			sock.Close()
+		}
 		fatal("start server: %v", err)
+	}
+	if sock != nil {
+		srv.Serve(sock)
 	}
 
 	fmt.Fprintf(os.Stderr, "Vault server listening on %s\n", ln.Addr())

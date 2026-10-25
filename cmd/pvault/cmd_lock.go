@@ -3,10 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"strconv"
-	"strings"
 	"syscall"
 	"time"
 )
@@ -64,20 +60,6 @@ func stopOwnServer() bool {
 	removeLegacySessionFile()
 	removePID()
 	return true
-}
-
-// isVaultServerProcess reports whether pid is a running pvault process.
-func isVaultServerProcess(pid int) bool {
-	out, err := exec.Command("ps", "-p", strconv.Itoa(pid), "-o", "comm=").Output()
-	if err != nil {
-		return false
-	}
-	name := filepath.Base(strings.TrimSpace(string(out)))
-	if strings.Contains(name, "pvault") {
-		return true
-	}
-	self, err := os.Executable()
-	return err == nil && name == filepath.Base(self)
 }
 
 // waitForServerExit polls until the server stops answering or the timeout
