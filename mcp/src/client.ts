@@ -83,7 +83,7 @@ function missingToken(detail?: string): VaultError {
 export function lookupFailure(label: string, e: unknown): string {
   const err = e as { killed?: boolean; signal?: string; code?: number | string; stderr?: string };
   if (err.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
-    return `${label} printed more than ${TOKEN_LOOKUP_MAX_BYTES / 1024} KB, which can't be a token`;
+    return `${label} printed more than ${TOKEN_LOOKUP_MAX_BYTES / 1024} KB, which can't be a token or password`;
   }
   if (err.killed || err.signal) {
     return `${label} timed out after ${TOKEN_LOOKUP_TIMEOUT_MS / 1000}s; a Keychain prompt may be waiting`;

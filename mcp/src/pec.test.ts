@@ -1,8 +1,8 @@
 import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import {
-  envelopeSender, listFolders, parseDaticert, parsePec, pecAttachment, pecConfig, pecKind, transportHeaders,
-  MAX_TEXT_CHARS,
+  decodeText, envelopeSender, isCalendarDate, listFolders, listMessages, parseDaticert, parsePec, pecAttachment,
+  pecConfig, pecKind, transportHeaders, MAX_TEXT_CHARS,
 } from "./pec.js";
 import { safeFilename, writeNewFile } from "./files.js";
 import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
@@ -252,4 +252,108 @@ test("writeNewFile never replaces a file and is owner-only", async () => {
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+// --- Regressions from review ---
+
+test("an .eml attached to ordinary mail is not unwrapped", async () => {
+  const sentCopy = crlf(`From: mario.rossi@pec.it
+To: entrate.tari-tares-tarsu@pec.comune.napoli.it
+Subject: Dichiarazione TARI
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="B"
+
+--B
+Content-Type: text/plain; charset=UTF-8
+
+In allegato la dichiarazione.
+--B
+Content-Type: application/pdf; name="modulo.pdf"
+Content-Disposition: attachment; filename="modulo.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQK
+--B
+Content-Type: message/rfc822; name="avviso.eml"
+Content-Disposition: attachment; filename="avviso.eml"
+
+From: x@example.com
+Subject: Avviso originale
+
+ciao
+--B--
+`);
+  const p = await parsePec(Buffer.from(sentCopy));
+  assert.equal(p.kind, "email");
+  assert.equal(p.message.subject, "Dichiarazione TARI");
+  assert.match(p.message.text, /In allegato la dichiarazione/);
+  assert.deepEqual(p.message.attachments.map((a) => a.filename), ["modulo.pdf", "avviso.eml"]);
+  assert.equal((await pecAttachment(Buffer.from(sentCopy), 0)).filename, "modulo.pdf");
+});
+
+test("a failed delivery keeps the provider's notice in envelope.text", async () => {
+  const raw = RECEIPT.replace("X-Ricevuta: avvenuta-consegna", "X-Ricevuta: errore-consegna")
+    .replace("Ricevuta di avvenuta consegna", "Il messaggio non e' stato consegnato: casella piena");
+  const p = await parsePec(Buffer.from(raw));
+  assert.equal(p.kind, "ricevuta-errore-consegna");
+  assert.match(p.envelope?.text ?? "", /casella piena/);
+});
+
+test("daticert.xml is decoded in its declared encoding", async () => {
+  const xml = Buffer.concat([
+    Buffer.from('<?xml version="1.0" encoding="ISO-8859-1"?><postacert tipo="posta-certificata"><intestazione><oggetto>Citt'),
+    Buffer.from([0xe0]),
+    Buffer.from("</oggetto></intestazione></postacert>"),
+  ]);
+  const raw = Buffer.concat([
+    Buffer.from(crlf(`From: posta-certificata@pec.aruba.it
+X-Trasporto: posta-certificata
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="B"
+
+--B
+Content-Type: application/xml; name="daticert.xml"
+Content-Disposition: inline; filename="daticert.xml"
+Content-Transfer-Encoding: base64
+
+${xml.toString("base64")}
+--B--
+`)),
+  ]);
+  assert.equal((await parsePec(raw)).certificazione?.oggetto, "Città");
+  assert.equal(decodeText(Buffer.from([0x43, 0xe0]), "iso-8859-1"), "Cà");
+  assert.equal(decodeText(Buffer.from("ok"), "no-such-charset"), "ok");
+});
+
+test("a bad character reference doesn't make daticert unreadable", () => {
+  const c = parseDaticert("<postacert><intestazione><oggetto>a &#x110000; b &#65;</oggetto></intestazione></postacert>");
+  assert.equal(c.oggetto, "a &#x110000; b A");
+});
+
+test("an empty transport header doesn't swallow the next line", () => {
+  assert.deepEqual(transportHeaders("X-Ricevuta:\r\nX-Trasporto: posta-certificata\r\n"), {
+    trasporto: "posta-certificata",
+    ricevuta: "",
+  });
+  assert.equal(pecKind(transportHeaders("X-Ricevuta:\r\nX-Trasporto: posta-certificata\r\n")), "posta-certificata");
+});
+
+test("dates must be real days, checked before connecting", async () => {
+  assert.ok(isCalendarDate("2026-02-28"));
+  assert.ok(isCalendarDate("2028-02-29"));
+  for (const bad of ["2026-02-30", "2026-13-01", "2026-1-01", "26-01-01", ""]) assert.equal(isCalendarDate(bad), false, bad);
+  process.env.PEC_ADDRESS = "mario.rossi@pec.it";
+  await assert.rejects(
+    listMessages(pecConfig()!, { folder: "INBOX", limit: 5, since: "2026-13-01" }),
+    /"2026-13-01" is not a real date/,
+  );
+});
+
+test("safeFilename never yields a hidden name and keeps the extension", () => {
+  assert.equal(safeFilename(" .bashrc", "x"), "bashrc");
+  assert.equal(safeFilename(". .zshrc", "x"), "zshrc");
+  assert.equal(safeFilename("fdp‮exe.pdf", "x"), "fdpexe.pdf");
+  const long = safeFilename(`${"a".repeat(300)}.pdf`, "x");
+  assert.equal(long.length, 200);
+  assert.ok(long.endsWith(".pdf"));
 });

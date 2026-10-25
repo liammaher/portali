@@ -99,7 +99,7 @@ What `kind` means in `pec_list` and `pec_read`:
 | `anomalia` | Ordinary or malformed mail that reached the PEC box; not certified |
 | `email` | No PEC transport headers |
 
-`certificazione` in `pec_read` is the provider's `daticert.xml`: sender, recipients, subject, date and delivery result. Prefer it over the message headers for who sent what and when. Its S/MIME signature is not verified by this server.
+For receipts, `envelope.text` is the provider's notice (e.g. why delivery failed). `certificazione` in `pec_read` is the provider's `daticert.xml`: sender, recipients, subject, date and delivery result. Prefer it over the message headers for who sent what and when. Its S/MIME signature is not verified by this server.
 
 ## Authentication
 

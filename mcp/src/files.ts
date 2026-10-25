@@ -1,13 +1,21 @@
-import { open } from "node:fs/promises";
+import { open, unlink } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 
-/** A plain file name: no folders, no leading dot, no control characters. */
+/** Bidirectional-text controls, which can make "fdp.exe" display as "exe.pdf". */
+const BIDI_CONTROLS = /[\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/g;
+const MAX_NAME = 200;
+
+/** A plain file name: no folders, no leading dot, no control characters, extension kept. */
 export function safeFilename(name: string | undefined, fallback: string): string {
-  const cleaned = basename((name ?? "").replace(/[\\/]/g, "_"))
+  let cleaned = basename((name ?? "").replace(/[\\/]/g, "_"))
     .replace(/[\u0000-\u001f\u007f]/g, "")
-    .replace(/^\.+/, "")
-    .trim()
-    .slice(0, 200);
+    .replace(BIDI_CONTROLS, "")
+    .replace(/^[\s.]+/, "")
+    .trim();
+  if (cleaned.length > MAX_NAME) {
+    const ext = extname(cleaned).slice(0, 20);
+    cleaned = cleaned.slice(0, MAX_NAME - ext.length) + ext;
+  }
   return cleaned || fallback;
 }
 
@@ -26,9 +34,12 @@ export async function writeNewFile(dir: string, name: string, data: Buffer): Pro
     }
     try {
       await handle.writeFile(data);
-    } finally {
+    } catch (e) {
       await handle.close();
+      await unlink(path).catch(() => {});
+      throw e;
     }
+    await handle.close();
     return path;
   }
   throw new Error(`too many files named like ${name} in ${dir}`);

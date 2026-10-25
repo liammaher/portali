@@ -130,7 +130,8 @@ async function withFolder<T>(cfg: PecConfig, folder: string, fn: (client: ImapFl
     try {
       lock = await client.getMailboxLock(folder, { readOnly: true });
     } catch (e) {
-      throw new PecError(`pec: can't open folder "${folder}" — ${(e as Error).message}. Use pec_folders to list them`);
+      const detail = (e as { responseText?: string }).responseText ?? (e as Error).message;
+      throw new PecError(`pec: can't open folder "${folder}" — ${detail.replace(/\.+$/, "")}. Use pec_folders to list them`);
     }
     try {
       return await fn(client);
@@ -161,7 +162,7 @@ export function pecKind(headers: { trasporto?: string; ricevuta?: string }): str
 /** Reads the X-Trasporto / X-Ricevuta lines out of a raw header block. */
 export function transportHeaders(raw: string): { trasporto?: string; ricevuta?: string } {
   const unfolded = raw.replace(/\r?\n[ \t]+/g, " ");
-  const get = (name: string) => unfolded.match(new RegExp(`^${name}:\\s*(.*)$`, "im"))?.[1]?.trim();
+  const get = (name: string) => unfolded.match(new RegExp(`^${name}:[ \\t]*(.*)$`, "im"))?.[1]?.trim();
   return { trasporto: get("X-Trasporto"), ricevuta: get("X-Ricevuta") };
 }
 
@@ -183,11 +184,16 @@ export interface Certificazione {
   errore_esteso?: string;
 }
 
+/** A character reference's character, or the reference itself when it isn't a valid code point. */
+function charRef(ref: string, code: number): string {
+  return code >= 0 && code <= 0x10ffff ? String.fromCodePoint(code) : ref;
+}
+
 function xmlText(s: string): string {
   return s
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
-    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
-    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
+    .replace(/&#x([0-9a-f]+);/gi, (ref, h) => charRef(ref, parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (ref, d) => charRef(ref, parseInt(d, 10)))
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
@@ -264,8 +270,8 @@ export interface ParsedPec {
     text: string;
     attachments: AttachmentInfo[];
   };
-  /** The envelope the provider wrapped it in, when the message is a PEC transport. */
-  envelope?: { from: string[]; subject?: string; date?: string };
+  /** The envelope the provider wrapped it in, when the message is a PEC transport; text is its notice (e.g. why delivery failed). */
+  envelope?: { from: string[]; subject?: string; date?: string; text: string };
 }
 
 function addresses(a: AddressObject | AddressObject[] | undefined): string[] {
@@ -284,6 +290,27 @@ function contentAttachments(mail: ParsedMail, isEnvelope: boolean): Attachment[]
   return mail.attachments.filter(
     (a) => !(a.contentType === "message/rfc822" || /^(daticert\.xml|smime\.p7s)$/i.test(a.filename ?? "")),
   );
+}
+
+/** Decodes bytes in the given charset, falling back to UTF-8 for unknown labels. */
+export function decodeText(data: Buffer, charset: string | undefined): string {
+  try {
+    return new TextDecoder(charset || "utf-8").decode(data);
+  } catch {
+    return new TextDecoder("utf-8").decode(data);
+  }
+}
+
+/** Decodes an XML document using the encoding its declaration names (UTF-8 by default). */
+export function decodeXml(data: Buffer): string {
+  const declared = data.subarray(0, 200).toString("latin1").match(/^\s*<\?xml[^>]*\bencoding\s*=\s*["']([^"']+)["']/i)?.[1];
+  return decodeText(data, declared);
+}
+
+/** The charset parameter of an attachment's Content-Type, if any. */
+export function attachmentCharset(a: Attachment): string | undefined {
+  const ct = a.headers.get("content-type") as { params?: Record<string, string> } | string | undefined;
+  return typeof ct === "object" ? ct?.params?.charset : undefined;
 }
 
 interface Parts {
@@ -306,13 +333,17 @@ async function parseParts(source: Buffer): Promise<Parts> {
     trasporto: headerValue(outer, "x-trasporto"),
     ricevuta: headerValue(outer, "x-ricevuta"),
   });
+  // Only a PEC transport wraps a certified message; in ordinary mail (e.g. the
+  // sent copy of a PEC) an attached .eml is just an attachment.
+  if (kind === "email") return { outer, kind };
   const daticert = outer.attachments.find((a) => /^daticert\.xml$/i.test(a.filename ?? ""));
-  const postacert = outer.attachments.find((a) => a.contentType === "message/rfc822");
+  const rfc822 = outer.attachments.filter((a) => a.contentType === "message/rfc822");
+  const postacert = rfc822.find((a) => /^postacert\.eml$/i.test(a.filename ?? "")) ?? rfc822[0];
   return {
     outer,
     inner: postacert ? await simpleParser(postacert.content, PARSE_OPTIONS) : undefined,
     kind,
-    certificazione: daticert ? parseDaticert(daticert.content.toString("utf8")) : undefined,
+    certificazione: daticert ? parseDaticert(decodeXml(daticert.content)) : undefined,
   };
 }
 
@@ -352,6 +383,7 @@ export async function parsePec(source: Buffer): Promise<ParsedPec> {
       from: addresses(outer.from),
       subject: outer.subject,
       date: outer.date?.toISOString(),
+      text: bodyText(outer),
     },
   };
 }
@@ -399,6 +431,14 @@ function summarize(msg: FetchMessageObject): MessageSummary {
   };
 }
 
+/** True for a YYYY-MM-DD string naming a real day (no 2026-02-30). */
+export function isCalendarDate(s: string): boolean {
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return false;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3];
+}
+
 export interface ListOptions {
   folder: string;
   limit: number;
@@ -412,6 +452,9 @@ export interface ListOptions {
 
 /** Newest-first summaries of the messages matching the filters. */
 export async function listMessages(cfg: PecConfig, opts: ListOptions): Promise<{ total: number; messages: MessageSummary[] }> {
+  for (const d of [opts.since, opts.before]) {
+    if (d !== undefined && !isCalendarDate(d)) throw new PecError(`pec: "${d}" is not a real date (YYYY-MM-DD)`);
+  }
   const query: SearchObject = {};
   if (opts.from) query.from = opts.from;
   if (opts.subject) query.subject = opts.subject;
@@ -422,7 +465,12 @@ export async function listMessages(cfg: PecConfig, opts: ListOptions): Promise<{
   if (Object.keys(query).length === 0) query.all = true;
 
   return withFolder(cfg, opts.folder, async (client) => {
-    const uids = (await client.search(query, { uid: true })) || [];
+    // imapflow returns false when the server rejects the search.
+    const found = await client.search(query, { uid: true });
+    if (found === false || found === undefined) {
+      throw new PecError(`pec: the server rejected the search in "${opts.folder}"`);
+    }
+    const uids = found;
     const newest = [...uids].sort((a, b) => b - a).slice(0, opts.limit);
     const messages: MessageSummary[] = [];
     if (newest.length > 0) {
