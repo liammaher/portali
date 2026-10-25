@@ -55,7 +55,51 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 
 Tokens are read-only unless created with `--access append` (also add new fields and documents, never overwrite or delete) or `--access write` (full). `vault_set` and `vault_document_add` need append or write.
 
+With PEC set up (see [PEC mailbox](#pec-mailbox-read-only)), five more tools appear:
+
+| Tool | Description |
+|------|-------------|
+| `pec_folders` | List the PEC mailbox's folders |
+| `pec_list` | Newest-first messages, filterable by sender, subject, text, date or unread; each tagged with its PEC `kind` |
+| `pec_read` | One message, unwrapped from the PEC envelope, with its text, attachment list and the provider's `daticert.xml` record |
+| `pec_attachment` | One attachment (images inline, text as text, PDFs and the rest as an embedded resource, max 10 MB) |
+| `pec_save_attachment` | Save one attachment into the first `VAULT_IMPORT_DIRS` folder (owner-only, never overwrites) so `vault_document_add` can archive it |
+
 Documents follow the same token rules as fields: scope pattern `<category>.documents` (or `<category>.*`) and the token's sensitivity cap (documents default to `sensitive`).
+
+## PEC mailbox (read-only)
+
+The server can read your PEC mailbox over IMAP so an agent can find notices from the Comune, Agenzia delle Entrate and others, and check receipts for PEC you sent. It can't send: there is no SMTP code at all, because a PEC message has the legal weight of a registered letter. Folders are opened with `EXAMINE` and bodies fetched with `BODY.PEEK`, so nothing is marked read, moved or deleted. The only thing written locally is a file `pec_save_attachment` creates in your import folder.
+
+1. In your provider's account panel, turn on 2-step verification and generate a password for mail programs. On Aruba: account.aruba.it/pec, Verifica in 2 passaggi. It works only over IMAP/SMTP (not webmail), can be revoked there, and Aruba shows it once.
+2. Store it in your Keychain. The command prompts for it, so it never lands in shell history or a config file:
+
+   ```sh
+   security add-generic-password -U -a you@pec.it -s pvault-pec -w
+   ```
+
+3. Add the PEC settings to the server's registration:
+
+   ```sh
+   claude mcp remove vault --scope user
+   claude mcp add vault --scope user \
+     -e VAULT_KEYCHAIN_SERVICE=pvault-mcp \
+     -e PEC_ADDRESS=you@pec.it -e PEC_KEYCHAIN_SERVICE=pvault-pec \
+     -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+   ```
+
+The password is read from the Keychain for every call, so when the app password expires (Aruba's reportedly last 90 days) you only rerun step 2.
+
+What `kind` means in `pec_list` and `pec_read`:
+
+| `kind` | Meaning |
+|--------|---------|
+| `posta-certificata` | A certified message someone sent you; `pec_read` returns the original from `postacert.eml` |
+| `ricevuta-accettazione`, `ricevuta-avvenuta-consegna`, `ricevuta-errore-consegna`, ... | A receipt for a message you sent |
+| `anomalia` | Ordinary or malformed mail that reached the PEC box; not certified |
+| `email` | No PEC transport headers |
+
+For receipts, `envelope.text` is the provider's notice (e.g. why delivery failed). `certificazione` in `pec_read` is the provider's `daticert.xml`: sender, recipients, subject, date and delivery result. Prefer it over the message headers for who sent what and when. Its S/MIME signature is not verified by this server.
 
 ## Authentication
 
@@ -80,6 +124,10 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `VAULT_KEYCHAIN_SERVICE` | — | macOS: Keychain service the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
 | `VAULT_TOKEN_COMMAND` | — | Command run in the platform shell that prints the token (e.g. another secret store); used when neither of the above is set |
 | `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` may read from (hidden files always refused) |
+| `PEC_ADDRESS` | — | Your PEC address (IMAP username). The `pec_*` tools exist only when this is set |
+| `PEC_KEYCHAIN_SERVICE` | — | Keychain service holding the PEC app password, stored for account `PEC_ADDRESS` (e.g. `pvault-pec`) |
+| `PEC_IMAP_HOST` | `imaps.pec.aruba.it` | IMAP server (TLS) |
+| `PEC_IMAP_PORT` | `993` | IMAP port |
 | `VAULT_SCOPE` | `*` | Optional extra filter applied in the MCP layer (the server enforces the token's own scope regardless) |
 
 ## Error Messages
@@ -96,6 +144,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `vault: this token can add new items but not overwrite or delete` | Overwriting or deleting needs `--access write` |
 | `vault: not found` | Field ID doesn't exist |
 | `vault: no service token` | Set `VAULT_TOKEN` in the MCP server config |
+| `pec: no password in Keychain service ...` | Store the app password with `security add-generic-password -U -a <address> -s <service> -w` |
+| `pec: login to ... failed` | The app password is wrong or expired; generate a new one and store it again |
 
 ## Demo
 

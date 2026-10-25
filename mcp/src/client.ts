@@ -1,9 +1,12 @@
-import { exec, execFile } from "node:child_process";
+import { exec } from "node:child_process";
 import { userInfo } from "node:os";
 import { promisify } from "node:util";
+import {
+  findGenericPassword, KEYCHAIN_SERVICE_PATTERN, LOOKUP_MAX_BYTES, LOOKUP_TIMEOUT_MS,
+  SECURITY_ITEM_NOT_FOUND, SECURITY_PATH,
+} from "./keychain.js";
 
 const execAsync = promisify(exec);
-const execFileAsync = promisify(execFile);
 
 interface VaultStatus {
   initialized: boolean;
@@ -37,18 +40,11 @@ function serverAddr(): string {
   return process.env.VAULT_ADDR ?? "http://127.0.0.1:7200";
 }
 
-const TOKEN_LOOKUP_TIMEOUT_MS = 10_000;
-const TOKEN_LOOKUP_MAX_BYTES = 64 * 1024;
+const TOKEN_LOOKUP_TIMEOUT_MS = LOOKUP_TIMEOUT_MS;
+const TOKEN_LOOKUP_MAX_BYTES = LOOKUP_MAX_BYTES;
 
 /** Printable ASCII without spaces: anything else can't go in a Bearer header. */
 const TOKEN_PATTERN = /^[\x21-\x7e]+$/;
-
-/** macOS's Keychain tool, by absolute path so nothing earlier in PATH can stand in for it. */
-const SECURITY_PATH = "/usr/bin/security";
-/** `security find-generic-password` exit status for a missing item (errSecItemNotFound). */
-const SECURITY_ITEM_NOT_FOUND = 44;
-/** Same rule as `pvault create-service-token --keychain`. */
-const KEYCHAIN_SERVICE_PATTERN = /^[A-Za-z0-9._][A-Za-z0-9._-]{0,63}$/;
 
 function staticToken(): string | undefined {
   return process.env.VAULT_TOKEN?.trim() || undefined;
@@ -83,11 +79,11 @@ function missingToken(detail?: string): VaultError {
   return new VaultError(`vault: no service token${why} — ${createTokenHelp()}`);
 }
 
-/** Why a token lookup process failed, in one line. */
-function lookupFailure(label: string, e: unknown): string {
+/** Why a token or password lookup process failed, in one line. */
+export function lookupFailure(label: string, e: unknown): string {
   const err = e as { killed?: boolean; signal?: string; code?: number | string; stderr?: string };
   if (err.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
-    return `${label} printed more than ${TOKEN_LOOKUP_MAX_BYTES / 1024} KB, which can't be a token`;
+    return `${label} printed more than ${TOKEN_LOOKUP_MAX_BYTES / 1024} KB, which can't be a token or password`;
   }
   if (err.killed || err.signal) {
     return `${label} timed out after ${TOKEN_LOOKUP_TIMEOUT_MS / 1000}s; a Keychain prompt may be waiting`;
@@ -102,12 +98,7 @@ async function keychainToken(service: string): Promise<string> {
     throw new VaultError(`vault: VAULT_KEYCHAIN_SERVICE "${service}" is not a valid Keychain service name`);
   }
   try {
-    const { stdout } = await execFileAsync(
-      SECURITY_PATH,
-      ["find-generic-password", "-a", userInfo().username, "-s", service, "-w"],
-      { timeout: TOKEN_LOOKUP_TIMEOUT_MS, maxBuffer: TOKEN_LOOKUP_MAX_BYTES },
-    );
-    return stdout.trim();
+    return await findGenericPassword(service, userInfo().username);
   } catch (e) {
     const code = (e as { code?: number | string }).code;
     if (code === SECURITY_ITEM_NOT_FOUND) {
