@@ -120,6 +120,7 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: DocumentScopeID(category), Action: "document_add", Purpose: contentType})
+	v.markChanged()
 	return &DocumentInfo{ID: id, Category: category, Name: name, ContentType: contentType, Size: doc.Size, Sensitivity: sensitivity, CreatedAt: doc.CreatedAt}, nil
 }
 
@@ -228,6 +229,7 @@ func (v *Vault) DeleteDocument(id string) (bool, error) {
 		return false, fmt.Errorf("remove document file: %w", err)
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: DocumentScopeID(doc.Category), Action: "document_delete"})
+	v.markChanged()
 	return true, nil
 }
 

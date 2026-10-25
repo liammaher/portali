@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -29,6 +30,22 @@ func cmdStatus() {
 		fmt.Println("Status:  unlocked")
 	}
 	fmt.Printf("Fields:  %d\n", status.FieldCount)
+	if b := status.Backup; b != nil {
+		switch {
+		case !b.Configured:
+			fmt.Println("Backup:  off — run 'pvault backup --to <folder>'")
+		case b.Error != "":
+			fmt.Printf("Backup:  FAILING — %s\n", b.Error)
+		case b.Last == "":
+			fmt.Println("Backup:  folder set, no backup yet")
+		default:
+			last := b.Last
+			if t, err := time.Parse(time.RFC3339, b.Last); err == nil {
+				last = t.Local().Format("2006-01-02 15:04")
+			}
+			fmt.Printf("Backup:  last %s\n", last)
+		}
+	}
 	if len(status.Categories) > 0 {
 		fmt.Println("Categories:")
 		for cat, count := range status.Categories {

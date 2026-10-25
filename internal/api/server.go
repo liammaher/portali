@@ -117,6 +117,7 @@ func (s *Server) registerRoutes() {
 	protected.HandleFunc("GET /vault/documents/{id}", s.handleGetDocument)
 	protected.HandleFunc("DELETE /vault/documents/{id}", s.handleDeleteDocument)
 	protected.HandleFunc("GET /vault/audit", s.handleAuditLog)
+	protected.HandleFunc("POST /vault/backup", s.handleBackup)
 	protected.HandleFunc("PUT /vault/sensitivity/{id...}", s.handleSetSensitivity)
 	protected.HandleFunc("POST /vault/tokens/service", s.handleCreateServiceToken)
 	protected.HandleFunc("GET /vault/tokens/service", s.handleListServiceTokens)

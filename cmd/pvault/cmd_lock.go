@@ -53,7 +53,14 @@ func stopOwnServer() bool {
 	if err != nil || p.Signal(syscall.SIGTERM) != nil {
 		return false
 	}
-	waitForServerExit(3 * time.Second)
+	// The server writes any pending backup before it locks, which can take a
+	// moment; never report "locked" while it is still running.
+	if !waitForServerExit(3 * time.Second) {
+		fmt.Fprintln(os.Stderr, "Writing the last backup before locking...")
+		if !waitForServerExit(2 * time.Minute) {
+			fatal("the vault server (pid %d) is still running and may still be unlocked — run 'pvault lock' again", pid)
+		}
+	}
 	removeLegacySessionFile()
 	removePID()
 	return true
@@ -73,10 +80,12 @@ func isVaultServerProcess(pid int) bool {
 	return err == nil && name == filepath.Base(self)
 }
 
-// waitForServerExit polls until the server stops answering or the timeout passes.
-func waitForServerExit(timeout time.Duration) {
+// waitForServerExit polls until the server stops answering or the timeout
+// passes, and reports whether it stopped.
+func waitForServerExit(timeout time.Duration) bool {
 	deadline := time.Now().Add(timeout)
 	for time.Now().Before(deadline) && portHasVault() {
 		time.Sleep(100 * time.Millisecond)
 	}
+	return !portHasVault()
 }

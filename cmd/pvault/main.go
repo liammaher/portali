@@ -38,6 +38,10 @@ func main() {
 		cmdExport()
 	case "audit":
 		cmdAudit()
+	case "backup":
+		cmdBackup()
+	case "restore":
+		cmdRestore()
 	case "create-service-token":
 		cmdCreateServiceToken()
 	case "list-service-tokens":
@@ -83,6 +87,11 @@ Commands:
   set-sensitivity <id> <tier>      Set field sensitivity (public|standard|sensitive|critical|personal)
   export [--include-personal]      Export decrypted fields as JSON (personal fields left out by default)
   audit                            Show access audit log
+  backup [--to <folder>]           Write an encrypted backup now; --to also sets the folder for
+                                   automatic backups (a minute after each change, and on lock)
+  restore <file> [--check] [--ask-key]
+                                   Recreate the vault from a backup (needs password + secret key);
+                                   --check only verifies it, --ask-key types the key to test your copy
   expiring [days]                  Show documents expired or expiring within days (default 90)
   doc add <category> <file> [--sensitivity tier]
                                    Encrypt and store a document scan (max 20 MB)

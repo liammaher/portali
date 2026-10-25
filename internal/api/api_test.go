@@ -3,12 +3,15 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -1028,5 +1031,56 @@ func TestSetField_ItalianValidation(t *testing.T) {
 	}, true)
 	if w.Code != 400 || !strings.Contains(w.Body.String(), "personal") {
 		t.Fatalf("spid.password as sensitive: expected 400, got %d: %s", w.Code, w.Body.String())
+	}
+}
+
+func TestBackup_SessionOnly(t *testing.T) {
+	env := setup(t)
+
+	w := env.doRequest(t, "POST", "/vault/backup", nil, true)
+	if w.Code != http.StatusBadRequest || !strings.Contains(w.Body.String(), "no_backup_dir") {
+		t.Fatalf("backup without folder: %d %s", w.Code, w.Body.String())
+	}
+
+	// An agent token, even with write access, can neither run a backup nor
+	// point backups at a folder of its choosing.
+	agent, err := env.vault.CreateServiceToken("agent", "*", time.Hour, "", vault.AccessWrite)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dir := t.TempDir()
+	session := env.token
+	env.token = agent
+	w = env.doRequest(t, "POST", "/vault/backup", map[string]string{"dir": dir}, true)
+	if w.Code != http.StatusForbidden {
+		t.Fatalf("service token backup: %d %s", w.Code, w.Body.String())
+	}
+	if entries, _ := os.ReadDir(dir); len(entries) != 0 {
+		t.Fatal("service token wrote a backup")
+	}
+
+	env.token = session
+	w = env.doRequest(t, "POST", "/vault/backup", map[string]string{"dir": dir}, true)
+	if w.Code != http.StatusOK {
+		t.Fatalf("session backup: %d %s", w.Code, w.Body.String())
+	}
+	var resp struct {
+		Path string `json:"path"`
+	}
+	json.NewDecoder(w.Body).Decode(&resp)
+	if filepath.Dir(resp.Path) != dir {
+		t.Fatalf("backup written to %q, want in %q", resp.Path, dir)
+	}
+	if _, err := os.Stat(resp.Path); err != nil {
+		t.Fatal(err)
+	}
+
+	var status vault.VaultStatus
+	json.NewDecoder(env.doRequest(t, "GET", "/vault/status", nil, false).Body).Decode(&status)
+	if status.Backup == nil || !status.Backup.Configured || status.Backup.Last == "" {
+		t.Fatalf("status backup = %+v", status.Backup)
+	}
+	if strings.Contains(fmt.Sprint(status.Backup), dir) {
+		t.Fatal("public status reveals the backup folder")
 	}
 }

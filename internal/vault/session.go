@@ -25,6 +25,12 @@ type Session struct {
 	// secretKey is kept while unlocked so a grant can be requested with the
 	// password alone (e.g. from the onboarding page). Zeroed on lock.
 	secretKey []byte
+	// beforeAutoLock runs when the idle timer fires, while the key is still
+	// held (e.g. to write a pending backup).
+	beforeAutoLock func()
+	// expiring is set once auto-lock has started: activity during
+	// beforeAutoLock must not re-arm the timer of a session about to end.
+	expiring bool
 }
 
 // sessionGrant is a password-gated grant. An empty scope means full
@@ -168,7 +174,7 @@ func (s *Session) addGrant(ttl time.Duration, scope, access string) (string, tim
 func (s *Session) Touch() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.timer != nil {
+	if s.timer != nil && !s.expiring {
 		s.timer.Reset(s.ttl)
 	}
 }
@@ -186,7 +192,27 @@ func (s *Session) Destroy() {
 	}
 }
 
+// setBeforeAutoLock sets a function auto-lock runs before zeroing the key.
+func (s *Session) setBeforeAutoLock(fn func()) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.beforeAutoLock = fn
+}
+
 func (s *Session) autoLock() {
+	s.mu.Lock()
+	if s.expiring || s.token == "" {
+		// Already locked, or a stale firing: nothing to do.
+		s.mu.Unlock()
+		return
+	}
+	s.expiring = true
+	before := s.beforeAutoLock
+	s.mu.Unlock()
+	if before != nil {
+		before()
+	}
+
 	s.mu.Lock()
 	s.zeroKey()
 	s.token = ""
