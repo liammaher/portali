@@ -4,6 +4,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 
 	"golang.org/x/sys/unix"
 )
@@ -30,9 +31,12 @@ func peerProcess(conn *net.UnixConn) (uid, pid int, exe string, err error) {
 	return int(cred.Uid), int(cred.Pid), exe, err
 }
 
-// processExe is the kernel's path of pid's running executable.
+// processExe is the kernel's path of pid's running executable. After a
+// reinstall (rm + cp) the kernel appends " (deleted)" to the old file's
+// path; it still names this pvault, so lock can stop the server.
 func processExe(pid int) (string, error) {
-	return os.Readlink("/proc/" + strconv.Itoa(pid) + "/exe")
+	exe, err := os.Readlink("/proc/" + strconv.Itoa(pid) + "/exe")
+	return strings.TrimSuffix(exe, " (deleted)"), err
 }
 
 func checkSameBuild(int) error { return nil }

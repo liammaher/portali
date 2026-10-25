@@ -257,3 +257,21 @@ func fatal(msg string, args ...any) {
 	fmt.Fprintf(os.Stderr, "Error: "+msg+"\n", args...)
 	os.Exit(1)
 }
+
+// parseFlags reads "--name value" pairs into flags. An unknown flag, a
+// missing value or a stray argument is an error, so a typo like
+// --max-sensitvity never silently falls back to a default.
+func parseFlags(args []string, flags map[string]*string) error {
+	for i := 0; i < len(args); i++ {
+		p, ok := flags[args[i]]
+		if !ok {
+			return fmt.Errorf("unknown option %q", args[i])
+		}
+		if i+1 >= len(args) || strings.HasPrefix(args[i+1], "--") {
+			return fmt.Errorf("%s needs a value", args[i])
+		}
+		*p = args[i+1]
+		i++
+	}
+	return nil
+}

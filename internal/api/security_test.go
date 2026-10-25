@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -759,5 +760,99 @@ func TestPortalLoginPreference_AgentFlow(t *testing.T) {
 	}
 	if code, _ := get("spid.password"); code != 403 && code != 404 {
 		t.Errorf("spid.password readable by the agent: %d", code)
+	}
+}
+
+// createWriteToken makes a write token with the given scope that can see
+// up to critical.
+func createWriteToken(t *testing.T, env *testEnv, scope string) string {
+	t.Helper()
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
+		"consumer": "agent", "scope": scope, "ttl": "1h", "access": "write", "max_sensitivity": "critical",
+	}, true)
+	var resp struct{ Token string }
+	json.NewDecoder(w.Body).Decode(&resp)
+	if resp.Token == "" {
+		t.Fatalf("create token: %d %s", w.Code, w.Body.String())
+	}
+	return resp.Token
+}
+
+// Deleting a field and writing it again would give it the default tier, so
+// agents may not delete fields stored above it.
+func TestDeleteCannotLowerFieldTier(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	env.doRequest(t, "PUT", "/vault/fields/identity.note", map[string]string{"value": "secret-note", "sensitivity": "critical"}, true)
+	env.doRequest(t, "PUT", "/vault/fields/identity.plain", map[string]string{"value": "x"}, true)
+	svc := createWriteToken(t, env, "identity.*")
+
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/identity.note", nil, svc); w.Code != 403 || !strings.Contains(w.Body.String(), "session_required") {
+		t.Errorf("token deleting a critical field: %d %s, want 403 session_required", w.Code, w.Body.String())
+	}
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/identity.plain", nil, svc); w.Code != 200 {
+		t.Errorf("token deleting a field at its default tier: %d %s", w.Code, w.Body.String())
+	}
+
+	// A write grant the user approved may still not lower a personal field.
+	env.doRequest(t, "PUT", "/vault/fields/residenza.note", map[string]string{"value": "very-private", "sensitivity": "personal"}, true)
+	grant := scopedGrant(t, env, sk, "residenza.note", "write")
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/residenza.note", nil, grant); w.Code != 403 {
+		t.Errorf("scoped grant deleting a personal field: %d %s, want 403", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "DELETE", "/vault/fields/identity.note", nil, true); w.Code != 200 {
+		t.Errorf("session delete: %d %s", w.Code, w.Body.String())
+	}
+}
+
+func TestDeleteCannotLowerDocumentTier(t *testing.T) {
+	env := setup(t)
+	if w := env.upload(t, env.token, "category=passaporto&name=scan.pdf&sensitivity=critical", "application/pdf", []byte("PDFDATA")); w.Code != 200 {
+		t.Fatal(w.Body.String())
+	}
+	svc := createWriteToken(t, env, "passaporto.*")
+	var docs []struct{ ID string }
+	json.NewDecoder(env.doRequestWithToken(t, "GET", "/vault/documents", nil, svc).Body).Decode(&docs)
+	if len(docs) != 1 {
+		t.Fatal(docs)
+	}
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/documents/"+docs[0].ID, nil, svc); w.Code != 403 || !strings.Contains(w.Body.String(), "session_required") {
+		t.Errorf("token deleting a critical document: %d %s, want 403 session_required", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "DELETE", "/vault/documents/"+docs[0].ID, nil, true); w.Code != 200 {
+		t.Errorf("session delete: %d %s", w.Code, w.Body.String())
+	}
+}
+
+// A token can't tell a hidden personal field from a missing one by deleting.
+func TestDeleteDoesNotRevealPersonalFields(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/identity.diary", map[string]string{"value": "x", "sensitivity": "personal"}, true)
+	for _, access := range []string{"read", "write"} {
+		tok := createTokenWithAccess(t, env, "identity.*", access)
+		a := env.doRequestWithToken(t, "DELETE", "/vault/fields/identity.diary", nil, tok)
+		b := env.doRequestWithToken(t, "DELETE", "/vault/fields/identity.nothing_here", nil, tok)
+		if a.Code != b.Code {
+			t.Errorf("%s token: personal field %d, missing field %d", access, a.Code, b.Code)
+		}
+	}
+}
+
+// Refunding an attempt that already expired must not erase a newer failed
+// one, or slow requests could buy extra password guesses.
+func TestRateLimiterRefundsOnlyItsOwnAttempt(t *testing.T) {
+	rl := newRateLimiter(2, 50*time.Millisecond)
+	slow, ok := rl.allow()
+	if !ok {
+		t.Fatal("first attempt refused")
+	}
+	time.Sleep(80 * time.Millisecond) // the slow request's attempt expires
+	for i := 0; i < 2; i++ {
+		if _, ok := rl.allow(); !ok {
+			t.Fatalf("attempt %d refused", i+2)
+		}
+	}
+	rl.refund(slow)
+	if _, ok := rl.allow(); ok {
+		t.Error("refunding an expired attempt freed a slot held by a newer failed attempt")
 	}
 }

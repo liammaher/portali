@@ -461,18 +461,29 @@ func cmdUnlock() {
     }
 }
 
+// requireTerminal keeps changes to the enrollment with the user at a
+// terminal ('pvault touchid enable|disable'), whose stderr pvault passes on;
+// an agent running the helper directly can't switch Touch ID off or replace
+// the saved password.
+func requireTerminal(_ command: String) {
+    guard isatty(STDERR_FILENO) == 1 else {
+        fail("\(command) only works in a terminal — run 'pvault touchid enable' or 'pvault touchid disable'")
+    }
+}
+
 // cmdEnroll saves the password with the pvault binary it may be sent to,
 // which pvault passes as the path of its own (symlink-resolved) executable.
 func cmdEnroll(_ args: [String]) {
     guard args.count == 2, args[0] == "--server", args[1].hasPrefix("/") else {
         fail("usage: pvault-touchid enroll --server <absolute path to pvault>")
     }
+    requireTerminal("enroll")
     let server = args[1]
     _ = trustedServerSignature(server, validate: true)
     guard let line = readLine(strippingNewline: true), !line.isEmpty else {
         fail("expected the profile password on stdin")
     }
-    approve("use Touch ID to unlock your vault")
+    approve("turn on Touch ID for your vault")
     storeEnrollment(Enrollment(password: line, server: server))
     print("enrolled")
 }
@@ -487,6 +498,7 @@ case "status":
 case "enroll":
     cmdEnroll(Array(args.dropFirst()))
 case "remove":
+    requireTerminal("remove")
     let s = SecItemDelete(itemQuery() as CFDictionary)
     if s != errSecSuccess && s != errSecItemNotFound { fail("removing Keychain item: \(keychainMessage(s))") }
     print("removed")

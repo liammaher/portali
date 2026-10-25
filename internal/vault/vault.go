@@ -100,22 +100,38 @@ func Open(dir string) (*Vault, error) {
 	return &Vault{db: db, dir: dir}, nil
 }
 
+// CanInit reports why Init would refuse dir, so the CLI can say so before
+// asking for a password.
+func CanInit(dir string) error {
+	if _, err := os.Stat(filepath.Join(dir, "vault.db")); err == nil {
+		return ErrAlreadyInit
+	}
+	if skPath := filepath.Join(dir, "secret.key"); fileExists(skPath) {
+		return errSecretKeyExists(skPath)
+	}
+	return nil
+}
+
+func fileExists(path string) bool {
+	_, err := os.Lstat(path)
+	return err == nil
+}
+
+func errSecretKeyExists(path string) error {
+	return fmt.Errorf("%s already exists, maybe the key for an earlier vault's backups — move it somewhere safe, then run init again", path)
+}
+
 // Init creates a new vault: generates salt, secret key, and stores verification ciphertext.
 func Init(dir, password string) (secretKey string, err error) {
+	if err := CanInit(dir); err != nil {
+		return "", err
+	}
 	// Create directory
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return "", fmt.Errorf("create vault dir: %w", err)
 	}
 	dbPath := filepath.Join(dir, "vault.db")
-	if _, err := os.Stat(dbPath); err == nil {
-		return "", ErrAlreadyInit
-	}
-
-	db, err := store.Open(dbPath)
-	if err != nil {
-		return "", fmt.Errorf("create database: %w", err)
-	}
-	defer db.Close()
+	skPath := filepath.Join(dir, "secret.key")
 
 	// Generate salt
 	salt, err := crypto.GenerateSalt()
@@ -128,6 +144,40 @@ func Init(dir, password string) (secretKey string, err error) {
 	if err != nil {
 		return "", fmt.Errorf("generate secret key: %w", err)
 	}
+
+	// Write the secret key first, never over an existing one: a key left
+	// from an earlier vault may be the only way to open its backups.
+	skFile, err := os.OpenFile(skPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	if errors.Is(err, os.ErrExist) {
+		return "", errSecretKeyExists(skPath)
+	}
+	if err != nil {
+		return "", fmt.Errorf("write secret key: %w", err)
+	}
+	_, err = skFile.WriteString(hex.EncodeToString(sk) + "\n")
+	if cerr := skFile.Close(); err == nil {
+		err = cerr
+	}
+	if err != nil {
+		os.Remove(skPath)
+		return "", fmt.Errorf("write secret key: %w", err)
+	}
+
+	db, err := store.Open(dbPath)
+	if err != nil {
+		os.Remove(skPath)
+		return "", fmt.Errorf("create database: %w", err)
+	}
+	// A half-made vault would count as initialized without a usable key, so
+	// any failure from here removes both files.
+	defer func() {
+		db.Close()
+		if err != nil {
+			for _, f := range []string{dbPath, dbPath + "-wal", dbPath + "-shm", skPath} {
+				os.Remove(f)
+			}
+		}
+	}()
 
 	// Store salt and secret key hash in DB
 	if err := db.SetMeta("salt", base64.StdEncoding.EncodeToString(salt)); err != nil {
@@ -148,19 +198,12 @@ func Init(dir, password string) (secretKey string, err error) {
 		return "", err
 	}
 
-	// Write secret key file
-	skPath := filepath.Join(dir, "secret.key")
-	skHex := hex.EncodeToString(sk)
-	if err := os.WriteFile(skPath, []byte(skHex+"\n"), 0600); err != nil {
-		return "", fmt.Errorf("write secret key: %w", err)
-	}
-
 	// Zero vault key
 	for i := range vaultKey {
 		vaultKey[i] = 0
 	}
 
-	return skHex, nil
+	return hex.EncodeToString(sk), nil
 }
 
 // Unlock derives the vault key and creates a session.
@@ -447,8 +490,10 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 
 	// With no explicit tier, keep an existing field's tier (so overwriting a
 	// value never silently downgrades it) and use the schema default for new
-	// fields.
-	if sensitivity == "" {
+	// fields. The tier read here is only for validation: the store keeps
+	// whatever tier the row has when it writes (KeepTier).
+	keepTier := sensitivity == ""
+	if keepTier {
 		existing, err := v.db.GetField(id)
 		if err != nil {
 			return err
@@ -473,6 +518,7 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 		Value:       encrypted,
 		Sensitivity: sensitivity,
 		UpdatedAt:   time.Now(),
+		KeepTier:    keepTier,
 	})
 	if err != nil {
 		return err

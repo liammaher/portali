@@ -3,6 +3,7 @@ package store
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -72,6 +73,15 @@ type DB struct {
 
 // Open opens or creates the vault database at the given path.
 func Open(path string) (*DB, error) {
+	// Owner-only, also for databases created before this check. SQLite gives
+	// the -wal and -shm files it creates the database file's mode.
+	if f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0600); err == nil {
+		f.Close()
+	}
+	for _, suffix := range []string{"", "-wal", "-shm"} {
+		os.Chmod(path+suffix, 0600)
+	}
+
 	conn, err := sql.Open("sqlite", path)
 	if err != nil {
 		return nil, fmt.Errorf("opening database: %w", err)

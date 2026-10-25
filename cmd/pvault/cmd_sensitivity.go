@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func cmdSetSensitivity() {
@@ -11,6 +13,9 @@ func cmdSetSensitivity() {
 	}
 	id := os.Args[2]
 	tier := os.Args[3]
+	if err := vault.ValidateFieldID(id); err != nil {
+		fatal("%v", err)
+	}
 
 	valid := map[string]bool{"public": true, "standard": true, "sensitive": true, "critical": true, "personal": true}
 	if !valid[tier] {

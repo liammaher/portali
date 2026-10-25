@@ -51,8 +51,9 @@ func cmdExport() {
 
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
+	// A failed write (full disk, closed pipe) must not look like a good export.
 	if err := enc.Encode(ctx); err != nil {
-		fmt.Fprintf(os.Stderr, "Error encoding: %v\n", err)
+		fatal("writing export: %v", err)
 	}
 	switch {
 	case omitted > 0:

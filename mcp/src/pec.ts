@@ -409,13 +409,19 @@ export interface MessageSummary {
   size?: number;
 }
 
-/** The original sender of a PEC envelope, whose From is "Per conto di: x" <posta-certificata@...>. */
+/**
+ * The original sender of a PEC envelope, whose From is "Per conto di: x" <posta-certificata@...>.
+ * Only the provider's envelope is unwrapped: any other message names its own From address, since
+ * its display name and Reply-To are whatever the sender chose.
+ */
 export function envelopeSender(
   from: { name?: string; address?: string }[] | undefined,
   replyTo: { name?: string; address?: string }[] | undefined,
 ): string | undefined {
+  const address = from?.[0]?.address;
+  if (!/^posta-certificata@/i.test(address ?? "")) return address;
   const perConto = from?.[0]?.name?.match(/^Per conto di:\s*(\S+@\S+)/i)?.[1];
-  return perConto ?? replyTo?.[0]?.address ?? from?.[0]?.address;
+  return perConto ?? replyTo?.[0]?.address ?? address;
 }
 
 function summarize(msg: FetchMessageObject): MessageSummary {

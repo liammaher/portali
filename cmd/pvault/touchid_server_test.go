@@ -100,3 +100,19 @@ func TestTouchIDHelper_EnrollChecksServer(t *testing.T) {
 		}
 	}
 }
+
+// Only the user at a terminal may change the enrollment: run without one,
+// as an agent would, remove and enroll refuse before touching the Keychain.
+func TestTouchIDHelper_EnrollmentNeedsTerminal(t *testing.T) {
+	helper := buildDebugHelper(t)
+	server := buildPvault(t, true)
+	for _, args := range [][]string{{"remove"}, {"enroll", "--server", server}} {
+		cmd := exec.Command(helper, args...)
+		cmd.Env = append(os.Environ(), "VAULT_DIR="+t.TempDir()) // never the real Keychain item
+		cmd.Stdin = strings.NewReader("test-password\n")
+		out, err := cmd.CombinedOutput()
+		if err == nil || !strings.Contains(string(out), "only works in a terminal") {
+			t.Errorf("%q without a terminal: err %v, output %s", args, err, out)
+		}
+	}
+}

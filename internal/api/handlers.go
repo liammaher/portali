@@ -109,7 +109,7 @@ func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
 	if !requireJSON(w, r) {
 		return
 	}
-	if !s.unlockLimit.allow() {
+	if _, ok := s.unlockLimit.allow(); !ok {
 		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many unlock attempts, try again later")
 		return
 	}
@@ -155,7 +155,8 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	if !requireJSON(w, r) {
 		return
 	}
-	if !s.grantLimit.allow() {
+	attempt, ok := s.grantLimit.allow()
+	if !ok {
 		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many failed attempts, try again later")
 		return
 	}
@@ -163,7 +164,7 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	wrongPassword := false
 	defer func() {
 		if !wrongPassword {
-			s.grantLimit.refund()
+			s.grantLimit.refund(attempt)
 		}
 	}()
 
@@ -386,10 +387,31 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if _, ok := s.requireFieldTier(w, r, id, false); !ok {
+	if isSessionAuth(r) {
+		if err := s.vault.Delete(id); err != nil {
+			handleVaultError(w, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]string{"status": "deleted"})
 		return
 	}
+	// Access first, so a read-only token learns nothing about the field.
 	if !requireAccess(w, r, true) {
+		return
+	}
+	existing, ok := s.requireFieldTier(w, r, id, false)
+	if !ok {
+		return
+	}
+	// Same answer as a hidden personal field, so tokens can't probe for them.
+	if existing == nil {
+		writeError(w, http.StatusNotFound, "not_found", "field not found")
+		return
+	}
+	// Writing it again would give it the default tier, so deleting a field
+	// stored above that would let an agent lower it; only the user's session may.
+	if !vault.TierAllows(vault.DefaultSensitivity(id), existing.Sensitivity) {
+		writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a field stored above its default sensitivity tier")
 		return
 	}
 	if err := s.vault.Delete(id); err != nil {

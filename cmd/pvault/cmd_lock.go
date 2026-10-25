@@ -26,7 +26,12 @@ func cmdLock() {
 	}
 
 	// The running server wasn't started by 'pvault unlock' (e.g. 'pvault
-	// serve'), so lock it through the API instead.
+	// serve'), so lock it through the API instead, unless it's locked
+	// already (no key in memory, and the API would refuse).
+	if !isVaultUnlocked() {
+		fmt.Println("Vault is already locked (server still running).")
+		return
+	}
 	resp, err := apiRequest("POST", "/vault/lock", nil)
 	if err != nil {
 		fatal("could not lock: %v", err)
