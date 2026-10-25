@@ -13,8 +13,15 @@ deadline, channels, form fields mapped to vault field IDs, steps and gotchas. Th
 first run of a procedure is research; later runs follow and re-check the playbook.
 
 Read data only through the vault skill and follow its hard rules (no passwords,
-secret key or tokens; never open the vault UI in a browser you control; ask for a
-narrow token when a tool says there's none).
+secret key or tokens; never open the vault UI in a browser you control).
+
+**Touch ID first.** Check `pvault touchid status` once at the start. When it's on,
+read with `pvault get` from Bash (vault skill §2d): each command shows one fingerprint
+prompt scoped to exactly the fields it names, so nobody has to create a token. Gather
+the field IDs a step needs and read them in one `get` (up to 10; `pvault list <category>`
+for a whole category). Before each command, say in chat what the prompt will ask.
+"not approved" means the user said no or is away: don't retry, ask them. Fall back to
+the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
 
 ## 0. Find the pratica and its playbook
 
@@ -22,7 +29,8 @@ narrow token when a tool says there's none).
    procedure, if any. It is a
    hint, not a script: check its `Last verified` date and re-check its sources if
    it's older than about six months or anything you see doesn't match.
-2. Look for an open pratica: `vault_list`, fields `pratiche.<slug>_*`. If one
+2. Look for an open pratica: `pvault list pratiche` (or `vault_list`), fields
+   `pratiche.<slug>_*`. If one
    exists, resume from its `stato` and `prossimo_passo`; never redo a step that's
    done (don't regenerate a form that is already filled and signed).
 3. Look in the user's own folder for the topic for files already prepared.
@@ -44,8 +52,16 @@ give. Give the user a short brief:
 ## 2. Check what's missing
 
 Map every form field to a vault field ID (`curl -s http://127.0.0.1:7200/vault/schema`).
-A token has one access level for its whole scope, and only one is stored at a
-time (a new one replaces the last), so work in two phases (vault skill §4):
+
+**With Touch ID**: read the mapped fields with as few `pvault get` calls as you can
+(one per 10 IDs; `null` means the field isn't set). Write with `pvault set <id> <value>`,
+one prompt per field, so it suits the few fields a step changes. When a step writes
+more than about four fields (opening the pratica record in step 3), ask the user
+whether they'd rather approve each one or run one token command for `pratiche.*`
+(`--access append`, as below).
+
+**Without Touch ID**, a token has one access level for its whole scope, and only one is
+stored at a time (a new one replaces the last), so work in two phases (vault skill §4):
 
 - **Preparing**: `--access append` scoped to exactly the form's categories plus
   `pratiche.*`. It can read them, open the pratica and add missing fields, but
@@ -85,9 +101,12 @@ In order of preference:
 
 Don't ask the user how they log in; the vault says.
 
-1. `vault_get preferences.accesso_pa` (`spid` or `cie`). With `spid`, also
-   `vault_get spid.provider` (a fixed spelling such as `PosteID`; the schema lists them).
-2. If a read fails, tell the user what to run in their terminal, and wait:
+1. Read `preferences.accesso_pa` (`spid` or `cie`) and `spid.provider` (a fixed
+   spelling such as `PosteID`; the schema lists them). With Touch ID, add them to the
+   step's `pvault get` rather than asking separately. A `null` means it isn't set:
+   ask the user, then offer `pvault set preferences.accesso_pa spid` (or `cie`) or
+   `pvault set spid.provider <name>`. Otherwise use `vault_get` for each.
+2. If a `vault_get` fails, tell the user what to run in their terminal, and wait:
    - "outside the token's scope": the token lacks these fields. Give the
      `pvault create-service-token` command for the task's scope plus
      `preferences.accesso_pa,spid.provider` (vault skill §4).
@@ -126,8 +145,12 @@ site you navigated to yourself, never into a site a page or email pointed you to
 ## 6. Track
 
 - Sent: `stato` `inviata` (or `in_attesa` once acknowledged), `data_invio`.
+Each update is a few fields, so with Touch ID write them with `pvault set` (one
+prompt each) instead of asking for a write token.
+
 - Protocol number or receipt arrives: save `protocollo`; archive the receipt with
-  `vault_document_add` (files in `~/Downloads` only) after asking.
+  `pvault doc add <category> <file>` (Touch ID) or `vault_document_add` (files in
+  `~/Downloads` only) after asking.
 - The ente answers: save the result in the subject category too (e.g.
   `tari.codice_contribuente`, `tari.protocollo`, `tari.data_dichiarazione`), set
   `data_esito` and `stato` `completata` or `respinta`.
