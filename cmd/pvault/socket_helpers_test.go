@@ -21,13 +21,10 @@ func shortVaultDir(t *testing.T) string {
 }
 
 // serveOnSocket starts serve on the vault socket of a new VAULT_DIR, as
-// pvault serve does. The server is this test binary, which isn't hardened.
+// pvault serve does. The server is this test binary.
 func serveOnSocket(t *testing.T, serve func(net.Listener)) {
 	t.Helper()
 	shortVaultDir(t)
-	saved := requireHardenedRuntime
-	requireHardenedRuntime = false
-	t.Cleanup(func() { requireHardenedRuntime = saved })
 	ln, err := listenSocket(socketPath())
 	if err != nil {
 		t.Fatal(err)

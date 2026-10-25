@@ -7,9 +7,9 @@
 // it makes macOS ask for the login password. This binary checks Touch ID
 // itself before reading the item, and never prints or returns the password —
 // it talks to the vault server directly and hands back only a scoped token.
-// It sends the password only to the pvault binary saved at enrollment, over
-// the vault dir's Unix socket, after checking who is listening (see
-// "Vault server" below).
+// It sends the password only over the vault dir's Unix socket, after checking
+// that the listener runs the pvault binary saved at enrollment (see "Vault
+// server" below for what that check does and doesn't stop).
 // The Touch ID prompt is built here from the exact request sent to the
 // server, so the caller cannot word it.
 //
@@ -94,9 +94,13 @@ func approve(_ reason: String) {
 
 // MARK: - Keychain
 
-// The item holds the password and the pvault binary that enrolled it (the
-// only server the password is ever sent to), as JSON. Both sit in the
-// protected data, so no other program can read or change them.
+// The item holds the password and the pvault binary that enrolled it, as
+// JSON. Both sit in the protected data, so no other program can read or
+// change them. enrollmentFormat (a plain attribute, readable without a
+// prompt) marks items in this format, so an item saved by an older helper
+// counts as not enrolled before anyone is asked for a fingerprint.
+let enrollmentFormat = Data("pvault-touchid/2".utf8)
+
 struct Enrollment: Codable {
     let password: String
     let server: String
@@ -130,7 +134,9 @@ func isEnrolled() -> Bool {
     // Attributes only, so this never triggers an access prompt.
     var q = itemQuery()
     q[kSecReturnAttributes as String] = true
-    return SecItemCopyMatching(q as CFDictionary, nil) == errSecSuccess
+    var out: CFTypeRef?
+    guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess else { return false }
+    return (out as? [String: Any])?[kSecAttrGeneric as String] as? Data == enrollmentFormat
 }
 
 func storeEnrollment(_ e: Enrollment) {
@@ -138,6 +144,7 @@ func storeEnrollment(_ e: Enrollment) {
     var add = itemQuery()
     add[kSecAttrLabel as String] = "pvault Touch ID"
     add[kSecAttrDescription as String] = "vault profile password, readable only by pvault-touchid"
+    add[kSecAttrGeneric as String] = enrollmentFormat
     add[kSecValueData as String] = try! JSONEncoder().encode(e)
     let s = SecItemAdd(add as CFDictionary, nil)
     if s != errSecSuccess { fail("saving to Keychain: \(keychainMessage(s))") }
@@ -164,41 +171,47 @@ func readEnrollment() -> Enrollment {
 
 // MARK: - Code signatures
 
-// cdhash identifies the exact build: an ad-hoc signature has no other name.
-func cdhash(_ code: SecStaticCode) -> Data? {
-    var info: CFDictionary?
-    guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &info) == errSecSuccess else { return nil }
-    return (info as? [String: Any])?[kSecCodeInfoUnique as String] as? Data
+// Signature identifies the exact build (an ad-hoc signature has no other
+// name than its cdhash) and whether it runs with the hardened runtime.
+struct Signature: Equatable {
+    let cdhash: Data
+    let hardened: Bool
 }
 
-func signatureFlags(_ code: SecStaticCode) -> UInt32 {
+func signature(_ code: SecStaticCode) -> Signature? {
     var info: CFDictionary?
-    guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &info) == errSecSuccess else { return 0 }
-    return ((info as? [String: Any])?[kSecCodeInfoFlags as String] as? NSNumber)?.uint32Value ?? 0
+    guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &info) == errSecSuccess,
+          let dict = info as? [String: Any], let hash = dict[kSecCodeInfoUnique as String] as? Data else { return nil }
+    let flags = (dict[kSecCodeInfoFlags as String] as? NSNumber)?.uint32Value ?? 0
+    return Signature(cdhash: hash, hardened: flags & SecCodeSignatureFlags.runtime.rawValue != 0)
 }
 
-// A pvault file that may serve the password: validly signed with the
-// hardened runtime, so no library can be injected into it via DYLD_*.
-func trustedServerCode(_ path: String) -> SecStaticCode {
+// The signature of a pvault file that may serve the password: signed with
+// the hardened runtime, so no library can be injected into it via DYLD_*.
+// Enrolling also validates the whole file; per request that isn't needed
+// (and would hash ~17 MB each time), since the running server is validated
+// itself and only has to carry the cdhash this file's signature declares.
+func trustedServerSignature(_ path: String, validate: Bool) -> Signature {
     var code: SecStaticCode?
     guard SecStaticCodeCreateWithPath(URL(fileURLWithPath: path) as CFURL, [], &code) == errSecSuccess, let code,
-          SecStaticCodeCheckValidity(code, [], nil) == errSecSuccess else {
+          !validate || SecStaticCodeCheckValidity(code, [], nil) == errSecSuccess, let sig = signature(code) else {
         fail("\(path) is not a validly signed pvault — build it with 'make build', then run 'pvault touchid enable' again")
     }
-    guard signatureFlags(code) & SecCodeSignatureFlags.runtime.rawValue != 0 else {
+    guard sig.hardened else {
         fail("\(path) is not signed with the hardened runtime — build it with 'make build', then run 'pvault touchid enable' again")
     }
-    return code
+    return sig
 }
 
 // MARK: - Vault server
 
 // Credentials go only over the vault dir's Unix socket, never TCP: anything
-// can listen on 127.0.0.1:7200 while the real server is down. Before sending,
-// checkPeer makes sure the listener is this user's, runs the pvault binary
-// saved at enrollment, and has the same cdhash as that file. A same-user
-// program that replaces that binary still wins; this stops port squatters
-// and agents kept out of the vault dir and the binary.
+// can listen on 127.0.0.1:7200 while the real server is down. The private
+// run dir is the protection: it stops port squatters and agents kept out of
+// the vault dir. checkPeer also makes sure the listener is this user's and
+// has the cdhash of the pvault saved at enrollment, which catches a stale or
+// mismatched server, but a process that can already write to the vault dir
+// can get around that check.
 func socketPath() -> String {
     (vaultDir() as NSString).appendingPathComponent("run/pvault.sock")
 }
@@ -234,17 +247,19 @@ func checkPeer(_ fd: Int32, server: String) {
     var guest: SecCode?
     guard SecCodeCopyGuestWithAttributes(nil, attrs, [], &guest) == errSecSuccess, let guest,
           SecCodeCheckValidity(guest, [], nil) == errSecSuccess else {
-        fail("refusing to send your password: the vault server's code signature is not valid")
+        // Also what a server started before pvault was reinstalled looks like.
+        fail("refusing to send your password: the vault server's code signature is not valid — if you rebuilt or reinstalled pvault, run 'pvault lock', then 'pvault unlock'")
     }
     let running = unsafeBitCast(guest, to: SecStaticCode.self)
-    let expected = trustedServerCode(server)
-    guard let have = cdhash(running), have == cdhash(expected),
-          signatureFlags(running) & SecCodeSignatureFlags.runtime.rawValue != 0 else {
-        var url: CFURL?
-        SecCodeCopyPath(running, [], &url)
-        let who = (url as URL?)?.path ?? "another program"
-        fail("refusing to send your password: the vault server is \(who), not \(server) — run 'pvault lock' then 'pvault unlock', or 'pvault touchid enable' with this pvault")
+    let expected = trustedServerSignature(server, validate: false)
+    guard signature(running) != expected else { return }
+    var url: CFURL?
+    SecCodeCopyPath(running, [], &url)
+    let who = (url as URL?)?.path ?? "another program"
+    if who == server || (who as NSString).resolvingSymlinksInPath == (server as NSString).resolvingSymlinksInPath {
+        fail("refusing to send your password: the vault server runs an older build of \(server) — run 'pvault lock', then 'pvault unlock'")
     }
+    fail("refusing to send your password: the vault server is \(who), not \(server) — run 'pvault lock' then 'pvault unlock', or 'pvault touchid enable' with this pvault")
 }
 
 // connectServer returns a socket to the vault server, checked as above.
@@ -306,26 +321,13 @@ func post(_ fd: Int32, _ path: String, _ body: [String: String]) -> (Int, [Strin
     let lines = head.components(separatedBy: "\r\n")
     let parts = lines[0].split(separator: " ")
     guard parts.count >= 2, let status = Int(parts[1]) else { fail("bad response from the vault server") }
-    var content = resp[split.upperBound...]
-    if lines.contains(where: { $0.lowercased() == "transfer-encoding: chunked" }) {
-        content = dechunk(Data(content))[...]
+    // The server answers these small JSON bodies with Content-Length; a
+    // chunked body would need decoding this client doesn't do.
+    if lines.contains(where: { $0.lowercased().hasPrefix("transfer-encoding:") }) {
+        fail("unexpected response from the vault server (chunked body)")
     }
-    let json = (try? JSONSerialization.jsonObject(with: Data(content))) as? [String: Any] ?? [:]
+    let json = (try? JSONSerialization.jsonObject(with: Data(resp[split.upperBound...]))) as? [String: Any] ?? [:]
     return (status, json)
-}
-
-func dechunk(_ data: Data) -> Data {
-    var out = Data()
-    var rest = data[...]
-    while let eol = rest.range(of: Data("\r\n".utf8)),
-          let size = Int(String(decoding: rest[..<eol.lowerBound], as: UTF8.self).split(separator: ";")[0], radix: 16),
-          size > 0, rest.distance(from: eol.upperBound, to: rest.endIndex) >= size {
-        let start = eol.upperBound
-        let end = rest.index(start, offsetBy: size)
-        out.append(rest[start..<end])
-        rest = rest[end...].dropFirst(2)
-    }
-    return out
 }
 
 func serverError(_ json: [String: Any], _ status: Int) -> String {
@@ -466,7 +468,7 @@ func cmdEnroll(_ args: [String]) {
         fail("usage: pvault-touchid enroll --server <absolute path to pvault>")
     }
     let server = args[1]
-    _ = trustedServerCode(server)
+    _ = trustedServerSignature(server, validate: true)
     guard let line = readLine(strippingNewline: true), !line.isEmpty else {
         fail("expected the profile password on stdin")
     }

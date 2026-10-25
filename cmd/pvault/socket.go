@@ -19,14 +19,11 @@ import (
 // The profile password and secret key only travel over a Unix socket in the
 // vault dir, never over TCP. Anything can listen on 127.0.0.1:7200 while the
 // real server is down; only a process that can write to <vault dir>/run can
-// put a socket there, and before sending credentials the client also checks
-// that the process on the other end is this pvault binary (peer_*.go). A
-// same-user program that replaces the pvault binary itself still wins: this
-// stops port squatters and agents kept out of the vault dir and the binary.
-
-// requireHardenedRuntime (macOS) is turned off only by tests, whose server
-// runs in the linker-signed, not hardened, test binary.
-var requireHardenedRuntime = true
+// put a socket there. That private dir is the protection: it stops port
+// squatters and agents kept out of the vault dir. The client also checks the
+// listener's uid and that it runs this pvault binary (peer_*.go), which
+// catches a stale or mismatched server, but a process that can already write
+// to the vault dir can get around that check.
 
 // maxSocketPath is sun_path's size on macOS (Linux allows 108).
 const maxSocketPath = 104
@@ -125,11 +122,11 @@ func dialVaultServer(ctx context.Context) (net.Conn, error) {
 var errNoVaultSocket = errors.New("this vault's server isn't running")
 
 // verifyPeer checks that the process listening on conn is this user's and
-// runs the same pvault binary as this one.
+// runs the same pvault binary, and build, as this one.
 func verifyPeer(conn net.Conn) error {
-	uid, exe, err := peerProcess(conn.(*net.UnixConn))
+	uid, pid, exe, err := peerProcess(conn.(*net.UnixConn))
 	if err != nil {
-		return fmt.Errorf("cannot identify the vault server: %w", err)
+		return fmt.Errorf("cannot identify the vault server (%v) — run 'pvault lock', then 'pvault unlock'", err)
 	}
 	if uid != os.Getuid() {
 		return fmt.Errorf("the vault server runs as another user (uid %d)", uid)
@@ -139,7 +136,10 @@ func verifyPeer(conn net.Conn) error {
 		return err
 	}
 	if !samePath(exe, self) {
-		return fmt.Errorf("the vault server is %s, not this pvault (%s) — run 'pvault lock' then 'pvault unlock'", exe, self)
+		return fmt.Errorf("the vault server is %s, not this pvault (%s) — stop it with '%s lock', then run 'pvault unlock'", exe, self, exe)
+	}
+	if err := checkSameBuild(pid); err != nil {
+		return fmt.Errorf("%w (pvault was rebuilt or reinstalled since it started) — run 'pvault lock', then 'pvault unlock'", err)
 	}
 	return nil
 }
@@ -185,4 +185,16 @@ func checkVaultServer() error {
 	}
 	resp.Body.Close()
 	return nil
+}
+
+// isVaultServerProcess reports whether pid runs this pvault binary, by the
+// kernel's path of its executable (which survives a reinstall with rm + cp),
+// so a planted PID file can't get another process signalled.
+func isVaultServerProcess(pid int) bool {
+	exe, err := processExe(pid)
+	if err != nil {
+		return false
+	}
+	self, err := os.Executable()
+	return err == nil && samePath(exe, self)
 }

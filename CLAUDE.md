@@ -84,25 +84,32 @@ Profile Password + Secret Key (128-bit)
   (dir 0700, socket 0600; bound before TCP, never taken over from a live server, stale
   ones replaced). `reUnlock`/`requestGrant` use `credentialRequest` (`socket.go`), which
   refuses a run dir that is a symlink, not ours or not 0700, and checks the listener
-  (`peer_darwin.go`: `LOCAL_PEERCRED` uid, `csops` valid + hardened runtime, kernel exe path
-  via `proc_info` equal to our own resolved `os.Executable()`; Linux: `SO_PEERCRED` +
-  `/proc/<pid>/exe`; other OSes keep TCP). `checkVaultServer` runs before any password or
-  Touch ID prompt. `make build` signs pvault ad-hoc with the hardened runtime so a genuine
-  pvault can't be DYLD-injected. Limit: a same-user program that replaces the pvault binary
-  (`~/.local/bin` is user-writable) still wins; this stops port squatters and agents kept
-  out of the vault dir and the binary. The onboarding page still sends its password over
-  TCP (browsers can't use Unix sockets). Tests: `serveOnSocket`/`shortVaultDir` (t.TempDir
-  paths exceed the 104-byte socket limit), `requireHardenedRuntime` off for in-process servers
+  (`peer_darwin.go`: `LOCAL_PEERCRED` uid, kernel exe path via `proc_info` equal to our own
+  resolved `os.Executable()`, and the same running cdhash as this process via `csops`, so a
+  server left running across a reinstall is refused before any prompt; Linux: `SO_PEERCRED`
+  + `/proc/<pid>/exe`; other OSes keep TCP). `checkVaultServer` runs before any password or
+  Touch ID prompt. The Go side doesn't require the hardened runtime, so `go build` and
+  release binaries work; the helper does (`make build` signs pvault that way).
+  Limits: the private run dir is the protection. The peer check catches stale or
+  mismatched servers but is not a guarantee against a process that can already write to
+  the vault dir, nor against one that replaces the pvault binary (`~/.local/bin` is
+  user-writable). The onboarding page still sends its password over TCP (browsers can't
+  use Unix sockets). `pvault lock` signals the PID file's process only if its kernel exe
+  path is this pvault. A server that exits during startup reports its own last stderr line.
+  Tests: `serveOnSocket`/`shortVaultDir` (t.TempDir paths exceed the 104-byte socket limit)
 - Touch ID (`cmd/pvault-touchid/main.swift`, macOS, ad-hoc signed + hardened runtime):
   `pvault touchid enable` (TTY only) stores the profile password in a plain login-Keychain
   item (service `pvault-touchid`, account = vault dir) whose ACL trusts only that exact
   helper build. Biometric Keychain flags need a paid Apple signature (-34018 otherwise),
   so the helper checks Touch ID itself (biometrics or Apple Watch, no Mac-password
   fallback), then sends the password only over the vault socket and returns only a token.
-  The Keychain item holds JSON `{password, server}`: `touchid enable` passes pvault's own
-  resolved path (`enroll --server`), and the helper sends only to a listener whose audit
-  token (`LOCAL_PEERTOKEN`) gives a valid, hardened `SecCode` with that file's cdhash.
-  A bare-password item (older helper) counts as not enrolled. Its prompt is worded from the exact scope it requests:
+  The Keychain item holds JSON `{password, server}` and `kSecAttrGeneric` =
+  `pvault-touchid/2`: `touchid enable` passes pvault's own resolved path (`enroll --server`,
+  which fully validates that file), and the helper sends only to a listener whose audit
+  token (`LOCAL_PEERTOKEN`) gives a valid, hardened `SecCode` with that file's declared
+  cdhash (no per-request file hashing). An item without the marker (older helper) counts as
+  not enrolled, so no fingerprint is asked for. The helper's HTTP client refuses chunked
+  bodies (the server sends Content-Length). Its prompt is worded from the exact scope it requests:
   append/write grants say they can read too, `cat.*` says "fields and documents", `*` is
   named alone, durations round up, and patterns are anchored with `\A`/`\z` (ICU `$` lets
   a trailing line break through) and capped at 100 characters.

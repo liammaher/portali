@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -33,11 +35,21 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 		return false, fmt.Errorf("creating stdin pipe: %w", err)
 	}
 	cmd.Stdout = nil
-	cmd.Stderr = nil
+	// The server's stderr goes to an unlinked temp file, so an early exit
+	// can report the server's own reason (socket or port) without tying the
+	// long-lived server to a pipe this command closes.
+	logFile, err := os.CreateTemp("", "pvault-serve-*.log")
+	if err != nil {
+		return false, fmt.Errorf("creating server log: %w", err)
+	}
+	defer logFile.Close()
+	cmd.Stderr = logFile
 
 	if err := cmd.Start(); err != nil {
+		os.Remove(logFile.Name())
 		return false, fmt.Errorf("starting server: %w", err)
 	}
+	os.Remove(logFile.Name())
 	if !locked {
 		fmt.Fprintf(stdin, "%s\n%s\n", pw, sk)
 	}
@@ -55,6 +67,9 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 	for {
 		select {
 		case <-exited:
+			if reason := lastLine(logFile); reason != "" {
+				return false, fmt.Errorf("vault server exited during startup: %s", strings.TrimPrefix(reason, "Error: "))
+			}
 			return false, errors.New("vault server exited during startup — is something else using " + serverAddr() + "? Run 'pvault serve' to see the error")
 		case <-deadline:
 			writePID(cmd.Process.Pid)
@@ -79,4 +94,12 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 			return true, nil
 		}
 	}
+}
+
+// lastLine returns the last line the exited server wrote to f.
+func lastLine(f *os.File) string {
+	f.Seek(0, io.SeekStart)
+	data, _ := io.ReadAll(f)
+	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+	return strings.TrimSpace(lines[len(lines)-1])
 }

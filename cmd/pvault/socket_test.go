@@ -148,18 +148,6 @@ func TestListenSocket(t *testing.T) {
 	}
 }
 
-func TestVerifyPeer_RequiresHardenedRuntime(t *testing.T) {
-	if runtime.GOOS != "darwin" {
-		t.Skip("hardened runtime is macOS only")
-	}
-	var got atomic.Int32
-	serveOnSocket(t, serveHandler(t, echoMux(&got)))
-	requireHardenedRuntime = true // the test binary is linker-signed only
-	if err := checkVaultServer(); err == nil || !strings.Contains(err.Error(), "hardened runtime") {
-		t.Fatalf("err = %v", err)
-	}
-}
-
 // buildPvault builds pvault into a new directory, signed like 'make build'
 // (hardened) or left as the Go linker signs it. Extra build flags make a
 // different build of the same code.
@@ -221,5 +209,23 @@ func TestCredentialRequest_RefusesOtherBinary(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "not this pvault") {
 		t.Fatalf("err = %v", err)
+	}
+}
+
+// lock signals a PID from the PID file only if it runs this pvault binary.
+func TestIsVaultServerProcess(t *testing.T) {
+	if !isVaultServerProcess(os.Getpid()) {
+		t.Fatal("this binary should count as the vault server")
+	}
+	if err := checkSameBuild(os.Getpid()); err != nil {
+		t.Fatalf("same process, different build? %v", err)
+	}
+	other := exec.Command("sleep", "5")
+	if err := other.Start(); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { other.Process.Kill(); other.Wait() })
+	if isVaultServerProcess(other.Process.Pid) {
+		t.Fatal("another program must not count as the vault server")
 	}
 }
