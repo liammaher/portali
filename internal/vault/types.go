@@ -9,6 +9,7 @@ type VaultStatus struct {
 	FieldCount  int            `json:"field_count"`
 	Documents   int            `json:"documents"`
 	Categories  map[string]int `json:"categories"`
+	Backup      *BackupStatus  `json:"backup,omitempty"`
 }
 
 // FieldInfo is a decrypted field returned to callers.

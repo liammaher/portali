@@ -87,6 +87,7 @@ type Vault struct {
 	session *Session
 	dir     string // ~/.pvault
 	salt    []byte // loaded on unlock, used for HKDF subkey derivation
+	backup  backupState
 }
 
 // Open opens an existing vault database.
@@ -183,16 +184,21 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 	// Store salt for HKDF subkey derivation
 	v.salt = salt
 
-	// Create session
-	session, err := NewSession(vaultKey, func() {
+	// Create session. Auto-lock only clears it if it is still the current
+	// session, never one created by a later unlock.
+	var session *Session
+	session, err = NewSession(vaultKey, func() {
 		v.mu.Lock()
-		v.session = nil
+		if v.session == session {
+			v.session = nil
+		}
 		v.mu.Unlock()
 	})
 	if err != nil {
 		return "", err
 	}
 	session.setSecretKey(sk)
+	session.setBeforeAutoLock(v.flushBackup)
 	v.session = session
 
 	// Zero local copies of the vault key and secret key
@@ -361,8 +367,13 @@ func (v *Vault) checkGrantCredentials(password, secretKeyHex string) (*Session, 
 	return session, nil
 }
 
-// Lock destroys the session and zeroes the vault key.
+// Lock destroys the session and zeroes the vault key, first writing any
+// automatic backup still waiting and letting one in progress finish (Close
+// closes the database right after).
 func (v *Vault) Lock() {
+	v.backup.mu.Lock()
+	defer v.backup.mu.Unlock()
+	v.flushBackupLocked()
 	v.mu.Lock()
 	defer v.mu.Unlock()
 	if v.session != nil {
@@ -398,6 +409,7 @@ func (v *Vault) Status() (*VaultStatus, error) {
 		cats, _ := v.db.CategoryCounts(TierPersonal)
 		status.Categories = cats
 		status.Documents, _ = v.db.DocumentCount(TierPersonal)
+		status.Backup = v.backupStatus()
 	}
 
 	return status, nil
@@ -467,6 +479,7 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: id, Action: "write"})
+	v.markChanged()
 	return nil
 }
 
@@ -696,6 +709,7 @@ func (v *Vault) Delete(id string) error {
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: id, Action: "delete"})
+	v.markChanged()
 	return nil
 }
 
@@ -710,7 +724,11 @@ func (v *Vault) SetSensitivity(id, tier string) error {
 	if IsCredentialField(id) && tier != TierPersonal {
 		return errCredentialTier(id)
 	}
-	return v.db.SetSensitivity(id, tier)
+	if err := v.db.SetSensitivity(id, tier); err != nil {
+		return err
+	}
+	v.markChanged()
+	return nil
 }
 
 // AuditLog returns recent audit entries.
@@ -801,6 +819,7 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 		Action:   "create_service_token",
 		Purpose:  "consumer: " + consumer + ", max_sensitivity: " + maxSensitivity + ", access: " + access,
 	})
+	v.markChanged()
 
 	return tokenStr, nil
 }
@@ -846,6 +865,7 @@ func (v *Vault) RevokeServiceToken(ref string) (int64, error) {
 			Scope:    "*",
 			Action:   "revoke_service_token",
 		})
+		v.markChanged()
 	}
 	return n, nil
 }

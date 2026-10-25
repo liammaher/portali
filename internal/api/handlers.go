@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -471,6 +472,43 @@ func (s *Server) handleAuditLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, entries)
+}
+
+// POST /vault/backup
+// Session only: writes an encrypted backup now. A "dir" in the body is also
+// remembered as the folder for automatic backups.
+func (s *Server) handleBackup(w http.ResponseWriter, r *http.Request) {
+	if !isSessionAuth(r) {
+		sessionRequired(w)
+		return
+	}
+	if !requireJSON(w, r) {
+		return
+	}
+	var req struct {
+		Dir string `json:"dir"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil && !errors.Is(err, io.EOF) {
+		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+		return
+	}
+	if req.Dir != "" {
+		if err := s.vault.SetBackupDir(req.Dir); err != nil {
+			handleVaultError(w, err)
+			return
+		}
+	}
+	path, err := s.vault.Backup()
+	switch {
+	case errors.Is(err, vault.ErrNoBackupDir):
+		writeError(w, http.StatusBadRequest, "no_backup_dir", err.Error())
+	case errors.Is(err, vault.ErrLocked):
+		handleVaultError(w, err)
+	case err != nil:
+		writeError(w, http.StatusInternalServerError, "backup_failed", err.Error())
+	default:
+		writeJSON(w, http.StatusOK, map[string]string{"path": path})
+	}
 }
 
 // PUT /vault/sensitivity/{id...}

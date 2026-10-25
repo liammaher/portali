@@ -35,6 +35,8 @@ pvault list [category]                   # List fields
 pvault delete <category.field>           # Delete field
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
 pvault export                            # Export all fields as JSON
+pvault backup [--to <folder>]            # Encrypted backup now; --to sets the auto-backup folder
+pvault restore <file> [--check]          # Recreate vault from a backup / only verify it
 pvault audit                             # Show access audit log
 pvault status                            # Show vault status
 ```
@@ -143,6 +145,21 @@ Profile Password + Secret Key (128-bit)
   `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.
   Token access uses scope ID `<category>.documents` plus the tier cap.
   Downloads are served as attachments with `Content-Security-Policy: sandbox`
+- Backups (`backup.go`): `vault.db` snapshot (`VACUUM INTO`) + `documents/*.enc` in a tar,
+  encrypted again with chunked AES-256-GCM (`crypto/stream.go`, STREAM nonces) under
+  HKDF(vault key, salt, `backup/<file id>`), so field names and the audit log are hidden.
+  The plaintext header (magic, version, time, salt, file id) is the AAD. `secret.key` is never
+  in a backup. `POST /vault/backup` is session-only; `--to` stores the folder in meta
+  `backup_dir` (absolute, outside the vault dir after resolving symlinks). Every write calls
+  `markChanged`, which backs up `backupDelay` (1m) after the last change; `Lock` (holding
+  `backup.mu` throughout) and auto-lock flush a pending one first, so `pvault lock` waits
+  for the server to exit. Lock order: `backup.mu` → `v.mu` → session `mu`. Auto-lock ignores
+  stale timer firings and only clears its own session. Files are
+  `pvault-<vault id>-<time>.pvbackup` (id = SHA-256 of the salt, 8 hex); pruning keeps this
+  vault's 10 newest plus the newest per day for 30 days and never touches other files.
+  Documents whose file is gone are dropped from the snapshot rather than failing the backup.
+  `RestoreBackup` only fills a missing or empty dir and checks the result unlocks
+  (`--ask-key` tests a hand-kept secret key); public status shows backup state, never the folder
 
 ## Conventions
 
