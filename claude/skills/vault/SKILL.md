@@ -16,6 +16,9 @@ Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md fo
 - Never put tokens in URLs or command lines you show the user.
 - Fields with tier `personal` (SPID/CIE credentials) are invisible to tokens on purpose.
   Send the user to the UI for those; don't try to work around the 404/403.
+- Logging in to a government portal: don't ask how. Read `preferences.accesso_pa`
+  (`spid`/`cie`) and, for SPID, `spid.provider`, then follow the pratica skill's
+  "Logging in to a portal".
 - Never open the vault UI in a browser you control (the built-in browser pane or
   Claude in Chrome). Signed in, that page has full access to every field.
 - Never read the `pvault-mcp` Keychain item or anything in `~/.pvault/` yourself

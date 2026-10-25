@@ -36,3 +36,22 @@ func TestOnboardingFieldsAreLoaded(t *testing.T) {
 		}
 	}
 }
+
+// Every option of a validated select on the onboarding page must be stored as
+// written, or picking it would fail or save a different spelling.
+func TestOnboardingSelectOptionsValidate(t *testing.T) {
+	page := string(onboardingHTML)
+	for _, id := range []string{"spid.provider", "preferences.accesso_pa"} {
+		sel := regexp.MustCompile(`(?s)<select data-field="` + regexp.QuoteMeta(id) + `">(.*?)</select>`).FindStringSubmatch(page)
+		if sel == nil {
+			t.Errorf("%s: select not found in onboarding.html", id)
+			continue
+		}
+		for _, m := range regexp.MustCompile(`<option value="([^"]+)">`).FindAllStringSubmatch(sel[1], -1) {
+			got, err := vault.NormalizeAndValidate(id, m[1])
+			if err != nil || got != m[1] {
+				t.Errorf("%s option %q normalizes to %q, %v; want it unchanged", id, m[1], got, err)
+			}
+		}
+	}
+}

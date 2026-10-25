@@ -119,6 +119,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 	if v, handled, err := normalizePratica(id, category, name, value); handled {
 		return v, err
 	}
+	if v, handled, err := normalizeAccess(id, category, name, value); handled {
+		return v, err
+	}
 
 	switch {
 	case hasFieldSuffix(name, "codice_fiscale"):

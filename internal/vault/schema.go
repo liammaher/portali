@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "7",
+	Version: "8",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -60,7 +60,7 @@ var RecommendedSchema = Schema{
 			Name:        "spid",
 			Description: "Your SPID identity. Everything here is personal by default: only you can see it, never an agent. Lower provider/level/renewal to standard if you want agents to see them.",
 			Fields: []SchemaField{
-				{ID: "spid.provider", Description: "Identity provider (e.g. PosteID, Aruba, InfoCert, Namirial, Sielte, Lepida)", Sensitivity: "personal"},
+				{ID: "spid.provider", Description: "Identity provider: PosteID, Aruba, InfoCert, Namirial, Sielte, Lepida, Register, TIM id, Intesi Group, EtnaID, TeamSystem or InfoCamere (validated). Lower it to standard so agents can pick it at a SPID login", Sensitivity: "personal"},
 				{ID: "spid.livello", Description: "Highest active level (1, 2 or 3)", Sensitivity: "personal"},
 				{ID: "spid.username", Description: "Login username (usually email or codice fiscale)", Sensitivity: "personal"},
 				{ID: "spid.password", Description: "Login password", Sensitivity: "personal"},
@@ -280,6 +280,7 @@ var RecommendedSchema = Schema{
 			Fields: []SchemaField{
 				{ID: "preferences.timezone", Description: "Preferred timezone (e.g. Europe/Rome)", Sensitivity: "public"},
 				{ID: "preferences.language", Description: "Preferred language (e.g. it, en)", Sensitivity: "public"},
+				{ID: "preferences.accesso_pa", Description: "How you log in to government portals by default: spid or cie (validated). With spid, agents use spid.provider", Sensitivity: "standard"},
 			},
 		},
 		{

@@ -606,3 +606,53 @@ func TestPersonalTier_StatusAndLoweredFields(t *testing.T) {
 		t.Fatalf("lowering spid.pass: expected 400, got %d", w.Code)
 	}
 }
+
+// The portal-login flow: the user stores their login method and SPID provider,
+// lowers the provider from personal, and an agent token scoped to just those
+// two fields can read them in their stored spelling.
+func TestPortalLoginPreference_AgentFlow(t *testing.T) {
+	env := setup(t)
+	token := createScopedToken(t, env, "claude", "preferences.accesso_pa,spid.provider")
+
+	for id, v := range map[string]string{"preferences.accesso_pa": "SPID", "spid.provider": "poste id"} {
+		if w := env.doRequest(t, "PUT", "/vault/fields/"+id, map[string]string{"value": v}, true); w.Code != 200 {
+			t.Fatalf("set %s: %d %s", id, w.Code, w.Body.String())
+		}
+	}
+	if w := env.doRequest(t, "PUT", "/vault/fields/spid.provider", map[string]string{"value": "Google"}, true); w.Code != 400 {
+		t.Errorf("unknown provider: expected 400, got %d", w.Code)
+	}
+
+	get := func(id string) (int, vault.FieldInfo) {
+		w := env.doRequestWithToken(t, "GET", "/vault/fields/"+id, nil, token)
+		var f vault.FieldInfo
+		json.NewDecoder(w.Body).Decode(&f)
+		return w.Code, f
+	}
+	if code, f := get("preferences.accesso_pa"); code != 200 || f.Value != "spid" {
+		t.Errorf("accesso_pa: %d %q, want 200 spid", code, f.Value)
+	}
+	// Still personal: hidden from the agent until the user lowers it.
+	if code, _ := get("spid.provider"); code != 404 {
+		t.Errorf("personal spid.provider: expected 404, got %d", code)
+	}
+	if w := env.doRequest(t, "PUT", "/vault/sensitivity/spid.provider", map[string]string{"tier": "standard"}, true); w.Code != 200 {
+		t.Fatalf("lower spid.provider: %d %s", w.Code, w.Body.String())
+	}
+	if code, f := get("spid.provider"); code != 200 || f.Value != "PosteID" {
+		t.Errorf("spid.provider: %d %q, want 200 PosteID", code, f.Value)
+	}
+	// Overwriting the provider keeps the lowered tier.
+	env.doRequest(t, "PUT", "/vault/fields/spid.provider", map[string]string{"value": "aruba"}, true)
+	if code, f := get("spid.provider"); code != 200 || f.Value != "Aruba" || f.Sensitivity != "standard" {
+		t.Errorf("after overwrite: %d %q %s", code, f.Value, f.Sensitivity)
+	}
+	// The rest of the spid category stays out of reach.
+	env.doRequest(t, "PUT", "/vault/fields/spid.password", map[string]string{"value": "hunter2"}, true)
+	if w := env.doRequest(t, "PUT", "/vault/sensitivity/spid.password", map[string]string{"tier": "standard"}, true); w.Code != 400 {
+		t.Errorf("lowering spid.password: expected 400, got %d", w.Code)
+	}
+	if code, _ := get("spid.password"); code != 403 && code != 404 {
+		t.Errorf("spid.password readable by the agent: %d", code)
+	}
+}
