@@ -1,6 +1,7 @@
 {
-  "name": "personal-vault-mcp",
+  "name": "@liammaher/personal-vault-mcp",
   "version": "0.1.0",
+  "private": true,
   "description": "MCP server for Personal Vault — exposes encrypted personal context to AI agents",
   "type": "module",
   "license": "MIT",
