@@ -122,6 +122,20 @@ test("VAULT_TOKEN wins over the command, and errors point at it", async () => {
   assert.deepEqual(seen, ["stale"]);
 });
 
+test("points to Touch ID before asking for a new token", async () => {
+  const touchIDFirst = (e: Error) => {
+    const touchID = e.message.indexOf("pvault touchid status");
+    assert.ok(touchID >= 0, `no Touch ID advice in: ${e.message}`);
+    assert.ok(touchID < e.message.indexOf("create-service-token"), "Touch ID comes first");
+    return true;
+  };
+  await assert.rejects(getField("residenza.comune"), touchIDFirst); // no token stored
+  await writeFile(tokenFile, "revoked\n");
+  await assert.rejects(getField("residenza.comune"), touchIDFirst); // expired or revoked
+  process.env.VAULT_TOKEN = "stale";
+  await assert.rejects(getField("residenza.comune"), touchIDFirst);
+});
+
 test("reports runaway command output as too large, not a timeout", async () => {
   process.env.VAULT_TOKEN_COMMAND = "node -e \"process.stdout.write('a'.repeat(100000))\"";
   await assert.rejects(getField("residenza.comune"), (e: Error) => {

@@ -58,20 +58,26 @@ function tokenCommand(): string | undefined {
   return process.env.VAULT_TOKEN_COMMAND?.trim() || undefined;
 }
 
-/** How to get a working token, matching whichever source is actually used. */
+/**
+ * How to get on without a working token: Touch ID first, since with it on the user
+ * approves `pvault get`/`pvault set` from the shell and no token is needed; else a
+ * new token, matching whichever source is actually used.
+ */
 function createTokenHelp(): string {
+  const touchID = "if `pvault touchid status` says on, use `pvault get <id> ...` or `pvault set` " +
+    "from the shell instead (the user approves with Touch ID, no token needed); otherwise ";
   const create = "`pvault create-service-token <name> --scope \"identity.*,...\"";
   const noRestart = "in their terminal; the next call uses it, no restart needed";
   if (!staticToken()) {
     const service = keychainService();
     if (service) {
-      return `ask the user to run ${create} --keychain ${service}\` ${noRestart}`;
+      return `${touchID}ask the user to run ${create} --keychain ${service}\` ${noRestart}`;
     }
     if (tokenCommand()) {
-      return `ask the user to run ${create} --keychain <service>\` (the service VAULT_TOKEN_COMMAND reads) ${noRestart}`;
+      return `${touchID}ask the user to run ${create} --keychain <service>\` (the service VAULT_TOKEN_COMMAND reads) ${noRestart}`;
     }
   }
-  return `ask the user to create one with ${create}\` and set it as VAULT_TOKEN in this MCP server's env`;
+  return `${touchID}ask the user to create one with ${create}\` and set it as VAULT_TOKEN in this MCP server's env`;
 }
 
 function missingToken(detail?: string): VaultError {
