@@ -6,7 +6,7 @@
 make build && make install
 
 pvault onboard               # Create vault, unlock, populate common fields (interactive)
-pvault set identity.full_name "Cool Cucumber"
+pvault set identity.full_name "Mario Rossi"
 pvault get identity.full_name
 pvault list
 pvault lock                  # Stop server, zero keys from memory
@@ -30,14 +30,14 @@ With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the pa
 Fields use dot notation: `category.field_name`.
 
 ```sh
-pvault set identity.full_name "Cool Cucumber"
-pvault set identity.date_of_birth "1995-06-15"
-pvault set addresses.home_city "San Francisco"
-pvault set employment.employer "Acme Corp"
-pvault set financial.filing_status "single"
-pvault set preferences.timezone "America/Los_Angeles"
+pvault set identity.full_name "Mario Rossi"
+pvault set identity.date_of_birth 15/06/1995    # stored as 1995-06-15
+pvault set residenza.comune "Napoli"
+pvault set residenza.provincia NA
+pvault set employment.employer "Acme S.r.l."
+pvault set preferences.timezone "Europe/Rome"
 pvault get identity.full_name
-pvault get identity.full_name addresses.home_city   # Several fields as JSON (max 10)
+pvault get identity.full_name residenza.comune      # Several fields as JSON (max 10)
 pvault list                      # All fields
 pvault list identity             # One category
 pvault delete identity.date_of_birth
@@ -52,16 +52,16 @@ Each field has a sensitivity tier that controls how it's shared with consumers.
 
 | Tier | Examples | Who can read it |
 |------|----------|-----------------|
-| `public` | Timezone, language | Any service token whose scope covers it |
-| `standard` | Address, employer | Service tokens with the default cap (`sensitive`) or higher |
-| `sensitive` | Date of birth, phone, rent | Service tokens with the default cap or higher |
-| `critical` | SSN, card number | Only tokens created with `--max-sensitivity critical` |
+| `public` | Language, timezone | Any service token whose scope covers it |
+| `standard` | Name, comune, employer | Service tokens with the default cap (`sensitive`) or higher |
+| `sensitive` | Codice fiscale, street address, phone, rent | Service tokens with the default cap or higher |
+| `critical` | Payment card number | Only tokens created with `--max-sensitivity critical` |
 | `personal` | SPID login, CIE PIN/PUK | Only you: your own session, or a Touch ID prompt you approve |
 
 A token's `--max-sensitivity` is the highest tier it can see; everything above it is hidden as if it didn't exist.
 
 ```sh
-pvault set-sensitivity financial.ssn critical
+pvault set-sensitivity financial.iban critical
 pvault set-sensitivity preferences.timezone public
 ```
 
@@ -69,7 +69,7 @@ pvault set-sensitivity preferences.timezone public
 
 Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `nucleo_familiare.membro1_data_nascita`), `date_of_<x>` or `<x>_date` (e.g. `identity.date_of_birth`) must be a real calendar date; hyphens count as underscores, and names like `date_format` are not treated as dates. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
 
-`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first.
+`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`).
 
 ## Document scans
 
@@ -106,7 +106,7 @@ A backup is a snapshot of `vault.db` plus the encrypted documents, in a tar encr
 Service tokens let agents authenticate with scoped, time-limited, sensitivity-capped credentials. They follow the 1Password service account pattern.
 
 ```sh
-pvault create-service-token tax-agent --scope "identity.*,financial.*" --ttl 1h
+pvault create-service-token tari-agent --scope "identity.*,residenza.*" --ttl 1h
 pvault create-service-token checkout --scope "payment.*" --max-sensitivity critical --ttl 1h
 pvault list-service-tokens
 pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list, or the full token
@@ -175,7 +175,7 @@ This is what consumers call. Returns:
 {
   "categories": {
     "identity": [
-      { "id": "identity.full_name", "category": "identity", "field_name": "full_name", "value": "Cool Cucumber", "sensitivity": "standard" }
+      { "id": "identity.full_name", "category": "identity", "field_name": "full_name", "value": "Mario Rossi", "sensitivity": "standard" }
     ],
     "preferences": [...]
   }

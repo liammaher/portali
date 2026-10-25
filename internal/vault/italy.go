@@ -23,15 +23,21 @@ func (e *ValidationError) Error() string {
 	return fmt.Sprintf("invalid value for %s: %s", e.Field, e.Msg)
 }
 
-// reCredentialWord matches a field-name word that names a login secret
-// (pin, pin1, puk2, password, otp, username, ...).
-const credentialWords = `pin[0-9]*|puk[0-9]*|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|chiave`
+const (
+	credentialWords = `pin[0-9]*|puk[0-9]*|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|chiave`
+	identityWords   = `spid|cieid|cie`
+)
 
-var reCredentialWord = regexp.MustCompile(`^(` + credentialWords + `)$`)
-
-// reJoinedCredential matches an identity word and a credential word run
-// together, as in identity.spidPassword (lower-cased to spidpassword).
-var reJoinedCredential = regexp.MustCompile(`^(spid|cieid|cie)(` + credentialWords + `)$|^(` + credentialWords + `)(spid|cieid|cie)$`)
+var (
+	// reCredentialWord matches a field-name word that names a login secret
+	// (pin, pin1, puk2, password, otp, username, ...).
+	reCredentialWord = regexp.MustCompile(`^(` + credentialWords + `)$`)
+	// reIdentityWord matches a word naming SPID, CieID or the CIE.
+	reIdentityWord = regexp.MustCompile(`^(` + identityWords + `)$`)
+	// reJoinedCredential matches an identity word and a credential word run
+	// together, as in identity.spidPassword (lower-cased to spidpassword).
+	reJoinedCredential = regexp.MustCompile(`^(` + identityWords + `)(` + credentialWords + `)$|^(` + credentialWords + `)(` + identityWords + `)$`)
+)
 
 // IsCredentialField reports whether a field holds a login secret: a
 // credential word (pin, puk, password, otp, username, ...) in a field about
@@ -56,25 +62,18 @@ func IsCredentialField(id string) bool {
 		return false
 	}
 
-	words := strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' })
-	aboutIdentity := category == "cie"
-	for _, w := range words {
-		if reJoinedCredential.MatchString(w) {
+	aboutIdentity, credentialWord := category == "cie", false
+	for _, w := range strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' }) {
+		switch {
+		case reJoinedCredential.MatchString(w):
 			return true
-		}
-		if w == "spid" || w == "cie" || w == "cieid" {
+		case reIdentityWord.MatchString(w):
 			aboutIdentity = true
+		case reCredentialWord.MatchString(w):
+			credentialWord = true
 		}
 	}
-	if !aboutIdentity {
-		return false
-	}
-	for _, w := range words {
-		if reCredentialWord.MatchString(w) {
-			return true
-		}
-	}
-	return false
+	return aboutIdentity && credentialWord
 }
 
 // isNonSecretAccountField lists SPID/CieID fields that may be lowered from

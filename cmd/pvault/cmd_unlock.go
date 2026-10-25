@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -37,7 +36,7 @@ func cmdUnlock() {
 	// With Touch ID, start the server locked and let the helper unlock it;
 	// the typed password stays the fallback.
 	if touchIDEnrolled() {
-		verified, err := startBackgroundServer(vaultDir(), "", "")
+		verified, err := startBackgroundServer("", "")
 		if err != nil {
 			fatal("%v", err)
 		}
@@ -65,7 +64,7 @@ func cmdUnlock() {
 		fatal("%v", err)
 	}
 
-	verified, err := startBackgroundServer(vaultDir(), pw, sk)
+	verified, err := startBackgroundServer(pw, sk)
 	if err != nil {
 		fatal("%v", err)
 	}
@@ -162,18 +161,10 @@ func reUnlock(password, secretKey string) error {
 	if err != nil {
 		return fmt.Errorf("re-unlock request: %w", err)
 	}
-	defer resp.Body.Close()
-
-	var result struct {
-		Token string `json:"token"`
-		Error string `json:"error"`
-	}
-	json.NewDecoder(resp.Body).Decode(&result)
-
-	if resp.StatusCode >= 400 {
-		return fmt.Errorf("unlock failed: %s", result.Error)
-	}
 	// The unlock token is deliberately discarded: CLI commands authenticate
 	// with a fresh password-gated grant instead of a stored token.
+	if err := apiResult(resp, nil); err != nil {
+		return fmt.Errorf("unlock failed: %w", err)
+	}
 	return nil
 }

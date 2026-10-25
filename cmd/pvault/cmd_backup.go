@@ -23,14 +23,8 @@ func iCloudBackupDir() string {
 
 func cmdBackup() {
 	dir := ""
-	args := os.Args[2:]
-	for i := 0; i < len(args); i++ {
-		if args[i] == "--to" && i+1 < len(args) {
-			dir = args[i+1]
-			i++
-			continue
-		}
-		fatal(backupUsage)
+	if err := parseFlags(os.Args[2:], map[string]*string{"--to": &dir}); err != nil {
+		fatal("%v\n%s", err, backupUsage)
 	}
 
 	body := map[string]string{}
@@ -54,7 +48,7 @@ func cmdBackup() {
 		Path string `json:"path"`
 	}
 	if err := apiResult(resp, &result); err != nil {
-		if strings.Contains(err.Error(), "no backup folder") {
+		if err.Error() == vault.ErrNoBackupDir.Error() {
 			fatal("no backup folder set yet. To keep backups in iCloud Drive, run:\n  pvault backup --to %q", iCloudBackupDir())
 		}
 		fatal("%v", err)

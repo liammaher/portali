@@ -519,19 +519,7 @@ func (e *testEnv) doRequestWithToken(t *testing.T, method, path string, body any
 
 func createScopedToken(t *testing.T, env *testEnv, consumer, scope string) string {
 	t.Helper()
-	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
-		"consumer": consumer,
-		"scope":    scope,
-		"ttl":      "1h",
-	}, true)
-	if w.Code != 200 {
-		t.Fatalf("create token: expected 200, got %d: %s", w.Code, w.Body.String())
-	}
-	var resp struct {
-		Token string `json:"token"`
-	}
-	json.NewDecoder(w.Body).Decode(&resp)
-	return resp.Token
+	return createToken(t, env, map[string]string{"consumer": consumer, "scope": scope})
 }
 
 func TestScopedToken_GetField_Allowed(t *testing.T) {
@@ -1049,9 +1037,7 @@ func TestBackup_SessionOnly(t *testing.T) {
 		t.Fatal(err)
 	}
 	dir := t.TempDir()
-	session := env.token
-	env.token = agent
-	w = env.doRequest(t, "POST", "/vault/backup", map[string]string{"dir": dir}, true)
+	w = env.doRequestWithToken(t, "POST", "/vault/backup", map[string]string{"dir": dir}, agent)
 	if w.Code != http.StatusForbidden {
 		t.Fatalf("service token backup: %d %s", w.Code, w.Body.String())
 	}
@@ -1059,7 +1045,6 @@ func TestBackup_SessionOnly(t *testing.T) {
 		t.Fatal("service token wrote a backup")
 	}
 
-	env.token = session
 	w = env.doRequest(t, "POST", "/vault/backup", map[string]string{"dir": dir}, true)
 	if w.Code != http.StatusOK {
 		t.Fatalf("session backup: %d %s", w.Code, w.Body.String())

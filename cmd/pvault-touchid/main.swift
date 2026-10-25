@@ -31,6 +31,7 @@ let defaultGrantSeconds = 120
 let maxGrantSeconds = 600  // vault.MaxScopedGrantTTL
 let maxScopePatterns = 10
 let maxPatternLength = 100  // keeps every pattern visible in the prompt
+let notSetUp = "Touch ID is not set up — run 'pvault touchid enable'"
 
 // The TCP address pvault must use for the tokens this helper hands out. The
 // password itself never goes over TCP. Debug builds (-D DEBUG) accept
@@ -158,7 +159,7 @@ func readEnrollment() -> Enrollment {
     q[kSecReturnData as String] = true
     var out: CFTypeRef?
     let s = SecItemCopyMatching(q as CFDictionary, &out)
-    if s == errSecItemNotFound { fail("Touch ID is not set up — run 'pvault touchid enable'", code: 3) }
+    if s == errSecItemNotFound { fail(notSetUp, code: 3) }
     guard s == errSecSuccess, let data = out as? Data else {
         fail("reading Keychain: \(keychainMessage(s)) — if pvault-touchid was rebuilt, run 'pvault touchid enable' again")
     }
@@ -391,12 +392,6 @@ func grantReason(scope: [String]?, access: String, seconds: Int) -> String {
 
 // MARK: - Commands
 
-func option(_ args: [String], _ name: String) -> String? {
-    guard let i = args.firstIndex(of: name) else { return nil }
-    guard i + 1 < args.count else { fail("\(name) needs a value") }
-    return args[i + 1]
-}
-
 struct GrantRequest {
     let scope: [String]?
     let access: String
@@ -404,56 +399,62 @@ struct GrantRequest {
 }
 
 func parseGrant(_ args: [String]) -> GrantRequest {
-    let known: Set = ["--scope", "--access", "--ttl"]
+    var opts: [String: String] = [:]
     var i = 0
     while i < args.count {
-        guard known.contains(args[i]) else { fail("unknown option \(args[i])") }
+        let name = args[i]
+        guard ["--scope", "--access", "--ttl"].contains(name) else { fail("unknown option \(name)") }
+        guard i + 1 < args.count else { fail("\(name) needs a value") }
+        guard opts[name] == nil else { fail("\(name) given twice") }
+        opts[name] = args[i + 1]
         i += 2
     }
-    let scope = option(args, "--scope").map(parseScope)
-    let access = option(args, "--access") ?? "read"
+    let scope = opts["--scope"].map(parseScope)
+    let access = opts["--access"] ?? "read"
     guard ["read", "append", "write"].contains(access) else { fail("access must be read, append or write") }
-    if scope == nil && option(args, "--access") != nil { fail("--access needs --scope") }
+    if scope == nil && opts["--access"] != nil { fail("--access needs --scope") }
     var seconds = defaultGrantSeconds
-    if let t = option(args, "--ttl") {
+    if let t = opts["--ttl"] {
         guard let n = Int(t), n > 0, n <= maxGrantSeconds else { fail("--ttl must be 1 to \(maxGrantSeconds) seconds") }
         seconds = n
     }
     return GrantRequest(scope: scope, access: access, seconds: seconds)
 }
 
-func cmdGrant(_ args: [String]) {
-    let req = parseGrant(args)
-    let (scope, access, seconds) = (req.scope, req.access, req.seconds)
-    guard isEnrolled() else { fail("Touch ID is not set up — run 'pvault touchid enable'", code: 3) }
-
-    approve(grantReason(scope: scope, access: access, seconds: seconds))
-
+// sendCredentials asks for a fingerprint, then sends the saved password and
+// the secret key, plus extra, to the checked vault server.
+func sendCredentials(reason: String, path: String, extra: [String: String] = [:]) -> (Int, [String: Any]) {
+    guard isEnrolled() else { fail(notSetUp, code: 3) }
+    approve(reason)
     let enrolled = readEnrollment()
     let fd = connectServer(server: enrolled.server)
-    var body = ["password": enrolled.password, "secret_key": readSecretKey(), "ttl": "\(seconds)s"]
-    if let scope {
-        body["scope"] = scope.joined(separator: ",")
-        body["access"] = access
+    let body = extra.merging(["password": enrolled.password, "secret_key": readSecretKey()]) { _, new in new }
+    return post(fd, path, body)
+}
+
+func cmdGrant(_ args: [String]) {
+    let req = parseGrant(args)
+    var extra = ["ttl": "\(req.seconds)s"]
+    if let scope = req.scope {
+        extra["scope"] = scope.joined(separator: ",")
+        extra["access"] = req.access
     }
-    let (status, json) = post(fd, "/vault/session", body)
+    let (status, json) = sendCredentials(
+        reason: grantReason(scope: req.scope, access: req.access, seconds: req.seconds),
+        path: "/vault/session", extra: extra)
     guard status == 200, let token = json["token"] as? String else {
         fail("vault refused the grant: \(serverError(json, status))")
     }
     // An older server ignores scope and grants full access, which is more
     // than the user approved: drop it unused.
-    if let scope, json["scope"] as? String != scope.joined(separator: ",") || json["access"] as? String != access {
+    if let scope = extra["scope"], json["scope"] as? String != scope || json["access"] as? String != req.access {
         fail("the running vault server doesn't support scoped grants — restart it with this version ('pvault lock', then 'pvault unlock')")
     }
     print(token)
 }
 
 func cmdUnlock() {
-    guard isEnrolled() else { fail("Touch ID is not set up — run 'pvault touchid enable'", code: 3) }
-    approve("unlock your vault")
-    let enrolled = readEnrollment()
-    let fd = connectServer(server: enrolled.server)
-    let (status, json) = post(fd, "/vault/unlock", ["password": enrolled.password, "secret_key": readSecretKey()])
+    let (status, json) = sendCredentials(reason: "unlock your vault", path: "/vault/unlock")
     switch status {
     case 200: print("unlocked")  // the unlock token is discarded on purpose
     case 409: print("already unlocked")
@@ -477,9 +478,11 @@ func cmdEnroll(_ args: [String]) {
     guard args.count == 2, args[0] == "--server", args[1].hasPrefix("/") else {
         fail("usage: pvault-touchid enroll --server <absolute path to pvault>")
     }
-    requireTerminal("enroll")
     let server = args[1]
+    // Before requireTerminal: it reads neither the Keychain nor stdin, and
+    // tests without a terminal can still reach it.
     _ = trustedServerSignature(server, validate: true)
+    requireTerminal("enroll")
     guard let line = readLine(strippingNewline: true), !line.isEmpty else {
         fail("expected the profile password on stdin")
     }

@@ -12,16 +12,15 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
-// createTokenWithAccess creates a service token with the given access level
-// (read, append or write) and the default sensitivity cap.
-func createTokenWithAccess(t *testing.T, env *testEnv, scope, access string) string {
+// createToken creates a 1h service token for consumer "agent" from req
+// (scope plus any of access and max_sensitivity).
+func createToken(t *testing.T, env *testEnv, req map[string]string) string {
 	t.Helper()
-	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
-		"consumer": "agent",
-		"scope":    scope,
-		"ttl":      "1h",
-		"access":   access,
-	}, true)
+	body := map[string]string{"consumer": "agent", "ttl": "1h"}
+	for k, v := range req {
+		body[k] = v
+	}
+	w := env.doRequest(t, "POST", "/vault/tokens/service", body, true)
 	if w.Code != 200 {
 		t.Fatalf("create token: expected 200, got %d: %s", w.Code, w.Body.String())
 	}
@@ -32,22 +31,16 @@ func createTokenWithAccess(t *testing.T, env *testEnv, scope, access string) str
 	return resp.Token
 }
 
+// createTokenWithAccess creates a service token with the given access level
+// (read, append or write) and the default sensitivity cap.
+func createTokenWithAccess(t *testing.T, env *testEnv, scope, access string) string {
+	t.Helper()
+	return createToken(t, env, map[string]string{"scope": scope, "access": access})
+}
+
 func createTokenWithTier(t *testing.T, env *testEnv, scope, maxSensitivity string) string {
 	t.Helper()
-	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
-		"consumer":        "agent",
-		"scope":           scope,
-		"ttl":             "1h",
-		"max_sensitivity": maxSensitivity,
-	}, true)
-	if w.Code != 200 {
-		t.Fatalf("create token: expected 200, got %d: %s", w.Code, w.Body.String())
-	}
-	var resp struct {
-		Token string `json:"token"`
-	}
-	json.NewDecoder(w.Body).Decode(&resp)
-	return resp.Token
+	return createToken(t, env, map[string]string{"scope": scope, "max_sensitivity": maxSensitivity})
 }
 
 func seedTiers(t *testing.T, env *testEnv) {
@@ -767,15 +760,7 @@ func TestPortalLoginPreference_AgentFlow(t *testing.T) {
 // up to critical.
 func createWriteToken(t *testing.T, env *testEnv, scope string) string {
 	t.Helper()
-	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{
-		"consumer": "agent", "scope": scope, "ttl": "1h", "access": "write", "max_sensitivity": "critical",
-	}, true)
-	var resp struct{ Token string }
-	json.NewDecoder(w.Body).Decode(&resp)
-	if resp.Token == "" {
-		t.Fatalf("create token: %d %s", w.Code, w.Body.String())
-	}
-	return resp.Token
+	return createToken(t, env, map[string]string{"scope": scope, "access": "write", "max_sensitivity": "critical"})
 }
 
 // Deleting a field and writing it again would give it the default tier, so

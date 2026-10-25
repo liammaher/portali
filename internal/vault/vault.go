@@ -204,6 +204,13 @@ func Init(dir, password string) (secretKey string, err error) {
 	return hex.EncodeToString(sk), nil
 }
 
+// parseSecretKey decodes a secret key, also as copied by hand: any case,
+// with spaces, dashes or line breaks.
+func parseSecretKey(s string) ([]byte, error) {
+	s = strings.NewReplacer(" ", "", "-", "", "\t", "", "\r", "", "\n", "").Replace(s)
+	return hex.DecodeString(s)
+}
+
 // Unlock derives the vault key and creates a session.
 func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err error) {
 	v.mu.Lock()
@@ -213,7 +220,7 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 		return "", ErrAlreadyUnlocked
 	}
 
-	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
+	sk, err := parseSecretKey(secretKeyHex)
 	if err != nil {
 		return "", ErrWrongPassword
 	}
@@ -255,7 +262,7 @@ func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err 
 // CheckCredentials reports whether the password and secret key unlock this
 // vault (ErrWrongPassword if not) without creating a session.
 func (v *Vault) CheckCredentials(password, secretKeyHex string) error {
-	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
+	sk, err := parseSecretKey(secretKeyHex)
 	if err != nil {
 		return ErrWrongPassword
 	}
@@ -381,7 +388,7 @@ func (v *Vault) checkGrantCredentials(password, secretKeyHex string) (*Session, 
 		}
 	} else {
 		var err error
-		if sk, err = hex.DecodeString(strings.TrimSpace(secretKeyHex)); err != nil {
+		if sk, err = parseSecretKey(secretKeyHex); err != nil {
 			return nil, ErrWrongPassword
 		}
 	}

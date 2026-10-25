@@ -387,32 +387,26 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if isSessionAuth(r) {
-		if err := s.vault.Delete(id); err != nil {
-			handleVaultError(w, err)
+	if !isSessionAuth(r) {
+		// Access first, so a read-only token learns nothing about the field.
+		if !requireAccess(w, r, true) {
 			return
 		}
-		writeJSON(w, http.StatusOK, map[string]string{"status": "deleted"})
-		return
-	}
-	// Access first, so a read-only token learns nothing about the field.
-	if !requireAccess(w, r, true) {
-		return
-	}
-	existing, ok := s.requireFieldTier(w, r, id, false)
-	if !ok {
-		return
-	}
-	// Same answer as a hidden personal field, so tokens can't probe for them.
-	if existing == nil {
-		writeError(w, http.StatusNotFound, "not_found", "field not found")
-		return
-	}
-	// Writing it again would give it the default tier, so deleting a field
-	// stored above that would let an agent lower it; only the user's session may.
-	if !vault.TierAllows(vault.DefaultSensitivity(id), existing.Sensitivity) {
-		writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a field stored above its default sensitivity tier")
-		return
+		existing, ok := s.requireFieldTier(w, r, id, false)
+		if !ok {
+			return
+		}
+		// Same answer as a hidden personal field, so tokens can't probe for them.
+		if existing == nil {
+			writeError(w, http.StatusNotFound, "not_found", "field not found")
+			return
+		}
+		// Writing it again would give it the default tier, so deleting a field
+		// stored above that would let an agent lower it; only the user's session may.
+		if !vault.TierAllows(vault.DefaultSensitivity(id), existing.Sensitivity) {
+			writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a field stored above its default sensitivity tier")
+			return
+		}
 	}
 	if err := s.vault.Delete(id); err != nil {
 		handleVaultError(w, err)

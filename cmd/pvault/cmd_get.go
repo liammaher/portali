@@ -99,7 +99,7 @@ func formatGetJSON(ids []string, values map[string]*string) string {
 }
 
 // jsonText encodes v without json.Marshal's HTML escaping, so a value like
-// "Via Roma 1 & 2" prints as typed rather than with &.
+// "Via Roma 1 & 2" prints as typed rather than with \u0026.
 func jsonText(v any) string {
 	var buf strings.Builder
 	enc := json.NewEncoder(&buf)

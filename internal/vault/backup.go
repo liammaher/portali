@@ -186,12 +186,10 @@ func backupStatusError(err error, dir string) string {
 	if info, serr := os.Stat(dir); serr != nil || !info.IsDir() {
 		return "backup folder is missing — run 'pvault backup --to <folder>'"
 	}
-	switch {
-	case errors.Is(err, os.ErrPermission):
+	if errors.Is(err, os.ErrPermission) {
 		return "no permission to write the backup (check the folder's permissions)"
-	default:
-		return "last backup failed — run 'pvault backup' to see why"
 	}
+	return "last backup failed — run 'pvault backup' to see why"
 }
 
 // markChanged schedules an automatic backup backupDelay after the latest
@@ -209,8 +207,9 @@ func (v *Vault) markChanged() {
 }
 
 // flushBackup runs a scheduled backup now, if there is one and a folder is
-// set. Lock and auto-lock call it while the key is still available, so the
-// last changes of a session are never left out.
+// set. The backup timer and auto-lock call it (Lock calls flushBackupLocked)
+// while the key is still available, so the last changes of a session are
+// never left out.
 func (v *Vault) flushBackup() {
 	v.backup.mu.Lock()
 	defer v.backup.mu.Unlock()
@@ -220,13 +219,6 @@ func (v *Vault) flushBackup() {
 // flushBackupLocked is flushBackup for a caller holding backup.mu, so no
 // other flush can take the pending backup and lose it to a lock.
 func (v *Vault) flushBackupLocked() {
-	v.mu.RLock()
-	unlocked := v.session != nil
-	v.mu.RUnlock()
-	if !unlocked {
-		return
-	}
-
 	s := &v.backup
 	s.stateMu.Lock()
 	if s.timer != nil {
@@ -239,10 +231,8 @@ func (v *Vault) flushBackupLocked() {
 		return
 	}
 
-	if dir, err := v.db.GetMeta(metaBackupDir); err != nil || dir == "" {
-		return
-	}
-	if _, err := v.backupLocked(); err != nil {
+	// backupLocked refuses a locked vault before touching the database.
+	if _, err := v.backupLocked(); err != nil && !errors.Is(err, ErrNoBackupDir) {
 		// Try again at the next change or lock.
 		s.stateMu.Lock()
 		s.pending = true
@@ -389,6 +379,7 @@ func pruneBackups(dir, vaultID string, now time.Time) {
 	if err != nil {
 		return
 	}
+	stamps := map[string]string{} // file name → its timestamp
 	var names []string
 	for _, e := range entries {
 		if !e.Type().IsRegular() {
@@ -396,6 +387,7 @@ func pruneBackups(dir, vaultID string, now time.Time) {
 		}
 		if m := reBackupName.FindStringSubmatch(e.Name()); m != nil && m[1] == vaultID {
 			names = append(names, e.Name())
+			stamps[e.Name()] = m[2]
 		} else if strings.HasPrefix(e.Name(), ".pvault-backup-") && strings.HasSuffix(e.Name(), ".tmp") {
 			if info, err := e.Info(); err == nil && now.Sub(info.ModTime()) > 24*time.Hour {
 				os.Remove(filepath.Join(dir, e.Name()))
@@ -406,7 +398,7 @@ func pruneBackups(dir, vaultID string, now time.Time) {
 
 	seenDays := map[string]bool{}
 	for i, name := range names {
-		stamp := reBackupName.FindStringSubmatch(name)[2]
+		stamp := stamps[name]
 		created, err := time.Parse(backupTimeFormat, stamp)
 		if err != nil {
 			continue
@@ -517,10 +509,7 @@ func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error
 // restoreInto decrypts a backup into target (created here) and verifies it,
 // writing secret.key there too if writeKey is set.
 func restoreInto(path, target, password, secretKeyHex string, writeKey bool) (*BackupInfo, error) {
-	// Accept the key as copied by hand: any case (hex.DecodeString takes
-	// both), spaces or dashes.
-	secretKeyHex = strings.NewReplacer(" ", "", "-", "", "\t", "").Replace(secretKeyHex)
-	sk, err := hex.DecodeString(strings.TrimSpace(secretKeyHex))
+	sk, err := parseSecretKey(secretKeyHex)
 	if err != nil {
 		return nil, ErrBackupUnreadable
 	}

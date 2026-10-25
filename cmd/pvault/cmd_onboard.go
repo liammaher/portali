@@ -64,7 +64,7 @@ func cmdOnboard() {
 	fmt.Printf("  %s\n", sk)
 	fmt.Println()
 
-	verified, err := startBackgroundServer(dir, pw, sk)
+	verified, err := startBackgroundServer(pw, sk)
 	if err != nil {
 		fatal("%v", err)
 	}
