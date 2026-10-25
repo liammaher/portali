@@ -124,6 +124,22 @@ With that config, `pvault create-service-token claude --scope "residenza.*" --tt
 
 Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_expiring`, `vault_documents`, `vault_document_get`, `vault_document_add`. The MCP server only ever uses the token you give it, and `vault_document_add` only reads files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
 
+### Claude Code setup
+
+[`claude/`](claude/) has two optional pieces that make Claude Code use the vault safely:
+
+- **Vault skill** ([`claude/skills/vault/SKILL.md`](claude/skills/vault/SKILL.md)): how to check the vault, read or change fields through the MCP tools, ask for a narrow short-lived token when it needs one, and send you to the web UI in your own browser rather than one Claude controls. Install it for all projects:
+
+  ```sh
+  mkdir -p ~/.claude/skills && cp -R claude/skills/vault ~/.claude/skills/
+  ```
+
+- **Permission rules** ([`claude/settings.example.json`](claude/settings.example.json)): deny rules that stop Claude's own tools from reading `~/.pvault/` or Keychain passwords (including the MCP token), so it goes through the MCP's scope and sensitivity checks. Merge the `permissions.deny` list into `~/.claude/settings.json`; don't replace the file.
+
+The rules match command text, so they stop direct or accidental access, not a determined attempt (a script that reads the Keychain internally isn't caught). For a hard boundary, also enable Claude Code's sandbox with `~/.pvault` in `sandbox.filesystem.denyRead`.
+
+Whatever a token allows, Claude sees: values returned by the MCP tools enter the conversation like any other text. What it never sees is your password, your secret key, `personal`-tier items (SPID/CIE credentials), and anything outside the token's scope or after it expires.
+
 ## Security model
 
 ```
