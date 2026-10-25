@@ -23,7 +23,7 @@ Save your secret key somewhere safe. You need both the profile password and the 
 
 While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory. `pvault ui` opens the onboarding page, which asks for the password itself and gets a 15-minute grant, so no token ever appears on a command line or in browser history. No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password (lock stops the server it started; for a server run with `pvault serve`, lock asks for the password). Only wrong passwords count toward the 10-per-minute limit.
 
-With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. In a terminal, a denied or failed prompt falls back to the password.
+With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs, so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password.
 
 ## Fields
 
@@ -37,6 +37,7 @@ pvault set employment.employer "Acme Corp"
 pvault set financial.filing_status "single"
 pvault set preferences.timezone "America/Los_Angeles"
 pvault get identity.full_name
+pvault get identity.full_name addresses.home_city   # Several fields as JSON (max 10)
 pvault list                      # All fields
 pvault list identity             # One category
 pvault delete identity.date_of_birth

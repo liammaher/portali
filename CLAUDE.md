@@ -30,7 +30,7 @@ pvault unlock                            # Start background server
 pvault lock                              # Stop server, zero keys
 pvault serve                             # Foreground server (debugging)
 pvault set <category.field> <value>      # Set encrypted field
-pvault get <category.field>              # Get decrypted field
+pvault get <category.field> [...]        # Get decrypted field(s); several → JSON, one grant
 pvault list [category]                   # List fields
 pvault delete <category.field>           # Delete field
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
