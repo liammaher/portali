@@ -153,7 +153,7 @@ Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, 
   mkdir -p ~/.claude/skills && ln -s "$PWD/claude/skills/vault" ~/.claude/skills/vault
   ```
 
-- **Pratica skill** ([`claude/skills/pratica/SKILL.md`](claude/skills/pratica/SKILL.md)): runs an Italian procedure end to end (research, gap check against the vault, filling the form or portal, handing you the login, signature, payment and sending, then tracking the reply). Each procedure gets a playbook in [`claude/skills/pratica/playbooks/`](claude/skills/pratica/playbooks/) after its first run, so later runs follow it. Playbooks hold field IDs, never your data. Open procedures are tracked in the vault as `pratiche.<slug>_<campo>` fields, and their deadlines show in `pvault expiring`. Link it the same way, so new playbooks land in this repo:
+- **Pratica skill** ([`claude/skills/pratica/SKILL.md`](claude/skills/pratica/SKILL.md)): runs an Italian procedure end to end (research, gap check against the vault, filling the form or portal, handing you the login, signature, payment and sending, then tracking the reply). Before researching, it looks the procedure up in the [pratiche-napoli](https://github.com/liammaher/pratiche-napoli) library (from GitHub, or a local clone at `$PRATICHE_NAPOLI_DIR`). Each procedure gets a playbook in [`claude/skills/pratica/playbooks/`](claude/skills/pratica/playbooks/) after its first run, so later runs follow it. Playbooks hold field IDs, never your data. Open procedures are tracked in the vault as `pratiche.<slug>_<campo>` fields, and their deadlines show in `pvault expiring`. Link it the same way, so new playbooks land in this repo:
 
   ```sh
   ln -s "$PWD/claude/skills/pratica" ~/.claude/skills/pratica
