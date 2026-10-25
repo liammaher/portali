@@ -9,7 +9,8 @@ You enter your details and scan your documents once. Agents that prepare forms (
 - **Local-first.** One SQLite database and an encrypted `documents/` folder in `~/.pvault/`. No cloud, no account.
 - **Encrypted per field and per file.** Argon2id → AES-256-GCM with per-category keys; filenames are encrypted too.
 - **Italian-aware.** Validates codice fiscale (incl. omocodia), partita IVA, CIE number, CAP and provincia; normalizes dates; tracks document expiry.
-- **Agent-safe by design.** Service tokens are scoped, short-lived, capped by sensitivity, and **read-only unless you say otherwise**. SPID credentials and CIE PIN/PUK are refused outright.
+- **Agent-safe by design.** Service tokens are scoped, short-lived, capped by sensitivity, and **read-only unless you say otherwise**.
+- **A personal tier only you can see.** SPID login, CIE PIN/PUK and similar secrets are stored as `personal`: no agent token, whatever its scope or cap, can read, list, change or even detect them.
 
 > Fork of [lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault) (MIT), extended with the Italian schema, document storage and a hardened agent access model.
 
@@ -40,6 +41,7 @@ You need both the profile password and the secret key to unlock. While unlocked,
 | contacts & bank | `identity.phone` (+39…), `identity.pec`, `financial.iban` (validated) |
 | `nucleo_familiare` | members as `membro<N>_nome`, `membro<N>_codice_fiscale`, … |
 | `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA |
+| `spid` (personal) | provider, livello, username, password, renewal date — plus `cie.pin` / `cie.puk` |
 | `permesso_soggiorno` | numero, tipo, questura, issue/expiry date |
 | `passaporto`, `patente`, `tessera_sanitaria` | numero, issuing authority/country, expiry date |
 
@@ -48,7 +50,8 @@ You need both the profile password and the secret key to unlock. While unlocked,
 ```sh
 pvault set identity.codice_fiscale "RSSMRA85T10A562S"
 pvault set permesso_soggiorno.data_scadenza 15/12/2026     # stored as 2026-12-15
-pvault set spid.password hunter2                           # refused — logins never go in the vault
+pvault set spid.password "…"                               # stored as personal: only you can ever read it
+pvault set spid.password "…" sensitive                     # refused — credentials can only be personal
 ```
 
 ## Document scans
@@ -89,7 +92,7 @@ pvault revoke-service-token <token_prefix>
 |---|---|---|
 | `--scope` | required | `category.*`, exact `category.field`, `category.documents`, or `*` |
 | `--access` | `read` | `append` = may add new fields/documents but never overwrite or delete; `write` = full |
-| `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in |
+| `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in; `personal` is never available |
 | `--ttl` | `24h` | maximum 90 days |
 
 Agent activity never keeps the vault unlocked: it auto-locks after 30 minutes without *your* activity.
@@ -125,7 +128,7 @@ Profile password + 128-bit secret key
 - The server listens on 127.0.0.1 only and rejects non-loopback `Host` headers (DNS rebinding).
 - No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password. Wrong passwords are rate-limited.
 - Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
-- SPID credentials and CIE PIN/PUK are rejected under any field name.
+- Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session. SPID/CIE credentials (under any field name) can only be stored as `personal`, and SPID/CieID categories default to it.
 
 **What it can't protect against:** malware or an agent running as your macOS user can still stop the vault, read `~/.pvault/secret.key` (useless without your password), or tamper with the `pvault` binary to capture your password. Keep the vault locked when you're not using it.
 

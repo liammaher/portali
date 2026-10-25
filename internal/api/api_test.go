@@ -1015,10 +1015,18 @@ func TestSetField_ItalianValidation(t *testing.T) {
 		t.Fatalf("invalid codice fiscale: expected 400 invalid_value, got %d: %s", w.Code, w.Body.String())
 	}
 
+	// Credentials are accepted only as personal: the default for spid.*...
 	w = env.doRequest(t, "PUT", "/vault/fields/spid.password", map[string]string{
 		"value": "hunter2",
 	}, true)
-	if w.Code != 400 || !strings.Contains(w.Body.String(), "forbidden_field") {
-		t.Fatalf("spid.password: expected 400 forbidden_field, got %d: %s", w.Code, w.Body.String())
+	if w.Code != 200 {
+		t.Fatalf("spid.password as personal: expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	// ...and refused at any lower tier.
+	w = env.doRequest(t, "PUT", "/vault/fields/spid.password", map[string]string{
+		"value": "hunter2", "sensitivity": "sensitive",
+	}, true)
+	if w.Code != 400 || !strings.Contains(w.Body.String(), "personal") {
+		t.Fatalf("spid.password as sensitive: expected 400, got %d: %s", w.Code, w.Body.String())
 	}
 }

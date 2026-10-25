@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "4",
+	Version: "5",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -46,12 +46,25 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "cie",
-			Description: "Carta d'identità elettronica details. Never store the PIN or PUK — those are rejected.",
+			Description: "Carta d'identità elettronica details. The PIN and PUK can only be stored as personal (never readable by agents).",
 			Fields: []SchemaField{
 				{ID: "cie.numero", Description: "CIE number printed top-right (e.g. CA12345AB, validated)", Sensitivity: "sensitive"},
 				{ID: "cie.data_rilascio", Description: "Issue date (YYYY-MM-DD)", Sensitivity: "standard"},
 				{ID: "cie.data_scadenza", Description: "Expiry date (YYYY-MM-DD)", Sensitivity: "standard"},
 				{ID: "cie.comune_rilascio", Description: "Comune that issued the card", Sensitivity: "standard"},
+				{ID: "cie.pin", Description: "CIE PIN (8 digits) — personal only", Sensitivity: "personal"},
+				{ID: "cie.puk", Description: "CIE PUK (8 digits) — personal only", Sensitivity: "personal"},
+			},
+		},
+		{
+			Name:        "spid",
+			Description: "Your SPID identity. Everything here is personal by default: only you can see it, never an agent. Lower provider/level/renewal to standard if you want agents to see them.",
+			Fields: []SchemaField{
+				{ID: "spid.provider", Description: "Identity provider (e.g. PosteID, Aruba, InfoCert, Namirial, Sielte, Lepida)", Sensitivity: "personal"},
+				{ID: "spid.livello", Description: "Highest active level (1, 2 or 3)", Sensitivity: "personal"},
+				{ID: "spid.username", Description: "Login username (usually email or codice fiscale)", Sensitivity: "personal"},
+				{ID: "spid.password", Description: "Login password", Sensitivity: "personal"},
+				{ID: "spid.data_scadenza", Description: "Next renewal/payment date (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "personal"},
 			},
 		},
 		{
@@ -234,6 +247,9 @@ func GetSchemaField(id string) *SchemaField {
 func DefaultSensitivity(id string) string {
 	if f, ok := schemaIndex[id]; ok {
 		return f.Sensitivity
+	}
+	if parts := strings.SplitN(id, ".", 2); IsCredentialField(id) || (len(parts) == 2 && IsPersonalCategory(parts[0])) {
+		return TierPersonal
 	}
 	if parts := strings.SplitN(strings.ToLower(id), ".", 2); len(parts) == 2 && hasFieldSuffix(parts[1], "codice_fiscale") {
 		return "sensitive"

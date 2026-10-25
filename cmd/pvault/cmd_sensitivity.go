@@ -7,14 +7,14 @@ import (
 
 func cmdSetSensitivity() {
 	if len(os.Args) < 4 {
-		fatal("usage: pvault set-sensitivity <id> <tier>\n  tiers: public, standard, sensitive, critical")
+		fatal("usage: pvault set-sensitivity <id> <tier>\n  tiers: public, standard, sensitive, critical, personal (never readable by agents)")
 	}
 	id := os.Args[2]
 	tier := os.Args[3]
 
-	valid := map[string]bool{"public": true, "standard": true, "sensitive": true, "critical": true}
+	valid := map[string]bool{"public": true, "standard": true, "sensitive": true, "critical": true, "personal": true}
 	if !valid[tier] {
-		fatal("invalid tier %q (must be public, standard, sensitive, or critical)", tier)
+		fatal("invalid tier %q (must be public, standard, sensitive, critical, or personal)", tier)
 	}
 
 	resp, err := apiRequest("PUT", "/vault/sensitivity/"+id, map[string]string{

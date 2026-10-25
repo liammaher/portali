@@ -502,3 +502,77 @@ func TestServiceToken_WriteAccessAndValidation(t *testing.T) {
 		t.Fatalf("list should show access: %+v", list)
 	}
 }
+
+func TestPersonalTier_InvisibleToAgents(t *testing.T) {
+	env := setup(t)
+	for id, v := range map[string]string{"spid.password": "hunter2", "spid.provider": "PosteID", "cie.pin": "12345678", "identity.full_name": "Mario Rossi"} {
+		if w := env.doRequest(t, "PUT", "/vault/fields/"+id, map[string]string{"value": v}, true); w.Code != 200 {
+			t.Fatalf("seed %s: %d %s", id, w.Code, w.Body.String())
+		}
+	}
+	env.doRequest(t, "PUT", "/vault/fields/spid.data_scadenza", map[string]string{"value": "2000-01-01"}, true)
+	var doc vault.DocumentInfo
+	json.NewDecoder(env.upload(t, env.token, "category=spid&name=recovery.png", "image/png", []byte("codes")).Body).Decode(&doc)
+	if doc.Sensitivity != vault.TierPersonal {
+		t.Fatalf("spid document tier = %q", doc.Sensitivity)
+	}
+
+	// Even the broadest agent token: full scope, critical cap, write access.
+	token := createTokenWithAccess(t, env, "*", "write")
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "x", "scope": "*", "max_sensitivity": "critical", "access": "write"}, true)
+	var created map[string]string
+	json.NewDecoder(w.Body).Decode(&created)
+	critical := created["token"]
+
+	for _, tok := range []string{token, critical} {
+		for _, id := range []string{"spid.password", "spid.provider", "cie.pin"} {
+			if w := env.doRequestWithToken(t, "GET", "/vault/fields/"+id, nil, tok); w.Code != 404 {
+				t.Errorf("GET %s: expected 404, got %d", id, w.Code)
+			}
+			if w := env.doRequestWithToken(t, "PUT", "/vault/fields/"+id, map[string]string{"value": "x"}, tok); w.Code != 403 {
+				t.Errorf("PUT %s: expected 403, got %d", id, w.Code)
+			}
+			if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/"+id, nil, tok); w.Code != 404 {
+				t.Errorf("DELETE %s: expected 404, got %d", id, w.Code)
+			}
+		}
+		// Creating new personal fields or documents is refused too.
+		if w := env.doRequestWithToken(t, "PUT", "/vault/fields/spid.otp", map[string]string{"value": "123456"}, tok); w.Code != 403 {
+			t.Errorf("create spid.otp: %d", w.Code)
+		}
+		if w := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.note", map[string]string{"value": "x", "sensitivity": "personal"}, tok); w.Code != 403 {
+			t.Errorf("create personal note: %d", w.Code)
+		}
+		if w := env.upload(t, tok, "category=spid&name=x.png", "image/png", []byte("x")); w.Code != 403 {
+			t.Errorf("upload spid doc: %d", w.Code)
+		}
+		if w := env.doRequestWithToken(t, "GET", "/vault/documents/"+doc.ID, nil, tok); w.Code != 404 {
+			t.Errorf("GET personal doc: %d", w.Code)
+		}
+
+		body := func(path string) string {
+			return env.doRequestWithToken(t, "GET", path, nil, tok).Body.String()
+		}
+		for _, path := range []string{"/vault/fields", "/vault/context", "/vault/fields/category/spid", "/vault/fields/category/cie", "/vault/documents", "/vault/expiring?days=10"} {
+			b := body(path)
+			if strings.Contains(b, "spid.") || strings.Contains(b, "cie.pin") || strings.Contains(b, "hunter2") || strings.Contains(b, doc.ID) {
+				t.Errorf("%s leaked personal data: %s", path, b)
+			}
+		}
+		if !strings.Contains(body("/vault/context"), "Mario Rossi") {
+			t.Error("non-personal data should still be visible")
+		}
+	}
+
+	// The user's own session sees everything, including the renewal date.
+	if w := env.doRequest(t, "GET", "/vault/fields/spid.password", nil, true); !strings.Contains(w.Body.String(), "hunter2") {
+		t.Errorf("session read: %s", w.Body.String())
+	}
+	if w := env.doRequest(t, "GET", "/vault/expiring?days=10", nil, true); !strings.Contains(w.Body.String(), "spid.data_scadenza") {
+		t.Errorf("session expiring should include SPID renewal: %s", w.Body.String())
+	}
+	// Agents can never be given personal access.
+	if w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "x", "scope": "*", "max_sensitivity": "personal"}, true); w.Code != 400 {
+		t.Errorf("personal cap: expected 400, got %d", w.Code)
+	}
+}

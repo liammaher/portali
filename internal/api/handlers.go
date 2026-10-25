@@ -35,12 +35,17 @@ func sensitivityDenied(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "sensitivity_exceeded", "token is not allowed to access fields at this sensitivity tier")
 }
 
+func personalOnlyDenied(w http.ResponseWriter) {
+	writeError(w, http.StatusForbidden, "personal_only", "personal fields and documents can only be changed by you, never by an agent")
+}
+
 // requireFieldTier checks an existing field's tier against the caller's cap
 // and writes the error response if access is denied. Missing fields pass so
-// callers can return their usual 404 or create them.
-func (s *Server) requireFieldTier(w http.ResponseWriter, r *http.Request, id string) bool {
+// callers can return their usual 404 or create them. Personal fields are
+// invisible to service tokens: reads and deletes get 404, writes are refused.
+func (s *Server) requireFieldTier(w http.ResponseWriter, r *http.Request, id string, write bool) bool {
 	maxTier := maxTierFromRequest(r)
-	if maxTier == "critical" {
+	if maxTier == vault.TierPersonal {
 		return true
 	}
 	meta, err := s.vault.FieldMeta(id)
@@ -48,7 +53,16 @@ func (s *Server) requireFieldTier(w http.ResponseWriter, r *http.Request, id str
 		handleVaultError(w, err)
 		return false
 	}
-	if meta != nil && !vault.TierAllows(maxTier, meta.Sensitivity) {
+	switch {
+	case meta == nil:
+		return true
+	case meta.Sensitivity == vault.TierPersonal && write:
+		personalOnlyDenied(w)
+		return false
+	case meta.Sensitivity == vault.TierPersonal:
+		writeError(w, http.StatusNotFound, "not_found", "field not found")
+		return false
+	case !vault.TierAllows(maxTier, meta.Sensitivity):
 		sensitivityDenied(w)
 		return false
 	}
@@ -214,9 +228,14 @@ func (s *Server) handleListFields(w http.ResponseWriter, r *http.Request) {
 		handleVaultError(w, err)
 		return
 	}
-	scope := scopeFromRequest(r)
+	scope, maxTier := scopeFromRequest(r), maxTierFromRequest(r)
 	allowed := make([]vault.FieldInfo, 0, len(fields))
 	for _, f := range fields {
+		// Agents see metadata of fields above their cap, but personal fields
+		// don't exist for them at all.
+		if f.Sensitivity == vault.TierPersonal && maxTier != vault.TierPersonal {
+			continue
+		}
 		if vault.ScopeAllows(scope, f.ID) {
 			allowed = append(allowed, f)
 		}
@@ -235,7 +254,7 @@ func (s *Server) handleGetField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if !s.requireFieldTier(w, r, id) {
+	if !s.requireFieldTier(w, r, id, false) {
 		return
 	}
 	field, err := s.vault.Get(id)
@@ -261,7 +280,12 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if !s.requireFieldTier(w, r, id) {
+	if !s.requireFieldTier(w, r, id, true) {
+		return
+	}
+	// Agents can never create personal fields (credentials, SPID details).
+	if maxTierFromRequest(r) != vault.TierPersonal && vault.DefaultSensitivity(id) == vault.TierPersonal {
+		personalOnlyDenied(w)
 		return
 	}
 	if accessFromRequest(r) != vault.AccessWrite {
@@ -289,6 +313,10 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 
 	// An empty tier keeps an existing field's tier, or uses the schema
 	// default for a new field (see Vault.Set).
+	if req.Sensitivity == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal {
+		personalOnlyDenied(w)
+		return
+	}
 
 	if err := s.vault.Set(id, req.Value, req.Sensitivity); err != nil {
 		handleVaultError(w, err)
@@ -318,7 +346,7 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
-	if !s.requireFieldTier(w, r, id) {
+	if !s.requireFieldTier(w, r, id, false) {
 		return
 	}
 	if !requireAccess(w, r, true) {
@@ -567,8 +595,6 @@ func handleVaultError(w http.ResponseWriter, err error) {
 		return
 	}
 	switch err {
-	case vault.ErrForbiddenField:
-		writeError(w, http.StatusBadRequest, "forbidden_field", err.Error())
 	case vault.ErrAmbiguousToken:
 		writeError(w, http.StatusConflict, "ambiguous_token", err.Error())
 	case vault.ErrLocked:

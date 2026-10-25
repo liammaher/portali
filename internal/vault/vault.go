@@ -29,12 +29,12 @@ var (
 )
 
 var validTiers = map[string]bool{
-	"public": true, "standard": true, "sensitive": true, "critical": true,
+	"public": true, "standard": true, "sensitive": true, "critical": true, TierPersonal: true,
 }
 
 // tierRank orders sensitivity tiers from least to most sensitive.
 var tierRank = map[string]int{
-	"public": 0, "standard": 1, "sensitive": 2, "critical": 3,
+	"public": 0, "standard": 1, "sensitive": 2, "critical": 3, TierPersonal: 4,
 }
 
 // TierAllows reports whether a token limited to maxTier may access a field
@@ -365,9 +365,6 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 	if err := ValidateFieldID(id); err != nil {
 		return err
 	}
-	if IsForbiddenField(id) {
-		return ErrForbiddenField
-	}
 	value, err := NormalizeAndValidate(id, value)
 	if err != nil {
 		return err
@@ -409,6 +406,9 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 	}
 	if !validTiers[sensitivity] {
 		return ErrInvalidTier
+	}
+	if IsCredentialField(id) && sensitivity != TierPersonal {
+		return errCredentialTier(id)
 	}
 
 	err = v.db.SetField(store.Field{
@@ -664,6 +664,9 @@ func (v *Vault) SetSensitivity(id, tier string) error {
 	if !validTiers[tier] {
 		return ErrInvalidTier
 	}
+	if IsCredentialField(id) && tier != TierPersonal {
+		return errCredentialTier(id)
+	}
 	return v.db.SetSensitivity(id, tier)
 }
 
@@ -708,6 +711,9 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 	}
 	if !validTiers[maxSensitivity] {
 		return "", ErrInvalidTier
+	}
+	if maxSensitivity == TierPersonal {
+		return "", &ValidationError{Field: "max_sensitivity", Msg: "personal fields are never available to agents; the highest cap is critical"}
 	}
 	if access == "" {
 		access = AccessRead

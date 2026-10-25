@@ -78,7 +78,7 @@ Commands:
   get <id>                         Get a field value
   list [category]                  List fields
   delete <id>                      Delete a field
-  set-sensitivity <id> <tier>      Set field sensitivity (public|standard|sensitive|critical)
+  set-sensitivity <id> <tier>      Set field sensitivity (public|standard|sensitive|critical|personal)
   export                           Export all decrypted fields as JSON
   audit                            Show access audit log
   expiring [days]                  Show documents expired or expiring within days (default 90)

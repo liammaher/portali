@@ -82,7 +82,11 @@ Profile Password + Secret Key (128-bit)
   and never reset the auto-lock timer (only session activity does)
 - MCP server uses only `VAULT_TOKEN`
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
-  SPID credentials and CIE PIN/PUK are rejected. Fields named with the word
+  SPID/CIE credentials (`IsCredentialField`) can only be stored with tier
+  `personal`; `spid`/`cieid` categories default to it. `personal` (rank 4) is
+  session-only: service tokens can't be capped at it, and the API hides
+  personal items (404 on read/delete, 403 personal_only on write, omitted
+  from every listing). Fields named with the word
   shape `data_<x>`, `date_of_<x>` or `<x>_date` must be real dates, stored as
   YYYY-MM-DD (`dates.go`)
 - Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,

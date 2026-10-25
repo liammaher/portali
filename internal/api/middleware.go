@@ -28,7 +28,7 @@ func scopeFromRequest(r *http.Request) string {
 }
 
 // maxTierFromRequest returns the highest sensitivity tier the caller may read.
-// Session tokens get "critical"; requests without auth context get "public".
+// Session tokens get "personal"; requests without auth context get "public".
 func maxTierFromRequest(r *http.Request) string {
 	if t, ok := r.Context().Value(maxTierKey).(string); ok {
 		return t
@@ -118,7 +118,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 			s.vault.TouchSession()
 			ctx := context.WithValue(r.Context(), scopeKey, "*")
 			ctx = context.WithValue(ctx, sessionAuthKey, true)
-			ctx = context.WithValue(ctx, maxTierKey, "critical")
+			ctx = context.WithValue(ctx, maxTierKey, vault.TierPersonal)
 			ctx = context.WithValue(ctx, accessKey, vault.AccessWrite)
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return

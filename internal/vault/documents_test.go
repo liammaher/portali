@@ -87,8 +87,11 @@ func TestDocument_InvalidIDsAndInputs(t *testing.T) {
 			t.Errorf("AddDocument(%q, %q, %q, %d bytes) = %v, want ValidationError", c.category, c.name, c.ct, len(c.data), err)
 		}
 	}
-	if _, err := v.AddDocument("spid", "creds.png", "image/png", []byte("x"), ""); !errors.Is(err, ErrForbiddenField) {
-		t.Errorf("spid document: got %v, want ErrForbiddenField", err)
+	if doc, err := v.AddDocument("spid", "recovery.png", "image/png", []byte("x"), ""); err != nil || doc.Sensitivity != TierPersonal {
+		t.Errorf("spid document: got %+v, %v; want personal", doc, err)
+	}
+	if _, err := v.AddDocument("spid", "recovery.png", "image/png", []byte("x"), "sensitive"); !errors.As(err, &verr) {
+		t.Errorf("spid document below personal: got %v, want ValidationError", err)
 	}
 	if _, err := v.AddDocument("passaporto", "a.pdf", "application/pdf", []byte("x"), "top"); err != ErrInvalidTier {
 		t.Errorf("bad tier: got %v", err)

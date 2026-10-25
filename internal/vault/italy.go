@@ -7,10 +7,11 @@ import (
 	"strings"
 )
 
-// ErrForbiddenField is returned for fields that hold authentication secrets.
-// SPID credentials and CIE PIN/PUK are strictly personal (AgID) and must stay
-// with the user's identity provider or CieID app, never in the vault.
-var ErrForbiddenField = errors.New("authentication secrets (SPID credentials, CIE PIN/PUK) must never be stored in the vault")
+// TierPersonal is the human-only sensitivity tier. Personal fields and
+// documents are never readable, listable or writable by any service token,
+// whatever its scope or cap; only the user's own session (CLI or onboarding
+// page, both gated on the password) can see them.
+const TierPersonal = "personal"
 
 // ValidationError reports a field value that failed format validation.
 type ValidationError struct {
@@ -23,25 +24,23 @@ func (e *ValidationError) Error() string {
 }
 
 // reCredentialWord matches a field-name word that names a login secret
-// (pin, pin1, puk2, password, otp, ...).
-var reCredentialWord = regexp.MustCompile(`^(pin[0-9]*|puk[0-9]*|password|passwd|pwd|passcode|otp|totp)$`)
+// (pin, pin1, puk2, password, otp, username, ...).
+var reCredentialWord = regexp.MustCompile(`^(pin[0-9]*|puk[0-9]*|password|passwd|pwd|passcode|otp|totp|username|login)$`)
 
-// IsForbiddenField reports whether a field ID would store an authentication
-// secret: anything in the spid or cieid categories, and any credential word
-// (pin, puk, password, otp, ...) in a field that is about SPID or the CIE,
-// e.g. cie.pin1, identity.spid_password, documents.cie_pin.
-func IsForbiddenField(id string) bool {
+// IsCredentialField reports whether a field holds a login secret: a
+// credential word (pin, puk, password, otp, username, ...) in a field about
+// SPID, CieID or the CIE, e.g. spid.password, cie.pin1, identity.spid_password.
+// Credentials are strictly personal (AgID), so they can only be stored with
+// TierPersonal and never reach an agent.
+func IsCredentialField(id string) bool {
 	parts := strings.SplitN(strings.ToLower(id), ".", 2)
 	if len(parts) != 2 {
 		return false
 	}
 	category, name := parts[0], parts[1]
-	if category == "spid" || category == "cieid" {
-		return true
-	}
 
 	words := strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' })
-	aboutIdentity := category == "cie"
+	aboutIdentity := category == "cie" || IsPersonalCategory(category)
 	for _, w := range words {
 		if w == "spid" || w == "cie" || w == "cieid" {
 			aboutIdentity = true
@@ -58,12 +57,26 @@ func IsForbiddenField(id string) bool {
 	return false
 }
 
+// IsPersonalCategory reports categories whose fields and documents default to
+// TierPersonal (SPID and CieID accounts).
+func IsPersonalCategory(category string) bool {
+	c := strings.ToLower(category)
+	return c == "spid" || c == "cieid"
+}
+
+// errCredentialTier is returned when a credential would be stored below
+// TierPersonal.
+func errCredentialTier(field string) error {
+	return &ValidationError{Field: field, Msg: "SPID/CIE credentials can only be stored as personal (never readable by agents)"}
+}
+
 var (
 	reCIENumber  = regexp.MustCompile(`^[A-Z]{2}[0-9]{5}[A-Z]{2}$`)
 	reCAP        = regexp.MustCompile(`^[0-9]{5}$`)
 	reProvincia  = regexp.MustCompile(`^[A-Z]{2}$`)
 	rePartitaIVA = regexp.MustCompile(`^[0-9]{11}$`)
 	reIBAN       = regexp.MustCompile(`^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$`)
+	reCIECode    = regexp.MustCompile(`^[0-9]{8}$`)
 )
 
 // NormalizeAndValidate applies Italian format rules to a field value based on
@@ -96,6 +109,17 @@ func NormalizeAndValidate(id, value string) (string, error) {
 			return "", &ValidationError{Field: id, Msg: err.Error()}
 		}
 		return iban, nil
+	case category == "cie" && (name == "pin" || name == "puk"):
+		v := strings.Map(func(r rune) rune {
+			if r == ' ' || r == '-' {
+				return -1
+			}
+			return r
+		}, value)
+		if !reCIECode.MatchString(v) {
+			return "", &ValidationError{Field: id, Msg: "CIE PIN and PUK are 8 digits (both halves together)"}
+		}
+		return v, nil
 	case category == "cie" && name == "numero":
 		n := normalizeCode(value)
 		if !reCIENumber.MatchString(n) {

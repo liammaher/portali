@@ -520,9 +520,86 @@ body::before{
     </div>
   </section>
 
-  <!-- 06 Documenti -->
+  <!-- 06 SPID -->
   <section class="section" data-section="5">
     <div class="section-number">06</div>
+    <h2>SPID e codici — solo per te</h2>
+    <p class="subtitle">Personal tier: stored encrypted and never readable, listable or changeable by any agent, whatever its token. Only you see these, here or with <code>pvault get</code>.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Provider SPID</label>
+        <span class="status idle"></span>
+        <select data-field="spid.provider">
+          <option value=""></option>
+          <option value="PosteID">PosteID</option>
+          <option value="Aruba">Aruba</option>
+          <option value="InfoCert">InfoCert</option>
+          <option value="Namirial">Namirial</option>
+          <option value="Sielte">Sielte</option>
+          <option value="Lepida">Lepida</option>
+          <option value="Register">Register</option>
+          <option value="TIM id">TIM id</option>
+          <option value="Intesi Group">Intesi Group</option>
+          <option value="EtnaID">EtnaID</option>
+          <option value="TeamSystem">TeamSystem</option>
+          <option value="InfoCamere">InfoCamere</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Livello</label>
+        <span class="status idle"></span>
+        <select data-field="spid.livello">
+          <option value=""></option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Username SPID</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="spid.username" placeholder="email o codice fiscale" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Password SPID</label>
+        <span class="status idle"></span>
+        <div class="input-wrap">
+          <input type="password" data-field="spid.password" placeholder="" autocomplete="off" >
+          <button type="button" class="toggle-vis" data-toggle>show</button>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Rinnovo / pagamento SPID</label>
+      <span class="status idle"></span>
+      <input type="date" data-field="spid.data_scadenza">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>PIN CIE</label>
+        <span class="status idle"></span>
+        <div class="input-wrap">
+          <input type="password" data-field="cie.pin" placeholder="8 cifre" autocomplete="off" inputmode="numeric">
+          <button type="button" class="toggle-vis" data-toggle>show</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>PUK CIE</label>
+        <span class="status idle"></span>
+        <div class="input-wrap">
+          <input type="password" data-field="cie.puk" placeholder="8 cifre" autocomplete="off" inputmode="numeric">
+          <button type="button" class="toggle-vis" data-toggle>show</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 Documenti -->
+  <section class="section" data-section="6">
+    <div class="section-number">07</div>
     <h2>Altri documenti</h2>
     <p class="subtitle">Numbers and expiry dates — run <code>pvault expiring</code> to see what needs renewing. Store scans with <code>pvault doc add</code>.</p>
 
@@ -588,9 +665,9 @@ body::before{
     </div>
   </section>
 
-  <!-- 07 Pagamento -->
-  <section class="section" data-section="6">
-    <div class="section-number">07</div>
+  <!-- 08 Pagamento -->
+  <section class="section" data-section="7">
+    <div class="section-number">08</div>
     <h2>Payment card</h2>
     <p class="subtitle">Optional — e.g. for pagoPA payments. Critical tier: agents can't read it unless you allow it.</p>
 
@@ -628,9 +705,9 @@ body::before{
       </div>
   </section>
 
-  <!-- 08 Preferenze -->
-  <section class="section" data-section="7">
-    <div class="section-number">08</div>
+  <!-- 09 Preferenze -->
+  <section class="section" data-section="8">
+    <div class="section-number">09</div>
     <h2>Preferences</h2>
     <p class="subtitle">How you like things set up</p>
 
@@ -713,7 +790,7 @@ body::before{
   document.getElementById('totalCount').textContent = totalCount;
 
   // Categories to load
-  const categories = ['identity', 'residenza', 'domicilio', 'financial', 'employment', 'business', 'cie',
+  const categories = ['identity', 'residenza', 'domicilio', 'financial', 'employment', 'business', 'cie', 'spid',
     'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'payment', 'preferences'];
 
   // --- API ---

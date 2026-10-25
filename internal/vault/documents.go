@@ -51,9 +51,6 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if !ValidCategoryName(category) {
 		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed"}
 	}
-	if IsForbiddenField(DocumentScopeID(category)) {
-		return nil, ErrForbiddenField
-	}
 	name, err := cleanDocumentName(name)
 	if err != nil {
 		return nil, err
@@ -68,11 +65,17 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if len(data) > MaxDocumentSize {
 		return nil, &ValidationError{Field: "document", Msg: fmt.Sprintf("file is larger than %d MB", MaxDocumentSize>>20)}
 	}
-	if sensitivity == "" {
+	// SPID/CieID documents (e.g. recovery codes) are always personal.
+	personalOnly := IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category))
+	switch {
+	case sensitivity == "" && personalOnly:
+		sensitivity = TierPersonal
+	case sensitivity == "":
 		sensitivity = "sensitive"
-	}
-	if !validTiers[sensitivity] {
+	case !validTiers[sensitivity]:
 		return nil, ErrInvalidTier
+	case personalOnly && sensitivity != TierPersonal:
+		return nil, errCredentialTier(DocumentScopeID(category))
 	}
 
 	vaultKey, err := v.requireUnlocked()

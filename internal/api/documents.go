@@ -27,6 +27,11 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 	if !requireAccess(w, r, false) {
 		return
 	}
+	if maxTierFromRequest(r) != vault.TierPersonal &&
+		(q.Get("sensitivity") == vault.TierPersonal || vault.IsPersonalCategory(category)) {
+		personalOnlyDenied(w)
+		return
+	}
 
 	select {
 	case s.uploadSlots <- struct{}{}:
@@ -131,7 +136,8 @@ func (s *Server) requireDocumentAccess(w http.ResponseWriter, r *http.Request, i
 		handleVaultError(w, err)
 		return false
 	}
-	if meta == nil {
+	// Personal documents don't exist for service tokens.
+	if meta == nil || (meta.Sensitivity == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal) {
 		writeError(w, http.StatusNotFound, "not_found", "document not found")
 		return false
 	}

@@ -106,19 +106,20 @@ func TestNormalizeAndValidate_Rejects(t *testing.T) {
 	}
 }
 
-func TestIsForbiddenField(t *testing.T) {
+func TestIsCredentialField(t *testing.T) {
 	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
-		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password"}
+		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password",
+		"spid.login", "cieid.username"}
 	for _, id := range forbidden {
-		if !IsForbiddenField(id) {
-			t.Errorf("IsForbiddenField(%q) = false, want true", id)
+		if !IsCredentialField(id) {
+			t.Errorf("IsCredentialField(%q) = false, want true", id)
 		}
 	}
 	allowed := []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
-		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin"}
+		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza"}
 	for _, id := range allowed {
-		if IsForbiddenField(id) {
-			t.Errorf("IsForbiddenField(%q) = true, want false", id)
+		if IsCredentialField(id) {
+			t.Errorf("IsCredentialField(%q) = true, want false", id)
 		}
 	}
 }
@@ -180,14 +181,28 @@ func TestVaultSet_ItalianValidation(t *testing.T) {
 		t.Errorf("value after rejected write = %q", f.Value)
 	}
 
-	if err := v.Set("spid.password", "hunter2", ""); !errors.Is(err, ErrForbiddenField) {
-		t.Errorf("Set spid.password: got %v, want ErrForbiddenField", err)
+	// Credentials are stored only as personal.
+	for _, id := range []string{"spid.password", "cie.pin", "identity.spid_password"} {
+		if err := v.Set(id, "12345678", ""); err != nil {
+			t.Errorf("Set %s: %v", id, err)
+		}
+		if f, _ := v.Get(id); f == nil || f.Sensitivity != TierPersonal {
+			t.Errorf("%s stored as %+v, want personal", id, f)
+		}
+		if err := v.Set(id, "12345678", "critical"); !errors.As(err, &verr) {
+			t.Errorf("Set %s as critical: got %v, want ValidationError", id, err)
+		}
+		if err := v.SetSensitivity(id, "standard"); !errors.As(err, &verr) {
+			t.Errorf("lowering %s: got %v, want ValidationError", id, err)
+		}
 	}
-	if err := v.Set("cie.pin", "12345678", ""); !errors.Is(err, ErrForbiddenField) {
-		t.Errorf("Set cie.pin: got %v, want ErrForbiddenField", err)
+	// Non-secret SPID details default to personal but may be lowered.
+	v.Set("spid.provider", "PosteID", "")
+	if f, _ := v.Get("spid.provider"); f.Sensitivity != TierPersonal {
+		t.Errorf("spid.provider default = %s, want personal", f.Sensitivity)
 	}
-	if f, _ := v.Get("spid.password"); f != nil {
-		t.Error("forbidden field was stored")
+	if err := v.SetSensitivity("spid.provider", "standard"); err != nil {
+		t.Errorf("lowering spid.provider: %v", err)
 	}
 }
 
@@ -233,6 +248,17 @@ func TestIBAN(t *testing.T) {
 	for id, want := range map[string]string{"identity.cellulare": "identity.phone", "financial.conto_corrente": "financial.iban"} {
 		if s := SuggestCanonical(id); s == nil || s.Canonical != want {
 			t.Errorf("SuggestCanonical(%q) = %+v, want %s", id, s, want)
+		}
+	}
+}
+
+func TestCIEPinPuk(t *testing.T) {
+	if got, err := NormalizeAndValidate("cie.pin", "1234 5678"); err != nil || got != "12345678" {
+		t.Errorf("cie.pin: %q %v", got, err)
+	}
+	for _, in := range []string{"1234", "123456789", "abcd5678"} {
+		if _, err := NormalizeAndValidate("cie.puk", in); err == nil {
+			t.Errorf("cie.puk %q should be rejected", in)
 		}
 	}
 }
