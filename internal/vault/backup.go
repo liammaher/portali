@@ -492,6 +492,7 @@ func CheckBackup(path, password, secretKeyHex string) (*BackupInfo, error) {
 // or be empty; an existing vault is never overwritten. The secret key is
 // written to dir/secret.key as on init.
 func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error) {
+	dir = filepath.Clean(dir) // with a trailing slash, Dir(dir) would be dir itself
 	if entries, err := os.ReadDir(dir); err == nil && len(entries) > 0 {
 		return nil, fmt.Errorf("%s is not empty — restore into a new folder (set VAULT_DIR) or move the old one away first", dir)
 	} else if err != nil && !errors.Is(err, os.ErrNotExist) {

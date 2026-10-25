@@ -332,7 +332,9 @@ func GetSchemaField(id string) *SchemaField {
 // codice fiscale fields (e.g. nucleo_familiare.membro1_codice_fiscale)
 // default to "sensitive".
 func DefaultSensitivity(id string) string {
-	if f, ok := schemaIndex[id]; ok {
+	// Validation ignores case, so the default must too (financial.SSN is
+	// still critical).
+	if f, ok := schemaIndex[strings.ToLower(id)]; ok {
 		return f.Sensitivity
 	}
 	if parts := strings.SplitN(id, ".", 2); IsCredentialField(id) || (len(parts) == 2 && IsPersonalCategory(parts[0])) {

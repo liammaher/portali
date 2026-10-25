@@ -174,6 +174,15 @@ test("envelopeSender unwraps 'Per conto di:'", () => {
   );
   assert.equal(envelopeSender([{ address: "posta-certificata@pec.aruba.it" }], [{ address: "x@pec.it" }]), "x@pec.it");
   assert.equal(envelopeSender([{ address: "plain@example.com" }], undefined), "plain@example.com");
+  // Outside the provider's envelope, the display name and Reply-To are the sender's choice.
+  assert.equal(
+    envelopeSender([{ address: "scam@evil.example" }], [{ address: "protocollo@pec.comune.napoli.it" }]),
+    "scam@evil.example",
+  );
+  assert.equal(
+    envelopeSender([{ name: "Per conto di: protocollo@pec.comune.napoli.it", address: "scam@evil.example" }], undefined),
+    "scam@evil.example",
+  );
 });
 
 test("parseDaticert reads the certification record", () => {

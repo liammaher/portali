@@ -89,7 +89,7 @@ func (s *Server) handleListDocuments(w http.ResponseWriter, r *http.Request) {
 // cannot run script on the vault's origin.
 func (s *Server) handleGetDocument(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	if !s.requireDocumentAccess(w, r, id) {
+	if _, ok := s.requireDocumentAccess(w, r, id); !ok {
 		return
 	}
 	info, data, err := s.vault.GetDocument(id)
@@ -117,10 +117,14 @@ func (s *Server) handleGetDocument(w http.ResponseWriter, r *http.Request) {
 // DELETE /vault/documents/{id}
 func (s *Server) handleDeleteDocument(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	if !s.requireDocumentAccess(w, r, id) {
+	meta, ok := s.requireDocumentAccess(w, r, id)
+	if !ok || !requireAccess(w, r, true) {
 		return
 	}
-	if !requireAccess(w, r, true) {
+	// A re-upload gets the default tier, so deleting one stored above it
+	// would let an agent lower it; only the user's session may.
+	if !isSessionAuth(r) && !vault.TierAllows(vault.DefaultDocumentSensitivity, meta.Sensitivity) {
+		writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a document stored above the default sensitivity tier")
 		return
 	}
 	deleted, err := s.vault.DeleteDocument(id)
@@ -137,24 +141,24 @@ func (s *Server) handleDeleteDocument(w http.ResponseWriter, r *http.Request) {
 
 // requireDocumentAccess checks the caller's scope and sensitivity cap for a
 // document and writes the error response if access is denied or it's missing.
-func (s *Server) requireDocumentAccess(w http.ResponseWriter, r *http.Request, id string) bool {
+func (s *Server) requireDocumentAccess(w http.ResponseWriter, r *http.Request, id string) (*vault.DocumentInfo, bool) {
 	meta, err := s.vault.DocumentMeta(id)
 	if err != nil {
 		handleVaultError(w, err)
-		return false
+		return nil, false
 	}
 	// Personal documents don't exist for service tokens.
 	if meta == nil || (meta.Sensitivity == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal) {
 		writeError(w, http.StatusNotFound, "not_found", "document not found")
-		return false
+		return nil, false
 	}
 	if !vault.ScopeAllows(scopeFromRequest(r), vault.DocumentScopeID(meta.Category)) {
 		scopeDenied(w)
-		return false
+		return nil, false
 	}
 	if !vault.TierAllows(maxTierFromRequest(r), meta.Sensitivity) {
 		sensitivityDenied(w)
-		return false
+		return nil, false
 	}
-	return true
+	return meta, true
 }

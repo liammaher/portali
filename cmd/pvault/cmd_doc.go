@@ -43,14 +43,11 @@ func cmdDocAdd() {
 		fatal(docUsage)
 	}
 	category, path := os.Args[3], os.Args[4]
-	needGrant(category+".documents", "append")
 	sensitivity := ""
-	for i := 5; i < len(os.Args); i++ {
-		if os.Args[i] == "--sensitivity" && i+1 < len(os.Args) {
-			sensitivity = os.Args[i+1]
-			i++
-		}
+	if err := parseFlags(os.Args[5:], map[string]*string{"--sensitivity": &sensitivity}); err != nil {
+		fatal("%v\n%s", err, docUsage)
 	}
+	needGrant(category+".documents", "append")
 
 	f, err := os.Open(path)
 	if err != nil {
@@ -114,11 +111,8 @@ func cmdDocGet() {
 	}
 	id := os.Args[3]
 	out := ""
-	for i := 4; i < len(os.Args); i++ {
-		if os.Args[i] == "--out" && i+1 < len(os.Args) {
-			out = os.Args[i+1]
-			i++
-		}
+	if err := parseFlags(os.Args[4:], map[string]*string{"--out": &out}); err != nil {
+		fatal("%v\n%s", err, docUsage)
 	}
 
 	// The ID doesn't say which category the document is in.

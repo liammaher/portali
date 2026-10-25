@@ -114,14 +114,16 @@ func TestNormalizeAndValidate_Rejects(t *testing.T) {
 func TestIsCredentialField(t *testing.T) {
 	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
 		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password",
-		"spid.login", "cieid.username", "spid.pass", "spid.pw", "spid.recovery_codes", "cieid.codice", "identity.spid_secret"}
+		"spid.login", "cieid.username", "spid.pass", "spid.pw", "spid.recovery_codes", "cieid.codice", "identity.spid_secret",
+		"identity.spidPassword", "identity.spidpassword", "identity.ciePin1", "notes.pinspid"}
 	for _, id := range forbidden {
 		if !IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = false, want true", id)
 		}
 	}
 	allowed := []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
-		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza"}
+		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza",
+		"identity.passaporto", "notes.specie", "identity.cieloazzurro"}
 	for _, id := range allowed {
 		if IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = true, want false", id)
@@ -137,6 +139,10 @@ func TestDefaultSensitivity_Italian(t *testing.T) {
 		{"residenza.comune", "standard"},
 		{"nucleo_familiare.membro1_codice_fiscale", "sensitive"},
 		{"nucleo_familiare.membro1_nome", "standard"},
+		// Validation ignores case, so defaults do too.
+		{"financial.SSN", "critical"},
+		{"Payment.card_number", "critical"},
+		{"Identity.date_of_birth", "sensitive"},
 	}
 	for _, tt := range tests {
 		if got := DefaultSensitivity(tt.id); got != tt.want {

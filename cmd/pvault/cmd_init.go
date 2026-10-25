@@ -8,6 +8,9 @@ import (
 
 func cmdInit() {
 	dir := vaultDir()
+	if err := vault.CanInit(dir); err != nil {
+		fatal("%v", err)
+	}
 
 	pw, err := promptPassword("Profile password: ")
 	if err != nil {

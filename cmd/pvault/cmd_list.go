@@ -11,6 +11,9 @@ func cmdList() {
 	path := "/vault/fields"
 	needGrant("*", "read")
 	if len(os.Args) >= 3 {
+		if !vault.ValidCategoryName(os.Args[2]) {
+			fatal("invalid category %q: only letters, digits, underscore and hyphen", os.Args[2])
+		}
 		path = "/vault/fields/category/" + os.Args[2]
 		needGrant(os.Args[2]+".*", "read")
 	}

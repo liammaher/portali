@@ -225,6 +225,16 @@ function mapError(status: number, body: string): VaultError {
     if (constraint === "scope_exceeded") {
       return new VaultError("vault: this is outside the token's scope");
     }
+    if (constraint === "personal_only") {
+      return new VaultError(
+        "vault: personal items (SPID/CIE credentials) can only be changed by the user — send them to the vault UI"
+      );
+    }
+    if (constraint === "session_required") {
+      return new VaultError(
+        "vault: only the user's own session can do this (lower a sensitivity tier, or delete an item stored above its default tier) — ask the user to do it in the vault UI or CLI"
+      );
+    }
     return new VaultError(`vault: forbidden — ${body}`);
   }
   if (status === 404) {
@@ -291,8 +301,22 @@ export async function getSchema(): Promise<unknown> {
   return resp.json();
 }
 
+// Field IDs go into the URL path, so only the vault's own ID shape is sent
+// (category.field_name: letters, digits, _ and -). A "/" or ".." could
+// otherwise reach another endpoint past VAULT_SCOPE.
+const FIELD_ID = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+
+function fieldPath(id: string): string {
+  if (!FIELD_ID.test(id)) {
+    throw new VaultError(
+      `vault: invalid field ID ${JSON.stringify(id)} — use category.field_name (letters, digits, _ and -)`
+    );
+  }
+  return `/vault/fields/${encodeURIComponent(id)}`;
+}
+
 export async function getField(id: string): Promise<FieldInfo> {
-  return apiRequest("GET", `/vault/fields/${id}`) as Promise<FieldInfo>;
+  return apiRequest("GET", fieldPath(id)) as Promise<FieldInfo>;
 }
 
 export async function listFields(): Promise<FieldInfo[]> {
@@ -312,7 +336,7 @@ export async function setField(
   if (sensitivity) {
     body.sensitivity = sensitivity;
   }
-  return apiRequest("PUT", `/vault/fields/${id}`, body) as Promise<{
+  return apiRequest("PUT", fieldPath(id), body) as Promise<{
     status: string;
   }>;
 }

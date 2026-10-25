@@ -18,6 +18,11 @@ func cmdUnlock() {
 	// Probe the port first — catches stale servers even if the PID file is gone.
 	if portHasVault() {
 		if isVaultUnlocked() {
+			// Anything can answer "unlocked" on the port; only say so for
+			// this vault's own server.
+			if err := checkVaultServer(); err != nil {
+				fatal("%v", err)
+			}
 			fmt.Println("Vault is already unlocked (server running).")
 			return
 		}
@@ -109,7 +114,10 @@ func unlockRunningServer(startedHere bool) {
 	if err != nil {
 		giveUp("%v", err)
 	}
-	reUnlock(pw, sk)
+	if err := reUnlock(pw, sk); err != nil {
+		giveUp("%v", err)
+	}
+	fmt.Println("Vault unlocked. Server running on", serverAddr())
 }
 
 // checkCredentials verifies the password and secret key against the vault
@@ -155,14 +163,14 @@ func isVaultUnlocked() bool {
 	return !status.Locked
 }
 
-func reUnlock(password, secretKey string) {
+func reUnlock(password, secretKey string) error {
 	body := map[string]string{
 		"password":   password,
 		"secret_key": secretKey,
 	}
 	resp, err := credentialRequest("POST", "/vault/unlock", body)
 	if err != nil {
-		fatal("re-unlock request: %v", err)
+		return fmt.Errorf("re-unlock request: %w", err)
 	}
 	defer resp.Body.Close()
 
@@ -173,9 +181,9 @@ func reUnlock(password, secretKey string) {
 	json.NewDecoder(resp.Body).Decode(&result)
 
 	if resp.StatusCode >= 400 {
-		fatal("unlock failed: %s", result.Error)
+		return fmt.Errorf("unlock failed: %s", result.Error)
 	}
 	// The unlock token is deliberately discarded: CLI commands authenticate
 	// with a fresh password-gated grant instead of a stored token.
-	fmt.Println("Vault unlocked. Server running on", serverAddr())
+	return nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -29,8 +30,10 @@ func cmdOnboard() {
 	dir := vaultDir()
 
 	// Check if vault already exists
-	if _, err := os.Stat(dir + "/vault.db"); err == nil {
+	if err := vault.CanInit(dir); errors.Is(err, vault.ErrAlreadyInit) {
 		fatal("vault already initialized at %s — use 'pvault unlock' instead", dir)
+	} else if err != nil {
+		fatal("%v", err)
 	}
 
 	fmt.Println("Create your vault")

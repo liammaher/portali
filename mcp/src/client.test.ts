@@ -180,3 +180,14 @@ test("reads the token from the Keychain for this user", {
     security("delete-generic-password", "-a", account, "-s", service);
   }
 });
+
+test("refuses field IDs that would leave /vault/fields/", async () => {
+  tokens.set("t-scope", "identity.");
+  process.env.VAULT_TOKEN = "t-scope";
+  for (const id of ["identity./../../context", "identity./../spid.password", "identity.a/b", "identity.a?x", "noDot"]) {
+    seen.length = 0;
+    await assert.rejects(getField(id), /invalid field ID/);
+    assert.equal(seen.length, 0, `${id} reached the server`);
+  }
+  assert.equal((await getField("identity.first_name")).value, "value-of-identity.first_name");
+});

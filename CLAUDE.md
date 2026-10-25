@@ -85,7 +85,8 @@ Profile Password + Secret Key (128-bit)
   API tests build requests with `newTestRequest` (loopback Host)
 - Writing a field without a tier keeps its existing tier (schema default for
   new fields), so overwrites never silently downgrade sensitivity
-- Secret key at `~/.pvault/secret.key` (0600), never in database
+- Secret key at `~/.pvault/secret.key` (0600), never in database. `Init` never replaces an
+  existing one (it may be the only key to old backups) and removes a half-made vault on failure
 - Credentials (password + secret key) never go over TCP, where anything can listen on
   7200 while the server is down. `pvault serve` also listens on `<vault dir>/run/pvault.sock`
   (dir 0700, socket 0600; bound before TCP, never taken over from a live server, stale
@@ -128,7 +129,8 @@ Profile Password + Secret Key (128-bit)
   the trusted server, so re-run `pvault touchid enable`. Tokens still go over TCP:
   pvault skips Touch ID when its `VAULT_ADDR` differs from the helper's 127.0.0.1:7200
   (`status` prints `server <addr>`), and a `unlock` that started the server stops it again if no one
-  can unlock it. `touchid enable`/`disable` are interactive only.
+  can unlock it. `touchid enable`/`disable` are interactive only, and the helper's own
+  `enroll`/`remove` refuse unless stderr is a terminal, so an agent can't switch it off.
   Debug builds (`-D DEBUG`) honor `VAULT_ADDR`, `PVAULT_TOUCHID_TEST_APPROVE=1` and
   `PVAULT_TOUCHID_TEST_PASSWORD`/`_SERVER` (enrollment without the Keychain) for tests, and
   add `describe-grant` (prints the prompt; `TestTouchIDHelper_*` compiles it with swiftc and
@@ -138,7 +140,11 @@ Profile Password + Secret Key (128-bit)
   approved it in person. It is not session auth (no audit, lock, tiers or tokens), and only
   its creation resets the auto-lock timer.
 - Only session auth may lower a tier: a token or scoped grant writing a field with a
-  `sensitivity` below its current tier (or the schema default) gets 403.
+  `sensitivity` below its current tier (or the schema default) gets 403, and so does
+  deleting a field or document stored above its default tier (re-creating it would lower it).
+  A tier-less write keeps the stored tier in the same SQL statement (`store.Field.KeepTier`),
+  so it can't undo a concurrent raise. Defaults ignore ID case, like validation. For tokens,
+  DELETE of a missing field is 404, the same as a hidden personal one.
   Handlers must test `isSessionAuth`, not `maxTier == personal`, to mean "the user's session"
 - Service tokens: access `read` (default) / `append` (add new fields and
   documents, no overwrite or delete) / `write`; explicit scope required, TTL 24h default / 90d max,

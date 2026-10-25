@@ -1,8 +1,10 @@
 package vault
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
+	"sync"
 	"testing"
 	"time"
 )
@@ -707,4 +709,73 @@ func mustScoped(t *testing.T, v *Vault, sk, scope, access string) string {
 		t.Fatal(err)
 	}
 	return token
+}
+
+// A write without a tier must not undo a tier change that lands between its
+// read of the old tier and its write.
+func TestSetKeepsConcurrentTierRaise(t *testing.T) {
+	v, _ := tmpVault(t)
+	id := "notes.salary"
+	for i := 0; i < 100; i++ {
+		if err := v.Set(id, "100", "standard"); err != nil {
+			t.Fatal(err)
+		}
+		var wg sync.WaitGroup
+		wg.Add(2)
+		go func() {
+			defer wg.Done()
+			if err := v.Set(id, "200", ""); err != nil {
+				t.Error(err)
+			}
+		}()
+		go func() {
+			defer wg.Done()
+			if err := v.SetSensitivity(id, "critical"); err != nil {
+				t.Error(err)
+			}
+		}()
+		wg.Wait()
+		if m, _ := v.FieldMeta(id); m.Sensitivity != "critical" {
+			t.Fatalf("run %d: tier is %q after a concurrent raise to critical", i, m.Sensitivity)
+		}
+	}
+}
+
+// A secret.key left from an earlier vault may be the only key to its
+// backups, so init never replaces it.
+func TestInitKeepsExistingSecretKey(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	if _, err := Init(dir, testPassword); err != nil {
+		t.Fatal(err)
+	}
+	keyPath := filepath.Join(dir, "secret.key")
+	before, _ := os.ReadFile(keyPath)
+	for _, f := range []string{"vault.db", "vault.db-wal", "vault.db-shm"} {
+		os.Remove(filepath.Join(dir, f))
+	}
+	if _, err := Init(dir, "other-password"); err == nil {
+		t.Fatal("second init over an existing secret.key succeeded")
+	}
+	if after, _ := os.ReadFile(keyPath); !bytes.Equal(before, after) {
+		t.Error("init replaced the existing secret.key")
+	}
+	if _, err := os.Stat(filepath.Join(dir, "vault.db")); !os.IsNotExist(err) {
+		t.Errorf("refused init left a vault.db behind (stat: %v)", err)
+	}
+}
+
+func TestInitCreatesOwnerOnlyDatabase(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	if _, err := Init(dir, testPassword); err != nil {
+		t.Fatal(err)
+	}
+	for _, f := range []string{"vault.db", "secret.key"} {
+		info, err := os.Stat(filepath.Join(dir, f))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if info.Mode().Perm() != 0600 {
+			t.Errorf("%s has mode %#o, want 0600", f, info.Mode().Perm())
+		}
+	}
 }

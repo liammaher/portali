@@ -149,7 +149,9 @@ server.registerTool(
       sensitivity: z
         .enum(["public", "standard", "sensitive", "critical"])
         .optional()
-        .describe("Sensitivity tier (default: standard)"),
+        .describe(
+          "Sensitivity tier. Leave it out: an existing field keeps its tier, a new one gets the schema default. Agents can only raise a tier, never lower it."
+        ),
     },
   },
   async ({ id, value, sensitivity }): Promise<CallToolResult> => {
@@ -256,7 +258,7 @@ server.registerTool(
     inputSchema: {
       path: z.string().describe("Absolute path of the local file to store"),
       category: z.string().describe("Category, e.g. permesso_soggiorno, passaporto, residenza, business"),
-      sensitivity: z.enum(["public", "standard", "sensitive", "critical"]).optional().describe("Sensitivity tier (default: sensitive)"),
+      sensitivity: z.enum(["sensitive", "critical"]).optional().describe("Sensitivity tier (default: sensitive; agents can't store documents lower)"),
     },
   },
   async ({ path, category, sensitivity }): Promise<CallToolResult> => {

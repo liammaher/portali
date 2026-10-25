@@ -187,15 +187,20 @@ func TestAutomaticBackupAfterChange(t *testing.T) {
 	if err := v.Set("notes.motto", "carpe noctem", ""); err != nil {
 		t.Fatal(err)
 	}
+	// The file is renamed into place before the status records it, so wait
+	// for the status.
 	deadline := time.Now().Add(5 * time.Second)
-	for len(backupFiles(t, dir)) == 0 {
+	for v.backupStatus().Last == "" {
 		if time.Now().After(deadline) {
 			t.Fatal("no automatic backup after a change")
 		}
 		time.Sleep(10 * time.Millisecond)
 	}
-	if st := v.backupStatus(); !st.Configured || st.Last == "" || st.Error != "" {
+	if st := v.backupStatus(); !st.Configured || st.Error != "" {
 		t.Fatalf("status after backup = %+v", st)
+	}
+	if len(backupFiles(t, dir)) == 0 {
+		t.Fatal("status says backed up, but no backup file")
 	}
 }
 
@@ -420,5 +425,17 @@ func TestBackupRemovesStaleWorkDir(t *testing.T) {
 	}
 	if _, err := os.Stat(stale); !errors.Is(err, os.ErrNotExist) {
 		t.Errorf("stale work dir still there after a backup (stat: %v)", err)
+	}
+}
+
+func TestRestoreIntoDirWithTrailingSlash(t *testing.T) {
+	v, sk, _ := backupVault(t)
+	path, err := v.Backup()
+	if err != nil {
+		t.Fatal(err)
+	}
+	target := filepath.Join(t.TempDir(), "restored") + "/"
+	if _, err := RestoreBackup(path, target, testPassword, sk); err != nil {
+		t.Errorf("restore into %q: %v", target, err)
 	}
 }

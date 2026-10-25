@@ -25,7 +25,13 @@ func (e *ValidationError) Error() string {
 
 // reCredentialWord matches a field-name word that names a login secret
 // (pin, pin1, puk2, password, otp, username, ...).
-var reCredentialWord = regexp.MustCompile(`^(pin[0-9]*|puk[0-9]*|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|chiave)$`)
+const credentialWords = `pin[0-9]*|puk[0-9]*|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|chiave`
+
+var reCredentialWord = regexp.MustCompile(`^(` + credentialWords + `)$`)
+
+// reJoinedCredential matches an identity word and a credential word run
+// together, as in identity.spidPassword (lower-cased to spidpassword).
+var reJoinedCredential = regexp.MustCompile(`^(spid|cieid|cie)(` + credentialWords + `)$|^(` + credentialWords + `)(spid|cieid|cie)$`)
 
 // IsCredentialField reports whether a field holds a login secret: a
 // credential word (pin, puk, password, otp, username, ...) in a field about
@@ -53,6 +59,9 @@ func IsCredentialField(id string) bool {
 	words := strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' })
 	aboutIdentity := category == "cie"
 	for _, w := range words {
+		if reJoinedCredential.MatchString(w) {
+			return true
+		}
 		if w == "spid" || w == "cie" || w == "cieid" {
 			aboutIdentity = true
 		}

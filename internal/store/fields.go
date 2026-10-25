@@ -14,6 +14,10 @@ type Field struct {
 	Sensitivity string
 	UpdatedAt   time.Time
 	Version     int
+	// KeepTier makes an update keep the stored tier; Sensitivity is then
+	// only used when the field is new. Deciding in the same statement means
+	// a concurrent tier change is never overwritten with a stale one.
+	KeepTier bool
 }
 
 // SetField upserts a field. If the field exists, bumps version.
@@ -23,10 +27,10 @@ func (d *DB) SetField(f Field) error {
 		 VALUES (?, ?, ?, ?, ?, ?, 1)
 		 ON CONFLICT(id) DO UPDATE SET
 			value = excluded.value,
-			sensitivity = CASE WHEN excluded.sensitivity != '' THEN excluded.sensitivity ELSE vault_fields.sensitivity END,
+			sensitivity = CASE WHEN ? OR excluded.sensitivity = '' THEN vault_fields.sensitivity ELSE excluded.sensitivity END,
 			updated_at = excluded.updated_at,
 			version = vault_fields.version + 1`,
-		f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, f.UpdatedAt.UTC().Format(time.RFC3339),
+		f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, f.UpdatedAt.UTC().Format(time.RFC3339), f.KeepTier,
 	)
 	return err
 }

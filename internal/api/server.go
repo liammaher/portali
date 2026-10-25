@@ -22,26 +22,32 @@ func newRateLimiter(max int, window time.Duration) *rateLimiter {
 	return &rateLimiter{max: max, window: window}
 }
 
-// allow returns true if the request is within the rate limit, counting it.
-func (rl *rateLimiter) allow() bool {
+// allow reports whether the request is within the rate limit, counting it,
+// and returns the attempt for refund.
+func (rl *rateLimiter) allow() (time.Time, bool) {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
 	if rl.fullLocked() {
-		return false
+		return time.Time{}, false
 	}
-	rl.attempts = append(rl.attempts, time.Now())
-	return true
+	now := time.Now()
+	rl.attempts = append(rl.attempts, now)
+	return now, true
 }
 
-// refund uncounts one attempt previously admitted by allow. Pairing the two
-// limits only failed attempts while still counting in-flight ones, so
-// concurrent requests can't all slip past the limit before any fails.
-func (rl *rateLimiter) refund() {
+// refund uncounts an attempt admitted by allow. Pairing the two limits only
+// failed attempts while still counting in-flight ones, so concurrent
+// requests can't all slip past the limit before any fails. An attempt that
+// already expired is gone; refunding it must not erase a newer one.
+func (rl *rateLimiter) refund(attempt time.Time) {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
-	if n := len(rl.attempts); n > 0 {
-		rl.attempts = rl.attempts[:n-1]
+	for i, t := range rl.attempts {
+		if t.Equal(attempt) {
+			rl.attempts = append(rl.attempts[:i], rl.attempts[i+1:]...)
+			return
+		}
 	}
 }
 
@@ -87,6 +93,11 @@ func New(v *vault.Vault, addr string) *Server {
 	s.server = &http.Server{
 		Addr:    addr,
 		Handler: s.handler,
+		// A request that trickles in can't hold an upload slot or a rate
+		// limit attempt indefinitely. Uploads are at most 20 MB over loopback.
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       2 * time.Minute,
+		IdleTimeout:       2 * time.Minute,
 	}
 	return s
 }
