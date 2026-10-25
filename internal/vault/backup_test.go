@@ -405,3 +405,20 @@ func TestStaleAutoLockKeepsNewSession(t *testing.T) {
 		t.Fatal("stale auto-lock dropped the current session")
 	}
 }
+
+func TestBackupRemovesStaleWorkDir(t *testing.T) {
+	v, _, _ := backupVault(t)
+	stale := filepath.Join(v.dir, ".backup-123456")
+	if err := os.Mkdir(stale, 0700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(stale, "vault.db"), []byte("snapshot"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := v.Backup(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(stale); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("stale work dir still there after a backup (stat: %v)", err)
+	}
+}

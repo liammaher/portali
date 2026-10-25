@@ -83,6 +83,19 @@ passaporto           2026-09-30  EXPIRED 24 days ago
 permesso_soggiorno   2026-12-15  in 52 days
 ```
 
+## Backups
+
+```sh
+pvault backup --to ~/Library/Mobile\ Documents/com~apple~CloudDocs/pvault-backups   # set the folder, back up now
+pvault backup                             # back up now
+pvault restore <file>.pvbackup --check    # verify a backup unlocks, without restoring
+pvault restore <file>.pvbackup            # recreate ~/.pvault (only if it's missing or empty)
+```
+
+Once a folder is set, the vault backs itself up a minute after each change and when it locks; `pvault status` shows the last backup or why it failed. Each `.pvbackup` holds the database and documents, encrypted again under your vault key, so even field names and the audit log are hidden; a cloud folder is fine. It keeps the 10 newest plus one per day for 30 days.
+
+The secret key is **not** in the backup: restoring needs your password and the secret key you saved at `pvault init`. `pvault restore <file> --check --ask-key` lets you type the saved key to test that your copy is right.
+
 ## Giving an agent access
 
 Create a token for each agent, scoped to what it needs:
@@ -160,7 +173,7 @@ pvault touchid enable    # asks for your password once, then a fingerprint
 
 From then on `pvault unlock` and every data command ask for your fingerprint instead of your password, and typing the password stays the fallback. Each prompt is worded from the exact request and covers only that command for 2 minutes, e.g. *"pvault-touchid" is trying to read spid.password from your vault for 2 minutes*. Commands Claude runs from its shell show the same prompt, so Claude can ask and you approve with a touch.
 
-How it works: the password sits in your login Keychain in an item only this exact helper build may read; any other program would make macOS ask for your login password. Apple's fingerprint-locked Keychain items need a paid developer signature, so the helper checks Touch ID itself before reading the item. It never prints the password: it talks to the vault directly and hands back only a short, scoped token. After rebuilding the helper, run `pvault touchid enable` again. `pvault touchid disable` removes the saved password.
+How it works: the password sits in your login Keychain in an item only this exact helper build may read; any other program would make macOS ask for your login password. Apple's fingerprint-locked Keychain items need a paid developer signature, so the helper checks Touch ID itself before reading the item. It never prints the password: it sends it only to the `pvault` build you enabled Touch ID with, over the vault's private socket (`~/.pvault/run/pvault.sock`), and hands back only a short, scoped token. So after rebuilding or moving `pvault` or the helper, run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`; until then a server left running from the old build is refused. `pvault touchid disable` removes the saved password.
 
 ## Security model
 
@@ -171,6 +184,7 @@ Profile password + 128-bit secret key
 ```
 
 - The server listens on 127.0.0.1 only and rejects non-loopback `Host` headers (DNS rebinding).
+- On macOS and Linux the CLI sends your password only over a private Unix socket (`~/.pvault/run/pvault.sock`) and only after checking that the server on it is this same `pvault`, so a program squatting on port 7200 while the vault is down never sees it. (The onboarding page still uses the port; browsers can't use sockets.)
 - No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password (or approving with Touch ID). Wrong passwords are rate-limited.
 - Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
 - Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session. SPID/CIE credentials (under any field name) can only be stored as `personal`, and SPID/CieID categories default to it.

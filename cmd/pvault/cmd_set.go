@@ -22,8 +22,9 @@ func cmdSet() {
 		fatal(setUsage)
 	}
 	id := os.Args[2]
-	if !strings.Contains(id, ".") {
-		fatal("field ID must be category.name (e.g., residenza.comune)")
+	// A well-formed ID first, so the Touch ID prompt names exactly one field.
+	if err := vault.ValidateFieldID(id); err != nil {
+		fatal("%v", err)
 	}
 	needGrant(id, "write")
 

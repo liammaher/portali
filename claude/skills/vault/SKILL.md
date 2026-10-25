@@ -71,14 +71,19 @@ only that command and expires within 2 minutes.
   10) for the exact fields a task needs, `pvault list <category>` for a category. Gather
   the IDs first and read them in one `get`, so the user approves once instead of per
   field. Several IDs print a JSON object, with `null` for fields that don't exist. `export`, `expiring`, `doc get` and `doc delete` ask for the whole vault,
-  and `audit`, `set-sensitivity` and token commands ask for full access; avoid them
-  unless the task needs them.
+  and `audit`, `set-sensitivity`, `backup` and token commands ask for full access; avoid
+  them unless the task needs them. `pvault status` shows when the last backup ran.
 - Writes: `pvault set <id> <value>` (pipe secrets: `printf '%s\n' "$v" | pvault set <id>`)
   and `pvault delete <id>`; confirm old and new value with the user first, as with `vault_set`.
 - If the command fails with "not approved", the user said no or wasn't at the Mac.
   Don't retry; ask them.
-- If it fails saying to run `pvault touchid enable` again (the helper was rebuilt, and
-  `touchid status` still says on), ask the user to run that in their own terminal.
+- If it fails saying to run `pvault touchid enable` again (pvault or the helper was
+  rebuilt or moved; `touchid status` still says on), ask the user to run that in their
+  own terminal. It's interactive, so you can't.
+- If it refuses to send the password because the vault server is an older build, was
+  rebuilt or reinstalled, or isn't this pvault, the server predates a reinstall. Say so,
+  then run `pvault lock` (no prompt) and `pvault unlock` (a fingerprint prompt), and retry.
+  If unlock then asks for `pvault touchid enable`, the user runs that first, as above.
 - Personal values you read this way enter the conversation: use them for the task
   and don't repeat them back unless asked.
 
@@ -143,8 +148,8 @@ Access levels: `read` (default), `append` (add new fields/documents, never overw
 
 ## 5. PEC mailbox (read-only)
 
-When the user's PEC is set up, the vault MCP also has `pec_folders`, `pec_list`, `pec_read`
-and `pec_attachment`. Use them to find notices (e.g. `pec_list` with `from: "comune.napoli.it"`)
+When the user's PEC is set up, the vault MCP also has `pec_folders`, `pec_list`, `pec_read`,
+`pec_attachment` and `pec_save_attachment`. Use them to find notices (e.g. `pec_list` with `from: "comune.napoli.it"`)
 or to check receipts for PEC the user sent (`kind: ricevuta-avvenuta-consegna`).
 
 - There is no way to send PEC, by design. Prepare the files and the recipient; the user sends.
@@ -154,5 +159,6 @@ or to check receipts for PEC the user sent (`kind: ricevuta-avvenuta-consegna`).
 - Never ask for the PEC password or read its Keychain item. If a tool says the password is
   missing or the login failed, give the user the `security add-generic-password` command from
   the error to run in their own terminal (it prompts, so the password never appears).
-- To keep a notice, and only if the user asks: `pec_save_attachment` (writes to ~/Downloads),
+- To keep a notice, and only if the user asks: `pec_save_attachment` (writes to the first
+  import folder, ~/Downloads by default),
   then `vault_document_add` on that path, then suggest deleting the unencrypted copy.

@@ -1,8 +1,8 @@
 .PHONY: build touchid test install clean
 
-# On macOS pvault is signed with the hardened runtime too: pvault and
-# pvault-touchid send the password only to a vault server running a hardened
-# build, so no library can be injected into it through DYLD_* variables.
+# On macOS pvault is signed with the hardened runtime too: pvault-touchid sends
+# the password only to a vault server running a hardened build, so no library
+# can be injected into it through DYLD_* variables.
 build:
 	go build -o bin/pvault ./cmd/pvault
 ifeq ($(shell uname),Darwin)

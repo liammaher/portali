@@ -37,7 +37,8 @@ func cmdUnlock() {
 			fatal("%v", err)
 		}
 		if !verified {
-			fatal("vault server is still starting — run 'pvault unlock' again in a moment")
+			stopOwnServer()
+			fatal("vault server didn't start in time — run 'pvault unlock' again")
 		}
 		unlockRunningServer(true)
 		return
@@ -90,7 +91,7 @@ func unlockRunningServer(startedHere bool) {
 		_, err := runTouchID("", "unlock")
 		if err == nil {
 			if !isVaultUnlocked() {
-				fatal("vault still locked after Touch ID unlock")
+				giveUp("vault still locked after Touch ID unlock")
 			}
 			fmt.Println("Vault unlocked with Touch ID. Server running on", serverAddr())
 			return

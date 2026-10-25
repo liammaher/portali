@@ -252,6 +252,15 @@ func (v *Vault) flushBackupLocked() {
 }
 
 func (v *Vault) writeBackup(vaultKey []byte, dir string, now time.Time) (string, error) {
+	// backup.mu is held, so any work dir already here was left by a crash.
+	// It holds a database snapshot (field names, audit log): remove it.
+	if entries, err := os.ReadDir(v.dir); err == nil {
+		for _, e := range entries {
+			if e.IsDir() && strings.HasPrefix(e.Name(), ".backup-") {
+				os.RemoveAll(filepath.Join(v.dir, e.Name()))
+			}
+		}
+	}
 	work, err := os.MkdirTemp(v.dir, ".backup-")
 	if err != nil {
 		return "", err

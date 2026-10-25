@@ -36,10 +36,17 @@ pvault delete <category.field>           # Delete field
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
 pvault export                            # Export all fields as JSON
 pvault backup [--to <folder>]            # Encrypted backup now; --to sets the auto-backup folder
-pvault restore <file> [--check]          # Recreate vault from a backup / only verify it
+pvault restore <file> [--check] [--ask-key]  # Recreate vault from a backup / only verify it
 pvault audit                             # Show access audit log
 pvault status                            # Show vault status
+pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
+pvault doc add|list|get|delete           # Encrypted document scans
+pvault touchid enable|disable|status     # Touch ID approvals (macOS)
+pvault create-service-token|list-service-tokens|revoke-service-token
+pvault ui                                # Onboarding page in the default browser
 ```
+
+`pvault help` prints every command with its flags.
 
 ## Architecture
 
@@ -152,9 +159,9 @@ Profile Password + Secret Key (128-bit)
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID/CIE credentials (`IsCredentialField`) can only be stored with tier
   `personal`; `spid`/`cieid` categories default to it. `personal` (rank 4) is
-  session-only: service tokens can't be capped at it, and the API hides
-  personal items (404 on read/delete, 403 personal_only on write, omitted
-  from every listing). Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
+  never reachable by service tokens: they can't be capped at it, and the API hides
+  personal items from them (404 on read/delete, 403 personal_only on write, omitted
+  from every listing). Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
   `spid.provider` (fixed spellings matching the onboarding select,
   `TestOnboardingSelectOptionsValidate`) are validated in `access.go`; the provider
   stays lowerable to `standard` so agents can pick it. Fields named with the word
@@ -185,11 +192,14 @@ Profile Password + Secret Key (128-bit)
   `backup_dir` (absolute, outside the vault dir after resolving symlinks). Every write calls
   `markChanged`, which backs up `backupDelay` (1m) after the last change; `Lock` (holding
   `backup.mu` throughout) and auto-lock flush a pending one first, so `pvault lock` waits
-  for the server to exit. Lock order: `backup.mu` → `v.mu` → session `mu`. Auto-lock ignores
+  for the server to exit. Lock order: `backup.mu` → `v.mu` → session `mu`; `backup.stateMu`
+  is a leaf, so `markChanged` never waits on a running backup. Auto-lock ignores
   stale timer firings and only clears its own session. Files are
   `pvault-<vault id>-<time>.pvbackup` (id = SHA-256 of the salt, 8 hex); pruning keeps this
   vault's 10 newest plus the newest per day for 30 days and never touches other files.
   Documents whose file is gone are dropped from the snapshot rather than failing the backup.
+  Each backup first removes `.backup-*` work dirs a crash left in the vault dir (they hold a
+  plaintext-named snapshot).
   `RestoreBackup` only fills a missing or empty dir and checks the result unlocks
   (`--ask-key` tests a hand-kept secret key); public status shows backup state, never the folder
 
