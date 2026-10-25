@@ -51,18 +51,21 @@ body::before{
   transition:width 0.6s var(--ease-out);
 }
 
-/* Navigation dots */
-.nav-dots{
-  position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:50;
-  display:flex;flex-direction:column;gap:14px;
+/* Chapter navigation */
+.chapters{
+  position:fixed;left:32px;top:50%;transform:translateY(-50%);z-index:50;
+  display:flex;flex-direction:column;
 }
-.nav-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--border);border:none;cursor:pointer;padding:0;
-  transition:all 0.4s var(--ease-out);
+.chapter{
+  display:flex;align-items:baseline;gap:10px;
+  padding:5px 12px;border:none;border-left:1px solid var(--border);
+  background:none;color:var(--text-muted);
+  font-family:var(--font-sans);font-size:13px;text-align:left;cursor:pointer;
+  transition:color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
 }
-.nav-dot:hover{background:var(--text-muted)}
-.nav-dot.active{background:var(--gold);box-shadow:0 0 8px rgba(201,168,124,0.3)}
+.chapter-num{font-family:var(--font-mono);font-size:11px}
+.chapter:hover{color:var(--text)}
+.chapter.active{color:var(--gold);border-left-color:var(--gold)}
 
 /* Layout */
 .container{
@@ -247,11 +250,14 @@ body::before{
 }
 
 /* Responsive */
+@media(max-width:1100px){
+  .chapter-label{display:none}
+}
 @media(max-width:600px){
   .header h1{font-size:32px}
   .section h2{font-size:24px}
   .field-row{flex-direction:column;gap:0}
-  .nav-dots{display:none}
+  .chapters{display:none}
   .container{padding:0 20px 80px}
 }
 </style>
@@ -262,7 +268,7 @@ body::before{
 
 <div class="error-banner" id="errorBanner">Session expired. Reload this page to sign in again.</div>
 
-<nav class="nav-dots" id="navDots"></nav>
+<nav class="chapters" id="chapters" aria-label="Sections"></nav>
 
 <div class="container locked">
   <div class="header">
@@ -281,7 +287,7 @@ body::before{
   </form>
 
   <!-- 01 Identità -->
-  <section class="section" data-section="0">
+  <section class="section" data-section="0" data-chapter="Identità">
     <div class="section-number">01</div>
     <h2>Who are you?</h2>
     <p class="subtitle">As on your documents — the codice fiscale is validated as you save</p>
@@ -339,7 +345,7 @@ body::before{
   </section>
 
   <!-- 02 Residenza -->
-  <section class="section" data-section="1">
+  <section class="section" data-section="1" data-chapter="Residenza">
     <div class="section-number">02</div>
     <h2>Where do you live?</h2>
     <p class="subtitle">Your residenza anagrafica as registered with the Comune (ANPR). Fill the domicilio only if you live somewhere else.</p>
@@ -420,7 +426,7 @@ body::before{
   </section>
 
   <!-- 03 Casa -->
-  <section class="section" data-section="2">
+  <section class="section" data-section="2" data-chapter="Casa">
     <div class="section-number">03</div>
     <h2>La tua casa</h2>
     <p class="subtitle">The home at the address above. Catasto data is on the visura catastale; TARI, the rental registration and ISEE all ask for it.</p>
@@ -523,7 +529,7 @@ body::before{
   </section>
 
   <!-- 04 Affitto e utenze -->
-  <section class="section" data-section="3">
+  <section class="section" data-section="3" data-chapter="Affitto e utenze">
     <div class="section-number">04</div>
     <h2>Affitto e utenze</h2>
     <p class="subtitle">Skip the contract if you own the home. Registration details are on the RLI receipt; the POD and PDR are on any electricity or gas bill.</p>
@@ -647,7 +653,7 @@ body::before{
   </section>
 
   <!-- 05 Contatti e banca -->
-  <section class="section" data-section="4">
+  <section class="section" data-section="4" data-chapter="Contatti">
     <div class="section-number">05</div>
     <h2>How can you be reached?</h2>
     <p class="subtitle">Contact details and the IBAN used for refunds (730, INPS) and payments</p>
@@ -677,7 +683,7 @@ body::before{
   </section>
 
   <!-- 06 Lavoro -->
-  <section class="section" data-section="5">
+  <section class="section" data-section="5" data-chapter="Lavoro">
     <div class="section-number">06</div>
     <h2>What do you do?</h2>
     <p class="subtitle">Employment, or your partita IVA if you are self-employed</p>
@@ -726,7 +732,7 @@ body::before{
   </section>
 
   <!-- 07 CIE -->
-  <section class="section" data-section="6">
+  <section class="section" data-section="6" data-chapter="Carta d'identità">
     <div class="section-number">07</div>
     <h2>Carta d'identità</h2>
     <p class="subtitle">Electronic identity card. Never enter the PIN or PUK — the vault refuses them.</p>
@@ -758,7 +764,7 @@ body::before{
   </section>
 
   <!-- 08 SPID -->
-  <section class="section" data-section="7">
+  <section class="section" data-section="7" data-chapter="SPID e codici">
     <div class="section-number">08</div>
     <h2>SPID e codici — solo per te</h2>
     <p class="subtitle">Personal tier: stored encrypted and never readable, listable or changeable by any agent, whatever its token. Only you see these, here or with <code>pvault get</code>.</p>
@@ -835,7 +841,7 @@ body::before{
   </section>
 
   <!-- 09 Documenti -->
-  <section class="section" data-section="8">
+  <section class="section" data-section="8" data-chapter="Altri documenti">
     <div class="section-number">09</div>
     <h2>Altri documenti</h2>
     <p class="subtitle">Numbers and expiry dates — run <code>pvault expiring</code> to see what needs renewing. Store scans with <code>pvault doc add</code>.</p>
@@ -923,7 +929,7 @@ body::before{
   </section>
 
   <!-- 10 Pagamento -->
-  <section class="section" data-section="9">
+  <section class="section" data-section="9" data-chapter="Pagamento">
     <div class="section-number">10</div>
     <h2>Payment card</h2>
     <p class="subtitle">Optional — e.g. for pagoPA payments. Critical tier: agents can't read it unless you allow it.</p>
@@ -963,7 +969,7 @@ body::before{
   </section>
 
   <!-- 11 Preferenze -->
-  <section class="section" data-section="10">
+  <section class="section" data-section="10" data-chapter="Preferenze">
     <div class="section-number">11</div>
     <h2>Preferences</h2>
     <p class="subtitle">How you like things set up</p>
@@ -1194,36 +1200,59 @@ body::before{
     document.getElementById('progress').style.width = pct + '%';
   }
 
-  // --- Scroll reveal + nav dots ---
+  // --- Scroll reveal + chapter navigation ---
 
   var sections = document.querySelectorAll('.section');
-  var navDots = document.getElementById('navDots');
+  var chapterNav = document.getElementById('chapters');
 
-  sections.forEach(function(_, i) {
-    var dot = document.createElement('button');
-    dot.className = 'nav-dot';
-    dot.setAttribute('aria-label', 'Section ' + (i + 1));
-    dot.addEventListener('click', function() {
-      sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  sections.forEach(function(section) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chapter';
+    var num = document.createElement('span');
+    num.className = 'chapter-num';
+    num.textContent = section.querySelector('.section-number').textContent;
+    var label = document.createElement('span');
+    label.className = 'chapter-label';
+    label.textContent = section.getAttribute('data-chapter');
+    btn.append(num, label);
+    btn.title = section.getAttribute('data-chapter');
+    btn.addEventListener('click', function() {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    navDots.appendChild(dot);
+    chapterNav.appendChild(btn);
   });
 
-  var dots = navDots.querySelectorAll('.nav-dot');
+  var chapters = chapterNav.querySelectorAll('.chapter');
 
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        var idx = parseInt(entry.target.getAttribute('data-section'), 10);
-        dots.forEach(function(d, i) {
-          d.classList.toggle('active', i === idx);
-        });
-      }
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
   }, { threshold: 0.15, rootMargin: '-40px 0px' });
 
   sections.forEach(function(s) { observer.observe(s); });
+
+  // The active chapter is the last section whose top has passed a third of
+  // the viewport (or the last one once the page is scrolled to the bottom).
+  function updateActiveChapter() {
+    var line = window.innerHeight / 3;
+    var active = 0;
+    sections.forEach(function(s, i) {
+      if (s.getBoundingClientRect().top <= line) active = i;
+    });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      active = sections.length - 1;
+    }
+    chapters.forEach(function(c, i) { c.classList.toggle('active', i === active); });
+  }
+  var scrollQueued = false;
+  window.addEventListener('scroll', function() {
+    if (scrollQueued) return;
+    scrollQueued = true;
+    requestAnimationFrame(function() { scrollQueued = false; updateActiveChapter(); });
+  }, { passive: true });
+  updateActiveChapter();
 
   // --- Password toggle ---
 
