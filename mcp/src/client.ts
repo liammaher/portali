@@ -1,3 +1,8 @@
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
+
 interface VaultStatus {
   initialized: boolean;
   locked: boolean;
@@ -30,32 +35,87 @@ function serverAddr(): string {
   return process.env.VAULT_ADDR ?? "http://127.0.0.1:7200";
 }
 
-const MISSING_TOKEN_HELP =
-  "vault: no service token — create one with " +
-  "`pvault create-service-token <name> --scope \"identity.*,...\"` " +
-  "and set it as VAULT_TOKEN in this MCP server's env";
+const CREATE_TOKEN_HELP = process.env.VAULT_TOKEN_COMMAND
+  ? "ask the user to run `pvault create-service-token <name> --scope \"identity.*,...\" --keychain <service>` " +
+    "in their terminal (the service VAULT_TOKEN_COMMAND reads); it is picked up on the next call, no restart needed"
+  : "ask the user to create one with `pvault create-service-token <name> --scope \"identity.*,...\"` " +
+    "and set it as VAULT_TOKEN in this MCP server's env";
+
+const MISSING_TOKEN_HELP = `vault: no service token — ${CREATE_TOKEN_HELP}`;
+
+/** Token from VAULT_TOKEN_COMMAND, kept until the server rejects it. */
+let commandToken: string | undefined;
 
 /**
- * The MCP server only ever uses a scoped service token supplied by the user
- * via VAULT_TOKEN. It never reads ~/.pvault/.session: that token has full,
+ * The MCP server only ever uses a scoped service token supplied by the user,
+ * either directly in VAULT_TOKEN or printed by VAULT_TOKEN_COMMAND (e.g. a
+ * Keychain lookup). It never reads ~/.pvault/.session: that token has full,
  * uncapped access and would bypass the scope and sensitivity limits.
  */
-function resolveToken(): string {
+async function resolveToken(): Promise<string> {
   const token = process.env.VAULT_TOKEN?.trim();
-  if (!token) {
+  if (token) {
+    return token;
+  }
+  const command = process.env.VAULT_TOKEN_COMMAND?.trim();
+  if (!command) {
     throw new VaultError(MISSING_TOKEN_HELP);
   }
-  return token;
+  if (!commandToken) {
+    try {
+      const { stdout } = await execFileAsync("/bin/sh", ["-c", command], { timeout: 10_000 });
+      commandToken = stdout.trim() || undefined;
+    } catch {
+      // No stored token yet (or the lookup failed): fall through to the help text.
+    }
+  }
+  if (!commandToken) {
+    throw new VaultError(MISSING_TOKEN_HELP);
+  }
+  return commandToken;
 }
 
+/**
+ * Fails fast when no token source is configured at all. With only
+ * VAULT_TOKEN_COMMAND the server starts even before a token is stored, so
+ * the user can create one mid-session.
+ */
 export function assertTokenConfigured(): void {
-  resolveToken();
+  if (!process.env.VAULT_TOKEN?.trim() && !process.env.VAULT_TOKEN_COMMAND?.trim()) {
+    throw new VaultError(MISSING_TOKEN_HELP);
+  }
+}
+
+/**
+ * Sends an authenticated request. A token from VAULT_TOKEN_COMMAND that the
+ * server rejects is re-read once, so a token replaced mid-session just works.
+ */
+async function authedFetch(path: string, init: RequestInit): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const token = await resolveToken();
+    const headers = new Headers(init.headers);
+    headers.set("Authorization", `Bearer ${token}`);
+    let resp: Response;
+    try {
+      resp = await fetch(`${serverAddr()}${path}`, { ...init, headers });
+    } catch {
+      throw new VaultError("vault: server not running — run 'pvault unlock'");
+    }
+    if (resp.status === 401 && token === commandToken) {
+      commandToken = undefined;
+      if (attempt === 0) continue;
+    }
+    if (!resp.ok) {
+      throw mapError(resp.status, await resp.text());
+    }
+    return resp;
+  }
 }
 
 function mapError(status: number, body: string): VaultError {
   if (status === 401) {
     return new VaultError(
-      "vault: service token invalid, expired or revoked — create a new one with `pvault create-service-token`"
+      `vault: service token invalid, expired or revoked — ${CREATE_TOKEN_HELP}`
     );
   }
   if (status === 403) {
@@ -110,32 +170,11 @@ async function apiRequest(
   path: string,
   body?: unknown
 ): Promise<unknown> {
-  const token = resolveToken();
-  const url = `${serverAddr()}${path}`;
-
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-
-  let resp: Response;
-  try {
-    resp = await fetch(url, {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : undefined,
-    });
-  } catch (err) {
-    throw new VaultError(
-      "vault: server not running — run 'pvault unlock'"
-    );
-  }
-
-  if (!resp.ok) {
-    const text = await resp.text();
-    throw mapError(resp.status, text);
-  }
-
+  const resp = await authedFetch(path, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined,
+  });
   return resp.json();
 }
 
@@ -236,7 +275,7 @@ export async function addDocument(
 ): Promise<DocumentInfo> {
   const q = new URLSearchParams({ category, name });
   if (sensitivity) q.set("sensitivity", sensitivity);
-  const resp = await rawFetch(`/vault/documents?${q}`, {
+  const resp = await authedFetch(`/vault/documents?${q}`, {
     method: "POST",
     headers: { "Content-Type": contentType },
     body: new Blob([new Uint8Array(data)]),
@@ -248,27 +287,12 @@ export async function addDocument(
 export async function getDocument(
   id: string,
 ): Promise<{ contentType: string; category: string; data: Buffer }> {
-  const resp = await rawFetch(`/vault/documents/${encodeURIComponent(id)}`, { method: "GET" });
+  const resp = await authedFetch(`/vault/documents/${encodeURIComponent(id)}`, { method: "GET" });
   return {
     contentType: resp.headers.get("Content-Type") ?? "application/octet-stream",
     category: resp.headers.get("X-Document-Category") ?? "",
     data: Buffer.from(await resp.arrayBuffer()),
   };
-}
-
-async function rawFetch(path: string, init: RequestInit): Promise<Response> {
-  const headers = new Headers(init.headers);
-  headers.set("Authorization", `Bearer ${resolveToken()}`);
-  let resp: Response;
-  try {
-    resp = await fetch(`${serverAddr()}${path}`, { ...init, headers });
-  } catch {
-    throw new VaultError("vault: server not running — run 'pvault unlock'");
-  }
-  if (!resp.ok) {
-    throw mapError(resp.status, await resp.text());
-  }
-  return resp;
 }
 
 export type { VaultStatus, FieldInfo, ContextBundle, ExpiryInfo, DocumentInfo };

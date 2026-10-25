@@ -96,6 +96,7 @@ pvault revoke-service-token <token_prefix>
 | `--access` | `read` | `append` = may add new fields/documents but never overwrite or delete; `write` = full |
 | `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in; `personal` is never available |
 | `--ttl` | `24h` | maximum 90 days |
+| `--keychain` | — | macOS: save the token in your Keychain under this service name instead of printing it |
 
 Agent activity never keeps the vault unlocked: it auto-locks after 30 minutes without *your* activity.
 
@@ -113,11 +114,13 @@ cd mcp && npm ci && npm run build
     "vault": {
       "command": "node",
       "args": ["/path/to/personal-vault-italia/mcp/dist/index.js"],
-      "env": { "VAULT_TOKEN": "<token from pvault create-service-token>" }
+      "env": { "VAULT_TOKEN_COMMAND": "security find-generic-password -a \"$USER\" -s pvault-mcp -w" }
     }
   }
 }
 ```
+
+With that config, `pvault create-service-token claude --scope "residenza.*" --ttl 2h --keychain pvault-mcp` grants access mid-session, with no restart and no token on screen. Outside macOS, set `"VAULT_TOKEN": "<token>"` instead.
 
 Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_expiring`, `vault_documents`, `vault_document_get`, `vault_document_add`. The MCP server only ever uses the token you give it, and `vault_document_add` only reads files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
 

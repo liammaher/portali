@@ -13,7 +13,9 @@ func cmdCreateServiceToken() {
 		"  --ttl defaults to 24h (max 2160h = 90 days).\n" +
 		"  --access defaults to read: the agent can only read. append also lets it add new fields and\n" +
 		"    documents (e.g. archive a receipt) but never overwrite or delete; write allows everything.\n" +
-		"  --max-sensitivity defaults to sensitive; use critical only for agents that must read critical fields."
+		"  --max-sensitivity defaults to sensitive; use critical only for agents that must read critical fields.\n" +
+		"  --keychain <service> (macOS) saves the token in your Keychain under that service name instead of\n" +
+		"    printing it, e.g. --keychain pvault-mcp for the MCP server's VAULT_TOKEN_COMMAND."
 	if len(os.Args) < 3 {
 		fatal(usage)
 	}
@@ -23,6 +25,7 @@ func cmdCreateServiceToken() {
 	ttl := "24h"
 	maxSensitivity := ""
 	access := ""
+	keychain := ""
 
 	for i := 3; i < len(os.Args); i++ {
 		switch os.Args[i] {
@@ -46,10 +49,22 @@ func cmdCreateServiceToken() {
 				access = os.Args[i+1]
 				i++
 			}
+		case "--keychain":
+			if i+1 < len(os.Args) {
+				keychain = os.Args[i+1]
+				i++
+			} else {
+				fatal(usage)
+			}
 		}
 	}
 	if scope == "" {
 		fatal(usage)
+	}
+	if keychain != "" {
+		if err := checkKeychain(keychain); err != nil {
+			fatal("%v", err)
+		}
 	}
 
 	resp, err := apiRequest("POST", "/vault/tokens/service", map[string]string{
@@ -73,13 +88,28 @@ func cmdCreateServiceToken() {
 		fatal("%v", err)
 	}
 
+	stored := false
+	if keychain != "" {
+		if err := storeInKeychain(keychain, result.Token); err != nil {
+			fmt.Fprintf(os.Stderr, "Keychain save failed (%v); printing the token instead.\n\n", err)
+		} else {
+			stored = true
+		}
+	}
+
 	fmt.Printf("Service token created for %q\n", consumer)
-	fmt.Printf("Token:           %s\n", result.Token)
+	if stored {
+		fmt.Printf("Keychain:        saved as service %q (replacing any previous one)\n", keychain)
+	} else {
+		fmt.Printf("Token:           %s\n", result.Token)
+	}
 	fmt.Printf("Scope:           %s\n", scope)
 	fmt.Printf("Max sensitivity: %s\n", result.MaxSensitivity)
 	fmt.Printf("Access:          %s\n", result.Access)
 	fmt.Printf("Expires:         %s\n", result.ExpiresAt)
-	fmt.Println("\nSave this token — it cannot be displayed again.")
+	if !stored {
+		fmt.Println("\nSave this token — it cannot be displayed again.")
+	}
 }
 
 func cmdListServiceTokens() {

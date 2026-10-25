@@ -16,20 +16,26 @@ npm run build
 
 ## Register with Claude Code
 
+On macOS, keep the token in your Keychain (recommended). Register once:
+
 ```sh
-claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+claude mcp add vault --scope user \
+  -e VAULT_TOKEN_COMMAND='security find-generic-password -a "$USER" -s pvault-mcp -w' \
+  -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
 ```
 
-`-e` saves the token in plain text in `~/.claude.json`. On macOS you can keep it
-in the Keychain instead: save it with
-`security add-generic-password -U -a "$USER" -s pvault-mcp -w` (it prompts for the
-token), then register a small launcher script in place of `node ...`:
+Then, whenever an agent needs access, create a token straight into the Keychain.
+It's never printed, and the running server picks it up on its next call, so
+there's no need to restart Claude:
 
 ```sh
-#!/bin/sh
-VAULT_TOKEN=$(security find-generic-password -a "$USER" -s pvault-mcp -w) || exit 1
-export VAULT_TOKEN
-exec node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h --keychain pvault-mcp
+```
+
+Elsewhere, pass the token directly (stored in plain text in `~/.claude.json`):
+
+```sh
+claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
 ```
 
 ## Tools
@@ -52,13 +58,15 @@ Documents follow the same token rules as fields: scope pattern `<category>.docum
 
 ## Authentication
 
-The MCP server only uses a service token you create and pass in `VAULT_TOKEN`:
+The MCP server only uses a service token you create, given either in `VAULT_TOKEN` or printed by `VAULT_TOKEN_COMMAND`:
 
 ```sh
-pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h
+pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h [--keychain pvault-mcp]
 ```
 
-It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start without `VAULT_TOKEN`.
+It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start when neither variable is set.
+
+With `VAULT_TOKEN_COMMAND`, the command runs on the first call that needs a token, and again if the server rejects it (expired, revoked or replaced). Until a token is stored, tools answer with how to create one.
 
 The token keeps working across vault lock/unlock cycles until it expires or is revoked.
 
@@ -67,7 +75,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address |
-| `VAULT_TOKEN` | — | **Required.** Service token from `pvault create-service-token` |
+| `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (this or `VAULT_TOKEN_COMMAND` is required) |
+| `VAULT_TOKEN_COMMAND` | — | Shell command that prints the token, e.g. a Keychain lookup; ignored when `VAULT_TOKEN` is set |
 | `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` may read from (hidden files always refused) |
 | `VAULT_SCOPE` | `*` | Optional extra filter applied in the MCP layer (the server enforces the token's own scope regardless) |
 
@@ -76,7 +85,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | Error | Meaning |
 |-------|---------|
 | `vault: server not running` | Run `pvault unlock` to start the server |
-| `vault: service token invalid, expired or revoked` | Create a new token and update `VAULT_TOKEN` |
+| `vault: no service token` | Create one (with `--keychain` when using `VAULT_TOKEN_COMMAND`) |
+| `vault: service token invalid, expired or revoked` | Create a new token (`--keychain` replaces the stored one) or update `VAULT_TOKEN` |
 | `vault: vault is locked` | Run `pvault unlock` to decrypt |
 | `vault: this item's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field or document |
 | `vault: this is outside the token's scope` | Not covered by the token's `--scope` |
