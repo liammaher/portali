@@ -93,6 +93,8 @@ var (
 	rePartitaIVA = regexp.MustCompile(`^[0-9]{11}$`)
 	reIBAN       = regexp.MustCompile(`^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$`)
 	reCIECode    = regexp.MustCompile(`^[0-9]{8}$`)
+	// reInternoPrefix strips a leading "interno", "int." or "int" from a flat number.
+	reInternoPrefix = regexp.MustCompile(`^(?i)\s*(interno|int\.?)\s*`)
 )
 
 // NormalizeAndValidate applies Italian format rules to a field value based on
@@ -150,6 +152,12 @@ func NormalizeAndValidate(id, value string) (string, error) {
 		v := strings.TrimSpace(value)
 		if !reCAP.MatchString(v) {
 			return "", &ValidationError{Field: id, Msg: "CAP must be 5 digits"}
+		}
+		return v, nil
+	case (category == "residenza" || category == "domicilio") && name == "interno":
+		v := strings.TrimSpace(reInternoPrefix.ReplaceAllString(value, ""))
+		if v == "" || len(v) > 10 {
+			return "", &ValidationError{Field: id, Msg: "interno is the flat number, e.g. 13 or 4B"}
 		}
 		return v, nil
 	case (category == "residenza" || category == "domicilio") && name == "provincia",

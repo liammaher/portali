@@ -39,7 +39,7 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 |---|---|
 | `identity` | name, `codice_fiscale` (validated), date/place of birth, sex, citizenship |
 | `cie` | `numero` (CA12345AB, validated), issue/expiry date, issuing comune |
-| `residenza` / `domicilio` | `indirizzo` (via/piazza), `civico`, `cap` (validated), `comune`, `provincia` (validated), `data_inizio` (residenza only) |
+| `residenza` / `domicilio` | `indirizzo` (via/piazza), `civico`, `interno` (flat number), `cap` (validated), `comune`, `provincia` (validated), `data_inizio` (residenza only) |
 | `abitazione` | `titolo` (locatario, proprietario…), catasto `foglio`/`particella`/`subalterno`, `catasto_categoria` (A/2, validated), rendita, `superficie_calpestabile_mq`, APE class |
 | `locazione` | contract type, start/end dates (end tracked by `pvault expiring`), rent and deposit (sensitive), cedolare secca, RLI registration details, landlord's name, `locatore_codice_fiscale` and `locatore_iban` (validated) |
 | `utenze` | `luce_pod` and `gas_pdr` (validated), supplier and customer code per utility |

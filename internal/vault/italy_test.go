@@ -73,6 +73,9 @@ func TestNormalizeAndValidate(t *testing.T) {
 		{"residenza.provincia", "na", "NA"},
 		{"domicilio.provincia", "mi", "MI"},
 		{"identity.birth_province", "ee", "EE"},
+		{"residenza.interno", "13", "13"},
+		{"residenza.interno", " int. 13 ", "13"},
+		{"domicilio.interno", "Interno 4B", "4B"},
 		{"residenza.comune", "Napoli", "Napoli"},       // no rule: unchanged
 		{"identity.full_name", "  Jane  ", "  Jane  "}, // no rule: unchanged
 	}
@@ -96,6 +99,8 @@ func TestNormalizeAndValidate_Rejects(t *testing.T) {
 		{"cie.numero", "AA1234567"}, // old paper ID format
 		{"residenza.cap", "8012"},
 		{"residenza.provincia", "Napoli"},
+		{"residenza.interno", "int."},
+		{"domicilio.interno", "the one at the end of the hall"},
 	}
 	for _, tt := range tests {
 		_, err := NormalizeAndValidate(tt.id, tt.in)
@@ -148,6 +153,8 @@ func TestSuggestCanonical_Italian(t *testing.T) {
 		{"business.vat_number", "business.partita_iva"},
 		{"cie.scadenza", "cie.data_scadenza"},
 		{"residenza.via", "residenza.indirizzo"},
+		{"residenza.numero_interno", "residenza.interno"},
+		{"domicilio.int", "domicilio.interno"},
 	}
 	for _, tt := range tests {
 		s := SuggestCanonical(tt.id)
