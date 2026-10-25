@@ -94,6 +94,11 @@ Profile Password + Secret Key (128-bit)
   from every listing). Fields named with the word
   shape `data_<x>`, `date_of_<x>` or `<x>_date` must be real dates, stored as
   YYYY-MM-DD (`dates.go`)
+- Housing categories `abitazione`, `locazione`, `utenze`, `tari` describe the home at
+  residenza/domicilio (address not duplicated). Their format rules live in
+  `internal/vault/housing.go` and run before the generic ones in `NormalizeAndValidate`,
+  scoped to those categories. Every onboarding `data-field` category must be in the
+  page's `categories` list (`TestOnboardingFieldsAreLoaded`)
 - Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,
   AAD bound to the document ID; encrypted filename; files at
   `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.

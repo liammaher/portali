@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "5",
+	Version: "6",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -88,6 +88,85 @@ var RecommendedSchema = Schema{
 				{ID: "domicilio.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "domicilio.comune", Description: "Comune of domicile", Sensitivity: "standard"},
 				{ID: "domicilio.provincia", Description: "Provincia as 2-letter sigla (e.g. NA, validated)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name: "abitazione",
+			Description: "The home you live in now (the unit at your residenza or domicilio; the address stays there). " +
+				"Catasto data is on the visura catastale and is needed for TARI, RLI registration and ISEE. " +
+				"Attach the visura and APE with 'pvault doc add abitazione <file>'.",
+			Fields: []SchemaField{
+				{ID: "abitazione.titolo", Description: "How you hold it: proprietario, locatario, comodatario, usufruttuario, ospite or altro (validated)", Sensitivity: "standard"},
+				{ID: "abitazione.data_inizio", Description: "Date you started living there (YYYY-MM-DD); the 'a decorrere dal' date on TARI forms", Sensitivity: "standard"},
+				{ID: "abitazione.catasto_sezione", Description: "Sezione urbana from the visura, if any", Sensitivity: "standard"},
+				{ID: "abitazione.catasto_foglio", Description: "Foglio from the visura (digits, validated)", Sensitivity: "standard"},
+				{ID: "abitazione.catasto_particella", Description: "Particella (mappale) from the visura (validated)", Sensitivity: "standard"},
+				{ID: "abitazione.catasto_subalterno", Description: "Subalterno from the visura, exactly as written (digits, validated)", Sensitivity: "standard"},
+				{ID: "abitazione.catasto_categoria", Description: "Categoria catastale, e.g. A/2 or A/3 (validated; a2 becomes A/2)", Sensitivity: "standard"},
+				{ID: "abitazione.catasto_rendita", Description: "Rendita catastale in euro (e.g. 512.30)", Sensitivity: "standard"},
+				{ID: "abitazione.superficie_calpestabile_mq", Description: "Walkable floor area in m² excluding balconies and terraces; the area TARI uses", Sensitivity: "standard"},
+				{ID: "abitazione.superficie_catastale_mq", Description: "Superficie catastale in m² from the visura", Sensitivity: "standard"},
+				{ID: "abitazione.vani", Description: "Consistenza in vani from the visura (e.g. 4.5)", Sensitivity: "standard"},
+				{ID: "abitazione.piano", Description: "Floor (e.g. terra, rialzato, 3)", Sensitivity: "standard"},
+				{ID: "abitazione.classe_energetica", Description: "Energy class from the APE: A4, A3, A2, A1, B, C, D, E, F or G (validated)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name: "locazione",
+			Description: "Your rental contract, if you rent. Registration details (estremi di registrazione) are on the RLI receipt " +
+				"and are asked for by utility transfers and tax deductions. Attach the contract and receipt with 'pvault doc add locazione <file>'.",
+			Fields: []SchemaField{
+				{ID: "locazione.tipo_contratto", Description: "Contract type (e.g. 4+4 libero, 3+2 concordato, transitorio, studenti)", Sensitivity: "standard"},
+				{ID: "locazione.data_stipula", Description: "Date the contract was signed (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "locazione.data_decorrenza", Description: "Date the contract starts (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "locazione.data_scadenza", Description: "Date the current term ends (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
+				{ID: "locazione.preavviso_disdetta_mesi", Description: "Months of notice needed to leave (whole number)", Sensitivity: "standard"},
+				{ID: "locazione.canone_mensile", Description: "Monthly rent in euro (e.g. 750.00)", Sensitivity: "sensitive"},
+				{ID: "locazione.spese_condominiali_mensili", Description: "Monthly condominium charges in euro", Sensitivity: "sensitive"},
+				{ID: "locazione.deposito_cauzionale", Description: "Security deposit in euro", Sensitivity: "sensitive"},
+				{ID: "locazione.cedolare_secca", Description: "Whether the landlord chose cedolare secca (si/no)", Sensitivity: "standard"},
+				{ID: "locazione.registrazione_codice_identificativo", Description: "Codice identificativo del contratto from the RLI receipt (validated)", Sensitivity: "standard"},
+				{ID: "locazione.data_registrazione", Description: "Registration date from the RLI receipt (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "locazione.registrazione_serie", Description: "Registration serie (e.g. 3T)", Sensitivity: "standard"},
+				{ID: "locazione.registrazione_numero", Description: "Registration numero (and sottonumero, if any)", Sensitivity: "standard"},
+				{ID: "locazione.registrazione_ufficio", Description: "Agenzia delle Entrate office code (e.g. TNM)", Sensitivity: "standard"},
+				{ID: "locazione.locatore_nome", Description: "Landlord's name (person or company)", Sensitivity: "sensitive"},
+				{ID: "locazione.locatore_codice_fiscale", Description: "Landlord's codice fiscale (validated)", Sensitivity: "sensitive"},
+				{ID: "locazione.locatore_iban", Description: "IBAN you pay the rent to (validated; spaces removed)", Sensitivity: "sensitive"},
+				{ID: "locazione.locatore_email", Description: "Landlord's email", Sensitivity: "sensitive"},
+				{ID: "locazione.locatore_pec", Description: "Landlord's PEC", Sensitivity: "sensitive"},
+				{ID: "locazione.locatore_telefono", Description: "Landlord's phone", Sensitivity: "sensitive"},
+				{ID: "locazione.amministratore_condominio", Description: "Building manager's name and contact", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "utenze",
+			Description: "Utility supplies at your home. The POD and PDR identify the meters and are needed for a voltura or subentro.",
+			Fields: []SchemaField{
+				{ID: "utenze.luce_pod", Description: "Electricity POD (e.g. IT001E12345678, validated)", Sensitivity: "standard"},
+				{ID: "utenze.luce_fornitore", Description: "Electricity supplier", Sensitivity: "standard"},
+				{ID: "utenze.luce_codice_cliente", Description: "Electricity customer code", Sensitivity: "sensitive"},
+				{ID: "utenze.luce_intestatario", Description: "Who the electricity contract is in the name of", Sensitivity: "standard"},
+				{ID: "utenze.gas_pdr", Description: "Gas PDR (14 digits, validated)", Sensitivity: "standard"},
+				{ID: "utenze.gas_fornitore", Description: "Gas supplier", Sensitivity: "standard"},
+				{ID: "utenze.gas_codice_cliente", Description: "Gas customer code", Sensitivity: "sensitive"},
+				{ID: "utenze.gas_intestatario", Description: "Who the gas contract is in the name of", Sensitivity: "standard"},
+				{ID: "utenze.acqua_fornitore", Description: "Water supplier (e.g. ABC Napoli)", Sensitivity: "standard"},
+				{ID: "utenze.acqua_codice_cliente", Description: "Water customer or utenza code", Sensitivity: "sensitive"},
+				{ID: "utenze.acqua_intestatario", Description: "Who the water contract is in the name of", Sensitivity: "standard"},
+				{ID: "utenze.internet_fornitore", Description: "Internet provider", Sensitivity: "standard"},
+				{ID: "utenze.internet_codice_cliente", Description: "Internet customer code", Sensitivity: "sensitive"},
+			},
+		},
+		{
+			Name:        "tari",
+			Description: "Your TARI (waste tax) position with the Comune. Attach the filed declaration with 'pvault doc add tari <file>'.",
+			Fields: []SchemaField{
+				{ID: "tari.codice_contribuente", Description: "Codice contribuente assigned by the Comune (Cod.Contr. on the forms and payment notices)", Sensitivity: "standard"},
+				{ID: "tari.data_dichiarazione", Description: "Date you filed the TARI declaration (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "tari.protocollo", Description: "Protocol number the Comune gave the declaration", Sensitivity: "standard"},
+				{ID: "tari.superficie_tassata_mq", Description: "Area the Comune taxes, in m², from the payment notice", Sensitivity: "standard"},
+				{ID: "tari.componenti_tassati", Description: "Number of occupants the Comune taxes, from the payment notice", Sensitivity: "standard"},
 			},
 		},
 		{
