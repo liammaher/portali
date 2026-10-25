@@ -11,16 +11,21 @@ import (
 
 // startBackgroundServer spawns 'pvault serve' detached from the terminal,
 // passes the credentials over stdin, and waits until the vault reports
-// unlocked. The PID is recorded only for a server that is actually running,
-// and an early exit is reported instead of claiming success.
+// unlocked. With no password it starts the server locked instead, for Touch
+// ID to unlock. The PID is recorded only for a server that is actually
+// running, and an early exit is reported instead of claiming success.
 // Returns verified=false if the server is still starting after the timeout.
 func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
+	locked := pw == ""
 	exe, err := os.Executable()
 	if err != nil {
 		return false, fmt.Errorf("finding executable: %w", err)
 	}
 
 	cmd := exec.Command(exe, "serve", "--password-stdin")
+	if locked {
+		cmd = exec.Command(exe, "serve", "--locked")
+	}
 	detachFromTerminal(cmd)
 	cmd.Env = append(os.Environ(), fmt.Sprintf("VAULT_DIR=%s", dir))
 	stdin, err := cmd.StdinPipe()
@@ -33,7 +38,9 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 	if err := cmd.Start(); err != nil {
 		return false, fmt.Errorf("starting server: %w", err)
 	}
-	fmt.Fprintf(stdin, "%s\n%s\n", pw, sk)
+	if !locked {
+		fmt.Fprintf(stdin, "%s\n%s\n", pw, sk)
+	}
 	stdin.Close()
 
 	exited := make(chan struct{})
@@ -62,7 +69,7 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 			}
 			json.NewDecoder(resp.Body).Decode(&status)
 			resp.Body.Close()
-			if status.Locked {
+			if status.Locked && !locked {
 				// Our server unlocks before it binds, so a locked answer
 				// comes from some other server on the port.
 				cmd.Process.Kill()

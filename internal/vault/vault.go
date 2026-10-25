@@ -63,6 +63,8 @@ const (
 	minTokenPrefixLen = 8
 	// MaxSessionGrantTTL caps password-gated session grants.
 	MaxSessionGrantTTL = time.Hour
+	// MaxScopedGrantTTL caps scoped grants, which back a single approval.
+	MaxScopedGrantTTL = 10 * time.Minute
 )
 
 // Token access levels. Read-only is the default: agents must be explicitly
@@ -282,35 +284,10 @@ func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Durat
 	if ttl <= 0 || ttl > MaxSessionGrantTTL {
 		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxSessionGrantTTL)}
 	}
-	v.mu.RLock()
-	session := v.session
-	v.mu.RUnlock()
-	if session == nil {
-		return "", time.Time{}, ErrLocked
-	}
-
-	var sk []byte
-	if strings.TrimSpace(secretKeyHex) == "" {
-		if sk = session.SecretKey(); sk == nil {
-			return "", time.Time{}, ErrLocked
-		}
-	} else {
-		var err error
-		if sk, err = hex.DecodeString(strings.TrimSpace(secretKeyHex)); err != nil {
-			return "", time.Time{}, ErrWrongPassword
-		}
-	}
-	vaultKey, _, err := v.verifyCredentials(password, sk)
-	for i := range sk {
-		sk[i] = 0
-	}
+	session, err := v.checkGrantCredentials(password, secretKeyHex)
 	if err != nil {
 		return "", time.Time{}, err
 	}
-	for i := range vaultKey {
-		vaultKey[i] = 0
-	}
-
 	token, expires, err := session.AddGrant(ttl)
 	if err != nil {
 		return "", time.Time{}, err
@@ -318,6 +295,70 @@ func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Durat
 	session.Touch()
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()})
 	return token, expires, nil
+}
+
+// CreateScopedGrant is CreateSessionGrant limited to scope and access, for
+// one approved request (e.g. a Touch ID prompt that named exactly these
+// fields). Unlike a service token it can reach personal fields, because the
+// user approved it in person; it cannot do session-only operations.
+func (v *Vault) CreateScopedGrant(password, secretKeyHex string, ttl time.Duration, scope, access string) (string, time.Time, error) {
+	if ttl <= 0 || ttl > MaxScopedGrantTTL {
+		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxScopedGrantTTL)}
+	}
+	if err := ValidateScope(scope); err != nil {
+		return "", time.Time{}, &ValidationError{Field: "scope", Msg: err.Error()}
+	}
+	if access == "" {
+		access = AccessRead
+	}
+	if !validAccess[access] {
+		return "", time.Time{}, ErrInvalidAccess
+	}
+	session, err := v.checkGrantCredentials(password, secretKeyHex)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	token, expires, err := session.AddScopedGrant(ttl, scope, access)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	session.Touch()
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: scope, Action: "scoped_grant", Purpose: "access: " + access + ", ttl: " + ttl.String()})
+	return token, expires, nil
+}
+
+// checkGrantCredentials verifies the password and secret key (or the one
+// held since unlock) and returns the live session.
+func (v *Vault) checkGrantCredentials(password, secretKeyHex string) (*Session, error) {
+	v.mu.RLock()
+	session := v.session
+	v.mu.RUnlock()
+	if session == nil {
+		return nil, ErrLocked
+	}
+
+	var sk []byte
+	if strings.TrimSpace(secretKeyHex) == "" {
+		if sk = session.SecretKey(); sk == nil {
+			return nil, ErrLocked
+		}
+	} else {
+		var err error
+		if sk, err = hex.DecodeString(strings.TrimSpace(secretKeyHex)); err != nil {
+			return nil, ErrWrongPassword
+		}
+	}
+	vaultKey, _, err := v.verifyCredentials(password, sk)
+	for i := range sk {
+		sk[i] = 0
+	}
+	if err != nil {
+		return nil, err
+	}
+	for i := range vaultKey {
+		vaultKey[i] = 0
+	}
+	return session, nil
 }
 
 // Lock destroys the session and zeroes the vault key.
@@ -685,6 +726,16 @@ func (v *Vault) ValidateToken(token string) bool {
 		return false
 	}
 	return v.session.ValidateToken(token)
+}
+
+// ScopedGrant returns the scope and access of a valid scoped grant.
+func (v *Vault) ScopedGrant(token string) (scope, access string, ok bool) {
+	v.mu.RLock()
+	defer v.mu.RUnlock()
+	if v.session == nil {
+		return "", "", false
+	}
+	return v.session.ScopedGrant(token)
 }
 
 // hashToken returns the hex-encoded SHA-256 hash of a token. Service tokens

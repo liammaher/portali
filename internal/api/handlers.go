@@ -46,19 +46,20 @@ func personalOnlyDenied(w http.ResponseWriter) {
 //
 // It returns the field's metadata (nil if missing, and always nil for the
 // user's own session, which skips the check) so callers needn't look it up again.
+// A scoped grant the user approved in person may reach any tier.
 func (s *Server) requireFieldTier(w http.ResponseWriter, r *http.Request, id string, write bool) (*vault.FieldInfo, bool) {
-	maxTier := maxTierFromRequest(r)
-	if maxTier == vault.TierPersonal {
+	if isSessionAuth(r) {
 		return nil, true
 	}
+	maxTier := maxTierFromRequest(r)
 	meta, err := s.vault.FieldMeta(id)
 	if err != nil {
 		handleVaultError(w, err)
 		return nil, false
 	}
 	switch {
-	case meta == nil:
-		return nil, true
+	case meta == nil, maxTier == vault.TierPersonal:
+		return meta, true
 	case meta.Sensitivity == vault.TierPersonal && write:
 		personalOnlyDenied(w)
 		return nil, false
@@ -169,6 +170,10 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		Password  string `json:"password"`
 		SecretKey string `json:"secret_key"`
 		TTL       string `json:"ttl"`
+		// Scope and Access, when set, limit the grant like a service token
+		// (see CreateScopedGrant).
+		Scope  string `json:"scope"`
+		Access string `json:"access"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
@@ -188,7 +193,17 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		ttl = parsed
 	}
 
-	token, expires, err := s.vault.CreateSessionGrant(req.Password, req.SecretKey, ttl)
+	var token string
+	var expires time.Time
+	var err error
+	if req.Scope != "" {
+		token, expires, err = s.vault.CreateScopedGrant(req.Password, req.SecretKey, ttl, req.Scope, req.Access)
+	} else if req.Access != "" {
+		writeError(w, http.StatusBadRequest, "invalid_request", "access requires a scope")
+		return
+	} else {
+		token, expires, err = s.vault.CreateSessionGrant(req.Password, req.SecretKey, ttl)
+	}
 	if err != nil {
 		if err == vault.ErrWrongPassword {
 			wrongPassword = true
@@ -198,10 +213,20 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		handleVaultError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]string{
+	resp := map[string]string{
 		"token":      token,
 		"expires_at": expires.UTC().Format(time.RFC3339),
-	})
+	}
+	if req.Scope != "" {
+		// Echoed so a client can tell a scoped grant from a full one
+		// (older servers ignore scope and grant full access).
+		resp["scope"] = req.Scope
+		resp["access"] = req.Access
+		if resp["access"] == "" {
+			resp["access"] = vault.AccessRead
+		}
+	}
+	writeJSON(w, http.StatusOK, resp)
 }
 
 // POST /vault/lock
@@ -287,11 +312,12 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if maxTierFromRequest(r) != vault.TierPersonal {
+	if !isSessionAuth(r) {
 		// Agents can never create personal fields (credentials, SPID
-		// details). An existing field keeps its own tier, so one the user
-		// lowered (e.g. spid.data_scadenza) can still be maintained.
-		if existing == nil && vault.DefaultSensitivity(id) == vault.TierPersonal {
+		// details) unless the user approved this one in person. An existing
+		// field keeps its own tier, so one the user lowered (e.g.
+		// spid.data_scadenza) can still be maintained.
+		if existing == nil && vault.DefaultSensitivity(id) == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal {
 			personalOnlyDenied(w)
 			return
 		}
@@ -317,6 +343,18 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 	if req.Sensitivity == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal {
 		personalOnlyDenied(w)
 		return
+	}
+	// Only the user's session may lower a tier (as with /vault/sensitivity);
+	// a token could otherwise expose a field to tokens with a lower cap.
+	if req.Sensitivity != "" && !isSessionAuth(r) {
+		baseline := vault.DefaultSensitivity(id)
+		if existing != nil {
+			baseline = existing.Sensitivity
+		}
+		if !vault.TierAllows(req.Sensitivity, baseline) {
+			writeError(w, http.StatusForbidden, "session_required", "only your own session can lower a field's sensitivity tier")
+			return
+		}
 	}
 
 	if err := s.vault.Set(id, req.Value, req.Sensitivity); err != nil {

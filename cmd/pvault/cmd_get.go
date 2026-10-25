@@ -12,6 +12,7 @@ func cmdGet() {
 		fatal("usage: pvault get <id>\n  example: pvault get identity.full_name")
 	}
 	id := os.Args[2]
+	needGrant(id, "read")
 
 	resp, err := apiRequest("GET", "/vault/fields/"+id, nil)
 	if err != nil {

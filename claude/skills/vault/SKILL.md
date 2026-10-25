@@ -15,7 +15,11 @@ Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md fo
 - Never create service tokens yourself; the user runs `pvault create-service-token`.
 - Never put tokens in URLs or command lines you show the user.
 - Fields with tier `personal` (SPID/CIE credentials) are invisible to tokens on purpose.
-  Send the user to the UI for those; don't try to work around the 404/403.
+  Reach them only through a Touch ID request the user approves (2d), and only when the
+  task needs that exact field; otherwise send the user to the UI. Don't try to work
+  around the 404/403.
+- Never run `pvault-touchid` directly or call `/vault/session` yourself; go through
+  `pvault` commands so each fingerprint prompt matches what the command does.
 - Never open the vault UI in a browser you control (the built-in browser pane or
   Claude in Chrome). Signed in, that page has full access to every field.
 - Never read the `pvault-mcp` Keychain item or anything in `~/.pvault/` yourself
@@ -27,9 +31,9 @@ Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md fo
 curl -s http://127.0.0.1:7200/vault/status
 ```
 
-- Connection refused: the server isn't running. Ask the user to run `pvault unlock`
-  in their own terminal (it prompts for the password).
-- `"locked":true`: same, `pvault unlock`.
+- Connection refused or `"locked":true`: the vault is locked. If `pvault touchid status`
+  says on, tell the user a fingerprint prompt is coming and run `pvault unlock` from
+  Bash. Otherwise ask them to run `pvault unlock` in their own terminal.
 - `"locked":false`: ready. `categories` shows how many fields each category has.
 
 ## 2. Pick a path to read or change data
@@ -47,10 +51,27 @@ into the page; access lasts 15 minutes in that tab ("Session expired" means relo
 and sign in again). Tell them which section and field to edit. Don't look at or
 read that page; ask the user to confirm when they're done.
 
-**c. CLI, run by the user.** CLI commands that touch data prompt for the password and
-need an interactive TTY, so they fail from Claude's Bash. Give the user the exact
-command instead, e.g. `pvault set residenza.data_inizio 2026-03-15`.
-Commands that work from Bash: `pvault status`, `pvault schema`, `pvault ui`.
+**c. CLI, run by the user.** Without Touch ID, CLI commands that touch data prompt for
+the password and need an interactive TTY, so they fail from Claude's Bash. Give the
+user the exact command instead, e.g. `pvault set residenza.data_inizio 2026-03-15`.
+Commands that always work from Bash: `pvault status`, `pvault schema`, `pvault ui`,
+`pvault touchid status`.
+
+**d. CLI with Touch ID approval.** When `pvault touchid status` says on, data commands
+run from Bash show a fingerprint prompt on the user's Mac, worded from the exact
+request (e.g. "read spid.password from your vault for 2 minutes"). The approval covers
+only that command and expires within 2 minutes.
+- Before running one, say in chat what the prompt will ask, so the user knows it's you.
+- Ask for the least: `pvault get <id>` for one field, `pvault list <category>` for a
+  category. `export`, `expiring`, `doc get` and `doc delete` ask for the whole vault,
+  and `audit`, `set-sensitivity` and token commands ask for full access; avoid them
+  unless the task needs them.
+- Writes: `pvault set <id> <value>` (pipe secrets: `printf '%s\n' "$v" | pvault set <id>`)
+  and `pvault delete <id>`; confirm old and new value with the user first, as with `vault_set`.
+- If the command fails with "not approved", the user said no or wasn't at the Mac.
+  Don't retry; ask them.
+- Personal values you read this way enter the conversation: use them for the task
+  and don't repeat them back unless asked.
 
 ## 3. Field IDs and formats
 

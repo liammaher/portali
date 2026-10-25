@@ -645,3 +645,66 @@ func TestCreateServiceToken_Access(t *testing.T) {
 		t.Fatalf("invalid access: got %v", err)
 	}
 }
+
+func TestCreateScopedGrant(t *testing.T) {
+	v, sk := tmpVault(t)
+
+	token, _, err := v.CreateScopedGrant(testPassword, sk, time.Minute, "identity.codice_fiscale", AccessRead)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if v.ValidateToken(token) {
+		t.Fatal("scoped grant must not validate as a full session token")
+	}
+	scope, access, ok := v.ScopedGrant(token)
+	if !ok || scope != "identity.codice_fiscale" || access != AccessRead {
+		t.Fatalf("ScopedGrant = %q, %q, %v", scope, access, ok)
+	}
+	full, _, _ := v.CreateSessionGrant(testPassword, sk, time.Minute)
+	if _, _, ok := v.ScopedGrant(full); ok {
+		t.Fatal("full grant must not look scoped")
+	}
+
+	if _, _, err := v.CreateScopedGrant("wrong", sk, time.Minute, "identity.*", ""); err != ErrWrongPassword {
+		t.Fatalf("wrong password: got %v", err)
+	}
+	if _, _, err := v.CreateScopedGrant(testPassword, sk, time.Minute, "identity", ""); err == nil {
+		t.Fatal("malformed scope should be rejected")
+	}
+	if _, _, err := v.CreateScopedGrant(testPassword, sk, time.Minute, "identity.*", "admin"); err != ErrInvalidAccess {
+		t.Fatalf("bad access: got %v", err)
+	}
+	if _, _, err := v.CreateScopedGrant(testPassword, sk, MaxScopedGrantTTL+time.Second, "identity.*", ""); err == nil {
+		t.Fatal("ttl above max should be rejected")
+	}
+	_, access, _ = v.ScopedGrant(mustScoped(t, v, sk, "identity.*", ""))
+	if access != AccessRead {
+		t.Fatalf("default access = %q, want read", access)
+	}
+
+	v.Lock()
+	if _, _, ok := v.ScopedGrant(token); ok {
+		t.Fatal("scoped grant must not survive lock")
+	}
+}
+
+func TestScopedGrant_Expires(t *testing.T) {
+	v, sk := tmpVault(t)
+	token, _, err := v.CreateScopedGrant(testPassword, sk, 50*time.Millisecond, "identity.*", AccessRead)
+	if err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(100 * time.Millisecond)
+	if _, _, ok := v.ScopedGrant(token); ok {
+		t.Fatal("expired scoped grant should not validate")
+	}
+}
+
+func mustScoped(t *testing.T, v *Vault, sk, scope, access string) string {
+	t.Helper()
+	token, _, err := v.CreateScopedGrant(testPassword, sk, time.Minute, scope, access)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return token
+}

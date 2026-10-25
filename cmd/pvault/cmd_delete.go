@@ -10,6 +10,7 @@ func cmdDelete() {
 		fatal("usage: pvault delete <id>")
 	}
 	id := os.Args[2]
+	needGrant(id, "write")
 
 	resp, err := apiRequest("DELETE", "/vault/fields/"+id, nil)
 	if err != nil {

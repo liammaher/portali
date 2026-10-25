@@ -106,17 +106,30 @@ func requestGrant(password, secretKey, ttl string) (string, error) {
 	return result.Token, nil
 }
 
-// promptGrant asks for the profile password and returns a session grant.
-// The password can only be typed in an interactive terminal, so an agent
-// running pvault through a shell tool cannot authenticate as the user.
+// promptGrant returns a grant for this command. With Touch ID on, a
+// fingerprint approves exactly cliGrant; otherwise, or if that fails in a
+// terminal, the profile password is typed for a session grant. The password
+// can only be typed in an interactive terminal, so an agent running pvault
+// through a shell tool can only get what the user approves by fingerprint.
 func promptGrant(ttl string) (string, error) {
 	// Check the server first so the user isn't asked for a password that
 	// can't be used.
 	if err := requireUnlockedServer(); err != nil {
 		return "", err
 	}
-	if !term.IsTerminal(int(syscall.Stdin)) {
-		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal")
+	interactive := term.IsTerminal(int(syscall.Stdin))
+	if touchIDEnrolled() {
+		token, err := touchIDGrant()
+		if err == nil {
+			return token, nil
+		}
+		if !interactive {
+			return "", err
+		}
+		fmt.Fprintf(os.Stderr, "%v — enter your password instead.\n", err)
+	}
+	if !interactive {
+		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal (or turn on Touch ID with 'pvault touchid enable')")
 	}
 	pw, err := promptPassword("Profile password: ")
 	if err != nil {

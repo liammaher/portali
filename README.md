@@ -148,7 +148,19 @@ Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, 
 
 The rules match command text, so they stop direct or accidental access, not a determined attempt (a script that reads the Keychain internally isn't caught). For a hard boundary, also enable Claude Code's sandbox with `~/.pvault` in `sandbox.filesystem.denyRead`.
 
-Whatever a token allows, Claude sees: values returned by the MCP tools enter the conversation like any other text. What it never sees is your password, your secret key, `personal`-tier items (SPID/CIE credentials), and anything outside the token's scope or after it expires.
+Whatever a token allows, Claude sees: values returned by the MCP tools enter the conversation like any other text. What it never sees is your password, your secret key, `personal`-tier items (SPID/CIE credentials) unless you approve them by fingerprint (see Touch ID), and anything outside the token's scope or after it expires.
+
+### Touch ID (macOS)
+
+`make build` also builds `bin/pvault-touchid`, a small signed helper; keep it next to `pvault` (`make install` copies both). Then:
+
+```sh
+pvault touchid enable    # asks for your password once, then a fingerprint
+```
+
+From then on `pvault unlock` and every data command ask for your fingerprint instead of your password, and typing the password stays the fallback. Each prompt is worded from the exact request and covers only that command for 2 minutes, e.g. *"pvault-touchid" is trying to read spid.password from your vault for 2 minutes*. Commands Claude runs from its shell show the same prompt, so Claude can ask and you approve with a touch.
+
+How it works: the password sits in your login Keychain in an item only this exact helper build may read; any other program would make macOS ask for your login password. Apple's fingerprint-locked Keychain items need a paid developer signature, so the helper checks Touch ID itself before reading the item. It never prints the password: it talks to the vault directly and hands back only a short, scoped token. After rebuilding the helper, run `pvault touchid enable` again. `pvault touchid disable` removes the saved password.
 
 ## Security model
 
@@ -159,7 +171,7 @@ Profile password + 128-bit secret key
 ```
 
 - The server listens on 127.0.0.1 only and rejects non-loopback `Host` headers (DNS rebinding).
-- No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password. Wrong passwords are rate-limited.
+- No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password (or approving with Touch ID). Wrong passwords are rate-limited.
 - Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
 - Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session. SPID/CIE credentials (under any field name) can only be stored as `personal`, and SPID/CieID categories default to it.
 

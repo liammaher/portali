@@ -43,6 +43,7 @@ func cmdDocAdd() {
 		fatal(docUsage)
 	}
 	category, path := os.Args[3], os.Args[4]
+	needGrant(category+".documents", "append")
 	sensitivity := ""
 	for i := 5; i < len(os.Args); i++ {
 		if os.Args[i] == "--sensitivity" && i+1 < len(os.Args) {
@@ -85,8 +86,10 @@ func cmdDocAdd() {
 
 func cmdDocList() {
 	path := "/vault/documents"
+	needGrant("*", "read")
 	if len(os.Args) >= 4 {
 		path += "?" + url.Values{"category": {os.Args[3]}}.Encode()
+		needGrant(os.Args[3]+".documents", "read")
 	}
 	resp, err := apiRequest("GET", path, nil)
 	if err != nil {
@@ -118,6 +121,8 @@ func cmdDocGet() {
 		}
 	}
 
+	// The ID doesn't say which category the document is in.
+	needGrant("*", "read")
 	resp, err := apiRequest("GET", "/vault/documents/"+url.PathEscape(id), nil)
 	if err != nil {
 		fatal("request failed: %v", err)
@@ -156,6 +161,7 @@ func cmdDocDelete() {
 	if len(os.Args) < 4 {
 		fatal(docUsage)
 	}
+	needGrant("*", "write")
 	resp, err := apiRequest("DELETE", "/vault/documents/"+url.PathEscape(os.Args[3]), nil)
 	if err != nil {
 		fatal("request failed: %v", err)

@@ -13,12 +13,15 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
-var passwordFromStdin bool
+var passwordFromStdin, startLocked bool
 
 func init() {
 	for _, arg := range os.Args {
-		if arg == "--password-stdin" {
+		switch arg {
+		case "--password-stdin":
 			passwordFromStdin = true
+		case "--locked":
+			startLocked = true
 		}
 	}
 }
@@ -31,9 +34,12 @@ func cmdServe() {
 	}
 	defer v.Close()
 
-	// Get credentials from stdin pipe (sent by unlock command) or prompt
+	// Get credentials from stdin pipe (sent by unlock command) or prompt.
+	// A server started --locked gets none: pvault-touchid unlocks it over the API.
 	var pw, sk string
-	if passwordFromStdin {
+	switch {
+	case startLocked:
+	case passwordFromStdin:
 		scanner := bufio.NewScanner(os.Stdin)
 		if scanner.Scan() {
 			pw = strings.TrimSpace(scanner.Text())
@@ -44,7 +50,7 @@ func cmdServe() {
 		if pw == "" || sk == "" {
 			fatal("failed to read credentials from stdin")
 		}
-	} else {
+	default:
 		pw, err = promptPassword("Profile password: ")
 		if err != nil {
 			fatal("reading password: %v", err)
@@ -57,8 +63,10 @@ func cmdServe() {
 
 	// The unlock token stays in this process only. CLI commands get their
 	// own password-gated grants, so nothing reusable is written to disk.
-	if _, err := v.Unlock(pw, sk); err != nil {
-		fatal("unlock: %v", err)
+	if !startLocked {
+		if _, err := v.Unlock(pw, sk); err != nil {
+			fatal("unlock: %v", err)
+		}
 	}
 	removeLegacySessionFile()
 
