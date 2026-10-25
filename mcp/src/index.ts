@@ -165,7 +165,7 @@ server.registerTool(
   "vault_expiring",
   {
     description:
-      "List the user's documents (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that have expired or expire within the given number of days, soonest first. Use this to remind the user to renew documents in time.",
+      "List the user's documents (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that have expired or expire within the given number of days, soonest first, plus the deadlines of open pratiche (document \"pratica <slug>\"; closed pratiche are left out). Use this to remind the user to renew documents and meet deadlines in time.",
     inputSchema: {
       days: z.number().int().min(0).max(3650).optional().describe("Look-ahead window in days (default 90)"),
     },

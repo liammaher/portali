@@ -24,7 +24,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "6",
+	Version: "7",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -170,6 +170,11 @@ var RecommendedSchema = Schema{
 				{ID: "tari.superficie_tassata_mq", Description: "Area the Comune taxes, in m², from the payment notice", Sensitivity: "standard"},
 				{ID: "tari.componenti_tassati", Description: "Number of occupants the Comune taxes, from the payment notice", Sensitivity: "standard"},
 			},
+		},
+		{
+			Name:        "pratiche",
+			Description: praticheDescription(),
+			Fields:      []SchemaField{},
 		},
 		{
 			Name: "nucleo_familiare",

@@ -130,12 +130,18 @@ Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, 
 
 ### Claude Code setup
 
-[`claude/`](claude/) has two optional pieces that make Claude Code use the vault safely:
+[`claude/`](claude/) has optional pieces that make Claude Code use the vault safely:
 
 - **Vault skill** ([`claude/skills/vault/SKILL.md`](claude/skills/vault/SKILL.md)): how to check the vault, read or change fields through the MCP tools, ask for a narrow short-lived token when it needs one, and send you to the web UI in your own browser rather than one Claude controls. Install it for all projects:
 
   ```sh
   mkdir -p ~/.claude/skills && cp -R claude/skills/vault ~/.claude/skills/
+  ```
+
+- **Pratica skill** ([`claude/skills/pratica/SKILL.md`](claude/skills/pratica/SKILL.md)): runs an Italian procedure end to end (research, gap check against the vault, filling the form or portal, handing you the login, signature, payment and sending, then tracking the reply). Each procedure gets a playbook in [`claude/skills/pratica/playbooks/`](claude/skills/pratica/playbooks/) after its first run, so later runs follow it. Playbooks hold field IDs, never your data. Open procedures are tracked in the vault as `pratiche.<slug>_<campo>` fields, and their deadlines show in `pvault expiring`. Link it rather than copying it, so new playbooks land in this repo. Run this from your main checkout, not a temporary git worktree, or the link breaks when the worktree is removed:
+
+  ```sh
+  ln -s "$PWD/claude/skills/pratica" ~/.claude/skills/pratica
   ```
 
 - **Permission rules** ([`claude/settings.example.json`](claude/settings.example.json)): deny rules that stop Claude's own tools from reading `~/.pvault/` or Keychain passwords (including the MCP token), so it goes through the MCP's scope and sensitivity checks. Merge the `permissions.deny` list into `~/.claude/settings.json`; don't replace the file.

@@ -72,6 +72,8 @@ Housing (the home at residenza/domicilio; the address itself stays there):
 `utenze.{luce_pod,gas_pdr,<servizio>_fornitore,<servizio>_codice_cliente}`, `tari.{codice_contribuente,data_dichiarazione}`.
 A TARI form needs `identity.*,residenza.*,abitazione.*,tari.*`; leave `locazione.*` out
 unless the task needs the contract (rent and landlord details are sensitive).
+To run a whole procedure (research, filling, hand-off, tracking), use the pratica skill;
+its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
 
 Validation done by the vault (expect errors otherwise):
 - Fields named `data_*`, `date_of_*` or `*_date`: real dates as `YYYY-MM-DD`.

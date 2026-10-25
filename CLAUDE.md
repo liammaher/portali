@@ -99,6 +99,12 @@ Profile Password + Secret Key (128-bit)
   `internal/vault/housing.go` and run before the generic ones in `NormalizeAndValidate`,
   scoped to those categories. Every onboarding `data-field` category must be in the
   page's `categories` list (`TestOnboardingFieldsAreLoaded`)
+- Pratiche (`pratiche.go`): procedures in progress are fields `pratiche.<slug>_<campo>`,
+  slug lower-case words joined by hyphens, campo/stato/canale from fixed lists (validated).
+  Well-formed pratiche fields are never credentials, even when the slug says cie-pin.
+  `<slug>_data_scadenza` shows in `Expiring` (as "pratica <slug>") until the pratica's
+  stato is completata/respinta/annullata. The pratica skill (`claude/skills/pratica/`) keeps
+  one playbook per procedure in `playbooks/`, with field IDs only, never personal values
 - Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,
   AAD bound to the document ID; encrypted filename; files at
   `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.

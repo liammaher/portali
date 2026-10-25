@@ -44,6 +44,11 @@ func IsCredentialField(id string) bool {
 	if IsPersonalCategory(category) {
 		return !isNonSecretAccountField(name)
 	}
+	// A pratica's campi are fixed and none is a secret, so a slug like
+	// cie-pin-ristampa doesn't make the pratica personal.
+	if _, _, ok := praticaField(category, name); ok {
+		return false
+	}
 
 	words := strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' })
 	aboutIdentity := category == "cie"
@@ -109,6 +114,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 	category, name := parts[0], parts[1]
 
 	if v, handled, err := normalizeHousing(id, category, name, value); handled {
+		return v, err
+	}
+	if v, handled, err := normalizePratica(id, category, name, value); handled {
 		return v, err
 	}
 
