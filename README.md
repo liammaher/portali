@@ -39,7 +39,7 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 |---|---|
 | `identity` | name, `codice_fiscale` (validated), date/place of birth, sex, citizenship |
 | `cie` | `numero` (CA12345AB, validated), issue/expiry date, issuing comune |
-| `residenza` / `domicilio` | via, civico, CAP, comune, provincia, residente dal |
+| `residenza` / `domicilio` | `indirizzo` (via/piazza), `civico`, `cap` (validated), `comune`, `provincia` (validated), `data_inizio` (residenza only) |
 | contacts & bank | `identity.phone` (+39…), `identity.pec`, `financial.iban` (validated) |
 | `nucleo_familiare` | members as `membro<N>_nome`, `membro<N>_codice_fiscale`, … |
 | `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA |
