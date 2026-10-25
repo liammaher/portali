@@ -77,6 +77,8 @@ only that command and expires within 2 minutes.
   and `pvault delete <id>`; confirm old and new value with the user first, as with `vault_set`.
 - If the command fails with "not approved", the user said no or wasn't at the Mac.
   Don't retry; ask them.
+- If it fails saying to run `pvault touchid enable` again (the helper was rebuilt, and
+  `touchid status` still says on), ask the user to run that in their own terminal.
 - Personal values you read this way enter the conversation: use them for the task
   and don't repeat them back unless asked.
 
