@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc && chmod +x dist/index.js",
     "prepare": "npm run build",
-    "dev": "npx tsx src/index.ts"
+    "dev": "npx tsx src/index.ts",
+    "test": "node --import tsx --test src/*.test.ts"
   },
   "keywords": ["mcp", "model-context-protocol", "personal-vault", "vault"],
   "repository": {

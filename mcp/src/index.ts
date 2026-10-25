@@ -306,7 +306,8 @@ server.registerTool(
 );
 
 async function main() {
-  // Fail fast: the server never falls back to the full-access session token.
+  // Fail fast without a token source: the server never falls back to the
+  // full-access session token.
   assertTokenConfigured();
 
   const transport = new StdioServerTransport();
