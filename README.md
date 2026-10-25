@@ -101,16 +101,18 @@ Agent activity never keeps the vault unlocked: it auto-locks after 30 minutes wi
 
 ### MCP server (Claude and other MCP clients)
 
+Build it from this repo (the `personal-vault-mcp` package on npm is unrelated; don't install it):
+
 ```sh
-cd mcp && npm install
+cd mcp && npm ci && npm run build
 ```
 
 ```json
 {
   "mcpServers": {
     "vault": {
-      "command": "npx",
-      "args": ["tsx", "/path/to/personal-vault-italia/mcp/src/index.ts"],
+      "command": "node",
+      "args": ["/path/to/personal-vault-italia/mcp/dist/index.js"],
       "env": { "VAULT_TOKEN": "<token from pvault create-service-token>" }
     }
   }

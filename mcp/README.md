@@ -4,20 +4,32 @@ MCP server that exposes your encrypted personal vault to AI agents.
 
 ## Install
 
-```sh
-npm install personal-vault-mcp
-```
-
-Or run directly with npx:
+Build it from this repo. It isn't published to npm, and the unrelated
+`personal-vault-mcp` package there is someone else's code, so don't install
+or `npx` it: it would run with your vault token.
 
 ```sh
-npx -y personal-vault-mcp@latest
+cd mcp
+npm ci
+npm run build
 ```
 
 ## Register with Claude Code
 
 ```sh
-claude mcp add vault -- npx -y personal-vault-mcp@latest
+claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+```
+
+`-e` saves the token in plain text in `~/.claude.json`. On macOS you can keep it
+in the Keychain instead: save it with
+`security add-generic-password -U -a "$USER" -s pvault-mcp -w` (it prompts for the
+token), then register a small launcher script in place of `node ...`:
+
+```sh
+#!/bin/sh
+VAULT_TOKEN=$(security find-generic-password -a "$USER" -s pvault-mcp -w) || exit 1
+export VAULT_TOKEN
+exec node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
 ```
 
 ## Tools
