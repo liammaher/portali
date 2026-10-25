@@ -840,6 +840,8 @@ body::before{
     <h2>Altri documenti</h2>
     <p class="subtitle">Numbers and expiry dates — run <code>pvault expiring</code> to see what needs renewing. Store scans with <code>pvault doc add</code>.</p>
 
+    <!-- Shown only to non-Italian citizens (see updatePermesso) -->
+    <div id="permessoFields">
     <div class="field-row">
       <div class="field">
         <label>Permesso di soggiorno — numero</label>
@@ -864,6 +866,7 @@ body::before{
         <input type="date" data-field="permesso_soggiorno.data_scadenza">
       </div>
     </div>
+    </div>
     <div class="field-row">
       <div class="field">
         <label>Passaporto — numero</label>
@@ -871,10 +874,27 @@ body::before{
         <input type="text" data-field="passaporto.numero" placeholder="" spellcheck="false">
       </div>
       <div class="field">
+        <label>Paese di rilascio</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="passaporto.paese_rilascio" placeholder="Italia">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Rilascio passaporto</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="passaporto.data_rilascio">
+      </div>
+      <div class="field">
         <label>Scadenza passaporto</label>
         <span class="status idle"></span>
         <input type="date" data-field="passaporto.data_scadenza">
       </div>
+    </div>
+    <div class="field">
+      <label>Autorità di rilascio</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="passaporto.autorita_rilascio" placeholder="Questura di Napoli" spellcheck="false">
     </div>
     <div class="field-row">
       <div class="field">
@@ -1021,7 +1041,7 @@ body::before{
   function init() {
   const BASE = window.location.origin;
   const inputs = document.querySelectorAll('[data-field]');
-  const totalCount = inputs.length;
+  let totalCount = inputs.length;
   let filledCount = 0;
 
   document.getElementById('totalCount').textContent = totalCount;
@@ -1064,7 +1084,21 @@ body::before{
     }).catch(function() {});
   }
 
-  Promise.all(categories.map(loadCategory)).then(updateProgress);
+  Promise.all(categories.map(loadCategory)).then(function() {
+    updatePermesso();
+    updateProgress();
+  });
+
+  // Italian citizens don't hold a permesso di soggiorno, so hide its fields.
+  var citizenship = document.querySelector('[data-field="identity.citizenship"]');
+  function updatePermesso() {
+    var italian = /^(ital|it$)/i.test(citizenship.value.trim());
+    document.getElementById('permessoFields').hidden = italian;
+  }
+  citizenship.addEventListener('input', function() {
+    updatePermesso();
+    updateProgress();
+  });
 
   // --- Auto-save on blur ---
 
@@ -1148,10 +1182,14 @@ body::before{
 
   function updateProgress() {
     filledCount = 0;
+    totalCount = 0;
     inputs.forEach(function(input) {
+      if (input.closest('[hidden]')) return;
+      totalCount++;
       if (input.value.trim()) filledCount++;
     });
     document.getElementById('filledCount').textContent = filledCount;
+    document.getElementById('totalCount').textContent = totalCount;
     var pct = totalCount > 0 ? (filledCount / totalCount * 100) : 0;
     document.getElementById('progress').style.width = pct + '%';
   }
