@@ -83,7 +83,10 @@ Profile Password + Secret Key (128-bit)
   helper build. Biometric Keychain flags need a paid Apple signature (-34018 otherwise),
   so the helper checks Touch ID itself (biometrics or Apple Watch, no Mac-password
   fallback), then talks to the server at the fixed address 127.0.0.1:7200 and returns
-  only a token, never the password. Its prompt is worded from the exact scope it requests.
+  only a token, never the password. Its prompt is worded from the exact scope it requests:
+  append/write grants say they can read too, `cat.*` says "fields and documents", `*` is
+  named alone, durations round up, and patterns are anchored with `\A`/`\z` (ICU `$` lets
+  a trailing line break through) and capped at 100 characters.
   pvault looks for the helper only next to its own binary. CLI commands call
   `needGrant(scope, access)`; with Touch ID on, the grant is scoped to that (full access
   if unset), and in a TTY a failed or denied prompt falls back to the typed password.
@@ -92,7 +95,8 @@ Profile Password + Secret Key (128-bit)
   pvault skips Touch ID when its `VAULT_ADDR` differs from the helper's server (`status`
   prints `server <addr>`), and a `unlock` that started the server stops it again if no one
   can unlock it. `touchid enable`/`disable` are interactive only.
-  Debug builds (`-D DEBUG`) honor `VAULT_ADDR` and `PVAULT_TOUCHID_TEST_APPROVE=1` for tests
+  Debug builds (`-D DEBUG`) honor `VAULT_ADDR` and `PVAULT_TOUCHID_TEST_APPROVE=1` for tests,
+  and add `describe-grant` (prints the prompt; `TestTouchIDHelper_*` compiles it with swiftc)
 - Scoped grants: `POST /vault/session` with `scope` (+ `access`) issues a grant limited
   like a service token (TTL max 10m) that can reach `personal` fields, because the user
   approved it in person. It is not session auth (no audit, lock, tiers or tokens), and only
@@ -141,7 +145,8 @@ Profile Password + Secret Key (128-bit)
 - Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,
   AAD bound to the document ID; encrypted filename; files at
   `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.
-  Token access uses scope ID `<category>.documents` plus the tier cap.
+  Token access uses scope ID `<category>.documents` plus the tier cap. Only session auth
+  may upload below `DefaultDocumentSensitivity` (`sensitive`); others get 403 session_required.
   Downloads are served as attachments with `Content-Security-Policy: sandbox`
 
 ## Conventions

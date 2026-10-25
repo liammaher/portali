@@ -32,6 +32,13 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 		personalOnlyDenied(w)
 		return
 	}
+	// Only the user's session may store a document below the default tier
+	// (as with fields), so an agent can't make it readable by lower caps.
+	if sens := q.Get("sensitivity"); sens != "" && !isSessionAuth(r) &&
+		sens != vault.DefaultDocumentSensitivity && vault.TierAllows(vault.DefaultDocumentSensitivity, sens) {
+		writeError(w, http.StatusForbidden, "session_required", "only your own session can store a document below the default sensitivity tier")
+		return
+	}
 
 	select {
 	case s.uploadSlots <- struct{}{}:

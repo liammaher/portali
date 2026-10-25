@@ -175,3 +175,29 @@ func TestDocuments_ConcurrentUploadsCapped(t *testing.T) {
 		t.Fatalf("expected 200 once a slot frees, got %d", w.Code)
 	}
 }
+
+func TestDocuments_TokenCannotLowerTier(t *testing.T) {
+	env := setup(t)
+	token := createTokenWithAccess(t, env, "passaporto.*", "append")
+	for _, tier := range []string{"public", "standard"} {
+		w := env.upload(t, token, "category=passaporto&name=p.pdf&sensitivity="+tier, "application/pdf", []byte("p"))
+		if w.Code != 403 {
+			t.Fatalf("token upload at %s: %d %s", tier, w.Code, w.Body.String())
+		}
+		if _, c := parseErrorResponse(t, w); c != "session_required" {
+			t.Fatalf("token upload at %s: constraint %q", tier, c)
+		}
+	}
+	for _, tier := range []string{"", "sensitive", "critical"} {
+		if w := env.upload(t, token, "category=passaporto&name=p.pdf&sensitivity="+tier, "application/pdf", []byte("p")); w.Code != 200 {
+			t.Fatalf("token upload at %q: %d %s", tier, w.Code, w.Body.String())
+		}
+	}
+	if w := env.upload(t, token, "category=passaporto&name=p.pdf&sensitivity=bogus", "application/pdf", []byte("p")); w.Code != 400 {
+		t.Fatalf("invalid tier: %d %s", w.Code, w.Body.String())
+	}
+	// The user's own session still chooses any tier.
+	if w := env.upload(t, env.token, "category=passaporto&name=p.pdf&sensitivity=public", "application/pdf", []byte("p")); w.Code != 200 {
+		t.Fatalf("session upload at public: %d %s", w.Code, w.Body.String())
+	}
+}

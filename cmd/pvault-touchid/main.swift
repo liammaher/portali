@@ -27,6 +27,7 @@ let keychainService = "pvault-touchid"
 let defaultGrantSeconds = 120
 let maxGrantSeconds = 600  // vault.MaxScopedGrantTTL
 let maxScopePatterns = 10
+let maxPatternLength = 100  // keeps every pattern visible in the prompt
 
 // The server address is fixed: if a caller could point it elsewhere, a fake
 // server would receive the password after the user approved. Debug builds
@@ -167,8 +168,10 @@ func serverError(_ json: [String: Any], _ status: Int) -> String {
 
 // MARK: - Prompt wording
 
-let categoryPattern = try! NSRegularExpression(pattern: "^[A-Za-z0-9_-]+\\.\\*$")
-let fieldPattern = try! NSRegularExpression(pattern: "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$")
+// \A and \z, not ^ and $: ICU's $ also matches before a trailing line break,
+// which would then show up in the prompt.
+let categoryPattern = try! NSRegularExpression(pattern: "\\A[A-Za-z0-9_-]+\\.\\*\\z")
+let fieldPattern = try! NSRegularExpression(pattern: "\\A[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\z")
 
 func matches(_ re: NSRegularExpression, _ s: String) -> Bool {
     re.firstMatch(in: s, range: NSRange(s.startIndex..., in: s)) != nil
@@ -180,7 +183,7 @@ func parseScope(_ scope: String) -> [String] {
     if parts.isEmpty || parts.count > maxScopePatterns {
         fail("scope must list 1 to \(maxScopePatterns) patterns")
     }
-    for p in parts where !(p == "*" || matches(categoryPattern, p) || matches(fieldPattern, p)) {
+    for p in parts where p.count > maxPatternLength || !(p == "*" || matches(categoryPattern, p) || matches(fieldPattern, p)) {
         fail("invalid scope pattern \"\(p)\"")
     }
     return parts
@@ -188,14 +191,15 @@ func parseScope(_ scope: String) -> [String] {
 
 func describe(_ pattern: String) -> String {
     if pattern == "*" { return "everything in your vault" }
-    if pattern.hasSuffix(".*") { return "all \(pattern.dropLast(2)) fields" }
+    // A category pattern also covers <category>.documents (vault.ScopeAllows).
+    if pattern.hasSuffix(".*") { return "all \(pattern.dropLast(2)) fields and documents" }
     if pattern.hasSuffix(".documents") { return "\(pattern.dropLast(10)) documents" }
     return pattern
 }
 
 func duration(_ seconds: Int) -> String {
     if seconds < 60 { return "\(seconds) seconds" }
-    let m = (seconds + 30) / 60
+    let m = (seconds + 59) / 60  // round up: never understate how long a grant lasts
     return m == 1 ? "1 minute" : "\(m) minutes"
 }
 
@@ -204,15 +208,17 @@ func grantReason(scope: [String]?, access: String, seconds: Int) -> String {
     guard let scope else {
         return "get full access to your vault, including settings and agent tokens, for \(duration(seconds))"
     }
-    let what = scope.map(describe).joined(separator: ", ")
+    // "*" covers everything, so it is named alone rather than last in a list.
+    let what = (scope.contains("*") ? describe("*") : scope.map(describe).joined(separator: ", ")) + " "
+    // Every scoped grant can read what it covers, append and write included.
     let verb: String
     switch access {
-    case "append": verb = "add new entries to"
+    case "append": verb = "read and add new entries to"
     case "write": verb = "read, change and delete"
     default: verb = "read"
     }
-    let from = scope.contains("*") ? "" : " from your vault"
-    return "\(verb) \(what)\(from) for \(duration(seconds))"
+    let place = scope.contains("*") ? "" : (access == "read" ? "from your vault " : "in your vault ")
+    return "\(verb) \(what)\(place)for \(duration(seconds))"
 }
 
 // MARK: - Commands
@@ -223,7 +229,13 @@ func option(_ args: [String], _ name: String) -> String? {
     return args[i + 1]
 }
 
-func cmdGrant(_ args: [String]) {
+struct GrantRequest {
+    let scope: [String]?
+    let access: String
+    let seconds: Int
+}
+
+func parseGrant(_ args: [String]) -> GrantRequest {
     let known: Set = ["--scope", "--access", "--ttl"]
     var i = 0
     while i < args.count {
@@ -239,6 +251,12 @@ func cmdGrant(_ args: [String]) {
         guard let n = Int(t), n > 0, n <= maxGrantSeconds else { fail("--ttl must be 1 to \(maxGrantSeconds) seconds") }
         seconds = n
     }
+    return GrantRequest(scope: scope, access: access, seconds: seconds)
+}
+
+func cmdGrant(_ args: [String]) {
+    let req = parseGrant(args)
+    let (scope, access, seconds) = (req.scope, req.access, req.seconds)
     guard isEnrolled() else { fail("Touch ID is not set up — run 'pvault touchid enable'", code: 3) }
 
     approve(grantReason(scope: scope, access: access, seconds: seconds))
@@ -297,6 +315,12 @@ case "unlock":
     cmdUnlock()
 case "grant":
     cmdGrant(Array(args.dropFirst()))
+#if DEBUG
+case "describe-grant":
+    // Prints the prompt a grant would show, for tests; no Keychain or server.
+    let req = parseGrant(Array(args.dropFirst()))
+    print(grantReason(scope: req.scope, access: req.access, seconds: req.seconds))
+#endif
 default:
     fail("usage: pvault-touchid status|enroll|remove|unlock|grant [--scope s] [--access a] [--ttl seconds]")
 }
