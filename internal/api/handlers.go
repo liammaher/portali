@@ -310,6 +310,12 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
+	// A read-only token is refused before the field is looked up, so it
+	// can't tell a hidden personal field from a missing one.
+	if !isSessionAuth(r) && accessFromRequest(r) == vault.AccessRead {
+		requireAccess(w, r, false)
+		return
+	}
 	existing, ok := s.requireFieldTier(w, r, id, true)
 	if !ok {
 		return
@@ -359,7 +365,15 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := s.vault.Set(id, req.Value, req.Sensitivity); err != nil {
+	// A token's checks above hold only for the field as it was looked up;
+	// SetChecked refuses the write if it changed meanwhile.
+	set := s.vault.Set
+	if !isSessionAuth(r) {
+		set = func(id, value, sensitivity string) error {
+			return s.vault.SetChecked(id, value, sensitivity, existing)
+		}
+	}
+	if err := set(id, req.Value, req.Sensitivity); err != nil {
 		handleVaultError(w, err)
 		return
 	}
@@ -387,6 +401,7 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		scopeDenied(w)
 		return
 	}
+	del := s.vault.Delete
 	if !isSessionAuth(r) {
 		// Access first, so a read-only token learns nothing about the field.
 		if !requireAccess(w, r, true) {
@@ -407,8 +422,9 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a field stored above its default sensitivity tier")
 			return
 		}
+		del = func(id string) error { return s.vault.DeleteChecked(id, existing) }
 	}
-	if err := s.vault.Delete(id); err != nil {
+	if err := del(id); err != nil {
 		handleVaultError(w, err)
 		return
 	}
@@ -688,6 +704,10 @@ func handleVaultError(w http.ResponseWriter, err error) {
 		return
 	}
 	switch err {
+	case vault.ErrFieldNotFound:
+		writeError(w, http.StatusNotFound, "not_found", "field not found")
+	case vault.ErrFieldChanged:
+		writeError(w, http.StatusConflict, "changed", err.Error())
 	case vault.ErrAmbiguousToken:
 		writeError(w, http.StatusConflict, "ambiguous_token", err.Error())
 	case vault.ErrLocked:

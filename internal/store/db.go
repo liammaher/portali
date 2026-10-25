@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -73,6 +74,9 @@ type DB struct {
 
 // Open opens or creates the vault database at the given path.
 func Open(path string) (*DB, error) {
+	if err := checkPath(path); err != nil {
+		return nil, err
+	}
 	// Owner-only, also for databases created before this check. SQLite gives
 	// the -wal and -shm files it creates the database file's mode.
 	if f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0600); err == nil {
@@ -179,4 +183,14 @@ func hasColumn(conn *sql.DB, table, column string) (bool, error) {
 // Close closes the database connection.
 func (d *DB) Close() error {
 	return d.conn.Close()
+}
+
+// checkPath refuses paths the SQLite driver would misread: it cuts its
+// connection string at the first '?', so a vault folder named "a?b" would
+// put the database in a file named "a" outside it.
+func checkPath(path string) error {
+	if strings.Contains(path, "?") {
+		return fmt.Errorf("the vault path %q can't contain '?'", path)
+	}
+	return nil
 }

@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/lovincyrus/personal-vault/internal/store"
 )
 
 func cmdAudit() {
+	positionalArgs(os.Args[2:], "usage: pvault audit", 0, 0)
 	resp, err := apiRequest("GET", "/vault/audit?limit=20", nil)
 	if err != nil {
 		fatal("request failed: %v", err)

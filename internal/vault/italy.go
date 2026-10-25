@@ -24,13 +24,13 @@ func (e *ValidationError) Error() string {
 }
 
 const (
-	credentialWords = `pin[0-9]*|puk[0-9]*|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|chiave`
+	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreti|chiave|chiavi)s?[0-9]*`
 	identityWords   = `spid|cieid|cie`
 )
 
 var (
 	// reCredentialWord matches a field-name word that names a login secret
-	// (pin, pin1, puk2, password, otp, username, ...).
+	// (pin, pin1, puk2, password, passwords, password2, otp, username, ...).
 	reCredentialWord = regexp.MustCompile(`^(` + credentialWords + `)$`)
 	// reIdentityWord matches a word naming SPID, CieID or the CIE.
 	reIdentityWord = regexp.MustCompile(`^(` + identityWords + `)$`)
@@ -41,7 +41,8 @@ var (
 
 // IsCredentialField reports whether a field holds a login secret: a
 // credential word (pin, puk, password, otp, username, ...) in a field about
-// SPID, CieID or the CIE, e.g. spid.password, cie.pin1, identity.spid_password.
+// SPID, CieID or the CIE, e.g. spid.password, cie.pin1, identity.spid_password,
+// cie_id.pin (the category's words count too).
 // Credentials are strictly personal (AgID), so they can only be stored with
 // TierPersonal and never reach an agent.
 func IsCredentialField(id string) bool {
@@ -62,8 +63,8 @@ func IsCredentialField(id string) bool {
 		return false
 	}
 
-	aboutIdentity, credentialWord := category == "cie", false
-	for _, w := range strings.FieldsFunc(name, func(r rune) bool { return r == '_' || r == '-' }) {
+	aboutIdentity, credentialWord := false, false
+	for _, w := range idWords(category + "_" + name) {
 		switch {
 		case reJoinedCredential.MatchString(w):
 			return true
@@ -87,10 +88,16 @@ func isNonSecretAccountField(name string) bool {
 }
 
 // IsPersonalCategory reports categories whose fields and documents default to
-// TierPersonal (SPID and CieID accounts).
+// TierPersonal: SPID and CieID accounts, including ones named per provider
+// such as spid_poste or cieid-2.
 func IsPersonalCategory(category string) bool {
-	c := strings.ToLower(category)
-	return c == "spid" || c == "cieid"
+	words := idWords(strings.ToLower(category))
+	return len(words) > 0 && (words[0] == "spid" || words[0] == "cieid")
+}
+
+// idWords splits a category or field name into its words.
+func idWords(s string) []string {
+	return strings.FieldsFunc(s, func(r rune) bool { return r == '_' || r == '-' })
 }
 
 // errCredentialTier is returned when a credential would be stored below
@@ -264,14 +271,22 @@ func ValidateCodiceFiscale(cf string) error {
 			return errors.New("first 6 characters (surname and name) must be letters")
 		}
 	}
-	if strings.IndexByte(cfMonthLetters, cf[8]) < 0 {
+	month := strings.IndexByte(cfMonthLetters, cf[8])
+	if month < 0 {
 		return fmt.Errorf("invalid month letter %q", cf[8])
 	}
 	day := int(resolved[9]-'0')*10 + int(resolved[10]-'0')
 	if day > 40 {
 		day -= 40 // women have 40 added to the day of birth
 	}
-	if day < 1 || day > 31 {
+	// The century isn't encoded, but 19yy and 20yy are leap years alike,
+	// except 1900: 29 February is possible when yy is a multiple of 4.
+	year := int(resolved[6]-'0')*10 + int(resolved[7]-'0')
+	maxDay := [12]int{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}[month]
+	if month == 1 && year%4 == 0 {
+		maxDay = 29
+	}
+	if day < 1 || day > maxDay {
 		return errors.New("invalid day of birth")
 	}
 	if !isUpperLetter(cf[11]) {
@@ -323,6 +338,10 @@ func ValidatePartitaIVA(piva string) error {
 	}
 	if check := (10 - sum%10) % 10; check != int(piva[10]-'0') {
 		return errors.New("partita IVA check digit does not match")
+	}
+	// Digits 8-10 are the issuing office, never 000 (so 00000000000 fails).
+	if piva[7:10] == "000" {
+		return errors.New("partita IVA office code (digits 8-10) can't be 000")
 	}
 	return nil
 }

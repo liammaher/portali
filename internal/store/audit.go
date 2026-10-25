@@ -8,12 +8,12 @@ import (
 
 // AuditEntry represents a row in vault_access_log.
 type AuditEntry struct {
-	ID        string
-	Consumer  string
-	Scope     string
-	Action    string
-	Purpose   string
-	CreatedAt time.Time
+	ID        string    `json:"id"`
+	Consumer  string    `json:"consumer"`
+	Scope     string    `json:"scope"`
+	Action    string    `json:"action"`
+	Purpose   string    `json:"purpose,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 // LogAccess writes an audit entry.

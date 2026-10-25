@@ -171,10 +171,86 @@ func TestSetBackupDirValidates(t *testing.T) {
 	}
 	inside := filepath.Join(v.dir, "backups")
 	os.Mkdir(inside, 0700)
-	for _, dir := range []string{"relative/dir", filepath.Join(t.TempDir(), "missing"), v.dir, inside} {
+	newInside := filepath.Join(v.dir, "new")
+	for _, dir := range []string{"relative/dir", v.dir, inside, newInside} {
 		var verr *ValidationError
 		if err := v.SetBackupDir(dir); !errors.As(err, &verr) {
 			t.Errorf("SetBackupDir(%q) = %v, want a validation error", dir, err)
+		}
+	}
+	if _, err := os.Stat(newInside); !errors.Is(err, os.ErrNotExist) {
+		t.Error("a refused folder was created")
+	}
+	// A new folder outside the vault is created, owner-only.
+	missing := filepath.Join(t.TempDir(), "missing", "deeper")
+	if err := v.SetBackupDir(missing); err != nil {
+		t.Fatal(err)
+	}
+	if info, err := os.Stat(missing); err != nil || info.Mode().Perm() != 0700 {
+		t.Fatalf("created folder: %v, %v", info, err)
+	}
+}
+
+// A restored vault has no service tokens (one revoked after the backup must
+// not come back) and reports the backup it came from as its last one.
+func TestRestoreDropsTokensAndKeepsBackupTime(t *testing.T) {
+	v, sk, _ := backupVault(t)
+	tok, err := v.CreateServiceToken("agent", "notes.*", 24*time.Hour, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	path, err := v.Backup()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := v.RevokeServiceToken(tok); err != nil {
+		t.Fatal(err)
+	}
+	last := v.backupStatus().Last
+	target := filepath.Join(t.TempDir(), "restored")
+	if _, err := RestoreBackup(path, target, testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(target)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	if _, ok := r.ValidateServiceToken(tok); ok {
+		t.Error("revoked token valid after restore")
+	}
+	if got := r.backupStatus().Last; got != last {
+		t.Errorf("restored last backup = %q, want %q", got, last)
+	}
+}
+
+// Work dirs an interrupted restore or check left behind are removed by the
+// next one; a recent one (maybe still in use) is kept.
+func TestRestoreRemovesStaleWorkDirs(t *testing.T) {
+	_, sk, path := backedUpVault(t)
+	parent := t.TempDir()
+	stale := filepath.Join(parent, ".pvault-restore-1")
+	fresh := filepath.Join(parent, ".pvault-restore-2")
+	checkStale := filepath.Join(os.TempDir(), "pvault-check-test-stale")
+	for _, d := range []string{stale, fresh, checkStale} {
+		if err := os.MkdirAll(filepath.Join(d, "vault"), 0700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	defer os.RemoveAll(checkStale)
+	old := time.Now().Add(-time.Hour)
+	os.Chtimes(stale, old, old)
+	os.Chtimes(checkStale, old, old)
+
+	if _, err := RestoreBackup(path, filepath.Join(parent, "restored"), testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := CheckBackup(path, testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	for d, want := range map[string]bool{stale: false, fresh: true, checkStale: false} {
+		if _, err := os.Stat(d); (err == nil) != want {
+			t.Errorf("%s exists = %v, want %v", d, err == nil, want)
 		}
 	}
 }

@@ -229,3 +229,17 @@ func TestIsVaultServerProcess(t *testing.T) {
 		t.Fatal("another program must not count as the vault server")
 	}
 }
+
+// pvault ui opens the password page only on this vault's own server, not
+// on another program answering "unlocked" on its port.
+func TestUIRefusesUnverifiedServer(t *testing.T) {
+	impostor := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{"locked":false}`))
+	}))
+	defer impostor.Close()
+	t.Setenv("VAULT_ADDR", impostor.URL)
+	shortVaultDir(t) // no socket: this vault's server isn't running
+	if url, err := uiURL(); err == nil {
+		t.Fatalf("opened %s on an unverified server", url)
+	}
+}

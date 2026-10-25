@@ -29,12 +29,10 @@ func cmdBackup() {
 
 	body := map[string]string{}
 	if dir != "" {
+		// The server creates the folder once it has checked it.
 		abs, err := filepath.Abs(dir)
 		if err != nil {
 			fatal("%v", err)
-		}
-		if err := os.MkdirAll(abs, 0700); err != nil {
-			fatal("create %s: %v", abs, err)
 		}
 		body["dir"] = abs
 	}

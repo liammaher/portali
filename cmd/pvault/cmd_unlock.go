@@ -31,7 +31,7 @@ func cmdUnlock() {
 	}
 
 	// Nothing on the port — clean up any stale PID file
-	removePID()
+	removeStalePID()
 
 	// With Touch ID, start the server locked and let the helper unlock it;
 	// the typed password stays the fallback.

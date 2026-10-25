@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"os/exec"
+	"testing"
+)
 
 func TestParseFlags(t *testing.T) {
 	var scope, ttl string
@@ -18,5 +22,55 @@ func TestParseFlags(t *testing.T) {
 		if err := parseFlags(args, flags); err == nil {
 			t.Errorf("parseFlags(%q) accepted", args)
 		}
+	}
+}
+
+func TestCheckArgs(t *testing.T) {
+	if err := checkArgs([]string{"identity"}, 0, 1); err != nil {
+		t.Errorf("one category: %v", err)
+	}
+	for _, args := range [][]string{
+		{"--bogus"},                  // read as a category name before
+		{"identity", "residenza"},    // too many
+		{"identity.full_name", "-f"}, // an option
+	} {
+		if err := checkArgs(args, 0, 1); err == nil {
+			t.Errorf("%q accepted", args)
+		}
+	}
+}
+
+func TestSetValueArg(t *testing.T) {
+	if v, given, err := setValueArg([]string{"Via Roma 1"}); err != nil || !given || v != "Via Roma 1" {
+		t.Errorf("one value: %q %v %v", v, given, err)
+	}
+	if _, given, err := setValueArg(nil); err != nil || given {
+		t.Errorf("no value: %v %v", given, err)
+	}
+	// Joined before, so "--sensitivity critical" became part of the value.
+	for _, args := range [][]string{{"value", "--sensitivity", "critical"}, {"Mario", "Rossi"}, {"--sensitivity"}} {
+		if _, _, err := setValueArg(args); err == nil {
+			t.Errorf("%q accepted", args)
+		}
+	}
+}
+
+// A PID file naming a live process stays (its own pvault needs it to stop
+// that server); one naming a finished process goes.
+func TestRemoveStalePIDKeepsLiveServer(t *testing.T) {
+	shortVaultDir(t)
+	writePID(os.Getpid())
+	removeStalePID()
+	if _, err := readPID(); err != nil {
+		t.Fatal("removed the PID file of a running process")
+	}
+	cmd := exec.Command("true")
+	if err := cmd.Run(); err != nil {
+		t.Fatal(err)
+	}
+	writePID(cmd.Process.Pid)
+	removeStalePID()
+	if _, err := readPID(); err == nil {
+		t.Fatal("kept the PID file of a finished process")
 	}
 }

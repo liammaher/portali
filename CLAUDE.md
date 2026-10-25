@@ -124,6 +124,9 @@ Profile Password + Secret Key (128-bit)
   pvault looks for the helper only next to its own binary. CLI commands call
   `needGrant(scope, access)`; with Touch ID on, the grant is scoped to that (full access
   if unset), and in a TTY a failed or denied prompt falls back to the typed password.
+  When a scoped grant gets 403 `session_required` (an operation only the user's session
+  may do), `authed` (`helpers.go`) asks once more for full access and resends.
+  `pvault ui` runs `checkVaultServer` too, so the password page never opens on an impostor.
   `pvault unlock` with Touch ID starts `pvault serve --locked` and the helper unlocks it.
   Rebuilding the helper changes its signature, and moving or rebuilding pvault changes
   the trusted server, so re-run `pvault touchid enable`. Tokens still go over TCP:
@@ -143,8 +146,12 @@ Profile Password + Secret Key (128-bit)
   `sensitivity` below its current tier (or the schema default) gets 403, and so does
   deleting a field or document stored above its default tier (re-creating it would lower it).
   A tier-less write keeps the stored tier in the same SQL statement (`store.Field.KeepTier`),
-  so it can't undo a concurrent raise. Defaults ignore ID case, like validation. For tokens,
-  DELETE of a missing field is 404, the same as a hidden personal one.
+  so it can't undo a concurrent raise. A token's write or delete is conditional on the field
+  it checked (`SetChecked`/`DeleteChecked`, `store.Seen`): if the field appeared or changed
+  tier meanwhile, it gets 409 instead of landing. Defaults ignore ID case, like validation.
+  For tokens, DELETE of a missing field is 404, the same as a hidden personal one, and a
+  read-only token's PUT is refused before the field is looked up; for the session, a
+  delete or tier change of a missing field is 404 too.
   Handlers must test `isSessionAuth`, not `maxTier == personal`, to mean "the user's session"
 - Service tokens: access `read` (default) / `append` (add new fields and
   documents, no overwrite or delete) / `write`; explicit scope required, TTL 24h default / 90d max,
@@ -163,8 +170,11 @@ Profile Password + Secret Key (128-bit)
   Messages are unwrapped from `postacert.eml` and `daticert.xml` is parsed
   (mailparser needs `ignoreEmbedded: true` or it splices the inner message into the envelope)
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
-  SPID/CIE credentials (`IsCredentialField`) can only be stored with tier
-  `personal`; `spid`/`cieid` categories default to it. `personal` (rank 4) is
+  SPID/CIE credentials (`IsCredentialField`: a credential word, plurals, digits and
+  `pincode`/`pukcode` included, with spid/cie/cieid among the category's or field's
+  words) can only be stored with tier `personal`; categories whose first word is
+  `spid`/`cieid` (`spid_poste`) default to it, and so do their documents
+  (`DefaultDocumentTier`). `personal` (rank 4) is
   never reachable by service tokens: they can't be capped at it, and the API hides
   personal items from them (404 on read/delete, 403 personal_only on write, omitted
   from every listing). Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
@@ -188,7 +198,8 @@ Profile Password + Secret Key (128-bit)
   AAD bound to the document ID; encrypted filename; files at
   `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.
   Token access uses scope ID `<category>.documents` plus the tier cap. Only session auth
-  may upload below `DefaultDocumentSensitivity` (`sensitive`); others get 403 session_required.
+  may upload below, or delete above, the category's `DefaultDocumentTier` (`sensitive`,
+  personal for SPID/CieID); others get 403 session_required.
   Downloads are served as attachments with `Content-Security-Policy: sandbox`
 - Backups (`backup.go`): `vault.db` snapshot (`VACUUM INTO`) + `documents/*.enc` in a tar,
   encrypted again with chunked AES-256-GCM (`crypto/stream.go`, STREAM nonces) under
@@ -200,12 +211,16 @@ Profile Password + Secret Key (128-bit)
   `backup.mu` throughout) and auto-lock flush a pending one first, so `pvault lock` waits
   for the server to exit. Lock order: `backup.mu` → `v.mu` → session `mu`; `backup.stateMu`
   is a leaf, so `markChanged` never waits on a running backup. Auto-lock ignores
-  stale timer firings and only clears its own session. Files are
+  stale timer firings (`Touch` arms a new timer; an older one's generation no longer
+  matches) and only clears its own session. Files are
   `pvault-<vault id>-<time>.pvbackup` (id = SHA-256 of the salt, 8 hex); pruning keeps this
   vault's 10 newest plus the newest per day for 30 days and never touches other files.
   Documents whose file is gone are dropped from the snapshot rather than failing the backup.
+  `store.PrepareSnapshot` also drops every service token (a restore must not revive a
+  revoked one) and records the backup's own time as `backup_last`.
   Each backup first removes `.backup-*` work dirs a crash left in the vault dir (they hold a
-  plaintext-named snapshot).
+  plaintext-named snapshot); restore and check remove `.pvault-restore-*` / `pvault-check-*`
+  ones older than 10 minutes. `SetBackupDir` creates the folder (0700) only after checking it.
   `RestoreBackup` only fills a missing or empty dir and checks the result unlocks
   (`--ask-key` tests a hand-kept secret key); public status shows backup state, never the folder
 
@@ -214,7 +229,10 @@ Profile Password + Secret Key (128-bit)
 - Field IDs are `category.field_name` (e.g., `identity.full_name`)
 - Sensitivity tiers: `public`, `standard`, `sensitive`, `critical`
 - All timestamps stored as RFC3339 strings in SQLite
-- WAL mode enabled, busy_timeout=5000ms
+- WAL mode enabled, busy_timeout=5000ms; the vault path can't contain `?` (the driver
+  cuts its DSN there)
+- CLI arguments: commands without flags use `positionalArgs`, so an unknown option is an
+  error, never ignored or read as a name; `pvault set` takes one value (quote spaces)
 - No CGO — pure Go for portability
 
 ## Environment Variables

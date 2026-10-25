@@ -101,7 +101,9 @@ Commands:
   ui                               Open vault onboarding form in browser
   touchid enable|disable|status    Approve requests with Touch ID instead of typing the password
   create-service-token <consumer> --scope <patterns> [--access read|append|write]
-                                   Create a scoped agent token (read-only by default; 24h default, 90d max)
+                       [--ttl 24h] [--max-sensitivity public|standard|sensitive|critical] [--keychain <service>]
+                                   Create a scoped agent token (read-only by default; 24h default, 90d max;
+                                   --keychain saves it to the macOS Keychain instead of printing it)
   list-service-tokens              List active service tokens
   revoke-service-token <prefix>    Revoke a service token by listed prefix or full token`)
 }

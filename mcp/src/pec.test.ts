@@ -168,20 +168,27 @@ test("transportHeaders reads folded header lines", () => {
 });
 
 test("envelopeSender unwraps 'Per conto di:'", () => {
+  const pec = "posta-certificata";
   assert.equal(
-    envelopeSender([{ name: "Per conto di: protocollo@pec.comune.napoli.it", address: "posta-certificata@pec.aruba.it" }], undefined),
+    envelopeSender([{ name: "Per conto di: protocollo@pec.comune.napoli.it", address: "posta-certificata@pec.aruba.it" }], undefined, pec),
     "protocollo@pec.comune.napoli.it",
   );
-  assert.equal(envelopeSender([{ address: "posta-certificata@pec.aruba.it" }], [{ address: "x@pec.it" }]), "x@pec.it");
-  assert.equal(envelopeSender([{ address: "plain@example.com" }], undefined), "plain@example.com");
+  assert.equal(envelopeSender([{ address: "posta-certificata@pec.aruba.it" }], [{ address: "x@pec.it" }], pec), "x@pec.it");
+  assert.equal(envelopeSender([{ address: "plain@example.com" }], undefined, "email"), "plain@example.com");
   // Outside the provider's envelope, the display name and Reply-To are the sender's choice.
   assert.equal(
-    envelopeSender([{ address: "scam@evil.example" }], [{ address: "protocollo@pec.comune.napoli.it" }]),
+    envelopeSender([{ address: "scam@evil.example" }], [{ address: "protocollo@pec.comune.napoli.it" }], pec),
     "scam@evil.example",
   );
   assert.equal(
-    envelopeSender([{ name: "Per conto di: protocollo@pec.comune.napoli.it", address: "scam@evil.example" }], undefined),
+    envelopeSender([{ name: "Per conto di: protocollo@pec.comune.napoli.it", address: "scam@evil.example" }], undefined, pec),
     "scam@evil.example",
+  );
+  // So is a posta-certificata@ address on a message without PEC transport headers.
+  assert.equal(
+    envelopeSender([{ name: "Per conto di: protocollo@pec.comune.napoli.it", address: "posta-certificata@evil.example" }],
+      [{ address: "protocollo@pec.comune.napoli.it" }], "email"),
+    "posta-certificata@evil.example",
   );
 });
 

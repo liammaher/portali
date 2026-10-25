@@ -275,3 +275,51 @@ func TestCIEPinPuk(t *testing.T) {
 		}
 	}
 }
+
+// Credentials are found whatever the provider is called: in the category's
+// words too, and with plurals, digits and the -code spellings.
+func TestCredentialFieldsInProviderCategories(t *testing.T) {
+	v, _ := tmpVault(t)
+	for _, id := range []string{"spid_poste.password", "spid-aruba.password", "cie_id.pin", "identity.spid_password2", "identity.spid_passwords", "cie.pincode", "identity.cie_pukcode"} {
+		if !IsCredentialField(id) || DefaultSensitivity(id) != TierPersonal {
+			t.Errorf("%s: credential = %v, default tier %q", id, IsCredentialField(id), DefaultSensitivity(id))
+		}
+		var verr *ValidationError
+		if err := v.Set(id, "hunter2-secret", "standard"); !errors.As(err, &verr) {
+			t.Errorf("%s stored below personal: %v", id, err)
+		}
+	}
+	for _, id := range []string{"cie.numero", "spid_poste.provider", "passaporto.numero", "identity.passaporto_numero"} {
+		if IsCredentialField(id) {
+			t.Errorf("%s treated as a credential", id)
+		}
+	}
+	if !IsPersonalCategory("spid_poste") || !IsPersonalCategory("CieID-2") || IsPersonalCategory("spidino") {
+		t.Error("personal categories by first word")
+	}
+	if DefaultDocumentTier("spid_poste") != TierPersonal || DefaultDocumentTier("passaporto") != DefaultDocumentSensitivity {
+		t.Error("document default tiers")
+	}
+}
+
+// The day of birth must exist in its month; 29 February only in a year
+// that is a leap year in either century.
+func TestCodiceFiscaleDayOfMonth(t *testing.T) {
+	cf := func(first15 string) string { return first15 + string(codiceFiscaleCheckChar(first15)) }
+	for _, c := range []string{cf("RSSMRA84B29A562"), cf("RSSMRA84B69A562"), cf("RSSMRA85D30A562")} {
+		if err := ValidateCodiceFiscale(c); err != nil {
+			t.Errorf("%s rejected: %v", c, err)
+		}
+	}
+	for _, c := range []string{cf("RSSMRA85B31A562"), cf("RSSMRA85B29A562"), cf("RSSMRA85D31A562"), cf("RSSMRA85B71A562")} {
+		if err := ValidateCodiceFiscale(c); err == nil {
+			t.Errorf("%s accepted", c)
+		}
+	}
+}
+
+func TestPartitaIVAOfficeCode(t *testing.T) {
+	if err := ValidatePartitaIVA("00000000000"); err == nil {
+		t.Error("00000000000 accepted")
+	}
+}

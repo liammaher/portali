@@ -10,8 +10,8 @@ import (
 
 func cmdExpiring() {
 	days := 90
-	if len(os.Args) >= 3 {
-		n, err := strconv.Atoi(os.Args[2])
+	if args := positionalArgs(os.Args[2:], "usage: pvault expiring [days]", 0, 1); len(args) == 1 {
+		n, err := strconv.Atoi(args[0])
 		if err != nil || n < 0 {
 			fatal("usage: pvault expiring [days]")
 		}

@@ -7,13 +7,10 @@ import (
 )
 
 func cmdUI() {
-	if err := requireUnlockedServer(); err != nil {
+	url, err := uiURL()
+	if err != nil {
 		fatal("%v", err)
 	}
-
-	// The page asks for the profile password itself, so no token is ever put
-	// on a command line or in browser history where other processes can see it.
-	url := serverAddr() + "/ui"
 
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
@@ -37,4 +34,18 @@ func cmdUI() {
 	fmt.Println()
 	fmt.Println("  " + url)
 	fmt.Println()
+}
+
+// uiURL returns the onboarding page's address once this vault's own server
+// is known to answer there. The page asks for the profile password itself,
+// so no token is ever put on a command line or in browser history, and it
+// must not open on whatever else answers on the vault's port.
+func uiURL() (string, error) {
+	if err := requireUnlockedServer(); err != nil {
+		return "", err
+	}
+	if err := checkVaultServer(); err != nil {
+		return "", err
+	}
+	return serverAddr() + "/ui", nil
 }

@@ -2,6 +2,7 @@ package vault
 
 import (
 	"testing"
+	"time"
 )
 
 func TestMemProtect_NoPanic(t *testing.T) {
@@ -94,5 +95,28 @@ func TestStaleAutoLockKeepsNewSession(t *testing.T) {
 	v.mu.RUnlock()
 	if still != current || current.VaultKey() == nil {
 		t.Fatal("stale auto-lock dropped the current session")
+	}
+}
+
+// A timer that already fired but is still waiting for the lock when the
+// user's activity re-arms it must not lock the vault.
+func TestTouchCancelsPendingAutoLock(t *testing.T) {
+	locked := make(chan struct{})
+	s, err := NewSession(make([]byte, 32), func() { close(locked) })
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Destroy()
+	s.mu.Lock()
+	s.ttl = 10 * time.Millisecond
+	s.armTimer()
+	time.Sleep(50 * time.Millisecond) // fired; its auto-lock waits for s.mu
+	s.ttl = time.Hour
+	s.armTimer() // what Touch does
+	s.mu.Unlock()
+	select {
+	case <-locked:
+		t.Fatal("stale timer locked the vault after activity")
+	case <-time.After(200 * time.Millisecond):
 	}
 }

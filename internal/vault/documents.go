@@ -48,6 +48,16 @@ func DocumentScopeID(category string) string {
 // (outside the SPID/CieID categories, which are always personal).
 const DefaultDocumentSensitivity = "sensitive"
 
+// DefaultDocumentTier is the tier a document in category gets when stored
+// without one: personal for SPID/CieID and credential categories, else
+// DefaultDocumentSensitivity.
+func DefaultDocumentTier(category string) string {
+	if IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category)) {
+		return TierPersonal
+	}
+	return DefaultDocumentSensitivity
+}
+
 // AddDocument encrypts and stores a file under a category. The content and
 // original filename are encrypted with the category's documents subkey and
 // bound to the document ID, so ciphertexts cannot be swapped between records.
@@ -70,12 +80,10 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 		return nil, &ValidationError{Field: "document", Msg: fmt.Sprintf("file is larger than %d MB", MaxDocumentSize>>20)}
 	}
 	// SPID/CieID documents (e.g. recovery codes) are always personal.
-	personalOnly := IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category))
+	personalOnly := DefaultDocumentTier(category) == TierPersonal
 	switch {
-	case sensitivity == "" && personalOnly:
-		sensitivity = TierPersonal
 	case sensitivity == "":
-		sensitivity = DefaultDocumentSensitivity
+		sensitivity = DefaultDocumentTier(category)
 	case !validTiers[sensitivity]:
 		return nil, ErrInvalidTier
 	case personalOnly && sensitivity != TierPersonal:

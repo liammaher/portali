@@ -16,6 +16,7 @@ type Session struct {
 	token    string
 	vaultKey []byte
 	timer    *time.Timer
+	timerGen uint64 // bumped per timer, so an older timer's firing is ignored
 	lockFn   func()
 	ttl      time.Duration
 	// grants are short-lived tokens issued after the user re-enters their
@@ -60,8 +61,20 @@ func NewSession(vaultKey []byte, lockFn func()) (*Session, error) {
 	lockMemory(s.vaultKey)
 	disableCoreDumps()
 
-	s.timer = time.AfterFunc(s.ttl, s.autoLock)
+	s.armTimer()
 	return s, nil
+}
+
+// armTimer starts a fresh idle timer; s.mu must be held (or s unpublished).
+// Resetting the old one isn't enough: a firing may already be waiting for
+// s.mu, and only its generation tells it that it is stale.
+func (s *Session) armTimer() {
+	if s.timer != nil {
+		s.timer.Stop()
+	}
+	s.timerGen++
+	gen := s.timerGen
+	s.timer = time.AfterFunc(s.ttl, func() { s.autoLockGen(gen) })
 }
 
 // Token returns the session token string.
@@ -167,7 +180,7 @@ func (s *Session) Touch() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.timer != nil && !s.expiring {
-		s.timer.Reset(s.ttl)
+		s.armTimer()
 	}
 }
 
@@ -191,9 +204,12 @@ func (s *Session) setBeforeAutoLock(fn func()) {
 	s.beforeAutoLock = fn
 }
 
-func (s *Session) autoLock() {
+func (s *Session) autoLock() { s.autoLockGen(0) }
+
+// autoLockGen locks the session when timer generation gen fires (0: any).
+func (s *Session) autoLockGen(gen uint64) {
 	s.mu.Lock()
-	if s.expiring || s.token == "" {
+	if s.expiring || s.token == "" || (gen != 0 && gen != s.timerGen) {
 		// Already locked, or a stale firing: nothing to do.
 		s.mu.Unlock()
 		return

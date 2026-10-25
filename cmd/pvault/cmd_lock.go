@@ -16,7 +16,7 @@ func cmdLock() {
 		fmt.Println("Vault locked (server stopped).")
 		return
 	}
-	removePID()
+	removeStalePID()
 
 	if !portHasVault() {
 		// Nothing to lock. Clean up files a crashed server may have left.

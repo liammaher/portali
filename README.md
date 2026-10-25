@@ -8,9 +8,9 @@ You enter your details and scan your documents once. Agents that prepare forms (
 
 - **Local-first.** One SQLite database and an encrypted `documents/` folder in `~/.pvault/`. No cloud, no account.
 - **Encrypted per field and per file.** Argon2id → AES-256-GCM with per-category keys; filenames are encrypted too.
-- **Italian-aware.** Validates codice fiscale (incl. omocodia), partita IVA, CIE number, CAP and provincia; normalizes dates; tracks document expiry.
+- **Italian-aware.** Validates codice fiscale (incl. omocodia and real birth dates), partita IVA, CIE number and IBAN, checks the format of CAP and provincia; normalizes dates; tracks document expiry.
 - **Agent-safe by design.** Service tokens are scoped, short-lived, capped by sensitivity, and **read-only unless you say otherwise**.
-- **A personal tier only you can see.** SPID login, CIE PIN/PUK and similar secrets are stored as `personal`: no agent token, whatever its scope or cap, can read, list, change or even detect them.
+- **A personal tier only you can see.** SPID login, CIE PIN/PUK and similar secrets are stored as `personal`: no agent token, whatever its scope or cap, can read, list or change them. To a token they look absent; the only trace is that a token with write access is refused if it tries to write one.
 
 > Fork of [lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault) (MIT), extended with the Italian schema, document storage and a hardened agent access model.
 
@@ -39,7 +39,7 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 |---|---|
 | `identity` | name, `codice_fiscale` (validated), date/place of birth, sex, citizenship |
 | `cie` | `numero` (CA12345AB, validated), issue/expiry date, issuing comune |
-| `residenza` / `domicilio` | `indirizzo` (via/piazza), `civico`, `interno` (flat number), `cap` (validated), `comune`, `provincia` (validated), `data_inizio` (residenza only) |
+| `residenza` / `domicilio` | `indirizzo` (via/piazza), `civico`, `interno` (flat number), `cap` (validated), `comune`, `provincia` (2-letter sigla, format checked), `data_inizio` (residenza only) |
 | `abitazione` | `titolo` (locatario, proprietario…), catasto `foglio`/`particella`/`subalterno`, `catasto_categoria` (A/2, validated), rendita, `superficie_calpestabile_mq`, APE class |
 | `locazione` | contract type, start/end dates (end tracked by `pvault expiring`), rent and deposit (sensitive), cedolare secca, RLI registration details, landlord's name, `locatore_codice_fiscale` and `locatore_iban` (validated) |
 | `utenze` | `luce_pod` and `gas_pdr` (validated), supplier and customer code per utility |
@@ -96,7 +96,7 @@ pvault restore <file>.pvbackup            # recreate ~/.pvault (only if it's mis
 
 Once a folder is set, the vault backs itself up a minute after each change and when it locks; `pvault status` shows the last backup or why it failed. Each `.pvbackup` holds the database and documents, encrypted again under your vault key, so even field names and the audit log are hidden; a cloud folder is fine. It keeps the 10 newest plus one per day for 30 days.
 
-The secret key is **not** in the backup: restoring needs your password and the secret key you saved at `pvault init`. `pvault restore <file> --check --ask-key` lets you type the saved key to test that your copy is right.
+The secret key is **not** in the backup: restoring needs your password and the secret key you saved at `pvault init`. Service tokens aren't either, so a token revoked after a backup never comes back; create new ones after a restore. `pvault restore <file> --check --ask-key` lets you type the saved key to test that your copy is right.
 
 ## Giving an agent access
 
