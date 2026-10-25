@@ -25,5 +25,5 @@ checksum:
 
 release:
   github:
-    owner: lovincyrus
-    name: personal-vault
+    owner: liammaher
+    name: personal-vault-italia
