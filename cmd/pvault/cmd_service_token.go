@@ -89,10 +89,9 @@ func cmdCreateServiceToken() {
 	}
 
 	stored := false
+	var keychainErr error
 	if keychain != "" {
-		if err := storeInKeychain(keychain, result.Token); err != nil {
-			fmt.Fprintf(os.Stderr, "Keychain save failed (%v); printing the token instead.\n\n", err)
-		} else {
+		if keychainErr = storeInKeychain(keychain, result.Token); keychainErr == nil {
 			stored = true
 		}
 	}
@@ -109,6 +108,11 @@ func cmdCreateServiceToken() {
 	fmt.Printf("Expires:         %s\n", result.ExpiresAt)
 	if !stored {
 		fmt.Println("\nSave this token — it cannot be displayed again.")
+	}
+	if keychainErr != nil {
+		// The token exists and is printed above, but whatever reads the
+		// Keychain won't see it: fail so callers don't assume it worked.
+		fatal("Keychain save failed: %v", keychainErr)
 	}
 }
 

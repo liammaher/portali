@@ -9,14 +9,15 @@ import (
 	"testing"
 )
 
-func TestKeychainServicePattern(t *testing.T) {
-	for _, ok := range []string{"pvault-mcp", "a", "x.y_z-1"} {
-		if !keychainServicePattern.MatchString(ok) {
+func TestKeychainNamePattern(t *testing.T) {
+	for _, ok := range []string{"pvault-mcp", "a", "x.y_z-1", "_svc"} {
+		if !keychainNamePattern.MatchString(ok) {
 			t.Errorf("%q should be accepted", ok)
 		}
 	}
-	for _, bad := range []string{"", "has space", "semi;colon", "quote\"", "new\nline"} {
-		if keychainServicePattern.MatchString(bad) {
+	// "--ttl" is what --keychain swallows when its value is forgotten.
+	for _, bad := range []string{"", "has space", "semi;colon", "quote\"", "new\nline", "-U", "--ttl"} {
+		if keychainNamePattern.MatchString(bad) {
 			t.Errorf("%q should be rejected", bad)
 		}
 	}

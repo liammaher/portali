@@ -81,7 +81,7 @@ Profile Password + Secret Key (128-bit)
   `max_sensitivity` cap (default `sensitive`), cannot change tiers,
   and never reset the auto-lock timer (only session activity does)
 - MCP server uses only a service token: `VAULT_TOKEN`, or `VAULT_TOKEN_COMMAND`
-  (re-run after a 401). `create-service-token --keychain <service>` stores the
+  (run per request, never cached). `create-service-token --keychain <service>` stores the
   token in the macOS Keychain via `security -i` stdin instead of printing it
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID/CIE credentials (`IsCredentialField`) can only be stored with tier

@@ -20,7 +20,7 @@ On macOS, keep the token in your Keychain (recommended). Register once:
 
 ```sh
 claude mcp add vault --scope user \
-  -e VAULT_TOKEN_COMMAND='security find-generic-password -a "$USER" -s pvault-mcp -w' \
+  -e VAULT_TOKEN_COMMAND='security find-generic-password -s pvault-mcp -w' \
   -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
 ```
 
@@ -66,7 +66,7 @@ pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h [-
 
 It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start when neither variable is set.
 
-With `VAULT_TOKEN_COMMAND`, the command runs on the first call that needs a token, and again if the server rejects it (expired, revoked or replaced). Until a token is stored, tools answer with how to create one.
+With `VAULT_TOKEN_COMMAND`, the command runs for every request (it is not cached), so a replaced token is used immediately; its error output is included when it fails. Until a token is stored, tools answer with how to create one.
 
 The token keeps working across vault lock/unlock cycles until it expires or is revoked.
 

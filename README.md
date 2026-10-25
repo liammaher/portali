@@ -114,7 +114,7 @@ cd mcp && npm ci && npm run build
     "vault": {
       "command": "node",
       "args": ["/path/to/personal-vault-italia/mcp/dist/index.js"],
-      "env": { "VAULT_TOKEN_COMMAND": "security find-generic-password -a \"$USER\" -s pvault-mcp -w" }
+      "env": { "VAULT_TOKEN_COMMAND": "security find-generic-password -s pvault-mcp -w" }
     }
   }
 }
