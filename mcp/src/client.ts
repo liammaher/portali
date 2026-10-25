@@ -68,16 +68,16 @@ function createTokenHelp(): string {
     "from the shell instead (the user approves with Touch ID, no token needed); otherwise ";
   const create = "`pvault create-service-token <name> --scope \"identity.*,...\"";
   const noRestart = "in their terminal; the next call uses it, no restart needed";
+  let ask = `ask the user to create one with ${create}\` and set it as VAULT_TOKEN in this MCP server's env`;
   if (!staticToken()) {
     const service = keychainService();
     if (service) {
-      return `${touchID}ask the user to run ${create} --keychain ${service}\` ${noRestart}`;
-    }
-    if (tokenCommand()) {
-      return `${touchID}ask the user to run ${create} --keychain <service>\` (the service VAULT_TOKEN_COMMAND reads) ${noRestart}`;
+      ask = `ask the user to run ${create} --keychain ${service}\` ${noRestart}`;
+    } else if (tokenCommand()) {
+      ask = `ask the user to run ${create} --keychain <service>\` (the service VAULT_TOKEN_COMMAND reads) ${noRestart}`;
     }
   }
-  return `${touchID}ask the user to create one with ${create}\` and set it as VAULT_TOKEN in this MCP server's env`;
+  return touchID + ask;
 }
 
 function missingToken(detail?: string): VaultError {

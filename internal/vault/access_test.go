@@ -2,6 +2,7 @@ package vault
 
 import (
 	"errors"
+	"strings"
 	"testing"
 )
 
@@ -86,5 +87,27 @@ func TestAccessPreferenceIsReadable(t *testing.T) {
 	}
 	if f, _ := v.Get("spid.provider"); f.Value != "PosteID" || f.Sensitivity != "standard" {
 		t.Errorf("spid.provider = %q (%s), want PosteID (standard)", f.Value, f.Sensitivity)
+	}
+}
+
+// The provider table, its list and the schema text must name the same providers.
+func TestSPIDProviderNamesMatchTable(t *testing.T) {
+	names := map[string]bool{}
+	for _, n := range spidProviderNames {
+		names[n] = true
+		if spidProviders[lettersAndDigits(n)] != n {
+			t.Errorf("%q is not accepted as itself", n)
+		}
+	}
+	for alias, n := range spidProviders {
+		if !names[n] {
+			t.Errorf("alias %q maps to %q, which isn't in spidProviderNames", alias, n)
+		}
+	}
+	if want := "PosteID, Aruba, InfoCert, Namirial, Sielte, Lepida, Register, TIM id, Intesi Group, EtnaID, TeamSystem or InfoCamere"; spidProviderList != want {
+		t.Errorf("spidProviderList = %q, want %q", spidProviderList, want)
+	}
+	if d := GetSchemaField("spid.provider").Description; !strings.Contains(d, spidProviderList) {
+		t.Errorf("schema description %q doesn't list the providers", d)
 	}
 }

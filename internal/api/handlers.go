@@ -319,7 +319,7 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		// details) unless the user approved this one in person. An existing
 		// field keeps its own tier, so one the user lowered (e.g.
 		// spid.data_scadenza) can still be maintained.
-		if existing == nil && vault.DefaultSensitivity(id) == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal {
+		if existing == nil && vault.DefaultSensitivity(id) == vault.TierPersonal && !reachesPersonal(r) {
 			personalOnlyDenied(w)
 			return
 		}
@@ -342,7 +342,7 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 
 	// An empty tier keeps an existing field's tier, or uses the schema
 	// default for a new field (see Vault.Set).
-	if req.Sensitivity == vault.TierPersonal && maxTierFromRequest(r) != vault.TierPersonal {
+	if req.Sensitivity == vault.TierPersonal && !reachesPersonal(r) {
 		personalOnlyDenied(w)
 		return
 	}

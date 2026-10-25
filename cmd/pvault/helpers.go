@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,6 +14,8 @@ import (
 	"syscall"
 
 	"golang.org/x/term"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func vaultDir() string {
@@ -148,17 +151,27 @@ func promptGrant(ttl string) (string, error) {
 	return requestGrant(pw, sk, ttl)
 }
 
+// errServerDown means nothing answered on the vault server's address.
+var errServerDown = errors.New("vault server not running — run 'pvault unlock'")
+
+// serverStatus returns the public status of the server at VAULT_ADDR.
+func serverStatus() (*vault.VaultStatus, error) {
+	resp, err := publicRequest("GET", "/vault/status", nil)
+	if err != nil {
+		return nil, errServerDown
+	}
+	var status vault.VaultStatus
+	if err := apiResult(resp, &status); err != nil {
+		return nil, err
+	}
+	return &status, nil
+}
+
 // requireUnlockedServer returns an error unless the vault server is running
 // and unlocked.
 func requireUnlockedServer() error {
-	resp, err := publicRequest("GET", "/vault/status", nil)
+	status, err := serverStatus()
 	if err != nil {
-		return fmt.Errorf("vault server not running — run 'pvault unlock'")
-	}
-	var status struct {
-		Locked bool `json:"locked"`
-	}
-	if err := apiResult(resp, &status); err != nil {
 		return err
 	}
 	if status.Locked {

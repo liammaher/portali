@@ -38,7 +38,7 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 	closed := map[string]bool{}
 	for _, fields := range ctx.Categories {
 		for _, f := range fields {
-			if slug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" && IsClosedStato(f.Value) {
+			if slug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" && isClosedStato(f.Value) {
 				closed[slug] = true
 			}
 		}

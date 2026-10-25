@@ -1,21 +1,18 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"time"
-
-	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func cmdStatus() {
-	resp, err := publicRequest("GET", "/vault/status", nil)
-	if err != nil {
+	status, err := serverStatus()
+	if errors.Is(err, errServerDown) {
 		fmt.Println("Vault is locked (server not running).")
 		return
 	}
-
-	var status vault.VaultStatus
-	if err := apiResult(resp, &status); err != nil {
+	if err != nil {
 		fatal("%v", err)
 	}
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -75,15 +74,10 @@ func startBackgroundServer(dir, pw, sk string) (verified bool, err error) {
 			writePID(cmd.Process.Pid)
 			return false, nil
 		case <-tick.C:
-			resp, err := publicRequest("GET", "/vault/status", nil)
+			status, err := serverStatus()
 			if err != nil {
 				continue
 			}
-			var status struct {
-				Locked bool `json:"locked"`
-			}
-			json.NewDecoder(resp.Body).Decode(&status)
-			resp.Body.Close()
 			if status.Locked && !locked {
 				// Our server unlocks before it binds, so a locked answer
 				// comes from some other server on the port.

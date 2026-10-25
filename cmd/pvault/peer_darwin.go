@@ -32,17 +32,15 @@ func peerProcess(conn *net.UnixConn) (uid, pid int, exe string, err error) {
 	if sockErr != nil {
 		return 0, 0, "", sockErr
 	}
-	exe, err = processPath(pid)
+	exe, err = processExe(pid)
 	return int(cred.Uid), pid, exe, err
 }
 
-// processExe is the kernel's path of pid's running executable.
-func processExe(pid int) (string, error) { return processPath(pid) }
-
-// processPath is libproc's proc_pidpath, which x/sys/unix doesn't wrap:
+// processExe is the kernel's path of pid's running executable: libproc's
+// proc_pidpath, which x/sys/unix doesn't wrap:
 // proc_info(PROC_INFO_CALL_PIDINFO, pid, PROC_PIDPATHINFO, 0, buf, size).
 // It still names the old file after pvault is reinstalled with rm + cp.
-func processPath(pid int) (string, error) {
+func processExe(pid int) (string, error) {
 	const (
 		procInfoCallPidInfo = 2
 		procPidPathInfo     = 11
