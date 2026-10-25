@@ -84,6 +84,10 @@ var synonyms = map[string]string{
 	// residenza / domicilio
 	"via":             "indirizzo",
 	"numero_civico":   "civico",
+	"int":             "interno",
+	"numero_interno":  "interno",
+	"flat":            "interno",
+	"apartment":       "interno",
 	"codice_postale":  "cap",
 	"sigla_provincia": "provincia",
 

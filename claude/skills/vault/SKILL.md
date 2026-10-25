@@ -60,7 +60,7 @@ Field IDs are `category.field`. Full list with descriptions and default tiers:
 curl -s http://127.0.0.1:7200/vault/schema
 ```
 
-Common ones: `residenza.{indirizzo,civico,cap,comune,provincia,data_inizio}`,
+Common ones: `residenza.{indirizzo,civico,interno,cap,comune,provincia,data_inizio}`,
 `domicilio.*` (only if different from residenza), `identity.codice_fiscale`,
 `cie.{numero,data_scadenza}`, `permesso_soggiorno.{numero,tipo,data_scadenza}`,
 `tessera_sanitaria.{numero,data_scadenza,medico_base}`.

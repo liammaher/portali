@@ -72,7 +72,8 @@ var RecommendedSchema = Schema{
 			Description: "Registered residence (residenza anagrafica, as recorded in ANPR)",
 			Fields: []SchemaField{
 				{ID: "residenza.indirizzo", Description: "Street (via/piazza) without house number", Sensitivity: "sensitive"},
-				{ID: "residenza.civico", Description: "House number, including interno/scala if any", Sensitivity: "sensitive"},
+				{ID: "residenza.civico", Description: "House number (numero civico) only, e.g. 544; scala or esponente like 12/B may follow", Sensitivity: "sensitive"},
+				{ID: "residenza.interno", Description: "Flat number (interno), e.g. 13; 'int. 13' is saved as 13", Sensitivity: "standard"},
 				{ID: "residenza.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "residenza.comune", Description: "Comune of residence", Sensitivity: "standard"},
 				{ID: "residenza.provincia", Description: "Provincia as 2-letter sigla (e.g. NA, validated)", Sensitivity: "standard"},
@@ -84,7 +85,8 @@ var RecommendedSchema = Schema{
 			Description: "Domicile, only if different from residenza",
 			Fields: []SchemaField{
 				{ID: "domicilio.indirizzo", Description: "Street (via/piazza) without house number", Sensitivity: "sensitive"},
-				{ID: "domicilio.civico", Description: "House number, including interno/scala if any", Sensitivity: "sensitive"},
+				{ID: "domicilio.civico", Description: "House number (numero civico) only, e.g. 544; scala or esponente like 12/B may follow", Sensitivity: "sensitive"},
+				{ID: "domicilio.interno", Description: "Flat number (interno), e.g. 13; 'int. 13' is saved as 13", Sensitivity: "standard"},
 				{ID: "domicilio.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "domicilio.comune", Description: "Comune of domicile", Sensitivity: "standard"},
 				{ID: "domicilio.provincia", Description: "Provincia as 2-letter sigla (e.g. NA, validated)", Sensitivity: "standard"},
