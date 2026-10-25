@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"syscall"
 
 	"golang.org/x/term"
@@ -69,8 +70,16 @@ func cmdTouchIDEnable() {
 	if err := checkCredentials(pw, sk); err != nil {
 		fatal("%v", err)
 	}
+	// The helper sends the password only to a server running this binary.
+	self, err := os.Executable()
+	if err == nil {
+		self, err = filepath.EvalSymlinks(self)
+	}
+	if err != nil {
+		fatal("finding pvault: %v", err)
+	}
 	fmt.Println("Touch your fingerprint sensor to confirm…")
-	if _, err := runTouchID(pw, "enroll"); err != nil {
+	if _, err := runTouchID(pw, "enroll", "--server", self); err != nil {
 		fatal("%v", err)
 	}
 	fmt.Println("Touch ID is on. pvault will ask for your fingerprint instead of your password,")

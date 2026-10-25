@@ -79,13 +79,30 @@ Profile Password + Secret Key (128-bit)
 - Writing a field without a tier keeps its existing tier (schema default for
   new fields), so overwrites never silently downgrade sensitivity
 - Secret key at `~/.pvault/secret.key` (0600), never in database
+- Credentials (password + secret key) never go over TCP, where anything can listen on
+  7200 while the server is down. `pvault serve` also listens on `<vault dir>/run/pvault.sock`
+  (dir 0700, socket 0600; bound before TCP, never taken over from a live server, stale
+  ones replaced). `reUnlock`/`requestGrant` use `credentialRequest` (`socket.go`), which
+  refuses a run dir that is a symlink, not ours or not 0700, and checks the listener
+  (`peer_darwin.go`: `LOCAL_PEERCRED` uid, `csops` valid + hardened runtime, kernel exe path
+  via `proc_info` equal to our own resolved `os.Executable()`; Linux: `SO_PEERCRED` +
+  `/proc/<pid>/exe`; other OSes keep TCP). `checkVaultServer` runs before any password or
+  Touch ID prompt. `make build` signs pvault ad-hoc with the hardened runtime so a genuine
+  pvault can't be DYLD-injected. Limit: a same-user program that replaces the pvault binary
+  (`~/.local/bin` is user-writable) still wins; this stops port squatters and agents kept
+  out of the vault dir and the binary. The onboarding page still sends its password over
+  TCP (browsers can't use Unix sockets). Tests: `serveOnSocket`/`shortVaultDir` (t.TempDir
+  paths exceed the 104-byte socket limit), `requireHardenedRuntime` off for in-process servers
 - Touch ID (`cmd/pvault-touchid/main.swift`, macOS, ad-hoc signed + hardened runtime):
   `pvault touchid enable` (TTY only) stores the profile password in a plain login-Keychain
   item (service `pvault-touchid`, account = vault dir) whose ACL trusts only that exact
   helper build. Biometric Keychain flags need a paid Apple signature (-34018 otherwise),
   so the helper checks Touch ID itself (biometrics or Apple Watch, no Mac-password
-  fallback), then talks to the server at the fixed address 127.0.0.1:7200 and returns
-  only a token, never the password. Its prompt is worded from the exact scope it requests:
+  fallback), then sends the password only over the vault socket and returns only a token.
+  The Keychain item holds JSON `{password, server}`: `touchid enable` passes pvault's own
+  resolved path (`enroll --server`), and the helper sends only to a listener whose audit
+  token (`LOCAL_PEERTOKEN`) gives a valid, hardened `SecCode` with that file's cdhash.
+  A bare-password item (older helper) counts as not enrolled. Its prompt is worded from the exact scope it requests:
   append/write grants say they can read too, `cat.*` says "fields and documents", `*` is
   named alone, durations round up, and patterns are anchored with `\A`/`\z` (ICU `$` lets
   a trailing line break through) and capped at 100 characters.
@@ -93,12 +110,15 @@ Profile Password + Secret Key (128-bit)
   `needGrant(scope, access)`; with Touch ID on, the grant is scoped to that (full access
   if unset), and in a TTY a failed or denied prompt falls back to the typed password.
   `pvault unlock` with Touch ID starts `pvault serve --locked` and the helper unlocks it.
-  Rebuilding the helper changes its signature, so re-run `pvault touchid enable`.
-  pvault skips Touch ID when its `VAULT_ADDR` differs from the helper's server (`status`
-  prints `server <addr>`), and a `unlock` that started the server stops it again if no one
+  Rebuilding the helper changes its signature, and moving or rebuilding pvault changes
+  the trusted server, so re-run `pvault touchid enable`. Tokens still go over TCP:
+  pvault skips Touch ID when its `VAULT_ADDR` differs from the helper's 127.0.0.1:7200
+  (`status` prints `server <addr>`), and a `unlock` that started the server stops it again if no one
   can unlock it. `touchid enable`/`disable` are interactive only.
-  Debug builds (`-D DEBUG`) honor `VAULT_ADDR` and `PVAULT_TOUCHID_TEST_APPROVE=1` for tests,
-  and add `describe-grant` (prints the prompt; `TestTouchIDHelper_*` compiles it with swiftc)
+  Debug builds (`-D DEBUG`) honor `VAULT_ADDR`, `PVAULT_TOUCHID_TEST_APPROVE=1` and
+  `PVAULT_TOUCHID_TEST_PASSWORD`/`_SERVER` (enrollment without the Keychain) for tests, and
+  add `describe-grant` (prints the prompt; `TestTouchIDHelper_*` compiles it with swiftc and
+  runs it against real `pvault serve --locked` builds and impostors)
 - Scoped grants: `POST /vault/session` with `scope` (+ `access`) issues a grant limited
   like a service token (TTL max 10m) that can reach `personal` fields, because the user
   approved it in person. It is not session auth (no audit, lock, tiers or tokens), and only

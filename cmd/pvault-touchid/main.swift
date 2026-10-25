@@ -7,12 +7,15 @@
 // it makes macOS ask for the login password. This binary checks Touch ID
 // itself before reading the item, and never prints or returns the password —
 // it talks to the vault server directly and hands back only a scoped token.
+// It sends the password only to the pvault binary saved at enrollment, over
+// the vault dir's Unix socket, after checking who is listening (see
+// "Vault server" below).
 // The Touch ID prompt is built here from the exact request sent to the
 // server, so the caller cannot word it.
 //
 // Usage:
 //   pvault-touchid status
-//   pvault-touchid enroll            (password on stdin)
+//   pvault-touchid enroll --server <pvault path>   (password on stdin)
 //   pvault-touchid remove
 //   pvault-touchid unlock
 //   pvault-touchid grant [--scope <patterns>] [--access read|append|write] [--ttl <seconds>]
@@ -29,9 +32,9 @@ let maxGrantSeconds = 600  // vault.MaxScopedGrantTTL
 let maxScopePatterns = 10
 let maxPatternLength = 100  // keeps every pattern visible in the prompt
 
-// The server address is fixed: if a caller could point it elsewhere, a fake
-// server would receive the password after the user approved. Debug builds
-// (-D DEBUG) accept VAULT_ADDR for tests.
+// The TCP address pvault must use for the tokens this helper hands out. The
+// password itself never goes over TCP. Debug builds (-D DEBUG) accept
+// VAULT_ADDR for tests.
 func serverAddr() -> String {
     #if DEBUG
     if let a = ProcessInfo.processInfo.environment["VAULT_ADDR"], !a.isEmpty { return a }
@@ -91,6 +94,14 @@ func approve(_ reason: String) {
 
 // MARK: - Keychain
 
+// The item holds the password and the pvault binary that enrolled it (the
+// only server the password is ever sent to), as JSON. Both sit in the
+// protected data, so no other program can read or change them.
+struct Enrollment: Codable {
+    let password: String
+    let server: String
+}
+
 func itemQuery() -> [String: Any] {
     [
         kSecClass as String: kSecClassGenericPassword,
@@ -103,36 +114,94 @@ func keychainMessage(_ s: OSStatus) -> String {
     (SecCopyErrorMessageString(s, nil) as String?) ?? "OSStatus \(s)"
 }
 
+#if DEBUG
+// Lets tests run unlock and grant without the Keychain; never in release builds.
+func testEnrollment() -> Enrollment? {
+    let env = ProcessInfo.processInfo.environment
+    guard let pw = env["PVAULT_TOUCHID_TEST_PASSWORD"], let server = env["PVAULT_TOUCHID_TEST_SERVER"] else { return nil }
+    return Enrollment(password: pw, server: server)
+}
+#endif
+
 func isEnrolled() -> Bool {
+    #if DEBUG
+    if testEnrollment() != nil { return true }
+    #endif
     // Attributes only, so this never triggers an access prompt.
     var q = itemQuery()
     q[kSecReturnAttributes as String] = true
     return SecItemCopyMatching(q as CFDictionary, nil) == errSecSuccess
 }
 
-func storePassword(_ password: String) {
+func storeEnrollment(_ e: Enrollment) {
     SecItemDelete(itemQuery() as CFDictionary)
     var add = itemQuery()
     add[kSecAttrLabel as String] = "pvault Touch ID"
     add[kSecAttrDescription as String] = "vault profile password, readable only by pvault-touchid"
-    add[kSecValueData as String] = Data(password.utf8)
+    add[kSecValueData as String] = try! JSONEncoder().encode(e)
     let s = SecItemAdd(add as CFDictionary, nil)
     if s != errSecSuccess { fail("saving to Keychain: \(keychainMessage(s))") }
 }
 
-func readPassword() -> String {
+func readEnrollment() -> Enrollment {
+    #if DEBUG
+    if let e = testEnrollment() { return e }
+    #endif
     var q = itemQuery()
     q[kSecReturnData as String] = true
     var out: CFTypeRef?
     let s = SecItemCopyMatching(q as CFDictionary, &out)
     if s == errSecItemNotFound { fail("Touch ID is not set up — run 'pvault touchid enable'", code: 3) }
-    guard s == errSecSuccess, let data = out as? Data, let pw = String(data: data, encoding: .utf8) else {
+    guard s == errSecSuccess, let data = out as? Data else {
         fail("reading Keychain: \(keychainMessage(s)) — if pvault-touchid was rebuilt, run 'pvault touchid enable' again")
     }
-    return pw
+    // A bare password was saved by a version that didn't pin the server.
+    guard let e = try? JSONDecoder().decode(Enrollment.self, from: data) else {
+        fail("Touch ID was set up by an older pvault-touchid — run 'pvault touchid enable' again", code: 3)
+    }
+    return e
+}
+
+// MARK: - Code signatures
+
+// cdhash identifies the exact build: an ad-hoc signature has no other name.
+func cdhash(_ code: SecStaticCode) -> Data? {
+    var info: CFDictionary?
+    guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &info) == errSecSuccess else { return nil }
+    return (info as? [String: Any])?[kSecCodeInfoUnique as String] as? Data
+}
+
+func signatureFlags(_ code: SecStaticCode) -> UInt32 {
+    var info: CFDictionary?
+    guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &info) == errSecSuccess else { return 0 }
+    return ((info as? [String: Any])?[kSecCodeInfoFlags as String] as? NSNumber)?.uint32Value ?? 0
+}
+
+// A pvault file that may serve the password: validly signed with the
+// hardened runtime, so no library can be injected into it via DYLD_*.
+func trustedServerCode(_ path: String) -> SecStaticCode {
+    var code: SecStaticCode?
+    guard SecStaticCodeCreateWithPath(URL(fileURLWithPath: path) as CFURL, [], &code) == errSecSuccess, let code,
+          SecStaticCodeCheckValidity(code, [], nil) == errSecSuccess else {
+        fail("\(path) is not a validly signed pvault — build it with 'make build', then run 'pvault touchid enable' again")
+    }
+    guard signatureFlags(code) & SecCodeSignatureFlags.runtime.rawValue != 0 else {
+        fail("\(path) is not signed with the hardened runtime — build it with 'make build', then run 'pvault touchid enable' again")
+    }
+    return code
 }
 
 // MARK: - Vault server
+
+// Credentials go only over the vault dir's Unix socket, never TCP: anything
+// can listen on 127.0.0.1:7200 while the real server is down. Before sending,
+// checkPeer makes sure the listener is this user's, runs the pvault binary
+// saved at enrollment, and has the same cdhash as that file. A same-user
+// program that replaces that binary still wins; this stops port squatters
+// and agents kept out of the vault dir and the binary.
+func socketPath() -> String {
+    (vaultDir() as NSString).appendingPathComponent("run/pvault.sock")
+}
 
 func readSecretKey() -> String {
     let path = (vaultDir() as NSString).appendingPathComponent("secret.key")
@@ -142,24 +211,121 @@ func readSecretKey() -> String {
     return s.trimmingCharacters(in: .whitespacesAndNewlines)
 }
 
-func post(_ path: String, _ body: [String: String]) -> (Int, [String: Any]) {
-    guard let url = URL(string: serverAddr() + path) else { fail("bad server address") }
-    var req = URLRequest(url: url, timeoutInterval: 30)
-    req.httpMethod = "POST"
-    req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    req.httpBody = try? JSONSerialization.data(withJSONObject: body)
-    let result = Box<(Int, [String: Any])?>(nil)
-    let done = DispatchSemaphore(value: 0)
-    URLSession.shared.dataTask(with: req) { data, resp, _ in
-        if let http = resp as? HTTPURLResponse {
-            let json = data.flatMap { try? JSONSerialization.jsonObject(with: $0) } as? [String: Any] ?? [:]
-            result.value = (http.statusCode, json)
+func ownedByMe(_ path: String, type: mode_t) -> stat? {
+    var st = stat()
+    guard lstat(path, &st) == 0, st.st_mode & S_IFMT == type, st.st_uid == getuid() else { return nil }
+    return st
+}
+
+func checkPeer(_ fd: Int32, server: String) {
+    var cred = xucred()
+    var credLen = socklen_t(MemoryLayout<xucred>.size)
+    guard getsockopt(fd, SOL_LOCAL, LOCAL_PEERCRED, &cred, &credLen) == 0, cred.cr_uid == getuid() else {
+        fail("refusing to send your password: the vault server runs as another user")
+    }
+    // The audit token names the exact process (pid and its version), so a
+    // reused pid can't stand in for it.
+    var token = audit_token_t()
+    var tokenLen = socklen_t(MemoryLayout<audit_token_t>.size)
+    guard getsockopt(fd, SOL_LOCAL, LOCAL_PEERTOKEN, &token, &tokenLen) == 0 else {
+        fail("refusing to send your password: cannot identify the vault server")
+    }
+    let attrs = [kSecGuestAttributeAudit: withUnsafeBytes(of: &token) { Data($0) }] as CFDictionary
+    var guest: SecCode?
+    guard SecCodeCopyGuestWithAttributes(nil, attrs, [], &guest) == errSecSuccess, let guest,
+          SecCodeCheckValidity(guest, [], nil) == errSecSuccess else {
+        fail("refusing to send your password: the vault server's code signature is not valid")
+    }
+    let running = unsafeBitCast(guest, to: SecStaticCode.self)
+    let expected = trustedServerCode(server)
+    guard let have = cdhash(running), have == cdhash(expected),
+          signatureFlags(running) & SecCodeSignatureFlags.runtime.rawValue != 0 else {
+        var url: CFURL?
+        SecCodeCopyPath(running, [], &url)
+        let who = (url as URL?)?.path ?? "another program"
+        fail("refusing to send your password: the vault server is \(who), not \(server) — run 'pvault lock' then 'pvault unlock', or 'pvault touchid enable' with this pvault")
+    }
+}
+
+// connectServer returns a socket to the vault server, checked as above.
+func connectServer(server: String) -> Int32 {
+    let path = socketPath()
+    let dir = (path as NSString).deletingLastPathComponent
+    guard let st = ownedByMe(dir, type: S_IFDIR), st.st_mode & 0o077 == 0 else {
+        fail("cannot reach the vault server: \(dir) is missing or not private — run 'pvault unlock'")
+    }
+    guard ownedByMe(path, type: S_IFSOCK) != nil else {
+        fail("cannot reach the vault server for \(vaultDir()) — run 'pvault unlock'")
+    }
+    var addr = sockaddr_un()
+    addr.sun_family = sa_family_t(AF_UNIX)
+    let bytes = path.utf8CString
+    guard bytes.count <= MemoryLayout.size(ofValue: addr.sun_path) else { fail("socket path \(path) is too long") }
+    withUnsafeMutableBytes(of: &addr.sun_path) { dst in bytes.withUnsafeBytes { dst.copyMemory(from: $0) } }
+    let fd = socket(AF_UNIX, SOCK_STREAM, 0)
+    guard fd >= 0 else { fail("socket: \(String(cString: strerror(errno)))") }
+    var timeout = timeval(tv_sec: 30, tv_usec: 0)
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
+    setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
+    let rc = withUnsafePointer(to: &addr) {
+        $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { connect(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size)) }
+    }
+    guard rc == 0 else { fail("cannot reach the vault server for \(vaultDir()) — run 'pvault unlock'") }
+    checkPeer(fd, server: server)
+    return fd
+}
+
+// post sends one HTTP/1.1 request over a checked socket (URLSession can't
+// use Unix sockets) and returns the status and JSON body.
+func post(_ fd: Int32, _ path: String, _ body: [String: String]) -> (Int, [String: Any]) {
+    defer { close(fd) }
+    let payload = try! JSONSerialization.data(withJSONObject: body)
+    var req = Data("POST \(path) HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: \(payload.count)\r\nConnection: close\r\n\r\n".utf8)
+    req.append(payload)
+    let sent = req.withUnsafeBytes { buf -> Bool in
+        var off = 0
+        while off < buf.count {
+            let n = write(fd, buf.baseAddress! + off, buf.count - off)
+            if n <= 0 { return false }
+            off += n
         }
-        done.signal()
-    }.resume()
-    done.wait()
-    guard let r = result.value else { fail("cannot reach vault server at \(serverAddr()) — run 'pvault unlock'") }
-    return r
+        return true
+    }
+    guard sent else { fail("sending to the vault server failed") }
+    var resp = Data()
+    var chunk = [UInt8](repeating: 0, count: 4096)
+    while true {
+        let n = read(fd, &chunk, chunk.count)
+        if n <= 0 { break }
+        resp.append(contentsOf: chunk[0..<n])
+    }
+    guard let split = resp.range(of: Data("\r\n\r\n".utf8)),
+          let head = String(data: resp[..<split.lowerBound], encoding: .utf8) else {
+        fail("bad response from the vault server")
+    }
+    let lines = head.components(separatedBy: "\r\n")
+    let parts = lines[0].split(separator: " ")
+    guard parts.count >= 2, let status = Int(parts[1]) else { fail("bad response from the vault server") }
+    var content = resp[split.upperBound...]
+    if lines.contains(where: { $0.lowercased() == "transfer-encoding: chunked" }) {
+        content = dechunk(Data(content))[...]
+    }
+    let json = (try? JSONSerialization.jsonObject(with: Data(content))) as? [String: Any] ?? [:]
+    return (status, json)
+}
+
+func dechunk(_ data: Data) -> Data {
+    var out = Data()
+    var rest = data[...]
+    while let eol = rest.range(of: Data("\r\n".utf8)),
+          let size = Int(String(decoding: rest[..<eol.lowerBound], as: UTF8.self).split(separator: ";")[0], radix: 16),
+          size > 0, rest.distance(from: eol.upperBound, to: rest.endIndex) >= size {
+        let start = eol.upperBound
+        let end = rest.index(start, offsetBy: size)
+        out.append(rest[start..<end])
+        rest = rest[end...].dropFirst(2)
+    }
+    return out
 }
 
 func serverError(_ json: [String: Any], _ status: Int) -> String {
@@ -261,12 +427,14 @@ func cmdGrant(_ args: [String]) {
 
     approve(grantReason(scope: scope, access: access, seconds: seconds))
 
-    var body = ["password": readPassword(), "secret_key": readSecretKey(), "ttl": "\(seconds)s"]
+    let enrolled = readEnrollment()
+    let fd = connectServer(server: enrolled.server)
+    var body = ["password": enrolled.password, "secret_key": readSecretKey(), "ttl": "\(seconds)s"]
     if let scope {
         body["scope"] = scope.joined(separator: ",")
         body["access"] = access
     }
-    let (status, json) = post("/vault/session", body)
+    let (status, json) = post(fd, "/vault/session", body)
     guard status == 200, let token = json["token"] as? String else {
         fail("vault refused the grant: \(serverError(json, status))")
     }
@@ -281,7 +449,9 @@ func cmdGrant(_ args: [String]) {
 func cmdUnlock() {
     guard isEnrolled() else { fail("Touch ID is not set up — run 'pvault touchid enable'", code: 3) }
     approve("unlock your vault")
-    let (status, json) = post("/vault/unlock", ["password": readPassword(), "secret_key": readSecretKey()])
+    let enrolled = readEnrollment()
+    let fd = connectServer(server: enrolled.server)
+    let (status, json) = post(fd, "/vault/unlock", ["password": enrolled.password, "secret_key": readSecretKey()])
     switch status {
     case 200: print("unlocked")  // the unlock token is discarded on purpose
     case 409: print("already unlocked")
@@ -289,12 +459,19 @@ func cmdUnlock() {
     }
 }
 
-func cmdEnroll() {
+// cmdEnroll saves the password with the pvault binary it may be sent to,
+// which pvault passes as the path of its own (symlink-resolved) executable.
+func cmdEnroll(_ args: [String]) {
+    guard args.count == 2, args[0] == "--server", args[1].hasPrefix("/") else {
+        fail("usage: pvault-touchid enroll --server <absolute path to pvault>")
+    }
+    let server = args[1]
+    _ = trustedServerCode(server)
     guard let line = readLine(strippingNewline: true), !line.isEmpty else {
         fail("expected the profile password on stdin")
     }
     approve("use Touch ID to unlock your vault")
-    storePassword(line)
+    storeEnrollment(Enrollment(password: line, server: server))
     print("enrolled")
 }
 
@@ -306,7 +483,7 @@ case "status":
     print("server \(serverAddr())")
     exit(enrolled ? 0 : 3)
 case "enroll":
-    cmdEnroll()
+    cmdEnroll(Array(args.dropFirst()))
 case "remove":
     let s = SecItemDelete(itemQuery() as CFDictionary)
     if s != errSecSuccess && s != errSecItemNotFound { fail("removing Keychain item: \(keychainMessage(s))") }
