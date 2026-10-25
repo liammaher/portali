@@ -10,12 +10,12 @@ import (
 func cmdList() {
 	path := "/vault/fields"
 	needGrant("*", "read")
-	if len(os.Args) >= 3 {
-		if !vault.ValidCategoryName(os.Args[2]) {
-			fatal("invalid category %q: only letters, digits, underscore and hyphen", os.Args[2])
+	if args := positionalArgs(os.Args[2:], "usage: pvault list [category]", 0, 1); len(args) == 1 {
+		if !vault.ValidCategoryName(args[0]) {
+			fatal("invalid category %q: only letters, digits, underscore and hyphen", args[0])
 		}
-		path = "/vault/fields/category/" + os.Args[2]
-		needGrant(os.Args[2]+".*", "read")
+		path = "/vault/fields/category/" + args[0]
+		needGrant(args[0]+".*", "read")
 	}
 
 	resp, err := apiRequest("GET", path, nil)

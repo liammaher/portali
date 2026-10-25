@@ -11,9 +11,10 @@ import (
 func cmdExport() {
 	includePersonal := false
 	for _, arg := range os.Args[2:] {
-		if arg == "--include-personal" {
-			includePersonal = true
+		if arg != "--include-personal" {
+			fatal("unknown option %q\nusage: pvault export [--include-personal]", arg)
 		}
+		includePersonal = true
 	}
 
 	needGrant("*", "read")

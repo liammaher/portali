@@ -8,11 +8,8 @@ import (
 )
 
 func cmdSetSensitivity() {
-	if len(os.Args) < 4 {
-		fatal("usage: pvault set-sensitivity <id> <tier>\n  tiers: public, standard, sensitive, critical, personal (never readable by agents)")
-	}
-	id := os.Args[2]
-	tier := os.Args[3]
+	args := positionalArgs(os.Args[2:], "usage: pvault set-sensitivity <id> <tier>\n  tiers: public, standard, sensitive, critical, personal (never readable by agents)", 2, 2)
+	id, tier := args[0], args[1]
 	if err := vault.ValidateFieldID(id); err != nil {
 		fatal("%v", err)
 	}

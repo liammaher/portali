@@ -779,3 +779,54 @@ func TestInitCreatesOwnerOnlyDatabase(t *testing.T) {
 		}
 	}
 }
+
+// Changing or deleting a field that isn't there is an error, not a silent
+// success the user would take for done.
+func TestMissingFieldErrors(t *testing.T) {
+	v, _ := tmpVault(t)
+	if err := v.SetSensitivity("notes.pin", "critical"); err != ErrFieldNotFound {
+		t.Errorf("SetSensitivity on a missing field: %v", err)
+	}
+	if err := v.Delete("notes.pin"); err != ErrFieldNotFound {
+		t.Errorf("Delete of a missing field: %v", err)
+	}
+}
+
+// A checked write or delete happens only if the field is still as checked.
+func TestCheckedWritesRefuseChangedFields(t *testing.T) {
+	v, _ := tmpVault(t)
+	if err := v.SetChecked("notes.a", "agent", "", nil); err != nil {
+		t.Fatalf("checked create: %v", err)
+	}
+	if err := v.SetChecked("notes.a", "again", "", nil); err != ErrFieldChanged {
+		t.Errorf("create over an existing field: %v", err)
+	}
+	seen, _ := v.FieldMeta("notes.a")
+	if err := v.SetSensitivity("notes.a", "critical"); err != nil {
+		t.Fatal(err)
+	}
+	if err := v.SetChecked("notes.a", "agent", "", seen); err != ErrFieldChanged {
+		t.Errorf("write after a tier change: %v", err)
+	}
+	if err := v.DeleteChecked("notes.a", seen); err != ErrFieldChanged {
+		t.Errorf("delete after a tier change: %v", err)
+	}
+	if f, _ := v.Get("notes.a"); f == nil || f.Value != "agent" || f.Sensitivity != "critical" {
+		t.Errorf("field = %+v", f)
+	}
+}
+
+func TestListServiceTokensLeavesOutExpired(t *testing.T) {
+	v, _ := tmpVault(t)
+	if _, err := v.CreateServiceToken("short", "notes.*", 50*time.Millisecond, "", ""); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := v.CreateServiceToken("long", "notes.*", time.Hour, "", ""); err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(100 * time.Millisecond)
+	tokens, err := v.ListServiceTokens()
+	if err != nil || len(tokens) != 1 || tokens[0].Consumer != "long" {
+		t.Fatalf("tokens = %+v, %v", tokens, err)
+	}
+}

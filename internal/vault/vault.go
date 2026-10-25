@@ -26,6 +26,8 @@ var (
 	ErrWrongPassword   = errors.New("wrong password or secret key")
 	ErrInvalidTier     = errors.New("invalid sensitivity tier: must be public, standard, sensitive, or critical")
 	ErrAmbiguousToken  = errors.New("token prefix matches more than one service token; use a longer prefix")
+	ErrFieldNotFound   = store.ErrNotFound
+	ErrFieldChanged    = store.ErrChanged
 )
 
 var validTiers = map[string]bool{
@@ -451,6 +453,21 @@ func (v *Vault) Status() (*VaultStatus, error) {
 
 // Set encrypts and stores a field value.
 func (v *Vault) Set(id, value, sensitivity string) error {
+	return v.set(id, value, sensitivity, nil)
+}
+
+// SetChecked is Set for a caller that checked the field first: it writes
+// only if the field is still as checked (absent if existing is nil, else
+// with existing's tier), and returns ErrFieldChanged otherwise.
+func (v *Vault) SetChecked(id, value, sensitivity string, existing *FieldInfo) error {
+	seen := &store.Seen{}
+	if existing != nil {
+		seen = &store.Seen{Exists: true, Tier: existing.Sensitivity}
+	}
+	return v.set(id, value, sensitivity, seen)
+}
+
+func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 	if err := ValidateFieldID(id); err != nil {
 		return err
 	}
@@ -485,14 +502,21 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 	// whatever tier the row has when it writes (KeepTier).
 	keepTier := sensitivity == ""
 	if keepTier {
-		existing, err := v.db.GetField(id)
-		if err != nil {
-			return err
-		}
-		if existing != nil {
-			sensitivity = existing.Sensitivity
-		} else {
+		switch {
+		case seen != nil && seen.Exists:
+			sensitivity = seen.Tier
+		case seen != nil:
 			sensitivity = DefaultSensitivity(id)
+		default:
+			existing, err := v.db.GetField(id)
+			if err != nil {
+				return err
+			}
+			if existing != nil {
+				sensitivity = existing.Sensitivity
+			} else {
+				sensitivity = DefaultSensitivity(id)
+			}
 		}
 	}
 	if !validTiers[sensitivity] {
@@ -510,6 +534,7 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 		Sensitivity: sensitivity,
 		UpdatedAt:   time.Now(),
 		KeepTier:    keepTier,
+		Seen:        seen,
 	})
 	if err != nil {
 		return err
@@ -735,13 +760,23 @@ func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 	return bundle, nil
 }
 
-// Delete removes a field.
+// Delete removes a field (ErrFieldNotFound if there is none).
 func (v *Vault) Delete(id string) error {
+	return v.delete(id, nil)
+}
+
+// DeleteChecked is Delete for a caller that checked the field first: it
+// deletes only if the field still has existing's tier (ErrFieldChanged).
+func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
+	return v.delete(id, &store.Seen{Exists: true, Tier: existing.Sensitivity})
+}
+
+func (v *Vault) delete(id string, seen *store.Seen) error {
 	if _, err := v.requireUnlocked(); err != nil {
 		return err
 	}
 
-	if err := v.db.DeleteField(id); err != nil {
+	if err := v.db.DeleteField(id, seen); err != nil {
 		return err
 	}
 
@@ -873,12 +908,23 @@ func (v *Vault) ValidateServiceToken(token string) (*store.Token, bool) {
 	return t, true
 }
 
-// ListServiceTokens returns all service tokens.
+// ListServiceTokens returns the service tokens that haven't expired.
 func (v *Vault) ListServiceTokens() ([]store.Token, error) {
 	if _, err := v.requireUnlocked(); err != nil {
 		return nil, err
 	}
-	return v.db.ListTokensByUsage("service")
+	tokens, err := v.db.ListTokensByUsage("service")
+	if err != nil {
+		return nil, err
+	}
+	now := time.Now()
+	active := tokens[:0]
+	for _, t := range tokens {
+		if t.ExpiresAt.After(now) {
+			active = append(active, t)
+		}
+	}
+	return active, nil
 }
 
 // RevokeServiceToken removes a service token. ref is either the raw token or

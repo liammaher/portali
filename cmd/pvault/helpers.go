@@ -75,6 +75,21 @@ func removePID() {
 	os.Remove(pidPath())
 }
 
+// removeStalePID removes the PID file unless its process still runs: a live
+// server's PID file is how its own pvault stops it, even when this pvault
+// (another build) won't.
+func removeStalePID() {
+	if pid, err := readPID(); err == nil && processRunning(pid) {
+		return
+	}
+	removePID()
+}
+
+func processRunning(pid int) bool {
+	p, err := os.FindProcess(pid)
+	return err == nil && p.Signal(syscall.Signal(0)) == nil
+}
+
 func promptPassword(prompt string) (string, error) {
 	fmt.Fprint(os.Stderr, prompt)
 	pw, err := term.ReadPassword(int(syscall.Stdin))
@@ -195,11 +210,43 @@ func sessionToken() (string, error) {
 // apiRequest makes an authenticated HTTP request to the vault server,
 // asking for the profile password if this process has no grant yet.
 func apiRequest(method, path string, body any) (*http.Response, error) {
+	return authed(func(token string) (*http.Response, error) {
+		return doRequest(method, path, body, token)
+	})
+}
+
+// authed sends a request with this command's grant. A Touch ID grant is
+// scoped to the command, and so can't do the few things only the user's own
+// session may (e.g. delete a field stored above its default tier): on that
+// refusal it asks once more, for full access, and resends.
+func authed(send func(token string) (*http.Response, error)) (*http.Response, error) {
 	token, err := sessionToken()
 	if err != nil {
 		return nil, err
 	}
-	return doRequest(method, path, body, token)
+	resp, err := send(token)
+	if err != nil || resp.StatusCode != http.StatusForbidden || cliGrant.scope == "" {
+		return resp, err
+	}
+	body, err := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	resp.Body = io.NopCloser(bytes.NewReader(body))
+	var refusal struct {
+		Constraint string `json:"constraint"`
+	}
+	if json.Unmarshal(body, &refusal) != nil || refusal.Constraint != "session_required" {
+		return resp, nil
+	}
+	fmt.Fprintln(os.Stderr, "Only your own session can do this, so approve full access for it.")
+	needGrant("", "")
+	cliToken = ""
+	if token, err = sessionToken(); err != nil {
+		return nil, err
+	}
+	return send(token)
 }
 
 // publicRequest makes an unauthenticated HTTP request (status, unlock, session).
@@ -208,19 +255,22 @@ func publicRequest(method, path string, body any) (*http.Response, error) {
 }
 
 // apiRawRequest makes an authenticated request with a raw (non-JSON) body,
-// e.g. a document upload.
-func apiRawRequest(method, path, contentType string, body io.Reader) (*http.Response, error) {
-	token, err := sessionToken()
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest(method, serverAddr()+path, body)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", contentType)
-	req.Header.Set("Authorization", "Bearer "+token)
-	return http.DefaultClient.Do(req)
+// e.g. a document upload, sent from its start (again, if it is resent).
+func apiRawRequest(method, path, contentType string, body io.ReadSeeker) (*http.Response, error) {
+	return authed(func(token string) (*http.Response, error) {
+		if _, err := body.Seek(0, io.SeekStart); err != nil {
+			return nil, err
+		}
+		// NopCloser: the client closes a request body it is given, and a
+		// file must stay open to be resent.
+		req, err := http.NewRequest(method, serverAddr()+path, io.NopCloser(body))
+		if err != nil {
+			return nil, err
+		}
+		req.Header.Set("Content-Type", contentType)
+		req.Header.Set("Authorization", "Bearer "+token)
+		return http.DefaultClient.Do(req)
+	})
 }
 
 func doRequest(method, path string, body any, token string) (*http.Response, error) {
@@ -269,6 +319,30 @@ func apiResult(resp *http.Response, target any) error {
 func fatal(msg string, args ...any) {
 	fmt.Fprintf(os.Stderr, "Error: "+msg+"\n", args...)
 	os.Exit(1)
+}
+
+// positionalArgs returns args, failing with usage when checkArgs refuses
+// them.
+func positionalArgs(args []string, usage string, min, max int) []string {
+	if err := checkArgs(args, min, max); err != nil {
+		fatal("%v\n%s", err, usage)
+	}
+	return args
+}
+
+// checkArgs refuses fewer than min or more than max arguments, or one that
+// looks like an option: a typo such as --include-persnal must never be
+// silently ignored or read as a name.
+func checkArgs(args []string, min, max int) error {
+	for _, a := range args {
+		if strings.HasPrefix(a, "-") {
+			return fmt.Errorf("unknown option %q", a)
+		}
+	}
+	if len(args) < min || len(args) > max {
+		return errors.New("wrong number of arguments")
+	}
+	return nil
 }
 
 // parseFlags reads "--name value" pairs into flags. An unknown flag, a

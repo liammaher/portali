@@ -170,7 +170,7 @@ func TestListFieldsByCategory_Filters(t *testing.T) {
 func TestDeleteField(t *testing.T) {
 	db := tmpDB(t)
 	db.SetField(Field{ID: "identity.name", Category: "identity", FieldName: "name", Value: "enc", UpdatedAt: time.Now()})
-	db.DeleteField("identity.name")
+	db.DeleteField("identity.name", nil)
 
 	f, _ := db.GetField("identity.name")
 	if f != nil {
@@ -381,5 +381,18 @@ func TestEveryConnectionWaitsForLocks(t *testing.T) {
 		if timeout != 5000 || mode != "wal" {
 			t.Errorf("connection %d: busy_timeout %d, journal_mode %q; want 5000, wal", i, timeout, mode)
 		}
+	}
+}
+
+// The driver cuts its connection string at '?', which would put the
+// database outside a folder named like "a?b".
+func TestOpenRefusesQuestionMarkInPath(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "a?b")
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	if db, err := Open(filepath.Join(dir, "vault.db")); err == nil {
+		db.Close()
+		t.Fatal("opened a database under a path with '?'")
 	}
 }

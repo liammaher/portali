@@ -8,10 +8,7 @@ import (
 )
 
 func cmdDelete() {
-	if len(os.Args) < 3 {
-		fatal("usage: pvault delete <id>")
-	}
-	id := os.Args[2]
+	id := positionalArgs(os.Args[2:], "usage: pvault delete <id>", 1, 1)[0]
 	// A well-formed ID first, so the Touch ID prompt names exactly one field.
 	if err := vault.ValidateFieldID(id); err != nil {
 		fatal("%v", err)

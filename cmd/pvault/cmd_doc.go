@@ -84,9 +84,9 @@ func cmdDocAdd() {
 func cmdDocList() {
 	path := "/vault/documents"
 	needGrant("*", "read")
-	if len(os.Args) >= 4 {
-		path += "?" + url.Values{"category": {os.Args[3]}}.Encode()
-		needGrant(os.Args[3]+".documents", "read")
+	if args := positionalArgs(os.Args[3:], docUsage, 0, 1); len(args) == 1 {
+		path += "?" + url.Values{"category": {args[0]}}.Encode()
+		needGrant(args[0]+".documents", "read")
 	}
 	resp, err := apiRequest("GET", path, nil)
 	if err != nil {
@@ -152,11 +152,9 @@ func cmdDocGet() {
 }
 
 func cmdDocDelete() {
-	if len(os.Args) < 4 {
-		fatal(docUsage)
-	}
+	id := positionalArgs(os.Args[3:], docUsage, 1, 1)[0]
 	needGrant("*", "write")
-	resp, err := apiRequest("DELETE", "/vault/documents/"+url.PathEscape(os.Args[3]), nil)
+	resp, err := apiRequest("DELETE", "/vault/documents/"+url.PathEscape(id), nil)
 	if err != nil {
 		fatal("request failed: %v", err)
 	}

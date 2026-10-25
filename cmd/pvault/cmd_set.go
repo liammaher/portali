@@ -28,9 +28,11 @@ func cmdSet() {
 	}
 	needGrant(id, "write")
 
-	var value string
-	if len(os.Args) >= 4 {
-		value = strings.Join(os.Args[3:], " ")
+	value, given, err := setValueArg(os.Args[3:])
+	if err != nil {
+		fatal("%v", err)
+	}
+	if given {
 		// Only real secrets: spid.provider and spid.data_scadenza are personal
 		// by default but not secret.
 		if vault.IsCredentialField(id) {
@@ -90,4 +92,19 @@ func promptValue(id string) (string, error) {
 		return "", fmt.Errorf("reading value from stdin: %w", err)
 	}
 	return strings.TrimRight(line, "\r\n"), nil
+}
+
+// setValueArg reads the value after the field ID, if one was given. Extra
+// arguments are refused rather than joined, which would also swallow a
+// mistyped option such as --sensitivity into the value.
+func setValueArg(args []string) (value string, given bool, err error) {
+	switch {
+	case len(args) > 1:
+		return "", false, fmt.Errorf("too many arguments: quote a value with spaces, e.g. pvault set residenza.indirizzo \"Via Roma 1\"\n%s", setUsage)
+	case len(args) == 1 && strings.HasPrefix(args[0], "--"):
+		return "", false, fmt.Errorf("unknown option %q: pvault set takes only <id> [value]; change a tier with pvault set-sensitivity", args[0])
+	case len(args) == 1:
+		return args[0], true, nil
+	}
+	return "", false, nil
 }

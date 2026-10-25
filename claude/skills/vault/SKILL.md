@@ -72,8 +72,9 @@ only that command and expires within 2 minutes.
   the IDs first and read them in one `get`, so the user approves once instead of per
   field. Several IDs print a JSON object, with `null` for fields that don't exist. `export`, `expiring`, `doc get` and `doc delete` ask for the whole vault,
   and `audit`, `set-sensitivity`, `backup` and token commands ask for full access; avoid
-  them unless the task needs them. `pvault status` shows when the last backup ran.
-- Writes: `pvault set <id> <value>` (pipe secrets: `printf '%s\n' "$v" | pvault set <id>`)
+  them unless the task needs them. Deleting a field or document stored above its default
+  tier, or `doc add --sensitivity` below it, shows a second prompt for full access: say so first. `pvault status` shows when the last backup ran.
+- Writes: `pvault set <id> <value>`, one quoted value (pipe secrets: `printf '%s\n' "$v" | pvault set <id>`)
   and `pvault delete <id>`; confirm old and new value with the user first, as with `vault_set`.
 - If the command fails with "not approved", the user said no or wasn't at the Mac.
   Don't retry; ask them.

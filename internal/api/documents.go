@@ -34,8 +34,8 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 	}
 	// Only the user's session may store a document below the default tier
 	// (as with fields), so an agent can't make it readable by lower caps.
-	if sens := q.Get("sensitivity"); sens != "" && !isSessionAuth(r) &&
-		sens != vault.DefaultDocumentSensitivity && vault.TierAllows(vault.DefaultDocumentSensitivity, sens) {
+	if sens, def := q.Get("sensitivity"), vault.DefaultDocumentTier(category); sens != "" && !isSessionAuth(r) &&
+		sens != def && vault.TierAllows(def, sens) {
 		writeError(w, http.StatusForbidden, "session_required", "only your own session can store a document below the default sensitivity tier")
 		return
 	}
@@ -123,7 +123,7 @@ func (s *Server) handleDeleteDocument(w http.ResponseWriter, r *http.Request) {
 	}
 	// A re-upload gets the default tier, so deleting one stored above it
 	// would let an agent lower it; only the user's session may.
-	if !isSessionAuth(r) && !vault.TierAllows(vault.DefaultDocumentSensitivity, meta.Sensitivity) {
+	if !isSessionAuth(r) && !vault.TierAllows(vault.DefaultDocumentTier(meta.Category), meta.Sensitivity) {
 		writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a document stored above the default sensitivity tier")
 		return
 	}

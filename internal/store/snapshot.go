@@ -12,6 +12,9 @@ func (d *DB) Snapshot(path string) error {
 // SnapshotDocumentIDs lists the document IDs recorded in a database file
 // written by Snapshot, without changing the file.
 func SnapshotDocumentIDs(path string) ([]string, error) {
+	if err := checkPath(path); err != nil {
+		return nil, err
+	}
 	conn, err := sql.Open("sqlite", path)
 	if err != nil {
 		return nil, err
@@ -33,9 +36,14 @@ func SnapshotDocumentIDs(path string) ([]string, error) {
 	return ids, rows.Err()
 }
 
-// SnapshotDropDocuments removes document rows from a snapshot file, e.g. for
-// documents deleted after it was taken.
-func SnapshotDropDocuments(path string, ids []string) error {
+// PrepareSnapshot readies a snapshot file for a backup: it removes the rows
+// of documents in dropDocs (e.g. deleted after it was taken) and every
+// service token, so a restore never brings back one revoked since, and sets
+// the meta entries in setMeta.
+func PrepareSnapshot(path string, dropDocs []string, setMeta map[string]string) error {
+	if err := checkPath(path); err != nil {
+		return err
+	}
 	conn, err := sql.Open("sqlite", path)
 	if err != nil {
 		return err
@@ -46,8 +54,16 @@ func SnapshotDropDocuments(path string, ids []string) error {
 	if _, err := conn.Exec("PRAGMA journal_mode=DELETE"); err != nil {
 		return err
 	}
-	for _, id := range ids {
+	for _, id := range dropDocs {
 		if _, err := conn.Exec("DELETE FROM vault_documents WHERE id = ?", id); err != nil {
+			return err
+		}
+	}
+	if _, err := conn.Exec("DELETE FROM vault_tokens"); err != nil {
+		return err
+	}
+	for k, v := range setMeta {
+		if _, err := conn.Exec("INSERT INTO vault_meta (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value", k, v); err != nil {
 			return err
 		}
 	}

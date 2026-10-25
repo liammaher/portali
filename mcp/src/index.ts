@@ -4,7 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { homedir } from "node:os";
-import { basename, extname, join, relative, isAbsolute, sep } from "node:path";
+import { basename, extname, join, relative, isAbsolute, resolve, sep } from "node:path";
 import {
   getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
   getExpiring, listDocuments, addDocument, getDocument,
@@ -178,7 +178,8 @@ server.registerTool(
   },
   async ({ days }): Promise<CallToolResult> => {
     try {
-      return ok(JSON.stringify(await getExpiring(days ?? 90), null, 2));
+      const items = await getExpiring(days ?? 90);
+      return ok(JSON.stringify(items.filter((i) => scopeAllows(scope, i.field_id)), null, 2));
     } catch (e) {
       return err((e as Error).message);
     }
@@ -230,7 +231,21 @@ const IMPORT_DIRS = (process.env.VAULT_IMPORT_DIRS ?? join(homedir(), "Downloads
 /** Resolve path and confirm it is a non-hidden file inside an import folder. */
 async function resolveImportPath(path: string): Promise<string> {
   if (!isAbsolute(path)) throw new Error("path must be absolute");
-  const real = await realpath(path);
+  const outside = new Error(
+    `only files inside ${IMPORT_DIRS.join(", ")} can be imported (set VAULT_IMPORT_DIRS to change this)`
+  );
+  let real: string;
+  try {
+    real = await realpath(path);
+  } catch (e) {
+    // Say what's wrong only inside an import folder: elsewhere, "no such
+    // file" would tell an agent which paths exist on the disk.
+    const inImportDir = IMPORT_DIRS.some((dir) => {
+      const rel = relative(resolve(dir), resolve(path));
+      return rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
+    });
+    throw inImportDir ? e : outside;
+  }
   for (const dir of IMPORT_DIRS) {
     let root: string;
     try {
@@ -245,9 +260,7 @@ async function resolveImportPath(path: string): Promise<string> {
     }
     return real;
   }
-  throw new Error(
-    `only files inside ${IMPORT_DIRS.join(", ")} can be imported (set VAULT_IMPORT_DIRS to change this)`
-  );
+  throw outside;
 }
 
 server.registerTool(

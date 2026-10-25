@@ -107,12 +107,13 @@ func TestGetFields_SingleMissingIsError(t *testing.T) {
 	}
 }
 
-// TestGet_EndToEnd runs multi-field get against a real vault and API server.
-// The stand-in helper does what pvault-touchid does after a fingerprint: it
-// asks the server for a grant scoped to the requested fields and prints only
-// the token. So this checks the scope pvault sends is accepted, covers every
-// field, reaches personal ones, and nothing else.
-func TestGet_EndToEnd(t *testing.T) {
+// touchIDVault starts a real vault and API server holding fields, and
+// installs a stand-in helper that does what pvault-touchid does after a
+// fingerprint: it asks the server for the grant pvault requested (scoped,
+// or full access without --scope) and prints only the token. Each run's
+// arguments are appended to the returned file.
+func touchIDVault(t *testing.T, fields map[string]string) (*vault.Vault, string) {
+	t.Helper()
 	dir := filepath.Join(t.TempDir(), ".vault")
 	sk, err := vault.Init(dir, "test-password")
 	if err != nil {
@@ -126,18 +127,10 @@ func TestGet_EndToEnd(t *testing.T) {
 	if _, err := v.Unlock("test-password", sk); err != nil {
 		t.Fatal(err)
 	}
-	for id, value := range map[string]string{
-		"identity.full_name":   "Mario Rossi",
-		"addresses.home_city":  "Napoli & dintorni",
-		"spid.password":        "s3cret",
-		"identity.nationality": "italiana",
-	} {
+	for id, value := range fields {
 		if err := v.Set(id, value, ""); err != nil {
 			t.Fatalf("set %s: %v", id, err)
 		}
-	}
-	if meta, _ := v.FieldMeta("spid.password"); meta == nil || meta.Sensitivity != vault.TierPersonal {
-		t.Fatalf("spid.password should be personal, got %+v", meta)
 	}
 
 	srv := api.New(v, "127.0.0.1:0")
@@ -158,10 +151,14 @@ func TestGet_EndToEnd(t *testing.T) {
 	script := `#!/bin/sh
 if [ "$1" = status ]; then echo enrolled; echo "server ` + addr + `"; exit 0; fi
 echo "$@" >> "` + argsFile + `"
-[ "$1" = grant ] && [ "$2" = --scope ] && [ "$4" = --access ] || exit 1
-/usr/bin/curl -sf -H 'Content-Type: application/json' \
-  -d "{\"password\":\"test-password\",\"scope\":\"$3\",\"access\":\"$5\",\"ttl\":\"120s\"}" \
-  ` + addr + `/vault/session | sed -n 's/.*"token":"\([^"]*\)".*/\1/p'
+[ "$1" = grant ] || exit 1
+if [ "$2" = --scope ]; then
+  [ "$4" = --access ] || exit 1
+  body="{\"password\":\"test-password\",\"scope\":\"$3\",\"access\":\"$5\",\"ttl\":\"120s\"}"
+else
+  body='{"password":"test-password","ttl":"120s"}'
+fi
+/usr/bin/curl -sf -H 'Content-Type: application/json' -d "$body" ` + addr + `/vault/session | sed -n 's/.*"token":"\([^"]*\)".*/\1/p'
 `
 	helper := filepath.Join(filepath.Dir(exe), touchIDHelperName)
 	if err := os.WriteFile(helper, []byte(script), 0o755); err != nil {
@@ -170,7 +167,23 @@ echo "$@" >> "` + argsFile + `"
 	t.Cleanup(func() { os.Remove(helper) })
 	resetTouchID(t)
 	cliToken = ""
-	t.Cleanup(func() { cliToken = "" })
+	t.Cleanup(func() { cliToken = ""; needGrant("", "") })
+	return v, argsFile
+}
+
+// TestGet_EndToEnd runs multi-field get against a real vault and API server,
+// so it checks the scope pvault sends is accepted, covers every field,
+// reaches personal ones, and nothing else.
+func TestGet_EndToEnd(t *testing.T) {
+	v, argsFile := touchIDVault(t, map[string]string{
+		"identity.full_name":   "Mario Rossi",
+		"addresses.home_city":  "Napoli & dintorni",
+		"spid.password":        "s3cret",
+		"identity.nationality": "italiana",
+	})
+	if meta, _ := v.FieldMeta("spid.password"); meta == nil || meta.Sensitivity != vault.TierPersonal {
+		t.Fatalf("spid.password should be personal, got %+v", meta)
+	}
 
 	ids, err := parseGetIDs([]string{"identity.full_name", "addresses.home_city", "spid.password", "identity.missing"})
 	if err != nil {
@@ -216,5 +229,51 @@ echo "$@" >> "` + argsFile + `"
 	resp.Body.Close()
 	if resp.StatusCode != http.StatusForbidden {
 		t.Fatalf("write with a read grant: status %d, want 403", resp.StatusCode)
+	}
+}
+
+// A scoped Touch ID grant can't do what only the user's own session may;
+// pvault then asks once more, for full access, instead of failing.
+func TestTouchIDFallsBackToFullAccessForSessionOnly(t *testing.T) {
+	v, argsFile := touchIDVault(t, nil)
+	if err := v.Set("identity.full_name", "Mario Rossi", "critical"); err != nil {
+		t.Fatal(err)
+	}
+
+	needGrant("identity.full_name", "write")
+	resp, err := apiRequest("DELETE", "/vault/fields/identity.full_name", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := apiResult(resp, nil); err != nil {
+		t.Fatalf("delete of a critical field: %v", err)
+	}
+	if f, _ := v.FieldMeta("identity.full_name"); f != nil {
+		t.Fatal("field still there")
+	}
+
+	// A document upload below the default tier, resent from the file's start.
+	path := filepath.Join(t.TempDir(), "r.pdf")
+	os.WriteFile(path, []byte("%PDF-1.4 receipt"), 0o600)
+	f, err := os.Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	cliToken = ""
+	needGrant("ricevute.documents", "append")
+	resp, err = apiRawRequest("POST", "/vault/documents?category=ricevute&name=r.pdf&sensitivity=standard", "application/pdf", f)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var doc vault.DocumentInfo
+	if err := apiResult(resp, &doc); err != nil || doc.Size != int64(len("%PDF-1.4 receipt")) {
+		t.Fatalf("upload: %+v, %v", doc, err)
+	}
+
+	data, _ := os.ReadFile(argsFile)
+	want := "grant --scope identity.full_name --access write\ngrant\ngrant --scope ricevute.documents --access append\ngrant\n"
+	if string(data) != want {
+		t.Fatalf("helper runs:\n%s\nwant:\n%s", data, want)
 	}
 }

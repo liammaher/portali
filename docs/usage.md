@@ -23,7 +23,7 @@ Save your secret key somewhere safe. You need both the profile password and the 
 
 While the vault is unlocked, every CLI command that reads or changes data asks for your profile password again, in an interactive terminal only. The server swaps it for a 2-minute grant held in memory. `pvault ui` opens the onboarding page, which asks for the password itself and gets a 15-minute grant, so no token ever appears on a command line or in browser history. No session token is ever written to disk, so an agent with shell access can't reuse your session. `pvault status` and `pvault lock` need no password (lock stops the server it started; for a server run with `pvault serve`, lock asks for the password). Only wrong passwords count toward the 10-per-minute limit.
 
-With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs, so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password. Touch ID only sends your password to the `pvault` build it was enabled with, over the vault's socket (see Security Model), so after rebuilding or moving `pvault` or `pvault-touchid` run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`. `pvault touchid status` shows whether it's on; `pvault touchid disable` removes the saved password.
+With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs, so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password. The few things only your own session may do (deleting a field or document stored above its default tier, or storing a document below it) need full access: the command then shows a second prompt asking for that. Touch ID only sends your password to the `pvault` build it was enabled with, over the vault's socket (see Security Model), so after rebuilding or moving `pvault` or `pvault-touchid` run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`. `pvault touchid status` shows whether it's on; `pvault touchid disable` removes the saved password.
 
 ## Fields
 
@@ -44,7 +44,7 @@ pvault delete identity.date_of_birth
 pvault export                    # All fields as JSON
 ```
 
-You can use any category and field name. Run `pvault schema` to see recommended field names and their default sensitivity tiers.
+You can use any category and field name. Run `pvault schema` to see recommended field names and their default sensitivity tiers. `pvault set` takes one value, so quote values with spaces; on every command an unknown option is an error, never ignored. Deleting or changing the tier of a field that doesn't exist is an error too.
 
 ## Sensitivity Tiers
 
@@ -58,7 +58,7 @@ Each field has a sensitivity tier that controls how it's shared with consumers.
 | `critical` | Payment card number | Only tokens created with `--max-sensitivity critical` |
 | `personal` | SPID login, CIE PIN/PUK | Only you: your own session, or a Touch ID prompt you approve |
 
-A token's `--max-sensitivity` is the highest tier it can see; everything above it is hidden as if it didn't exist.
+A token's `--max-sensitivity` is the highest tier whose values it can read. Fields above it still appear in `GET /vault/fields` (metadata only, no value), and reading one returns 403 `sensitivity_exceeded`; context, category reads and document listings leave them out. `personal` items are hidden from every token completely.
 
 ```sh
 pvault set-sensitivity financial.iban critical
@@ -99,7 +99,7 @@ pvault restore <file>                   # recreate the vault (only into a missin
 
 A backup is a snapshot of `vault.db` plus the encrypted documents, in a tar encrypted again with chunked AES-256-GCM under a key derived from your vault key, so field names and the audit log are hidden too. Files are named `pvault-<vault id>-<time>.pvbackup` and written with mode 0600. Once a folder is set (an absolute path outside the vault directory), the server backs up a minute after the last change and again before it locks; `pvault lock` waits for that. Pruning keeps this vault's 10 newest backups plus the newest per day for 30 days, and never touches other files. `pvault status` shows when the last backup ran or why it failed, never the folder.
 
-`secret.key` is never in a backup: restoring needs your profile password and the secret key you saved at `pvault init`. Backing up needs your own session (password or Touch ID), not a service token.
+`secret.key` is never in a backup: restoring needs your profile password and the secret key you saved at `pvault init`. Service tokens are left out too (a token revoked after the backup must not come back), so create new ones after a restore. A restore or check interrupted with Ctrl-C leaves a work folder (`.pvault-restore-*` next to the target, `pvault-check-*` in the temp folder); the next restore or check removes it. Backing up needs your own session (password or Touch ID), not a service token.
 
 ## Service Tokens
 
@@ -128,7 +128,7 @@ The vault runs at `http://127.0.0.1:7200`. All protected endpoints require `Auth
 ### Public
 
 ```
-GET  /vault/status                       # { initialized, locked, field_count, categories }
+GET  /vault/status                       # { initialized, locked, field_count, documents, categories, backup? } (personal items not counted)
 GET  /vault/schema                       # Recommended field names and sensitivity tiers
 POST /vault/unlock                       # { password, secret_key } → { token }
 POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
@@ -192,7 +192,7 @@ PUT /vault/sensitivity/{id}              # { tier } — update sensitivity
 
 ```
 POST   /vault/tokens/service             # { consumer, scope, ttl?, max_sensitivity?, access? } → { token, scope, max_sensitivity, access, expires_at }
-GET    /vault/tokens/service             # List active tokens (hash prefixes only)
+GET    /vault/tokens/service             # List active (unexpired) tokens (hash prefixes only)
 DELETE /vault/tokens/service/{ref}       # Revoke by listed hash prefix (≥8 chars) or full token
 ```
 
@@ -205,7 +205,8 @@ POST /vault/lock                         # Lock vault, zero keys
 ### Audit
 
 ```
-GET /vault/audit?limit=50                # Recent access log
+GET /vault/audit?limit=50                # Recent access log: [{ id, consumer, scope, action, purpose?, created_at }]
+                                         # A token's request is logged as action api_access under its consumer name
 ```
 
 ### Backup
@@ -245,7 +246,7 @@ Profile Password + Secret Key (128-bit)
 ~/.pvault/
 ├── vault.db       # SQLite database (encrypted fields)
 ├── secret.key     # 128-bit secret key (mode 0600)
-├── documents/     # Encrypted document files, <id>.enc (mode 0600)
+├── documents/     # Encrypted document files, <id>.enc (mode 0600); created with the first document
 ├── run/           # pvault.sock, the server's credential socket (dir 0700, socket 0600)
-└── pvault.pid     # PID of running server
+└── pvault.pid     # PID of the server 'pvault unlock' started (not written by 'pvault serve')
 ```

@@ -100,11 +100,15 @@ func (v *Vault) SetBackupDir(dir string) error {
 		return &ValidationError{Field: "dir", Msg: "must be an absolute path"}
 	}
 	dir = filepath.Clean(dir)
-	if info, err := os.Stat(dir); err != nil || !info.IsDir() {
-		return &ValidationError{Field: "dir", Msg: "folder does not exist"}
-	}
 	if isWithin(dir, v.dir) {
 		return &ValidationError{Field: "dir", Msg: "must be outside the vault folder, or the backup is lost with it"}
+	}
+	// Created only once it is known to be acceptable.
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		return &ValidationError{Field: "dir", Msg: "can't create the folder: " + err.Error()}
+	}
+	if info, err := os.Stat(dir); err != nil || !info.IsDir() {
+		return &ValidationError{Field: "dir", Msg: "not a folder"}
 	}
 	return v.db.SetMeta(metaBackupDir, dir)
 }
@@ -278,10 +282,9 @@ func (v *Vault) writeBackup(vaultKey []byte, dir string, now time.Time) (string,
 			return "", err
 		}
 	}
-	if len(missing) > 0 {
-		if err := store.SnapshotDropDocuments(snapshot, missing); err != nil {
-			return "", fmt.Errorf("update snapshot: %w", err)
-		}
+	// The restored vault reports this backup as its last one.
+	if err := store.PrepareSnapshot(snapshot, missing, map[string]string{metaBackupLast: now.Format(time.RFC3339)}); err != nil {
+		return "", fmt.Errorf("update snapshot: %w", err)
 	}
 	docIDs = present
 
@@ -464,12 +467,35 @@ func readBackupHeader(r io.Reader) (*backupHeader, error) {
 // CheckBackup decrypts a backup and checks it is complete and unlocks with
 // the password and secret key, without changing any vault.
 func CheckBackup(path, password, secretKeyHex string) (*BackupInfo, error) {
+	removeStaleWorkDirs(os.TempDir(), "pvault-check-")
 	work, err := os.MkdirTemp("", "pvault-check-")
 	if err != nil {
 		return nil, err
 	}
 	defer os.RemoveAll(work)
 	return restoreInto(path, filepath.Join(work, "vault"), password, secretKeyHex, false)
+}
+
+// staleWorkDirAge is how old a restore or check work dir must be before
+// another run treats it as left behind by an interrupted one.
+const staleWorkDirAge = 10 * time.Minute
+
+// removeStaleWorkDirs removes the work dirs named prefix* in dir that an
+// interrupted restore or check left behind (Ctrl-C skips their cleanup).
+// They hold a decrypted database snapshot: field names and the audit log.
+func removeStaleWorkDirs(dir, prefix string) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return
+	}
+	for _, e := range entries {
+		if !e.IsDir() || !strings.HasPrefix(e.Name(), prefix) {
+			continue
+		}
+		if info, err := e.Info(); err == nil && time.Since(info.ModTime()) > staleWorkDirAge {
+			os.RemoveAll(filepath.Join(dir, e.Name()))
+		}
+	}
 }
 
 // RestoreBackup recreates a vault at dir from a backup. dir must not exist
@@ -487,6 +513,7 @@ func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error
 		return nil, err
 	}
 	// Stage next to dir so the final step is a rename on the same disk.
+	removeStaleWorkDirs(parent, ".pvault-restore-")
 	work, err := os.MkdirTemp(parent, ".pvault-restore-")
 	if err != nil {
 		return nil, err

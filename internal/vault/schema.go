@@ -76,7 +76,7 @@ var RecommendedSchema = Schema{
 				{ID: "residenza.interno", Description: "Flat number (interno), e.g. 13; 'int. 13' is saved as 13", Sensitivity: "standard"},
 				{ID: "residenza.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "residenza.comune", Description: "Comune of residence", Sensitivity: "standard"},
-				{ID: "residenza.provincia", Description: "Provincia as 2-letter sigla (e.g. NA, validated)", Sensitivity: "standard"},
+				{ID: "residenza.provincia", Description: "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
 				{ID: "residenza.data_inizio", Description: "Date residence began (YYYY-MM-DD)", Sensitivity: "standard"},
 			},
 		},
@@ -89,7 +89,7 @@ var RecommendedSchema = Schema{
 				{ID: "domicilio.interno", Description: "Flat number (interno), e.g. 13; 'int. 13' is saved as 13", Sensitivity: "standard"},
 				{ID: "domicilio.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "domicilio.comune", Description: "Comune of domicile", Sensitivity: "standard"},
-				{ID: "domicilio.provincia", Description: "Provincia as 2-letter sigla (e.g. NA, validated)", Sensitivity: "standard"},
+				{ID: "domicilio.provincia", Description: "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
 			},
 		},
 		{

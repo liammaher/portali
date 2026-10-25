@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http/httptest"
 	"path/filepath"
 	"strings"
@@ -839,5 +840,100 @@ func TestRateLimiterRefundsOnlyItsOwnAttempt(t *testing.T) {
 	rl.refund(slow)
 	if _, ok := rl.allow(); ok {
 		t.Error("refunding an expired attempt freed a slot held by a newer failed attempt")
+	}
+}
+
+// A read-only token gets the same answer for a hidden personal field as for
+// a missing one, on PUT as on DELETE.
+func TestPutDoesNotRevealPersonalFields(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/identity.diary", map[string]string{"value": "x", "sensitivity": "personal"}, true)
+	tok := createTokenWithAccess(t, env, "identity.*", "read")
+	a := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.diary", map[string]string{"value": "y"}, tok)
+	b := env.doRequestWithToken(t, "PUT", "/vault/fields/identity.nothing_here", map[string]string{"value": "y"}, tok)
+	if a.Code != b.Code || a.Body.String() != b.Body.String() {
+		t.Errorf("existing personal field: %d %s\nmissing field: %d %s", a.Code, a.Body.String(), b.Code, b.Body.String())
+	}
+}
+
+// A token's write checked against a field that changes meanwhile (here the
+// user creating it as personal) is refused, never applied to the new field.
+func TestTokenWriteRacingUserWrite(t *testing.T) {
+	env := setup(t)
+	tok := createTokenWithAccess(t, env, "identity.*", "append")
+	for i := 0; i < 100; i++ {
+		id := fmt.Sprintf("identity.secret%d", i)
+		var wg sync.WaitGroup
+		wg.Add(2)
+		go func() {
+			defer wg.Done()
+			env.doRequest(t, "PUT", "/vault/fields/"+id, map[string]string{"value": "user", "sensitivity": "personal"}, true)
+		}()
+		go func() {
+			defer wg.Done()
+			env.doRequestWithToken(t, "PUT", "/vault/fields/"+id, map[string]string{"value": "agent"}, tok)
+		}()
+		wg.Wait()
+		if f, _ := env.vault.Get(id); f != nil && f.Sensitivity == vault.TierPersonal && f.Value == "agent" {
+			t.Fatalf("%s: the token's value landed in the user's personal field", id)
+		}
+	}
+}
+
+func TestSessionChangesToMissingFieldsAre404(t *testing.T) {
+	env := setup(t)
+	if w := env.doRequest(t, "PUT", "/vault/sensitivity/notes.pin", map[string]string{"tier": "critical"}, true); w.Code != 404 {
+		t.Errorf("set-sensitivity on a missing field: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "DELETE", "/vault/fields/notes.pin", nil, true); w.Code != 404 {
+		t.Errorf("delete of a missing field: %d %s", w.Code, w.Body.String())
+	}
+}
+
+// An expired token no longer shows up as active.
+func TestListServiceTokensOmitsExpired(t *testing.T) {
+	env := setup(t)
+	if _, err := env.vault.CreateServiceToken("short", "notes.*", 50*time.Millisecond, "", ""); err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(100 * time.Millisecond)
+	w := env.doRequest(t, "GET", "/vault/tokens/service", nil, true)
+	if w.Code != 200 || strings.Contains(w.Body.String(), "short") {
+		t.Errorf("list: %d %s", w.Code, w.Body.String())
+	}
+}
+
+// A SPID document stored at its own default tier (personal) is not "above
+// the default", so a scoped grant the user approved may delete it, as it may
+// delete spid fields.
+func TestScopedGrantDeletesSPIDDocumentAtDefaultTier(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	if w := env.upload(t, env.token, "category=spid_poste&name=codes.pdf", "application/pdf", []byte("PDFDATA")); w.Code != 200 {
+		t.Fatal(w.Body.String())
+	}
+	var docs []struct{ ID, Sensitivity string }
+	json.NewDecoder(env.doRequest(t, "GET", "/vault/documents", nil, true).Body).Decode(&docs)
+	if len(docs) != 1 || docs[0].Sensitivity != vault.TierPersonal {
+		t.Fatalf("documents = %+v", docs)
+	}
+	grant := scopedGrant(t, env, sk, "spid_poste.*", "write")
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/documents/"+docs[0].ID, nil, grant); w.Code != 200 {
+		t.Errorf("grant deleting a SPID document: %d %s", w.Code, w.Body.String())
+	}
+}
+
+// The audit log uses the API's snake_case field names, like everything else.
+func TestAuditLogFieldNames(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/identity.full_name", map[string]string{"value": "Mario Rossi"}, true)
+	w := env.doRequest(t, "GET", "/vault/audit?limit=5", nil, true)
+	var entries []map[string]any
+	if err := json.NewDecoder(w.Body).Decode(&entries); err != nil || len(entries) == 0 {
+		t.Fatalf("audit: %v %s", err, w.Body.String())
+	}
+	for _, key := range []string{"id", "consumer", "scope", "action", "created_at"} {
+		if _, ok := entries[0][key]; !ok {
+			t.Errorf("audit entry has no %q: %v", key, entries[0])
+		}
 	}
 }
