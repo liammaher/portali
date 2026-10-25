@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"os"
 	"os/exec"
 	"os/user"
 	"runtime"
@@ -23,12 +24,23 @@ func TestKeychainNamePattern(t *testing.T) {
 	}
 }
 
+func TestTokenRefIsServerHash(t *testing.T) {
+	// The server stores hex(sha256(token)) and accepts it as a revoke reference.
+	got := tokenRef("abc")
+	want := "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+	if got != want {
+		t.Fatalf("tokenRef = %s, want %s", got, want)
+	}
+}
+
+// TestStoreInKeychain writes to the real login Keychain, so it only runs when
+// asked: PVAULT_KEYCHAIN_TEST=1 go test ./cmd/pvault/
 func TestStoreInKeychain(t *testing.T) {
 	if runtime.GOOS != "darwin" {
 		t.Skip("macOS Keychain only")
 	}
-	if testing.Short() {
-		t.Skip("touches the login Keychain")
+	if os.Getenv("PVAULT_KEYCHAIN_TEST") != "1" {
+		t.Skip("touches the login Keychain; set PVAULT_KEYCHAIN_TEST=1 to run")
 	}
 	u, err := user.Current()
 	if err != nil {
@@ -38,22 +50,21 @@ func TestStoreInKeychain(t *testing.T) {
 	rand.Read(b)
 	service := "pvault-test-" + hex.EncodeToString(b)
 	t.Cleanup(func() {
-		exec.Command("security", "delete-generic-password", "-a", u.Username, "-s", service).Run()
+		exec.Command(securityPath, "delete-generic-password", "-a", u.Username, "-s", service).Run()
 	})
 
 	if err := checkKeychain(service); err != nil {
 		t.Fatal(err)
+	}
+	if got, err := readKeychain(service); err != nil || got != "" {
+		t.Fatalf("missing item: got %q, %v; want empty, nil", got, err)
 	}
 	for _, token := range []string{"aaaa1111", "bbbb2222"} { // second call replaces the first
 		if err := storeInKeychain(service, token); err != nil {
 			t.Fatalf("store %s: %v", token, err)
 		}
 	}
-	got, err := exec.Command("security", "find-generic-password", "-a", u.Username, "-s", service, "-w").Output()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(got) != "bbbb2222\n" {
-		t.Fatalf("got %q", got)
+	if got, err := readKeychain(service); err != nil || got != "bbbb2222" {
+		t.Fatalf("got %q, %v", got, err)
 	}
 }

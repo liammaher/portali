@@ -1,6 +1,8 @@
-import { execFile } from "node:child_process";
+import { exec, execFile } from "node:child_process";
+import { userInfo } from "node:os";
 import { promisify } from "node:util";
 
+const execAsync = promisify(exec);
 const execFileAsync = promisify(execFile);
 
 interface VaultStatus {
@@ -35,13 +37,25 @@ function serverAddr(): string {
   return process.env.VAULT_ADDR ?? "http://127.0.0.1:7200";
 }
 
-const TOKEN_COMMAND_TIMEOUT_MS = 10_000;
+const TOKEN_LOOKUP_TIMEOUT_MS = 10_000;
+const TOKEN_LOOKUP_MAX_BYTES = 64 * 1024;
 
 /** Printable ASCII without spaces: anything else can't go in a Bearer header. */
 const TOKEN_PATTERN = /^[\x21-\x7e]+$/;
 
+/** macOS's Keychain tool, by absolute path so nothing earlier in PATH can stand in for it. */
+const SECURITY_PATH = "/usr/bin/security";
+/** `security find-generic-password` exit status for a missing item (errSecItemNotFound). */
+const SECURITY_ITEM_NOT_FOUND = 44;
+/** Same rule as `pvault create-service-token --keychain`. */
+const KEYCHAIN_SERVICE_PATTERN = /^[A-Za-z0-9._][A-Za-z0-9._-]{0,63}$/;
+
 function staticToken(): string | undefined {
   return process.env.VAULT_TOKEN?.trim() || undefined;
+}
+
+function keychainService(): string | undefined {
+  return process.env.VAULT_KEYCHAIN_SERVICE?.trim() || undefined;
 }
 
 function tokenCommand(): string | undefined {
@@ -50,16 +64,18 @@ function tokenCommand(): string | undefined {
 
 /** How to get a working token, matching whichever source is actually used. */
 function createTokenHelp(): string {
-  if (!staticToken() && tokenCommand()) {
-    return (
-      "ask the user to run `pvault create-service-token <name> --scope \"identity.*,...\" --keychain <service>` " +
-      "in their terminal (the service VAULT_TOKEN_COMMAND reads); the next call uses it, no restart needed"
-    );
+  const create = "`pvault create-service-token <name> --scope \"identity.*,...\"";
+  const noRestart = "in their terminal; the next call uses it, no restart needed";
+  if (!staticToken()) {
+    const service = keychainService();
+    if (service) {
+      return `ask the user to run ${create} --keychain ${service}\` ${noRestart}`;
+    }
+    if (tokenCommand()) {
+      return `ask the user to run ${create} --keychain <service>\` (the service VAULT_TOKEN_COMMAND reads) ${noRestart}`;
+    }
   }
-  return (
-    "ask the user to create one with `pvault create-service-token <name> --scope \"identity.*,...\"` " +
-    "and set it as VAULT_TOKEN in this MCP server's env"
-  );
+  return `ask the user to create one with ${create}\` and set it as VAULT_TOKEN in this MCP server's env`;
 }
 
 function missingToken(detail?: string): VaultError {
@@ -67,45 +83,83 @@ function missingToken(detail?: string): VaultError {
   return new VaultError(`vault: no service token${why} — ${createTokenHelp()}`);
 }
 
-/** First line of a command's stderr, or a description of how it failed. */
-function commandFailure(e: unknown): string {
+/** Why a token lookup process failed, in one line. */
+function lookupFailure(label: string, e: unknown): string {
   const err = e as { killed?: boolean; signal?: string; code?: number | string; stderr?: string };
+  if (err.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
+    return `${label} printed more than ${TOKEN_LOOKUP_MAX_BYTES / 1024} KB, which can't be a token`;
+  }
   if (err.killed || err.signal) {
-    return `VAULT_TOKEN_COMMAND timed out after ${TOKEN_COMMAND_TIMEOUT_MS / 1000}s; a Keychain prompt may be waiting`;
+    return `${label} timed out after ${TOKEN_LOOKUP_TIMEOUT_MS / 1000}s; a Keychain prompt may be waiting`;
   }
   const line = err.stderr?.trim().split("\n")[0];
-  return `VAULT_TOKEN_COMMAND failed: ${line || `exit ${err.code ?? "unknown"}`}`;
+  return `${label} failed: ${line || `exit ${err.code ?? "unknown"}`}`;
+}
+
+/** Reads the token pvault create-service-token --keychain stored for this user. */
+async function keychainToken(service: string): Promise<string> {
+  if (!KEYCHAIN_SERVICE_PATTERN.test(service)) {
+    throw new VaultError(`vault: VAULT_KEYCHAIN_SERVICE "${service}" is not a valid Keychain service name`);
+  }
+  try {
+    const { stdout } = await execFileAsync(
+      SECURITY_PATH,
+      ["find-generic-password", "-a", userInfo().username, "-s", service, "-w"],
+      { timeout: TOKEN_LOOKUP_TIMEOUT_MS, maxBuffer: TOKEN_LOOKUP_MAX_BYTES },
+    );
+    return stdout.trim();
+  } catch (e) {
+    const code = (e as { code?: number | string }).code;
+    if (code === SECURITY_ITEM_NOT_FOUND) {
+      throw missingToken(`nothing stored in Keychain service "${service}"`);
+    }
+    if (code === "ENOENT") {
+      throw missingToken(`${SECURITY_PATH} not found; VAULT_KEYCHAIN_SERVICE needs macOS`);
+    }
+    throw missingToken(lookupFailure("Keychain lookup", e));
+  }
+}
+
+/** Runs VAULT_TOKEN_COMMAND in the platform shell and returns its output. */
+async function commandToken(command: string): Promise<string> {
+  try {
+    const { stdout } = await execAsync(command, {
+      timeout: TOKEN_LOOKUP_TIMEOUT_MS,
+      maxBuffer: TOKEN_LOOKUP_MAX_BYTES,
+    });
+    return stdout.trim();
+  } catch (e) {
+    throw missingToken(lookupFailure("VAULT_TOKEN_COMMAND", e));
+  }
 }
 
 /**
- * The MCP server only ever uses a scoped service token supplied by the user,
- * either directly in VAULT_TOKEN or printed by VAULT_TOKEN_COMMAND (e.g. a
- * Keychain lookup). It never reads ~/.pvault/.session: that token has full,
- * uncapped access and would bypass the scope and sensitivity limits.
+ * The MCP server only ever uses a scoped service token supplied by the user:
+ * VAULT_TOKEN, else the Keychain item named by VAULT_KEYCHAIN_SERVICE, else
+ * the output of VAULT_TOKEN_COMMAND. It never reads ~/.pvault/.session: that
+ * token has full, uncapped access and would bypass the scope and sensitivity
+ * limits.
  *
- * The command runs for every request rather than being cached, so a token
- * the user replaces mid-session is used right away, even while the old one
- * is still valid.
+ * Lookups run for every request rather than being cached, so a token the
+ * user replaces mid-session is used right away.
  */
 async function resolveToken(): Promise<string> {
   let token = staticToken();
   let source = "VAULT_TOKEN";
   if (!token) {
+    const service = keychainService();
     const command = tokenCommand();
-    if (!command) {
+    if (service) {
+      source = `Keychain service "${service}"`;
+      token = await keychainToken(service);
+    } else if (command) {
+      source = "VAULT_TOKEN_COMMAND output";
+      token = await commandToken(command);
+    } else {
       throw missingToken();
     }
-    source = "VAULT_TOKEN_COMMAND output";
-    try {
-      const { stdout } = await execFileAsync("/bin/sh", ["-c", command], {
-        timeout: TOKEN_COMMAND_TIMEOUT_MS,
-      });
-      token = stdout.trim();
-    } catch (e) {
-      throw missingToken(commandFailure(e));
-    }
     if (!token) {
-      throw missingToken("VAULT_TOKEN_COMMAND printed nothing");
+      throw missingToken(`${source} is empty`);
     }
   }
   if (!TOKEN_PATTERN.test(token)) {
@@ -115,12 +169,12 @@ async function resolveToken(): Promise<string> {
 }
 
 /**
- * Fails fast when no token source is configured at all. With only
- * VAULT_TOKEN_COMMAND the server starts even before a token is stored, so
+ * Fails fast when no token source is configured at all. With a Keychain
+ * service or command the server starts even before a token is stored, so
  * the user can create one mid-session.
  */
 export function assertTokenConfigured(): void {
-  if (!staticToken() && !tokenCommand()) {
+  if (!staticToken() && !keychainService() && !tokenCommand()) {
     throw missingToken();
   }
 }

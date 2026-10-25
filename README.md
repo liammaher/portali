@@ -96,7 +96,7 @@ pvault revoke-service-token <token_prefix>
 | `--access` | `read` | `append` = may add new fields/documents but never overwrite or delete; `write` = full |
 | `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in; `personal` is never available |
 | `--ttl` | `24h` | maximum 90 days |
-| `--keychain` | — | macOS: save the token in your Keychain under this service name instead of printing it |
+| `--keychain` | — | macOS: save the token in your Keychain under this service name instead of printing it, revoking the token it replaces |
 
 Agent activity never keeps the vault unlocked: it auto-locks after 30 minutes without *your* activity.
 
@@ -114,7 +114,7 @@ cd mcp && npm ci && npm run build
     "vault": {
       "command": "node",
       "args": ["/path/to/personal-vault-italia/mcp/dist/index.js"],
-      "env": { "VAULT_TOKEN_COMMAND": "security find-generic-password -s pvault-mcp -w" }
+      "env": { "VAULT_KEYCHAIN_SERVICE": "pvault-mcp" }
     }
   }
 }
