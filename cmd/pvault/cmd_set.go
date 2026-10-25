@@ -29,7 +29,9 @@ func cmdSet() {
 	var value string
 	if len(os.Args) >= 4 {
 		value = strings.Join(os.Args[3:], " ")
-		if vault.DefaultSensitivity(id) == vault.TierPersonal {
+		// Only real secrets: spid.provider and spid.data_scadenza are personal
+		// by default but not secret.
+		if vault.IsCredentialField(id) {
 			fmt.Fprintf(os.Stderr, "Warning: %s is a secret and the value you typed is now in your shell history.\n"+
 				"Next time run 'pvault set %s' without a value to type it hidden.\n", id, id)
 		}
