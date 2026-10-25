@@ -197,7 +197,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "permesso_soggiorno",
-			Description: "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement). Attach scans with 'pvault doc add permesso_soggiorno <file>'.",
+			Description: "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement; not needed when identity.citizenship is italiana). Attach scans with 'pvault doc add permesso_soggiorno <file>'.",
 			Fields: []SchemaField{
 				{ID: "permesso_soggiorno.numero", Description: "Document number printed on the card", Sensitivity: "sensitive"},
 				{ID: "permesso_soggiorno.tipo", Description: "Type or reason (e.g. Art. 50 TUE, lavoro subordinato, soggiornante di lungo periodo)", Sensitivity: "standard"},

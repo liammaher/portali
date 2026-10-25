@@ -62,8 +62,10 @@ curl -s http://127.0.0.1:7200/vault/schema
 
 Common ones: `residenza.{indirizzo,civico,interno,cap,comune,provincia,data_inizio}`,
 `domicilio.*` (only if different from residenza), `identity.codice_fiscale`,
-`cie.{numero,data_scadenza}`, `permesso_soggiorno.{numero,tipo,data_scadenza}`,
+`cie.{numero,data_scadenza}`, `passaporto.{numero,paese_rilascio,data_rilascio,data_scadenza,autorita_rilascio}`,
 `tessera_sanitaria.{numero,data_scadenza,medico_base}`.
+`permesso_soggiorno.*` is only for non-Italian citizens: if `identity.citizenship` is
+italiana, don't ask for it or list it as missing.
 Housing (the home at residenza/domicilio; the address itself stays there):
 `abitazione.{titolo,data_inizio,catasto_foglio,catasto_particella,catasto_subalterno,catasto_categoria,superficie_calpestabile_mq}`,
 `locazione.{tipo_contratto,data_decorrenza,data_scadenza,canone_mensile,registrazione_codice_identificativo,locatore_nome,locatore_codice_fiscale}`,
