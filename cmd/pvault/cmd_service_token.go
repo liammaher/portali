@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -89,8 +90,12 @@ func cmdCreateServiceToken() {
 	}
 
 	stored := false
+	previous := ""
 	var keychainErr error
 	if keychain != "" {
+		// Read the old token first: once replaced it's no longer reachable
+		// through the Keychain, so it should stop working too.
+		previous, _ = readKeychain(keychain)
 		if keychainErr = storeInKeychain(keychain, result.Token); keychainErr == nil {
 			stored = true
 		}
@@ -98,7 +103,10 @@ func cmdCreateServiceToken() {
 
 	fmt.Printf("Service token created for %q\n", consumer)
 	if stored {
-		fmt.Printf("Keychain:        saved as service %q (replacing any previous one)\n", keychain)
+		fmt.Printf("Keychain:        saved as service %q\n", keychain)
+		if previous != "" && previous != result.Token {
+			fmt.Printf("Previous token:  %s\n", revokeReplacedToken(previous))
+		}
 	} else {
 		fmt.Printf("Token:           %s\n", result.Token)
 	}
@@ -114,6 +122,23 @@ func cmdCreateServiceToken() {
 		// Keychain won't see it: fail so callers don't assume it worked.
 		fatal("Keychain save failed: %v", keychainErr)
 	}
+}
+
+// revokeReplacedToken revokes the token a --keychain save just replaced and
+// describes the outcome for the summary.
+func revokeReplacedToken(previous string) string {
+	resp, err := apiRequest("DELETE", "/vault/tokens/service/"+tokenRef(previous), nil)
+	if err != nil {
+		return fmt.Sprintf("NOT revoked (%v); check `pvault list-service-tokens`", err)
+	}
+	if resp.StatusCode == http.StatusNotFound {
+		resp.Body.Close()
+		return "already expired or revoked"
+	}
+	if err := apiResult(resp, nil); err != nil {
+		return fmt.Sprintf("NOT revoked (%v); check `pvault list-service-tokens`", err)
+	}
+	return "revoked"
 }
 
 func cmdListServiceTokens() {

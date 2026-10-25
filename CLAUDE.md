@@ -80,9 +80,12 @@ Profile Password + Secret Key (128-bit)
   documents, no overwrite or delete) / `write`; explicit scope required, TTL 24h default / 90d max,
   `max_sensitivity` cap (default `sensitive`), cannot change tiers,
   and never reset the auto-lock timer (only session activity does)
-- MCP server uses only a service token: `VAULT_TOKEN`, or `VAULT_TOKEN_COMMAND`
-  (run per request, never cached). `create-service-token --keychain <service>` stores the
-  token in the macOS Keychain via `security -i` stdin instead of printing it
+- MCP server uses only a service token: `VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`
+  (Keychain item for the current user), else `VAULT_TOKEN_COMMAND`; lookups run per
+  request, never cached. `create-service-token --keychain <service>` stores the token
+  via `/usr/bin/security -i` stdin instead of printing it and revokes the token it
+  replaces (by hash, so no raw token goes in a URL). `TestStoreInKeychain` and the
+  MCP Keychain test touch the real Keychain and only run with `PVAULT_KEYCHAIN_TEST=1`
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID/CIE credentials (`IsCredentialField`) can only be stored with tier
   `personal`; `spid`/`cieid` categories default to it. `personal` (rank 4) is

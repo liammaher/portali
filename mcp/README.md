@@ -20,13 +20,14 @@ On macOS, keep the token in your Keychain (recommended). Register once:
 
 ```sh
 claude mcp add vault --scope user \
-  -e VAULT_TOKEN_COMMAND='security find-generic-password -s pvault-mcp -w' \
+  -e VAULT_KEYCHAIN_SERVICE=pvault-mcp \
   -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
 ```
 
 Then, whenever an agent needs access, create a token straight into the Keychain.
 It's never printed, and the running server picks it up on its next call, so
-there's no need to restart Claude:
+there's no need to restart Claude. Creating a new one revokes the token it
+replaces, so only one Keychain token is ever valid:
 
 ```sh
 pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h --keychain pvault-mcp
@@ -58,15 +59,15 @@ Documents follow the same token rules as fields: scope pattern `<category>.docum
 
 ## Authentication
 
-The MCP server only uses a service token you create, given either in `VAULT_TOKEN` or printed by `VAULT_TOKEN_COMMAND`:
+The MCP server only uses a service token you create, from (in order) `VAULT_TOKEN`, the Keychain item named by `VAULT_KEYCHAIN_SERVICE`, or the output of `VAULT_TOKEN_COMMAND`:
 
 ```sh
 pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h [--keychain pvault-mcp]
 ```
 
-It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start when neither variable is set.
+It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start when none of these is set.
 
-With `VAULT_TOKEN_COMMAND`, the command runs for every request (it is not cached), so a replaced token is used immediately; its error output is included when it fails. Until a token is stored, tools answer with how to create one.
+`VAULT_KEYCHAIN_SERVICE` reads the item `--keychain` wrote, for the same macOS user, with `/usr/bin/security`. Keychain lookups and `VAULT_TOKEN_COMMAND` run for every request (nothing is cached), so a replaced token is used immediately, and their error is included when they fail. Until a token is stored, tools answer with the exact command to create one.
 
 The token keeps working across vault lock/unlock cycles until it expires or is revoked.
 
@@ -75,8 +76,9 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address |
-| `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (this or `VAULT_TOKEN_COMMAND` is required) |
-| `VAULT_TOKEN_COMMAND` | — | Shell command that prints the token, e.g. a Keychain lookup; ignored when `VAULT_TOKEN` is set |
+| `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (one token source is required) |
+| `VAULT_KEYCHAIN_SERVICE` | — | macOS: Keychain service the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
+| `VAULT_TOKEN_COMMAND` | — | Command run in the platform shell that prints the token (e.g. another secret store); used when neither of the above is set |
 | `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` may read from (hidden files always refused) |
 | `VAULT_SCOPE` | `*` | Optional extra filter applied in the MCP layer (the server enforces the token's own scope regardless) |
 
@@ -85,8 +87,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | Error | Meaning |
 |-------|---------|
 | `vault: server not running` | Run `pvault unlock` to start the server |
-| `vault: no service token` | Create one (with `--keychain` when using `VAULT_TOKEN_COMMAND`) |
-| `vault: service token invalid, expired or revoked` | Create a new token (`--keychain` replaces the stored one) or update `VAULT_TOKEN` |
+| `vault: no service token` | Create one; the message gives the exact `--keychain` command when using `VAULT_KEYCHAIN_SERVICE` |
+| `vault: service token invalid, expired or revoked` | Create a new token (`--keychain` replaces and revokes the stored one) or update `VAULT_TOKEN` |
 | `vault: vault is locked` | Run `pvault unlock` to decrypt |
 | `vault: this item's sensitivity tier is above ...` | Token's `--max-sensitivity` is too low for this field or document |
 | `vault: this is outside the token's scope` | Not covered by the token's `--scope` |

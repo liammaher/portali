@@ -2,8 +2,10 @@ import { test, before, after, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
+import { execFileSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { tmpdir, userInfo } from "node:os";
 import { join } from "node:path";
 import { assertTokenConfigured, getField } from "./client.js";
 
@@ -44,6 +46,7 @@ beforeEach(async () => {
   tokens.clear();
   seen.length = 0;
   delete process.env.VAULT_TOKEN;
+  delete process.env.VAULT_KEYCHAIN_SERVICE;
   process.env.VAULT_TOKEN_COMMAND = `cat '${tokenFile}'`;
   await rm(tokenFile, { force: true });
 });
@@ -52,6 +55,9 @@ test("refuses to start with no token source at all", () => {
   delete process.env.VAULT_TOKEN_COMMAND;
   assert.throws(assertTokenConfigured, /no service token/);
   process.env.VAULT_TOKEN_COMMAND = "true";
+  assert.doesNotThrow(assertTokenConfigured);
+  delete process.env.VAULT_TOKEN_COMMAND;
+  process.env.VAULT_KEYCHAIN_SERVICE = "pvault-mcp";
   assert.doesNotThrow(assertTokenConfigured);
 });
 
@@ -66,7 +72,7 @@ test("explains the failure when no token is stored yet", async () => {
 
 test("reports a command that prints nothing", async () => {
   await writeFile(tokenFile, "\n");
-  await assert.rejects(getField("residenza.comune"), /VAULT_TOKEN_COMMAND printed nothing/);
+  await assert.rejects(getField("residenza.comune"), /VAULT_TOKEN_COMMAND output is empty/);
 });
 
 test("uses a token stored mid-session", async () => {
@@ -114,4 +120,49 @@ test("VAULT_TOKEN wins over the command, and errors point at it", async () => {
     return true;
   });
   assert.deepEqual(seen, ["stale"]);
+});
+
+test("reports runaway command output as too large, not a timeout", async () => {
+  process.env.VAULT_TOKEN_COMMAND = "node -e \"process.stdout.write('a'.repeat(100000))\"";
+  await assert.rejects(getField("residenza.comune"), (e: Error) => {
+    assert.match(e.message, /printed more than 64 KB/);
+    assert.doesNotMatch(e.message, /timed out/);
+    return true;
+  });
+});
+
+test("names the exact Keychain service in its advice", async () => {
+  const service = `pvault-test-missing-${randomBytes(4).toString("hex")}`;
+  process.env.VAULT_KEYCHAIN_SERVICE = service;
+  process.env.VAULT_TOKEN_COMMAND = "exit 1"; // the Keychain service wins over the command
+  await assert.rejects(getField("residenza.comune"), (e: Error) => {
+    assert.match(e.message, new RegExp(`--keychain ${service}\``));
+    assert.match(e.message, /nothing stored in Keychain service|needs macOS/);
+    assert.doesNotMatch(e.message, /VAULT_TOKEN_COMMAND/);
+    return true;
+  });
+  assert.equal(seen.length, 0);
+});
+
+test("rejects an invalid Keychain service name", async () => {
+  process.env.VAULT_KEYCHAIN_SERVICE = "-s";
+  await assert.rejects(getField("residenza.comune"), /not a valid Keychain service name/);
+});
+
+// Touches the real login Keychain: PVAULT_KEYCHAIN_TEST=1 npm test
+test("reads the token from the Keychain for this user", {
+  skip: process.platform !== "darwin" || process.env.PVAULT_KEYCHAIN_TEST !== "1",
+}, async () => {
+  const service = `pvault-test-${randomBytes(4).toString("hex")}`;
+  const account = userInfo().username;
+  const security = (...args: string[]) => execFileSync("/usr/bin/security", args, { stdio: "ignore" });
+  security("add-generic-password", "-a", account, "-s", service, "-w", "cccc");
+  try {
+    tokens.set("cccc", "residenza.");
+    process.env.VAULT_KEYCHAIN_SERVICE = service;
+    assert.equal((await getField("residenza.comune")).value, "value-of-residenza.comune");
+    assert.deepEqual(seen, ["cccc"]);
+  } finally {
+    security("delete-generic-password", "-a", account, "-s", service);
+  }
 });

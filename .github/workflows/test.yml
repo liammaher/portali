@@ -42,7 +42,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Type-check
-        run: npx tsc --noEmit -p .
+        run: npx tsc -p tsconfig.test.json
 
       - name: Test
         run: npm test
