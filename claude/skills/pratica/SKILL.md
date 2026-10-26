@@ -25,9 +25,9 @@ secret key or tokens; never open the vault UI in a browser you control).
 business's pratiche (SCIA, TARI non domestica, INAIL, ComUnica, or a client's CILA filed
 by a professional) use its business vault: add `--vault <name>` to every `pvault`
 command and use that vault's MCP server (vault skill, "Several vaults"). There `io` is the
-business, the form's people are people in the vault with a `ruolo` (the legale
-rappresentante is whoever's `ruolo.tipo` says so; a client is `ruolo.tipo` cliente), and
-the pratica record lives in that vault. Never ask for or store a client's SPID or CIE
+business, the form's people are people in the vault with a `ruolo` (who signs, the
+procuratore, the soci: a library entry says which, see step 2; a client is `ruolo.tipo`
+cliente), and the pratica record lives in that vault. Never ask for or store a client's SPID or CIE
 credentials: a professional files with their own identity and the client's signed procura
 (stored as the client's document, e.g. `rossi:procura`).
 
@@ -112,9 +112,31 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
   is `si`), each mapped from `<slug>:identity.*`, with `relazione_label` (moglie,
   figlia) for the form's rapporto/parentela. Read their fields with one
   `pvault get <slug>:identity.first_name ...` or a `*:identity.*` scope.
-  The library's older `repeat: nucleo_familiare.membro<N>_*` means the same thing
-  until it is updated: read it as `repeat: famiglia`.
+- `party: { ruolo: X }` next to `direct`, `concat` or `fallback`: the same fields (written
+  without a prefix), read from the person whose `ruolo.tipo` includes X (or any of a
+  list): `<slug>:identity.codice_fiscale`. Find them with `pvault --vault <name> person list`
+  or `vault_household`. Nobody has it (always so in the default vault, which has no
+  `ruolo`): ask the user, from the row's label. Several: ask which one. Whether the role
+  applies to this pratica at all (is a procura used? is there a preposto?) is usually
+  its own `ask` row: settle that first, and leave the rows empty if it doesn't.
+- `repeat: { ruolo: [...], except: dichiarante }`: one row, or one allegato, per person
+  with that ruolo, leaving out whoever signs; fields written `*:category.field` as in
+  `repeat: famiglia`. The row's `notes` may narrow it (only the soci tenuti ai requisiti,
+  only the acconciatori): ask the user when the vault can't tell.
 - `ask: <question>`: not in the vault; ask the user. `blank_with_reason`: leave empty.
+
+An entry with a top-level `dichiarante: { ruolo: [titolare, legale_rappresentante] }`
+names who signs. In it, unprefixed fields of a person's own categories (`/vault/schema`
+categories with `subject` persona and `scope` person: `identity`, `residenza`, `cie`,
+`permesso_soggiorno`, ...) and `ruolo.*`, in `forms` and in `records`, are the signer's:
+
+- default vault: the user, as always; their role is `business.qualita_dichiarante`.
+- business vault: the person whose `ruolo.tipo` includes one of the listed roles
+  (several: ask who signs), so `identity.last_name` is read as `<slug>:identity.last_name`.
+  "In qualità di" is `fallback: [business.qualita_dichiarante, ruolo.tipo]`: write the
+  listed role that person holds, not their whole `ruolo.tipo`.
+
+`business.*`, `locale.*` and the other categories stay the vault's own either way.
 
 An ID the vault schema doesn't list yet (the library's `contract/extensions.json`)
 is an `ask` too.
@@ -131,7 +153,9 @@ stored at a time (a new one replaces the last), so work in two phases (vault ski
 
 - **Preparing**: `--access append` scoped to exactly the form's categories plus
   `pratiche.*` (family members' data needs their prefix: `*:identity.*,*:famiglia.*`
-  for a list of conviventi, `leo:*` for a pratica about leo). It can read them, open the pratica and add missing fields, but
+  for a list of conviventi, `leo:*` for a pratica about leo; in a business vault, the
+  signer and the people picked by ruolo likewise: `*:identity.*,*:residenza.*,*:ruolo.*`,
+  or `rossi:*` for one person). It can read them, open the pratica and add missing fields, but
   never overwrite your data. When a portal login is involved, add
   `preferences.accesso_pa,spid.provider` to the scope (exact fields, not whole categories).
 - **Tracking** (step 6, overwriting `stato` and friends): `--access write` scoped
