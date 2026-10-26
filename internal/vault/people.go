@@ -24,8 +24,7 @@ var ErrPersonNotFound = errors.New("person not found")
 // one of their rows, so a hidden person is refused like a missing one.
 func (v *Vault) checkPersonRefs(id, value string, allow FieldFilter) error {
 	_, local := SplitPerson(id)
-	parts := strings.SplitN(canonicalLocalID(local), ".", 2)
-	if len(parts) != 2 || !isPersonRefField(parts[0], parts[1]) {
+	if !isPersonRefID(local) {
 		return nil
 	}
 	for _, ref := range PersonRefs(value) {
@@ -51,6 +50,74 @@ func (v *Vault) checkPersonRefs(id, value string, allow FieldFilter) error {
 	return nil
 }
 
+// checkPersonExists refuses a write by a service token (allow set) under a
+// person the vault doesn't have. A new person starts with the session or a
+// grant the user approved ('pvault person add'), so an agent can't claim a
+// slug first or skip the --ruolo a business vault asks for. id is a field ID
+// or a document category.
+func (v *Vault) checkPersonExists(id string, allow FieldFilter) error {
+	person, _ := SplitPerson(id)
+	if allow == nil || person == "" {
+		return nil
+	}
+	exists, err := v.db.PersonExists(person)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return &ValidationError{Field: id, Msg: "there is no person \"" + person + "\" in the vault: only the user adds people"}
+	}
+	return nil
+}
+
+// checkPraticaPersona refuses to open a pratica whose persona names someone
+// no longer in the vault: RemovePerson lets a closed pratica keep naming
+// them (it is history), but an open one must name people who exist. It reads
+// persona whatever the caller may read; a service token (token) is told only
+// that it names someone gone, not who.
+func (v *Vault) checkPraticaPersona(vaultKey []byte, slug string, token bool) error {
+	id := "pratiche." + slug + "_persona"
+	f, err := v.db.GetField(id)
+	if err != nil || f == nil {
+		return err
+	}
+	persone, err := decryptValue(vaultKey, v.salt, "pratiche", f.Value)
+	if err != nil {
+		return err
+	}
+	if err := v.checkPersonRefs(id, persone, nil); err != nil {
+		var verr *ValidationError
+		if !errors.As(err, &verr) {
+			return err
+		}
+		msg := "persona names someone who is not in the vault: " + verr.Msg
+		if token {
+			msg = "persona names someone who is no longer in the vault: ask the user to fix it first"
+		}
+		return &ValidationError{Field: "pratiche." + slug + "_stato", Msg: msg}
+	}
+	return nil
+}
+
+// visibleRefs drops from a value naming people the ones allow can't see a row
+// of, so a token's view of the household never shows a slug it could not name.
+func (v *Vault) visibleRefs(value string, allow FieldFilter) (string, error) {
+	var kept []string
+	for _, ref := range PersonRefs(value) {
+		if ref != OwnerRef {
+			ok, err := v.personVisible(ref, allow)
+			if err != nil {
+				return "", err
+			}
+			if !ok {
+				continue
+			}
+		}
+		kept = append(kept, ref)
+	}
+	return strings.Join(kept, ","), nil
+}
+
 // personVisible reports whether slug has a field or document allow accepts
 // (any, if allow is nil).
 func (v *Vault) personVisible(slug string, allow FieldFilter) (bool, error) {
@@ -72,6 +139,12 @@ func (v *Vault) personVisible(slug string, allow FieldFilter) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+// isPersonRefID is isPersonRefField for a field ID without its person prefix.
+func isPersonRefID(local string) bool {
+	parts := strings.SplitN(canonicalLocalID(local), ".", 2)
+	return len(parts) == 2 && isPersonRefField(parts[0], parts[1])
 }
 
 // isPersonRefField reports the fields whose value names people: those the

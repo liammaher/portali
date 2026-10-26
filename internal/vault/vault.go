@@ -550,9 +550,10 @@ func (v *Vault) Set(id, value, sensitivity string) error {
 // SetChecked is Set for a caller that checked the field first: it writes
 // only if the field is still as checked (absent if existing is nil, else
 // with existing's tier), and returns ErrFieldChanged otherwise. With allow
-// (a service token's filter), a value naming people (checkPersonRefs) may
-// name only people with a row allow accepts, so the answer never says whether
-// a hidden person exists; nil lets it name anyone.
+// (a service token's filter), the field must belong to a person already in
+// the vault (checkPersonExists) and a value naming people (checkPersonRefs)
+// may name only people with a row allow accepts, so the answer never says
+// whether a hidden person exists; nil lets it name anyone and add a person.
 func (v *Vault) SetChecked(id, value, sensitivity string, existing *FieldInfo, allow FieldFilter) error {
 	seen := &store.Seen{}
 	if existing != nil {
@@ -585,12 +586,21 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 		return err
 	}
 	defer clear(vaultKey)
+	if err := v.checkPersonExists(id, allow); err != nil {
+		return err
+	}
 	if err := v.checkPersonRefs(id, value, allow); err != nil {
 		return err
 	}
 
 	parts := strings.SplitN(id, ".", 2)
 	category, fieldName := parts[0], parts[1]
+	slug, campo, _ := praticaField(category, fieldName)
+	if campo == "stato" && !isClosedStato(value) {
+		if err := v.checkPraticaPersona(vaultKey, slug, allow != nil); err != nil {
+			return err
+		}
+	}
 
 	// Derive category subkey
 	subkey, err := crypto.DeriveSubkey(vaultKey, v.salt, category)
@@ -635,7 +645,6 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 		return errCredentialTier(id)
 	}
 
-	_, campo, _ := praticaField(category, fieldName)
 	err = v.db.SetField(store.Field{
 		ID:          id,
 		Category:    category,
@@ -873,10 +882,20 @@ func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
 func (v *Vault) delete(id string, seen *store.Seen) error {
 	v.writeMu.RLock()
 	defer v.writeMu.RUnlock()
-	if err := v.checkUnlocked(); err != nil {
+	vaultKey, err := v.requireUnlocked()
+	if err != nil {
 		return err
 	}
+	defer clear(vaultKey)
 
+	// A pratica without a stato counts as open, so deleting a closed one's
+	// stato reopens it: its persona must still name people who exist.
+	category, name, _ := strings.Cut(id, ".")
+	if slug, campo, ok := praticaField(category, name); ok && campo == "stato" {
+		if err := v.checkPraticaPersona(vaultKey, slug, seen != nil); err != nil {
+			return err
+		}
+	}
 	if err := v.db.DeleteField(id, seen); err != nil {
 		return err
 	}

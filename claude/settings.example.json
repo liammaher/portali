@@ -3,6 +3,8 @@
     "deny": [
       "Read(~/.pvault/**)",
       "Edit(~/.pvault/**)",
+      "Read(~/.pvault-*/**)",
+      "Edit(~/.pvault-*/**)",
       "Bash(*.pvault*)",
       "Bash(*pvault-mcp*)",
       "Bash(*find-generic-password*)",

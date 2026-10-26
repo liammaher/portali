@@ -24,6 +24,23 @@ jobs:
       - name: Test
         run: go test -race ./...
 
+  # peer_darwin.go and the Swift Touch ID helper compile only here, and their
+  # tests skip elsewhere.
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: go test -race ./cmd/...
+
   mcp:
     runs-on: ubuntu-latest
     defaults:

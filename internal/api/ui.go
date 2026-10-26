@@ -1,7 +1,9 @@
 package api
 
 import (
+	"crypto/sha256"
 	_ "embed"
+	"encoding/base64"
 	"net/http"
 	"regexp"
 	"strings"
@@ -23,8 +25,26 @@ var pageFields = func() []string {
 	return ids
 }()
 
+// pageCSP lets the page run only its own inline script and style, named by
+// hash so editing either updates the policy, and talk only to this server: the
+// page holds the 15-minute grant and shows decrypted values, so a script that
+// got in some other way could neither load more code nor send them elsewhere.
+var pageCSP = func() string {
+	hash := func(tag string) string {
+		m := regexp.MustCompile(`(?s)<` + tag + `>(.*?)</` + tag + `>`).FindSubmatch(onboardingHTML)
+		if m == nil {
+			panic("onboarding page has no inline <" + tag + ">")
+		}
+		sum := sha256.Sum256(m[1])
+		return "'sha256-" + base64.StdEncoding.EncodeToString(sum[:]) + "'"
+	}
+	return "default-src 'none'; script-src " + hash("script") + "; style-src " + hash("style") +
+		"; style-src-attr 'unsafe-inline'; img-src data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+}()
+
 func (s *Server) handleUI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Content-Security-Policy", pageCSP)
 	w.Write(onboardingHTML)
 }
 

@@ -206,7 +206,7 @@ Whatever a token allows, Claude sees: values returned by the MCP tools enter the
 
 ### Touch ID (macOS)
 
-`make build` also builds `bin/pvault-touchid`, a small signed helper; keep it next to `pvault` (`make install` copies both). Then:
+Touch ID needs a build from source: the release archives carry neither the helper nor the hardened-runtime signature it requires of `pvault`. `make build` also builds `bin/pvault-touchid`, a small signed helper; keep it next to `pvault` (`make install` copies both). Then:
 
 ```sh
 pvault touchid enable    # asks for your password once, then a fingerprint

@@ -59,7 +59,7 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	doc, err := s.vault.AddDocument(category, q.Get("name"), r.Header.Get("Content-Type"), data, q.Get("sensitivity"))
+	doc, err := s.vault.AddDocumentIf(peopleFilter(r), category, q.Get("name"), r.Header.Get("Content-Type"), data, q.Get("sensitivity"))
 	if err != nil {
 		handleVaultError(w, err)
 		return

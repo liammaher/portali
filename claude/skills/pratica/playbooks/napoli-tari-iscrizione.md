@@ -68,9 +68,8 @@ Signature, sending the PEC/email (or the raccomandata), paying the F24.
 
 ## Run log
 
-- 2026-10-25: first run. Found a signed Mod. 1 that had never been sent and an unpaid F24
-  for the 2026 unica soluzione, whose deadline had already passed; tracked them as two
-  pratiche (iscrizione and acconto), the iscrizione on hold at the user's request.
+- 2026-10-25: first run. Found an earlier partial run (a form signed but never sent, a
+  payment not made) and tracked each as its own pratica, resuming where the user said.
 - 2026-10-26: trimmed to what the library lacks. The library has since verified the
   90-day deadline (regolamento 2023), confirmed the current Mod. 1 prints the new simulator
   link, and lists the POTESs portal as a channel.

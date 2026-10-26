@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Personal Vault</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -20,9 +17,9 @@
   --danger:#C97C7C;
   --green:#7CC9A0;
   --border:#1E1E1E;
-  --font-serif:'Instrument Serif',Georgia,'Times New Roman',serif;
-  --font-sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --font-mono:'JetBrains Mono','SF Mono','Fira Code',monospace;
+  --font-serif:Georgia,'Times New Roman',serif;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'Fira Code',monospace;
   --ease-out:cubic-bezier(0.22,1,0.36,1);
 }
 
@@ -1650,6 +1647,9 @@ body::before{
   function init() {
   const BASE = window.location.origin;
   const inputs = document.querySelectorAll('[data-field]');
+  // The secrets (password inputs), fixed now: "show" turns an input into text,
+  // so its type can't say what is a secret later.
+  inputs.forEach(function(input) { if (input.type === 'password') input.dataset.secretField = '1'; });
   let totalCount = inputs.length;
   let filledCount = 0;
 
@@ -1718,15 +1718,45 @@ body::before{
 
   // --- Load existing values ---
 
+  // A secret (a password input) is never sent back to the page: the input
+  // says it is saved, and typing replaces it.
+  function markSecretSaved(input) {
+    if (input.dataset.placeholder === undefined) input.dataset.placeholder = input.placeholder;
+    input.value = '';
+    input.dataset.saved = '';
+    input.dataset.secret = '1';
+    input.placeholder = 'saved \u2014 type to replace';
+    hideSecret(input);
+  }
+  function clearSecretMark(input) {
+    delete input.dataset.secret;
+    if (input.dataset.placeholder !== undefined) input.placeholder = input.dataset.placeholder;
+    hideSecret(input);
+  }
+  function hideSecret(input) {
+    if (!input.dataset.secretField) return;
+    input.type = 'password';
+    const btn = input.parentElement.querySelector('[data-toggle]');
+    if (btn) btn.textContent = 'show';
+  }
+
   function loadCategory(cat) {
     const p = prefix, g = gen;
     if (!canHold(holders.categories, cat, p !== '')) return Promise.resolve();
-    return api('GET', '/vault/fields/category/' + p + cat).then(function(fields) {
+    // The vault leaves the secrets of this category out of the answer: the page
+    // only learns that they are saved.
+    const secrets = Array.prototype.filter.call(inputs, function(i) {
+      return i.dataset.secretField && i.getAttribute('data-field').split('.')[0] === cat;
+    }).map(function(i) { return p + i.getAttribute('data-field'); });
+    const query = secrets.length ? '?omit=' + encodeURIComponent(secrets.join(',')) : '';
+    return api('GET', '/vault/fields/category/' + p + cat + query).then(function(fields) {
       if (g !== gen || !Array.isArray(fields)) return;
       fields.forEach(function(f) {
         // A field can appear in more than one section (business.denominazione).
         document.querySelectorAll('[data-field="' + f.id.slice(p.length) + '"]').forEach(function(input) {
-          if (f.value) {
+          if (f.redacted) {
+            if (input.dataset.secretField) markSecretSaved(input);
+          } else if (f.value) {
             input.value = f.value;
             input.dataset.saved = f.value;
           }
@@ -1836,6 +1866,7 @@ body::before{
     inputs.forEach(function(input) {
       input.value = '';
       input.dataset.saved = '';
+      clearSecretMark(input);
       setStatus(input.closest('.field').querySelector('.status'), 'idle');
     });
     syncChecks();
@@ -1978,7 +2009,7 @@ body::before{
 
     input.addEventListener('blur', function() {
       // Secrets are saved exactly as typed: a password may start or end with a space.
-      const val = input.type === 'password' ? input.value : input.value.trim();
+      const val = input.dataset.secretField ? input.value : input.value.trim();
       const local = input.getAttribute('data-field');
       // The person whose field this is, fixed now: a switch can't redirect it.
       const p = prefix, g = gen;
@@ -2006,16 +2037,20 @@ body::before{
           }
           if (g !== gen) return; // the page shows someone else now
           input.dataset.saved = val;
-          // Show the stored form (e.g. an upper-cased codice fiscale)
-          api('GET', '/vault/fields/' + fieldId).then(function(f) {
-            // A hidden input (the ruolo checkboxes) is never focused, so check
-            // instead that no newer choice was made while this read was out.
-            if (g === gen && f && f.value && document.activeElement !== input && (input.type !== 'hidden' || input.value === val)) {
-              input.value = f.value;
-              input.dataset.saved = f.value;
-              if (input.type === 'hidden') syncChecks();
-            }
-          }).catch(function() {});
+          if (input.dataset.secretField) {
+            if (document.activeElement !== input) markSecretSaved(input); // not while they type again
+          } else {
+            // Show the stored form (e.g. an upper-cased codice fiscale)
+            api('GET', '/vault/fields/' + fieldId).then(function(f) {
+              // A hidden input (the ruolo checkboxes) is never focused, so check
+              // instead that no newer choice was made while this read was out.
+              if (g === gen && f && f.value && document.activeElement !== input && (input.type !== 'hidden' || input.value === val)) {
+                input.value = f.value;
+                input.dataset.saved = f.value;
+                if (input.type === 'hidden') syncChecks();
+              }
+            }).catch(function() {});
+          }
           if (p && ['identity.first_name', 'famiglia.relazione', 'identity.sex', 'ruolo.tipo', 'business.denominazione'].indexOf(local) >= 0) {
             loadPeople(); // the names in the Persona list
           }
@@ -2074,7 +2109,7 @@ body::before{
     inputs.forEach(function(input) {
       if (input.closest('[hidden]')) return;
       totalCount++;
-      if (input.value.trim()) filledCount++;
+      if (input.value.trim() || input.dataset.secret) filledCount++;
     });
     document.getElementById('filledCount').textContent = filledCount;
     document.getElementById('totalCount').textContent = totalCount;

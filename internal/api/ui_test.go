@@ -188,3 +188,44 @@ func TestUIFields(t *testing.T) {
 		}
 	}
 }
+
+// The page holds a grant and shows decrypted values: it loads nothing from
+// elsewhere, sends no Referer, and runs only the script the server shipped.
+func TestOnboardingPageIsLockedDown(t *testing.T) {
+	env := setup(t)
+	w := env.doRequest(t, "GET", "/ui", nil, false)
+	csp := w.Header().Get("Content-Security-Policy")
+	for _, want := range []string{"default-src 'none'", "script-src 'sha256-", "style-src 'sha256-", "connect-src 'self'", "frame-ancestors 'none'"} {
+		if !strings.Contains(csp, want) {
+			t.Errorf("CSP %q lacks %q", csp, want)
+		}
+	}
+	if scriptSrc := regexp.MustCompile(`script-src [^;]*`).FindString(csp); strings.Contains(scriptSrc, "unsafe") {
+		t.Errorf("script-src allows inline script: %q", scriptSrc)
+	}
+	if got := w.Header().Get("Referrer-Policy"); got != "no-referrer" {
+		t.Errorf("Referrer-Policy = %q", got)
+	}
+	if ext := regexp.MustCompile(`(?:src|href)="https?://`).FindString(w.Body.String()); ext != "" {
+		t.Errorf("the page loads %s...: it must be self-contained", ext)
+	}
+}
+
+// The page asks the vault to leave its password inputs' values out, and the
+// vault does: the field shows as saved, with no value.
+func TestCategoryReadCanOmitSecrets(t *testing.T) {
+	env := setup(t)
+	for id, val := range map[string]string{"spid.username": "mario", "spid.password": "hunter2-secret"} {
+		if err := env.vault.Set(id, val, ""); err != nil {
+			t.Fatal(err)
+		}
+	}
+	w := env.doRequest(t, "GET", "/vault/fields/category/spid?omit=spid.password", nil, true)
+	body := w.Body.String()
+	if strings.Contains(body, "hunter2") || !strings.Contains(body, `"redacted":true`) || !strings.Contains(body, "mario") {
+		t.Fatalf("omit: %s", body)
+	}
+	if w := env.doRequest(t, "GET", "/vault/fields/category/spid", nil, true); !strings.Contains(w.Body.String(), "hunter2") {
+		t.Fatalf("without omit the value is returned: %s", w.Body.String())
+	}
+}
