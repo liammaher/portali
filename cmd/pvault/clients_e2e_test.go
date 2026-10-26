@@ -79,6 +79,9 @@ func TestClients_EndToEnd(t *testing.T) {
 
 	// With Touch ID, 'set' gets a grant for that one field, which can still
 	// name a client it can't otherwise see.
+	// Times are to the second and a scan from the closing's second counts as
+	// later, so the closing must come in a later second than the scans.
+	time.Sleep(time.Second)
 	runCmd(t, cmdSet, "set", "pratiche.docfa-rossi_persona", "rossi")
 	runCmd(t, cmdSet, "set", "pratiche.docfa-rossi_stato", "annullata")
 

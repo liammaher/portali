@@ -51,28 +51,9 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 		return nil, err
 	}
 
-	// Pratiche whose stato ends them, and whom each one is for, by slug. A
-	// pratica stored under two spellings of pratiche (from before IDs had to
-	// be lower-case) is closed only if every stato says so, and is for
-	// everyone its persona fields name.
-	closed := map[string]bool{}
-	persona := map[string][]string{}
-	for _, fields := range ctx.Categories {
-		for _, f := range fields {
-			slug, campo, _ := praticaField(f.Category, f.FieldName)
-			switch {
-			case campo == "stato":
-				prev, seen := closed[slug]
-				closed[slug] = isClosedStato(f.Value) && (prev || !seen)
-			case campo == "persona":
-				for _, ref := range PersonRefs(f.Value) {
-					if ref != OwnerRef && !slices.Contains(persona[slug], ref) {
-						persona[slug] = append(persona[slug], ref)
-					}
-				}
-			}
-		}
-	}
+	// Which pratiche are closed, and whom each one is for (from what allow
+	// accepts: a stato it can't see leaves its pratica's deadline showing).
+	pratiche := praticheIn(ctx, nil)
 
 	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
 	cutoff := today.Add(within)
@@ -99,7 +80,7 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 				continue
 			}
 			slug, _, isPratica := praticaField(f.Category, f.FieldName)
-			if !IsExpiryField(f.FieldName) || (isPratica && closed[slug]) {
+			if !IsExpiryField(f.FieldName) || (isPratica && pratiche[slug] != nil && pratiche[slug].closed()) {
 				continue
 			}
 			normalized, err := NormalizeDate(f.Value)
@@ -112,8 +93,11 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 			}
 			if isPratica {
 				document = "pratica " + slug // a pratica's deadline
-				slices.Sort(persona[slug])
-				person = strings.Join(persona[slug], ",")
+				if p := pratiche[slug]; p != nil {
+					persone := slices.DeleteFunc(slices.Clone(p.persone), func(s string) bool { return s == OwnerRef })
+					slices.Sort(persone)
+					person = strings.Join(slices.Compact(persone), ",")
+				}
 			}
 			add(f.ID, document, person, "", expires)
 		}
@@ -156,18 +140,17 @@ type idScans struct {
 // at least one pratica names in persona and every pratica naming them is
 // closed. Only clients: the business's own pratiche (persona io) use its
 // titolare's and soci's documents too, without naming them. A category is
-// returned only if every scan in it was there when the last of those pratiche
-// closed (its stato was last written), so a scan handed over for a new job, or
-// for a later person given a removed person's slug, is never due; and a
-// procura category is kept while a procura.data_scadenza is still ahead.
+// returned only if every scan in it was there before the last of those
+// pratiche closed (ClosedAt; times are to the second, so a scan from the same
+// second counts as after), so a scan handed over for a new job, or for a later
+// person given a removed person's slug, is never due; and a procura category
+// is kept while a procura.data_scadenza is still ahead.
 //
 // It reads every pratica, not just those allow accepts, so a pratica the
 // caller can't see still counts as open; but a person counts only if the
 // caller can read the persona and stato of every pratica naming them, their
 // ruolo.tipo and procura.data_scadenza, and every scan in the category. A
-// partial view never says scans can go. A pratica stored under two spellings
-// of pratiche (from before IDs had to be lower-case) is closed only if every
-// stato says so, and names everyone any of its persona fields names.
+// partial view never says scans can go.
 func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScans, error) {
 	ctx, err := v.decryptFields(func(id, _ string) bool {
 		person, local := SplitPerson(id)
@@ -182,52 +165,28 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 		return nil, err
 	}
 	visible := func(f FieldInfo) bool { return allow == nil || allow(f.ID, f.Sensitivity) }
-	type pratica struct {
-		persone      []string
-		stati        int
-		open, hidden bool
-		closedAt     time.Time
-	}
-	pratiche := map[string]*pratica{}
 	client, blocked := map[string]bool{}, map[string]bool{} // blocked: a ruolo.tipo or procura date the caller can't read
 	procuraInForce := map[string]bool{}
 	for _, fields := range ctx.Categories {
 		for _, f := range fields {
-			if person, local := SplitPerson(f.Category); person != "" {
-				switch {
-				case !visible(f):
-					blocked[person] = true
-				case isRuoloTipo(local, f.FieldName):
-					client[person] = client[person] || slices.Contains(strings.Split(f.Value, ","), "cliente")
-				default: // a procura's data_scadenza
-					if d, err := NormalizeDate(f.Value); err != nil || d >= today.Format(dateLayout) {
-						procuraInForce[person] = true
-					}
+			person, local := SplitPerson(f.Category)
+			switch {
+			case person == "":
+			case !visible(f):
+				blocked[person] = true
+			case local == "ruolo":
+				client[person] = client[person] || slices.Contains(strings.Split(f.Value, ","), "cliente")
+			default: // a procura's data_scadenza
+				if d, err := NormalizeDate(f.Value); err != nil || d >= today.Format(dateLayout) {
+					procuraInForce[person] = true
 				}
-				continue
-			}
-			slug, campo, _ := praticaField(f.Category, f.FieldName)
-			p := pratiche[slug]
-			if p == nil {
-				p = &pratica{}
-				pratiche[slug] = p
-			}
-			p.hidden = p.hidden || !visible(f)
-			if campo == "stato" {
-				p.stati++
-				p.open = p.open || !isClosedStato(f.Value)
-				if f.UpdatedAt.After(p.closedAt) {
-					p.closedAt = f.UpdatedAt
-				}
-			} else {
-				p.persone = append(p.persone, PersonRefs(f.Value)...)
 			}
 		}
 	}
 	done := map[string]bool{}            // client → every pratica naming them is closed, and readable
 	lastClosed := map[string]time.Time{} // client → when the last of those closed
-	for _, p := range pratiche {
-		closed := p.stati > 0 && !p.open && !p.hidden
+	for _, p := range praticheIn(ctx, allow) {
+		closed := p.closed() && !p.hidden
 		for _, person := range p.persone {
 			ok := client[person] && !blocked[person] && closed
 			if prev, seen := done[person]; seen {
@@ -250,7 +209,7 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 			continue
 		}
 		ok := (allow == nil || allow(DocumentScopeID(doc.Category), doc.Sensitivity)) &&
-			!doc.CreatedAt.After(lastClosed[person]) &&
+			doc.CreatedAt.Before(lastClosed[person]) && // same second: maybe after, so kept
 			!(procuraInForce[person] && schemaCategoryOf(base).Name == "procura")
 		if prev, seen := due[doc.Category]; seen {
 			ok = ok && prev
@@ -268,14 +227,13 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 	return out, nil
 }
 
-// isRuoloTipo reports a person's ruolo.tipo (category and name without the
-// person, any case).
+// isRuoloTipo reports a person's ruolo.tipo (category without the person).
 func isRuoloTipo(category, name string) bool {
-	return strings.EqualFold(category, "ruolo") && strings.EqualFold(name, "tipo")
+	return category == "ruolo" && name == "tipo"
 }
 
 // isProcuraScadenza reports a procura's data_scadenza, numbered copies too.
 func isProcuraScadenza(category, name string) bool {
 	c := schemaCategoryOf(category)
-	return c != nil && c.Name == "procura" && strings.EqualFold(name, "data_scadenza")
+	return c != nil && c.Name == "procura" && name == "data_scadenza"
 }

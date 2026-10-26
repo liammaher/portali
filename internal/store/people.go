@@ -2,49 +2,24 @@ package store
 
 import (
 	"database/sql"
-	"sort"
 	"time"
 )
 
-// Other people's fields and documents are stored in categories
-// prefixed with the person's slug and a colon (leo:cie). ';' sorts right
-// after ':', so [slug:, slug;) is exactly one person's categories, without
-// LIKE (where '_' would be a wildcard).
+// Other people's fields and documents are stored in categories prefixed
+// with the person's slug and a colon (leo:cie), and the person in
+// vault_people. ';' sorts right after ':', so [slug:, slug;) is exactly one
+// person's categories, without LIKE (where '_' would be a wildcard).
 
-// PersonExists reports whether a person has any field or document.
+// PersonExists reports whether the vault has the person.
 func (d *DB) PersonExists(slug string) (bool, error) {
-	lo, hi := slug+":", slug+";"
 	var n int
-	err := d.conn.QueryRow(
-		`SELECT EXISTS (SELECT 1 FROM vault_fields WHERE category >= ? AND category < ?)
-		     OR EXISTS (SELECT 1 FROM vault_documents WHERE category >= ? AND category < ?)`,
-		lo, hi, lo, hi,
-	).Scan(&n)
+	err := d.conn.QueryRow(`SELECT EXISTS (SELECT 1 FROM vault_people WHERE slug = ?)`, slug).Scan(&n)
 	return n == 1, err
 }
 
-// PersonSlugs returns the slugs of every person with a field or document,
-// sorted.
+// PersonSlugs returns the slugs of the vault's people, sorted.
 func (d *DB) PersonSlugs() ([]string, error) {
-	rows, err := d.conn.Query(
-		`SELECT DISTINCT substr(category, 1, instr(category, ':') - 1) FROM vault_fields WHERE instr(category, ':') > 0
-		 UNION
-		 SELECT DISTINCT substr(category, 1, instr(category, ':') - 1) FROM vault_documents WHERE instr(category, ':') > 0`,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var slugs []string
-	for rows.Next() {
-		var s string
-		if err := rows.Scan(&s); err != nil {
-			return nil, err
-		}
-		slugs = append(slugs, s)
-	}
-	sort.Strings(slugs)
-	return slugs, rows.Err()
+	return d.ids(`SELECT slug FROM vault_people ORDER BY slug`)
 }
 
 // PersonRows returns the IDs of a person's fields and documents.
@@ -108,39 +83,54 @@ func (d *DB) ids(query string, args ...any) ([]string, error) {
 	return ids, rows.Err()
 }
 
-// ApplyPersonChange deletes fields, documents and tokens and inserts new
-// fields in one transaction, so removing or migrating a person never
-// half-happens. Every field and document to delete must still exist and every
-// field to insert must not exist yet; otherwise nothing changes and it returns
-// ErrChanged. A token already gone (expired, revoked) is no error.
-func (d *DB) ApplyPersonChange(deleteFields, deleteDocs, deleteTokens []string, insert []Field) error {
+// Change is a set of row changes ApplyChange makes in one transaction.
+type Change struct {
+	DeleteFields, DeleteDocs []string // each must still exist
+	DeleteTokens             []string // a token already gone (expired, revoked) is no error
+	Insert                   []Field  // each must not exist yet
+	DeletePerson             string   // the person removed with their rows, if any
+}
+
+// ApplyChange makes c in one transaction, so removing or migrating a person
+// never half-happens. If a row to delete is gone or one to insert exists,
+// nothing changes and it returns ErrChanged.
+func (d *DB) ApplyChange(c Change) error {
 	tx, err := d.conn.Begin()
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
-	for _, id := range deleteFields {
+	for _, id := range c.DeleteFields {
 		if err := oneRow(tx.Exec(`DELETE FROM vault_fields WHERE id = ?`, id)); err != nil {
 			return err
 		}
 	}
-	for _, id := range deleteDocs {
+	for _, id := range c.DeleteDocs {
 		if err := oneRow(tx.Exec(`DELETE FROM vault_documents WHERE id = ?`, id)); err != nil {
 			return err
 		}
 	}
-	for _, token := range deleteTokens {
+	for _, token := range c.DeleteTokens {
 		if _, err := tx.Exec(`DELETE FROM vault_tokens WHERE token = ?`, token); err != nil {
 			return err
 		}
 	}
-	for _, f := range insert {
+	for _, f := range c.Insert {
+		var closedAt any // NULL unless set
+		if !f.ClosedAt.IsZero() {
+			closedAt = f.ClosedAt.UTC().Format(time.RFC3339)
+		}
 		res, err := tx.Exec(
-			`INSERT INTO vault_fields (id, category, field_name, value, sensitivity, updated_at, version)
-			 VALUES (?, ?, ?, ?, ?, ?, 1) ON CONFLICT(id) DO NOTHING`,
-			f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, f.UpdatedAt.UTC().Format(time.RFC3339),
+			`INSERT INTO vault_fields (id, category, field_name, value, sensitivity, updated_at, version, closed_at)
+			 VALUES (?, ?, ?, ?, ?, ?, 1, ?) ON CONFLICT(id) DO NOTHING`,
+			f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, f.UpdatedAt.UTC().Format(time.RFC3339), closedAt,
 		)
 		if err := oneRow(res, err); err != nil {
+			return err
+		}
+	}
+	if c.DeletePerson != "" {
+		if err := oneRow(tx.Exec(`DELETE FROM vault_people WHERE slug = ?`, c.DeletePerson)); err != nil {
 			return err
 		}
 	}

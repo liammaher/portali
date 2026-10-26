@@ -27,7 +27,7 @@ What makes it work, and should be kept:
 - **One set of rules.** Every category-keyed rule strips the prefix with `SplitMember`
   first; `TestMemberRulesMatchOwner` checks that a party gets exactly the owner's rules.
 - **A small scope grammar** (`leo:*`, `leo:cat.*`, `*:cat.*`, `*`) parsed the same way in
-  Go, `mcp/src/scope.ts` and the Touch ID helper, tested against
+  Go and the Touch ID helper, tested against
   `internal/vault/testdata/scopes.json`.
 - **Facts, not procedure rules.** `famiglia` stores the relazione (with its ANPR Tabella
   05 code), a_carico, genitori, rappresentanza. Who counts for an ISEE or a 730 is up to

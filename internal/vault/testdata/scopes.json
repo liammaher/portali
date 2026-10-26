@@ -1,5 +1,5 @@
 {
-  "_comment": "Scope matching cases shared by internal/vault/scope_test.go and mcp/src/scope.test.ts, so the Go and TypeScript matchers can't drift apart.",
+  "_comment": "Scope cases shared by internal/vault/scope_test.go (the server) and cmd/pvault/touchid_prompt_test.go (the Touch ID helper parses validScopes and invalidScopes), so the two can't drift apart.",
   "fields": [
     {"scope": "*", "id": "identity.full_name", "want": true},
     {"scope": "*", "id": "leo:cie.numero", "want": true},
@@ -57,18 +57,6 @@
     {"scope": "*:identity.*", "category": "identity", "want": true},
     {"scope": "*:identity.*", "category": "giulia:cie", "want": false}
   ],
-  "people": [
-    {"scope": "*", "person": "leo", "want": true},
-    {"scope": "*", "person": "", "want": true},
-    {"scope": "identity.*", "person": "", "want": true},
-    {"scope": "identity.*", "person": "leo", "want": false},
-    {"scope": "leo:*", "person": "leo", "want": true},
-    {"scope": "leo:cie.*", "person": "leo", "want": true},
-    {"scope": "leo:cie.*", "person": "giulia", "want": false},
-    {"scope": "leo:cie.*", "person": "", "want": false},
-    {"scope": "*:identity.*", "person": "giulia", "want": true},
-    {"scope": "*:identity.*", "person": "", "want": true}
-  ],
   "validScopes": [
     "*", "identity.*", "identity.full_name", "cie.documents", "identity.*,residenza.*",
     "leo:*", "leo:cie.*", "leo:cie.numero", "leo:cie.documents", "*:identity.*",
@@ -78,6 +66,6 @@
     "", " ", "*:*", "io:*", "io:cie.*", "Leo:*", "LEO:cie.*", "leo:", ":cie.*", "leo:cie",
     "leo:cie:x.y", "a:b:c.d", "leo:*:x", "-leo:*", "1leo:*", "leo_x:*", "leo:cie.*x",
     "leo :cie.*", "cie", "cie.", ".x", "identity.full name",
-    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:*"
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:*", "identity.*,", "a.b,,c.d"
   ]
 }

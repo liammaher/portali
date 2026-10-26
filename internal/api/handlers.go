@@ -83,6 +83,17 @@ func callerFilter(r *http.Request) vault.FieldFilter {
 	}
 }
 
+// peopleFilter is what the caller may know about who is in the vault: nil
+// (everyone) for the user's session and grants they approved in person, the
+// caller's own filter for a service token, so its answers never depend on
+// people it can't see.
+func peopleFilter(r *http.Request) vault.FieldFilter {
+	if reachesPersonal(r) {
+		return nil
+	}
+	return callerFilter(r)
+}
+
 // requireJSON rejects bodies not sent as application/json. Browsers cannot
 // send that cross-origin without a CORS preflight, which this server never
 // grants, so web pages cannot hit credential endpoints.
@@ -387,10 +398,7 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 	// user approved in person may name anyone, as the session can.
 	set := s.vault.Set
 	if !isSessionAuth(r) {
-		var allow vault.FieldFilter
-		if !reachesPersonal(r) {
-			allow = callerFilter(r)
-		}
+		allow := peopleFilter(r)
 		set = func(id, value, sensitivity string) error {
 			return s.vault.SetChecked(id, value, sensitivity, existing, allow)
 		}
@@ -449,7 +457,7 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a field stored above its default sensitivity tier")
 			return
 		}
-		del = func(id string) error { return s.vault.DeleteChecked(id, existing, callerFilter(r)) }
+		del = func(id string) error { return s.vault.DeleteChecked(id, existing) }
 	}
 	if err := del(id); err != nil {
 		handleVaultError(w, err)

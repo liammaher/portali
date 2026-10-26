@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -180,6 +181,16 @@ func pickPort(dir string) (int, error) {
 		return port, nil
 	}
 	return 0, fmt.Errorf("no free port in %d-%d for a new vault", firstNamedPort, lastNamedPort)
+}
+
+// listenError explains a failed TCP listen. A port in use is most likely
+// another vault's: pickPort sees only the vaults in the home folder and what
+// is running, so a stopped vault kept elsewhere (VAULT_DIR) can have the same.
+func listenError(err error, dir string) error {
+	if errors.Is(err, syscall.EADDRINUSE) {
+		return fmt.Errorf("%w: another vault or program has this port; put a free one in %s (and leave VAULT_PORT unset)", err, portPath(dir))
+	}
+	return err
 }
 
 // ensurePort gives dir a port file if it has none (a new or restored vault).

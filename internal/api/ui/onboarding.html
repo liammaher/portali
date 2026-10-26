@@ -1659,15 +1659,21 @@ body::before{
   const categories = ['identity', 'residenza', 'domicilio', 'abitazione', 'locazione', 'utenze', 'tari', 'financial', 'employment', 'business', 'locale', 'cie', 'spid',
     'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'albo', 'cassa', 'firma_digitale', 'payment', 'preferences', 'famiglia', 'ruolo', 'procura'];
 
-  // What the vault is (persona or impresa) and what each category is about
-  // come from the public schema: which categories the vault's own data and
-  // its people can hold is the vault's rule, mirrored here to show only
-  // what can be saved.
+  // What the vault is (persona or impresa) comes from the public schema, and
+  // who may hold each field on this page from the vault itself (/ui/fields:
+  // the checks a save makes), so the page shows only what can be saved and
+  // never copies the vault's rules.
   let kind = 'persona';
   let catInfo = {};
-  const schemaReady = fetch(BASE + '/vault/schema').then(readJSON).then(function(schema) {
-    kind = schema.vault_kind || 'persona';
-    (schema.categories || []).forEach(function(c) { catInfo[c.name] = c; });
+  let holders = { fields: {}, categories: {} };
+  const schemaReady = Promise.all([
+    fetch(BASE + '/vault/schema').then(readJSON),
+    // Without these answers every field shows, and the vault still says no.
+    fetch(BASE + '/ui/fields').then(readJSON).catch(function() { return { fields: {}, categories: {} }; })
+  ]).then(function(res) {
+    kind = res[0].vault_kind || 'persona';
+    (res[0].categories || []).forEach(function(c) { catInfo[c.name] = c; });
+    holders = res[1];
     if (kind === 'impresa') {
       document.querySelector('.header h1').textContent = 'Your business vault';
       personSelect.options[0].textContent = "L'impresa";
@@ -1676,26 +1682,12 @@ body::before{
     showError("Couldn't load the vault's schema: reload this page.");
   });
 
-  // allowed mirrors the vault's kind rules (checkKind) and owner-only
-  // categories: person is true for another person's fields (prefix set).
-  function allowed(cat, person) {
-    const c = catInfo[cat];
-    if (!c) return true;
-    if (c.kinds && c.kinds.indexOf(kind) < 0) return false;
-    if (person && c.scope === 'owner') return false;
-    // A procura is always another person's (isPersonOnlyCategory).
-    if (!person && /^procura[0-9]*$/.test(cat)) return false;
-    if (!person && kind === 'impresa' && c.subject === 'persona') return false;
-    // A business vault never holds other people's SPID/CieID accounts.
-    if (person && kind === 'impresa' && /^(spid|cieid)[0-9]*([_-]|$)/.test(cat)) return false;
-    return true;
-  }
-
-  // inputAllowed is allowed for one input; secrets (password inputs: PINs,
-  // passwords) are never another person's in a business vault.
-  function inputAllowed(input, person) {
-    if (!allowed(input.getAttribute('data-field').split('.')[0], person)) return false;
-    return !(person && kind === 'impresa' && input.type === 'password');
+  // canHold reports whether the vault's own data (person false) or another
+  // person may hold a field ID, or with holders.categories some field of a
+  // category; anything not listed is allowed.
+  function canHold(list, key, person) {
+    const h = list[key];
+    return !h || (person ? h.person : h.owner);
   }
 
   // Whose fields the page shows: '' for you, 'leo:' for family member leo.
@@ -1728,7 +1720,7 @@ body::before{
 
   function loadCategory(cat) {
     const p = prefix, g = gen;
-    if (!allowed(cat, p !== '')) return Promise.resolve();
+    if (!canHold(holders.categories, cat, p !== '')) return Promise.resolve();
     return api('GET', '/vault/fields/category/' + p + cat).then(function(fields) {
       if (g !== gen || !Array.isArray(fields)) return;
       fields.forEach(function(f) {
@@ -1853,8 +1845,8 @@ body::before{
   }
   personSelect.addEventListener('change', function() { switchTo(personSelect.value); });
 
-  // Show what the current person can have: each field by its category
-  // (allowed), each section if it has a field left to show. Sections marked
+  // Show what the current person can have: each field the vault says they
+  // can hold (canHold), each section if it has a field left to show. Sections marked
   // data-kind are for one vault kind; data-relation sections (Famiglia,
   // Persone) for the vault kinds their category is for, with the owner's view
   // (the people list) or a person's (their relazione or ruolo).
@@ -1862,7 +1854,7 @@ body::before{
     const member = prefix !== '';
     document.querySelectorAll('[data-owner-only]').forEach(function(el) { el.hidden = member; });
     document.querySelectorAll('[data-member-only]').forEach(function(el) { el.hidden = !member; });
-    inputs.forEach(function(input) { input.closest('.field').hidden = !inputAllowed(input, member); });
+    inputs.forEach(function(input) { input.closest('.field').hidden = !canHold(holders.fields, input.getAttribute('data-field'), member); });
     // Start from every section shown, so one hidden by an earlier pass (e.g.
     // before the schema said which kind of vault this is) can come back.
     sections.forEach(function(section) { section.hidden = false; });
@@ -1892,9 +1884,11 @@ body::before{
     updateActiveChapter();
   }
 
-  // slugFromName mirrors the vault's (household.go): accents dropped, spaces,
+  // slugFromName proposes a slug for a new person: accents dropped, spaces,
   // apostrophes, hyphens and underscores become one hyphen, anything else is
   // dropped, and it starts with a letter: "Maria Luisa" is maria-luisa, "J.R." jr.
+  // Like the nucleo migration's (household.go), but it folds every accent;
+  // the two never need to agree, since the vault only checks the slug.
   function slugFromName(name) {
     const s = name.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[\s'_-]+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-')

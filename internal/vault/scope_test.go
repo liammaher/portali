@@ -121,7 +121,8 @@ func TestScopeAllowsCategory(t *testing.T) {
 	}
 }
 
-// scopeFixture is testdata/scopes.json, shared with mcp/src/scope.test.ts.
+// scopeFixture is testdata/scopes.json, shared with the Touch ID helper's
+// test (cmd/pvault/touchid_prompt_test.go).
 type scopeFixture struct {
 	Fields []struct {
 		Scope, ID string
@@ -130,10 +131,6 @@ type scopeFixture struct {
 	Categories []struct {
 		Scope, Category string
 		Want            bool
-	}
-	People []struct {
-		Scope, Person string
-		Want          bool
 	}
 	ValidScopes   []string
 	InvalidScopes []string
@@ -164,11 +161,7 @@ func TestScopeFixture(t *testing.T) {
 			t.Errorf("ScopeAllowsCategory(%q, %q) = %v, want %v", c.Scope, c.Category, got, c.Want)
 		}
 	}
-	for _, c := range f.People {
-		if got := ScopeAllowsPerson(c.Scope, c.Person); got != c.Want {
-			t.Errorf("ScopeAllowsPerson(%q, %q) = %v, want %v", c.Scope, c.Person, got, c.Want)
-		}
-	}
+
 	for _, s := range f.ValidScopes {
 		if err := ValidateScope(s); err != nil {
 			t.Errorf("ValidateScope(%q) = %v, want nil", s, err)

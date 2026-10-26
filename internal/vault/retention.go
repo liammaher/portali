@@ -134,17 +134,22 @@ func (v *Vault) ScanDays() (days int, set bool, err error) {
 }
 
 // retentionEnd returns the day the retention period after a relationship's
-// end date runs out.
+// end date runs out: the same day years later, or the month's last day when
+// that day doesn't exist (29 February to 28 February, art. 2963 c.c.).
 func retentionEnd(dataFine string, years int) (time.Time, bool) {
 	d, err := NormalizeDate(dataFine)
 	if err != nil {
 		return time.Time{}, false
 	}
-	end, _ := time.Parse(dateLayout, d)
-	return end.AddDate(years, 0, 0), true
+	start, _ := time.Parse(dateLayout, d)
+	end := start.AddDate(years, 0, 0)
+	if end.Day() != start.Day() { // AddDate went on into March
+		end = end.AddDate(0, 0, -end.Day())
+	}
+	return end, true
 }
 
 // isRuoloDataFine reports ruolo.data_fine (lower-case local ID).
 func isRuoloDataFine(category, name string) bool {
-	return strings.EqualFold(category, "ruolo") && strings.EqualFold(name, "data_fine")
+	return category == "ruolo" && name == "data_fine"
 }

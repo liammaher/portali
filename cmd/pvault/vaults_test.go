@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"net"
 	"os"
 	"os/exec"
@@ -134,5 +135,59 @@ func TestPorts(t *testing.T) {
 	os.WriteFile(portPath(other), []byte("seven\n"), 0600)
 	if _, _, err := readPort(other); err == nil {
 		t.Error("a non-numeric port file was accepted")
+	}
+}
+
+// init prints the new vault's secret key before giving it a port, so a port
+// error never hides the key.
+func TestFinishInit_KeyBeforePort(t *testing.T) {
+	home := isolatedHome(t)
+	dir := filepath.Join(home, ".pvault-new")
+	t.Setenv("VAULT_DIR", dir)
+	for port := firstNamedPort; port <= lastNamedPort; port++ { // every named port taken
+		other := filepath.Join(home, ".pvault-p"+strconv.Itoa(port))
+		if err := os.Mkdir(other, 0700); err != nil {
+			t.Fatal(err)
+		}
+		if err := writePort(other, port); err != nil {
+			t.Fatal(err)
+		}
+	}
+	var out bytes.Buffer
+	if err := finishInit(&out, dir, "SK-TEST-KEY", ""); err == nil {
+		t.Fatal("no free port, but finishInit succeeded")
+	}
+	if !strings.Contains(out.String(), "SK-TEST-KEY") {
+		t.Fatalf("secret key not printed before the port error:\n%s", out.String())
+	}
+
+	home = isolatedHome(t)
+	dir = filepath.Join(home, ".pvault-studio")
+	t.Setenv("VAULT_DIR", dir)
+	if err := os.Mkdir(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	out.Reset()
+	if err := finishInit(&out, dir, "SK-TEST-KEY", "impresa"); err != nil {
+		t.Fatal(err)
+	}
+	if got := out.String(); !strings.Contains(got, "Business vault") || !strings.Contains(got, ":7201") || !strings.Contains(got, "'pvault --vault studio unlock'") {
+		t.Fatalf("finishInit output:\n%s", got)
+	}
+}
+
+// A port in use says which file gives the vault another one.
+func TestListenError(t *testing.T) {
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ln.Close()
+	_, err = net.Listen("tcp", ln.Addr().String())
+	if err == nil {
+		t.Fatal("listened twice on one port")
+	}
+	if got := listenError(err, "/v").Error(); !strings.Contains(got, "/v/port") {
+		t.Fatalf("listenError = %q, want it to name /v/port", got)
 	}
 }

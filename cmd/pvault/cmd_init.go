@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -45,23 +46,37 @@ func cmdInit() {
 	if err != nil {
 		fatal("%v", err)
 	}
-	port, err := ensurePort(dir)
-	if err != nil {
+	if err := finishInit(os.Stdout, dir, sk, opts.Kind); err != nil {
 		fatal("vault created, but %v", err)
 	}
+}
 
-	if opts.Kind == vault.KindImpresa {
-		fmt.Println("Business vault initialized successfully.")
+// finishInit reports a new vault and gives it its port. The secret key is
+// printed first: the vault exists either way, and an error about ports must
+// not hide it.
+func finishInit(w io.Writer, dir, sk, kind string) error {
+	if kind == vault.KindImpresa {
+		fmt.Fprintln(w, "Business vault initialized successfully.")
 	} else {
-		fmt.Println("Vault initialized successfully.")
+		fmt.Fprintln(w, "Vault initialized successfully.")
 	}
-	fmt.Println()
-	fmt.Println("Your secret key (save this somewhere safe):")
-	fmt.Printf("  %s\n", sk)
-	fmt.Println()
-	fmt.Printf("Secret key also saved to: %s\n", secretKeyPath())
-	fmt.Printf("Vault database: %s/vault.db\n", dir)
-	fmt.Printf("Server address: http://127.0.0.1:%d\n", port)
-	fmt.Println()
-	fmt.Printf("Next: run 'pvault %sunlock' to start using your vault.\n", vaultFlag())
+	fmt.Fprintln(w)
+	printSecretKey(w, sk)
+	fmt.Fprintf(w, "Secret key also saved to: %s\n", secretKeyPath())
+	port, err := ensurePort(dir)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(w, "Vault database: %s/vault.db\n", dir)
+	fmt.Fprintf(w, "Server address: http://127.0.0.1:%d\n", port)
+	fmt.Fprintln(w)
+	fmt.Fprintf(w, "Next: run '%s' to start using your vault.\n", pvCmd("unlock"))
+	return nil
+}
+
+// printSecretKey shows a new vault's secret key.
+func printSecretKey(w io.Writer, sk string) {
+	fmt.Fprintln(w, "Your secret key (save this somewhere safe):")
+	fmt.Fprintf(w, "  %s\n", sk)
+	fmt.Fprintln(w)
 }

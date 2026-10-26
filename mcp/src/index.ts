@@ -10,8 +10,6 @@ import {
   getExpiring, listDocuments, addDocument, getDocument, listMembers,
 } from "./client.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { getScope, scopeAllows, scopeAllowsCategory } from "./scope.js";
-import { filterHousehold } from "./household.js";
 import {
   pecConfig, listFolders, listMessages, fetchSource, parsePec, pecAttachment, attachmentCharset, decodeText, isCalendarDate,
 } from "./pec.js";
@@ -26,7 +24,13 @@ function err(message: string): CallToolResult {
   return { content: [{ type: "text", text: message }], isError: true };
 }
 
-const scope = getScope();
+// The token's own scope is the only one: the vault server enforces it on
+// every request. VAULT_SCOPE was a second filter here; refuse to start
+// rather than quietly read more than someone set it to.
+if (process.env.VAULT_SCOPE) {
+  console.error("vault MCP: VAULT_SCOPE is no longer supported: give the service token that scope instead (pvault create-service-token --scope ...)");
+  process.exit(1);
+}
 
 const server = new McpServer({
   name: "vault",
@@ -78,8 +82,7 @@ server.registerTool(
   },
   async (): Promise<CallToolResult> => {
     try {
-      const result = filterHousehold(await listMembers(), scope);
-      return ok(JSON.stringify(result, null, 2));
+      return ok(JSON.stringify(await listMembers(), null, 2));
     } catch (e) {
       return err((e as Error).message);
     }
@@ -100,9 +103,6 @@ server.registerTool(
     },
   },
   async ({ id }): Promise<CallToolResult> => {
-    if (!scopeAllows(scope, id)) {
-      return err(`scope denied: ${id} is not in VAULT_SCOPE`);
-    }
     try {
       const field = await getField(id);
       return ok(JSON.stringify(field, null, 2));
@@ -120,9 +120,7 @@ server.registerTool(
   },
   async (): Promise<CallToolResult> => {
     try {
-      const fields = await listFields();
-      const filtered = fields.filter((f) => scopeAllows(scope, f.id));
-      return ok(JSON.stringify(filtered, null, 2));
+      return ok(JSON.stringify(await listFields(), null, 2));
     } catch (e) {
       return err((e as Error).message);
     }
@@ -137,20 +135,7 @@ server.registerTool(
   },
   async (): Promise<CallToolResult> => {
     try {
-      const ctx = await getContext();
-      for (const cat of Object.keys(ctx.categories)) {
-        if (!scopeAllowsCategory(scope, cat)) {
-          delete ctx.categories[cat];
-          continue;
-        }
-        ctx.categories[cat] = ctx.categories[cat].filter((f) =>
-          scopeAllows(scope, f.id)
-        );
-        if (ctx.categories[cat].length === 0) {
-          delete ctx.categories[cat];
-        }
-      }
-      return ok(JSON.stringify(ctx, null, 2));
+      return ok(JSON.stringify(await getContext(), null, 2));
     } catch (e) {
       return err((e as Error).message);
     }
@@ -178,9 +163,6 @@ server.registerTool(
     },
   },
   async ({ id, value, sensitivity }): Promise<CallToolResult> => {
-    if (!scopeAllows(scope, id)) {
-      return err(`scope denied: ${id} is not in VAULT_SCOPE`);
-    }
     try {
       await setField(id, value, sensitivity);
       return ok(`Saved ${id}`);
@@ -202,7 +184,7 @@ server.registerTool(
   async ({ days }): Promise<CallToolResult> => {
     try {
       const items = await getExpiring(days ?? 90);
-      return ok(JSON.stringify(items.filter((i) => scopeAllows(scope, i.field_id)), null, 2));
+      return ok(JSON.stringify(items, null, 2));
     } catch (e) {
       return err((e as Error).message);
     }
@@ -221,7 +203,7 @@ server.registerTool(
   async ({ category }): Promise<CallToolResult> => {
     try {
       const docs = await listDocuments(category);
-      return ok(JSON.stringify(docs.filter((d) => scopeAllows(scope, `${d.category}.documents`)), null, 2));
+      return ok(JSON.stringify(docs, null, 2));
     } catch (e) {
       return err((e as Error).message);
     }
@@ -298,9 +280,6 @@ server.registerTool(
     },
   },
   async ({ path, category, sensitivity }): Promise<CallToolResult> => {
-    if (!scopeAllows(scope, `${category}.documents`)) {
-      return err(`scope denied: ${category}.documents is not in VAULT_SCOPE`);
-    }
     try {
       const real = await resolveImportPath(path);
       const info = await stat(real);
@@ -328,9 +307,6 @@ server.registerTool(
   async ({ id }): Promise<CallToolResult> => {
     try {
       const doc = await getDocument(id);
-      if (!scopeAllows(scope, `${doc.category}.documents`)) {
-        return err(`scope denied: ${doc.category}.documents is not in VAULT_SCOPE`);
-      }
       if (doc.data.length > MAX_INLINE_BYTES) {
         return err("document is larger than 10 MB and can't be returned inline");
       }

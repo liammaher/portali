@@ -241,7 +241,8 @@ func TestMembers(t *testing.T) {
 	}
 
 	// Inserting a field that exists changes nothing.
-	err := db.ApplyPersonChange([]string{"leo:cie.numero"}, []string{"d1"}, nil, []Field{{ID: "cie.numero", Category: "cie", FieldName: "numero", Value: "w", Sensitivity: "standard", UpdatedAt: now}})
+	err := db.ApplyChange(Change{DeleteFields: []string{"leo:cie.numero"}, DeleteDocs: []string{"d1"},
+		Insert: []Field{{ID: "cie.numero", Category: "cie", FieldName: "numero", Value: "w", Sensitivity: "standard", UpdatedAt: now}}})
 	if err != ErrChanged {
 		t.Fatalf("insert over an existing field = %v, want ErrChanged", err)
 	}
@@ -249,14 +250,21 @@ func TestMembers(t *testing.T) {
 		t.Fatal("a failed change still deleted a field")
 	}
 	// Deleting a row that's gone changes nothing either.
-	if err := db.ApplyPersonChange([]string{"leo:cie.numero", "leo:cie.missing"}, nil, nil, nil); err != ErrChanged {
+	if err := db.ApplyChange(Change{DeleteFields: []string{"leo:cie.numero", "leo:cie.missing"}}); err != ErrChanged {
 		t.Fatalf("delete of a missing field = %v, want ErrChanged", err)
 	}
-	if err := db.ApplyPersonChange([]string{"leo:cie.numero"}, []string{"d1"}, nil, nil); err != nil {
+	// A person stays when their last row goes; DeletePerson removes them.
+	if err := db.ApplyChange(Change{DeleteDocs: []string{"d1"}}); err != nil {
 		t.Fatal(err)
 	}
-	if slugs, _ := db.PersonSlugs(); strings.Join(slugs, ",") != "leo_x" {
+	if err := db.ApplyChange(Change{DeleteFields: []string{"leo:cie.numero"}, DeletePerson: "leo"}); err != nil {
+		t.Fatal(err)
+	}
+	if slugs, _ := db.PersonSlugs(); strings.Join(slugs, ",") != "giulia,leo_x" {
 		t.Fatalf("after removal PersonSlugs = %v", slugs)
+	}
+	if err := db.ApplyChange(Change{DeletePerson: "leo"}); err != ErrChanged {
+		t.Fatalf("removing a person twice = %v, want ErrChanged", err)
 	}
 }
 

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"maps"
-	"net/http"
 	"os"
 	"slices"
 	"sort"
@@ -301,22 +300,18 @@ func cmdPersonAdd() {
 	fmt.Printf("Added %s. Their fields are %s:<category>.<field>, e.g. pvault %sset %s:cie.numero <numero>\n", slug, slug, vaultFlag(), slug)
 }
 
-// addPerson writes a new person's fields, refusing a slug that already has
-// any of them, so adding never overwrites someone.
+// addPerson writes a new person's fields, refusing a slug the vault already
+// has, even with no fields left: adding never overwrites someone, and a new
+// person never inherits what names an earlier one (tokens, pratiche).
 func addPerson(slug string, fields [][2]string) error {
-	for _, f := range fields {
-		resp, err := apiRequest("GET", "/vault/fields/"+f[0], nil)
-		if err != nil {
-			return fmt.Errorf("request failed: %w", err)
-		}
-		switch resp.StatusCode {
-		case http.StatusNotFound:
-			resp.Body.Close()
-		case http.StatusOK:
-			resp.Body.Close()
-			return fmt.Errorf("%s already has %s: change it with '%s', or pick another slug", slug, f[0], pvCmd("set "+f[0]+" <value>"))
-		default:
-			return apiResult(resp, nil) // closes the body after reading the server's reason
+	h, err := fetchHousehold() // the grant was approved in person, so it lists everyone
+	if err != nil {
+		return err
+	}
+	for _, m := range h.Members {
+		if m.Slug == slug {
+			return fmt.Errorf("%s is already in the vault: change their fields with '%s', or pick another slug (or remove them first with '%s')",
+				slug, pvCmd("set "+slug+":<category>.<field> <value>"), pvCmd("person remove "+slug))
 		}
 	}
 	for _, f := range fields {

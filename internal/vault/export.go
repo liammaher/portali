@@ -50,6 +50,12 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 		return nil, err
 	}
 	defer clear(vaultKey)
+	if exists, err := v.db.PersonExists(slug); err != nil || !exists {
+		if err == nil {
+			err = ErrPersonNotFound
+		}
+		return nil, err
+	}
 
 	out := &PersonExport{Person: slug, Exported: time.Now().UTC(), Fields: []FieldInfo{}, Documents: []ExportedDocument{}}
 	keep := func(sensitivity string) bool {
@@ -101,9 +107,6 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 		return a.Name < b.Name
 	})
 
-	if len(out.Fields) == 0 && len(out.Documents) == 0 && len(out.Missing) == 0 && out.Omitted == 0 {
-		return nil, ErrPersonNotFound
-	}
 	// The audit action follows member_remove's naming.
 	v.db.LogAccess(store.AuditEntry{
 		Consumer: "vault", Scope: slug + ":*", Action: "member_export",

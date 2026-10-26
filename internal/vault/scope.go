@@ -3,6 +3,7 @@ package vault
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
 )
 
@@ -60,10 +61,9 @@ func errPersonSlug(person string) error {
 }
 
 // CheckLowerCase refuses a new field ID or document category with upper-case
-// letters. The rules read IDs ignoring case, but the store doesn't, so
-// pratiche.x_stato and Pratiche.x_stato would be two rows saying different
-// things about one pratica. Rows stored before this rule can still be read,
-// re-tiered and deleted.
+// letters: the store is case-sensitive, so pratiche.x_stato and
+// Pratiche.x_stato would be two rows saying different things about one
+// pratica. Unlock makes older fields lower-case (migrateLegacyFields).
 func CheckLowerCase(id string) error {
 	if lower := strings.ToLower(id); id != lower {
 		return &ValidationError{Field: id, Msg: "IDs are lower-case: use " + lower}
@@ -106,7 +106,7 @@ func ValidCategoryName(name string) bool {
 // procedures, which a person can't have: the housing categories and pratiche.
 func IsOwnerOnlyCategory(category string) bool {
 	_, category = SplitPerson(category)
-	return IsHousingCategory(strings.ToLower(category)) || isPraticheCategory(category)
+	return IsHousingCategory(category) || isPraticheCategory(category)
 }
 
 // checkPersonCategory refuses an owner-only category with a person prefix,
@@ -123,12 +123,22 @@ func checkPersonCategory(category, field string) error {
 	return nil
 }
 
+// checkHolder refuses a field whose owner can't hold it: an owner-only or
+// person-only category, or a field the schema keeps for one of them.
+func checkHolder(id string) error {
+	category, _, _ := strings.Cut(id, ".")
+	if err := checkPersonCategory(category, id); err != nil {
+		return err
+	}
+	return checkFieldFor(id)
+}
+
 // checkFieldFor refuses a field the schema keeps for the owner (ForOwner)
 // with a person prefix, or one it keeps for other people (ForPerson)
 // without one.
 func checkFieldFor(id string) error {
 	person, local := SplitPerson(id)
-	f := GetSchemaField(strings.ToLower(local))
+	f := GetSchemaField(canonicalLocalID(local))
 	switch {
 	case f == nil:
 	case f.For == ForOwner && person != "":
@@ -257,17 +267,6 @@ func ScopeAllowsCategory(scope, category string) bool {
 	return ParseScope(scope).AllowsCategory(category)
 }
 
-// ScopeAllowsPerson checks if a scope reaches any data of a person ("" is
-// the owner).
-func ScopeAllowsPerson(scope, person string) bool {
-	for _, sp := range ParseScope(scope) {
-		if sp.allowsPerson(person) {
-			return true
-		}
-	}
-	return false
-}
-
 // ScopeAllowsWholePerson checks if a scope reaches all of a person's data:
 // "*" or "slug:*".
 func ScopeAllowsWholePerson(scope, person string) bool {
@@ -279,15 +278,22 @@ func ScopeAllowsWholePerson(scope, person string) bool {
 	return false
 }
 
+// ScopePeople returns the slugs a scope's patterns name: leo for leo:cie.*,
+// none for "*" or "*:cie.*".
+func ScopePeople(scope string) []string {
+	var slugs []string
+	for _, sp := range ParseScope(scope) {
+		if !sp.all && sp.person != "" && sp.person != "*" && !slices.Contains(slugs, sp.person) {
+			slugs = append(slugs, sp.person)
+		}
+	}
+	return slugs
+}
+
 // ScopeNamesPerson reports a scope with a pattern naming the person's slug
 // (not "*" or "*:..."), i.e. one that was granted for that person.
 func ScopeNamesPerson(scope, person string) bool {
-	for _, sp := range ParseScope(scope) {
-		if !sp.all && sp.person == person {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(ScopePeople(scope), person)
 }
 
 // ValidateScope checks that every comma-separated pattern in a token scope is

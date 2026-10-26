@@ -49,11 +49,14 @@ var euroFields = map[string]bool{
 	"locazione.deposito_cauzionale":        true,
 }
 
-// IsHousingCategory reports the categories that describe your home.
+// IsHousingCategory reports the categories that describe your home, and
+// numbered copies of them (abitazione2).
 func IsHousingCategory(category string) bool {
-	switch strings.ToLower(category) {
-	case "abitazione", "locazione", "utenze", "tari":
-		return true
+	if c := schemaCategoryOf(category); c != nil {
+		switch c.Name {
+		case "abitazione", "locazione", "utenze", "tari":
+			return true
+		}
 	}
 	return false
 }

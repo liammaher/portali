@@ -344,39 +344,35 @@ func TestMembers_HiddenPersonRef(t *testing.T) {
 	}
 }
 
-// A token can't delete a person's last field it can see, and the answer is
-// the same whether hidden (personal) rows remain or not, so it learns nothing
-// about them. The session, which sees everything, may delete it while others
-// remain.
-func TestMembers_LastRowDelete(t *testing.T) {
-	env := setup(t)
+// A grant the user approved for one of a person's fields (what `pvault
+// delete leo:cie.numero` asks Touch ID for) deletes it, the last one too:
+// leo stays in the vault until 'pvault person remove'.
+func TestMembers_DeleteWithApprovedGrant(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
 	for _, kv := range [][2]string{
-		{"anna:identity.first_name", "Anna"},
-		{"anna:identity.last_name", "Neri"},
-		{"anna:spid.password", "hunter2-secret"}, // personal: no token sees it
-		{"bob:identity.first_name", "Bob"},
+		{"leo:identity.first_name", "Leo"},
+		{"leo:cie.numero", "CA12345AB"},
 	} {
 		if w := env.doRequest(t, "PUT", "/vault/fields/"+kv[0], map[string]string{"value": kv[1]}, true); w.Code != 200 {
 			t.Fatalf("seed %s: %d %s", kv[0], w.Code, w.Body.String())
 		}
 	}
-	anna := createTokenWithAccess(t, env, "anna:*", "write")
-	bob := createTokenWithAccess(t, env, "bob:*", "write")
-	if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/anna:identity.last_name", nil, anna); w.Code != 200 {
-		t.Fatalf("delete a non-last field: %d %s", w.Code, w.Body.String())
+	for _, id := range []string{"leo:cie.numero", "leo:identity.first_name"} {
+		g := scopedGrant(t, env, sk, id, "write")
+		if w := env.doRequestWithToken(t, "DELETE", "/vault/fields/"+id, nil, g); w.Code != 200 {
+			t.Fatalf("approved delete of %s: %d %s", id, w.Code, w.Body.String())
+		}
 	}
-	hidden := env.doRequestWithToken(t, "DELETE", "/vault/fields/anna:identity.first_name", nil, anna)
-	none := env.doRequestWithToken(t, "DELETE", "/vault/fields/bob:identity.first_name", nil, bob)
-	if hidden.Code != 400 || none.Code != 400 {
-		t.Fatalf("last visible field: anna %d %s, bob %d %s", hidden.Code, hidden.Body.String(), none.Code, none.Body.String())
+	if w := env.doRequest(t, "GET", "/vault/members", nil, true); !strings.Contains(w.Body.String(), `"slug":"leo"`) {
+		t.Fatalf("leo gone with their last row: %s", w.Body.String())
 	}
-	if a, b := strings.ReplaceAll(hidden.Body.String(), "anna", "X"), strings.ReplaceAll(none.Body.String(), "bob", "X"); a != b {
-		t.Errorf("answers differ with hidden rows:\n%s\n%s", a, b)
-	}
-	if w := env.doRequest(t, "DELETE", "/vault/fields/anna:identity.first_name", nil, true); w.Code != 200 {
-		t.Fatalf("session delete while spid.password remains: %d %s", w.Code, w.Body.String())
-	}
-	if w := env.doRequest(t, "DELETE", "/vault/fields/anna:spid.password", nil, true); w.Code != 400 {
-		t.Fatalf("session delete of anna's last row: %d %s", w.Code, w.Body.String())
+}
+
+// A service token can't name a person who isn't in the vault yet.
+func TestMembers_TokenForUnknownPerson(t *testing.T) {
+	env := setup(t)
+	w := env.doRequest(t, "POST", "/vault/tokens/service", map[string]string{"consumer": "agent", "scope": "zed:*", "ttl": "1h"}, true)
+	if w.Code != 400 || !strings.Contains(w.Body.String(), `no person \"zed\"`) {
+		t.Fatalf("token naming zed: %d %s", w.Code, w.Body.String())
 	}
 }

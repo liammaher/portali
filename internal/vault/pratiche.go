@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"time"
 )
 
 // Pratiche are the procedures you have in progress with an ente (a TARI
@@ -39,9 +40,12 @@ func isClosedStato(stato string) bool {
 // praticaCanali are the ways a pratica can be submitted.
 var praticaCanali = []string{"portale", "pec", "email", "sportello", "posta", "app"}
 
-// isPraticheCategory reports the category that tracks procedures.
+// isPraticheCategory reports the category that tracks procedures, or a
+// numbered copy of it, for the rules: a copy is owner-only like pratiche,
+// and NormalizeAndValidate refuses it (oneOnly).
 func isPraticheCategory(category string) bool {
-	return strings.EqualFold(category, "pratiche")
+	c := schemaCategoryOf(category)
+	return c != nil && c.Name == "pratiche"
 }
 
 // splitPraticaField splits a pratiche field name into its slug and campo,
@@ -56,16 +60,47 @@ func splitPraticaField(name string) (slug, campo string, ok bool) {
 	return slug, campo, true
 }
 
-// praticaField is splitPraticaField for a stored field in the pratiche
-// category, ignoring case, so a row from before IDs had to be lower-case
-// (pratiche.cila-roma_STATO) counts as the pratica it names; ok is false for
-// any other category. Validation calls splitPraticaField itself, which
-// refuses upper case.
+// praticaField is splitPraticaField for a field in the pratiche category;
+// ok is false for any other category.
 func praticaField(category, name string) (slug, campo string, ok bool) {
-	if !isPraticheCategory(category) {
+	if category != "pratiche" {
 		return "", "", false
 	}
-	return splitPraticaField(strings.ToLower(name))
+	return splitPraticaField(name)
+}
+
+// praticaState is what a pratica's stato and persona fields say.
+type praticaState struct {
+	stato    string    // "" without a stato field
+	closedAt time.Time // when the stato closed (FieldInfo.ClosedAt)
+	persone  []string  // whom persona names, io included
+	hidden   bool      // a stato or persona field the caller can't see
+}
+
+func (p *praticaState) closed() bool { return isClosedStato(p.stato) }
+
+// praticheIn collects the pratiche whose stato or persona ctx holds, by slug.
+// hidden marks those with a field allow rejects.
+func praticheIn(ctx *ContextBundle, allow FieldFilter) map[string]*praticaState {
+	out := map[string]*praticaState{}
+	for _, f := range ctx.Categories["pratiche"] {
+		slug, campo, ok := praticaField(f.Category, f.FieldName)
+		if !ok || (campo != "stato" && campo != "persona") {
+			continue
+		}
+		p := out[slug]
+		if p == nil {
+			p = &praticaState{}
+			out[slug] = p
+		}
+		p.hidden = p.hidden || (allow != nil && !allow(f.ID, f.Sensitivity))
+		if campo == "stato" {
+			p.stato, p.closedAt = f.Value, f.ClosedAt
+		} else {
+			p.persone = PersonRefs(f.Value)
+		}
+	}
+	return out
 }
 
 // praticheDescription documents the naming convention in the schema.
@@ -89,9 +124,6 @@ func normalizePratica(id, category, name, value string) (out string, handled boo
 	fail := func(msg string) (string, bool, error) {
 		return "", true, &ValidationError{Field: id, Msg: msg}
 	}
-	// name is lower-cased by NormalizeAndValidate, so split the original:
-	// IDs are case-sensitive, and TARI-2026_stato would be a second field
-	// for the same pratica.
 	_, original, _ := strings.Cut(id, ".")
 	_, campo, ok := splitPraticaField(original)
 	if !ok {

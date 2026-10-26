@@ -204,3 +204,25 @@ func TestTouchIDHelper_UnlocksNamedVault(t *testing.T) {
 		t.Fatalf("default vault status: %v\n%s", err, out)
 	}
 }
+
+// The helper's hints name the vault they are about, as pvault's do: a named
+// vault in the home folder gets --vault, any other VAULT_DIR is reached
+// through VAULT_DIR itself.
+func TestTouchIDHelper_HintsNameVault(t *testing.T) {
+	helper := buildDebugHelper(t)
+	pvault := buildPvault(t, true)
+	home := t.TempDir()
+	for dir, want := range map[string]string{
+		filepath.Join(home, ".pvault-studio"):         "run 'pvault --vault studio unlock'",
+		filepath.Join(home, ".pvault"):                "run 'pvault unlock'",
+		filepath.Join(home, "elsewhere", ".pvault-x"): "run 'pvault unlock'",
+	} {
+		cmd := exec.Command(helper, "unlock")
+		cmd.Env = append(os.Environ(), "HOME="+home, "VAULT_DIR="+dir,
+			"PVAULT_TOUCHID_TEST_APPROVE=1", "PVAULT_TOUCHID_TEST_PASSWORD=test-password", "PVAULT_TOUCHID_TEST_SERVER="+pvault)
+		out, err := cmd.CombinedOutput()
+		if err == nil || !strings.Contains(string(out), want) {
+			t.Errorf("%s: %v\n%s\nwant %q", dir, err, out, want)
+		}
+	}
+}

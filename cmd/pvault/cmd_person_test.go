@@ -69,11 +69,21 @@ func TestPersonAdd_EndToEnd(t *testing.T) {
 	cliToken = ""
 	needGrant("leo:famiglia.*,leo:identity.*", "append")
 	fields, _ = personAddFields("leo", vault.KindPersona, []string{"--relazione", "nipote"})
-	if err := addPerson("leo", fields); err == nil || !strings.Contains(err.Error(), "already has leo:famiglia.relazione") {
+	if err := addPerson("leo", fields); err == nil || !strings.Contains(err.Error(), "leo is already in the vault") {
 		t.Fatalf("adding an existing member = %v", err)
 	}
 	if f, _ := v.Get("leo:famiglia.relazione"); f.Value != "figlio" {
 		t.Fatalf("leo's relazione overwritten: %s", f.Value)
+	}
+	// Nor someone whose fields are all gone: they are still a person, whom
+	// tokens and pratiche may name.
+	if err := v.Delete("leo:famiglia.relazione"); err != nil {
+		t.Fatal(err)
+	}
+	cliToken = ""
+	needGrant("leo:famiglia.*,leo:identity.*", "append")
+	if err := addPerson("leo", fields); err == nil || !strings.Contains(err.Error(), "leo is already in the vault") {
+		t.Fatalf("adding over a person with no fields = %v", err)
 	}
 }
 

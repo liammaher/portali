@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -47,7 +48,6 @@ type Household struct {
 // householdField reports the fields Household decrypts.
 func householdField(id string) bool {
 	member, local := SplitPerson(id)
-	local = strings.ToLower(local) // IDs ignore case, like validation (Ruolo.tipo is ruolo.tipo)
 	if member == "" {
 		return local == "famiglia.intestatario_scheda"
 	}
@@ -62,8 +62,10 @@ func householdField(id string) bool {
 }
 
 // Household returns the people whose data allow accepts at least one row
-// of, with the famiglia, ruolo and name fields allow accepts.
-func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) {
+// of, or with everyone (the session and grants the user approved) every
+// person, also those with no rows yet; with the famiglia, ruolo and name
+// fields allow accepts.
+func (v *Vault) Household(allow FieldFilter, everyone bool, now time.Time) (*Household, error) {
 	if err := v.checkUnlocked(); err != nil {
 		return nil, err
 	}
@@ -75,6 +77,15 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 		return members[slug]
 	}
 
+	if everyone {
+		slugs, err := v.db.PersonSlugs()
+		if err != nil {
+			return nil, err
+		}
+		for _, slug := range slugs {
+			member(slug)
+		}
+	}
 	fields, err := v.db.ListFields()
 	if err != nil {
 		return nil, err
@@ -112,7 +123,7 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 			if values[slug] == nil {
 				values[slug] = map[string]string{}
 			}
-			values[slug][strings.ToLower(local)] = f.Value
+			values[slug][local] = f.Value
 		}
 	}
 
@@ -176,7 +187,7 @@ func ageOn(dob string, now time.Time) (int, bool) {
 
 // Migration of the old nucleo_familiare.membro<N>_<campo> fields.
 
-var reMembroField = regexp.MustCompile(`(?i)^membro([0-9]+)_(.+)$`)
+var reMembroField = regexp.MustCompile(`^membro([0-9]+)_(.+)$`)
 
 // membroCampi maps an old membro<N>_<campo> to the member's field.
 var membroCampi = map[string]string{
@@ -221,14 +232,11 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	}
 	defer clear(vaultKey)
 
-	ctx, err := v.decryptFields(func(id, _ string) bool { return strings.HasPrefix(strings.ToLower(id), "nucleo_familiare.") })
+	ctx, err := v.decryptFields(func(id, _ string) bool { return strings.HasPrefix(id, "nucleo_familiare.") })
 	if err != nil {
 		return nil, err
 	}
-	var old []FieldInfo // every spelling of the category (IDs ignore case elsewhere too)
-	for _, fs := range ctx.Categories {
-		old = append(old, fs...)
-	}
+	old := ctx.Categories["nucleo_familiare"]
 	report := &MigrationReport{DryRun: dryRun, Members: []MigratedMember{}, Moved: map[string]string{}, Deleted: []string{}, Left: map[string]string{}}
 
 	// Group the membro<N> fields and pick each member's slug.
@@ -238,7 +246,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		if m := reMembroField.FindStringSubmatch(f.FieldName); m != nil {
 			n, _ := strconv.Atoi(m[1])
 			byN[n] = append(byN[n], f)
-			campi[f.ID] = strings.ToLower(m[2])
+			campi[f.ID] = m[2]
 		}
 	}
 	existing, err := v.db.PersonSlugs()
@@ -263,13 +271,34 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		return nil, err
 	}
 	now := time.Now()
+	// hasPerson reports someone who exists, or is a member this run adds.
+	hasPerson := func(slug string) bool {
+		return slices.Contains(existing, slug) ||
+			slices.ContainsFunc(report.Members, func(m MigratedMember) bool { return m.Slug == slug })
+	}
+	var dbErr error // a failed lookup ends the migration, not just one field
 	// add plans a new field, never below its schema default tier or minTier.
 	add := func(newID, value, minTier string) error {
 		value, err := NormalizeAndValidate(newID, value)
 		if err != nil {
 			return errors.New(errMsg(err))
 		}
-		if existing, err := v.db.GetField(newID); err != nil || existing != nil || planned[newID] {
+		// As checkPersonRefs: a value naming someone who doesn't exist would
+		// name whoever is later given that slug.
+		_, local := SplitPerson(newID)
+		if category, name, _ := strings.Cut(canonicalLocalID(local), "."); isPersonRefField(category, name) {
+			for _, ref := range PersonRefs(value) {
+				if ref != OwnerRef && !hasPerson(ref) {
+					return errors.New("there is no person \"" + ref + "\": add them with 'pvault person add', then migrate again")
+				}
+			}
+		}
+		existingField, err := v.db.GetField(newID)
+		if err != nil {
+			dbErr = err
+			return err
+		}
+		if existingField != nil || planned[newID] {
 			return errors.New(newID + " is already set")
 		}
 		planned[newID] = true
@@ -335,7 +364,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	}
 
 	for _, f := range old {
-		switch strings.ToLower(f.FieldName) {
+		switch f.FieldName {
 		case "numero_componenti":
 			// Derived now: you plus the members in your stato di famiglia. A
 			// count that doesn't match stays, so it isn't lost.
@@ -357,10 +386,13 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		}
 	}
 
+	if dbErr != nil {
+		return nil, dbErr
+	}
 	if dryRun || len(deletes) == 0 {
 		return report, nil
 	}
-	if err := v.db.ApplyPersonChange(deletes, nil, nil, inserts); err != nil {
+	if err := v.db.ApplyChange(store.Change{DeleteFields: deletes, Insert: inserts}); err != nil {
 		return nil, err
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "nucleo_familiare.*", Action: "member_migrate",
@@ -373,7 +405,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 func (v *Vault) countInStatoFamiglia() (int, error) {
 	ctx, err := v.decryptFields(func(id, _ string) bool {
 		person, rest := SplitPerson(id)
-		return person != "" && strings.EqualFold(rest, "famiglia.stato_famiglia")
+		return person != "" && rest == "famiglia.stato_famiglia"
 	})
 	if err != nil {
 		return 0, err
@@ -397,6 +429,18 @@ func encryptValue(vaultKey, salt []byte, category, value string) (string, error)
 	}
 	defer clear(subkey)
 	return crypto.EncryptToBase64(subkey, []byte(value))
+}
+
+// decryptValue decrypts a field value stored under category's subkey.
+func decryptValue(vaultKey, salt []byte, category, encrypted string) (string, error) {
+	subkey, err := crypto.DeriveSubkey(vaultKey, salt, category)
+	if err != nil {
+		return "", fmt.Errorf("derive subkey: %w", err)
+	}
+	defer clear(subkey)
+	plaintext, err := crypto.DecryptFromBase64(subkey, encrypted)
+	defer clear(plaintext)
+	return string(plaintext), err
 }
 
 // errMsg is a ValidationError's message without the field ID.
