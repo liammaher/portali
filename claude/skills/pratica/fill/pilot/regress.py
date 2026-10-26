@@ -4,7 +4,7 @@
   PRATICHE_NAPOLI_DIR=<pratiche-napoli checkout> regress.py [--keep DIR] [case ...]
 
 Each case changes the pilot's inputs (the made-up vault, the answers, the
-library entry, the layout, the form), runs fill.py against its own synthetic
+library entry, the library's layout, the form), runs fill.py against its own synthetic
 vault, and checks the exit code and that each expected line is in the output.
 The form is downloaded once from the entry's URL. --keep copies each case's
 filled.pdf, page-1.png and report.json to DIR/<case>/.
@@ -24,7 +24,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
 FILL = os.path.join(HERE, "..", "fill.py")
 ID, FORM = "napoli/comune/tari-iscrizione-uso-abitativo", "mod-1"
-LAYOUT = os.path.join(HERE, "..", "layouts", ID, FORM + ".json")
 SLUG = "tari-iscrizione-uso-abitativo-2026"
 
 
@@ -67,7 +66,7 @@ def box(label, **changes):
             if b.get("label") == label:
                 for key, value in changes.items():
                     if key == "column":
-                        b["table"]["columns"][value[0]]["x"] = value[1]
+                        b["table"]["columns"][value[0]] = value[1]
                     else:
                         b[key] = value
     return edit
@@ -85,25 +84,38 @@ def people(n):
 
 
 CONVIVENTI = "Conviventi (nominativo, luogo e data di nascita, rapporto, codice fiscale)"
+COABITANTI = "Coabitanti fuori dallo stato di famiglia (nominativo, luogo e data di nascita, rapporto, codice fiscale)"
+SARA = {"Nominativo": "Bruni Sara", "Luogo e data di nascita": "Salerno, 02/02/1990",
+        "Rapporto di parentela o coabitante": "coabitante", "Codice fiscale": "BRNSRA90B42H703X"}
 LONG_NOTE = ("Contratto di locazione registrato presso l'Agenzia delle Entrate; conviventi come da stato di "
              "famiglia; il box auto non è pertinenza dell'abitazione e sarà dichiarato a parte se necessario.")
 
 # name: (description, changes, expected exit, lines the output must contain)
 CASES = {
-    "baseline": ("the pilot as it is", {}, 0, ["ok   the form is ready", "opens pratiche.", "a closed pratica leaves expiring"]),
+    "baseline": ("the pilot as it is", {}, 0, ["ok   the form is ready", "opens pratiche.",
+                                                "the deadline shows in expiring: 2026-11-30", "a closed pratica leaves expiring"]),
+    "coabitante": ("someone outside the stato di famiglia lives there: a row of the table, and a 4th occupant",
+                   {"answers": {COABITANTI: [SARA]}}, 1,
+                   ["ok   the form is ready", "values read back in their boxes",
+                    "FAIL the ente's tari.componenti_tassati matches what was declared: 3 vs 4"]),
+    "coabitante-as-text": ("coabitanti answered as text, not one entry per person by column",
+                           {"answers": {COABITANTI: "Sara Bruni"}}, 1, ["answer with one entry per person"]),
+    "titolo-altro": ("a comodatario ticks altro and writes comodatario next to it",
+                     {"fixture": setting({"abitazione.titolo": ["comodatario"]})}, 0, ["values read back in their boxes"]),
     "socket-draft": ("a draft over the vault's socket, as on a real vault: filled, nothing written",
                      {"socket": True}, 0, ["ok   the form is ready", "draft: nothing written to the vault", "no pratiche fields in the vault"]),
     "socket-not-private": ("the socket's run folder isn't private: the token isn't sent",
                            {"socket": True, "chmod_run": 0o755}, 1, ["must be a private folder of yours"]),
     "convivente-gaps": ("a convivente lacks a date of birth, another a codice fiscale",
                         {"fixture": without("giulia:identity.date_of_birth", "luca:identity.codice_fiscale")}, 1,
-                        ["giulia has no date_of_birth", "luca has no codice_fiscale", "FAIL the form is ready"]),
+                        ["giulia:identity.date_of_birth not in the vault", "luca:identity.codice_fiscale not in the vault",
+                         "FAIL the form is ready"]),
     "owner-no-cf": ("the owner's codice fiscale isn't in the vault",
                     {"fixture": without("identity.codice_fiscale")}, 1,
                     ["identity.codice_fiscale not in the vault", "FAIL the form is ready"]),
     "domicilio-no-civico": ("a domicilio without a civico: the address must not lose it",
                             {"fixture": with_fields(["domicilio.indirizzo", "Via Chiaia"], ["domicilio.comune", "Napoli"])}, 1,
-                            ["Appartamento sito in via: no @civico"]),
+                            ["domicilio.civico not in the vault"]),
     "hidden-field": ("a field above the token's tier is hidden, not missing",
                      {"fixture": setting({"abitazione.catasto_foglio": ["12", "critical"]})}, 1,
                      ["abitazione.catasto_foglio in the vault but this token can't read it"]),
@@ -120,10 +132,10 @@ CASES = {
                         ["luca:famiglia.stato_famiglia not in the vault"]),
     "owner-born-abroad": ("the owner was born abroad (EE) and has no birth country: needed after all",
                           {"fixture": setting({"identity.birth_province": ["EE"]})}, 1,
-                          ["identity.birth_country not in the vault (needed: identity.birth_province is EE: born abroad)"]),
+                          ["identity.birth_country not in the vault (needed: identity.birth_province is EE)"]),
     "member-born-abroad": ("a convivente born abroad, known only from her CF (Z114), without a birth country",
                            {"fixture": without("giulia:identity.birth_country", "giulia:identity.birth_province")}, 1,
-                           ["giulia has no identity.birth_country (identity.codice_fiscale has a foreign birthplace code"]),
+                           ["giulia:identity.birth_country not in the vault (needed: *:identity.codice_fiscale matches ^.{11}Z)"]),
     "too-many-people": ("six people in the stato di famiglia, five rows on the form",
                         {"fixture": people(4)}, 1, ["6 people for 5 rows"]),
     "unicode-names": ("names Helvetica can't print",
@@ -141,7 +153,7 @@ CASES = {
     "open-same-slug": ("an open pratica already has the slug: resume it",
                        {"fixture": with_fields([f"pratiche.{SLUG}_titolo", "TARI"])}, 1, ["resume it instead"]),
     "shifted-column": ("the codice fiscale column moved off the table's lines",
-                       {"layout": box(CONVIVENTI, column=(3, [300, 435]))}, 1,
+                       {"layout": box(CONVIVENTI, column=("Codice fiscale", [300, 435]))}, 1,
                        ["isn't between the table's lines"]),
     "box-over-label": ("the Via box stretched over the printed n°",
                        {"layout": box("Via", rect=[55, 177.7, 380, 188.2])}, 1, ["covers the printed"]),
@@ -192,11 +204,12 @@ def main():
         with open(os.path.join(base, "entry.json"), "w", encoding="utf-8") as f:
             f.write(entry_json)
         needs = subprocess.run([sys.executable, "-I", FILL, "needs", "--entry", os.path.join(base, "entry.json"),
-                                "--form", FORM, "--layout", LAYOUT], check=True, capture_output=True, text=True).stdout
+                                "--form", FORM], check=True, capture_output=True, text=True).stdout
+        layout = load(os.path.join(library, "layouts", ID, FORM + ".json"))
         failed = []
         for name in names:
             description, changes, want_exit, want_lines = CASES[name]
-            ok, detail = case(base, name, entry, pdf, needs, changes, want_exit, want_lines)
+            ok, detail = case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines)
             print(f"{'ok  ' if ok else 'FAIL'} {name}: {description}{'' if ok else chr(10) + detail}")
             if keep:
                 shutil.copytree(os.path.join(base, name, "out"), os.path.join(keep, name), dirs_exist_ok=True)
@@ -208,7 +221,7 @@ def main():
         shutil.rmtree(base, ignore_errors=True)
 
 
-def case(base, name, entry, pdf, needs, changes, want_exit, want_lines):
+def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
     work = os.path.join(base, name)
     out = os.path.join(work, "out")
     os.makedirs(out)
@@ -218,7 +231,7 @@ def case(base, name, entry, pdf, needs, changes, want_exit, want_lines):
     entry = copy.deepcopy(entry)
     if "entry" in changes:
         changes["entry"](entry)
-    layout = load(LAYOUT)
+    layout = copy.deepcopy(layout)
     if "layout" in changes:
         changes["layout"](layout)
     answers = load(os.path.join(HERE, "answers.json"))
@@ -253,8 +266,7 @@ def case(base, name, entry, pdf, needs, changes, want_exit, want_lines):
                                  env={**os.environ, "VAULT_TOKEN": server["tokens"]["prepare"]})
             run.stdout += written_pratiche(server)
         else:
-            run = subprocess.run(common + ["--server", os.path.join(work, "server.json"), "--reply", os.path.join(HERE, "reply.json"),
-                                           "--deadline-from", "abitazione.data_inizio", "--deadline-days", "90"],
+            run = subprocess.run(common + ["--server", os.path.join(work, "server.json"), "--reply", os.path.join(HERE, "reply.json")],
                                  capture_output=True, text=True)
     finally:
         open(os.path.join(work, "done"), "w").close()

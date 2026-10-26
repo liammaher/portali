@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fill a pratiche-napoli form from the vault, and check the result.
 
-  fill.py needs --entry E.json --form ID --layout L.json [--draft]
+  fill.py needs --entry E.json --form ID [--draft]
       The service tokens a run needs, as the pratica skill asks for them:
       prepare (append, the form's categories and pratiche.*) and track
       (write, pratiche.* and the categories the entry's records go to); with
@@ -9,8 +9,7 @@
 
   fill.py run --entry E.json --form ID --layout L.json --pdf FORM.pdf --out DIR
               (--server S.json | --vault-dir DIR [--keychain SERVICE])
-              [--draft] [--answers A.json] [--reply R.json]
-              [--deadline-from FIELD --deadline-days N] [--playbook NAME]
+              [--draft] [--answers A.json] [--reply R.json] [--playbook NAME]
       Reads the vault over its HTTP API with the prepare token, resolves each
       of the entry's form rows, fills the PDF at the layout's positions, reads
       the PDF back to check every value landed in its box, and, only if every
@@ -27,7 +26,12 @@ run/pvault.sock, after checking that folder is yours and private, as the MCP
 server does; the token is the one `pvault create-service-token ... --keychain
 SERVICE` stored, else $VAULT_TOKEN.
 
-The entry is a library procedure as JSON (its YAML, converted). Needs PyMuPDF (fitz).
+The entry is a library procedure as JSON (its YAML, converted): what goes in
+each box (map, template, columns, optional, choices) and the deadline
+(compute). The layout is the library's layouts/<procedure>/<form>.json: only
+where each box is. Answers are the ask rows' answers by label; one whose
+answers go into a table (into_table) takes a list of rows, each by column
+label. Needs PyMuPDF (fitz).
 """
 
 import argparse
@@ -49,6 +53,8 @@ import urllib.parse
 CANALE = {"portal": "portale", "desk": "sportello", "post": "posta"}
 CLOSED = {"completata", "respinta", "annullata"}
 MAP_KINDS = {"direct", "concat", "fallback", "repeat", "ask", "blank_with_reason"}
+MAP_KEYS = MAP_KINDS | {"fields", "template", "columns"}
+ROW_KEYS = {"label", "map", "notes", "optional", "choices"}
 INK = (0, 0, 0.55)
 # A Unicode font to embed when there is one, so Łukasz or Nguyễn print; the
 # base-14 Helvetica only has Latin-1. Neither is used by the forms here, so
@@ -58,8 +64,10 @@ UNICODE_FONTS = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/dejavu/DejaVuSans.ttf",
 ]
-# Answers confirming that nobody else lives in the home.
+# Answers confirming that nobody else lives in the home, or that an ask has
+# nothing to write (no garage).
 NOBODY = {"nessuno", "nessuna", "none", "nobody"}
+NOTHING = NOBODY | {"no"}
 # Typographic marks typed on phones, as the plain ones Latin-1 has.
 PLAIN = str.maketrans({"’": "'", "‘": "'", "“": '"', "”": '"', "–": "-"})
 
@@ -86,8 +94,8 @@ def form_of(entry, form_id):
 def check_supported(entry, form):
     # The vault owner is the dichiarante and the family are the conviventi:
     # what a personal vault's resident procedure needs. Business vaults
-    # (dichiarante, party, repeat by ruolo) come later. Anything else is
-    # refused, never read as blank.
+    # (dichiarante, party, repeat by ruolo) come later. Anything this tool
+    # doesn't know is refused, never read as blank.
     if entry.get("schema_version") != 0:
         sys.exit(f"schema_version {entry.get('schema_version')}: this tool reads version 0")
     if "dichiarante" in entry:
@@ -97,10 +105,10 @@ def check_supported(entry, form):
         kinds = set(m) & MAP_KINDS
         if "party" in m or isinstance(m.get("repeat"), dict):
             sys.exit(f"row {row['label']!r}: party and repeat by ruolo aren't supported yet")
-        if len(kinds) != 1 or set(m) - MAP_KINDS - {"fields"}:
-            sys.exit(f"row {row['label']!r}: unknown map {sorted(m)}")
-        if m.get("repeat", "famiglia") != "famiglia":
-            sys.exit(f"row {row['label']!r}: unknown repeat {m['repeat']!r}")
+        if len(kinds) != 1 or set(m) - MAP_KEYS or set(row) - ROW_KEYS:
+            sys.exit(f"row {row['label']!r}: unknown map or row keys {sorted(set(m) | set(row))}")
+        if "repeat" in m and not m.get("columns"):
+            sys.exit(f"row {row['label']!r}: a table needs the procedure's columns")
 
 
 def refs(m):
@@ -112,28 +120,30 @@ def category(ref):
     return local.split(".", 1)[0]
 
 
-def template_refs(layout):
-    """Vault fields a layout template names directly ({abitazione.piano})."""
-    out = set()
-    for box in layout["boxes"]:
-        for name in re.findall(r"\{([^}|]+)", box.get("template", "")):
-            if "." in name:
-                out.add(name)
-    return out
+def template_names(template):
+    """Every {name} in a template, in or out of [...]."""
+    def walk(nodes):
+        for n in nodes:
+            if n[0] == "var":
+                yield n[1]
+            elif n[0] == "group":
+                yield from walk(n[1])
+    return list(walk(parse_template(template)))
 
 
-def needs(entry, form, layout, draft=False):
+def needs(entry, form, draft=False):
     check_supported(entry, form)
     patterns = set()
     for row in form["fields"]:
         m = row["map"]
-        for ref in refs(m):
-            patterns.add(f"{category(ref)}.*")
+        read = refs(m) + [n for n in template_names(m.get("template", "")) if "." in n and not n.startswith(".")]
+        read += [c["field"] for o in row.get("optional", []) for c in o.get("required_if", [])]
         if m.get("repeat") == "famiglia":
             # Who is in the stato di famiglia, and their names for relazione_label.
-            patterns |= {"*:famiglia.*", "*:identity.*"}
-            patterns |= {f"*:{category(ref)}.*" for ref in m["fields"]}
-    patterns |= {f"{category(ref)}.*" for ref in template_refs(layout)}
+            read += ["*:famiglia.*", "*:identity.*"] + m["fields"]
+        for ref in read:
+            patterns.add(f"*:{category(ref)}.*" if ref.startswith("*:") else f"{category(ref)}.*")
+    patterns |= {f"{category(r['compute']['from'])}.*" for r in entry.get("deadline", {}).get("rules", []) if "compute" in r}
     # *:x.* reaches the owner too, so x.* beside it adds nothing.
     patterns = {p for p in patterns if f"*:{p}" not in patterns}
     if draft:
@@ -272,77 +282,10 @@ class Vault:
 
 # --- Resolving rows ----------------------------------------------------------
 
-def resolve(form, values, household, answers):
-    """Each row as value, missing (the vault lacks it: ask the user), answered,
-    ask (not answered yet) or blank, the four ways the skill reads a row."""
-    rows = []
-    for row in form["fields"]:
-        m, out = row["map"], {"label": row["label"]}
-        if "direct" in m or "concat" in m:
-            got = [values.get(r) for r in refs(m)]
-            missing = [r for r, v in zip(refs(m), got) if not v]
-            if missing:
-                out.update(status="missing", missing=missing)
-            else:
-                out.update(status="value", value=" ".join(got))
-        elif "fallback" in m:
-            first = next((r for r in m["fallback"] if values.get(r)), None)
-            if first:
-                out.update(status="value", value=values[first], source=category(first))
-            else:
-                out.update(status="missing", missing=m["fallback"])
-        elif "repeat" in m:
-            people, unknown = [], []
-            for member in household.get("members", []):
-                stato = member.get("famiglia", {}).get("stato_famiglia")
-                if stato is None:
-                    # Unset isn't no: who lives with the dichiarante can't be guessed.
-                    unknown.append(f"{member['slug']}:famiglia.stato_famiglia")
-                if stato != "si":
-                    continue
-                person = {"slug": member["slug"], "relazione_label": member.get("relazione_label", "")}
-                for ref in m["fields"]:
-                    local = ref.split(":", 1)[1]
-                    person[local.split(".", 1)[1]] = values.get(f"{member['slug']}:{local}", "")
-                people.append(person)
-            # The entry's step 2: whoever is intestatario della scheda declares.
-            intestatario = values.get("famiglia.intestatario_scheda")
-            if unknown:
-                out.update(status="missing", missing=unknown)
-            elif people and intestatario is None:
-                out.update(status="missing", missing=["famiglia.intestatario_scheda"])
-            elif intestatario not in (None, "io"):
-                sys.exit(f"the intestatario della scheda is {intestatario}: they sign, which this tool doesn't do yet")
-            elif not people and said(answers.get(row["label"], "")) not in NOBODY:
-                # An empty stato di famiglia may only mean nobody was added to the vault.
-                out.update(status="ask", question="Nessuno nello stato di famiglia del vault: confermare che non convive "
-                           "nessuno (risposta \"nessuno\"), oppure aggiungere i conviventi al vault")
-            else:
-                out.update(status="value", value=people)
-        elif "ask" in m:
-            answer = answers.get(row["label"])
-            if answer:
-                out.update(status="answered", value=answer)
-            else:
-                out.update(status="ask", question=m["ask"])
-        else:
-            out.update(status="blank", reason=m["blank_with_reason"])
-        rows.append(out)
-    return rows
-
-
-def required_by(rule, lookup):
-    """Why an optional row or field is needed after all: the first of its
-    required_if conditions the data meets, or None."""
-    for cond in rule.get("required_if", []) if isinstance(rule, dict) else []:
-        if re.search(cond["matches"], lookup(cond["field"]) or ""):
-            return f"{cond['field']} {cond['means']}"
-    return None
-
-
 def parse_template(template):
-    """{name}, {name|date}, [optional part], and \\[ \\] \\{ \\} for the
-    characters themselves; groups nest."""
+    """The library's template language ($defs/template): {name}, {name|date},
+    [optional part], and \\[ \\] \\{ \\} for the characters themselves;
+    groups nest."""
     stack, i = [[]], 0
     while i < len(template):
         c = template[i]
@@ -390,6 +333,146 @@ def render(template, lookup):
                     out.append(text)
         return "".join(out), missing
     return ev(parse_template(template))
+
+
+def required_by(rule, lookup):
+    """Why an optional field is needed after all: the first of its
+    required_if conditions the data meets, or None."""
+    for c in rule.get("required_if", []):
+        v = lookup(c["field"]) or ""
+        if "equals" in c and v == c["equals"]:
+            return f"{c['field']} is {c['equals']}"
+        if "matches" in c and re.search(c["matches"], v):
+            return f"{c['field']} matches {c['matches']}"
+    return None
+
+
+def gaps(names, lookup, optional, conditions, name_of):
+    """The empty names a row can't do without: outside [...] and not optional,
+    or optional but required now. Each as {field, needed}."""
+    out = []
+    for name, outside in names:
+        if lookup(name):
+            continue
+        rule = optional.get(name)
+        needed = required_by(rule, conditions) if rule else None
+        if (outside and rule is None) or needed:
+            out.append({"field": name_of(name), "needed": needed})
+    return out
+
+
+def placed_names(template):
+    """Every {name} in a template, and whether it is outside any [...]."""
+    def walk(nodes, outside):
+        for n in nodes:
+            if n[0] == "var":
+                yield n[1], outside
+            elif n[0] == "group":
+                yield from walk(n[1], False)
+    return list(dict.fromkeys(walk(parse_template(template), True)))
+
+
+def resolve(form, values, household, answers):
+    """Each row as value, missing (the vault lacks something it needs: ask
+    the user), answered, ask (not answered yet) or blank, the ways the skill
+    reads a row. A table's value lists its people, each a cell per column."""
+    rows = []
+    for row in form["fields"]:
+        m, out = row["map"], {"label": row["label"]}
+        if "repeat" in m:
+            out.update(table_row(row, values, household, answers))
+        elif "ask" in m:
+            # A list is rows for a table; "no" or "nessuno" leaves a text box
+            # empty, but is an answer to boxes to tick.
+            answer = answers.get(row["label"])
+            if answer is None or answer == "":
+                out.update(status="ask", question=m["ask"])
+            elif answer == [] or (not isinstance(answer, list) and not row.get("choices") and said(answer) in NOTHING):
+                out.update(status="blank", reason=f"answered {answer!r}")
+            else:
+                out.update(status="answered", value=answer)
+        elif "blank_with_reason" in m:
+            out.update(status="blank", reason=m["blank_with_reason"])
+        else:
+            out.update(scalar_row(row, values))
+        rows.append(out)
+    return rows
+
+
+def scalar_row(row, values):
+    """A direct, concat or fallback row: its template's text (fields joined by
+    spaces without one), or what it lacks. A row of boxes to tick keeps the
+    field's own value, which picks the box."""
+    m = row["map"]
+    optional = {o["field"]: o for o in row.get("optional", [])}
+    source = None
+    if "fallback" in m:
+        first = next((r for r in m["fallback"] if values.get(r)), None)
+        if first is None:
+            return {"status": "missing", "missing": [{"field": f, "needed": None} for f in m["fallback"]]}
+        source = category(first)
+        template = m.get("template") or "{" + first + "}"
+    else:
+        template = m.get("template") or " ".join("{" + r + "}" for r in refs(m))
+
+    def lookup(name):
+        return values.get(f"{source}.{name[1:]}") if name.startswith(".") else values.get(name)
+    text, _ = render(template, lookup)
+    missing = gaps(placed_names(template), lookup, optional, values.get,
+                   lambda n: f"{source}.{n[1:]}" if n.startswith(".") else n)
+    if missing:
+        return {"status": "missing", "missing": missing}
+    text = " ".join(text.split())
+    if not text:
+        return {"status": "blank", "reason": "optional, and empty"}
+    if row.get("choices"):
+        text = values.get(m["direct"], "")
+    return {"status": "value", "value": text, "source": source}
+
+
+def table_row(row, values, household, answers):
+    """A repeat: famiglia row: the people in the stato di famiglia, each with
+    the text of every column, and what any of them lacks."""
+    m = row["map"]
+    optional = {o["field"]: o for o in row.get("optional", [])}
+    people, unknown = [], []
+    for member in household.get("members", []):
+        stato = member.get("famiglia", {}).get("stato_famiglia")
+        if stato is None:
+            # Unset isn't no: who lives with the dichiarante can't be guessed.
+            unknown.append({"field": f"{member['slug']}:famiglia.stato_famiglia", "needed": None})
+        if stato == "si":
+            people.append(member)
+    # The entry's step 2: whoever is intestatario della scheda declares.
+    intestatario = values.get("famiglia.intestatario_scheda")
+    if unknown:
+        return {"status": "missing", "missing": unknown}
+    if people and intestatario is None:
+        return {"status": "missing", "missing": [{"field": "famiglia.intestatario_scheda", "needed": None}]}
+    if intestatario not in (None, "io"):
+        sys.exit(f"the intestatario della scheda is {intestatario}: they sign, which this tool doesn't do yet")
+    if not people and said(answers.get(row["label"], "")) not in NOBODY:
+        # An empty stato di famiglia may only mean nobody was added to the vault.
+        return {"status": "ask", "question": "Nessuno nello stato di famiglia del vault: confermare che non convive "
+                "nessuno (risposta \"nessuno\"), oppure aggiungere i conviventi al vault"}
+    rows, missing = [], []
+    for member in people:
+        slug = member["slug"]
+
+        def lookup(name, slug=slug, member=member):
+            if name == "relazione":
+                return member.get("relazione_label", "")
+            return values.get(f"{slug}:{name[2:]}") if name.startswith("*:") else None
+        cells = {}
+        for col in m["columns"]:
+            cells[col["label"]], _ = render(col["template"], lookup)
+            missing += gaps(placed_names(col["template"]), lookup, optional, lookup,
+                            lambda n, slug=slug: f"{slug}:famiglia.relazione" if n == "relazione" else f"{slug}:{n[2:]}")
+        rows.append({"slug": slug, "cells": cells})
+    out = {"status": "value", "value": rows}
+    if missing:
+        out["missing"] = list({m["field"]: m for m in missing}.values())
+    return out
 
 
 # --- Filling and reading back -----------------------------------------------
@@ -452,76 +535,75 @@ class Pen:
         self.size = saved
 
 
-def fill_pdf(fitz, pdf_in, pdf_out, layout, rows, values):
+def fill_pdf(fitz, pdf_in, pdf_out, layout, form, rows):
     by_label = {r["label"]: r for r in rows}
+    library = {r["label"]: r for r in form["fields"]}
     doc = fitz.open(pdf_in)
     pen = Pen(fitz, doc[0], layout.get("font_size", 9))
+    ticked = set()
 
     for box in layout["boxes"]:
-        labels = box.get("labels") or [box["label"]]
-        row = by_label.get(labels[0])
-        if "skip" in box or row is None or row["status"] in ("missing", "ask", "blank"):
+        label = box["label"]
+        row = by_label.get(label)
+        if row is None or "skip" in box or "into_table" in box:
+            continue
+        if "table" in box:
+            fill_table(pen, box, row, [by_label[b["label"]] for b in layout["boxes"]
+                                       if b.get("into_table") == label and b["label"] in by_label])
+            continue
+        if row["status"] not in ("value", "answered"):
             continue
         value = row["value"]
-        if "cells" in box:
+        if "choices" in box:
+            hit = [c for c in library[label]["choices"] if said(value) in {said(v) for v in c["values"]}]
+            if not hit and "ask" not in library[label]["map"]:
+                pen.problems.append(f"{label}: {value!r} ticks none of its boxes")
+            for c in hit:
+                pen.put(box["choices"][c["box"]], "X", center=True)
+                ticked.add((label, c["box"]))
+                if c.get("write_value") and said(value) != said(c["box"]):
+                    pen.put(box["write"][c["box"]], value)
+        elif "cells" in box:
             for (cx0, cx1), ch in zip(box["cells"], value):
                 pen.put([cx0, box["baseline"] - 9, cx1, box["baseline"] + 2.6], ch, center=True)
             if len(value) != len(box["cells"]):
-                pen.problems.append(f"{labels[0]}: {len(value)} characters for {len(box['cells'])} cells")
+                pen.problems.append(f"{label}: {len(value)} characters for {len(box['cells'])} cells")
         elif "parts" in box:
             parts = value.split("-")[::-1]  # YYYY-MM-DD → DD, MM, YYYY
             for rect, part in zip(box["parts"], parts):
                 pen.put(rect, part, center=True)
-        elif "choices" in box:
-            choice = value if value in box["choices"] else box["other"]["choice"]
-            pen.put(box["choices"][choice], "X", center=True)
-            if choice == box["other"]["choice"] and value != choice:
-                pen.put(box["other"]["rect"], value)
-        elif "checkbox" in box:
-            if said(value) in {said(w) for w in box["checked_when"]}:
-                pen.put(box["checkbox"], "X", center=True)
-                if "then_by_hand" in box:
-                    pen.problems.append(f"{labels[0]}: ticked, so {box['then_by_hand']} must be filled by hand (no library row)")
-        elif "table" in box:
-            table = box["table"]
-            if len(value) > len(table["rows"]):
-                pen.problems.append(f"{labels[0]}: {len(value)} people for {len(table['rows'])} rows")
-            for (top, bottom), person in zip(table["rows"], value):
-                for need in table.get("require", []):
-                    why = required_by(need, lambda f: values.get(f"{person['slug']}:{f}"))
-                    if why and not values.get(f"{person['slug']}:{need['field']}"):
-                        pen.problems.append(f"{labels[0]}: {person['slug']} has no {need['field']} ({why})")
-                for col in table["columns"]:
-                    text, missing = render(col["template"], lambda n: person.get(n, ""))
-                    if missing:
-                        pen.problems.append(f"{labels[0]}: {person['slug']} has no {', '.join(missing)}")
-                    elif text:
-                        pen.put([col["x"][0], top, col["x"][1], bottom], text)
+        elif "continuation" in box:
+            pen.lines([box["rect"]] + box["continuation"], value)
         else:
-            if said(value) in {said(w) for w in box.get("skip_answers", [])}:
-                continue
-            label_values = {str(i): by_label.get(l, {}).get("value") for i, l in enumerate(labels)}
-            source = row.get("source")
-
-            def lookup(name):
-                if name == "value":
-                    return value
-                if name in label_values:
-                    return label_values[name]
-                if name.startswith("@"):
-                    return values.get(f"{source}.{name[1:]}") if source else None
-                return values.get(name)
-            text, missing = render(box["template"], lookup)
-            if missing:
-                pen.problems.append(f"{labels[0]}: no {', '.join(missing)} for {box['template']!r}")
-            elif "continuation" in box:
-                pen.lines([box["rect"]] + box["continuation"], text)
-            else:
-                pen.put(box["rect"], text)
+            pen.put(box["rect"], value)
+    for u in layout.get("unmapped", []):
+        w = u.get("needed_when")
+        if w and (w["field"], w["box"]) in ticked:
+            pen.problems.append(f"{w['box']} is ticked, so {u['box']} must be filled by hand: {u['why']}")
     if pen.file:
         doc.subset_fonts()
     doc.save(pdf_out, garbage=3, deflate=True)
     return pen.written, pen.problems, pen.name()
+
+
+def fill_table(pen, box, row, extra_rows):
+    """A table: the row's people, then the answers of the asks that go into
+    it, each a row by column label."""
+    table, label = box["table"], box["label"]
+    lines = [p["cells"] for p in row.get("value", [])] if row["status"] == "value" else []
+    for extra in extra_rows:
+        if extra["status"] != "answered":
+            continue
+        if not all(isinstance(e, dict) and set(e) <= set(table["columns"]) for e in extra["value"]):
+            pen.problems.append(f"{extra['label']}: answer with one entry per person, by column ({', '.join(table['columns'])})")
+            continue
+        lines += extra["value"]
+    if len(lines) > len(table["rows"]):
+        pen.problems.append(f"{label}: {len(lines)} people for {len(table['rows'])} rows")
+    for (top, bottom), cells in zip(table["rows"], lines):
+        for column, (x0, x1) in table["columns"].items():
+            if cells.get(column):
+                pen.put([x0, top, x1, bottom], cells[column])
 
 
 def read_back(fitz, pdf_path, written, font):
@@ -555,7 +637,7 @@ def layout_problems(fitz, pdf_path, layout):
     chars = [(c["bbox"], c["c"]) for b in page.get_text("rawdict")["blocks"] for l in b.get("lines", [])
              for s in l["spans"] for c in s["chars"]]
     underscores = [b for b, c in chars if c == "_"]
-    printed = [(b, c) for b, c in chars if c not in "_  "]
+    printed = [(b, c) for b, c in chars if c not in "_ \u00a0"]
     shapes = [d["rect"] for d in page.get_drawings()]
 
     def blank_problem(rect):
@@ -576,9 +658,9 @@ def layout_problems(fitz, pdf_path, layout):
 
     out = []
     for box in layout["boxes"]:
-        name = (box.get("labels") or [box.get("label")])[0]
+        name = box["label"]
         rects = ([box["rect"]] if "rect" in box else []) + box.get("continuation", []) + box.get("parts", [])
-        rects += [box["other"]["rect"]] if "other" in box else []
+        rects += list(box.get("write", {}).values())
         for rect in rects:
             problem = blank_problem(rect)
             if problem:
@@ -586,8 +668,7 @@ def layout_problems(fitz, pdf_path, layout):
         for x0, x1 in box.get("cells", []):
             if not any(abs(r.x0 - x0) <= 1 and abs(r.x1 - x1) <= 1 and 0 <= r.y0 - box["baseline"] <= 3 for r in shapes):
                 out.append(f"{name}: cell {x0}-{x1} has no underline")
-        squares = list(box.get("choices", {}).values()) + ([box["checkbox"]] if "checkbox" in box else [])
-        for square in squares:
+        for square in box.get("choices", {}).values():
             if not any(near(r, square) for r in shapes):
                 out.append(f"{name}: no checkbox at {square}")
         if "table" in box:
@@ -597,10 +678,9 @@ def layout_problems(fitz, pdf_path, layout):
                     if not any(abs(r.y0 - y) <= 0.5 and r.width > 100 for r in shapes):
                         out.append(f"{name}: no table line at y={y}")
             verticals = [r.x0 for r in shapes if r.width < 1 and r.height > 5 and rows[0][0] - 1 <= r.y0 <= rows[-1][1]]
-            for col in box["table"]["columns"]:
-                x0, x1 = col["x"]
+            for column, (x0, x1) in box["table"]["columns"].items():
                 if not any(0 <= x0 - v <= 3 for v in verticals) or not any(-1 <= v - x1 <= 3 for v in verticals):
-                    out.append(f"{name}: column {col['x']} isn't between the table's lines")
+                    out.append(f"{name}: column {column} {[x0, x1]} isn't between the table's lines")
     return out
 
 
@@ -639,7 +719,7 @@ def run(a):
     misplaced = layout_problems(fitz, a.pdf, layout)
     check("every layout box sits on the form's own blank", not misplaced, "; ".join(misplaced))
     library_labels = {r["label"] for r in form["fields"]}
-    layout_labels = {l for b in layout["boxes"] for l in (b.get("labels") or [b["label"]])}
+    layout_labels = {b["label"] for b in layout["boxes"]}
     check("every library row has a place on the form", library_labels <= layout_labels,
           ", ".join(sorted(library_labels - layout_labels)))
     check("every layout box is a library row", layout_labels <= library_labels,
@@ -650,19 +730,15 @@ def run(a):
     status, household = prepare.call("GET", "/vault/members")
     check("prepare token reads the household", status == 200, str(status))
     rows = resolve(form, values, household if status == 200 else {}, answers)
-    optional = layout.get("optional_rows", {})
     for r in rows:
-        if r["status"] == "missing":
-            # An optional row is still needed when its required_if holds (born abroad).
-            rule = optional.get(r["label"])
-            why = required_by(rule, values.get) if rule is not None else None
-            if rule is None or why:
-                check(f"row {r['label']!r} has a value", False,
-                      "; ".join(f"{ref} {prepare.why_missing(ref)}" for ref in r["missing"]) + (f" (needed: {why})" if why else ""))
+        if r.get("missing"):
+            check(f"row {r['label']!r} has a value", False, "; ".join(
+                f"{m['field']} {prepare.why_missing(m['field'])}" + (f" (needed: {m['needed']})" if m["needed"] else "")
+                for m in r["missing"]))
         if r["status"] == "ask":
             check(f"row {r['label']!r} is answered", False, r["question"])
 
-    written, problems, font = fill_pdf(fitz, a.pdf, f"{a.out}/filled.pdf", layout, rows, values)
+    written, problems, font = fill_pdf(fitz, a.pdf, f"{a.out}/filled.pdf", layout, form, rows)
     check("everything the rows hold is on the form", not problems, "; ".join(problems))
     results, stray = read_back(fitz, f"{a.out}/filled.pdf", written, font)
     bad = [r for r in results if not r["ok"]]
@@ -672,7 +748,9 @@ def run(a):
     fitz.open(f"{a.out}/filled.pdf")[0].get_pixmap(dpi=110).save(f"{a.out}/page-1.png")
 
     procedure = entry["id"].rsplit("/", 1)[1]
-    start = values.get(a.deadline_from) if a.deadline_from else None
+    # The library's deadline, when it runs from a date the vault keeps.
+    compute = next((r["compute"] for r in entry.get("deadline", {}).get("rules", []) if "compute" in r), None)
+    start = values.get(compute["from"]) if compute else None
     slug = a.slug or f"{procedure}-{(start or dt.date.today().isoformat())[:4]}"
     failed = [c["check"] for c in checks if not c["ok"]]
     ready = check("the form is ready", not failed, f"{len(failed)} checks failed" if failed else "")
@@ -707,8 +785,8 @@ def run(a):
         "playbook": a.playbook or "",
         "prossimo_passo": f"Firmare il modulo e inviarlo ({channel['type']}: {destinatario})",
     }
-    if start and a.deadline_days:
-        record["data_scadenza"] = (dt.date.fromisoformat(start) + dt.timedelta(days=a.deadline_days)).isoformat()
+    if start:
+        record["data_scadenza"] = (dt.date.fromisoformat(start) + dt.timedelta(days=compute["days"])).isoformat()
     for campo, value in record.items():
         if value:
             status, got = prepare.set(f"pratiche.{slug}_{campo}", value)
@@ -737,7 +815,7 @@ def run(a):
             field, value = (f"pratiche.{slug}_{campo}", value) if campo else value
             status, got = track.set(field, str(value))
             check(f"track sets {field}", status == 200, "" if status == 200 else f"{status} {got}")
-        people = next((len(r["value"]) for r in rows if isinstance(r.get("value"), list)), 0)
+        people = sum(len(r["value"]) for r in rows if isinstance(r.get("value"), list))
         for field, want in (("tari.superficie_tassata_mq", values.get("abitazione.superficie_calpestabile_mq")),
                             ("tari.componenti_tassati", str(1 + people))):
             if field in reply:
@@ -764,8 +842,8 @@ def main():
         s = sub.add_parser(name)
         s.add_argument("--entry", required=True)
         s.add_argument("--form", required=True)
-        s.add_argument("--layout", required=True)
     r = sub.choices["run"]
+    r.add_argument("--layout", required=True, help="the library's layouts/<procedure>/<form>.json")
     for s in sub.choices.values():
         s.add_argument("--draft", action="store_true", help="read only: no pratica record, no reply")
     where = r.add_mutually_exclusive_group(required=True)
@@ -778,12 +856,10 @@ def main():
     r.add_argument("--reply")
     r.add_argument("--slug")
     r.add_argument("--playbook")
-    r.add_argument("--deadline-from")
-    r.add_argument("--deadline-days", type=int)
     a = p.parse_args()
     if a.cmd == "needs":
         entry = load(a.entry)
-        print(json.dumps(needs(entry, form_of(entry, a.form), load(a.layout), a.draft), indent=2))
+        print(json.dumps(needs(entry, form_of(entry, a.form), a.draft), indent=2))
         return 0
     if a.draft and a.reply:
         p.error("--draft writes nothing, so it takes no --reply")

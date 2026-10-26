@@ -14,7 +14,7 @@ repo=$(cd "$here/../../../../.." && pwd)
 library=${PRATICHE_NAPOLI_DIR:?set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout}
 id=napoli/comune/tari-iscrizione-uso-abitativo
 form=mod-1
-layout="$here/../layouts/$id/$form.json"
+layout="$library/layouts/$id/$form.json"
 out=${1:-$(mktemp -d)}
 mkdir -p "$out"
 # The harness's files, its tokens among them, go when the run does.
@@ -28,7 +28,7 @@ trap 'touch "$work/done"; if [ -n "$harness" ]; then wait "$harness" || true; fi
   process.stdout.write(JSON.stringify(parse(readFileSync(process.argv[1], "utf8"), { version: "1.2" })));
 ' "procedures/$id.yaml") > "$work/entry.json"
 
-python3 -I "$here/../fill.py" needs --entry "$work/entry.json" --form "$form" --layout "$layout" > "$work/needs.json"
+python3 -I "$here/../fill.py" needs --entry "$work/entry.json" --form "$form" > "$work/needs.json"
 cp "$here/fixture.json" "$work/"
 
 url=$(python3 -I -c 'import json,sys; print(next(f["url"] for f in json.load(open(sys.argv[1]))["forms"] if f["id"] == sys.argv[2]))' "$work/entry.json" "$form")
@@ -44,5 +44,4 @@ done
 echo "scopes: $(python3 -I -c 'import json,sys; t=json.load(open(sys.argv[1]))["tokens"]; print("; ".join(f"{k} {v["access"]} {v["scope"]}" for k,v in t.items()))' "$work/needs.json")"
 python3 -I "$here/../fill.py" run --entry "$work/entry.json" --form "$form" --layout "$layout" \
   --server "$work/server.json" --pdf "$work/form.pdf" --out "$out" \
-  --answers "$here/answers.json" --reply "$here/reply.json" \
-  --deadline-from abitazione.data_inizio --deadline-days 90 --playbook napoli-tari-iscrizione
+  --answers "$here/answers.json" --reply "$here/reply.json" --playbook napoli-tari-iscrizione
