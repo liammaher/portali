@@ -600,8 +600,12 @@ func TestNewPersonCantTakeSlugAPraticaNames(t *testing.T) {
 		t.Fatal(err)
 	}
 	var verr *ValidationError
-	if err := v.Set("leo:famiglia.relazione", "altro", ""); !errors.As(err, &verr) || !strings.Contains(err.Error(), "pratiche.cie-leo_persona") {
-		t.Fatalf("new person with the slug = %v, want a refusal naming the pratica", err)
+	if err := v.Set("leo:famiglia.relazione", "altro", ""); !errors.As(err, &verr) || !strings.Contains(err.Error(), `1 pratica(s) still name "leo"`) || strings.Contains(err.Error(), "cie-leo") {
+		t.Fatalf("new person with the slug = %v, want a refusal that counts the pratiche without naming them", err)
+	}
+	// Deleting the pratica starts with its persona: the stato alone would reopen it.
+	if err := v.Delete("pratiche.cie-leo_stato"); err == nil || !strings.Contains(err.Error(), "delete its persona field first") {
+		t.Fatalf("deleting the stato first = %v, want advice to delete persona first", err)
 	}
 	if _, err := v.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("scan"), ""); !errors.As(err, &verr) {
 		t.Fatalf("document for a new person with the slug = %v, want ValidationError", err)
@@ -651,10 +655,60 @@ func TestMigrateNucleo_RerunJoinsSamePerson(t *testing.T) {
 		t.Fatalf("giulia:famiglia.relazione = %+v, %v", f, err)
 	}
 
+	// Nothing of membro1 is left, so the record goes: someone entered in
+	// that slot later is a new person, never giulia.
+	if m, _ := v.db.MetaWithPrefix(metaNucleoMembro); len(m) != 0 {
+		t.Errorf("migration record kept after membro1 moved whole: %v", m)
+	}
+	mustSet(t, v, "nucleo_familiare.membro1_cognome", "Rossi")
+	mustSet(t, v, "nucleo_familiare.membro1_relazione", "figlio")
+	if report, err := v.MigrateNucleo(false); err != nil || len(report.Members) != 1 || report.Members[0].Slug != "membro1" {
+		t.Fatalf("third run = %+v, %v; want a new person", report, err)
+	}
+	if f, _ := v.Get("giulia:famiglia.relazione"); f == nil || f.Value != "altro_affine" {
+		t.Errorf("giulia:famiglia.relazione = %+v, want it untouched", f)
+	}
+}
+
+// A new member entered under a membro<N> whose earlier person still has
+// fields left behind is a new person: their nome says so.
+func TestMigrateNucleo_NewNomeIsNewPerson(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Giulia")
+	mustSet(t, v, "nucleo_familiare.membro1_relazione", "zia acquisita") // left: keeps the record
+	if _, err := v.MigrateNucleo(false); err != nil {
+		t.Fatal(err)
+	}
+	if err := v.Delete("nucleo_familiare.membro1_relazione"); err != nil {
+		t.Fatal(err)
+	}
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Marco")
+	mustSet(t, v, "nucleo_familiare.membro1_sesso", "M")
+	report, err := v.MigrateNucleo(false)
+	if err != nil || len(report.Members) != 1 || report.Members[0].Slug != "marco" {
+		t.Fatalf("second run = %+v, %v; want marco", report, err)
+	}
+	if f, _ := v.Get("giulia:identity.sex"); f != nil {
+		t.Errorf("Marco's sex landed on giulia: %+v", f)
+	}
+}
+
+// Removing the person a membro became forgets the record, so a later person
+// with that slug never gets the membro's leftover fields.
+func TestRemovePerson_ForgetsNucleoRecord(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Giulia")
+	mustSet(t, v, "nucleo_familiare.membro1_relazione", "zia acquisita")
+	if _, err := v.MigrateNucleo(false); err != nil {
+		t.Fatal(err)
+	}
+	if m, _ := v.db.MetaWithPrefix(metaNucleoMembro); m[metaNucleoMembro+"1"] != "giulia" {
+		t.Fatalf("record = %v, want membro1 → giulia", m)
+	}
 	if _, err := v.RemovePerson("giulia"); err != nil {
 		t.Fatal(err)
 	}
 	if m, _ := v.db.MetaWithPrefix(metaNucleoMembro); len(m) != 0 {
-		t.Errorf("migration record kept after removing giulia: %v", m)
+		t.Errorf("record kept after removing giulia: %v", m)
 	}
 }

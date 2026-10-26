@@ -240,12 +240,16 @@ func TestRestoreRemovesStaleWorkDirs(t *testing.T) {
 		}
 	}
 	defer os.RemoveAll(checkStale)
+	legacy := filepath.Join(parent, ".pvault-restore-1") // left by an older build
+	if err := os.MkdirAll(filepath.Join(legacy, "vault"), 0700); err != nil {
+		t.Fatal(err)
+	}
 	named := filepath.Join(parent, ".pvault-restore-test")
 	if _, err := Init(named, testPassword); err != nil {
 		t.Fatal(err)
 	}
 	old := time.Now().Add(-time.Hour)
-	for _, d := range []string{stale, checkStale, named} {
+	for _, d := range []string{stale, checkStale, named, legacy} {
 		os.Chtimes(d, old, old)
 	}
 
@@ -255,7 +259,7 @@ func TestRestoreRemovesStaleWorkDirs(t *testing.T) {
 	if _, err := CheckBackup(path, testPassword, sk); err != nil {
 		t.Fatal(err)
 	}
-	for d, want := range map[string]bool{stale: false, fresh: true, checkStale: false, filepath.Join(named, "secret.key"): true} {
+	for d, want := range map[string]bool{stale: false, fresh: true, checkStale: false, legacy: false, filepath.Join(named, "secret.key"): true} {
 		if _, err := os.Stat(d); (err == nil) != want {
 			t.Errorf("%s exists = %v, want %v", d, err == nil, want)
 		}

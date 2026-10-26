@@ -275,7 +275,9 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		taken[s] = true
 	}
 	// Who an earlier run made each membro, so fields it left behind (fixed
-	// since) join that person instead of a new one named membro<N>.
+	// since) join that person instead of a new one named membro<N>. Kept only
+	// while that membro has fields left, and used only for a group without a
+	// nome: a nome there is someone entered since, a new person.
 	migrated, err := v.db.MetaWithPrefix(metaNucleoMembro)
 	if err != nil {
 		return nil, err
@@ -349,10 +351,12 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		return true
 	}
 
+	slugOf := map[int]string{}
 	for _, n := range ns {
 		fields := byN[n]
+		hasNome := slices.ContainsFunc(fields, func(f FieldInfo) bool { return campi[f.ID] == "nome" })
 		slug := migrated[metaNucleoMembro+strconv.Itoa(n)]
-		if !slices.Contains(existing, slug) {
+		if hasNome || !slices.Contains(existing, slug) {
 			slug = ""
 			for _, f := range fields {
 				if campi[f.ID] == "nome" {
@@ -369,6 +373,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 			taken[slug] = true
 		}
 
+		slugOf[n] = slug
 		mm := MigratedMember{N: n, Slug: slug, Fields: map[string]string{}}
 		for _, f := range fields {
 			target, ok := membroCampi[campi[f.ID]]
@@ -418,11 +423,23 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	if dryRun || len(deletes) == 0 {
 		return report, nil
 	}
+	// Remember who each membro with fields left became; forget the rest.
 	remember := map[string]string{}
-	for _, m := range report.Members {
-		remember[metaNucleoMembro+strconv.Itoa(m.N)] = m.Slug
+	for n, fields := range byN {
+		left := slices.ContainsFunc(fields, func(f FieldInfo) bool { return report.Left[f.ID] != "" })
+		made := slices.Contains(existing, slugOf[n]) ||
+			slices.ContainsFunc(report.Members, func(m MigratedMember) bool { return m.Slug == slugOf[n] })
+		if left && made {
+			remember[metaNucleoMembro+strconv.Itoa(n)] = slugOf[n]
+		}
 	}
-	if err := v.db.ApplyChange(store.Change{DeleteFields: deletes, Insert: inserts, SetMeta: remember}); err != nil {
+	var forget []string
+	for k := range migrated {
+		if _, ok := remember[k]; !ok {
+			forget = append(forget, k)
+		}
+	}
+	if err := v.db.ApplyChange(store.Change{DeleteFields: deletes, Insert: inserts, SetMeta: remember, DeleteMeta: forget}); err != nil {
 		return nil, err
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "nucleo_familiare.*", Action: "member_migrate",

@@ -92,7 +92,7 @@ func (v *Vault) checkPraticaPersona(vaultKey []byte, slug string, token bool) er
 		}
 		// Not "add them first": the slug stays a removed person's while a
 		// pratica names it (checkNewPersonSlug).
-		msg := "persona names someone who is no longer in the vault (" + persone + "): set it to io or someone in the vault first"
+		msg := "persona names someone who is no longer in the vault (" + persone + "): to reopen it, set persona to io or someone in the vault; to delete the pratica, delete its persona field first"
 		if token {
 			msg = "persona names someone who is no longer in the vault: ask the user to fix it first"
 		}
@@ -119,8 +119,9 @@ func (v *Vault) checkNewPersonSlug(id string) error {
 		return err
 	}
 	if refs := named[person]; len(refs) > 0 {
-		return &ValidationError{Field: id, Msg: fmt.Sprintf("%s still names %q, a person who was removed: give the new person another slug, or delete those pratiche first",
-			strings.Join(refs, ", "), person)}
+		// Not which pratiche: a grant for this person may not read them.
+		return &ValidationError{Field: id, Msg: fmt.Sprintf("%d pratica(s) still name %q, a person who was removed: give the new person another slug, or delete those pratiche (each one's persona field first; 'pvault list pratiche' shows them)",
+			len(refs), person)}
 	}
 	return nil
 }

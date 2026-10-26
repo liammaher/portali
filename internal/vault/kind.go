@@ -101,7 +101,7 @@ func isSPIDCategory(category string) bool {
 	return len(words) > 0 && reSPIDWord.MatchString(words[0])
 }
 
-var reSPIDWord = regexp.MustCompile(`^spid[0-9]*$`)
+var reSPIDWord = regexp.MustCompile(`^spid(?:` + spidProviderPattern() + `)?[0-9]*$`)
 
 // namesNonSPIDIdentity reports a secret of a CIE, CieID or digital signature
 // stored under a SPID category: a word naming one of them next to a credential

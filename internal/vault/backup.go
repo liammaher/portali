@@ -509,16 +509,32 @@ const staleWorkDirAge = 10 * time.Minute
 // restoreWorkPrefix names RestoreBackup's work dirs.
 const restoreWorkPrefix = ".pvault.restore-"
 
+// legacyRestoreWorkPrefix named them before; a vault can have that name too
+// (pvault --vault restore-x), so only a dir holding nothing but the staged
+// vault folder (onlyStagedVault) is taken for a work dir.
+const legacyRestoreWorkPrefix = ".pvault-restore-"
+
+func onlyStagedVault(path string) bool {
+	entries, err := os.ReadDir(path)
+	return err == nil && (len(entries) == 0 || len(entries) == 1 && entries[0].Name() == "vault" && entries[0].IsDir())
+}
+
 // removeStaleWorkDirs removes the work dirs named prefix* in dir that an
 // interrupted restore or check left behind (Ctrl-C skips their cleanup).
 // They hold a decrypted database snapshot: field names and the audit log.
 func removeStaleWorkDirs(dir, prefix string) {
+	removeStaleDirs(dir, prefix, func(string) bool { return true })
+}
+
+// removeStaleDirs is removeStaleWorkDirs for the dirs named prefix* that
+// isWork also accepts.
+func removeStaleDirs(dir, prefix string, isWork func(path string) bool) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return
 	}
 	for _, e := range entries {
-		if !e.IsDir() || !strings.HasPrefix(e.Name(), prefix) {
+		if !e.IsDir() || !strings.HasPrefix(e.Name(), prefix) || !isWork(filepath.Join(dir, e.Name())) {
 			continue
 		}
 		if info, err := e.Info(); err == nil && time.Since(info.ModTime()) > staleWorkDirAge {
@@ -545,6 +561,7 @@ func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error
 	// a name no vault folder (.pvault, .pvault-<name>) can have: the sweep
 	// must never take a vault named restore-<x> for a work dir.
 	removeStaleWorkDirs(parent, restoreWorkPrefix)
+	removeStaleDirs(parent, legacyRestoreWorkPrefix, onlyStagedVault)
 	work, err := os.MkdirTemp(parent, restoreWorkPrefix)
 	if err != nil {
 		return nil, err

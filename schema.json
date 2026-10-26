@@ -1226,6 +1226,7 @@
   "credentials": {
     "secret": "^((?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco|cvv|cvc|cvn)s?[0-9]*)$",
     "credential": "^((?:(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco|cvv|cvc|cvn)s?[0-9]*|(?:pass|username|login|chiave|chiavi)s?[0-9]*))$",
-    "identity": "^((?:spid|cieid|cie|firma|firmadigitale|cns|smartcard)[0-9]*)$"
+    "identity": "^((?:spid(?:spiditaliaregisterit|titrusttechnologies|intesigroupid|posteitaliane|infocamereid|teamsystemid|intesigroup|etnahitech|infocamere|infocertid|namirialid|registerit|spiditalia|teamsystem|infocert|intesiid|lepidaid|namirial|register|sielteid|arubaid|posteid|etnaid|intesi|lepida|sielte|tittid|aruba|poste|timid|etna|titt|tim)?|cieid(?:app)?|cie|firma|firmadigitale|cns|smartcard)[0-9]*)$",
+    "account": "^((?:spid(?:spiditaliaregisterit|titrusttechnologies|intesigroupid|posteitaliane|infocamereid|teamsystemid|intesigroup|etnahitech|infocamere|infocertid|namirialid|registerit|spiditalia|teamsystem|infocert|intesiid|lepidaid|namirial|register|sielteid|arubaid|posteid|etnaid|intesi|lepida|sielte|tittid|aruba|poste|timid|etna|titt|tim)?|cieid(?:app)?)[0-9]*)$"
   }
 }

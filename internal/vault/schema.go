@@ -73,6 +73,9 @@ type CredentialWords struct {
 	Credential string `json:"credential"`
 	// Identity names SPID, CieID, the CIE or a digital signature.
 	Identity string `json:"identity"`
+	// Account is the first word of a SPID or CieID account category
+	// (spid_poste, spidposte), every field of which is a credential.
+	Account string `json:"account"`
 }
 
 // SchemaJSON is RecommendedSchema as 'pvault schema --json' prints it and
@@ -91,6 +94,7 @@ var RecommendedSchema = Schema{
 		Secret:     `^(` + secretWords + `)$`,
 		Credential: `^(` + credentialWords + `)$`,
 		Identity:   `^(` + identityWords + `)$`,
+		Account:    `^(` + accountWords + `)$`,
 	},
 	Version: "12",
 	Categories: []SchemaCategory{

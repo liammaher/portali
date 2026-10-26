@@ -299,7 +299,7 @@ server.registerTool(
   "vault_document_get",
   {
     description:
-      "Read an encrypted document from the vault by id. Images are returned as images; other files (e.g. PDFs) as an embedded resource. The content passes through the LLM provider's inference pipeline.",
+      "Read an encrypted document from the vault by id. Images (PNG, JPEG, GIF, WebP up to about 3.7 MB) are returned as images; other files (e.g. PDFs, larger images) as an embedded resource. The content passes through the LLM provider's inference pipeline.",
     inputSchema: {
       id: z.string().describe("Document id from vault_documents"),
     },
@@ -398,8 +398,8 @@ if (pec) {
     "pec_attachment",
     {
       description:
-        "Open one attachment of a PEC message, by uid and the index pec_read listed. Images are returned as images, " +
-        "text as text, other files (e.g. PDFs, .p7m) as an embedded resource. " +
+        "Open one attachment of a PEC message, by uid and the index pec_read listed. Images (when they really are PNG, JPEG, GIF " +
+        "or WebP, up to about 3.7 MB) are returned as images, text as text, other files (e.g. PDFs, .p7m) as an embedded resource. " +
         UNTRUSTED,
       inputSchema: {
         uid: z.number().int().positive().describe("Message uid from pec_list"),

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"slices"
+	"sort"
 	"strings"
 )
 
@@ -32,10 +33,20 @@ const (
 	// CieID or the CIE (spid.username, spid.pass): elsewhere they are
 	// everyday words (pec.username, locazione.chiavi_consegnate, pass_ztl).
 	credentialWords = `(?:` + secretWords + `|(?:pass|username|login|chiave|chiavi)s?[0-9]*)`
+)
+
+var (
+	// accountWord names a SPID or CieID account, a SPID provider run on as
+	// people write it (spidposte, spidaruba, cieidapp) included; not any
+	// word that starts like one (spidino).
+	accountWord = `spid(?:` + spidProviderPattern() + `)?|cieid(?:app)?`
+	// accountWords match the first word of an account category, every field
+	// of which is a credential. A trailing number names a second one: spid2.
+	accountWords = `(?:` + accountWord + `)[0-9]*`
 	// A trailing number names a second account or card: spid2, cie2. firma,
 	// firmadigitale, cns and smartcard cover a digital signature or CNS
 	// (firma_digitale.pin, cns.puk).
-	identityWords = `(?:spid|cieid|cie|firma|firmadigitale|cns|smartcard)[0-9]*`
+	identityWords = `(?:` + accountWord + `|cie|firma|firmadigitale|cns|smartcard)[0-9]*`
 )
 
 var (
@@ -48,11 +59,23 @@ var (
 	reIdentityWord = regexp.MustCompile(`^(` + identityWords + `)$`)
 	// rePersonalCategoryWord matches the first word of a SPID or CieID
 	// account category (not the CIE itself, whose number isn't secret).
-	rePersonalCategoryWord = regexp.MustCompile(`^(spid|cieid)[0-9]*$`)
+	rePersonalCategoryWord = regexp.MustCompile(`^(` + accountWords + `)$`)
 	// reJoinedCredential matches an identity word and a credential word run
 	// together, as in identity.spidPassword (lower-cased to spidpassword).
 	reJoinedCredential = regexp.MustCompile(`^(` + identityWords + `)(` + credentialWords + `)$|^(` + credentialWords + `)(` + identityWords + `)$`)
 )
+
+// spidProviderPattern is every spelling spidProviders knows, longest first.
+func spidProviderPattern() string {
+	names := make([]string, 0, len(spidProviders))
+	for k := range spidProviders {
+		names = append(names, k)
+	}
+	sort.Slice(names, func(i, j int) bool {
+		return len(names[i]) > len(names[j]) || len(names[i]) == len(names[j]) && names[i] < names[j]
+	})
+	return strings.Join(names, "|")
+}
 
 // IsCredentialField reports whether a field holds a login secret: any field
 // whose category or name has a secret word (pin, puk, password, otp, ...),
