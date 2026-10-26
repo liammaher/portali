@@ -21,7 +21,18 @@ before(async () => {
       res.end(JSON.stringify([
         { field_id: "passaporto.data_scadenza", document: "passaporto", expires_on: "2026-11-01", days_left: 7 },
         { field_id: "residenza.data_scadenza", document: "residenza", expires_on: "2026-11-02", days_left: 8 },
+        { field_id: "leo:residenza.data_scadenza", document: "residenza", member: "leo", expires_on: "2026-11-03", days_left: 9 },
       ]));
+      return;
+    }
+    if (req.url === "/vault/members") {
+      res.end(JSON.stringify({
+        intestatario_scheda: "io",
+        members: [
+          { slug: "leo", famiglia: { relazione: "figlio" }, first_name: "Leo", age: 6, minor: true, anpr_relazione: "3", relazione_label: "figlio", fields: 5 },
+          { slug: "giulia", famiglia: { relazione: "coniuge" }, first_name: "Giulia", fields: 2 },
+        ],
+      }));
       return;
     }
     res.end("{}");
@@ -53,8 +64,16 @@ const text = (r: unknown) => ((r as { content: { text: string }[] }).content[0]?
 
 test("vault_expiring keeps to VAULT_SCOPE", async () => {
   const out = text(await client.callTool({ name: "vault_expiring", arguments: {} }));
-  assert.match(out, /residenza\.data_scadenza/);
+  assert.match(out, /"residenza\.data_scadenza/);
   assert.doesNotMatch(out, /passaporto/);
+  // residenza.* is the owner's residenza only, never a family member's.
+  assert.doesNotMatch(out, /leo:/);
+});
+
+test("vault_household keeps to VAULT_SCOPE", async () => {
+  // VAULT_SCOPE is residenza.*: an owner scope, which reaches no member.
+  const out = JSON.parse(text(await client.callTool({ name: "vault_household", arguments: {} })));
+  assert.deepEqual(out, { members: [] });
 });
 
 test("vault_document_add doesn't tell which paths exist outside the import folders", async () => {

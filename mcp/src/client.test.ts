@@ -184,10 +184,13 @@ test("reads the token from the Keychain for this user", {
 test("refuses field IDs that would leave /vault/fields/", async () => {
   tokens.set("t-scope", "identity.");
   process.env.VAULT_TOKEN = "t-scope";
-  for (const id of ["identity./../../context", "identity./../spid.password", "identity.a/b", "identity.a?x", "noDot"]) {
+  for (const id of ["identity./../../context", "identity./../spid.password", "identity.a/b", "identity.a?x", "noDot",
+    "leo:/../context.x", "a:b:c.d", "io:identity.first_name", "Leo:identity.first_name", ":identity.first_name", "leo:"]) {
     seen.length = 0;
     await assert.rejects(getField(id), /invalid field ID/);
     assert.equal(seen.length, 0, `${id} reached the server`);
   }
   assert.equal((await getField("identity.first_name")).value, "value-of-identity.first_name");
+  tokens.set("t-scope", "leo:identity.");
+  assert.equal((await getField("leo:identity.first_name")).value, "value-of-leo:identity.first_name");
 });
