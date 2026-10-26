@@ -152,9 +152,10 @@ GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fi
 ```
 GET    /vault/members                    # { intestatario_scheda?, members: [{ slug, famiglia, first_name, last_name, age, minor,
                                          #   anpr_relazione, relazione_label, fields, documents }] } — only what the caller's scope reaches
-DELETE /vault/members/{slug}             # Session only: delete a member's fields and documents, revoke tokens naming them
-                                         #   (409 member_in_use while another field names them)
-POST   /vault/members/migrate[?dry_run=1]  # Session only: nucleo_familiare.membro<N>_* → members
+DELETE /vault/members/{slug}             # Your session, or a grant you approved for <slug>:* with write access (Touch ID):
+                                         #   delete a member's fields and documents, revoke tokens naming them
+                                         #   (409 member_in_use while another field names them; closed pratiche don't count)
+POST   /vault/members/migrate[?dry_run=1]  # Session only: nucleo_familiare.membro<N>_* → members (dry_run: 1/true/0/false)
 ```
 
 Field IDs and document categories take the member prefix everywhere (`/vault/fields/leo:cie.numero`, `?category=leo:cie`). The public `/vault/status` counts only your own data.

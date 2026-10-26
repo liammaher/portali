@@ -256,11 +256,15 @@ Profile Password + Secret Key (128-bit)
   genitori, rappresentanza; the owner's `intestatario_scheda`); procedure rules live in
   playbooks. Values naming people (`genitori`, `intestatario_scheda`, pratiche `persona`)
   must name `io` or an existing member. `GET /vault/members` derives age/minor/label only
-  from fields the caller can read. `RemoveMember`/`MigrateNucleo` are session-only, hold
-  `backup.mu` and `writeMu` (every single write holds `writeMu` for reading), change rows
-  in one `store.ApplyMemberChange` transaction, and remove refuses while another field
-  names the member, then revokes tokens and drops grants whose scope names the slug. The
-  public status counts only the owner's data, so it never reveals members. No rename yet.
+  from fields the caller can read. `MigrateNucleo` is session-only; `DELETE
+  /vault/members/{slug}` also accepts a grant the user approved with write access to
+  `<slug>:*` (`ScopeAllowsWholeMember`), so `pvault member remove` asks one Touch ID prompt
+  worded "read, change and delete everything about <slug>" (service tokens never may).
+  Both hold `backup.mu` and `writeMu` (every single write holds `writeMu` for reading),
+  change rows in one `store.ApplyMemberChange` transaction; remove refuses while another
+  field names the member (closed pratiche don't count), then revokes tokens and drops
+  grants whose scope names the slug. The public status counts only the owner's data, so it
+  never reveals members. Bulk reads parse the scope once (`ParseScope`). No rename yet.
 
 ## Conventions
 

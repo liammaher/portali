@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -22,14 +23,19 @@ func (s *Server) handleListMembers(w http.ResponseWriter, r *http.Request) {
 }
 
 // DELETE /vault/members/{slug}
-// Session only: deletes every field and document of a member and revokes
-// the tokens and grants that name them.
+// Deletes every field and document of a member and revokes the tokens and
+// grants that name them. Only the user may: their session, or a grant they
+// approved in person (Touch ID) for write access to everything about that
+// member, whose prompt names exactly that. Service tokens never may.
 func (s *Server) handleRemoveMember(w http.ResponseWriter, r *http.Request) {
-	if !isSessionAuth(r) {
+	slug := r.PathValue("slug")
+	approved := reachesPersonal(r) && accessFromRequest(r) == vault.AccessWrite &&
+		vault.ValidMemberSlug(slug) && vault.ScopeAllowsWholeMember(scopeFromRequest(r), slug)
+	if !isSessionAuth(r) && !approved {
 		sessionRequired(w)
 		return
 	}
-	out, err := s.vault.RemoveMember(r.PathValue("slug"))
+	out, err := s.vault.RemoveMember(slug)
 	var inUse *vault.MemberInUseError
 	switch {
 	case errors.As(err, &inUse):
@@ -48,7 +54,14 @@ func (s *Server) handleMigrateMembers(w http.ResponseWriter, r *http.Request) {
 		sessionRequired(w)
 		return
 	}
-	dryRun := r.URL.Query().Get("dry_run") == "1"
+	dryRun := false
+	if v := r.URL.Query().Get("dry_run"); v != "" {
+		var err error
+		if dryRun, err = strconv.ParseBool(v); err != nil {
+			writeError(w, http.StatusBadRequest, "invalid_request", "dry_run must be 1/true or 0/false")
+			return
+		}
+	}
 	report, err := s.vault.MigrateNucleo(dryRun)
 	if err != nil {
 		handleVaultError(w, err)

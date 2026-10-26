@@ -203,7 +203,7 @@ func TestMigrateNucleo(t *testing.T) {
 func TestSlugFromName(t *testing.T) {
 	for in, want := range map[string]string{
 		"Giulia": "giulia", "Maria Luisa": "maria-luisa", "Niccolò": "niccolo", "D'Amico": "d-amico",
-		" Anna-Maria ": "anna-maria", "123": "", "Io": "", "": "",
+		" Anna-Maria ": "anna-maria", "123": "", "Io": "", "": "", "J.R.": "jr", "a - b": "a-b", "1anna": "anna",
 	} {
 		if got := slugFromName(in); got != want {
 			t.Errorf("slugFromName(%q) = %q, want %q", in, got, want)
@@ -245,5 +245,38 @@ func TestBackupRestoresMembers(t *testing.T) {
 	}
 	if info, data, err := r.GetDocument(doc.ID); err != nil || string(data) != "leo's card" || info.Category != "leo:cie" {
 		t.Fatalf("restored document = %+v %q %v", info, data, err)
+	}
+}
+
+// A closed pratica is history: it names a member without keeping them.
+func TestRemoveMember_ClosedPraticaDoesNotBlock(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "leo:famiglia.relazione", "figlio")
+	mustSet(t, v, "pratiche.cie-leo_persona", "leo")
+	mustSet(t, v, "pratiche.cie-leo_stato", "in_attesa")
+	var inUse *MemberInUseError
+	if _, err := v.RemoveMember("leo"); !errors.As(err, &inUse) {
+		t.Fatalf("open pratica: remove = %v, want MemberInUseError", err)
+	}
+	mustSet(t, v, "pratiche.cie-leo_stato", "completata")
+	if _, err := v.RemoveMember("leo"); err != nil {
+		t.Fatalf("closed pratica: remove = %v", err)
+	}
+}
+
+// Field IDs ignore case elsewhere, so migration does too.
+func TestMigrateNucleo_MixedCase(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "Nucleo_Familiare.Membro1_Nome", "Anna")
+	mustSet(t, v, "nucleo_familiare.MEMBRO1_relazione", "Madre")
+	report, err := v.MigrateNucleo(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(report.Members) != 1 || report.Members[0].Slug != "anna" || len(report.Left) != 0 {
+		t.Fatalf("report = %+v", report)
+	}
+	if f, err := v.Get("anna:famiglia.relazione"); err != nil || f.Value != "genitore" {
+		t.Fatalf("anna:famiglia.relazione = %+v, %v", f, err)
 	}
 }

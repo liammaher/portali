@@ -21,7 +21,8 @@ func TestMemberAddFields(t *testing.T) {
 	if want := "giulia:famiglia.relazione=moglie,giulia:identity.first_name=Giulia,giulia:identity.sex=F"; strings.Join(got, ",") != want {
 		t.Fatalf("fields = %v, want %s", got, want)
 	}
-	for _, bad := range [][]string{{"--nome", "Giulia"}, {"--relazione"}, {"--relazione", "x", "--relazione", "y"}, {"--eta", "3"}} {
+	for _, bad := range [][]string{{"--nome", "Giulia"}, {"--relazione"}, {"--relazione", "x", "--relazione", "y"}, {"--eta", "3"},
+		{"--relazione", "amico"}, {"--relazione", "moglie", "--codice-fiscale", "XYZ"}, {"--relazione", "figlio", "--data-nascita", "31/02/2020"}} {
 		if _, err := memberAddFields("giulia", bad); err == nil {
 			t.Errorf("%v accepted", bad)
 		}
@@ -63,8 +64,8 @@ func TestFormatHousehold(t *testing.T) {
 		{Slug: "giulia", RelazioneLabel: "moglie", FirstName: "Giulia", Famiglia: map[string]string{"stato_famiglia": "si"}, Fields: 3},
 		{Slug: "leo", RelazioneLabel: "figlio/a", Age: &age, Minor: &minor, Famiglia: map[string]string{"genitori": "io,giulia", "a_carico_percentuale": "50"}, Fields: 4, Documents: 1},
 	}}
-	want := "giulia  moglie · Giulia · stato di famiglia  [3 fields, 0 documents]\n" +
-		"leo     figlio/a · 6 anni (minore) · a carico 50% · genitori io,giulia  [4 fields, 1 documents]\n" +
+	want := "giulia  moglie · Giulia · stato di famiglia\n" +
+		"leo     figlio/a · 6 anni (minore) · a carico 50% · genitori io,giulia\n" +
 		"Intestatario della scheda anagrafica: io\n"
 	if got := formatHousehold(h); got != want {
 		t.Fatalf("got:\n%s\nwant:\n%s", got, want)
@@ -94,5 +95,27 @@ func TestFormatMigration(t *testing.T) {
 		if !strings.Contains(got, want) {
 			t.Errorf("missing %q in:\n%s", want, got)
 		}
+	}
+}
+
+// member remove needs one approval, worded for exactly that member, and no
+// second prompt for full access.
+func TestMemberRemove_OneScopedApproval(t *testing.T) {
+	v, argsFile := touchIDVault(t, map[string]string{"leo:famiglia.relazione": "figlio", "leo:cie.numero": "CA12345AB"})
+	needGrant("leo:*", "write")
+	resp, err := apiRequest("DELETE", "/vault/members/leo", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out vault.RemovedMember
+	if err := apiResult(resp, &out); err != nil || out.Fields != 2 {
+		t.Fatalf("remove = %+v, %v", out, err)
+	}
+	if f, _ := v.FieldMeta("leo:cie.numero"); f != nil {
+		t.Fatal("leo:cie.numero still there")
+	}
+	data, _ := os.ReadFile(argsFile)
+	if want := "grant --scope leo:* --access write\n"; string(data) != want {
+		t.Fatalf("helper calls:\n%s\nwant:\n%s", data, want)
 	}
 }

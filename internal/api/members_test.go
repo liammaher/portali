@@ -173,3 +173,57 @@ func TestMembers_RemoveAndMigrate(t *testing.T) {
 		t.Fatalf("migrated field: %d", w.Code)
 	}
 }
+
+// A grant the user approved for everything about one member, with write
+// access, may remove that member (its Touch ID prompt says exactly that);
+// nothing narrower, and no service token, may.
+func TestMembers_RemoveWithApprovedGrant(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	seedHousehold(t, env)
+	env.doRequest(t, "PUT", "/vault/fields/marco:famiglia.relazione", map[string]string{"value": "fratello"}, true)
+
+	for _, c := range []struct{ scope, access string }{
+		{"leo:cie.*", "write"}, // not everything about leo
+		{"leo:*", "read"},      // not write
+		{"marco:*", "write"},   // another member
+	} {
+		g := scopedGrant(t, env, sk, c.scope, c.access)
+		if w := env.doRequestWithToken(t, "DELETE", "/vault/members/leo", nil, g); w.Code != 403 {
+			t.Fatalf("%s/%s removed leo: %d", c.scope, c.access, w.Code)
+		}
+	}
+	token := createToken(t, env, map[string]string{"scope": "leo:*", "access": "write"})
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/members/leo", nil, token); w.Code != 403 {
+		t.Fatalf("service token removed leo: %d", w.Code)
+	}
+	g := scopedGrant(t, env, sk, "leo:*", "write")
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/members/marco", nil, g); w.Code != 403 {
+		t.Fatalf("leo:* grant removed marco: %d", w.Code)
+	}
+	if w := env.doRequestWithToken(t, "DELETE", "/vault/members/leo", nil, g); w.Code != 200 {
+		t.Fatalf("approved leo:* grant: %d %s", w.Code, w.Body.String())
+	}
+	// The grant named leo, so it ends with him.
+	if w := env.doRequestWithToken(t, "GET", "/vault/members", nil, g); w.Code != 401 {
+		t.Fatalf("leo:* grant after removal: %d", w.Code)
+	}
+}
+
+func TestMembers_MigrateDryRunValues(t *testing.T) {
+	env := setup(t)
+	env.doRequest(t, "PUT", "/vault/fields/nucleo_familiare.membro1_nome", map[string]string{"value": "Marco"}, true)
+	for _, v := range []string{"1", "true"} {
+		w := env.doRequest(t, "POST", "/vault/members/migrate?dry_run="+v, nil, true)
+		var report vault.MigrationReport
+		json.NewDecoder(w.Body).Decode(&report)
+		if w.Code != 200 || !report.DryRun {
+			t.Fatalf("dry_run=%s: %d %+v", v, w.Code, report)
+		}
+	}
+	if w := env.doRequest(t, "POST", "/vault/members/migrate?dry_run=yes-please", nil, true); w.Code != 400 {
+		t.Fatalf("dry_run=yes-please: %d", w.Code)
+	}
+	if w := env.doRequest(t, "GET", "/vault/fields/nucleo_familiare.membro1_nome", nil, true); w.Code != 200 {
+		t.Fatal("a dry run moved the field")
+	}
+}

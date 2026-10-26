@@ -64,7 +64,8 @@ pvault set leo:famiglia.genitori io,giulia      # who holds responsabilità geni
 pvault set leo:famiglia.stato_famiglia si       # lives with you (stato di famiglia)
 pvault set leo:cie.data_scadenza 20/11/2026     # tracked by pvault expiring as "cie (leo)"
 pvault member list                              # relazione, age, stato di famiglia, a carico
-pvault member remove giulia                     # refused while another field still names her
+pvault member remove giulia                     # refused while another field still names her; with Touch ID
+                                                # the prompt reads "read, change and delete everything about giulia"
 pvault member migrate --dry-run                 # turn old nucleo_familiare.membro<N> fields into members
 ```
 

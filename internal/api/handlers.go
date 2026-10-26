@@ -77,9 +77,9 @@ func (s *Server) requireFieldTier(w http.ResponseWriter, r *http.Request, id str
 // callerFilter limits bulk reads to fields within the caller's scope and
 // sensitivity cap, so nothing else is decrypted.
 func callerFilter(r *http.Request) vault.FieldFilter {
-	scope, maxTier := scopeFromRequest(r), maxTierFromRequest(r)
+	scope, maxTier := vault.ParseScope(scopeFromRequest(r)), maxTierFromRequest(r)
 	return func(id, sensitivity string) bool {
-		return vault.ScopeAllows(scope, id) && vault.TierAllows(maxTier, sensitivity)
+		return scope.Allows(id) && vault.TierAllows(maxTier, sensitivity)
 	}
 }
 
@@ -271,7 +271,7 @@ func (s *Server) handleListFields(w http.ResponseWriter, r *http.Request) {
 		handleVaultError(w, err)
 		return
 	}
-	scope, maxTier := scopeFromRequest(r), maxTierFromRequest(r)
+	scope, maxTier := vault.ParseScope(scopeFromRequest(r)), maxTierFromRequest(r)
 	allowed := make([]vault.FieldInfo, 0, len(fields))
 	for _, f := range fields {
 		// Agents see metadata of fields above their cap, but personal fields
@@ -279,7 +279,7 @@ func (s *Server) handleListFields(w http.ResponseWriter, r *http.Request) {
 		if f.Sensitivity == vault.TierPersonal && maxTier != vault.TierPersonal {
 			continue
 		}
-		if vault.ScopeAllows(scope, f.ID) {
+		if scope.Allows(f.ID) {
 			allowed = append(allowed, f)
 		}
 	}

@@ -166,16 +166,45 @@ func (sp scopePattern) allows(member, category, field string) bool {
 	return sp.allowsCategory(member, category) && (sp.all || sp.wholeMember || sp.field == "" || sp.field == field)
 }
 
-// scopePatterns parses a comma-separated scope, skipping malformed patterns
+// Scope is a parsed token scope. Parse it once with ParseScope when matching
+// many fields (bulk reads); the Scope* functions parse on every call.
+type Scope []scopePattern
+
+// ParseScope parses a comma-separated scope, skipping malformed patterns
 // (which ValidateScope refuses when a token or grant is created).
-func scopePatterns(scope string) []scopePattern {
-	var out []scopePattern
+func ParseScope(scope string) Scope {
+	var out Scope
 	for _, p := range strings.Split(scope, ",") {
 		if sp, ok := parseScopePattern(strings.TrimSpace(p)); ok {
 			out = append(out, sp)
 		}
 	}
 	return out
+}
+
+// Allows reports whether the scope reaches a field ID. An ID without a
+// category and field (no dot) is reached only by "*".
+func (s Scope) Allows(fieldID string) bool {
+	member, local, _ := cutMember(fieldID)
+	category, field, ok := strings.Cut(local, ".")
+	for _, sp := range s {
+		if sp.all || (ok && sp.allows(member, category, field)) {
+			return true
+		}
+	}
+	return false
+}
+
+// AllowsCategory reports whether the scope reaches any field in a category
+// ([member:]category).
+func (s Scope) AllowsCategory(category string) bool {
+	member, local, _ := cutMember(category)
+	for _, sp := range s {
+		if sp.allowsCategory(member, local) {
+			return true
+		}
+	}
+	return false
 }
 
 // ScopeAllows checks if a comma-separated scope pattern allows access to a field ID.
@@ -185,33 +214,31 @@ func scopePatterns(scope string) []scopePattern {
 // (everything about a member). A pattern without a member prefix never
 // reaches a member's data.
 func ScopeAllows(scope, fieldID string) bool {
-	member, local, _ := cutMember(fieldID)
-	category, field, _ := strings.Cut(local, ".")
-	for _, sp := range scopePatterns(scope) {
-		if sp.allows(member, category, field) {
-			return true
-		}
-	}
-	return false
+	return ParseScope(scope).Allows(fieldID)
 }
 
 // ScopeAllowsCategory checks if a scope pattern allows access to any field in
 // a category ([member:]category).
 func ScopeAllowsCategory(scope, category string) bool {
-	member, local, _ := cutMember(category)
-	for _, sp := range scopePatterns(scope) {
-		if sp.allowsCategory(member, local) {
+	return ParseScope(scope).AllowsCategory(category)
+}
+
+// ScopeAllowsMember checks if a scope reaches any data of a member ("" is
+// the owner).
+func ScopeAllowsMember(scope, member string) bool {
+	for _, sp := range ParseScope(scope) {
+		if sp.allowsMember(member) {
 			return true
 		}
 	}
 	return false
 }
 
-// ScopeAllowsMember checks if a scope reaches any data of a member ("" is
-// the owner).
-func ScopeAllowsMember(scope, member string) bool {
-	for _, sp := range scopePatterns(scope) {
-		if sp.allowsMember(member) {
+// ScopeAllowsWholeMember checks if a scope reaches all of a member's data:
+// "*" or "slug:*".
+func ScopeAllowsWholeMember(scope, member string) bool {
+	for _, sp := range ParseScope(scope) {
+		if sp.all || (sp.wholeMember && sp.member == member) {
 			return true
 		}
 	}
@@ -221,7 +248,7 @@ func ScopeAllowsMember(scope, member string) bool {
 // ScopeNamesMember reports a scope with a pattern naming the member's slug
 // (not "*" or "*:..."), i.e. one that was granted for that person.
 func ScopeNamesMember(scope, member string) bool {
-	for _, sp := range scopePatterns(scope) {
+	for _, sp := range ParseScope(scope) {
 		if !sp.all && sp.member == member {
 			return true
 		}

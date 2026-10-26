@@ -271,19 +271,34 @@ func (v *Vault) RemoveMember(slug string) (*RemovedMember, error) {
 }
 
 // personRefsTo returns the IDs of fields outside the member's own data whose
-// value names slug.
+// value names slug. A closed pratica (completata, respinta, annullata) is
+// history, not a reference: it doesn't keep a member from being removed.
 func (v *Vault) personRefsTo(slug string) ([]string, error) {
 	ctx, err := v.decryptFields(func(id, _ string) bool {
 		member, local := SplitMember(id)
 		parts := strings.SplitN(strings.ToLower(local), ".", 2)
-		return member != slug && len(parts) == 2 && isPersonRefField(parts[0], parts[1])
+		if member == slug || len(parts) != 2 {
+			return false
+		}
+		_, campo, _ := praticaField(parts[0], parts[1])
+		return isPersonRefField(parts[0], parts[1]) || campo == "stato"
 	})
 	if err != nil {
 		return nil, err
 	}
+	closed := map[string]bool{}
+	for _, f := range ctx.Categories["pratiche"] {
+		if pslug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" && isClosedStato(f.Value) {
+			closed[pslug] = true
+		}
+	}
 	var refs []string
 	for _, fs := range ctx.Categories {
 		for _, f := range fs {
+			pslug, campo, isPratica := praticaField(f.Category, f.FieldName)
+			if campo == "stato" || (isPratica && closed[pslug]) {
+				continue
+			}
 			if slices.Contains(PersonRefs(f.Value), slug) {
 				refs = append(refs, f.ID)
 			}
@@ -295,7 +310,7 @@ func (v *Vault) personRefsTo(slug string) ([]string, error) {
 
 // Migration of the old nucleo_familiare.membro<N>_<campo> fields.
 
-var reMembroField = regexp.MustCompile(`^membro([0-9]+)_(.+)$`)
+var reMembroField = regexp.MustCompile(`(?i)^membro([0-9]+)_(.+)$`)
 
 // membroCampi maps an old membro<N>_<campo> to the member's field.
 var membroCampi = map[string]string{
@@ -337,19 +352,24 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	}
 	defer clear(vaultKey)
 
-	ctx, err := v.decryptFields(func(id, _ string) bool { return strings.HasPrefix(id, "nucleo_familiare.") })
+	ctx, err := v.decryptFields(func(id, _ string) bool { return strings.HasPrefix(strings.ToLower(id), "nucleo_familiare.") })
 	if err != nil {
 		return nil, err
 	}
-	old := ctx.Categories["nucleo_familiare"]
+	var old []FieldInfo // every spelling of the category (IDs ignore case elsewhere too)
+	for _, fs := range ctx.Categories {
+		old = append(old, fs...)
+	}
 	report := &MigrationReport{DryRun: dryRun, Members: []MigratedMember{}, Moved: map[string]string{}, Deleted: []string{}, Left: map[string]string{}}
 
 	// Group the membro<N> fields and pick each member's slug.
 	byN := map[int][]FieldInfo{}
+	campi := map[string]string{} // old ID -> lower-case campo
 	for _, f := range old {
 		if m := reMembroField.FindStringSubmatch(f.FieldName); m != nil {
 			n, _ := strconv.Atoi(m[1])
 			byN[n] = append(byN[n], f)
+			campi[f.ID] = strings.ToLower(m[2])
 		}
 	}
 	existing, err := v.db.MemberSlugs()
@@ -403,7 +423,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		fields := byN[n]
 		slug := ""
 		for _, f := range fields {
-			if f.FieldName == fmt.Sprintf("membro%d_nome", n) {
+			if campi[f.ID] == "nome" {
 				slug = slugFromName(f.Value)
 			}
 		}
@@ -418,8 +438,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 
 		mm := MigratedMember{N: n, Slug: slug, Fields: map[string]string{}}
 		for _, f := range fields {
-			campo := strings.TrimPrefix(f.FieldName, fmt.Sprintf("membro%d_", n))
-			target, ok := membroCampi[campo]
+			target, ok := membroCampi[campi[f.ID]]
 			if !ok {
 				report.Left[f.ID] = "no matching member field; set it by hand as " + slug + ":<category>.<field>"
 				continue
@@ -434,7 +453,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	}
 
 	for _, f := range old {
-		switch f.FieldName {
+		switch strings.ToLower(f.FieldName) {
 		case "numero_componenti":
 			// Derived now: you plus the members in your stato di famiglia.
 			deletes = append(deletes, f.ID)

@@ -35,7 +35,10 @@
     {"scope": "io:*", "id": "cie.numero", "want": false},
     {"scope": "leo:cie.documents", "id": "leo:cie.documents", "want": true},
     {"scope": "cie.documents", "id": "leo:cie.documents", "want": false},
-    {"scope": "*:cie.*", "id": "leo:cie.documents", "want": true}
+    {"scope": "*:cie.*", "id": "leo:cie.documents", "want": true},
+    {"scope": "identity.*", "id": "identity", "want": false},
+    {"scope": "leo:*", "id": "leo:identity", "want": false},
+    {"scope": "*", "id": "identity", "want": true}
   ],
   "categories": [
     {"scope": "*", "category": "identity", "want": true},

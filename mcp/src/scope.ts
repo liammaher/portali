@@ -86,13 +86,14 @@ function allowsCategory(sp: Pattern, member: string, category: string): boolean 
   return allowsMember(sp, member) && (sp.all || sp.wholeMember || sp.category === category);
 }
 
+/** An ID without a category and field (no dot) is reached only by "*". */
 export function scopeAllows(scope: string, fieldID: string): boolean {
   const [member, local] = cutMember(fieldID);
   const dot = local.indexOf(".");
-  const category = dot < 0 ? local : local.slice(0, dot);
-  const field = dot < 0 ? "" : local.slice(dot + 1);
+  const category = local.slice(0, dot);
+  const field = local.slice(dot + 1);
   return patterns(scope).some(
-    (sp) => allowsCategory(sp, member, category) && (sp.all || sp.wholeMember || sp.field === "" || sp.field === field),
+    (sp) => sp.all || (dot >= 0 && allowsCategory(sp, member, category) && (sp.wholeMember || sp.field === "" || sp.field === field)),
   );
 }
 

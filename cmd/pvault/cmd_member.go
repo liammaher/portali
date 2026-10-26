@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"maps"
 	"net/http"
 	"os"
+	"slices"
 	"sort"
 	"strings"
 	"syscall"
@@ -108,7 +110,8 @@ func formatHousehold(h *vault.Household) string {
 		if g := m.Famiglia["genitori"]; g != "" {
 			parts = append(parts, "genitori "+g)
 		}
-		fmt.Fprintf(&b, "%-*s  %s  [%d fields, %d documents]\n", width, m.Slug, strings.Join(parts, " · "), m.Fields, m.Documents)
+		// No field counts: under a scoped grant they'd cover only its categories.
+		fmt.Fprintf(&b, "%-*s  %s\n", width, m.Slug, strings.Join(parts, " · "))
 	}
 	if h.IntestatarioScheda != "" {
 		fmt.Fprintf(&b, "Intestatario della scheda anagrafica: %s\n", h.IntestatarioScheda)
@@ -177,7 +180,9 @@ var memberAddFlags = []struct{ flag, field string }{
 	{"--sesso", "identity.sex"},
 }
 
-// memberAddFields reads member add's options into the fields to write.
+// memberAddFields reads member add's options into the fields to write, and
+// checks every value first, so a bad one (e.g. the codice fiscale) is
+// refused before anything is written or any prompt is shown.
 func memberAddFields(slug string, args []string) ([][2]string, error) {
 	values := make([]string, len(memberAddFlags))
 	flags := map[string]*string{}
@@ -193,7 +198,11 @@ func memberAddFields(slug string, args []string) ([][2]string, error) {
 	var out [][2]string
 	for i, f := range memberAddFlags {
 		if values[i] != "" {
-			out = append(out, [2]string{slug + ":" + f.field, values[i]})
+			id := slug + ":" + f.field
+			if _, err := vault.NormalizeAndValidate(id, values[i]); err != nil {
+				return nil, fmt.Errorf("%s: %w", f.flag, err)
+			}
+			out = append(out, [2]string{id, values[i]})
 		}
 	}
 	return out, nil
@@ -224,13 +233,14 @@ func addMember(slug string, fields [][2]string) error {
 		if err != nil {
 			return fmt.Errorf("request failed: %w", err)
 		}
-		resp.Body.Close()
 		switch resp.StatusCode {
 		case http.StatusNotFound:
+			resp.Body.Close()
 		case http.StatusOK:
+			resp.Body.Close()
 			return fmt.Errorf("%s already has %s: change it with 'pvault set %s <value>', or pick another slug", slug, f[0], f[0])
 		default:
-			return apiResult(resp, nil)
+			return apiResult(resp, nil) // closes the body after reading the server's reason
 		}
 	}
 	for _, f := range fields {
@@ -254,7 +264,8 @@ func cmdMemberRemove(slug string) {
 			fatal("not removed")
 		}
 	}
-	needGrant("", "") // only your own session may remove a member
+	// The approval names exactly this: everything about slug, with write access.
+	needGrant(slug+":*", "write")
 	resp, err := apiRequest("DELETE", "/vault/members/"+slug, nil)
 	if err != nil {
 		fatal("request failed: %v", err)
@@ -325,10 +336,5 @@ func formatMigration(r *vault.MigrationReport) string {
 }
 
 func sortedKeys(m map[string]string) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	return keys
+	return slices.Sorted(maps.Keys(m))
 }

@@ -1334,10 +1334,13 @@ body::before{
     updateActiveChapter();
   }
 
-  // slugFromName mirrors the vault's: "Maria Luisa" becomes maria-luisa.
+  // slugFromName mirrors the vault's (members.go): accents dropped, spaces,
+  // apostrophes, hyphens and underscores become one hyphen, anything else is
+  // dropped, and it starts with a letter: "Maria Luisa" is maria-luisa, "J.R." jr.
   function slugFromName(name) {
-    const s = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-').replace(/^[^a-z]+/, '').slice(0, 32).replace(/-+$/, '');
+    const s = name.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\s'_-]+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-')
+      .replace(/^[^a-z]+/, '').slice(0, 32).replace(/-+$/, '');
     return /^[a-z][a-z0-9-]{0,31}$/.test(s) && s !== 'io' ? s : '';
   }
 
@@ -1397,12 +1400,19 @@ body::before{
       const statusEl = input.closest('.field').querySelector('.status');
 
       if (!val.trim() || val === input.dataset.saved) return;
+      // The full name as shown now, so it's saved for this person even if
+      // the page switches to someone else before the save returns.
+      const isName = local === 'identity.first_name' || local === 'identity.last_name';
+      const fullName = isName ? currentFullName() : '';
 
       setStatus(statusEl, 'saving');
 
       api('PUT', '/vault/fields/' + fieldId, { value: val })
         .then(function() {
-          if (g !== gen) return;
+          if (fullName) {
+            api('PUT', '/vault/fields/' + p + 'identity.full_name', { value: fullName }).catch(function() {});
+          }
+          if (g !== gen) return; // the page shows someone else now
           input.dataset.saved = val;
           // Show the stored form (e.g. an upper-cased codice fiscale)
           api('GET', '/vault/fields/' + fieldId).then(function(f) {
@@ -1411,9 +1421,6 @@ body::before{
               input.dataset.saved = f.value;
             }
           }).catch(function() {});
-          if (local === 'identity.first_name' || local === 'identity.last_name') {
-            syncFullName(p);
-          }
           if (p && (local === 'identity.first_name' || local === 'famiglia.relazione' || local === 'identity.sex')) {
             loadPeople(); // the names in the Persona list
           }
@@ -1448,16 +1455,11 @@ body::before{
     }
   });
 
-  // Agents look for identity.full_name, so keep it in step with nome + cognome
-  // (of the person p, while the page still shows them).
-  function syncFullName(p) {
-    if (p !== prefix) return;
+  // Agents look for identity.full_name, so keep it in step with nome + cognome.
+  function currentFullName() {
     const first = document.querySelector('[data-field="identity.first_name"]').value.trim();
     const last = document.querySelector('[data-field="identity.last_name"]').value.trim();
-    const full = (first + ' ' + last).trim();
-    if (full) {
-      api('PUT', '/vault/fields/' + p + 'identity.full_name', { value: full }).catch(function() {});
-    }
+    return (first + ' ' + last).trim();
   }
 
   // --- Status indicator ---
