@@ -59,6 +59,10 @@ the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks 
    (several entries can share an ente: TARI alone has iscrizione, variazione,
    cessazione and autotutela). No match is normal: the library covers mostly
    micro-business procedures so far, so go on to step 1 without it.
+   Then check its `schema_version`: this skill reads entries of version 0. Any other
+   number means the library changed how entries are written, so this file may misread
+   its `forms`, `dichiarante` and `records`: tell the user, use the entry only for its
+   sources, deadline, channels and steps, and map the form yourself as without one.
 3. Look for an open pratica: `pvault list pratiche` (or `vault_list`), fields
    `pratiche.<slug>_*`. If one
    exists, resume from its `stato` and `prossimo_passo`; never redo a step that's
@@ -181,9 +185,9 @@ Slug: lower-case words joined by hyphens, `<topic>-<procedure>-<year>`, e.g.
 `tari-iscrizione-2026`. Fields are `pratiche.<slug>_<campo>`; the vault validates them
 (`/vault/schema` lists the campi, stati and canali). Set at least `titolo`, `ente`,
 `stato`, `canale`, `destinatario`, `data_scadenza`, `playbook` and `prossimo_passo`.
-`canale` is the vault's word for the library channel's `type`: `portal` → `portale`,
-`desk` → `sportello`, `post` → `posta`; `pec`, `email` and `app` stay as they are. A
-`phone` channel is for questions, not a way to file, so it is never a `canale`.
+`canale` takes the library channel's `type` as it is (the vault saves `portal` as
+`portale`, `desk` as `sportello`, `post` as `posta`). A `phone` channel is for questions,
+not a way to file, so it is never a `canale`.
 
 When the pratica is for a family member (a child's CIE, a parent's ISEE), or in a
 business vault for a client, set `persona` to their slug: `pvault expiring` then labels

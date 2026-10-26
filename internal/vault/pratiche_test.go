@@ -14,6 +14,12 @@ func TestNormalizeAndValidate_Pratiche(t *testing.T) {
 		{"pratiche.tari-iscrizione-2026_stato", "In attesa", "in_attesa"},
 		{"pratiche.tari-iscrizione-2026_stato", "da-fare", "da_fare"},
 		{"pratiche.tari-iscrizione-2026_canale", " Email ", "email"},
+		// pratiche-napoli's channel types, saved as they are.
+		{"pratiche.tari-iscrizione-2026_canale", "portal", "portale"},
+		{"pratiche.tari-iscrizione-2026_canale", "Desk", "sportello"},
+		{"pratiche.tari-iscrizione-2026_canale", "post", "posta"},
+		{"pratiche.tari-iscrizione-2026_canale", "pec", "pec"},
+		{"pratiche.tari-iscrizione-2026_canale", "app", "app"},
 		{"pratiche.tari-iscrizione-2026_data_invio", "21/03/2026", "2026-03-21"},
 		{"pratiche.tari-iscrizione-2026_data_scadenza", "2026-12-16", "2026-12-16"},
 		{"pratiche.tari-iscrizione-2026_importo", "€ 259", "259.00"},
@@ -43,6 +49,7 @@ func TestNormalizeAndValidate_PraticheRejects(t *testing.T) {
 		{"pratiche.tari--2026_stato", "inviata"},        // empty slug word
 		{"pratiche.tari-2026_stato", "sent"},            // unknown stato
 		{"pratiche.tari-2026_canale", "piccione"},       // unknown canale
+		{"pratiche.tari-2026_canale", "phone"},          // the library's, but for questions only
 		{"pratiche.tari-2026_data_invio", "31/02/2026"}, // impossible date
 		{"pratiche.tari-2026_importo", "duecento"},      // not an amount
 		{"pratiche.tari-2026_data_scadenza", "presto"},  // not a date

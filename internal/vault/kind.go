@@ -150,13 +150,14 @@ func (v *Vault) checkKindCategory(person, category, field string) error {
 	if c == nil {
 		return nil // user-defined categories are allowed anywhere
 	}
-	if len(c.Kinds) > 0 && !slices.Contains(c.Kinds, v.kind) {
-		return &ValidationError{Field: field, Msg: c.Name + " is only for " + strings.Join(c.Kinds, "/") + " vaults; this one is " + v.kind}
-	}
 	if v.kind == KindImpresa && IsHousingCategory(category) {
 		// Its own home, in a personal vault: a person can't have one either
-		// (IsOwnerOnlyCategory), so no spelling would do.
+		// (IsOwnerOnlyCategory), so no spelling would do. Before the kinds
+		// check, which says the same less helpfully.
 		return &ValidationError{Field: field, Msg: c.Name + " describes the home in a personal vault; a business vault keeps its premises in locale.*"}
+	}
+	if len(c.Kinds) > 0 && !slices.Contains(c.Kinds, v.kind) {
+		return &ValidationError{Field: field, Msg: c.Name + " is only for " + strings.Join(c.Kinds, "/") + " vaults; this one is " + v.kind}
 	}
 	if v.kind == KindImpresa && person == "" && c.Subject == SubjectPersona {
 		return &ValidationError{Field: field, Msg: c.Name + " describes a person, and this vault's own data is the business's: store it on the person, e.g. bianchi:" + strings.ToLower(category) + ".…"}

@@ -1,6 +1,7 @@
 package vault
 
 import (
+	"maps"
 	"regexp"
 	"slices"
 	"strings"
@@ -39,6 +40,11 @@ func isClosedStato(stato string) bool {
 
 // praticaCanali are the ways a pratica can be submitted.
 var praticaCanali = []string{"portale", "pec", "email", "sportello", "posta", "app"}
+
+// praticaCanaleAliases are the channel types of a pratiche-napoli entry that
+// name a canale differently, so its type can be saved as it is. Its phone
+// channel is for questions, never a way to file, so it is no canale.
+var praticaCanaleAliases = map[string]string{"portal": "portale", "desk": "sportello", "post": "posta"}
 
 // isPraticheCategory reports the category that tracks procedures, or a
 // numbered copy of it, for the rules: a copy is owner-only like pratiche,
@@ -115,10 +121,19 @@ func praticheDescription() string {
 		"The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. " +
 		"Campi: " + strings.Join(praticaCampi, ", ") + ". " +
 		"stato is one of " + strings.Join(praticaStati, ", ") + "; " +
-		"canale is one of " + strings.Join(praticaCanali, ", ") + ". " +
+		"canale is one of " + strings.Join(praticaCanali, ", ") + " (a pratiche-napoli channel type is accepted as it is: " + canaleAliasList() + "). " +
 		"data_scadenza is the deadline, tracked by 'pvault expiring' until stato is " + orList(praticaStatiChiusi) + ". " +
 		"playbook names the procedure's playbook file. " +
 		"persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche <file>'."
+}
+
+// canaleAliasList says each alias as "portal is portale", in a fixed order.
+func canaleAliasList() string {
+	var out []string
+	for _, alias := range slices.Sorted(maps.Keys(praticaCanaleAliases)) {
+		out = append(out, alias+" is "+praticaCanaleAliases[alias])
+	}
+	return strings.Join(out, ", ")
 }
 
 // normalizePratica applies the pratiche rules. handled is false outside the
@@ -141,6 +156,9 @@ func normalizePratica(id, category, name, value string) (out string, handled boo
 	case "stato":
 		return oneOf(value, praticaStati, fail, "stato")
 	case "canale":
+		if canale, ok := praticaCanaleAliases[normalizeChoice(value)]; ok {
+			value = canale
+		}
 		return oneOf(value, praticaCanali, fail, "canale")
 	case "importo":
 		v, ok := normalizeEuro(value)
