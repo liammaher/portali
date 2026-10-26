@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 	"time"
 
@@ -11,8 +12,11 @@ import (
 )
 
 // Exporting one person's data, for their right to data portability (GDPR
-// art. 20): every field and document stored about them, in one call the
-// audit log records. Only the user's session may (the API enforces it).
+// art. 20): every field and document stored about them, and the fields of
+// every pratica that names them (a client's CILA, a child's CIE), in one call
+// the audit log records. The documents attached to pratiche are not theirs
+// alone to tell: they sit in one 'pratiche' category, not per pratica, so they
+// are not exported. Only the user's session may (the API enforces it).
 
 // PersonExport is everything stored about one person.
 type PersonExport struct {
@@ -65,9 +69,25 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 		}
 		return true
 	}
+	// The pratiche that name them: their persona is read before the fields
+	// are chosen, so none is missed whatever the order.
+	named := map[string]bool{}
+	personas, err := v.decryptFields(func(id, _ string) bool {
+		_, campo, ok := praticaOfID(id)
+		return ok && campo == "persona"
+	})
+	if err != nil {
+		return nil, err
+	}
+	for pslug, p := range praticheIn(personas, nil) {
+		if slices.Contains(p.persone, slug) {
+			named[pslug] = true
+		}
+	}
 	ctx, err := v.decryptFields(func(id, sensitivity string) bool {
 		person, _ := SplitPerson(id)
-		return person == slug && keep(sensitivity)
+		pslug, _, isPratica := praticaOfID(id)
+		return (person == slug || (isPratica && named[pslug])) && keep(sensitivity)
 	})
 	if err != nil {
 		return nil, err
@@ -110,7 +130,7 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 	// The audit action follows member_remove's naming.
 	v.db.LogAccess(store.AuditEntry{
 		Consumer: "vault", Scope: slug + ":*", Action: "member_export",
-		Purpose: fmt.Sprintf("%d fields, %d documents, %d personal left out, %d files missing", len(out.Fields), len(out.Documents), out.Omitted, len(out.Missing)),
+		Purpose: fmt.Sprintf("%d fields, %d documents, %d personal left out (include_personal=%t), %d files missing", len(out.Fields), len(out.Documents), out.Omitted, includePersonal, len(out.Missing)),
 	})
 	return out, nil
 }

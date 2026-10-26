@@ -9,7 +9,7 @@ business's and its people), served to the CLI, an onboarding page and an MCP ser
 - **Database:** `modernc.org/sqlite` (pure Go)
 - **Crypto:** `golang.org/x/crypto` (argon2, hkdf) + stdlib `crypto/aes`, `crypto/cipher`
 - **HTTP:** stdlib `net/http`
-- **Tests:** `go test -race ./...` (MCP: `cd mcp && npm test`)
+- **Tests:** `go test -race ./...` (MCP: `cd mcp && npx tsc -p tsconfig.test.json && npm test`; tsx doesn't check types)
 - **Build:** `make build` (outputs `bin/pvault`, and `bin/pvault-touchid` on macOS)
 
 ## Commands
@@ -17,7 +17,7 @@ business's and its people), served to the CLI, an onboarding page and an MCP ser
 ```sh
 make build                        # Build bin/pvault (+ bin/pvault-touchid on macOS)
 make touchid                      # Rebuild only the Touch ID helper
-make test                         # Run all tests with race detector
+make test                         # Go tests with race detector (not the MCP ones)
 make clean                        # Remove build artifacts
 go test -race ./internal/vault/   # One layer: crypto, store, vault, api
 ```
@@ -80,7 +80,8 @@ Profile Password + Secret Key (128-bit)
 - Session tokens: 32 random bytes, constant-time compare, never on disk, never in a URL.
 - Each CLI command re-enters the password (TTY only) and trades it at `POST /vault/session`
   for an in-memory grant (2m CLI, 15m UI, max 1h). Only wrong passwords count toward the
-  10/min limit; attempts are counted on entry and refunded otherwise.
+  10/min limit (5/min for `/vault/unlock`); attempts are counted on entry and refunded
+  otherwise.
 - Credential endpoints require `Content-Type: application/json`; every request needs a
   loopback Host (DNS rebinding).
 
@@ -102,8 +103,9 @@ Profile Password + Secret Key (128-bit)
   enrolled pvault (audit token → valid hardened code with the enrolled cdhash), and returns
   only a token. Rebuilding the helper or moving pvault means `pvault touchid enable` again.
 - The prompt is worded from the exact scope it requests and never understates it.
-  Patterns are anchored with `\A`/`\z`. Its parser is held to `testdata/scopes.json`.
-- `touchid enable`/`disable` are interactive only, so an agent can't switch them.
+  Patterns are anchored with `\A`/`\z`. Its parser is held to `internal/vault/testdata/scopes.json`.
+- `touchid enable`/`disable` refuse without a terminal, so a script can't switch them; an
+  agent with a pty could, which only falls back to the password.
 - CLI commands call `needGrant(scope, access)`: with Touch ID the grant is scoped to that
   (full access if unset). A scoped grant refused with 403 `session_required` makes `authed`
   ask once more for full access.
@@ -208,8 +210,8 @@ the page never copies a rule.
   person's `ruolo.data_fine` + years) and `kind: pratiche_closed` (a client's ID and
   procura scans, once every pratica naming them closed, dated last closing + days).
 - A scan is reported only if it predates the last closing (a same-second one counts as
-  after) and no procura is still in force; a caller that can't see everything relevant
-  gets no entry. Nothing is ever deleted automatically.
+  after), and a procura's scans only once its `data_scadenza` has passed (a procura with
+  none is still in force); a caller that can't see everything relevant gets no entry. Nothing is ever deleted automatically.
 - `GET /vault/members/{slug}/export` is session-only and audited; personal-tier items only
   with `include_personal=1`. `pvault person export` writes a new 0700 folder, files 0600.
 

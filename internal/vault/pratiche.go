@@ -69,6 +69,12 @@ func praticaField(category, name string) (slug, campo string, ok bool) {
 	return splitPraticaField(name)
 }
 
+// praticaOfID is praticaField for a field ID.
+func praticaOfID(id string) (slug, campo string, ok bool) {
+	category, name, _ := strings.Cut(id, ".")
+	return praticaField(category, name)
+}
+
 // praticaState is what a pratica's stato and persona fields say.
 type praticaState struct {
 	stato    string    // "" without a stato field

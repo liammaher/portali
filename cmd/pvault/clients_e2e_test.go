@@ -144,7 +144,8 @@ func TestClients_EndToEnd(t *testing.T) {
 
 	to := t.TempDir()
 	out = runCmd(t, cmdPersonExport, "person", "export", "rossi", "--to", to)
-	if !strings.Contains(out, "5 fields, 2 documents") || !strings.Contains(out, "NOT encrypted") {
+	// 5 of rossi's own fields, and the 4 of the 2 pratiche naming him.
+	if !strings.Contains(out, "9 fields, 2 documents") || !strings.Contains(out, "NOT encrypted") {
 		t.Errorf("export output:\n%s", out)
 	}
 	dir := filepath.Join(to, "rossi-export-"+today)
@@ -160,7 +161,7 @@ func TestClients_EndToEnd(t *testing.T) {
 			File     string `json:"file"`
 		}
 	}
-	if err := json.Unmarshal(data, &index); err != nil || index.Person != "rossi" || len(index.Fields) != 5 || len(index.Documents) != 2 {
+	if err := json.Unmarshal(data, &index); err != nil || index.Person != "rossi" || len(index.Fields) != 9 || len(index.Documents) != 2 {
 		t.Fatalf("fields.json: %v\n%s", err, data)
 	}
 	for _, d := range index.Documents {
