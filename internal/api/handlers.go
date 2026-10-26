@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -482,6 +483,16 @@ func (s *Server) handleGetByCategory(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		handleVaultError(w, err)
 		return
+	}
+	// ?omit=id,id keeps those values out of the answer (the onboarding page
+	// never needs a saved secret back); the fields still show as saved.
+	if omit := r.URL.Query().Get("omit"); omit != "" {
+		ids := strings.Split(omit, ",")
+		for i := range fields {
+			if slices.Contains(ids, fields[i].ID) {
+				fields[i].Value, fields[i].Redacted = "", true
+			}
+		}
 	}
 	writeJSON(w, http.StatusOK, fields)
 }

@@ -19,6 +19,7 @@ type FieldInfo struct {
 	Category    string    `json:"category"`
 	FieldName   string    `json:"field_name"`
 	Value       string    `json:"value,omitempty"`
+	Redacted    bool      `json:"redacted,omitempty"` // the caller asked for the value to be left out (?omit=)
 	Sensitivity string    `json:"sensitivity"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Version     int       `json:"version"`

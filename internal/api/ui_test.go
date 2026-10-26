@@ -210,3 +210,22 @@ func TestOnboardingPageIsLockedDown(t *testing.T) {
 		t.Errorf("the page loads %s...: it must be self-contained", ext)
 	}
 }
+
+// The page asks the vault to leave its password inputs' values out, and the
+// vault does: the field shows as saved, with no value.
+func TestCategoryReadCanOmitSecrets(t *testing.T) {
+	env := setup(t)
+	for id, val := range map[string]string{"spid.username": "mario", "spid.password": "hunter2-secret"} {
+		if err := env.vault.Set(id, val, ""); err != nil {
+			t.Fatal(err)
+		}
+	}
+	w := env.doRequest(t, "GET", "/vault/fields/category/spid?omit=spid.password", nil, true)
+	body := w.Body.String()
+	if strings.Contains(body, "hunter2") || !strings.Contains(body, `"redacted":true`) || !strings.Contains(body, "mario") {
+		t.Fatalf("omit: %s", body)
+	}
+	if w := env.doRequest(t, "GET", "/vault/fields/category/spid", nil, true); !strings.Contains(w.Body.String(), "hunter2") {
+		t.Fatalf("without omit the value is returned: %s", w.Body.String())
+	}
+}
