@@ -8,7 +8,7 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
-const listUsage = `usage: pvault list [category | person: | person:category]
+const listUsage = `usage: pvault list [category | slug: | slug:category]
   e.g. pvault list cie, pvault list leo: (everything about leo), pvault list leo:cie`
 
 func cmdList() {
