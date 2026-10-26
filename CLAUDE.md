@@ -41,6 +41,7 @@ pvault audit                             # Show access audit log
 pvault status                            # Show vault status
 pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
 pvault doc add|list|get|delete           # Encrypted document scans
+pvault member list|show|add|remove|migrate  # Family members (leo:cie.numero)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
@@ -124,8 +125,9 @@ Profile Password + Secret Key (128-bit)
   cdhash (no per-request file hashing). An item without the marker (older helper) counts as
   not enrolled, so no fingerprint is asked for. The helper's HTTP client refuses chunked
   bodies (the server sends Content-Length). Its prompt is worded from the exact scope it requests:
-  append/write grants say they can read too, `cat.*` says "fields and documents", `*` is
-  named alone, durations round up, and patterns are anchored with `\A`/`\z` (ICU `$` lets
+  append/write grants say they can read too, `cat.*` says "all your cat fields and
+  documents" (`leo:cat.*` "all of leo's ...", `*:cat.*` "everyone's ...", `leo:*`
+  "everything about leo"), `*` is named alone and says it includes the family, durations round up, and patterns are anchored with `\A`/`\z` (ICU `$` lets
   a trailing line break through) and capped at 100 characters.
   pvault looks for the helper only next to its own binary. CLI commands call
   `needGrant(scope, access)`; with Touch ID on, the grant is scoped to that (full access
@@ -228,7 +230,7 @@ Profile Password + Secret Key (128-bit)
   `backup_dir` (absolute, outside the vault dir after resolving symlinks). Every write calls
   `markChanged`, which backs up `backupDelay` (1m) after the last change; `Lock` (holding
   `backup.mu` throughout) and auto-lock flush a pending one first, so `pvault lock` waits
-  for the server to exit. Lock order: `backup.mu` → `v.mu` → session `mu`; `backup.stateMu`
+  for the server to exit. Lock order: `backup.mu` → `writeMu` → `v.mu` → session `mu`; `backup.stateMu`
   is a leaf, so `markChanged` never waits on a running backup. Auto-lock ignores
   stale timer firings (`Touch` arms a new timer; an older one's generation no longer
   matches) and only clears its own session. Files are
@@ -243,9 +245,37 @@ Profile Password + Secret Key (128-bit)
   `RestoreBackup` only fills a missing or empty dir and checks the result unlocks
   (`--ask-key` tests a hand-kept secret key); public status shows backup state, never the folder
 
+- Household (`scope.go`, `famiglia.go`, `members.go`): a family member's IDs are
+  `<slug>:category.field` (slug `^[a-z][a-z0-9-]{0,31}$`, `io` reserved for the owner, who
+  has no prefix); documents in `<slug>:<category>`. The stored category (`leo:cie`) is the
+  HKDF info, so each person has their own subkeys and no DB change was needed. Every
+  category-keyed rule (`IsCredentialField`, `IsPersonalCategory`, `DefaultSensitivity`,
+  `DefaultDocumentTier`, `NormalizeAndValidate`, `SuggestCanonical`) strips the prefix
+  first with `SplitMember` (whatever the slug looks like), so `leo:spid.password` is
+  personal like `spid.password`; `TestMemberRulesMatchOwner` checks every schema ID and the
+  credential tables with a prefix. Owner-only categories (housing, `pratiche`) refuse a
+  prefix. Scopes: unprefixed patterns are the owner's only; `leo:cat.*`, `leo:cat.field`,
+  `leo:*` and `*:cat.*` (owner and every member) reach members; `*` everyone; `*:*` and `io:`
+  are refused. Go, `mcp/src/scope.ts` and the Touch ID helper parse the same grammar, and
+  the Go and TS matchers share `internal/vault/testdata/scopes.json`. `famiglia` holds facts
+  only (relazione → ANPR Tabella 05 code and gendered label, stato_famiglia, a_carico,
+  genitori, rappresentanza; the owner's `intestatario_scheda`); procedure rules live in
+  playbooks. Values naming people (`genitori`, `intestatario_scheda`, pratiche `persona`)
+  must name `io` or an existing member. `GET /vault/members` derives age/minor/label only
+  from fields the caller can read. `MigrateNucleo` is session-only; `DELETE
+  /vault/members/{slug}` also accepts a grant the user approved with write access to
+  `<slug>:*` (`ScopeAllowsWholeMember`), so `pvault member remove` asks one Touch ID prompt
+  worded "read, change and delete everything about <slug>" (service tokens never may).
+  Both hold `backup.mu` and `writeMu` (every single write holds `writeMu` for reading),
+  change rows in one `store.ApplyMemberChange` transaction; remove refuses while another
+  field names the member (closed pratiche don't count), then revokes tokens and drops
+  grants whose scope names the slug. The public status counts only the owner's data, so it
+  never reveals members. Bulk reads parse the scope once (`ParseScope`). No rename yet.
+
 ## Conventions
 
-- Field IDs are `category.field_name` (e.g., `identity.full_name`)
+- Field IDs are `category.field_name` (e.g., `identity.full_name`), or
+  `member:category.field_name` for a family member (`leo:identity.full_name`)
 - Sensitivity tiers: `public`, `standard`, `sensitive`, `critical`
 - All timestamps stored as RFC3339 strings in SQLite
 - WAL mode enabled, busy_timeout=5000ms; the vault path can't contain `?` (the driver

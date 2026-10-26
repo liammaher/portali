@@ -111,23 +111,27 @@ func TestNormalizeAndValidate_Rejects(t *testing.T) {
 	}
 }
 
+// credentialIDs and nonCredentialIDs are also run with a member prefix
+// (TestMemberRulesMatchOwner).
+var credentialIDs = []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
+	"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password",
+	"spid.login", "cieid.username", "spid.pass", "spid.pw", "spid.recovery_codes", "cieid.codice", "identity.spid_secret",
+	"identity.spidPassword", "identity.spidpassword", "identity.ciePin1", "notes.pinspid",
+	// A second account or card, and Italian words for a secret answer or credentials.
+	"spid2.password", "spid1.pin", "cieid2.username", "cie2.pin", "identity.spid2_password", "identity.cie2_puk",
+	"identity.spid_risposta_segreta", "identity.spid_credenziali"}
+
+var nonCredentialIDs = []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
+	"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza",
+	"identity.passaporto", "notes.specie", "identity.cieloazzurro", "cie2.numero", "spid2.provider"}
+
 func TestIsCredentialField(t *testing.T) {
-	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
-		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password",
-		"spid.login", "cieid.username", "spid.pass", "spid.pw", "spid.recovery_codes", "cieid.codice", "identity.spid_secret",
-		"identity.spidPassword", "identity.spidpassword", "identity.ciePin1", "notes.pinspid",
-		// A second account or card, and Italian words for a secret answer or credentials.
-		"spid2.password", "spid1.pin", "cieid2.username", "cie2.pin", "identity.spid2_password", "identity.cie2_puk",
-		"identity.spid_risposta_segreta", "identity.spid_credenziali"}
-	for _, id := range forbidden {
+	for _, id := range credentialIDs {
 		if !IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = false, want true", id)
 		}
 	}
-	allowed := []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
-		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza",
-		"identity.passaporto", "notes.specie", "identity.cieloazzurro", "cie2.numero", "spid2.provider"}
-	for _, id := range allowed {
+	for _, id := range nonCredentialIDs {
 		if IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = true, want false", id)
 		}

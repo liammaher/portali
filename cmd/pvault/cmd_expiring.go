@@ -33,7 +33,7 @@ func cmdExpiring() {
 	}
 	width := 20
 	for _, it := range items {
-		width = max(width, len(it.Document))
+		width = max(width, len(expiryLabel(it)))
 	}
 	for _, it := range items {
 		when := fmt.Sprintf("in %d days", it.DaysLeft)
@@ -43,6 +43,15 @@ func cmdExpiring() {
 		case it.DaysLeft == 0:
 			when = "expires TODAY"
 		}
-		fmt.Printf("%-*s %s  %s\n", width, it.Document, it.ExpiresOn, when)
+		fmt.Printf("%-*s %s  %s\n", width, expiryLabel(it), it.ExpiresOn, when)
 	}
+}
+
+// expiryLabel names the document and, for a family member's, whose it is:
+// "cie (leo)".
+func expiryLabel(it vault.ExpiryInfo) string {
+	if it.Member != "" {
+		return it.Document + " (" + it.Member + ")"
+	}
+	return it.Document
 }

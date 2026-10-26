@@ -28,10 +28,14 @@ documents (`pvault doc list cie`).
 
 ## Vault fields
 
-The library's `forms[mod-1].fields` is the mapping. Tokens for this pratica, if Touch ID
-is off (the skill's step 2):
+The library's `forms[mod-1].fields` is the mapping. Its conviventi row (`repeat:
+nucleo_familiare.membro<N>_*` until the library is updated) means the family members
+whose `<slug>:famiglia.stato_famiglia` is si: `<slug>:identity.{last_name,first_name,
+birth_comune,date_of_birth,codice_fiscale}`, rapporto = `relazione_label` from
+`vault_household` / `pvault member list`. Tokens for this pratica, if Touch ID is off
+(the skill's step 2):
 
-- preparing: `--scope "identity.*,residenza.*,domicilio.*,abitazione.*,nucleo_familiare.*,tari.*,pratiche.*" --access append`
+- preparing: `--scope "*:identity.*,*:famiglia.*,residenza.*,domicilio.*,abitazione.*,tari.*,pratiche.*" --access append`
 - tracking: `--scope "pratiche.*,tari.*" --access write`
 
 Leave `locazione.*` out: the form doesn't need the rent or the landlord.
@@ -51,7 +55,8 @@ Signature, sending the PEC/email (or the raccomandata), paying the F24.
   `pvault doc add tari <file>`.
 - The Comune replies (or a payment notice arrives): save the library entry's `records`
   (codice contribuente, date and protocollo; taxed area and occupants from the notice), and
-  check the notice matches `abitazione.superficie_calpestabile_mq` and the household.
+  check the notice matches `abitazione.superficie_calpestabile_mq` and the household
+  (1 + the members whose `famiglia.stato_famiglia` is si).
 - Close the pratica: `_stato` = `completata`, `_data_esito`.
 - The F24 is tracked as its own pratica: `importo`, `data_scadenza`, then
   `data_pagamento` when paid.

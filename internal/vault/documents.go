@@ -52,6 +52,7 @@ const DefaultDocumentSensitivity = "sensitive"
 // without one: personal for SPID/CieID and credential categories, else
 // DefaultDocumentSensitivity.
 func DefaultDocumentTier(category string) string {
+	_, category = SplitMember(category)
 	if IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category)) {
 		return TierPersonal
 	}
@@ -63,7 +64,10 @@ func DefaultDocumentTier(category string) string {
 // bound to the document ID, so ciphertexts cannot be swapped between records.
 func (v *Vault) AddDocument(category, name, contentType string, data []byte, sensitivity string) (*DocumentInfo, error) {
 	if !ValidCategoryName(category) {
-		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed"}
+		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed, with an optional member: prefix"}
+	}
+	if err := checkMemberCategory(category, DocumentScopeID(category)); err != nil {
+		return nil, err
 	}
 	name, err := cleanDocumentName(name)
 	if err != nil {
@@ -79,6 +83,8 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if len(data) > MaxDocumentSize {
 		return nil, &ValidationError{Field: "document", Msg: fmt.Sprintf("file is larger than %d MB", MaxDocumentSize>>20)}
 	}
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	// SPID/CieID documents (e.g. recovery codes) are always personal.
 	personalOnly := DefaultDocumentTier(category) == TierPersonal
 	switch {
@@ -230,6 +236,8 @@ func (v *Vault) DeleteDocument(id string) (bool, error) {
 	if !reDocumentID.MatchString(id) {
 		return false, nil
 	}
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := v.checkUnlocked(); err != nil {
 		return false, err
 	}

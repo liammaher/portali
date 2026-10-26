@@ -104,13 +104,7 @@ func normalizeHousing(id, category, name, value string) (out string, handled boo
 	case key == "tari.componenti_tassati":
 		return wholeNumber(value, 1, 30, fail)
 	case key == "locazione.cedolare_secca":
-		switch strings.ToLower(strings.TrimSpace(value)) {
-		case "si", "sì", "s", "yes", "y", "true":
-			return "si", true, nil
-		case "no", "n", "false":
-			return "no", true, nil
-		}
-		return fail("must be si or no")
+		return yesNo(value, fail)
 	case key == "locazione.registrazione_codice_identificativo":
 		return matchCode(value, reRLICode, fail, "codice identificativo is 10-20 letters and digits, as on the RLI receipt")
 	case key == "utenze.luce_pod":

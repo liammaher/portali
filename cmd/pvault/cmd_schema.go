@@ -26,9 +26,13 @@ func cmdSchema() {
 
 	fmt.Println("Recommended Vault Schema")
 	fmt.Println("========================")
+	fmt.Println("A family member's fields use the same IDs with their slug in front, e.g. leo:cie.numero.")
 	fmt.Println()
 	for _, cat := range vault.RecommendedSchema.Categories {
 		fmt.Printf("%s — %s\n", cat.Name, cat.Description)
+		if cat.Scope == vault.ScopeOwner {
+			fmt.Println("  (yours only: family members don't have this category)")
+		}
 		if len(cat.Fields) == 0 {
 			fmt.Println("  (user-defined fields)")
 		}
@@ -36,6 +40,12 @@ func cmdSchema() {
 			fmt.Printf("  %-35s %s", f.ID, f.Description)
 			if f.Sensitivity != "standard" {
 				fmt.Printf(" [%s]", f.Sensitivity)
+			}
+			switch f.For {
+			case "member":
+				fmt.Print(" [family members only: <slug>:" + f.ID + "]")
+			case "owner":
+				fmt.Print(" [yours only]")
 			}
 			fmt.Println()
 		}

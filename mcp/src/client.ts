@@ -302,14 +302,15 @@ export async function getSchema(): Promise<unknown> {
 }
 
 // Field IDs go into the URL path, so only the vault's own ID shape is sent
-// (category.field_name: letters, digits, _ and -). A "/" or ".." could
-// otherwise reach another endpoint past VAULT_SCOPE.
-const FIELD_ID = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+// ([member:]category.field_name: letters, digits, _ and -, and a member slug
+// of lower-case letters, digits and -). A "/" or ".." could otherwise reach
+// another endpoint past VAULT_SCOPE.
+const FIELD_ID = /^(?:(?!io:)[a-z][a-z0-9-]{0,31}:)?[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
 
 function fieldPath(id: string): string {
   if (!FIELD_ID.test(id)) {
     throw new VaultError(
-      `vault: invalid field ID ${JSON.stringify(id)} — use category.field_name (letters, digits, _ and -)`
+      `vault: invalid field ID ${JSON.stringify(id)} — use category.field_name, or member:category.field_name for a family member (letters, digits, _ and -)`
     );
   }
   return `/vault/fields/${encodeURIComponent(id)}`;
@@ -344,6 +345,7 @@ export async function setField(
 interface ExpiryInfo {
   field_id: string;
   document: string;
+  member?: string; // a family member's slug; absent for the owner
   expires_on: string;
   days_left: number;
   expired: boolean;
@@ -357,6 +359,28 @@ interface DocumentInfo {
   size: number;
   sensitivity: string;
   created_at: string;
+}
+
+export interface MemberInfo {
+  slug: string;
+  famiglia?: Record<string, string>;
+  first_name?: string;
+  last_name?: string;
+  age?: number;
+  minor?: boolean;
+  anpr_relazione?: string;
+  relazione_label?: string;
+  fields?: number;
+  documents?: number;
+}
+
+export interface Household {
+  intestatario_scheda?: string;
+  members: MemberInfo[];
+}
+
+export async function listMembers(): Promise<Household> {
+  return apiRequest("GET", "/vault/members") as Promise<Household>;
 }
 
 export async function getExpiring(days: number): Promise<ExpiryInfo[]> {

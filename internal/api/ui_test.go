@@ -41,17 +41,46 @@ func TestOnboardingFieldsAreLoaded(t *testing.T) {
 // written, or picking it would fail or save a different spelling.
 func TestOnboardingSelectOptionsValidate(t *testing.T) {
 	page := string(onboardingHTML)
-	for _, id := range []string{"spid.provider", "preferences.accesso_pa"} {
+	// The famiglia selects show a family member's fields, so they are
+	// checked as a member's (x:famiglia.relazione).
+	for _, id := range []string{"spid.provider", "preferences.accesso_pa",
+		"famiglia.relazione", "famiglia.stato_famiglia", "famiglia.a_carico_percentuale", "famiglia.rappresentanza"} {
 		sel := regexp.MustCompile(`(?s)<select data-field="` + regexp.QuoteMeta(id) + `">(.*?)</select>`).FindStringSubmatch(page)
 		if sel == nil {
 			t.Errorf("%s: select not found in onboarding.html", id)
 			continue
 		}
+		stored := id
+		if strings.HasPrefix(id, "famiglia.") {
+			stored = "x:" + id
+		}
 		for _, m := range regexp.MustCompile(`<option value="([^"]+)">`).FindAllStringSubmatch(sel[1], -1) {
-			got, err := vault.NormalizeAndValidate(id, m[1])
+			got, err := vault.NormalizeAndValidate(stored, m[1])
 			if err != nil || got != m[1] {
 				t.Errorf("%s option %q normalizes to %q, %v; want it unchanged", id, m[1], got, err)
 			}
 		}
+	}
+}
+
+// The page offers every relazione the vault accepts.
+func TestOnboardingRelazioniComplete(t *testing.T) {
+	page := string(onboardingHTML)
+	sel := regexp.MustCompile(`(?s)<select data-field="famiglia.relazione">(.*?)</select>`).FindStringSubmatch(page)
+	if sel == nil {
+		t.Fatal("relazione select not found")
+	}
+	var offered []string
+	for _, m := range regexp.MustCompile(`<option value="([^"]+)">`).FindAllStringSubmatch(sel[1], -1) {
+		offered = append(offered, m[1])
+	}
+	schema := vault.GetSchemaField("famiglia.relazione").Description
+	for _, key := range offered {
+		if !strings.Contains(schema, key) {
+			t.Errorf("option %q not in the schema's relazioni", key)
+		}
+	}
+	if got, want := len(offered), strings.Count(strings.SplitN(strings.SplitN(schema, ": ", 2)[1], " (", 2)[0], ",")+1; got != want {
+		t.Errorf("page offers %d relazioni, the vault accepts %d", got, want)
 	}
 }

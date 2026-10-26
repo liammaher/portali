@@ -63,6 +63,7 @@ body::before{
   font-family:var(--font-sans);font-size:13px;text-align:left;cursor:pointer;
   transition:color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
 }
+.chapter[hidden]{display:none}
 .chapter-num{font-family:var(--font-mono);font-size:11px}
 .chapter:hover{color:var(--text)}
 .chapter.active{color:var(--gold);border-left-color:var(--gold)}
@@ -225,6 +226,39 @@ body::before{
 }
 .gate-error{color:var(--danger);margin-top:16px;min-height:1.2em}
 
+/* Person switcher */
+.people{
+  position:sticky;top:0;z-index:60;
+  display:flex;align-items:baseline;gap:12px;
+  background:var(--bg);
+  padding:14px 0;margin-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.container.locked .people{display:none}
+.people label{
+  font-size:12px;font-weight:500;color:var(--text-muted);
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+.people select{
+  flex:1;
+  background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;
+  color:var(--gold);font-family:var(--font-mono);font-size:15px;
+  padding:6px 20px 6px 0;outline:none;cursor:pointer;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%237A756F' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0 center;
+}
+.people select:focus{border-bottom-color:var(--gold)}
+.people select option{background:var(--surface);color:var(--text)}
+.members-list{list-style:none;margin-bottom:28px;font-family:var(--font-mono);font-size:14px}
+.members-list li{padding:8px 0;border-bottom:1px solid var(--border)}
+.members-list button{
+  background:none;border:none;color:var(--text);cursor:pointer;
+  font:inherit;text-align:left;padding:0;
+}
+.members-list button:hover{color:var(--gold)}
+.members-list .muted{color:var(--text-muted)}
+.add-error{color:var(--danger);min-height:1.2em;font-size:13px;margin-top:12px}
+
 /* Error banner */
 .error-banner{
   position:fixed;top:0;left:0;right:0;z-index:200;
@@ -285,6 +319,11 @@ body::before{
     <button type="submit" class="gate-btn">Open vault</button>
     <p class="gate-error" id="gateError" role="alert"></p>
   </form>
+
+  <div class="people">
+    <label for="person">Persona</label>
+    <select id="person"><option value="">Io</option></select>
+  </div>
 
   <!-- 01 Identità -->
   <section class="section" data-section="0" data-chapter="Identità">
@@ -426,7 +465,7 @@ body::before{
   </section>
 
   <!-- 03 Casa -->
-  <section class="section" data-section="2" data-chapter="Casa">
+  <section data-owner-only class="section" data-section="2" data-chapter="Casa">
     <div class="section-number">03</div>
     <h2>La tua casa</h2>
     <p class="subtitle">The home at the address above. Catasto data is on the visura catastale; TARI, the rental registration and ISEE all ask for it.</p>
@@ -529,7 +568,7 @@ body::before{
   </section>
 
   <!-- 04 Affitto e utenze -->
-  <section class="section" data-section="3" data-chapter="Affitto e utenze">
+  <section data-owner-only class="section" data-section="3" data-chapter="Affitto e utenze">
     <div class="section-number">04</div>
     <h2>Affitto e utenze</h2>
     <p class="subtitle">Skip the contract if you own the home. Registration details are on the RLI receipt; the POD and PDR are on any electricity or gas bill.</p>
@@ -929,7 +968,7 @@ body::before{
   </section>
 
   <!-- 10 Pagamento -->
-  <section class="section" data-section="9" data-chapter="Pagamento">
+  <section data-owner-only class="section" data-section="9" data-chapter="Pagamento">
     <div class="section-number">10</div>
     <h2>Payment card</h2>
     <p class="subtitle">Optional — e.g. for pagoPA payments. Critical tier: agents can't read it unless you allow it.</p>
@@ -1011,6 +1050,107 @@ body::before{
     </div>
   </section>
 
+  <!-- 12 Famiglia -->
+  <section class="section" data-section="11" data-chapter="Famiglia">
+    <div class="section-number">12</div>
+    <h2 data-owner-only>Your family</h2>
+    <h2 data-member-only>Family</h2>
+    <p class="subtitle" data-owner-only>Add the people you handle paperwork for. Each one gets their own fields: pick them under Persona at the top of the page to fill them in.</p>
+    <p class="subtitle" data-member-only>How this person relates to you, as the anagrafe and procedures like ISEE and the 730 need it</p>
+
+    <div data-owner-only>
+      <ul class="members-list" id="membersList"></ul>
+      <div class="field-row">
+        <div class="field">
+          <label for="addName">Nome</label>
+          <input type="text" id="addName" placeholder="Giulia" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="addRelazione">Relazione</label>
+          <select id="addRelazione"></select>
+        </div>
+      </div>
+      <button type="button" class="gate-btn" id="addPerson">Aggiungi persona</button>
+      <p class="add-error" id="addError" role="alert"></p>
+
+      <div class="field" style="margin-top:36px">
+        <label>Intestatario della scheda anagrafica</label>
+        <span class="status idle"></span>
+        <select id="intestatario" data-field="famiglia.intestatario_scheda">
+          <option value=""></option>
+          <option value="io">Io</option>
+        </select>
+      </div>
+    </div>
+
+    <div data-member-only>
+      <div class="field">
+        <label>Relazione con te</label>
+        <span class="status idle"></span>
+        <select data-field="famiglia.relazione">
+          <option value=""></option>
+          <option value="coniuge">Coniuge (marito/moglie)</option>
+          <option value="unito_civilmente">Unito/a civilmente</option>
+          <option value="convivente">Convivente</option>
+          <option value="figlio">Figlio/a</option>
+          <option value="nipote">Nipote (figlio/a di un figlio)</option>
+          <option value="genitore">Genitore</option>
+          <option value="nonno">Nonno/a</option>
+          <option value="fratello">Fratello/sorella</option>
+          <option value="nipote_collaterale">Nipote (figlio/a di fratello o sorella)</option>
+          <option value="zio">Zio/a</option>
+          <option value="cugino">Cugino/a</option>
+          <option value="altro_parente">Altro parente</option>
+          <option value="genero_nuora">Genero/nuora</option>
+          <option value="suocero">Suocero/a</option>
+          <option value="cognato">Cognato/a</option>
+          <option value="altro_affine">Altro affine</option>
+          <option value="altro">Altro (es. l'altro genitore dei tuoi figli)</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Nel tuo stato di famiglia</label>
+          <span class="status idle"></span>
+          <select data-field="famiglia.stato_famiglia">
+            <option value=""></option>
+            <option value="si">Sì, vive con te</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>A carico (IRPEF)</label>
+          <span class="status idle"></span>
+          <select data-field="famiglia.a_carico_percentuale">
+            <option value=""></option>
+            <option value="0">No</option>
+            <option value="50">50%</option>
+            <option value="100">100%</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Genitori (per un figlio: io e/o un'altra persona)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="famiglia.genitori" placeholder="io,giulia" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label>Rappresentanza (per un adulto)</label>
+        <span class="status idle"></span>
+        <select data-field="famiglia.rappresentanza">
+          <option value=""></option>
+          <option value="tutore">Tutore</option>
+          <option value="amministratore_sostegno">Amministratore di sostegno</option>
+          <option value="curatore">Curatore</option>
+          <option value="delega">Delega</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
   <div class="footer">
     <span class="count" id="filledCount">0</span> of <span id="totalCount">0</span> fields filled
   </div>
@@ -1064,7 +1204,15 @@ body::before{
 
   // Categories to load
   const categories = ['identity', 'residenza', 'domicilio', 'abitazione', 'locazione', 'utenze', 'tari', 'financial', 'employment', 'business', 'cie', 'spid',
-    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'payment', 'preferences'];
+    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'payment', 'preferences', 'famiglia'];
+  // The home belongs to the owner: family members don't have these.
+  const ownerOnly = ['abitazione', 'locazione', 'utenze', 'tari'];
+
+  // Whose fields the page shows: '' for you, 'leo:' for family member leo.
+  // gen changes on every switch, so a response for the previous person is
+  // dropped instead of filling (and later saving into) the new one's fields.
+  let prefix = '';
+  let gen = 0;
 
   // --- API ---
 
@@ -1089,21 +1237,142 @@ body::before{
   // --- Load existing values ---
 
   function loadCategory(cat) {
-    return api('GET', '/vault/fields/category/' + cat).then(function(fields) {
-      if (!Array.isArray(fields)) return;
+    const p = prefix, g = gen;
+    if (p && ownerOnly.indexOf(cat) >= 0) return Promise.resolve();
+    return api('GET', '/vault/fields/category/' + p + cat).then(function(fields) {
+      if (g !== gen || !Array.isArray(fields)) return;
       fields.forEach(function(f) {
-        const input = document.querySelector('[data-field="' + f.id + '"]');
+        const input = document.querySelector('[data-field="' + f.id.slice(p.length) + '"]');
         if (input && f.value) {
           input.value = f.value;
+          input.dataset.saved = f.value;
         }
       });
     }).catch(function() {});
   }
 
-  Promise.all(categories.map(loadCategory)).then(function() {
-    updatePermesso();
-    updateProgress();
+  function loadAll() {
+    const g = gen;
+    return Promise.all(categories.map(loadCategory)).then(function() {
+      if (g !== gen) return;
+      updatePermesso();
+      updateProgress();
+    });
+  }
+
+  // --- Family members ---
+
+  const personSelect = document.getElementById('person');
+  const intestatario = document.getElementById('intestatario');
+  const membersList = document.getElementById('membersList');
+  const addRelazione = document.getElementById('addRelazione');
+  addRelazione.innerHTML = document.querySelector('[data-field="famiglia.relazione"]').innerHTML;
+  let members = [];
+
+  function personLabel(m) {
+    const name = m.first_name || m.slug;
+    return m.relazione_label ? name + ' (' + m.relazione_label + ')' : name;
+  }
+
+  // fillSelect replaces a select's options, keeping its value if still there.
+  function fillSelect(sel, options) {
+    const value = sel.value;
+    sel.textContent = '';
+    options.forEach(function(o) { sel.append(new Option(o[1], o[0])); });
+    sel.value = options.some(function(o) { return o[0] === value; }) ? value : options[0][0];
+  }
+
+  function loadPeople() {
+    return api('GET', '/vault/members').then(function(h) {
+      members = h.members || [];
+      const people = members.map(function(m) { return [m.slug, personLabel(m)]; });
+      fillSelect(personSelect, [['', 'Io']].concat(people));
+      fillSelect(intestatario, [['', ''], ['io', 'Io']].concat(people));
+      membersList.textContent = '';
+      if (!members.length) {
+        const li = document.createElement('li');
+        li.className = 'muted';
+        li.textContent = 'Nessuno ancora.';
+        membersList.append(li);
+      }
+      members.forEach(function(m) {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = personLabel(m);
+        btn.addEventListener('click', function() { switchTo(m.slug); });
+        const slug = document.createElement('span');
+        slug.className = 'muted';
+        slug.textContent = '  ' + m.slug + ':';
+        li.append(btn, slug);
+        membersList.append(li);
+      });
+    }).catch(function() {});
+  }
+
+  function switchTo(slug) {
+    personSelect.value = slug;
+    prefix = slug ? slug + ':' : '';
+    gen++;
+    inputs.forEach(function(input) {
+      input.value = '';
+      input.dataset.saved = '';
+      setStatus(input.closest('.field').querySelector('.status'), 'idle');
+    });
+    applyPerson();
+    loadAll();
+    window.scrollTo({ top: 0 });
+  }
+  personSelect.addEventListener('change', function() { switchTo(personSelect.value); });
+
+  // Sections about the home are yours only; famiglia shows your view or a member's.
+  function applyPerson() {
+    const member = prefix !== '';
+    document.querySelectorAll('[data-owner-only]').forEach(function(el) { el.hidden = member; });
+    document.querySelectorAll('[data-member-only]').forEach(function(el) { el.hidden = !member; });
+    chapters.forEach(function(c, i) { c.hidden = sections[i].hidden; });
+    updateActiveChapter();
+  }
+
+  // slugFromName mirrors the vault's (members.go): accents dropped, spaces,
+  // apostrophes, hyphens and underscores become one hyphen, anything else is
+  // dropped, and it starts with a letter: "Maria Luisa" is maria-luisa, "J.R." jr.
+  function slugFromName(name) {
+    const s = name.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\s'_-]+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-')
+      .replace(/^[^a-z]+/, '').slice(0, 32).replace(/-+$/, '');
+    return /^[a-z][a-z0-9-]{0,31}$/.test(s) && s !== 'io' ? s : '';
+  }
+
+  document.getElementById('addPerson').addEventListener('click', function() {
+    const nameInput = document.getElementById('addName');
+    const name = nameInput.value.trim();
+    const rel = addRelazione.value;
+    const errEl = document.getElementById('addError');
+    errEl.textContent = '';
+    const slug = slugFromName(name);
+    if (!slug) { errEl.textContent = 'Scrivi il nome (con delle lettere).'; return; }
+    if (!rel) { errEl.textContent = 'Scegli la relazione.'; return; }
+    // Never write over someone already in the vault.
+    api('GET', '/vault/members').then(function(h) {
+      if ((h.members || []).some(function(m) { return m.slug === slug; })) {
+        throw new Error(slug + ' è già nel vault: sceglilo in alto, o usa un altro nome.');
+      }
+      return api('PUT', '/vault/fields/' + slug + ':famiglia.relazione', { value: rel });
+    }).then(function() {
+      return api('PUT', '/vault/fields/' + slug + ':identity.first_name', { value: name });
+    }).then(function() {
+      nameInput.value = '';
+      addRelazione.value = '';
+      return loadPeople();
+    }).then(function() {
+      switchTo(slug);
+    }).catch(function(err) {
+      errEl.textContent = err.message.replace(/^invalid value for \S+: /, '');
+    });
   });
+
+  loadPeople().then(loadAll);
 
   // Italian citizens don't hold a permesso di soggiorno, so hide its fields.
   var citizenship = document.querySelector('[data-field="identity.citizenship"]');
@@ -1119,30 +1388,41 @@ body::before{
   // --- Auto-save on blur ---
 
   inputs.forEach(function(input) {
-    let lastSaved = '';
+    input.dataset.saved = '';
 
     input.addEventListener('blur', function() {
       // Secrets are saved exactly as typed: a password may start or end with a space.
       const val = input.type === 'password' ? input.value : input.value.trim();
-      const fieldId = input.getAttribute('data-field');
+      const local = input.getAttribute('data-field');
+      // The person whose field this is, fixed now: a switch can't redirect it.
+      const p = prefix, g = gen;
+      const fieldId = p + local;
       const statusEl = input.closest('.field').querySelector('.status');
 
-      if (!val.trim() || val === lastSaved) return;
+      if (!val.trim() || val === input.dataset.saved) return;
+      // The full name as shown now, so it's saved for this person even if
+      // the page switches to someone else before the save returns.
+      const isName = local === 'identity.first_name' || local === 'identity.last_name';
+      const fullName = isName ? currentFullName() : '';
 
       setStatus(statusEl, 'saving');
 
       api('PUT', '/vault/fields/' + fieldId, { value: val })
         .then(function() {
-          lastSaved = val;
+          if (fullName) {
+            api('PUT', '/vault/fields/' + p + 'identity.full_name', { value: fullName }).catch(function() {});
+          }
+          if (g !== gen) return; // the page shows someone else now
+          input.dataset.saved = val;
           // Show the stored form (e.g. an upper-cased codice fiscale)
           api('GET', '/vault/fields/' + fieldId).then(function(f) {
-            if (f && f.value && document.activeElement !== input) {
+            if (g === gen && f && f.value && document.activeElement !== input) {
               input.value = f.value;
-              lastSaved = f.value;
+              input.dataset.saved = f.value;
             }
           }).catch(function() {});
-          if (fieldId === 'identity.first_name' || fieldId === 'identity.last_name') {
-            syncFullName();
+          if (p && (local === 'identity.first_name' || local === 'famiglia.relazione' || local === 'identity.sex')) {
+            loadPeople(); // the names in the Persona list
           }
           setStatus(statusEl, 'saved');
           updateProgress();
@@ -1150,7 +1430,7 @@ body::before{
         })
         .catch(function(err) {
           // e.g. an invalid codice fiscale: show the server's reason
-          setStatus(statusEl, 'error', err.message.replace(/^invalid value for [^:]+: /, ''));
+          if (g === gen) setStatus(statusEl, 'error', err.message.replace(/^invalid value for \S+: /, ''));
         });
     });
 
@@ -1176,13 +1456,10 @@ body::before{
   });
 
   // Agents look for identity.full_name, so keep it in step with nome + cognome.
-  function syncFullName() {
+  function currentFullName() {
     const first = document.querySelector('[data-field="identity.first_name"]').value.trim();
     const last = document.querySelector('[data-field="identity.last_name"]').value.trim();
-    const full = (first + ' ' + last).trim();
-    if (full) {
-      api('PUT', '/vault/fields/identity.full_name', { value: full }).catch(function() {});
-    }
+    return (first + ' ' + last).trim();
   }
 
   // --- Status indicator ---
@@ -1247,12 +1524,14 @@ body::before{
   // the viewport (or the last one once the page is scrolled to the bottom).
   function updateActiveChapter() {
     var line = window.innerHeight / 3;
-    var active = 0;
+    var active = 0, last = 0;
     sections.forEach(function(s, i) {
+      if (s.hidden) return;
+      last = i;
       if (s.getBoundingClientRect().top <= line) active = i;
     });
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-      active = sections.length - 1;
+      active = last;
     }
     chapters.forEach(function(c, i) { c.classList.toggle('active', i === active); });
   }
@@ -1262,7 +1541,7 @@ body::before{
     scrollQueued = true;
     requestAnimationFrame(function() { scrollQueued = false; updateActiveChapter(); });
   }, { passive: true });
-  updateActiveChapter();
+  applyPerson();
 
   // --- Password toggle ---
 

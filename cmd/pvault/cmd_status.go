@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"time"
 )
 
@@ -47,8 +48,16 @@ func cmdStatus() {
 	}
 	if len(status.Categories) > 0 {
 		fmt.Println("Categories:")
-		for cat, count := range status.Categories {
-			fmt.Printf("  %-20s %d fields\n", cat, count)
+		cats := make([]string, 0, len(status.Categories))
+		width := 20
+		for cat := range status.Categories {
+			cats = append(cats, cat)
+			width = max(width, len(cat))
 		}
+		sort.Strings(cats)
+		for _, cat := range cats {
+			fmt.Printf("  %-*s %d fields\n", width, cat, status.Categories[cat])
+		}
+		fmt.Println("Family members aren't counted here; see 'pvault member list'.")
 	}
 }

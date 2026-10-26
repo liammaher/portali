@@ -24,7 +24,10 @@ func TestParseGetIDs(t *testing.T) {
 		t.Fatalf("ids = %v, want duplicates dropped in order", ids)
 	}
 
-	for _, bad := range []string{"residenza.*", "*", "nodot", "a.b,c.d"} {
+	if ids, err := parseGetIDs([]string{"leo:cie.numero", "cie.numero"}); err != nil || len(ids) != 2 {
+		t.Fatalf("member IDs: %v %v", ids, err)
+	}
+	for _, bad := range []string{"residenza.*", "*", "nodot", "a.b,c.d", "leo:*", "leo:", ":cie.numero", "io:cie.numero", "Leo:cie.numero", "a:b:c.d"} {
 		if _, err := parseGetIDs([]string{bad}); err == nil {
 			t.Errorf("%q should be rejected", bad)
 		}

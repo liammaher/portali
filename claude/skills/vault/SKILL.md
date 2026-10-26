@@ -90,7 +90,10 @@ only that command and expires within 2 minutes.
 
 ## 3. Field IDs and formats
 
-Field IDs are `category.field`. Full list with descriptions and default tiers:
+Field IDs are `category.field` for the user, and `<slug>:category.field` for a family
+member they keep in the vault (`leo:identity.codice_fiscale`, `giulia:cie.numero`).
+Full list with descriptions, default tiers and which categories members can have
+(`scope`: `person` or `owner`):
 
 ```sh
 curl -s http://127.0.0.1:7200/vault/schema
@@ -101,7 +104,8 @@ Common ones: `residenza.{indirizzo,civico,interno,cap,comune,provincia,data_iniz
 `cie.{numero,data_scadenza}`, `passaporto.{numero,paese_rilascio,data_rilascio,data_scadenza,autorita_rilascio}`,
 `tessera_sanitaria.{numero,data_scadenza,medico_base}`.
 `permesso_soggiorno.*` is only for non-Italian citizens: if `identity.citizenship` is
-italiana, don't ask for it or list it as missing.
+italiana, don't ask for it or list it as missing. The same holds per person:
+`leo:permesso_soggiorno.*` only if `leo:identity.citizenship` isn't italiana.
 Housing (the home at residenza/domicilio; the address itself stays there):
 `abitazione.{titolo,data_inizio,catasto_foglio,catasto_particella,catasto_subalterno,catasto_categoria,superficie_calpestabile_mq}`,
 `locazione.{tipo_contratto,data_decorrenza,data_scadenza,canone_mensile,registrazione_codice_identificativo,locatore_nome,locatore_codice_fiscale}`,
@@ -113,6 +117,28 @@ and its premises in `locale.{indirizzo,civico,cap,comune,provincia,titolo,data_i
 (like `abitazione`, but with their own address). `identity.birth_country` only if born abroad.
 To run a whole procedure (research, filling, hand-off, tracking), use the pratica skill;
 its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
+
+### Family members (household)
+
+- A member is a person with their own fields under a slug (usually their first name):
+  every person category applies (`leo:identity.*`, `leo:cie.*`, `leo:spid.*`,
+  `leo:tessera_sanitaria.*`, documents in `leo:cie`). The home (`abitazione`,
+  `locazione`, `utenze`, `tari`) and `pratiche` are the user's only.
+- `<slug>:famiglia.*` says how they relate to the user: `relazione` (coniuge, figlio,
+  genitore, convivente, unito_civilmente, ...; mapped to ANPR codes), `stato_famiglia`
+  (si/no: in the user's stato di famiglia), `a_carico_percentuale` (0/50/100, IRPEF),
+  `genitori` (for a child: `io` and/or slugs) and `rappresentanza` (tutore,
+  amministratore_sostegno, curatore, delega). The user's own `famiglia.intestatario_scheda`
+  is `io` or a slug.
+- To see who is there: `vault_household` (MCP), or `pvault member list` (Touch ID
+  prompt "read everyone's famiglia ... and identity fields ..."). It gives each member's
+  slug, relazione, `relazione_label` (moglie, figlia: the word forms use), age, `minor`.
+- Adding: the user runs `pvault member add <slug> --relazione <r> --nome <N>` (or the
+  "Aggiungi persona" form in `pvault ui`). Removing (`pvault member remove`) and
+  `pvault member migrate` (old `nucleo_familiare.membro<N>_*` fields) are theirs to run.
+- For a minor, procedures need both parents in `genitori` (CIE valid for travel, SPID
+  minori, INPS delega, Assegno Unico). A parent who isn't the user's spouse can be a
+  member too (relazione `altro`, `stato_famiglia` no).
 
 Validation done by the vault (expect errors otherwise):
 - Fields named `data_*`, `date_of_*` or `*_date`: real dates as `YYYY-MM-DD`.
@@ -142,6 +168,9 @@ pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h
 ```
 
 - Scope: only the categories the task touches (e.g. `"identity.*,residenza.*"`).
+  Unprefixed patterns are the user's own data only; a family member needs their slug:
+  `leo:cie.*` (one category), `leo:*` (everything about leo), `*:identity.*` (that
+  category for the user and every member, e.g. to list conviventi). `*` reaches everyone.
 - Access: `read` if you only need to look things up; `write` only to change fields.
 - TTL: short, e.g. `2h`.
 

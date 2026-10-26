@@ -45,7 +45,7 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 | `utenze` | `luce_pod` and `gas_pdr` (validated), supplier and customer code per utility |
 | `tari` | `codice_contribuente`, declaration date and protocollo, taxed area and occupants |
 | contacts & bank | `identity.phone` (+39…), `identity.pec`, `financial.iban` (validated) |
-| `nucleo_familiare` | members as `membro<N>_nome`, `membro<N>_codice_fiscale`, … |
+| `famiglia` | how each family member relates to you: `relazione` (mapped to ANPR codes), `stato_famiglia`, `a_carico_percentuale`, `genitori`, `rappresentanza`; your `intestatario_scheda` |
 | `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA, `qualita_dichiarante` (titolare / legale_rappresentante), sede legale address (`sede_legale_cap`, `sede_legale_provincia` validated) |
 | `locale` | the business premises: address, `titolo`, `data_inizio`, catasto data and `catasto_categoria` (C/1, validated), `superficie_mq`, `destinazione_uso` |
 | `spid` (personal) | provider, livello, username, password, renewal date — plus `cie.pin` / `cie.puk` |
@@ -53,6 +53,24 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 | `passaporto`, `patente`, `tessera_sanitaria` | numero, issuing authority/country, expiry date |
 
 `pvault schema` lists every recommended field. You can add any `category.field` of your own.
+
+### Your family
+
+Keep your spouse's, children's or parents' data in the same vault: each family member has the same categories as you under a prefix, e.g. `leo:identity.codice_fiscale`, `leo:cie.data_scadenza`, documents in `leo:cie`. Only the home (`abitazione`, `locazione`, `utenze`, `tari`) and your `pratiche` are yours alone.
+
+```sh
+pvault member add giulia --relazione moglie --nome Giulia
+pvault member add leo --relazione figlio --nome Leo --data-nascita 2019-05-01
+pvault set leo:famiglia.genitori io,giulia      # who holds responsabilità genitoriale
+pvault set leo:famiglia.stato_famiglia si       # lives with you (stato di famiglia)
+pvault set leo:cie.data_scadenza 20/11/2026     # tracked by pvault expiring as "cie (leo)"
+pvault member list                              # relazione, age, stato di famiglia, a carico
+pvault member remove giulia                     # refused while another field still names her; with Touch ID
+                                                # the prompt reads "read, change and delete everything about giulia"
+pvault member migrate --dry-run                 # turn old nucleo_familiare.membro<N> fields into members
+```
+
+Relationships are recorded relative to you, as ANPR records them relative to the intestatario della scheda; each procedure's playbook decides who counts (stato di famiglia for TARI, the ISEE nucleo, dependants for the 730). The onboarding page (`pvault ui`) has a person switcher and an "Aggiungi persona" form. Removing a member deletes their fields and documents and revokes the agent tokens that named them.
 
 ```sh
 pvault set identity.codice_fiscale "RSSMRA85T10A562S"
@@ -112,7 +130,7 @@ pvault revoke-service-token <token_prefix>
 
 | Option | Default | Meaning |
 |---|---|---|
-| `--scope` | required | `category.*`, exact `category.field`, `category.documents`, or `*` |
+| `--scope` | required | `category.*`, exact `category.field`, `category.documents`, or `*`. These reach only your own data; for family members add a prefix: `leo:cie.*`, `leo:*` (everything about leo), `*:identity.*` (you and every member). `*` reaches everyone |
 | `--access` | `read` | `append` = may add new fields/documents but never overwrite or delete; `write` = full |
 | `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in; `personal` is never available |
 | `--ttl` | `24h` | maximum 90 days |

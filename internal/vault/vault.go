@@ -84,7 +84,12 @@ var ErrInvalidAccess = errors.New("invalid access: must be read, append, or writ
 
 // Vault is the main entry point for vault operations.
 type Vault struct {
-	mu      sync.RWMutex
+	mu sync.RWMutex
+	// writeMu is held for reading by every single write (field, tier,
+	// document) and for writing by changes to a whole member (RemoveMember,
+	// MigrateNucleo), so those see no write land halfway. Lock order:
+	// backup.mu, writeMu, mu.
+	writeMu sync.RWMutex
 	db      *store.DB
 	session *Session
 	dir     string // ~/.pvault
@@ -447,8 +452,9 @@ func (v *Vault) Status() (*VaultStatus, error) {
 
 	if init {
 		// Status is public, so personal fields and documents are left out of
-		// every count: agents must not even learn that they exist.
-		count, _ := v.db.FieldCount(TierPersonal)
+		// every count: agents must not even learn that they exist. Nor that
+		// family members exist: only the owner's data is counted.
+		count, _ := v.db.FieldCount(TierPersonal, true)
 		status.FieldCount = count
 		cats, _ := v.db.CategoryCounts(TierPersonal)
 		status.Categories = cats
@@ -476,6 +482,8 @@ func (v *Vault) SetChecked(id, value, sensitivity string, existing *FieldInfo) e
 }
 
 func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := ValidateFieldID(id); err != nil {
 		return err
 	}
@@ -489,6 +497,9 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 		return err
 	}
 	defer clear(vaultKey)
+	if err := v.checkPersonRefs(id, value); err != nil {
+		return err
+	}
 
 	parts := strings.SplitN(id, ".", 2)
 	category, fieldName := parts[0], parts[1]
@@ -799,6 +810,8 @@ func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
 }
 
 func (v *Vault) delete(id string, seen *store.Seen) error {
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := v.checkUnlocked(); err != nil {
 		return err
 	}
@@ -814,6 +827,8 @@ func (v *Vault) delete(id string, seen *store.Seen) error {
 
 // SetSensitivity updates a field's sensitivity tier.
 func (v *Vault) SetSensitivity(id, tier string) error {
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := v.checkUnlocked(); err != nil {
 		return err
 	}

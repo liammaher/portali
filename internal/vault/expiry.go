@@ -11,9 +11,10 @@ import (
 // ExpiryInfo describes a document expiry date found in the vault.
 type ExpiryInfo struct {
 	FieldID   string `json:"field_id"`
-	Document  string `json:"document"`   // category, e.g. permesso_soggiorno, or "pratica <slug>"
-	ExpiresOn string `json:"expires_on"` // YYYY-MM-DD
-	DaysLeft  int    `json:"days_left"`  // negative once expired
+	Document  string `json:"document"`         // category without the member, e.g. permesso_soggiorno, or "pratica <slug>"
+	Member    string `json:"member,omitempty"` // whose it is: a family member's slug, empty for the owner
+	ExpiresOn string `json:"expires_on"`       // YYYY-MM-DD
+	DaysLeft  int    `json:"days_left"`        // negative once expired
 	Expired   bool   `json:"expired"`
 }
 
@@ -28,18 +29,23 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 			return false
 		}
 		_, campo, _ := praticaField(parts[0], parts[1])
-		return IsExpiryField(parts[1]) || campo == "stato"
+		return IsExpiryField(parts[1]) || campo == "stato" || campo == "persona"
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	// Pratiche whose stato ends them, by slug.
+	// Pratiche whose stato ends them, and whom each one is for, by slug.
 	closed := map[string]bool{}
+	persona := map[string]string{}
 	for _, fields := range ctx.Categories {
 		for _, f := range fields {
-			if slug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" && isClosedStato(f.Value) {
+			slug, campo, _ := praticaField(f.Category, f.FieldName)
+			switch {
+			case campo == "stato" && isClosedStato(f.Value):
 				closed[slug] = true
+			case campo == "persona" && f.Value != OwnerRef:
+				persona[slug] = f.Value
 			}
 		}
 	}
@@ -62,13 +68,15 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 				continue
 			}
 			days := int(expires.Sub(today).Hours() / 24)
-			document := f.Category
+			member, document := SplitMember(f.Category)
 			if isPratica {
 				document = "pratica " + slug // a pratica's deadline
+				member = persona[slug]
 			}
 			result = append(result, ExpiryInfo{
 				FieldID:   f.ID,
 				Document:  document,
+				Member:    member,
 				ExpiresOn: normalized,
 				DaysLeft:  days,
 				Expired:   days < 0,

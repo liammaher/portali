@@ -593,7 +593,7 @@ func restoreInto(path, target, password, secretKeyHex string, writeKey bool) (*B
 			return nil, fmt.Errorf("backup is missing document %s", d.ID)
 		}
 	}
-	fields, err := v.db.FieldCount("")
+	fields, err := v.db.FieldCount("", false)
 	if err != nil {
 		return nil, err
 	}

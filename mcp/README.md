@@ -45,7 +45,8 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 |------|-------------|
 | `vault_status` | Check if the vault is running and unlocked |
 | `vault_schema` | Recommended field IDs with descriptions and default tiers, plus the pratiche campi, stati and canali |
-| `vault_get` | Get a single decrypted field by ID |
+| `vault_household` | Family members: slug, famiglia fields (relazione, stato di famiglia, a carico, genitori), name, age, ANPR relazione code and label |
+| `vault_get` | Get a single decrypted field by ID (a family member's is `leo:cie.numero`) |
 | `vault_list` | List all field metadata (no values) |
 | `vault_context` | Get all decrypted fields grouped by category |
 | `vault_set` | Set an encrypted field value in the vault |
@@ -67,6 +68,8 @@ With PEC set up (see [PEC mailbox](#pec-mailbox-read-only)), five more tools app
 | `pec_save_attachment` | Save one attachment into the first `VAULT_IMPORT_DIRS` folder (owner-only, never overwrites) so `vault_document_add` can archive it |
 
 Documents follow the same token rules as fields: scope pattern `<category>.documents` (or `<category>.*`) and the token's sensitivity cap (documents default to `sensitive`).
+
+Family members' fields and documents have the member's slug in front (`leo:identity.codice_fiscale`, documents in `leo:cie`). Scopes without a prefix reach only the user's own data; `leo:*` reaches everything about leo, `leo:cie.*` one of leo's categories, `*:identity.*` that category for the user and every member, and `*` everything. `vault_household`, `vault_expiring` and every other tool keep to the token's scope and `VAULT_SCOPE` the same way.
 
 ## PEC mailbox (read-only)
 
@@ -108,7 +111,11 @@ The MCP server only uses a service token you create, from (in order) `VAULT_TOKE
 
 ```sh
 pvault create-service-token claude --scope "identity.*,residenza.*" --ttl 24h [--keychain pvault-mcp]
+# also the family's identity and famiglia fields:
+pvault create-service-token claude --scope "*:identity.*,*:famiglia.*,residenza.*" --ttl 24h
 ```
+
+A token with `--scope "*"` reaches family members' data too.
 
 It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start when none of these is set.
 

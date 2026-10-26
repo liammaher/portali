@@ -39,14 +39,21 @@ func TestTouchIDHelper_PromptWording(t *testing.T) {
 			"read identity.full_name, residenza.cap from your vault for 2 minutes"},
 		// Append and write grants can read too, and a category covers its documents.
 		{[]string{"--scope", "spid.*", "--access", "append"},
-			"read and add new entries to all spid fields and documents in your vault for 2 minutes"},
+			"read and add new entries to all your spid fields and documents in your vault for 2 minutes"},
 		{[]string{"--scope", "tari.documents", "--access", "append"},
-			"read and add new entries to tari documents in your vault for 2 minutes"},
+			"read and add new entries to your tari documents in your vault for 2 minutes"},
 		{[]string{"--scope", "passaporto.*", "--access", "write"},
-			"read, change and delete all passaporto fields and documents in your vault for 2 minutes"},
+			"read, change and delete all your passaporto fields and documents in your vault for 2 minutes"},
 		// "*" is named alone, never at the end of a list.
 		{[]string{"--scope", "identity.full_name,spid.*,*", "--access", "write"},
-			"read, change and delete everything in your vault for 2 minutes"},
+			"read, change and delete everything in your vault, your family's data included for 2 minutes"},
+		// Family members: one member's data, or everyone's.
+		{[]string{"--scope", "leo:*"}, "read everything about leo from your vault for 2 minutes"},
+		{[]string{"--scope", "leo:cie.*", "--access", "append"},
+			"read and add new entries to all of leo's cie fields and documents in your vault for 2 minutes"},
+		{[]string{"--scope", "*:identity.*"}, "read everyone's identity fields and documents from your vault for 2 minutes"},
+		{[]string{"--scope", "leo:cie.numero,giulia:cie.documents"},
+			"read leo:cie.numero, giulia's cie documents from your vault for 2 minutes"},
 		// Durations round up.
 		{[]string{"--scope", "residenza.cap", "--ttl", "89"}, "read residenza.cap from your vault for 2 minutes"},
 		{[]string{"--scope", "residenza.cap", "--ttl", "45"}, "read residenza.cap from your vault for 45 seconds"},
@@ -74,6 +81,9 @@ func TestTouchIDHelper_RejectsOddScopes(t *testing.T) {
 		"x",
 		"",
 		strings.Repeat("a.b,", 10) + "c.d",
+		// Malformed member prefixes, and io (the owner has no prefix).
+		"leo:", ":cie.*", "leo:cie:x.y", "Leo:*", "leo:*\n", "*:*", "io:*", "io:cie.*",
+		"leo:cie", "leo_x:cie.*", strings.Repeat("a", 33) + ":*",
 	} {
 		out, err := exec.Command(helper, "describe-grant", "--scope", scope).CombinedOutput()
 		if err == nil {
