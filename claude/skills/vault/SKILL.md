@@ -55,7 +55,7 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 **a. Vault MCP tools (preferred when loaded).** `vault_get`, `vault_set`, `vault_list`,
 `vault_context`, `vault_expiring`, `vault_documents`, `vault_document_add`,
 `vault_document_get`. They use a scoped service token, so a call can fail with
-"scope denied", 403 or 404 when the field is outside the token's scope, access level
+"vault: this is outside the token's scope", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
 If a tool says there's no token, or it's expired or revoked, and `pvault touchid status`
 says on, use d instead of asking for a new token.
@@ -234,7 +234,7 @@ scoped to just that task, for them to run in their own terminal (it asks for the
 password and never prints the token):
 
 ```sh
-pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h --keychain pvault-mcp
+pvault create-service-token claude --scope "residenza.*" --access read --ttl 2h --keychain pvault-mcp
 ```
 
 - Scope: only the categories the task touches (e.g. `"identity.*,residenza.*"`).

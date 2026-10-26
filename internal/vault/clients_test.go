@@ -187,7 +187,9 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 		}
 		got = append(got, it.FieldID)
 	}
-	if strings.Join(got, " ") != "rossi:cie.documents rossi:procura.documents" {
+	// The procura has no data_scadenza: a mandate valid until revoked is still
+	// in force, so its scan is kept.
+	if strings.Join(got, " ") != "rossi:cie.documents" {
 		t.Fatalf("scans due = %v", got)
 	}
 	// Only documents the caller can see.
@@ -217,12 +219,12 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 	mustSet(t, v, "pratiche.albo-bianchi_persona", "bianchi")
 	mustSet(t, v, "pratiche.albo-bianchi_stato", "completata")
 	mustSet(t, v, "pratiche.scia-bar_stato", "in_attesa")
-	if items, _ := v.Expiring(window, nil, now); len(items) != 2 {
+	if items, _ := v.Expiring(window, nil, now); len(items) != 1 {
 		t.Fatalf("titolare's scans flagged: %+v", items)
 	}
 	// A client who is also a socio stays a client.
 	mustSet(t, v, "bianchi:ruolo.tipo", "socio,cliente")
-	if items, _ := v.Expiring(window, nil, now); len(items) != 3 || items[0].Person != "bianchi" {
+	if items, _ := v.Expiring(window, nil, now); len(items) != 2 || items[0].Person != "bianchi" {
 		t.Fatalf("socio and cliente: %+v", items)
 	}
 
@@ -343,7 +345,7 @@ func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
 		return strings.Join(got, " ")
 	}
 	for range 20 {
-		if got := due(); got != "rossi:cie.documents rossi:procura.documents" {
+		if got := due(); got != "rossi:cie.documents" { // an undated procura is still in force
 			t.Fatalf("scans due = %q", got)
 		}
 	}
@@ -461,5 +463,36 @@ func TestRetentionEnd(t *testing.T) {
 		if end, ok := retentionEnd(c.from, c.years); !ok || end.Format(dateLayout) != c.want {
 			t.Errorf("retentionEnd(%s, %d) = %s, %v; want %s", c.from, c.years, end.Format(dateLayout), ok, c.want)
 		}
+	}
+}
+
+// The export of a client holds the pratiche that name them, not other
+// people's, and says whether personal items were left out.
+func TestExportPersonIncludesTheirPratiche(t *testing.T) {
+	v := tmpVaultKind(t, KindImpresa)
+	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
+	mustSet(t, v, "verdi:ruolo.tipo", "cliente")
+	mustSet(t, v, "pratiche.cila-roma_stato", "in_attesa") // before its persona: any order
+	mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
+	mustSet(t, v, "pratiche.cila-roma_protocollo", "PROT-1")
+	mustSet(t, v, "pratiche.scia-verdi_persona", "verdi")
+	mustSet(t, v, "pratiche.scia-verdi_protocollo", "PROT-2")
+	mustSet(t, v, "pratiche.albo_note", "the business's own, naming nobody")
+
+	out, err := v.ExportPerson("rossi", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var ids []string
+	for _, f := range out.Fields {
+		ids = append(ids, f.ID)
+	}
+	want := "pratiche.cila-roma_persona pratiche.cila-roma_protocollo pratiche.cila-roma_stato rossi:ruolo.tipo"
+	if strings.Join(ids, " ") != want {
+		t.Fatalf("fields = %v, want %s", ids, want)
+	}
+	entries, _ := v.AuditLog(10)
+	if !hasAudit(entries, "member_export") {
+		t.Error("no member_export audit entry")
 	}
 }

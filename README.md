@@ -180,7 +180,7 @@ cd mcp && npm ci && npm run build
 
 With that config, `pvault create-service-token claude --scope "residenza.*" --ttl 2h --keychain pvault-mcp` grants access mid-session, with no restart and no token on screen. Outside macOS, set `"VAULT_TOKEN": "<token>"` instead.
 
-Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_expiring`, `vault_documents`, `vault_document_get`, `vault_document_add`. The MCP server only ever uses the token you give it, and `vault_document_add` only reads files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
+Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_household`, `vault_expiring`, `vault_documents`, `vault_document_get`, `vault_document_add`, and, with `PEC_ADDRESS` set, the read-only `pec_folders`, `pec_list`, `pec_read`, `pec_attachment`, `pec_save_attachment`. The MCP server only ever uses the token you give it, and `vault_document_add` only reads files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
 
 ### Claude Code setup
 
@@ -198,7 +198,7 @@ Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, 
   ln -s "$PWD/claude/skills/pratica" ~/.claude/skills/pratica
   ```
 
-- **Permission rules** ([`claude/settings.example.json`](claude/settings.example.json)): deny rules that stop Claude's own tools from reading `~/.pvault/` or Keychain passwords (including the MCP token), so it goes through the MCP's scope and sensitivity checks. Merge the `permissions.deny` list into `~/.claude/settings.json`; don't replace the file.
+- **Permission rules** ([`claude/settings.example.json`](claude/settings.example.json)): deny rules that stop Claude's own tools from reading `~/.pvault/` (and a business vault's `~/.pvault-<name>/`) or Keychain passwords (including the MCP token), so it goes through the MCP's scope and sensitivity checks. Merge the `permissions.deny` list into `~/.claude/settings.json`; don't replace the file.
 
 The rules match command text, so they stop direct or accidental access, not a determined attempt (a script that reads the Keychain internally isn't caught). For a hard boundary, also enable Claude Code's sandbox with `~/.pvault` in `sandbox.filesystem.denyRead`.
 
@@ -228,7 +228,7 @@ Profile password + 128-bit secret key
 - On macOS and Linux the CLI sends your password only over a private Unix socket (`~/.pvault/run/pvault.sock`) and only after checking that the server on it is this same `pvault`, so a program squatting on port 7200 while the vault is down never sees it. (The onboarding page still uses the port; browsers can't use sockets.)
 - No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password (or approving with Touch ID). Wrong passwords are rate-limited.
 - Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
-- Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session. Login secrets (any field whose name has a word like pin, puk, password or otp: `spid.password`, `fisconline.pin`) can only be stored as `personal`, and SPID/CieID categories default to it. Field IDs are lower-case.
+- Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session, or by a Touch ID prompt you approve. Login secrets (any field whose name has a word like pin, puk, password or otp: `spid.password`, `fisconline.pin`) can only be stored as `personal`, and SPID/CieID categories default to it. Field IDs are lower-case.
 
 **What it can't protect against:** malware or an agent running as your macOS user can still stop the vault, read `~/.pvault/secret.key` (useless without your password), or tamper with the `pvault` binary to capture your password. Keep the vault locked when you're not using it.
 

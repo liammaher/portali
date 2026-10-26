@@ -30,7 +30,7 @@ there's no need to restart Claude. Creating a new one revokes the token it
 replaces, so only one Keychain token is ever valid:
 
 ```sh
-pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h --keychain pvault-mcp
+pvault create-service-token claude --scope "residenza.*" --access read --ttl 2h --keychain pvault-mcp
 ```
 
 ### A second vault (e.g. a business vault)

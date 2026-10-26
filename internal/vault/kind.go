@@ -52,7 +52,8 @@ func (v *Vault) Kind() string {
 //     secrets (CIE PIN, Fisconline PIN): a business may never hold them.
 //     Its own data may hold its own SPID (per uso professionale) and portal
 //     logins (entratel.password), but no CIE, CieID or digital signature
-//     secret, which is always a person's.
+//     secret, which is always a person's, not even under a SPID category
+//     (spid.cie_pin).
 //
 // A document category is checked as its scope ID (DocumentScopeID), so its
 // documents follow the same rules.
@@ -70,7 +71,8 @@ func (v *Vault) checkKind(id string) error {
 	if v.kind == KindImpresa && person != "" && (IsCredentialField(id) || IsPersonalCategory(category)) {
 		return &ValidationError{Field: id, Msg: errPartyCredential}
 	}
-	if v.kind == KindImpresa && person == "" && (IsIdentityCredential(id) || IsPersonalCategory(category)) && !isSPIDCategory(category) {
+	if v.kind == KindImpresa && person == "" && (IsIdentityCredential(id) || IsPersonalCategory(category)) &&
+		(!isSPIDCategory(category) || namesNonSPIDIdentity(local)) {
 		return &ValidationError{Field: id, Msg: errBusinessCredential}
 	}
 	return nil
@@ -100,6 +102,19 @@ func isSPIDCategory(category string) bool {
 }
 
 var reSPIDWord = regexp.MustCompile(`^spid[0-9]*$`)
+
+// namesNonSPIDIdentity reports a secret of a CIE, CieID or digital signature
+// stored under a SPID category: a word naming one of them next to a credential
+// word, as in spid.cie_pin or spid_firma.puk. A plain detail (spid.attivato_con_cie)
+// is no secret and passes.
+func namesNonSPIDIdentity(local string) bool {
+	other, credential := false, false
+	for _, w := range idWords(strings.ReplaceAll(strings.ToLower(local), ".", "_")) {
+		other = other || (reIdentityWord.MatchString(w) && !reSPIDWord.MatchString(w))
+		credential = credential || reCredentialWord.MatchString(w)
+	}
+	return other && credential
+}
 
 // schemaCategoryOf returns the schema category a category is, or is a
 // numbered copy of: cie2 and identity-2 follow the rules of cie and
