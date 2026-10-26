@@ -7,12 +7,22 @@ type SchemaField struct {
 	ID          string `json:"id"`
 	Description string `json:"description"`
 	Sensitivity string `json:"sensitivity"`
+	// For is "owner" or "member" when only the vault's owner or only a
+	// family member (with a prefix) can have the field.
+	For string `json:"for,omitempty"`
 }
+
+// Category scopes: who can have a category's fields.
+const (
+	ScopePerson = "person" // the owner and every family member (leo:cie.numero)
+	ScopeOwner  = "owner"  // the household or the owner's own procedures only
+)
 
 // SchemaCategory groups recommended fields under a category.
 type SchemaCategory struct {
 	Name        string        `json:"name"`
 	Description string        `json:"description"`
+	Scope       string        `json:"scope"`
 	Fields      []SchemaField `json:"fields"`
 }
 
@@ -24,7 +34,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "8",
+	Version: "9",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -177,13 +187,15 @@ var RecommendedSchema = Schema{
 			Fields:      []SchemaField{},
 		},
 		{
-			Name: "nucleo_familiare",
-			Description: "Household (stato di famiglia). Add one set of fields per member as membro<N>_<campo>, " +
-				"e.g. nucleo_familiare.membro1_nome, membro1_cognome, membro1_codice_fiscale (validated), " +
-				"membro1_data_nascita, membro1_relazione (coniuge, figlio/a, ...)",
+			Name:        "famiglia",
+			Description: famigliaDescription(),
 			Fields: []SchemaField{
-				{ID: "nucleo_familiare.numero_componenti", Description: "Number of people in the household, including you", Sensitivity: "standard"},
-				{ID: "nucleo_familiare.intestatario_scheda", Description: "Whether you are the intestatario della scheda anagrafica (si/no)", Sensitivity: "standard"},
+				{ID: "famiglia.intestatario_scheda", Description: "Who is the intestatario della scheda anagrafica: io (you) or a member's slug (validated)", Sensitivity: "standard", For: "owner"},
+				{ID: "famiglia.relazione", Description: "How the member relates to you: " + strings.Join(relazioneKeys(), ", ") + " (validated; moglie, figlia, madre... accepted)", Sensitivity: "standard", For: "member"},
+				{ID: "famiglia.stato_famiglia", Description: "Whether the member is in your stato di famiglia (famiglia anagrafica): si or no", Sensitivity: "standard", For: "member"},
+				{ID: "famiglia.a_carico_percentuale", Description: "Share of the member you claim as an IRPEF dependant: 0, 50 or 100", Sensitivity: "sensitive", For: "member"},
+				{ID: "famiglia.genitori", Description: "For a child: who holds responsabilità genitoriale, io and/or members' slugs (e.g. io,giulia)", Sensitivity: "standard", For: "member"},
+				{ID: "famiglia.rappresentanza", Description: "How you can act for an adult member: " + strings.Join(rappresentanze, ", "), Sensitivity: "standard", For: "member"},
 			},
 		},
 		{
@@ -309,6 +321,10 @@ var schemaIndex map[string]*SchemaField
 func init() {
 	schemaIndex = make(map[string]*SchemaField)
 	for i := range RecommendedSchema.Categories {
+		c := &RecommendedSchema.Categories[i]
+		if c.Scope = ScopePerson; IsOwnerOnlyCategory(c.Name) {
+			c.Scope = ScopeOwner
+		}
 		for j := range RecommendedSchema.Categories[i].Fields {
 			f := &RecommendedSchema.Categories[i].Fields[j]
 			schemaIndex[f.ID] = f
@@ -329,10 +345,9 @@ func GetSchemaField(id string) *SchemaField {
 
 // DefaultSensitivity returns the schema default sensitivity for a field ID,
 // or "standard" if the field is not in the schema. Non-canonical personal
-// codice fiscale fields (e.g. nucleo_familiare.membro1_codice_fiscale)
-// default to "sensitive".
+// codice fiscale fields (e.g. custom.coniuge_codice_fiscale) default to
+// "sensitive". A member's field defaults like the owner's.
 func DefaultSensitivity(id string) string {
-	// A member's field (leo:cie.numero) defaults like the owner's.
 	_, id = SplitMember(id)
 	// Validation ignores case, so the default must too (financial.SSN is
 	// still critical).

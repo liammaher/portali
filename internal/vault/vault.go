@@ -489,6 +489,9 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 		return err
 	}
 	defer clear(vaultKey)
+	if err := v.checkPersonRefs(id, value); err != nil {
+		return err
+	}
 
 	parts := strings.SplitN(id, ".", 2)
 	category, fieldName := parts[0], parts[1]

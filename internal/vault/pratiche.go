@@ -18,7 +18,7 @@ var rePraticaSlug = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
 var praticaCampi = []string{
 	"titolo", "ente", "stato", "canale", "destinatario", "protocollo",
 	"data_invio", "data_scadenza", "data_esito", "importo", "data_pagamento",
-	"prossimo_passo", "playbook", "note",
+	"prossimo_passo", "playbook", "note", "persona",
 }
 
 // praticaStati are the stages of a pratica, in order.
@@ -73,7 +73,8 @@ func praticheDescription() string {
 		"stato is one of " + strings.Join(praticaStati, ", ") + "; " +
 		"canale is one of " + strings.Join(praticaCanali, ", ") + ". " +
 		"data_scadenza is the deadline, tracked by 'pvault expiring' until stato is " + orList(praticaStatiChiusi) + ". " +
-		"playbook names the procedure's playbook file. Attach submitted files with 'pvault doc add pratiche <file>'."
+		"playbook names the procedure's playbook file. " +
+		"persona is who it is for: io (you, the default) or a family member's slug. Attach submitted files with 'pvault doc add pratiche <file>'."
 }
 
 // normalizePratica applies the pratiche rules. handled is false outside the
@@ -104,6 +105,12 @@ func normalizePratica(id, category, name, value string) (out string, handled boo
 		v, ok := normalizeEuro(value)
 		if !ok {
 			return fail("must be an amount in euro (e.g. 259, 259,00 or 1.250,50)")
+		}
+		return v, true, nil
+	case "persona":
+		v, msg := normalizePersonRefs(value, "", 1)
+		if msg != "" {
+			return fail("persona " + msg)
 		}
 		return v, true, nil
 	case "data_invio", "data_scadenza", "data_esito", "data_pagamento":
