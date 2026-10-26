@@ -2,11 +2,9 @@ package vault
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 	"testing"
 	"time"
 
@@ -22,8 +20,14 @@ func mustSet(t *testing.T, v *Vault, id, value string) {
 }
 
 // setLegacy stores a field the way an older version could, without Set's
-// checks: IDs didn't have to be lower-case (Pratiche.x_stato).
+// checks: IDs didn't have to be lower-case (Pratiche.x_stato). Unlock
+// migrates such rows (relock).
 func setLegacy(t *testing.T, v *Vault, id, value string) {
+	t.Helper()
+	setLegacyAt(t, v, id, value, time.Now())
+}
+
+func setLegacyAt(t *testing.T, v *Vault, id, value string, at time.Time) {
 	t.Helper()
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
@@ -41,7 +45,20 @@ func setLegacy(t *testing.T, v *Vault, id, value string) {
 		t.Fatal(err)
 	}
 	if err := v.db.SetField(store.Field{ID: id, Category: category, FieldName: name, Value: encrypted,
-		Sensitivity: DefaultSensitivity(id), UpdatedAt: time.Now()}); err != nil {
+		Sensitivity: DefaultSensitivity(id), UpdatedAt: at}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// relock locks the vault and unlocks it again, which runs the migrations.
+func relock(t *testing.T, v *Vault) {
+	t.Helper()
+	sk, err := os.ReadFile(filepath.Join(v.dir, "secret.key"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	v.Lock()
+	if _, err := v.Unlock(testPassword, strings.TrimSpace(string(sk))); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -61,7 +78,7 @@ func TestHousehold(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	h, err := v.Household(nil, now)
+	h, err := v.Household(nil, true, now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +97,7 @@ func TestHousehold(t *testing.T) {
 	// A filter sees only what it allows, and derived values only from
 	// fields it can read.
 	famigliaOnly := func(id, tier string) bool { return ScopeAllows("*:famiglia.*", id) && TierAllows("sensitive", tier) }
-	h, _ = v.Household(famigliaOnly, now)
+	h, _ = v.Household(famigliaOnly, false, now)
 	if h.IntestatarioScheda != "io" || len(h.Members) != 2 {
 		t.Fatalf("famiglia-only household = %+v", h)
 	}
@@ -91,11 +108,11 @@ func TestHousehold(t *testing.T) {
 		t.Errorf("famiglia-only leo = %+v (no age without date_of_birth)", l)
 	}
 	ownerOnly := func(id, tier string) bool { return ScopeAllows("identity.*,famiglia.*", id) }
-	if h, _ := v.Household(ownerOnly, now); len(h.Members) != 0 {
+	if h, _ := v.Household(ownerOnly, false, now); len(h.Members) != 0 {
 		t.Errorf("owner scope saw members: %+v", h.Members)
 	}
 	cieOnly := func(id, tier string) bool { return ScopeAllows("leo:cie.*", id) }
-	if h, _ := v.Household(cieOnly, now); len(h.Members) != 1 || h.Members[0].Famiglia != nil || h.IntestatarioScheda != "" {
+	if h, _ := v.Household(cieOnly, false, now); len(h.Members) != 1 || h.Members[0].Famiglia != nil || h.IntestatarioScheda != "" {
 		t.Errorf("leo:cie.* household = %+v", h)
 	}
 }
@@ -280,63 +297,47 @@ func TestBackupRestoresMembers(t *testing.T) {
 	}
 }
 
-// A closed pratica is history: it names a member without keeping them.
-// A person's last field or document can't be deleted on its own, which would
-// skip RemovePerson's checks and leave their tokens for a later person with
-// the same slug.
-func TestDeletePersonLastRowRefused(t *testing.T) {
+// A person is a record of their own: deleting their last field or document
+// leaves them in the vault (only RemovePerson removes them, revoking what
+// names them), and a service token can't name someone who isn't there yet.
+func TestPersonOutlivesTheirRows(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:identity.first_name", "Leo")
-	mustSet(t, v, "leo:identity.last_name", "Rossi")
 	doc, err := v.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("%PDF"), "")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := v.Delete("leo:identity.last_name"); err != nil {
+	if err := v.Delete("leo:identity.first_name"); err != nil {
 		t.Fatal(err)
 	}
-	if ok, err := v.DeleteDocument(doc.ID, nil); !ok || err != nil {
-		t.Fatalf("delete document = %v, %v", ok, err)
+	if ok, err := v.DeleteDocument(doc.ID); !ok || err != nil {
+		t.Fatalf("delete leo's last document = %v, %v", ok, err)
 	}
-	var verr *ValidationError
-	if err := v.Delete("leo:identity.first_name"); !errors.As(err, &verr) || !strings.Contains(verr.Msg, "pvault person remove leo") {
-		t.Fatalf("delete last field = %v, want a ValidationError pointing to person remove", err)
+	if h, err := v.Household(nil, true, time.Now()); err != nil || len(h.Members) != 1 || h.Members[0].Slug != "leo" {
+		t.Fatalf("household after leo's last row went = %+v, %v", h, err)
 	}
-	if f, _ := v.db.GetField("leo:identity.first_name"); f == nil {
-		t.Fatal("last field deleted")
+	if h, _ := v.Household(func(string, string) bool { return true }, false, time.Now()); len(h.Members) != 0 {
+		t.Fatalf("a token's household shows people it can't see a row of: %+v", h)
+	}
+	if out, err := v.ExportPerson("leo", false); err != nil || len(out.Fields)+len(out.Documents) != 0 {
+		t.Fatalf("export of leo with no rows = %+v, %v; want an empty export", out, err)
 	}
 
-	doc, _ = v.AddDocument("anna:cie", "cie.pdf", "application/pdf", []byte("%PDF"), "")
-	if ok, err := v.DeleteDocument(doc.ID, nil); ok || !errors.As(err, &verr) {
-		t.Fatalf("delete last document = %v, %v; want refused", ok, err)
+	if _, err := v.CreateServiceToken("x", "zed:*", time.Hour, "", ""); err == nil {
+		t.Fatal("token naming a person who doesn't exist")
 	}
-	// The owner's fields are not people's rows.
-	mustSet(t, v, "identity.first_name", "Liam")
-	if err := v.Delete("identity.first_name"); err != nil {
-		t.Fatal(err)
+	if _, err := v.CreateServiceToken("x", "*:cie.*", time.Hour, "", ""); err != nil {
+		t.Fatalf("token for everyone's cie: %v", err)
 	}
-}
-
-// Two deletes racing on a person's last two rows can't both succeed.
-func TestDeletePersonLastRow_Concurrent(t *testing.T) {
-	v, _ := tmpVault(t)
-	for i := range 10 {
-		slug := fmt.Sprintf("p%d", i)
-		mustSet(t, v, slug+":identity.first_name", "A")
-		mustSet(t, v, slug+":identity.last_name", "B")
-		var wg sync.WaitGroup
-		errs := make([]error, 2)
-		for j, id := range []string{slug + ":identity.first_name", slug + ":identity.last_name"} {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				errs[j] = v.Delete(id)
-			}()
-		}
-		wg.Wait()
-		if (errs[0] == nil) == (errs[1] == nil) {
-			t.Fatalf("%s: deletes returned %v and %v; want exactly one refused", slug, errs[0], errs[1])
-		}
+	if _, err := v.CreateServiceToken("x", "leo:*", time.Hour, "", ""); err != nil {
+		t.Fatalf("token naming leo: %v", err)
+	}
+	removed, err := v.RemovePerson("leo")
+	if err != nil || len(removed.RevokedTokens) != 1 {
+		t.Fatalf("RemovePerson(leo) = %+v, %v", removed, err)
+	}
+	if _, err := v.RemovePerson("leo"); !errors.Is(err, ErrPersonNotFound) {
+		t.Fatalf("second RemovePerson(leo) = %v, want ErrPersonNotFound", err)
 	}
 }
 
@@ -425,12 +426,13 @@ func TestMigrateNucleo_KeepsMismatchedCount(t *testing.T) {
 	}
 }
 
-// Field IDs from before they had to be lower-case are read ignoring case, so
-// migration does too.
+// Field IDs from before they had to be lower-case are lower-case after
+// unlocking, so the nucleo migration finds them.
 func TestMigrateNucleo_MixedCase(t *testing.T) {
 	v, _ := tmpVault(t)
 	setLegacy(t, v, "Nucleo_Familiare.Membro1_Nome", "Anna")
 	setLegacy(t, v, "nucleo_familiare.MEMBRO1_relazione", "Madre")
+	relock(t, v)
 	report, err := v.MigrateNucleo(false)
 	if err != nil {
 		t.Fatal(err)
@@ -440,5 +442,31 @@ func TestMigrateNucleo_MixedCase(t *testing.T) {
 	}
 	if f, err := v.Get("anna:famiglia.relazione"); err != nil || f.Value != "genitore" {
 		t.Fatalf("anna:famiglia.relazione = %+v, %v", f, err)
+	}
+}
+
+// Migration checks person references like Set does: an intestatario_scheda
+// naming nobody stays where it is (it would name whoever later gets the
+// slug); one naming a member this migration adds moves.
+func TestMigrateNucleo_PersonRefs(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "nucleo_familiare.intestatario_scheda", "marco")
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Giulia")
+	report, err := v.MigrateNucleo(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if msg := report.Left["nucleo_familiare.intestatario_scheda"]; !strings.Contains(msg, `no person "marco"`) {
+		t.Fatalf("left = %v, want intestatario_scheda kept for lack of marco", report.Left)
+	}
+	if f, _ := v.db.GetField("famiglia.intestatario_scheda"); f != nil {
+		t.Fatal("famiglia.intestatario_scheda names a person who doesn't exist")
+	}
+
+	w, _ := tmpVault(t)
+	mustSet(t, w, "nucleo_familiare.intestatario_scheda", "marco")
+	mustSet(t, w, "nucleo_familiare.membro1_nome", "Marco")
+	if report, err := w.MigrateNucleo(false); err != nil || report.Moved["nucleo_familiare.intestatario_scheda"] == "" {
+		t.Fatalf("intestatario_scheda naming a migrated member: %+v, %v", report, err)
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
 )
 
@@ -149,6 +150,10 @@ var (
 	reInternoPrefix = regexp.MustCompile(`^(?i)\s*(interno|int\.?)\s*`)
 )
 
+// oneOnly are the categories a holder has one of, so no numbered copies:
+// the rules that read them (Household, retention, Expiring) read these names.
+var oneOnly = []string{"famiglia", "pratiche", "ruolo"}
+
 // NormalizeAndValidate applies Italian format rules to a field value based on
 // its ID (matched case-insensitively). It returns the normalized value (e.g.
 // upper-cased codice fiscale) or a *ValidationError. Fields without a rule
@@ -156,16 +161,16 @@ var (
 // rules as the owner's; errors name the full ID.
 func NormalizeAndValidate(id, value string) (string, error) {
 	person, local := SplitPerson(id)
-	parts := strings.SplitN(strings.ToLower(local), ".", 2)
+	parts := strings.SplitN(canonicalLocalID(local), ".", 2) // cie2.numero is a cie.numero
 	if len(parts) != 2 {
 		return value, nil
 	}
 	category, name := parts[0], parts[1]
-
-	if err := checkPersonCategory(strings.SplitN(id, ".", 2)[0], id); err != nil {
-		return "", err
+	if written, _, _ := strings.Cut(strings.ToLower(local), "."); written != category && slices.Contains(oneOnly, category) {
+		return "", &ValidationError{Field: id, Msg: category + " has no numbered copies: it is one record per person (pratiche: one per slug), so use " + category + ".*"}
 	}
-	if err := checkFieldFor(id); err != nil {
+
+	if err := checkHolder(id); err != nil {
 		return "", err
 	}
 	if v, handled, err := normalizeFamiglia(id, person, category, name, value); handled {

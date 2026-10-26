@@ -59,14 +59,11 @@ func cmdOnboard() {
 	if err != nil {
 		fatal("%v", err)
 	}
+	fmt.Println()
+	printSecretKey(os.Stdout, sk) // before anything else can fail
 	if _, err := ensurePort(dir); err != nil {
-		fatal("vault created, but %v", err)
+		fatal("vault created (secret key above, also in %s), but %v", secretKeyPath(), err)
 	}
-
-	fmt.Println()
-	fmt.Println("Your secret key (save this somewhere safe):")
-	fmt.Printf("  %s\n", sk)
-	fmt.Println()
 
 	verified, err := startBackgroundServer(pw, sk)
 	if err != nil {

@@ -69,10 +69,10 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if err := CheckLowerCase(category); err != nil {
 		return nil, err
 	}
-	if err := checkPersonCategory(category, DocumentScopeID(category)); err != nil {
+	if err := v.checkKind(DocumentScopeID(category)); err != nil {
 		return nil, err
 	}
-	if err := v.checkKind(DocumentScopeID(category)); err != nil {
+	if err := checkPersonCategory(category, DocumentScopeID(category)); err != nil {
 		return nil, err
 	}
 	name, err := cleanDocumentName(name)
@@ -246,26 +246,18 @@ func (v *Vault) decryptDocumentContent(vaultKey []byte, doc store.Document) ([]b
 }
 
 // DeleteDocument removes a document's encrypted file and metadata.
-// Returns false if it did not exist. allow is what the caller can see
-// (checkNotLastPersonRow); nil for the user's session.
-func (v *Vault) DeleteDocument(id string, allow FieldFilter) (bool, error) {
+// Returns false if it did not exist.
+func (v *Vault) DeleteDocument(id string) (bool, error) {
 	if !reDocumentID.MatchString(id) {
 		return false, nil
 	}
-	// The category picks the lock; a document's category never changes, so
-	// only its existence is read again under it.
-	doc, err := v.db.GetDocument(id)
-	if err != nil || doc == nil {
-		return false, err
-	}
-	defer v.lockWrite(doc.Category)()
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := v.checkUnlocked(); err != nil {
 		return false, err
 	}
-	if doc, err = v.db.GetDocument(id); err != nil || doc == nil {
-		return false, err
-	}
-	if err := v.checkNotLastPersonRow(doc.Category, id, allow); err != nil {
+	doc, err := v.db.GetDocument(id)
+	if err != nil || doc == nil {
 		return false, err
 	}
 	// Remove the row first: if removing the file then fails, only an

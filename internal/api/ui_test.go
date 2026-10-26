@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -125,6 +127,64 @@ func TestOnboardingKindMarkers(t *testing.T) {
 	for _, m := range regexp.MustCompile(`data-relation="([a-z_]+)"`).FindAllStringSubmatch(page, -1) {
 		if c := vault.GetSchemaCategory(m[1]); c == nil || len(c.Kinds) == 0 {
 			t.Errorf("data-relation %q is not a kind-specific category", m[1])
+		}
+	}
+}
+
+// The onboarding page shows what the vault says each field's holder can
+// have (/ui/fields), for every input on it and in both kinds of vault.
+func TestUIFields(t *testing.T) {
+	persona := setup(t)
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	sk, err := vault.InitWithOptions(dir, testPassword, vault.InitOptions{Kind: vault.KindImpresa})
+	if err != nil {
+		t.Fatal(err)
+	}
+	v, err := vault.Open(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { v.Close() })
+	if _, err := v.Unlock(testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	impresa := &testEnv{server: New(v, ":0"), vault: v}
+
+	type holders struct{ Owner, Person bool }
+	get := func(env *testEnv) (fields, categories map[string]holders) {
+		t.Helper()
+		w := env.doRequest(t, "GET", "/ui/fields", nil, false)
+		var out struct{ Fields, Categories map[string]holders }
+		if w.Code != 200 || json.Unmarshal(w.Body.Bytes(), &out) != nil {
+			t.Fatalf("/ui/fields: %d %s", w.Code, w.Body.String())
+		}
+		return out.Fields, out.Categories
+	}
+	pf, pc := get(persona)
+	bf, bc := get(impresa)
+	if len(pf) != len(pageFields) || len(bf) != len(pageFields) {
+		t.Fatalf("answers for %d and %d of the page's %d fields", len(pf), len(bf), len(pageFields))
+	}
+	for _, c := range []struct {
+		got  holders
+		want holders
+		what string
+	}{
+		{pf["identity.first_name"], holders{true, true}, "persona identity.first_name"},
+		{pf["famiglia.relazione"], holders{false, true}, "persona famiglia.relazione"},
+		{pf["abitazione.titolo"], holders{true, false}, "persona abitazione.titolo"},
+		{pf["procura.ente"], holders{false, true}, "persona procura.ente"},
+		{pf["cie.pin"], holders{true, true}, "persona cie.pin"},
+		{bf["identity.first_name"], holders{false, true}, "impresa identity.first_name"},
+		{bf["business.denominazione"], holders{true, true}, "impresa business.denominazione"},
+		{bf["abitazione.titolo"], holders{false, false}, "impresa abitazione.titolo"},
+		{bf["cie.pin"], holders{false, false}, "impresa cie.pin"},
+		{bf["spid.provider"], holders{true, false}, "impresa spid.provider"},
+		{pc["procura"], holders{false, true}, "persona procura category"},
+		{bc["famiglia"], holders{false, false}, "impresa famiglia category"},
+	} {
+		if c.got != c.want {
+			t.Errorf("%s = %+v, want %+v", c.what, c.got, c.want)
 		}
 	}
 }

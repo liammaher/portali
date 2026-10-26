@@ -31,31 +31,51 @@ let defaultGrantSeconds = 120
 let maxGrantSeconds = 600  // vault.MaxScopedGrantTTL
 let maxScopePatterns = 10
 let maxPatternLength = 100  // keeps every pattern visible in the prompt
-let notSetUp = "Touch ID is not set up — run 'pvault touchid enable'"
+// A person's slug (vault.ValidPersonSlug), also a named vault's name. Before
+// notSetUp, which uses it: main.swift sets globals in order.
+let personSlug = "[a-z][a-z0-9-]{0,31}"
+let notSetUp = "Touch ID is not set up — run \(pvCmd("touchid enable"))"
 
-// vaultDir matches pvault's: VAULT_DIR, else $HOME/.pvault (Go's
-// os.UserHomeDir reads $HOME, which NSHomeDirectory ignores).
+// homeDir is pvault's: Go's os.UserHomeDir reads $HOME, which
+// NSHomeDirectory ignores.
+func homeDir() -> String {
+    ProcessInfo.processInfo.environment["HOME"].flatMap { $0.isEmpty ? nil : $0 } ?? NSHomeDirectory()
+}
+
+// vaultDir matches pvault's: VAULT_DIR, else $HOME/.pvault.
 func vaultDir() -> String {
-    let env = ProcessInfo.processInfo.environment
-    if let d = env["VAULT_DIR"], !d.isEmpty {
+    if let d = ProcessInfo.processInfo.environment["VAULT_DIR"], !d.isEmpty {
         return (d as NSString).standardizingPath
     }
-    let home = env["HOME"].flatMap { $0.isEmpty ? nil : $0 } ?? NSHomeDirectory()
-    return (home as NSString).appendingPathComponent(".pvault")
+    return (homeDir() as NSString).appendingPathComponent(".pvault")
+}
+
+// vaultName is the name of a vault folder .pvault-<name> (pvault --vault
+// <name>), nil for any other.
+func vaultName() -> String? {
+    let base = (vaultDir() as NSString).lastPathComponent
+    guard base.hasPrefix(".pvault-") else { return nil }
+    let name = String(base.dropFirst(".pvault-".count))
+    return name != "io" && name.range(of: "\\A\(personSlug)\\z", options: .regularExpression) != nil ? name : nil
+}
+
+// pvCmd quotes a pvault command for messages, with --vault when this vault
+// is a named one in the home folder, like pvault's own pvCmd:
+// pvCmd("unlock") is 'pvault --vault studio unlock' for ~/.pvault-studio.
+// Any other VAULT_DIR is reached through VAULT_DIR itself, so no flag.
+func pvCmd(_ args: String) -> String {
+    let parent = (vaultDir() as NSString).deletingLastPathComponent
+    if let name = vaultName(), parent == (homeDir() as NSString).standardizingPath {
+        return "'pvault --vault \(name) \(args)'"
+    }
+    return "'pvault \(args)'"
 }
 
 // vaultLabel names the vault in prompts: "your vault" for the default one,
 // "your studio vault" for ~/.pvault-studio (pvault --vault studio), so with
 // several vaults a fingerprint is never given for the wrong one.
 func vaultLabel() -> String {
-    let base = (vaultDir() as NSString).lastPathComponent
-    if base.hasPrefix(".pvault-") {
-        let name = String(base.dropFirst(".pvault-".count))
-        if !name.isEmpty, name.range(of: "\\A[a-z][a-z0-9-]{0,31}\\z", options: .regularExpression) != nil {
-            return "your \(name) vault"
-        }
-    }
-    return "your vault"
+    vaultName().map { "your \($0) vault" } ?? "your vault"
 }
 
 func fail(_ msg: String, code: Int32 = 1) -> Never {
@@ -165,11 +185,11 @@ func readEnrollment() -> Enrollment {
     let s = SecItemCopyMatching(q as CFDictionary, &out)
     if s == errSecItemNotFound { fail(notSetUp, code: 3) }
     guard s == errSecSuccess, let data = out as? Data else {
-        fail("reading Keychain: \(keychainMessage(s)) — if pvault-touchid was rebuilt, run 'pvault touchid enable' again")
+        fail("reading Keychain: \(keychainMessage(s)) — if pvault-touchid was rebuilt, run \(pvCmd("touchid enable")) again")
     }
     // A bare password was saved by a version that didn't pin the server.
     guard let e = try? JSONDecoder().decode(Enrollment.self, from: data) else {
-        fail("Touch ID was set up by an older pvault-touchid — run 'pvault touchid enable' again", code: 3)
+        fail("Touch ID was set up by an older pvault-touchid — run \(pvCmd("touchid enable")) again", code: 3)
     }
     return e
 }
@@ -200,10 +220,10 @@ func trustedServerSignature(_ path: String, validate: Bool) -> Signature {
     var code: SecStaticCode?
     guard SecStaticCodeCreateWithPath(URL(fileURLWithPath: path) as CFURL, [], &code) == errSecSuccess, let code,
           !validate || SecStaticCodeCheckValidity(code, [], nil) == errSecSuccess, let sig = signature(code) else {
-        fail("\(path) is not a validly signed pvault — build it with 'make build', then run 'pvault touchid enable' again")
+        fail("\(path) is not a validly signed pvault — build it with 'make build', then run \(pvCmd("touchid enable")) again")
     }
     guard sig.hardened else {
-        fail("\(path) is not signed with the hardened runtime — build it with 'make build', then run 'pvault touchid enable' again")
+        fail("\(path) is not signed with the hardened runtime — build it with 'make build', then run \(pvCmd("touchid enable")) again")
     }
     return sig
 }
@@ -253,7 +273,7 @@ func checkPeer(_ fd: Int32, server: String) {
     guard SecCodeCopyGuestWithAttributes(nil, attrs, [], &guest) == errSecSuccess, let guest,
           SecCodeCheckValidity(guest, [], nil) == errSecSuccess else {
         // Also what a server started before pvault was reinstalled looks like.
-        fail("refusing to send your password: the vault server's code signature is not valid — if you rebuilt or reinstalled pvault, run 'pvault lock', then 'pvault unlock'")
+        fail("refusing to send your password: the vault server's code signature is not valid — if you rebuilt or reinstalled pvault, run \(pvCmd("lock")), then \(pvCmd("unlock"))")
     }
     let running = unsafeBitCast(guest, to: SecStaticCode.self)
     let expected = trustedServerSignature(server, validate: false)
@@ -262,9 +282,9 @@ func checkPeer(_ fd: Int32, server: String) {
     SecCodeCopyPath(running, [], &url)
     let who = (url as URL?)?.path ?? "another program"
     if who == server || (who as NSString).resolvingSymlinksInPath == (server as NSString).resolvingSymlinksInPath {
-        fail("refusing to send your password: the vault server runs an older build of \(server) — run 'pvault lock', then 'pvault unlock'")
+        fail("refusing to send your password: the vault server runs an older build of \(server) — run \(pvCmd("lock")), then \(pvCmd("unlock"))")
     }
-    fail("refusing to send your password: the vault server is \(who), not \(server) — run 'pvault lock' then 'pvault unlock', or 'pvault touchid enable' with this pvault")
+    fail("refusing to send your password: the vault server is \(who), not \(server) — run \(pvCmd("lock")) then \(pvCmd("unlock")), or \(pvCmd("touchid enable")) with this pvault")
 }
 
 // connectServer returns a socket to the vault server, checked as above.
@@ -272,10 +292,10 @@ func connectServer(server: String) -> Int32 {
     let path = socketPath()
     let dir = (path as NSString).deletingLastPathComponent
     guard let st = ownedByMe(dir, type: S_IFDIR), st.st_mode & 0o077 == 0 else {
-        fail("cannot reach the vault server: \(dir) is missing or not private — run 'pvault unlock'")
+        fail("cannot reach the vault server: \(dir) is missing or not private — run \(pvCmd("unlock"))")
     }
     guard ownedByMe(path, type: S_IFSOCK) != nil else {
-        fail("cannot reach the vault server for \(vaultDir()) — run 'pvault unlock'")
+        fail("cannot reach the vault server for \(vaultDir()) — run \(pvCmd("unlock"))")
     }
     var addr = sockaddr_un()
     addr.sun_family = sa_family_t(AF_UNIX)
@@ -290,7 +310,7 @@ func connectServer(server: String) -> Int32 {
     let rc = withUnsafePointer(to: &addr) {
         $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { connect(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size)) }
     }
-    guard rc == 0 else { fail("cannot reach the vault server for \(vaultDir()) — run 'pvault unlock'") }
+    guard rc == 0 else { fail("cannot reach the vault server for \(vaultDir()) — run \(pvCmd("unlock"))") }
     checkPeer(fd, server: server)
     return fd
 }
@@ -345,7 +365,6 @@ func serverError(_ json: [String: Any], _ status: Int) -> String {
 // which would then show up in the prompt. A pattern may start with another
 // person's slug (vault.ValidPersonSlug) or "*" for everyone: leo:cie.*,
 // *:identity.*, or leo:* for everything about leo.
-let personSlug = "[a-z][a-z0-9-]{0,31}"
 let categoryPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(personSlug)|\\*):)?[A-Za-z0-9_-]+\\.\\*\\z")
 let fieldPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(personSlug)|\\*):)?[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\z")
 let personPattern = try! NSRegularExpression(pattern: "\\A\(personSlug):\\*\\z")
@@ -356,7 +375,8 @@ func matches(_ re: NSRegularExpression, _ s: String) -> Bool {
 
 // parseScope mirrors vault.ValidateScope so nothing odd reaches the prompt.
 func parseScope(_ scope: String) -> [String] {
-    let parts = scope.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+    // Empty pieces stay, so "identity.*," is refused as the server refuses it.
+    let parts = scope.split(separator: ",", omittingEmptySubsequences: false).map { $0.trimmingCharacters(in: .whitespaces) }
     if parts.isEmpty || parts.count > maxScopePatterns {
         fail("scope must list 1 to \(maxScopePatterns) patterns")
     }
@@ -387,7 +407,7 @@ func describe(_ pattern: String) -> String {
     // A category pattern also covers <category>.documents (vault.ScopeAllows).
     if rest.hasSuffix(".*") { return "\(all) \(rest.dropLast(2)) fields and documents" }
     if rest.hasSuffix(".documents") { return "\(whose) \(rest.dropLast(10)) documents" }
-    return pattern
+    return whose == "your" ? pattern : "\(whose) \(rest)"
 }
 
 func duration(_ seconds: Int) -> String {
@@ -472,7 +492,7 @@ func cmdGrant(_ args: [String]) {
     // An older server ignores scope and grants full access, which is more
     // than the user approved: drop it unused.
     if let scope = extra["scope"], json["scope"] as? String != scope || json["access"] as? String != req.access {
-        fail("the running vault server doesn't support scoped grants — restart it with this version ('pvault lock', then 'pvault unlock')")
+        fail("the running vault server doesn't support scoped grants — restart it with this version (\(pvCmd("lock")), then \(pvCmd("unlock")))")
     }
     print(token)
 }
@@ -492,7 +512,7 @@ func cmdUnlock() {
 // the saved password.
 func requireTerminal(_ command: String) {
     guard isatty(STDERR_FILENO) == 1 else {
-        fail("\(command) only works in a terminal — run 'pvault touchid enable' or 'pvault touchid disable'")
+        fail("\(command) only works in a terminal — run \(pvCmd("touchid enable")) or \(pvCmd("touchid disable"))")
     }
 }
 

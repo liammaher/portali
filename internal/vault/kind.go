@@ -62,7 +62,7 @@ func (v *Vault) checkKind(id string) error {
 	if err := v.checkKindCategory(person, category, id); err != nil {
 		return err
 	}
-	if f := GetSchemaField(strings.ToLower(local)); f != nil && len(f.Kinds) > 0 && !slices.Contains(f.Kinds, v.kind) {
+	if f := GetSchemaField(canonicalLocalID(local)); f != nil && len(f.Kinds) > 0 && !slices.Contains(f.Kinds, v.kind) {
 		return &ValidationError{Field: id, Msg: "is only for " + strings.Join(f.Kinds, "/") + " vaults; this one is " + v.kind}
 	}
 	// The whole SPID/CieID account, not just its secrets: IsCredentialField
@@ -74,6 +74,17 @@ func (v *Vault) checkKind(id string) error {
 		return &ValidationError{Field: id, Msg: errBusinessCredential}
 	}
 	return nil
+}
+
+// CanHold reports whether this vault's own data (person false) or another
+// person may hold a field ID: the checks Set makes before reading the value
+// (the vault's kind, owner-only and person-only categories and fields). The
+// onboarding page shows only what can be saved from these answers.
+func (v *Vault) CanHold(id string, person bool) bool {
+	if person {
+		id = "x:" + id // the rules treat every person alike
+	}
+	return v.checkKind(id) == nil && checkHolder(id) == nil
 }
 
 const (
@@ -101,6 +112,22 @@ func schemaCategoryOf(category string) *SchemaCategory {
 	return GetSchemaCategory(strings.TrimRight(strings.TrimRight(name, "0123456789"), "_-"))
 }
 
+// canonicalLocalID returns a field ID without its person, lower-case, with a
+// numbered copy's category named as the schema category it copies:
+// Cie2.Numero gives cie.numero. Every rule keyed by category or schema field
+// reads this, so a copy follows exactly the rules of the original.
+func canonicalLocalID(local string) string {
+	local = strings.ToLower(local)
+	category, name, ok := strings.Cut(local, ".")
+	if c := schemaCategoryOf(category); c != nil {
+		category = c.Name
+	}
+	if !ok {
+		return category
+	}
+	return category + "." + name
+}
+
 // checkKindCategory applies the category rules of checkKind. field names the
 // ID in the error.
 func (v *Vault) checkKindCategory(person, category, field string) error {
@@ -110,6 +137,11 @@ func (v *Vault) checkKindCategory(person, category, field string) error {
 	}
 	if len(c.Kinds) > 0 && !slices.Contains(c.Kinds, v.kind) {
 		return &ValidationError{Field: field, Msg: c.Name + " is only for " + strings.Join(c.Kinds, "/") + " vaults; this one is " + v.kind}
+	}
+	if v.kind == KindImpresa && IsHousingCategory(category) {
+		// Its own home, in a personal vault: a person can't have one either
+		// (IsOwnerOnlyCategory), so no spelling would do.
+		return &ValidationError{Field: field, Msg: c.Name + " describes the home in a personal vault; a business vault keeps its premises in locale.*"}
 	}
 	if v.kind == KindImpresa && person == "" && c.Subject == SubjectPersona {
 		return &ValidationError{Field: field, Msg: c.Name + " describes a person, and this vault's own data is the business's: store it on the person, e.g. bianchi:" + strings.ToLower(category) + ".…"}

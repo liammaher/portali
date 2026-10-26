@@ -1,14 +1,44 @@
 package vault
 
 import (
+	"database/sql"
 	"errors"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/store"
 )
+
+// setDocumentsCreatedAt dates every document at at. Times are stored to the
+// second, and a scan from the second its pratica closed counts as after it,
+// so tests that upload and close at once date the scans back first.
+func setDocumentsCreatedAt(t *testing.T, v *Vault, at time.Time) {
+	t.Helper()
+	execSQL(t, v, "UPDATE vault_documents SET created_at = ?", at.UTC().Format(time.RFC3339))
+}
+
+// setClosedAt dates when a closed pratica's stato closed.
+func setClosedAt(t *testing.T, v *Vault, id string, at time.Time) {
+	t.Helper()
+	execSQL(t, v, "UPDATE vault_fields SET closed_at = ? WHERE id = ?", at.UTC().Format(time.RFC3339), id)
+}
+
+// execSQL runs a statement on the vault's database, for states only an
+// older version could leave.
+func execSQL(t *testing.T, v *Vault, query string, args ...any) {
+	t.Helper()
+	db, err := sql.Open("sqlite", filepath.Join(v.dir, "vault.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if _, err := db.Exec(query, args...); err != nil {
+		t.Fatal(err)
+	}
+}
 
 func TestProcura_PersonOnly(t *testing.T) {
 	for _, kind := range []string{KindPersona, KindImpresa} {
@@ -128,6 +158,7 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 	if _, err := v.AddDocument("rossi:cie", "retro.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
 		t.Fatal(err)
 	}
+	setDocumentsCreatedAt(t, v, now.Add(-time.Hour))
 	// rossi: both pratiche closed. verdi: one still open. neri: none.
 	mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
 	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
@@ -182,6 +213,7 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 	if _, err := v.AddDocument("bianchi:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
 		t.Fatal(err)
 	}
+	setDocumentsCreatedAt(t, v, now.Add(-time.Hour))
 	mustSet(t, v, "pratiche.albo-bianchi_persona", "bianchi")
 	mustSet(t, v, "pratiche.albo-bianchi_stato", "completata")
 	mustSet(t, v, "pratiche.scia-bar_stato", "in_attesa")
@@ -288,12 +320,12 @@ func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
 		t.Fatal(err)
 	}
 	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
-	setLegacy(t, v, "rossi:Ruolo.tipo", "titolare") // IDs are case-sensitive in the store
 	for _, cat := range []string{"cie", "procura"} {
 		if _, err := v.AddDocument("rossi:"+cat, cat+".pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
 			t.Fatal(err)
 		}
 	}
+	setDocumentsCreatedAt(t, v, now.Add(-time.Minute))
 	mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
 	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
 	due := func() string {
@@ -325,25 +357,37 @@ func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
 		t.Fatalf("procura expired: scans due = %q", got)
 	}
 
-	// The pratica closed an hour ago; a new CIE arrives now.
-	stato, err := v.db.GetField("pratiche.cila-roma_stato")
-	if err != nil || stato == nil {
-		t.Fatal(stato, err)
-	}
-	stato.UpdatedAt = time.Now().Add(-time.Hour)
-	if err := v.db.SetField(*stato); err != nil {
-		t.Fatal(err)
-	}
+	// The pratica closed an hour ago; the scans arrived a minute ago.
+	setClosedAt(t, v, "pratiche.cila-roma_stato", time.Now().Add(-time.Hour))
 	if got := due(); got != "" {
 		t.Fatalf("scans uploaded after the close: due = %q", got)
 	}
-	// Saving the same stato again, or changing its tier, isn't a new close.
+	// Saving the same stato again, changing its tier, or correcting it to
+	// another closing stato isn't a new close.
 	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
 	if err := v.SetSensitivity("pratiche.cila-roma_stato", "sensitive"); err != nil {
 		t.Fatal(err)
 	}
+	mustSet(t, v, "pratiche.cila-roma_stato", "annullata")
 	if got := due(); got != "" {
-		t.Fatalf("after re-saving the stato: due = %q", got)
+		t.Fatalf("after re-saving or correcting the stato: due = %q", got)
+	}
+	// Reopening and closing it again is.
+	mustSet(t, v, "pratiche.cila-roma_stato", "in_attesa")
+	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
+	if got := due(); got != "rossi:cie.documents rossi:procura.documents" {
+		t.Fatalf("closed again: due = %q", got)
+	}
+
+	// A scan from the very second the pratica closed may have come after it
+	// (times are to the second), so it isn't due.
+	doc, err := v.AddDocument("rossi:passaporto", "passaporto.pdf", "application/pdf", []byte("%PDF"), "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	setClosedAt(t, v, "pratiche.cila-roma_stato", doc.CreatedAt)
+	if got := due(); got != "rossi:cie.documents rossi:procura.documents" {
+		t.Fatalf("scan from the second of the close: due = %q", got)
 	}
 }
 
@@ -363,6 +407,7 @@ func TestRetention_ScanDays(t *testing.T) {
 	if _, err := v.AddDocument("rossi:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
 		t.Fatal(err)
 	}
+	setDocumentsCreatedAt(t, v, time.Now().Add(-time.Minute))
 	mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
 	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
 	closedOn := time.Now().UTC()
@@ -402,43 +447,19 @@ func TestRetention_ScanDays(t *testing.T) {
 	}
 }
 
-// A pratica stored under two spellings (from before IDs had to be
-// lower-case, in the category, the slug or the campo) is closed only if every
-// stato says so, whatever order the rows are read in: its client's scans
-// aren't due, its deadline still shows, it still keeps its person from being
-// removed, and its deadline names everyone its persona fields name.
-func TestRetention_LegacyCaseVariants(t *testing.T) {
-	now := time.Now().UTC()
-	for _, legacy := range []string{"Pratiche.cila-roma", "pratiche.CILA-ROMA", "pratiche.cila-roma_STATO"} {
-		v := tmpVaultKind(t, KindImpresa)
-		if err := v.SetScanDays(0); err != nil {
-			t.Fatal(err)
-		}
-		mustSet(t, v, "rossi:ruolo.tipo", "cliente")
-		mustSet(t, v, "verdi:ruolo.tipo", "cliente")
-		if _, err := v.AddDocument("rossi:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
-			t.Fatal(err)
-		}
-		mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
-		mustSet(t, v, "pratiche.cila-roma_stato", "completata")
-		mustSet(t, v, "pratiche.cila-roma_data_scadenza", now.AddDate(0, 0, 10).Format(dateLayout))
-		stato, persona := legacy+"_stato", legacy+"_persona"
-		if strings.HasSuffix(legacy, "_STATO") {
-			stato, persona = legacy, strings.TrimSuffix(legacy, "_STATO")+"_PERSONA"
-		}
-		setLegacy(t, v, stato, "in_attesa")
-		setLegacy(t, v, persona, "verdi")
-		for range 30 {
-			items, err := v.Expiring(90*24*time.Hour, nil, now)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if len(items) != 1 || items[0].Kind != "" || items[0].Document != "pratica cila-roma" || items[0].Person != "rossi,verdi" {
-				t.Fatalf("%s: open under one spelling: %+v", legacy, items)
-			}
-		}
-		if _, err := v.RemovePerson("rossi"); err == nil {
-			t.Fatalf("%s: removed a person an open pratica names", legacy)
+func TestRetentionEnd(t *testing.T) {
+	for _, c := range []struct {
+		from  string
+		years int
+		want  string
+	}{
+		{"2024-02-29", 1, "2025-02-28"}, // no 29 February: the month's last day
+		{"2024-02-29", 4, "2028-02-29"},
+		{"2024-03-31", 10, "2034-03-31"},
+		{"2023-02-28", 1, "2024-02-28"},
+	} {
+		if end, ok := retentionEnd(c.from, c.years); !ok || end.Format(dateLayout) != c.want {
+			t.Errorf("retentionEnd(%s, %d) = %s, %v; want %s", c.from, c.years, end.Format(dateLayout), ok, c.want)
 		}
 	}
 }

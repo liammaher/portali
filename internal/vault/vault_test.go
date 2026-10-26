@@ -808,7 +808,7 @@ func TestCheckedWritesRefuseChangedFields(t *testing.T) {
 	if err := v.SetChecked("notes.a", "agent", "", seen, nil); err != ErrFieldChanged {
 		t.Errorf("write after a tier change: %v", err)
 	}
-	if err := v.DeleteChecked("notes.a", seen, nil); err != ErrFieldChanged {
+	if err := v.DeleteChecked("notes.a", seen); err != ErrFieldChanged {
 		t.Errorf("delete after a tier change: %v", err)
 	}
 	if f, _ := v.Get("notes.a"); f == nil || f.Value != "agent" || f.Sensitivity != "critical" {

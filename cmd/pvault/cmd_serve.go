@@ -78,7 +78,7 @@ func cmdServe() {
 		if sock != nil {
 			sock.Close()
 		}
-		fatal("start server: %v", err)
+		fatal("start server: %v", listenError(err, dir))
 	}
 	if sock != nil {
 		srv.Serve(sock)

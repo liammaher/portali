@@ -9,7 +9,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 // The real MCP server over stdio, against a fake vault whose token may read
-// everything, so only the server's own VAULT_SCOPE and import rules apply.
+// everything, so only the server's own import rules apply.
 let vault: Server;
 let importDir: string;
 let client: Client;
@@ -47,7 +47,6 @@ before(async () => {
       ...(process.env as Record<string, string>),
       VAULT_ADDR: `http://127.0.0.1:${(vault.address() as AddressInfo).port}`,
       VAULT_TOKEN: "pvs_" + "a".repeat(64),
-      VAULT_SCOPE: "residenza.*",
       VAULT_IMPORT_DIRS: importDir,
       PEC_ADDRESS: "",
     },
@@ -62,18 +61,19 @@ after(async () => {
 
 const text = (r: unknown) => ((r as { content: { text: string }[] }).content[0]?.text ?? "");
 
-test("vault_expiring keeps to VAULT_SCOPE", async () => {
-  const out = text(await client.callTool({ name: "vault_expiring", arguments: {} }));
-  assert.match(out, /"residenza\.data_scadenza/);
-  assert.doesNotMatch(out, /passaporto/);
-  // residenza.* is the owner's residenza only, never a family member's.
-  assert.doesNotMatch(out, /leo:/);
+test("vault_household passes on what the vault's scope allows", async () => {
+  const out = JSON.parse(text(await client.callTool({ name: "vault_household", arguments: {} })));
+  assert.deepEqual(out.members.map((m: { slug: string }) => m.slug), ["leo", "giulia"]);
 });
 
-test("vault_household keeps to VAULT_SCOPE", async () => {
-  // VAULT_SCOPE is residenza.*: an owner scope, which reaches no member.
-  const out = JSON.parse(text(await client.callTool({ name: "vault_household", arguments: {} })));
-  assert.deepEqual(out, { members: [] });
+test("refuses to start with VAULT_SCOPE set", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const run = spawnSync(process.execPath, ["--import", "tsx", "src/index.ts"], {
+    env: { ...process.env, VAULT_SCOPE: "residenza.*", VAULT_TOKEN: "pvs_" + "a".repeat(64) },
+    input: "", encoding: "utf8",
+  });
+  assert.notEqual(run.status, 0);
+  assert.match(run.stderr, /VAULT_SCOPE is no longer supported/);
 });
 
 test("vault_document_add doesn't tell which paths exist outside the import folders", async () => {

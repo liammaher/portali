@@ -490,12 +490,13 @@ func GetSchemaCategory(name string) *SchemaCategory {
 // DefaultSensitivity returns the schema default sensitivity for a field ID,
 // or "standard" if the field is not in the schema. Non-canonical personal
 // codice fiscale fields (e.g. custom.coniuge_codice_fiscale) default to
-// "sensitive". A member's field defaults like the owner's.
+// "sensitive". A member's field defaults like the owner's, and a numbered
+// copy (cie2.numero) like its original.
 func DefaultSensitivity(id string) string {
 	_, id = SplitPerson(id)
-	// Validation ignores case, so the default must too (financial.SSN is
-	// still critical).
-	if f, ok := schemaIndex[strings.ToLower(id)]; ok {
+	// Asked about IDs as typed too, before CheckLowerCase refuses them:
+	// financial.SSN is still critical.
+	if f, ok := schemaIndex[canonicalLocalID(id)]; ok {
 		return f.Sensitivity
 	}
 	if parts := strings.SplitN(id, ".", 2); IsCredentialField(id) || (len(parts) == 2 && IsPersonalCategory(parts[0])) {

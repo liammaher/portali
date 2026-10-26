@@ -316,9 +316,9 @@ export async function getSchema(): Promise<unknown> {
 }
 
 // Field IDs go into the URL path, so only the vault's own ID shape is sent
-// ([member:]category.field_name: letters, digits, _ and -, and a member slug
-// of lower-case letters, digits and -). A "/" or ".." could otherwise reach
-// another endpoint past VAULT_SCOPE.
+// ([person:]category.field_name: letters, digits, _ and -, and a person's
+// slug as vault.ValidPersonSlug has it). A "/" or ".." could otherwise reach
+// another endpoint.
 const FIELD_ID = /^(?:(?!io:)[a-z][a-z0-9-]{0,31}:)?[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
 
 function fieldPath(id: string): string {

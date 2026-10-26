@@ -13,9 +13,11 @@ import (
 // GET /vault/members
 // Lists family members, limited like every bulk read to the caller's scope
 // and tier cap: a member shows only if the caller can reach some of their
-// data, and derived values (age, label) only from fields it can read.
+// data, and derived values (age, label) only from fields it can read. The
+// session and grants the user approved see everyone, people with no fields
+// or documents yet too.
 func (s *Server) handleListMembers(w http.ResponseWriter, r *http.Request) {
-	h, err := s.vault.Household(callerFilter(r), time.Now())
+	h, err := s.vault.Household(callerFilter(r), reachesPersonal(r), time.Now())
 	if err != nil {
 		handleVaultError(w, err)
 		return

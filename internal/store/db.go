@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS vault_fields (
 	value       TEXT NOT NULL,
 	sensitivity TEXT NOT NULL DEFAULT 'standard',
 	updated_at  TEXT NOT NULL,
-	version     INTEGER NOT NULL DEFAULT 1
+	version     INTEGER NOT NULL DEFAULT 1,
+	closed_at   TEXT
 );
 
 CREATE TABLE IF NOT EXISTS vault_access_log (
@@ -59,6 +60,25 @@ CREATE TABLE IF NOT EXISTS vault_meta (
 	key   TEXT PRIMARY KEY,
 	value TEXT NOT NULL
 );
+
+-- The vault's other people (people.go). Writing a person's first field or
+-- document adds them; only ApplyChange's DeletePerson removes one.
+CREATE TABLE IF NOT EXISTS vault_people (
+	slug       TEXT PRIMARY KEY,
+	created_at TEXT NOT NULL
+);
+
+CREATE TRIGGER IF NOT EXISTS vault_fields_person AFTER INSERT ON vault_fields
+WHEN instr(NEW.category, ':') > 0 BEGIN
+	INSERT OR IGNORE INTO vault_people (slug, created_at)
+	VALUES (substr(NEW.category, 1, instr(NEW.category, ':') - 1), strftime('%Y-%m-%dT%H:%M:%SZ', 'now'));
+END;
+
+CREATE TRIGGER IF NOT EXISTS vault_documents_person AFTER INSERT ON vault_documents
+WHEN instr(NEW.category, ':') > 0 BEGIN
+	INSERT OR IGNORE INTO vault_people (slug, created_at)
+	VALUES (substr(NEW.category, 1, instr(NEW.category, ':') - 1), strftime('%Y-%m-%dT%H:%M:%SZ', 'now'));
+END;
 
 CREATE INDEX IF NOT EXISTS idx_fields_category ON vault_fields(category);
 CREATE INDEX IF NOT EXISTS idx_documents_category ON vault_documents(category);
@@ -116,7 +136,30 @@ func migrate(conn *sql.DB) error {
 	if err := ensureColumn(conn, "vault_tokens", "max_sensitivity", addTokenMaxSensitivity); err != nil {
 		return err
 	}
-	return ensureColumn(conn, "vault_tokens", "access", addTokenAccess)
+	if err := ensureColumn(conn, "vault_tokens", "access", addTokenAccess); err != nil {
+		return err
+	}
+	if err := ensureColumn(conn, "vault_fields", "closed_at", addFieldClosedAt); err != nil {
+		return err
+	}
+	return addPeopleWithRows(conn)
+}
+
+// addPeopleWithRows adds to vault_people everyone with a field or document,
+// for databases from before the table (and restored backups of them).
+func addPeopleWithRows(conn *sql.DB) error {
+	_, err := conn.Exec(`INSERT OR IGNORE INTO vault_people (slug, created_at)
+		SELECT substr(category, 1, instr(category, ':') - 1), strftime('%Y-%m-%dT%H:%M:%SZ', 'now') FROM vault_fields WHERE instr(category, ':') > 0
+		UNION
+		SELECT substr(category, 1, instr(category, ':') - 1), strftime('%Y-%m-%dT%H:%M:%SZ', 'now') FROM vault_documents WHERE instr(category, ':') > 0`)
+	return err
+}
+
+// addFieldClosedAt adds when a pratica closed (Field.ClosedAt). The vault
+// dates older closed stati when it unlocks, since only it can read them.
+func addFieldClosedAt(conn *sql.DB) error {
+	_, err := conn.Exec(`ALTER TABLE vault_fields ADD COLUMN closed_at TEXT`)
+	return err
 }
 
 // ensureColumn runs add if table lacks column, tolerating another process

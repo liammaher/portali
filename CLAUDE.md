@@ -1,13 +1,16 @@
 # Personal Vault
 
+An encrypted local vault for Italian bureaucracy data (a person's, their family's, or a
+business's and its people), served to the CLI, an onboarding page and an MCP server.
+
 ## Quick Reference
 
-- **Language:** Go 1.26+
-- **Database:** `modernc.org/sqlite` (pure Go, no CGO)
+- **Language:** Go 1.26+, no CGO
+- **Database:** `modernc.org/sqlite` (pure Go)
 - **Crypto:** `golang.org/x/crypto` (argon2, hkdf) + stdlib `crypto/aes`, `crypto/cipher`
 - **HTTP:** stdlib `net/http`
-- **Tests:** `go test -race ./...`
-- **Build:** `make build` (outputs `bin/pvault`)
+- **Tests:** `go test -race ./...` (MCP: `cd mcp && npm test`)
+- **Build:** `make build` (outputs `bin/pvault`, and `bin/pvault-touchid` on macOS)
 
 ## Commands
 
@@ -16,10 +19,7 @@ make build                        # Build bin/pvault (+ bin/pvault-touchid on ma
 make touchid                      # Rebuild only the Touch ID helper
 make test                         # Run all tests with race detector
 make clean                        # Remove build artifacts
-go test -race ./internal/crypto/  # Test crypto layer only
-go test -race ./internal/store/   # Test store layer only
-go test -race ./internal/vault/   # Test vault core only
-go test -race ./internal/api/     # Test HTTP API only
+go test -race ./internal/vault/   # One layer: crypto, store, vault, api
 ```
 
 ## CLI Usage
@@ -27,22 +27,18 @@ go test -race ./internal/api/     # Test HTTP API only
 ```sh
 pvault init [--impresa]                  # Create new vault (~/.pvault/); --impresa: a business vault
 pvault --vault <name> <command>          # Any command on another vault (~/.pvault-<name>)
-pvault unlock                            # Start background server
-pvault lock                              # Stop server, zero keys
-pvault serve                             # Foreground server (debugging)
+pvault unlock | lock | serve             # Background server / stop it, zero keys / foreground
 pvault set <category.field> <value>      # Set encrypted field
 pvault get <category.field> [...]        # Get decrypted field(s); several → JSON, one grant
 pvault list [category]                   # List fields
 pvault delete <category.field>           # Delete field
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
-pvault export                            # Export all fields as JSON
+pvault export | audit | status           # All fields as JSON / access log / status
 pvault backup [--to <folder>]            # Encrypted backup now; --to sets the auto-backup folder
 pvault restore <file> [--check] [--ask-key]  # Recreate vault from a backup / only verify it
-pvault audit                             # Show access audit log
-pvault status                            # Show vault status
 pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
 pvault doc add|list|get|delete           # Encrypted document scans
-pvault person list|show|add|remove|export|migrate  # Other people, e.g. family (leo:cie.numero); alias: member
+pvault person list|show|add|remove|export|migrate  # Other people (leo:cie.numero); alias: member
 pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
 pvault retention scans <days>|unset      # How long clients' ID scans are kept after their pratiche close (no default)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
@@ -55,12 +51,15 @@ pvault ui                                # Onboarding page in the default browse
 ## Architecture
 
 ```
-cmd/pvault/      CLI (thin HTTP clients to the vault server)
+cmd/pvault/          CLI (thin HTTP clients to the vault server)
+cmd/pvault-touchid/  Swift helper: Touch ID approval, then a grant over the vault socket
 internal/
-  crypto/        KDF (Argon2id), cipher (AES-256-GCM), HKDF subkeys
-  store/         SQLite CRUD (fields, documents, tokens, audit, meta)
-  vault/         Business logic (init, unlock/lock, encrypt/decrypt, session)
-  api/           HTTP server, handlers, Bearer token middleware
+  crypto/            KDF (Argon2id), cipher (AES-256-GCM), HKDF subkeys, backup stream
+  store/             SQLite CRUD (fields, documents, people, tokens, audit, meta)
+  vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
+  api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
+mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
+claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
 ```
 
 ## Security Model
@@ -68,335 +67,183 @@ internal/
 ```
 Profile Password + Secret Key (128-bit)
   → Argon2id (64MB, 3 iter) → Vault Key (256-bit, in-memory only)
-  → HKDF per category → Category Subkeys
+  → HKDF per category → Category Subkeys (documents: info documents/<category>)
   → AES-256-GCM per field (12-byte random nonce)
 ```
 
-- App-layer encryption: encrypt before INSERT, decrypt after SELECT
-- Vault key exists only in memory while unlocked. `requireUnlocked` hands out a copy
-  that each caller clears (`defer clear(vaultKey)`, and its subkeys likewise); callers
-  that don't need the key use `checkUnlocked`
-- Auto-lock after 30 min idle
-- Session token: 32 bytes crypto/rand, constant-time comparison; never written to disk
-- CLI auth: each command re-enters the password (interactive TTY only) and
-  exchanges it via `POST /vault/session` for an in-memory grant (2m CLI,
-  15m UI, max 1h), cleared on lock. Only failed attempts count toward the
-  10/min limit. The secret key is held in memory while unlocked, so the
-  onboarding page asks for the password alone; no token is ever put in a URL.
-- Credential endpoints (`/vault/unlock`, `/vault/session`) require
-  `Content-Type: application/json` so web pages can't call them cross-origin,
-  and every request must carry a loopback Host (127.0.0.1/localhost/::1) to
-  block DNS rebinding. Grant and unlock attempts are counted on entry and refunded unless
-  the password was wrong, so concurrent guesses can't bypass the limit and junk requests
-  can't use up the user's own attempts.
-  API tests build requests with `newTestRequest` (loopback Host)
-- Writing a field without a tier keeps its existing tier (schema default for
-  new fields), so overwrites never silently downgrade sensitivity
-- Secret key at `~/.pvault/secret.key` (0600), never in database. `Init` never replaces an
-  existing one (it may be the only key to old backups) and removes a half-made vault on failure.
-  `Open` never creates `vault.db` (`ErrNotInitialized`), so `pvault serve` in an empty dir
-  can't make a later `init` refuse
-- Credentials (password + secret key) never go over TCP, where anything can listen on
-  7200 while the server is down. `pvault serve` also listens on `<vault dir>/run/pvault.sock`
-  (dir 0700, socket 0600; bound before TCP, never taken over from a live server, stale
-  ones replaced). `reUnlock`/`requestGrant` use `credentialRequest` (`socket.go`), which
-  refuses a run dir that is a symlink, not ours or not 0700, and checks the listener
-  (`peer_darwin.go`: `LOCAL_PEERCRED` uid, kernel exe path via `proc_info` equal to our own
-  resolved `os.Executable()`, and the same running cdhash as this process via `csops`, so a
-  server left running across a reinstall is refused before any prompt; Linux: `SO_PEERCRED`
-  + `/proc/<pid>/exe`; other OSes keep TCP). `checkVaultServer` runs before any password or
-  Touch ID prompt, and also requires `VAULT_ADDR` to be the TCP address the verified server
-  reports in `/vault/status` (`addr`), since tokens and the UI's password go there. The Go side doesn't require the hardened runtime, so `go build` and
-  release binaries work; the helper does (`make build` signs pvault that way).
-  Limits: the private run dir is the protection. The peer check catches stale or
-  mismatched servers but is not a guarantee against a process that can already write to
-  the vault dir, nor against one that replaces the pvault binary (`~/.local/bin` is
-  user-writable). The onboarding page still sends its password over TCP (browsers can't
-  use Unix sockets). `pvault lock` signals the PID file's process only if its kernel exe
-  path is this pvault. A server that exits during startup reports its own last stderr line.
-  Tests: `serveOnSocket`/`shortVaultDir` (t.TempDir paths exceed the 104-byte socket limit)
-- Touch ID (`cmd/pvault-touchid/main.swift`, macOS, ad-hoc signed + hardened runtime):
-  `pvault touchid enable` (TTY only) stores the profile password in a plain login-Keychain
-  item (service `pvault-touchid`, account = vault dir) whose ACL trusts only that exact
-  helper build. Biometric Keychain flags need a paid Apple signature (-34018 otherwise),
-  so the helper checks Touch ID itself (biometrics or Apple Watch, no Mac-password
-  fallback), then sends the password only over the vault socket and returns only a token.
-  The Keychain item holds JSON `{password, server}` and `kSecAttrGeneric` =
-  `pvault-touchid/2`: `touchid enable` passes pvault's own resolved path (`enroll --server`,
-  which fully validates that file), and the helper sends only to a listener whose audit
-  token (`LOCAL_PEERTOKEN`) gives a valid, hardened `SecCode` with that file's declared
-  cdhash (no per-request file hashing). An item without the marker (older helper) counts as
-  not enrolled, so no fingerprint is asked for. The helper's HTTP client refuses chunked
-  bodies (the server sends Content-Length). Its prompt is worded from the exact scope it requests:
-  append/write grants say they can read too, `cat.*` says "all your cat fields and
-  documents" (`leo:cat.*` "all of leo's ...", `*:cat.*` "everyone's ...", `leo:*`
-  "everything about leo"), `*` is named alone and says it includes the family, durations round up, and patterns are anchored with `\A`/`\z` (ICU `$` lets
-  a trailing line break through) and capped at 100 characters.
-  pvault looks for the helper only next to its own binary. CLI commands call
-  `needGrant(scope, access)`; with Touch ID on, the grant is scoped to that (full access
-  if unset), and in a TTY a failed or denied prompt falls back to the typed password.
-  When a scoped grant gets 403 `session_required` (an operation only the user's session
-  may do), `authed` (`helpers.go`) asks once more for full access and resends.
-  `pvault ui` and `onboard` (before its grant) run `checkVaultServer` too, so the password
-  page never opens on an impostor and no grant goes to an unverified address.
-  `pvault unlock` with Touch ID starts `pvault serve --locked` and the helper unlocks it.
-  Rebuilding the helper changes its signature, and moving or rebuilding pvault changes
-  the trusted server, so re-run `pvault touchid enable`. The helper never talks TCP: the
-  token it returns goes to `serverAddr()`, which `checkVaultServer` (run before every
-  prompt) has checked is the socket-verified server's address, so any vault's port works.
-  Prompts name the vault from its dir (`.pvault-studio` → "your studio vault"; "your
-  vault" otherwise). A `unlock` that started the server stops it again if no one
-  can unlock it. `touchid enable`/`disable` are interactive only, and the helper's own
-  `enroll`/`remove` refuse unless stderr is a terminal, so an agent can't switch it off.
-  Debug builds (`-D DEBUG`) honor `PVAULT_TOUCHID_TEST_APPROVE=1` and
-  `PVAULT_TOUCHID_TEST_PASSWORD`/`_SERVER` (enrollment without the Keychain) for tests, and
-  add `describe-grant` (prints the prompt; `TestTouchIDHelper_*` compiles it with swiftc and
-  runs it against real `pvault serve --locked` builds and impostors)
-- Scoped grants: `POST /vault/session` with `scope` (+ `access`) issues a grant limited
-  like a service token (TTL max 10m) that can reach `personal` fields, because the user
-  approved it in person. It is not session auth (no audit, lock, tiers or tokens), and only
-  its creation resets the auto-lock timer.
-- Only session auth may lower a tier: a token or scoped grant writing a field with a
-  `sensitivity` below its current tier (or the schema default) gets 403, and so does
-  deleting a field or document stored above its default tier (re-creating it would lower it).
-  A tier-less write keeps the stored tier in the same SQL statement (`store.Field.KeepTier`),
-  so it can't undo a concurrent raise. A token's write or delete is conditional on the field
-  it checked (`SetChecked`/`DeleteChecked`, `store.Seen`): if the field appeared or changed
-  tier meanwhile, it gets 409 instead of landing. Defaults ignore ID case, like validation.
-  For tokens, DELETE of a missing field is 404, the same as a hidden personal one, and a
-  read-only token's PUT is refused before the field is looked up; for the session, a
-  delete or tier change of a missing field is 404 too.
-  Handlers must test `isSessionAuth`, not `maxTier == personal`, to mean "the user's session"
-- Service tokens: access `read` (default) / `append` (add new fields and
-  documents, no overwrite or delete) / `write`; explicit scope required, TTL 24h default / 90d max,
-  `max_sensitivity` cap (default `sensitive`), cannot change tiers,
-  and never reset the auto-lock timer (only session activity does)
-- MCP server uses only a service token: `VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`
-  (Keychain item for the current user), else `VAULT_TOKEN_COMMAND`; lookups run per
-  request, never cached. `create-service-token --keychain <service>` stores the token
-  via `/usr/bin/security -i` stdin instead of printing it and revokes the token it
-  replaces (by hash, so no raw token goes in a URL). `TestStoreInKeychain` and the
-  MCP Keychain test touch the real Keychain and only run with `PVAULT_KEYCHAIN_TEST=1`
-- PEC (`mcp/src/pec.ts`): read-only IMAP tools `pec_folders`/`pec_list`/`pec_read`/
-  `pec_attachment`/`pec_save_attachment` (writes into the first import dir, `wx` + 0600, then
-  sets `com.apple.quarantine` so Gatekeeper warns on open; names are cut to 200 UTF-8 bytes
-  with control characters removed, so `vault_document_add` accepts them), registered only
-  when `PEC_ADDRESS` is set. No SMTP code by design. Only png/jpeg/gif/webp go out as inline
-  images (`content.ts`); HEIC, TIFF and the rest as an embedded resource.
-  EXAMINE + BODY.PEEK so nothing is marked read. The app password comes from Keychain
-  (`PEC_KEYCHAIN_SERVICE`, account = the PEC address) per request, never cached.
-  Messages are unwrapped from `postacert.eml` and `daticert.xml` is parsed
-  (mailparser needs `ignoreEmbedded: true` or it splices the inner message into the envelope)
-- Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
-  credentials (`IsCredentialField`: a secret word such as pin/puk/password/otp among the
-  category's or field's words in any category, `fisconline.pin`, `entratel.password`; the
-  wider credential words username/login/pass/chiave only next to spid/cie/cieid/firma/cns,
-  `spid.username` but not `pec.username`; plurals, digits and `pincode`/`pukcode` included;
-  pratiche campi never) can only be stored with tier `personal`; `IsIdentityCredential` is
-  the narrower SPID/CieID/CIE/firma kind;
-  categories whose first word is `spid`/`cieid` (`spid_poste`, `spid2`) default to it, and so
-  do their documents (`DefaultDocumentTier`, which the upload check uses, so a token can't
-  create a personal document in `cie_pin` either). `personal` (rank 4) is
-  never reachable by service tokens: they can't be capped at it, and the API hides
-  personal items from them (404 on read/delete, 403 personal_only on write, omitted
-  from every listing; a single-field read re-checks the tier on the row it decrypts,
-  `GetIf`). Reads trust the stored tier, so `Open` raises to personal any field or document
-  the current rules call a credential but that is stored below it (`raiseCredentialTiers`, audited
-  as `tier_raise`: a word added later, like `sblocco`, must not leave old rows agent-readable).
-  Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
-  `spid.provider` (fixed spellings matching the onboarding select,
-  `TestOnboardingSelectOptionsValidate`) are validated in `access.go`; the provider
-  stays lowerable to `standard` so agents can pick it. Fields named with the word
-  shape `data_<x>`, `date_of_<x>` or `<x>_date` must be real dates, stored as
-  YYYY-MM-DD (`dates.go`)
-- Housing categories `abitazione`, `locazione`, `utenze`, `tari` describe the home at
-  residenza/domicilio (address not duplicated). Their format rules live in
-  `internal/vault/housing.go` and run before the generic ones in `NormalizeAndValidate`,
-  scoped to those categories. Euro amounts need 3-digit thousands groups and at most 2
-  decimals (`1.234.56` and the ambiguous `1,250` are refused); `*_mq` and `vani` read
-  separators the same way (`parseItalianNumber`), so `1.200 m²` is 1200; a share
-  (`ruolo.quota_percentuale`) has no thousands, so there `33.333` is a decimal. Every onboarding `data-field` category must be in the
-  page's `categories` list (`TestOnboardingFieldsAreLoaded`)
-- `business` (incl. `sede_legale_*`) and `locale` (the business premises, one unit, with its
-  own address) have their rules in `internal/vault/business.go`; address parts share the
-  residenza checks through `addressPart`, catasto fields share abitazione's (`normalizeCatasto`).
-  `identity.birth_country` is for births abroad only (Italia is refused). These came from the
-  pratiche-napoli library's `contract/extensions.json`: when the library needs a field the
-  vault lacks, add it here, then remove it from `extensions.json` there and regenerate `fields.json`
-- Pratiche (`pratiche.go`): procedures in progress are fields `pratiche.<slug>_<campo>`,
-  slug lower-case words joined by hyphens, campo/stato/canale from fixed lists (validated).
-  Well-formed pratiche fields are never credentials, even when the slug says cie-pin.
-  `<slug>_data_scadenza` shows in `Expiring` (as "pratica <slug>") until the pratica's
-  stato is completata/respinta/annullata. The pratica skill (`claude/skills/pratica/`) keeps
-  one playbook per procedure in `playbooks/`, with field IDs only, never personal values
-- Documents (`documents.go`): AES-256-GCM with HKDF info `documents/<category>`,
-  AAD bound to the document ID; encrypted filename; files at
-  `~/.pvault/documents/<id>.enc` (0600). IDs must match `^[0-9a-f]{32}$`.
-  Token access uses scope ID `<category>.documents` plus the tier cap. Only session auth
-  may upload below, or delete above, the category's `DefaultDocumentTier` (`sensitive`,
-  personal for SPID/CieID); others get 403 session_required.
-  Downloads are served as attachments with `Content-Security-Policy: sandbox`
-- Backups (`backup.go`): `vault.db` snapshot (`VACUUM INTO`) + `documents/*.enc` in a tar,
-  encrypted again with chunked AES-256-GCM (`crypto/stream.go`, STREAM nonces) under
-  HKDF(vault key, salt, `backup/<file id>`), so field names and the audit log are hidden.
-  The plaintext header (magic, version, time, salt, file id) is the AAD. `secret.key` is never
-  in a backup. `POST /vault/backup` is session-only; `--to` stores the folder in meta
-  `backup_dir` (absolute, outside the vault dir after resolving symlinks). Every write calls
-  `markChanged`, which backs up `backupDelay` (1m) after the last change; `Lock` (holding
-  `backup.mu` throughout) and auto-lock flush a pending one first, so `pvault lock` waits
-  for the server to exit. Lock order: `backup.mu` → `writeMu` → `v.mu` → session `mu`; `backup.stateMu`
-  is a leaf, so `markChanged` never waits on a running backup. Auto-lock ignores
-  stale timer firings (`Touch` arms a new timer; an older one's generation no longer
-  matches) and only clears its own session. Files are
-  `pvault-<vault id>-<time>.pvbackup` (id = SHA-256 of the salt, 8 hex); pruning keeps this
-  vault's 10 newest plus the newest per day for 30 days and never touches other files.
-  Documents whose file is gone are dropped from the snapshot rather than failing the backup.
-  `store.PrepareSnapshot` also drops every service token (a restore must not revive a
-  revoked one) and records the backup's own time as `backup_last`.
-  Each backup first removes `.backup-*` work dirs a crash left in the vault dir (they hold a
-  plaintext-named snapshot); restore and check remove `.pvault-restore-*` / `pvault-check-*`
-  ones older than 10 minutes. `SetBackupDir` creates the folder (0700) only after checking it.
-  `RestoreBackup` only fills a missing or empty dir and checks the result unlocks
-  (`--ask-key` tests a hand-kept secret key); public status shows backup state, never the folder
+### Keys and sessions
+- Encrypt before INSERT, decrypt after SELECT. The vault key lives only in memory while
+  unlocked: `requireUnlocked` hands out a copy each caller clears (`defer clear(...)`, subkeys
+  too); callers that don't need it use `checkUnlocked`. Auto-lock after 30 min idle.
+- `secret.key` (0600) is never in the database or a backup. `Init` never replaces one and
+  removes a half-made vault on failure; `Open` never creates `vault.db`.
+- Session tokens: 32 random bytes, constant-time compare, never on disk, never in a URL.
+- Each CLI command re-enters the password (TTY only) and trades it at `POST /vault/session`
+  for an in-memory grant (2m CLI, 15m UI, max 1h). Only wrong passwords count toward the
+  10/min limit; attempts are counted on entry and refunded otherwise.
+- Credential endpoints require `Content-Type: application/json`; every request needs a
+  loopback Host (DNS rebinding).
 
-- People (`scope.go`, `people.go`; the family view in `famiglia.go`, `household.go`): besides
-  the owner, a vault holds other people (today: family members). A person's IDs are
-  `<slug>:category.field` (slug `^[a-z][a-z0-9-]{0,31}$`, `io` reserved for the owner, who
-  has no prefix); documents in `<slug>:<category>`. The general layer says "person"
-  (`SplitPerson`, `ValidPersonSlug`, `RemovePerson`, `store.PersonRows`); `pvault person`
-  is the command, with `pvault member` as an alias. The API route `/vault/members`, the
-  JSON keys (`member`, `members`, `"for": "member"`), the audit actions (`member_remove`)
-  and the MCP tool `vault_household` keep their old names. The stored category (`leo:cie`)
-  is the HKDF info, so each person has their own subkeys and no DB change was needed. Every
-  category-keyed rule (`IsCredentialField`, `IsPersonalCategory`, `DefaultSensitivity`,
-  `DefaultDocumentTier`, `NormalizeAndValidate`, `SuggestCanonical`) strips the prefix
-  first with `SplitPerson` (whatever the slug looks like), so `leo:spid.password` is
-  personal like `spid.password`; `TestPersonRulesMatchOwner` checks every schema ID and the
-  credential tables with a prefix. Owner-only categories (housing, `pratiche`) refuse a
-  prefix. The schema is the only list of owner-only and person-only fields
-  (`SchemaField.For`: `ForOwner`/`ForPerson`, enforced by `checkFieldFor`) and of fields
-  whose value names people (`PersonRef`: `famiglia.genitori`, `famiglia.intestatario_scheda`;
-  plus pratiche `persona`, in `isPersonRefField`). Such values must name `io` or an
-  existing person; for a service token, one with a row its filter reads (`SetChecked`'s
-  `allow`, `personVisible`), so a hidden person gets the same 400 as a missing one (the
-  session and approved grants may name anyone). Scopes: unprefixed patterns are the owner's only; `leo:cat.*`,
-  `leo:cat.field`, `leo:*` and `*:cat.*` (owner and every person) reach other people; `*`
-  everyone; `*:*` and `io:` are refused. Go, `mcp/src/scope.ts` and the Touch ID helper
-  parse the same grammar, and the Go and TS matchers share
-  `internal/vault/testdata/scopes.json`. `famiglia` holds facts only (relazione → ANPR
-  Tabella 05 code and gendered label, stato_famiglia, a_carico, genitori, rappresentanza;
-  the owner's `intestatario_scheda`); procedure rules live in playbooks. `GET
-  /vault/members` (`Household`) derives age/minor/label only from fields the caller can
-  read. `MigrateNucleo` is session-only; `DELETE /vault/members/{slug}` also accepts a grant
-  the user approved with write access to `<slug>:*` (`ScopeAllowsWholePerson`), so `pvault
-  person remove` asks one Touch ID prompt worded "read, change and delete everything about
-  <slug>" (service tokens never may). Both hold `backup.mu` and `writeMu` (every single
-  write holds `writeMu` for reading; deleting a person's field or document holds it
-  exclusively, `lockWrite`), change rows in one `store.ApplyPersonChange` transaction; remove
-  refuses while another field names the person (closed pratiche don't count), revokes the
-  tokens whose scope names the slug in that same transaction, then drops grants and deletes
-  the files (any it can't are reported in `files_left`, never left for a retry that would
-  find no person). A person's last field or document can't be deleted on its own
-  (`checkNotLastPersonRow`, 400): that would skip these checks. For a token only rows it can
-  see count, so the answer never reveals hidden ones. Migration marks each new
-  member `famiglia.stato_famiglia=si` and drops `numero_componenti` only when you plus the
-  people in your stato di famiglia match it; otherwise it stays, reported in `left`. The public
-  status counts only the owner's data, so it never reveals other people. Bulk reads parse
-  the scope once (`ParseScope`). No slug rename yet. Business and client vaults:
-  `docs/design/business-vaults.md`.
-- Vault kinds and named vaults (`kind.go`, `ruolo.go`, `cmd/pvault/vaults.go`): meta `kind`
-  (`persona`, the default and every vault from before kinds, or `impresa`, set by
-  `pvault init --impresa` via `InitWithOptions`) is loaded by `Open` and reported in
-  `/vault/status` (`kind`) and `/vault/schema` (`vault_kind`). Schema categories carry
-  `subject` (persona/impresa) and `kinds`; fields may carry `kinds`
-  (`business.qualita_dichiarante` is persona-only). Additive keys only: pratiche-napoli's
-  `gen-fields` refuses new `scope` or `for` values. `checkKind` (in `Vault.set` and
-  `AddDocument`, not the pure `NormalizeAndValidate`, so `TestPersonRulesMatchOwner` holds)
-  refuses a category kept for the other kind (`famiglia` persona, `ruolo` impresa), a
-  persona-subject category in an impresa vault's own data (numbered copies such as `cie2`,
-  `identity-2` count as their category, `schemaCategoryOf`), in an impresa vault any
-  person's SPID/CieID category or credential field/document (CIE and `firma`/`cns` PINs,
-  portal logins like `fisconline.pin` included), even at the personal tier, and in an
-  impresa vault's own data any identity credential (`IsIdentityCredential`) or personal
-  category except its own SPID (`isSPIDCategory`): a CIE, CieID or digital signature is
-  always a person's, while its own portal logins (`entratel.password`) are allowed at
-  personal. Documents are checked as their scope ID (`checkKind(DocumentScopeID(cat))`). `MigrateNucleo` refuses in impresa vaults.
-  `ruolo.tipo` is a validated list (`normalizeRuoli`); the people listing carries `ruolo`
-  and `denominazione`. Named vaults: `--vault <name>` (first argument only) or
-  `PVAULT_VAULT` becomes `VAULT_DIR=~/.pvault-<name>` via `os.Setenv` before dispatch, so
-  `serve` and the Touch ID helper (which read only `VAULT_DIR`) follow; a different
-  `VAULT_DIR` is an error. Each vault's TCP port is in a plain `<dir>/port` file (0600):
-  init and restore write it (`ensurePort`: 7200 for `~/.pvault`, else the lowest free
-  7201-7299 no sibling vault's port file names), `serve` and `serverAddr()` read it, and the
-  CLI never opens `vault.db` for it; it isn't trusted, since `checkVaultServer` compares it
-  with the socket-verified status `addr` (and records the verified `kind` for `person`).
-  Hints in messages use `pvCmd` so they name `--vault`. Tests: `kind_test.go`,
-  `vaults_test.go`, `TestTouchIDHelper_PromptNamesVault`, `TestTouchIDHelper_UnlocksNamedVault`.
-  The onboarding page hides what a person can't hold from `/vault/schema`'s `subject`/`kinds`,
-  mirroring `checkKind` in JS (`allowed`/`inputAllowed`); no test runs that JS, so change both
-  together (`TestOnboardingRuoliComplete`/`TestOnboardingKindMarkers` check only the option
-  lists and markers).
-- Clients (phase 2: `procura.go`, `retention.go`, `export.go`): `procura` is a person-only
-  category in every kind (`isPersonOnlyCategory`, numbered copies too; `checkPersonCategory`
-  refuses it unprefixed, for fields and documents): `<slug>:procura.{ente,oggetto,
-  data_conferimento,data_scadenza}` (standard tier, `For: ForPerson`) and the signed copy in
-  `<slug>:procura` (sensitive). Its `data_scadenza` shows in `Expiring` like any other.
-  Retention is meta `retention_years`, no default (D8 unverified, so none is hard-coded),
-  set only by the session (`PUT /vault/retention`; `GET` for any caller). `Expiring` then
-  adds `kind: retention` entries (`ruolo.data_fine` + years, within the window) and, in
-  impresa vaults only and once the user set meta `scan_days` (`pvault retention scans <days>`,
-  no default, 0 allowed), `kind: pratiche_closed` entries (last closing + days) for a client's (ruolo.tipo
-  includes cliente) ID/procura document categories (`idScanCategories`) once at least one
-  pratica names them in `persona` and all of those are closed, and only if every scan in
-  the category predates the last closing (the stato's `updated_at`, which a re-save of the
-  same stato keeps and a tier change never moves), so a new job's or a
-  reused slug's scans are never due; a `procura` category waits while a
-  `procura.data_scadenza` is ahead. That check reads every pratica, but counts a client
-  only if the caller can read every pratica naming them, their ruolo.tipo and procura date,
-  and every scan in the category, so a partial view never says scans can go; entries are only what the
-  caller's filter reads. A document whose file is gone is listed in the export's `missing`
-  instead of failing it. `pvault expiring` prints a hint in an impresa vault for each period not set.
-  `GET /vault/members/{slug}/export[?include_personal=1]` is session-only (not even an
-  approved `<slug>:*` grant), returns fields and documents with content, and logs one
-  `member_export` audit entry; personal-tier items are left out (counted in `omitted`)
-  unless asked. `pvault person export` writes a new `<slug>-export-<date>/` (0700, never an
-  existing one, removed on failure) with `fields.json` and `documents/<category>/<name>`
-  (0600, names made unique). The onboarding page's Procura section is `data-member-only`
-  and `allowed` mirrors the person-only rule. The skills carry the art. 28 (cloud AI) note.
+### Credentials never travel over TCP
+- `pvault serve` listens on `<vault dir>/run/pvault.sock` (dir 0700) before TCP. The CLI sends
+  passwords only there (`credentialRequest`, `socket.go`), after `checkVaultServer` verifies
+  the listener is this same pvault build (peer uid, exe path, cdhash; `peer_darwin.go`,
+  Linux `SO_PEERCRED`) and that `VAULT_ADDR` is the address that server reports. It runs
+  before every password or Touch ID prompt. The onboarding page is the one exception (a
+  browser can't use a socket).
+- Limits: this catches stale or impostor servers, not a process that can already write to
+  the vault dir or replace the pvault binary.
+
+### Touch ID (`cmd/pvault-touchid/main.swift`)
+- The profile password sits in a login-Keychain item whose ACL trusts only that helper
+  build; the helper checks Touch ID itself, sends the password only over the socket to the
+  enrolled pvault (audit token → valid hardened code with the enrolled cdhash), and returns
+  only a token. Rebuilding the helper or moving pvault means `pvault touchid enable` again.
+- The prompt is worded from the exact scope it requests and never understates it.
+  Patterns are anchored with `\A`/`\z`. Its parser is held to `testdata/scopes.json`.
+- `touchid enable`/`disable` are interactive only, so an agent can't switch them.
+- CLI commands call `needGrant(scope, access)`: with Touch ID the grant is scoped to that
+  (full access if unset). A scoped grant refused with 403 `session_required` makes `authed`
+  ask once more for full access.
+
+### Who may do what
+- **Session** (the user, typed password): everything. Handlers test `isSessionAuth`.
+- **Scoped grant** (`POST /vault/session` with `scope`, max 10m): what the user approved
+  in person, `personal` tier included. Not session auth.
+- **Service token** (agents, MCP): explicit scope, access `read`/`append`/`write`, TTL
+  24h default / 90d max, `max_sensitivity` cap (default `sensitive`, never `personal`).
+  Never resets the auto-lock timer. A token may name only people who exist.
+- Tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Service tokens never
+  see `personal` items (404 on read/delete, 403 on write, left out of listings).
+- Only the session may lower a tier, or delete a field or document stored above its
+  default tier. A write without a tier keeps the stored one in the same SQL statement
+  (`KeepTier`). A token's write or delete lands only if the field is still as it checked
+  it (`store.Seen`, else 409).
+- Reads trust the stored tier, so `Open` raises to `personal` anything the current rules
+  call a credential (`raiseCredentialTiers`).
+
+### Backups (`backup.go`)
+- A `vault.db` snapshot plus document files in a tar, encrypted with chunked AES-GCM under
+  a per-file HKDF key; the plaintext header is the AAD. Never `secret.key`, never service
+  tokens (a restore must not revive a revoked one). Session-only.
+- Every write calls `markChanged` (backup 1m after the last change); lock and auto-lock
+  flush first. Pruning touches only this vault's files.
+- Lock order: `backup.mu` → `writeMu` → `v.mu` → session `mu`. `backup.stateMu` is a leaf.
+  Every single write holds `writeMu` for reading; removing or migrating people holds it
+  exclusively.
+
+## Data Rules
+
+All value rules run in `Vault.Set`: `checkKind` first (what this kind of vault can hold),
+then the pure `NormalizeAndValidate`. `Vault.CanHold` answers the same checks for a field
+ID without a value; the onboarding page shows only what it allows (`GET /ui/fields`), so
+the page never copies a rule.
+
+- **IDs** are `category.field_name`, or `<slug>:category.field_name` for another person;
+  lower-case only (`CheckLowerCase`; Unlock migrates older fields, `migrateLegacyFields`).
+  Rules read stored IDs as they are, never ignoring case.
+- **Numbered copies** of a schema category (`cie2`, `abitazione-2`) follow every rule of the
+  original: rules read `canonicalLocalID`/`schemaCategoryOf`. `famiglia`, `ruolo` and
+  `pratiche` (one per holder) have none (`oneOnly`).
+- **Credentials** (`IsCredentialField`: a secret word like pin/puk/password/otp in the
+  category or field name, wider words next to spid/cie/firma) are stored only as
+  `personal`; SPID/CieID categories and their documents default to it.
+- **Formats**: Italian codes, dates (`YYYY-MM-DD`), euro amounts and areas are validated
+  and normalized (`italy.go`, `dates.go`, `housing.go`, `business.go`). Housing categories
+  (`abitazione`, `locazione`, `utenze`, `tari`) describe the home at residenza/domicilio.
+  New fields the pratiche-napoli library needs are added here, then dropped from its
+  `contract/extensions.json`.
+- **Pratiche** (`pratiche.go`): `pratiche.<slug>_<campo>`, campo/stato/canale from fixed
+  lists, never credentials. A deadline shows in `Expiring` until the stato closes. The
+  store dates each closing (`closed_at`, kept across corrections between closed stati).
+  `praticheIn` is the one reading of "is this pratica closed, and for whom".
+- **Documents** (`documents.go`): AAD bound to the document ID, encrypted filename,
+  `documents/<id>.enc` (0600); token scope ID `<category>.documents`. Downloads are
+  attachments with `Content-Security-Policy: sandbox`.
+
+### People (`scope.go`, `people.go`, `household.go`)
+- A person is a row in `vault_people`: added by their first field or document (a SQLite
+  trigger), removed only by `RemovePerson`. Deleting their last row leaves them, and
+  `pvault person add` refuses a slug the vault has (a new person never inherits what
+  named an earlier one). Slugs are
+  `^[a-z][a-z0-9-]{0,31}$`; `io` is the owner, who has no prefix.
+- The stored category (`leo:cie`) is the HKDF info, so each person has their own keys.
+  Every category rule strips the prefix first (`SplitPerson`), so `leo:spid.password` is
+  personal like `spid.password` (`TestPersonRulesMatchOwner`).
+- The schema says which fields are owner-only or person-only (`For`) and which name people
+  (`PersonRef`, plus pratiche `persona`); housing and `pratiche` are owner-only, `procura`
+  person-only. A value naming people must name `io` or existing people; a service token
+  only people it can see a row of.
+- Scopes: unprefixed patterns reach only the owner; `leo:cat.*`, `leo:cat.field`, `leo:*`;
+  `*:cat.*` for everyone; `*` everything; `*:*` and `io:` refused.
+- `RemovePerson` (the session, or a grant the user approved for `<slug>:*` write) refuses
+  while another field names the person (a closed pratica doesn't count), and deletes their
+  rows, the person and the tokens naming them in one transaction; then drops grants and
+  files (`files_left` if one stays).
+- Service tokens never learn of people they can't see a row of; public status counts only
+  the owner's data.
+- Old JSON and audit names stay for compatibility: `/vault/members`, `member`, `members`,
+  `"for": "member"`, `member_remove`, MCP `vault_household`.
+
+### Vault kinds and named vaults (`kind.go`, `cmd/pvault/vaults.go`)
+- Meta `kind`: `persona` (default) or `impresa`, fixed at init. Schema categories carry
+  `subject` and `kinds`. `checkKind` refuses the other kind's categories (`famiglia`,
+  `ruolo`), persona categories as the business's own data, housing in a business vault
+  (its premises are `locale`), and in a business vault any person's SPID/CieID or login
+  secret; the business itself may hold only its own SPID and portal logins.
+- `--vault <name>` (first argument) or `PVAULT_VAULT` sets `VAULT_DIR=~/.pvault-<name>`
+  before dispatch. Each vault's TCP port is in `<dir>/port` (7200 for `~/.pvault`, else the
+  lowest free 7201-7299); it is never trusted (`checkVaultServer`). Hints use `pvCmd` so
+  they name `--vault` (the Swift helper has its own `pvCmd`).
+
+### Clients and retention (`procura.go`, `retention.go`, `export.go`, `expiry.go`)
+- Retention periods have no default (D8): meta `retention_years`, and for business vaults
+  `scan_days`, set only by the session. `Expiring` then reports `kind: retention` (a
+  person's `ruolo.data_fine` + years) and `kind: pratiche_closed` (a client's ID and
+  procura scans, once every pratica naming them closed, dated last closing + days).
+- A scan is reported only if it predates the last closing (a same-second one counts as
+  after) and no procura is still in force; a caller that can't see everything relevant
+  gets no entry. Nothing is ever deleted automatically.
+- `GET /vault/members/{slug}/export` is session-only and audited; personal-tier items only
+  with `include_personal=1`. `pvault person export` writes a new 0700 folder, files 0600.
+
+### MCP (`mcp/src`)
+- Uses only a service token (`VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`, else
+  `VAULT_TOKEN_COMMAND`), looked up per request; the server enforces its scope. It refuses
+  to start with the old `VAULT_SCOPE` set.
+- PEC (`pec.ts`): read-only IMAP (EXAMINE + BODY.PEEK), registered only with
+  `PEC_ADDRESS`, app password from Keychain per request, no SMTP code by design. Saved
+  attachments go to the first import dir (0600, quarantined). Mailparser needs
+  `ignoreEmbedded: true` or it splices `postacert.eml` into the envelope.
 
 ## Conventions
 
-- Field IDs are `category.field_name` (e.g., `identity.full_name`), or
-  `person:category.field_name` for another person (`leo:identity.full_name`), lower-case:
-  `Set` and `AddDocument` refuse upper-case letters (`CheckLowerCase`, which the CLI also runs before any prompt), since the rules
-  ignore case but the store doesn't. Older mixed-case rows can still be read, re-tiered and
-  deleted, and the pratiche checks (`Expiring`, `scansAfterPratiche`, `personRefsTo`) count a
-  pratica as closed only if every spelling's stato says so
-- Sensitivity tiers: `public`, `standard`, `sensitive`, `critical`
-- All timestamps stored as RFC3339 strings in SQLite
-- WAL mode enabled, busy_timeout=5000ms; the vault path can't contain `?` (the driver
-  cuts its DSN there)
-- CLI arguments: commands without flags use `positionalArgs`, so an unknown option is an
-  error, never ignored or read as a name; `pvault set` takes one value (quote spaces).
-  `parseFlags` refuses a repeated flag, and `serve` accepts only `--password-stdin` or
-  `--locked`; the stdin password is kept as typed (only the line ending is dropped)
-- No CGO — pure Go for portability
+- All timestamps are RFC3339 strings in SQLite, to the second.
+- WAL mode, busy_timeout=5000ms; the vault path can't contain `?`.
+- CLI arguments: unknown options and repeated flags are errors, never ignored
+  (`positionalArgs`, `parseFlags`); `pvault set` takes one value.
+- A comment says why; CLAUDE.md says what must stay true. Keep both short.
 
 ## Environment Variables
 
 - `VAULT_DIR` — vault directory (default: `~/.pvault`)
 - `PVAULT_VAULT` — like `--vault <name>`: the vault in `~/.pvault-<name>`
-- `VAULT_ADDR` — server address for CLI (default: from the vault's `port` file, else `http://127.0.0.1:7200`)
+- `VAULT_ADDR` — server address for the CLI (default: from the vault's `port` file, else `http://127.0.0.1:7200`)
 - `VAULT_PORT` — server port for `pvault serve` (default: the vault's `port` file, else `7200`)
 
 ## Testing
 
-Tests use temp directories — no cleanup needed. All tests run with `-race`.
+Tests use temp directories and run with `-race`. `internal/vault` and `internal/api` call
+`crypto.UseFastKDFForTests` in `TestMain` (cheap Argon2id; it panics outside a test binary).
+API requests go through `newTestRequest` (loopback Host); socket tests use
+`serveOnSocket`/`shortVaultDir` (temp paths exceed the 104-byte socket limit). The Touch ID
+tests compile the helper with `-D DEBUG`, which adds `describe-grant` and test enrollment
+(`PVAULT_TOUCHID_TEST_*`). Keychain tests run only with `PVAULT_KEYCHAIN_TEST=1`.
 
 ```go
 // Pattern: create temp vault, run test
 func tmpVault(t *testing.T) (*Vault, string) {
-    dir := filepath.Join(t.TempDir(), ".vault")
+    dir := filepath.Join(t.TempDir(), ".pvault")
     sk, _ := Init(dir, "test-password")
     v, _ := Open(dir)
     v.Unlock("test-password", sk)

@@ -31,6 +31,11 @@ type Field struct {
 	Sensitivity string
 	UpdatedAt   time.Time
 	Version     int
+	// ClosedAt is when a pratica's stato last went from open to closed, zero
+	// for any other field. A write sets it from Closes, in the same
+	// statement: kept while the stato stays closed, cleared when it reopens.
+	ClosedAt time.Time
+	Closes   bool
 	// KeepTier makes an update keep the stored tier; Sensitivity is then
 	// only used when the field is new. Deciding in the same statement means
 	// a concurrent tier change is never overwritten with a stale one.
@@ -47,140 +52,105 @@ func (d *DB) SetField(f Field) error {
 	switch {
 	case f.Seen == nil:
 		res, err = d.conn.Exec(
-			`INSERT INTO vault_fields (id, category, field_name, value, sensitivity, updated_at, version)
-			 VALUES (?, ?, ?, ?, ?, ?, 1)
+			`INSERT INTO vault_fields (id, category, field_name, value, sensitivity, updated_at, version, closed_at)
+			 VALUES (?, ?, ?, ?, ?, ?, 1, CASE WHEN ? THEN ? END)
 			 ON CONFLICT(id) DO UPDATE SET
 				value = excluded.value,
 				sensitivity = CASE WHEN ? OR excluded.sensitivity = '' THEN vault_fields.sensitivity ELSE excluded.sensitivity END,
 				updated_at = excluded.updated_at,
-				version = vault_fields.version + 1`,
-			f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, updated, f.KeepTier,
+				version = vault_fields.version + 1,
+				closed_at = CASE WHEN excluded.closed_at IS NOT NULL THEN COALESCE(vault_fields.closed_at, excluded.closed_at) END`,
+			f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, updated, f.Closes, updated, f.KeepTier,
 		)
 	case !f.Seen.Exists:
 		res, err = d.conn.Exec(
-			`INSERT INTO vault_fields (id, category, field_name, value, sensitivity, updated_at, version)
-			 VALUES (?, ?, ?, ?, ?, ?, 1) ON CONFLICT(id) DO NOTHING`,
-			f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, updated,
+			`INSERT INTO vault_fields (id, category, field_name, value, sensitivity, updated_at, version, closed_at)
+			 VALUES (?, ?, ?, ?, ?, ?, 1, CASE WHEN ? THEN ? END) ON CONFLICT(id) DO NOTHING`,
+			f.ID, f.Category, f.FieldName, f.Value, f.Sensitivity, updated, f.Closes, updated,
 		)
 	default:
 		res, err = d.conn.Exec(
 			`UPDATE vault_fields SET value = ?,
 				sensitivity = CASE WHEN ? OR ? = '' THEN sensitivity ELSE ? END,
-				updated_at = ?, version = version + 1
+				updated_at = ?, version = version + 1,
+				closed_at = CASE WHEN ? THEN COALESCE(closed_at, ?) END
 			 WHERE id = ? AND sensitivity = ?`,
-			f.Value, f.KeepTier, f.Sensitivity, f.Sensitivity, updated, f.ID, f.Seen.Tier,
+			f.Value, f.KeepTier, f.Sensitivity, f.Sensitivity, updated, f.Closes, updated, f.ID, f.Seen.Tier,
 		)
 	}
 	return affectedOne(res, err, true) // an unchecked upsert always writes
 }
 
+// FixClosedAt corrects closing times an older version left behind (it
+// didn't know the column): a closed stato without one is dated at its
+// updated_at, and an open one loses its stale one.
+func (d *DB) FixClosedAt(undated, stale []string) error {
+	for _, id := range undated {
+		if _, err := d.conn.Exec(`UPDATE vault_fields SET closed_at = updated_at WHERE id = ? AND closed_at IS NULL`, id); err != nil {
+			return err
+		}
+	}
+	for _, id := range stale {
+		if _, err := d.conn.Exec(`UPDATE vault_fields SET closed_at = NULL WHERE id = ?`, id); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // GetField retrieves a single field by ID (includes encrypted value).
 func (d *DB) GetField(id string) (*Field, error) {
-	var f Field
-	var updatedAt string
-	err := d.conn.QueryRow(
-		"SELECT id, category, field_name, value, sensitivity, updated_at, version FROM vault_fields WHERE id = ?",
-		id,
-	).Scan(&f.ID, &f.Category, &f.FieldName, &f.Value, &f.Sensitivity, &updatedAt, &f.Version)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
+	fields, err := d.queryFields(true, "WHERE id = ?", id)
+	if err != nil || len(fields) == 0 {
 		return nil, err
 	}
-	f.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAt)
-	return &f, nil
+	return &fields[0], nil
 }
 
 // ListFields returns all field metadata (no values).
 func (d *DB) ListFields() ([]Field, error) {
-	rows, err := d.conn.Query(
-		"SELECT id, category, field_name, sensitivity, updated_at, version FROM vault_fields ORDER BY category, field_name",
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var fields []Field
-	for rows.Next() {
-		var f Field
-		var updatedAt string
-		if err := rows.Scan(&f.ID, &f.Category, &f.FieldName, &f.Sensitivity, &updatedAt, &f.Version); err != nil {
-			return nil, err
-		}
-		f.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAt)
-		fields = append(fields, f)
-	}
-	return fields, rows.Err()
+	return d.queryFields(false, "ORDER BY category, field_name")
 }
 
 // ListFieldsByCategory returns field metadata for a category (no values).
 func (d *DB) ListFieldsByCategory(category string) ([]Field, error) {
-	rows, err := d.conn.Query(
-		"SELECT id, category, field_name, sensitivity, updated_at, version FROM vault_fields WHERE category = ? ORDER BY field_name",
-		category,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var fields []Field
-	for rows.Next() {
-		var f Field
-		var updatedAt string
-		if err := rows.Scan(&f.ID, &f.Category, &f.FieldName, &f.Sensitivity, &updatedAt, &f.Version); err != nil {
-			return nil, err
-		}
-		f.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAt)
-		fields = append(fields, f)
-	}
-	return fields, rows.Err()
+	return d.queryFields(false, "WHERE category = ? ORDER BY field_name", category)
 }
 
 // GetFieldsByCategory returns fields in a category (with encrypted values).
 func (d *DB) GetFieldsByCategory(category string) ([]Field, error) {
-	rows, err := d.conn.Query(
-		"SELECT id, category, field_name, value, sensitivity, updated_at, version FROM vault_fields WHERE category = ? ORDER BY field_name",
-		category,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var fields []Field
-	for rows.Next() {
-		var f Field
-		var updatedAt string
-		if err := rows.Scan(&f.ID, &f.Category, &f.FieldName, &f.Value, &f.Sensitivity, &updatedAt, &f.Version); err != nil {
-			return nil, err
-		}
-		f.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAt)
-		fields = append(fields, f)
-	}
-	return fields, rows.Err()
+	return d.queryFields(true, "WHERE category = ? ORDER BY field_name", category)
 }
 
 // GetAllFields returns all fields including encrypted values.
 func (d *DB) GetAllFields() ([]Field, error) {
-	rows, err := d.conn.Query(
-		"SELECT id, category, field_name, value, sensitivity, updated_at, version FROM vault_fields ORDER BY category, field_name",
-	)
+	return d.queryFields(true, "ORDER BY category, field_name")
+}
+
+// queryFields returns the fields a WHERE/ORDER BY clause selects, with their
+// encrypted values if withValue.
+func (d *DB) queryFields(withValue bool, clause string, args ...any) ([]Field, error) {
+	value := "''"
+	if withValue {
+		value = "value"
+	}
+	rows, err := d.conn.Query("SELECT id, category, field_name, "+value+", sensitivity, updated_at, version, closed_at FROM vault_fields "+clause, args...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-
 	var fields []Field
 	for rows.Next() {
 		var f Field
 		var updatedAt string
-		if err := rows.Scan(&f.ID, &f.Category, &f.FieldName, &f.Value, &f.Sensitivity, &updatedAt, &f.Version); err != nil {
+		var closedAt sql.NullString
+		if err := rows.Scan(&f.ID, &f.Category, &f.FieldName, &f.Value, &f.Sensitivity, &updatedAt, &f.Version, &closedAt); err != nil {
 			return nil, err
 		}
 		f.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAt)
+		if closedAt.Valid {
+			f.ClosedAt, _ = time.Parse(time.RFC3339, closedAt.String)
+		}
 		fields = append(fields, f)
 	}
 	return fields, rows.Err()

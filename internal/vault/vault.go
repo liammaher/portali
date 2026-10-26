@@ -127,26 +127,6 @@ func Open(dir string) (*Vault, error) {
 	return v, nil
 }
 
-// statoUpdatedAt is the updated_at for a write of value: now, except that a
-// pratica's stato saved again unchanged keeps its time, which
-// scansAfterPratiche reads as when the pratica closed.
-func (v *Vault) statoUpdatedAt(id, category, fieldName, value string, subkey []byte) (time.Time, error) {
-	now := time.Now()
-	if _, campo, ok := praticaField(category, fieldName); !ok || campo != "stato" {
-		return now, nil
-	}
-	existing, err := v.db.GetField(id)
-	if err != nil || existing == nil {
-		return now, err
-	}
-	old, err := crypto.DecryptFromBase64(subkey, existing.Value)
-	defer clear(old)
-	if err != nil || string(old) != value {
-		return now, nil
-	}
-	return existing.UpdatedAt, nil
-}
-
 // raiseCredentialTiers moves to TierPersonal every field and document that the
 // current rules call a credential but that is stored below it. Reads trust the
 // stored tier, so a field stored before a credential word was added
@@ -312,6 +292,18 @@ func parseSecretKey(s string) ([]byte, error) {
 
 // Unlock derives the vault key and creates a session.
 func (v *Vault) Unlock(password string, secretKeyHex string) (token string, err error) {
+	if token, err = v.unlock(password, secretKeyHex); err != nil {
+		return "", err
+	}
+	// After v.mu is released: the migration takes the write locks first.
+	if err := v.migrateLegacyFields(); err != nil {
+		// The vault stays usable; rows it couldn't move keep their old form.
+		v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "migrate_failed", Purpose: err.Error()})
+	}
+	return token, nil
+}
+
+func (v *Vault) unlock(password string, secretKeyHex string) (token string, err error) {
 	v.mu.Lock()
 	defer v.mu.Unlock()
 
@@ -578,11 +570,13 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 	if err := CheckLowerCase(id); err != nil {
 		return err
 	}
-	value, err := NormalizeAndValidate(id, value)
-	if err != nil {
+	// The kind first: it says what this vault can hold at all, so its answer
+	// beats one about a prefix or a format.
+	if err := v.checkKind(id); err != nil {
 		return err
 	}
-	if err := v.checkKind(id); err != nil {
+	value, err := NormalizeAndValidate(id, value)
+	if err != nil {
 		return err
 	}
 
@@ -641,17 +635,15 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 		return errCredentialTier(id)
 	}
 
-	updatedAt, err := v.statoUpdatedAt(id, category, fieldName, value, subkey)
-	if err != nil {
-		return err
-	}
+	_, campo, _ := praticaField(category, fieldName)
 	err = v.db.SetField(store.Field{
 		ID:          id,
 		Category:    category,
 		FieldName:   fieldName,
 		Value:       encrypted,
 		Sensitivity: sensitivity,
-		UpdatedAt:   updatedAt,
+		UpdatedAt:   time.Now(),
+		Closes:      campo == "stato" && isClosedStato(value), // dates the closing (ClosedAt)
 		KeepTier:    keepTier,
 		Seen:        seen,
 	})
@@ -700,15 +692,8 @@ func (v *Vault) GetIf(id string, allow FieldFilter) (*FieldInfo, error) {
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: id, Action: "read"})
 
-	return &FieldInfo{
-		ID:          f.ID,
-		Category:    f.Category,
-		FieldName:   f.FieldName,
-		Value:       string(plaintext),
-		Sensitivity: f.Sensitivity,
-		UpdatedAt:   f.UpdatedAt,
-		Version:     f.Version,
-	}, nil
+	info := fieldInfo(*f, string(plaintext))
+	return &info, nil
 }
 
 // FieldMeta returns a field's metadata without decrypting its value.
@@ -721,14 +706,8 @@ func (v *Vault) FieldMeta(id string) (*FieldInfo, error) {
 	if err != nil || f == nil {
 		return nil, err
 	}
-	return &FieldInfo{
-		ID:          f.ID,
-		Category:    f.Category,
-		FieldName:   f.FieldName,
-		Sensitivity: f.Sensitivity,
-		UpdatedAt:   f.UpdatedAt,
-		Version:     f.Version,
-	}, nil
+	info := fieldInfo(*f, "")
+	return &info, nil
 }
 
 // List returns all field metadata (no values).
@@ -744,14 +723,7 @@ func (v *Vault) List() ([]FieldInfo, error) {
 
 	result := make([]FieldInfo, len(fields))
 	for i, f := range fields {
-		result[i] = FieldInfo{
-			ID:          f.ID,
-			Category:    f.Category,
-			FieldName:   f.FieldName,
-			Sensitivity: f.Sensitivity,
-			UpdatedAt:   f.UpdatedAt,
-			Version:     f.Version,
-		}
+		result[i] = fieldInfo(f, "")
 	}
 	return result, nil
 }
@@ -769,16 +741,23 @@ func (v *Vault) ListByCategory(category string) ([]FieldInfo, error) {
 
 	result := make([]FieldInfo, len(fields))
 	for i, f := range fields {
-		result[i] = FieldInfo{
-			ID:          f.ID,
-			Category:    f.Category,
-			FieldName:   f.FieldName,
-			Sensitivity: f.Sensitivity,
-			UpdatedAt:   f.UpdatedAt,
-			Version:     f.Version,
-		}
+		result[i] = fieldInfo(f, "")
 	}
 	return result, nil
+}
+
+// fieldInfo is a stored field's metadata, with its decrypted value if given.
+func fieldInfo(f store.Field, value string) FieldInfo {
+	return FieldInfo{
+		ID:          f.ID,
+		Category:    f.Category,
+		FieldName:   f.FieldName,
+		Value:       value,
+		Sensitivity: f.Sensitivity,
+		UpdatedAt:   f.UpdatedAt,
+		Version:     f.Version,
+		ClosedAt:    f.ClosedAt,
+	}
 }
 
 // FieldFilter reports whether a caller may receive a field. Fields it rejects
@@ -817,15 +796,7 @@ func (v *Vault) GetByCategory(category string, allow FieldFilter) ([]FieldInfo, 
 		if err != nil {
 			return nil, fmt.Errorf("decrypt %s: %w", f.ID, err)
 		}
-		result = append(result, FieldInfo{
-			ID:          f.ID,
-			Category:    f.Category,
-			FieldName:   f.FieldName,
-			Value:       string(plaintext),
-			Sensitivity: f.Sensitivity,
-			UpdatedAt:   f.UpdatedAt,
-			Version:     f.Version,
-		})
+		result = append(result, fieldInfo(f, string(plaintext)))
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: category + ".*", Action: "read"})
@@ -882,15 +853,7 @@ func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 			return nil, fmt.Errorf("decrypt %s: %w", f.ID, err)
 		}
 
-		bundle.Categories[f.Category] = append(bundle.Categories[f.Category], FieldInfo{
-			ID:          f.ID,
-			Category:    f.Category,
-			FieldName:   f.FieldName,
-			Value:       string(plaintext),
-			Sensitivity: f.Sensitivity,
-			UpdatedAt:   f.UpdatedAt,
-			Version:     f.Version,
-		})
+		bundle.Categories[f.Category] = append(bundle.Categories[f.Category], fieldInfo(f, string(plaintext)))
 	}
 
 	return bundle, nil
@@ -898,22 +861,19 @@ func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 
 // Delete removes a field (ErrFieldNotFound if there is none).
 func (v *Vault) Delete(id string) error {
-	return v.delete(id, nil, nil)
+	return v.delete(id, nil)
 }
 
 // DeleteChecked is Delete for a caller that checked the field first: it
 // deletes only if the field still has existing's tier (ErrFieldChanged).
-// allow is what the caller can see (checkNotLastPersonRow).
-func (v *Vault) DeleteChecked(id string, existing *FieldInfo, allow FieldFilter) error {
-	return v.delete(id, &store.Seen{Exists: true, Tier: existing.Sensitivity}, allow)
+func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
+	return v.delete(id, &store.Seen{Exists: true, Tier: existing.Sensitivity})
 }
 
-func (v *Vault) delete(id string, seen *store.Seen, allow FieldFilter) error {
-	defer v.lockWrite(id)()
+func (v *Vault) delete(id string, seen *store.Seen) error {
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := v.checkUnlocked(); err != nil {
-		return err
-	}
-	if err := v.checkNotLastPersonRow(id, id, allow); err != nil {
 		return err
 	}
 
@@ -994,6 +954,20 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 	}
 	if err := ValidateScope(scope); err != nil {
 		return "", &ValidationError{Field: "scope", Msg: err.Error()}
+	}
+	// A token may name only people who exist, so it can't wait for one.
+	// RemovePerson revokes those naming whom it removes; writeMu keeps it
+	// from missing this one.
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
+	for _, slug := range ScopePeople(scope) {
+		exists, err := v.db.PersonExists(slug)
+		if err != nil {
+			return "", err
+		}
+		if !exists {
+			return "", &ValidationError{Field: "scope", Msg: "there is no person \"" + slug + "\": a token can name only people already in the vault (\"*:category.*\" reaches everyone, later people too)"}
+		}
 	}
 	if ttl <= 0 || ttl > MaxServiceTokenTTL {
 		return "", &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxServiceTokenTTL)}

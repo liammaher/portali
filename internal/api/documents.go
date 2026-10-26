@@ -127,7 +127,7 @@ func (s *Server) handleDeleteDocument(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a document stored above the default sensitivity tier")
 		return
 	}
-	deleted, err := s.vault.DeleteDocument(id, callerFilter(r))
+	deleted, err := s.vault.DeleteDocument(id)
 	if err != nil {
 		handleVaultError(w, err)
 		return

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -54,7 +55,11 @@ func TestTouchIDHelper_PromptWording(t *testing.T) {
 			"read and add new entries to all of leo's cie fields and documents in your vault for 2 minutes"},
 		{[]string{"--scope", "*:identity.*"}, "read everyone's identity fields and documents from your vault for 2 minutes"},
 		{[]string{"--scope", "leo:cie.numero,giulia:cie.documents"},
-			"read leo:cie.numero, giulia's cie documents from your vault for 2 minutes"},
+			"read leo's cie.numero, giulia's cie documents from your vault for 2 minutes"},
+		// What pvault retention and person list ask for.
+		{[]string{"--scope", "*:ruolo.data_fine"}, "read everyone's ruolo.data_fine from your vault for 2 minutes"},
+		{[]string{"--scope", "*:ruolo.*,*:business.denominazione"},
+			"read everyone's ruolo fields and documents, everyone's business.denominazione from your vault for 2 minutes"},
 		// Durations round up.
 		{[]string{"--scope", "residenza.cap", "--ttl", "89"}, "read residenza.cap from your vault for 2 minutes"},
 		{[]string{"--scope", "residenza.cap", "--ttl", "45"}, "read residenza.cap from your vault for 45 seconds"},
@@ -133,6 +138,30 @@ func TestTouchIDHelper_RejectsBadGrantArgs(t *testing.T) {
 		out, err := exec.Command(helper, append([]string{"describe-grant"}, args...)...).CombinedOutput()
 		if err == nil {
 			t.Errorf("%q accepted: %s", args, out)
+		}
+	}
+}
+
+// The helper parses scopes as the server does: every valid scope of the
+// shared fixture gets a prompt, every invalid one is refused.
+func TestTouchIDHelper_ScopeFixture(t *testing.T) {
+	helper := buildDebugHelper(t)
+	data, err := os.ReadFile(filepath.Join("..", "..", "internal", "vault", "testdata", "scopes.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var f struct{ ValidScopes, InvalidScopes []string }
+	if err := json.Unmarshal(data, &f); err != nil {
+		t.Fatal(err)
+	}
+	for _, scope := range f.ValidScopes {
+		if out, err := exec.Command(helper, "describe-grant", "--scope", scope).CombinedOutput(); err != nil {
+			t.Errorf("valid scope %q refused: %v\n%s", scope, err, out)
+		}
+	}
+	for _, scope := range f.InvalidScopes {
+		if out, err := exec.Command(helper, "describe-grant", "--scope", scope).CombinedOutput(); err == nil {
+			t.Errorf("invalid scope %q accepted: %s", scope, out)
 		}
 	}
 }

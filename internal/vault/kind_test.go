@@ -199,15 +199,6 @@ func TestKind_PersonRefMessageNamesRuolo(t *testing.T) {
 	}
 }
 
-func TestKind_HouseholdIgnoresCategoryCase(t *testing.T) {
-	v := tmpVaultKind(t, KindImpresa)
-	setLegacy(t, v, "bianchi:Ruolo.tipo", "socio")
-	h, err := v.Household(nil, time.Now())
-	if err != nil || len(h.Members) != 1 || h.Members[0].Ruolo["tipo"] != "socio" {
-		t.Fatalf("household = %+v, %v", h, err)
-	}
-}
-
 func TestKind_HouseholdShowsRuolo(t *testing.T) {
 	v := tmpVaultKind(t, KindImpresa)
 	for id, val := range map[string]string{
@@ -220,7 +211,7 @@ func TestKind_HouseholdShowsRuolo(t *testing.T) {
 			t.Fatalf("Set(%q): %v", id, err)
 		}
 	}
-	h, err := v.Household(nil, time.Now())
+	h, err := v.Household(nil, true, time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -362,5 +353,70 @@ func TestSchema_SubjectAndKinds(t *testing.T) {
 	}
 	if GetSchemaCategory("ruolo") == nil || GetSchemaCategory("nope") != nil {
 		t.Error("GetSchemaCategory")
+	}
+}
+
+// A numbered copy of a schema category (cie2, abitazione2) follows every rule
+// of the original: formats, owner-only and person-only, field kinds and
+// default tiers. famiglia, ruolo and pratiche have no copies.
+func TestNumberedCopiesFollowTheirCategory(t *testing.T) {
+	persona := tmpVaultKind(t, KindPersona)
+	impresa := tmpVaultKind(t, KindImpresa)
+	mustSet(t, persona, "leo:famiglia.relazione", "figlio")
+	mustSet(t, impresa, "bianchi:ruolo.tipo", "titolare")
+	tests := []struct {
+		v        *Vault
+		id, val  string
+		wantFail bool
+	}{
+		{persona, "cie2.numero", "not-a-cie", true},
+		{persona, "cie2.numero", "CA12345AB", false},
+		{persona, "leo:famiglia2.relazione", "garbage", true},
+		{persona, "leo:abitazione2.piano", "3", true},
+		{persona, "leo:tari-2.protocollo", "x", true},
+		{persona, "leo:pratiche2.cie-leo_stato", "da_fare", true},
+		{persona, "pratiche2.cie-leo_stato", "garbage", true},
+		{persona, "pratiche2.cie-leo_stato", "da_fare", true}, // a pratica lives in pratiche only
+		{impresa, "bianchi:ruolo2.tipo", "garbage", true},
+		// One ruolo, famiglia and pratiche per holder: the readers know only those.
+		{impresa, "bianchi:ruolo2.tipo", "cliente", true},
+		{impresa, "bianchi:ruolo-2.data_fine", "2020-01-01", true},
+		{persona, "leo:famiglia2.relazione", "figlio", true},
+		{impresa, "business2.qualita_dichiarante", "titolare", true},
+	}
+	for _, tt := range tests {
+		err := tt.v.Set(tt.id, tt.val, "")
+		if tt.wantFail != (err != nil) {
+			t.Errorf("%s vault: Set(%q, %q) = %v, want failure %v", tt.v.Kind(), tt.id, tt.val, err, tt.wantFail)
+		}
+	}
+	if got, want := DefaultSensitivity("leo:cie2.numero"), DefaultSensitivity("cie.numero"); got != want {
+		t.Errorf("DefaultSensitivity(leo:cie2.numero) = %s, want %s like cie.numero", got, want)
+	}
+}
+
+// In a business vault the housing categories have no spelling at all: the
+// business's own data isn't a home and a person can't have one. Both
+// spellings say so, instead of each pointing at the other.
+func TestKind_HousingInBusinessVault(t *testing.T) {
+	v := tmpVaultKind(t, KindImpresa)
+	mustSet(t, v, "bianchi:ruolo.tipo", "titolare")
+	for _, id := range []string{"tari.codice_contribuente", "bianchi:tari.codice_contribuente", "abitazione.titolo", "bianchi:utenze.pod"} {
+		err := v.Set(id, "x", "")
+		if err == nil || !strings.Contains(err.Error(), "locale.*") {
+			t.Errorf("Set(%s) = %v, want it to point to locale.*", id, err)
+		}
+	}
+	if _, err := v.AddDocument("bianchi:locazione", "contratto.pdf", "application/pdf", []byte("%PDF"), ""); err == nil || !strings.Contains(err.Error(), "locale.*") {
+		t.Errorf("AddDocument(bianchi:locazione) = %v, want it to point to locale.*", err)
+	}
+}
+
+// A numbered copy of a field that names people is checked like the original.
+func TestNumberedCopiesCheckPersonRefs(t *testing.T) {
+	v := tmpVaultKind(t, KindPersona)
+	mustSet(t, v, "leo:famiglia.relazione", "figlio")
+	if err := v.Set("leo:famiglia2.genitori", "marco", ""); err == nil {
+		t.Error("leo:famiglia2.genitori named a person who doesn't exist")
 	}
 }

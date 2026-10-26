@@ -88,7 +88,7 @@ With PEC set up (see [PEC mailbox](#pec-mailbox-read-only)), five more tools app
 
 Documents follow the same token rules as fields: scope pattern `<category>.documents` (or `<category>.*`) and the token's sensitivity cap (documents default to `sensitive`).
 
-Family members' fields and documents have the member's slug in front (`leo:identity.codice_fiscale`, documents in `leo:cie`). Scopes without a prefix reach only the user's own data; `leo:*` reaches everything about leo, `leo:cie.*` one of leo's categories, `*:identity.*` that category for the user and every member, and `*` everything. `vault_household`, `vault_expiring` and every other tool keep to the token's scope and `VAULT_SCOPE` the same way.
+Family members' fields and documents have the member's slug in front (`leo:identity.codice_fiscale`, documents in `leo:cie`). Scopes without a prefix reach only the user's own data; `leo:*` reaches everything about leo, `leo:cie.*` one of leo's categories, `*:identity.*` that category for the user and every member, and `*` everything. `vault_household`, `vault_expiring` and every other tool keep to the token's scope, which the vault server enforces.
 
 ## PEC mailbox (read-only)
 
@@ -156,7 +156,6 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `PEC_KEYCHAIN_SERVICE` | — | Keychain service holding the PEC app password, stored for account `PEC_ADDRESS` (e.g. `pvault-pec`) |
 | `PEC_IMAP_HOST` | `imaps.pec.aruba.it` | IMAP server (TLS) |
 | `PEC_IMAP_PORT` | `993` | IMAP port |
-| `VAULT_SCOPE` | `*` | Optional extra filter applied in the MCP layer (the server enforces the token's own scope regardless) |
 
 ## Error Messages
 

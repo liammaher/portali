@@ -201,3 +201,11 @@ func TestHashSecretKey_Deterministic(t *testing.T) {
 		t.Fatalf("expected 32-byte hash, got %d", len(h1))
 	}
 }
+
+// The cost real vaults use; UseFastKDFForTests is for other packages' tests
+// only, and this package never calls it.
+func TestKDFCost(t *testing.T) {
+	if argonTime != 3 || argonMemory != 64*1024 {
+		t.Fatalf("Argon2id cost = %d passes, %d KiB; want 3 passes, 64 MiB", argonTime, argonMemory)
+	}
+}

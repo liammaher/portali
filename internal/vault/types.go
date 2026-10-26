@@ -22,6 +22,7 @@ type FieldInfo struct {
 	Sensitivity string    `json:"sensitivity"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Version     int       `json:"version"`
+	ClosedAt    time.Time `json:"-"` // a pratica's stato: when it closed (store.Field.ClosedAt)
 }
 
 // ContextBundle is a full decrypted dump grouped by category.
