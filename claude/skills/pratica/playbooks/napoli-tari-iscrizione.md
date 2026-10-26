@@ -1,71 +1,39 @@
 # Comune di Napoli — TARI nuova iscrizione (uso abitativo)
 
-Last verified: 2026-10-25
+Last verified: 2026-10-26
 Library: napoli/comune/tari-iscrizione-uso-abitativo
-Applies to: whoever starts occupying or holding a home in Napoli (owner, tenant or
-other), once, when the occupation starts. The declaration stays valid for later
-years until something changes (then Mod. variazione / cessazione).
+Applies to: whoever starts occupying or holding a home in Napoli, once, within 90 days of
+the start. The library entry has the procedure itself: sources, deadline and lateness
+sanction, channels, payment (F24 codes, 2026 schedule, simulator), documents, the Mod. 1
+field mapping, steps and pitfalls. Read it first; this file keeps only what it lacks.
 
 ## Sources
 
-- Form: **Mod. 1 TARI – Nuova iscrizione uso abitativo**, from the Comune's TARI pages.
-  Its AVVERTENZE and INFORMAZIONI boxes list the channels and contacts (checked 2026-10-25).
-- [TARI 2026 — Comune di Napoli](https://www.comune.napoli.it/articolo_tematico/tributi-locali/tari-tassa-sui-rifiuti/tari-2026/)
-  (page updated 2026-10-02): payment deadlines and the F24 simulator.
-- Regolamento TARI: delibera C.C. n. 16 del 29.9.2020 is the latest found; the article on
-  the declaration deadline was not checked.
+See the library entry. Nothing extra used here.
 
 ## Deadline
 
-- **Declaration**: not confirmed for Napoli. Many comuni require it within 90 days of
-  the start of occupation; others accept it until 30 June of the following year. Check
-  the current regolamento before telling the user it's late, and file as soon as possible.
-- **Payment 2026** (autoliquidazione: due even without a payment notice). Acconto = 75%
-  of the amount at 2025 tariffs:
-  - unica soluzione 15/10/2026, or rate 30/09, 30/10 and 30/11/2026
-  - saldo at 2026 tariffs 16/02/2027 (the Comune sends a new notice)
-- Late payment: ravvedimento operoso is possible; let the Comune's simulator or the
-  sportello compute the sanzione and interest, don't estimate it.
+In the library (90 days, verified on the 2023 regolamento). When the user is past it, say
+so and let the Comune compute the sanction; don't estimate it.
 
 ## Channels
 
-Any one of:
-
-- email to `entrate.tari-tares-tarsu@comune.napoli.it`
-- PEC to `entrate.tari-tares-tarsu@pec.comune.napoli.it` (gives a legal receipt; preferred
-  when the user has a PEC)
-- raccomandata to Comune di Napoli, Area Entrate, Servizio IMU e TARI, Via Diocleziano 330,
-  80125 Napoli
-- sportello at the same address, Mon–Fri 8:30–12:30 (appointment via the Comune's online
-  booking service)
-
-Phone: 081 795 3711, every day 9:00–13:00.
+In the library. PEC is the preferred one when `identity.pec` is set: it gives a legal
+receipt, which is what the vault should archive.
 
 ## Documents and form
 
-1. Mod. 1 filled in and **signed** (firma is a required field).
-2. Copy of an identity document (art. 38 DPR 445/2000): CIE or passport, from the vault's
-   `cie` or `passaporto` documents or the user's folder.
-3. Optional: visura catastale if the user doesn't know the catasto data.
+In the library. The identity copy can come from the vault's `cie` or `passaporto`
+documents (`pvault doc list cie`).
 
 ## Vault fields
 
-| Form field | Field ID |
-|---|---|
-| Il/La sottoscritto/a | `identity.last_name` + `identity.first_name` |
-| nato/a a, il | `identity.birth_comune` (+ country if abroad), `identity.date_of_birth` |
-| C.F. | `identity.codice_fiscale` |
-| residente in, Via, n° | `residenza.comune` (`residenza.provincia`), `residenza.indirizzo`, `residenza.civico` |
-| Telefono, e-mail, pec | `identity.phone`, `identity.email`, `identity.pec` |
-| a decorrere dal | `abitazione.data_inizio` |
-| qualità di | `abitazione.titolo` (proprietario / possessore / locatario / altro) |
-| Appartamento sito in via | `domicilio.*` if set, else `residenza.*`, with `abitazione.piano` and `*.interno` |
-| Sez., Foglio, Part., Sub. | `abitazione.catasto_sezione`, `_foglio`, `_particella`, `_subalterno` |
-| Superficie calpestabile in mq | `abitazione.superficie_calpestabile_mq` |
-| Conviventi (nome, luogo e data di nascita, rapporto, C.F.) | `repeat: famiglia`: each member with `<slug>:famiglia.stato_famiglia` si: `<slug>:identity.{last_name,first_name,birth_comune,date_of_birth,codice_fiscale}`, rapporto = `relazione_label` from `vault_household` / `pvault member list` |
-| Cod.Contr. | leave blank on a new iscrizione; the Comune assigns it (`tari.codice_contribuente`) |
-
-Tokens for this pratica (see the skill's step 2):
+The library's `forms[mod-1].fields` is the mapping. Its conviventi row (`repeat:
+nucleo_familiare.membro<N>_*` until the library is updated) means the family members
+whose `<slug>:famiglia.stato_famiglia` is si: `<slug>:identity.{last_name,first_name,
+birth_comune,date_of_birth,codice_fiscale}`, rapporto = `relazione_label` from
+`vault_household` / `pvault member list`. Tokens for this pratica, if Touch ID is off
+(the skill's step 2):
 
 - preparing: `--scope "*:identity.*,*:famiglia.*,residenza.*,domicilio.*,abitazione.*,tari.*,pratiche.*" --access append`
 - tracking: `--scope "pratiche.*,tari.*" --access write`
@@ -74,42 +42,35 @@ Leave `locazione.*` out: the form doesn't need the rent or the landlord.
 
 ## Steps
 
-1. Ask whether a Mod. 1 was already filled, signed or sent; look in the user's TARI folder.
-2. Fill the PDF from the vault (pdf skill); the user signs it.
-3. Check the payment position: compute the F24 with the simulator (see Gotchas) or use a
-   payment notice. Codice ente F839; codici tributo 3944 (TARI) and TEFA; rateazione 0101
-   is the unica soluzione.
-4. Hand off: signed form + ID copy, sent by email or PEC from the address written on the form.
-5. Track the reply and record the codice contribuente.
+The library's. Before filling, check the user's TARI folder and `pvault list pratiche`
+for a Mod. 1 already filled or signed, and don't regenerate a signed one.
 
 ## Needs the user
 
-Signature, sending the email/PEC (or the raccomandata), paying the F24.
+Signature, sending the PEC/email (or the raccomandata), paying the F24.
 
 ## After submission
 
-- Save `pratiche.<slug>_data_invio`, `_stato` = `inviata`; keep the sent email or PEC receipt.
-- The Comune replies (or a payment notice arrives) with the Cod.Contr.: save
-  `tari.codice_contribuente`, `tari.data_dichiarazione`, `tari.protocollo`; from the notice
-  also `tari.superficie_tassata_mq` and `tari.componenti_tassati`, and check they match
-  `abitazione.superficie_calpestabile_mq` and the household (1 + the members whose
-  `famiglia.stato_famiglia` is si).
+- Save `pratiche.<slug>_data_invio`, `_stato` = `inviata`; archive the PEC receipt with
+  `pvault doc add tari <file>`.
+- The Comune replies (or a payment notice arrives): save the library entry's `records`
+  (codice contribuente, date and protocollo; taxed area and occupants from the notice), and
+  check the notice matches `abitazione.superficie_calpestabile_mq` and the household
+  (1 + the members whose `famiglia.stato_famiglia` is si).
 - Close the pratica: `_stato` = `completata`, `_data_esito`.
+- The F24 is tracked as its own pratica: `importo`, `data_scadenza`, then
+  `data_pagamento` when paid.
 
 ## Gotchas
 
-- The form prints the old simulator link (`riscotel.it/calcolotari/napoli`). The Comune's
-  TARI 2026 page points to `https://portaletributi.comune.napoli.it/?ente=NAPO`; use that.
-- Payment is in autoliquidazione: a new occupant who never received a notice still owes the
-  2026 rate.
-- A convivente without an Italian codice fiscale was entered as `N/E`; the Comune hasn't
-  confirmed that's accepted.
-- The "Uso stagionale" 40% reduction is only for a second home when the user already has a
-  TARI position for their main home; leave it blank otherwise.
+- The library's form mapping uses `identity.birth_country` for "nato/a a (stato estero)";
+  leave it empty for someone born in Italy (the vault refuses Italia there).
 
 ## Run log
 
 - 2026-10-25: first run. Found a signed Mod. 1 that had never been sent and an unpaid F24
   for the 2026 unica soluzione, whose deadline had already passed; tracked them as two
   pratiche (iscrizione and acconto), the iscrizione on hold at the user's request.
-  Found the moved simulator URL. Declaration deadline still unverified.
+- 2026-10-26: trimmed to what the library lacks. The library has since verified the
+  90-day deadline (regolamento 2023), confirmed the current Mod. 1 prints the new simulator
+  link, and lists the POTESs portal as a channel.

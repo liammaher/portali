@@ -112,6 +112,9 @@ Housing (the home at residenza/domicilio; the address itself stays there):
 `utenze.{luce_pod,gas_pdr,<servizio>_fornitore,<servizio>_codice_cliente}`, `tari.{codice_contribuente,data_dichiarazione}`.
 A TARI form needs `identity.*,residenza.*,abitazione.*,tari.*`; leave `locazione.*` out
 unless the task needs the contract (rent and landlord details are sensitive).
+Business (an impresa): `business.{partita_iva,denominazione,qualita_dichiarante,pec,email,sede_legale_*}`,
+and its premises in `locale.{indirizzo,civico,cap,comune,provincia,titolo,data_inizio,catasto_*,superficie_mq,destinazione_uso}`
+(like `abitazione`, but with their own address). `identity.birth_country` only if born abroad.
 To run a whole procedure (research, filling, hand-off, tracking), use the pratica skill;
 its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
 
@@ -143,6 +146,9 @@ Validation done by the vault (expect errors otherwise):
 - Housing: `catasto_categoria` (A/2), foglio/subalterno digits, `*_mq` and `vani` numbers,
   euro amounts stored as `1250.50` (Italian `1.250,50` accepted), `luce_pod`
   (IT001E12345678), `gas_pdr` (14 digits), `cedolare_secca` si/no, `abitazione.titolo` from a fixed list.
+- Business: `locale.*` uses the same catasto, `cap`/`provincia`/`interno` and `*_mq` rules (also
+  `business.sede_legale_cap`/`_provincia`); `locale.titolo` and `business.qualita_dichiarante`
+  from fixed lists; `identity.birth_country` refuses Italia.
 - Writing without a tier keeps the existing tier; don't pass one unless asked.
 
 ## 4. Granting MCP access (per task, on demand)

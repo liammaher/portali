@@ -147,6 +147,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 	if v, handled, err := normalizeHousing(id, category, name, value); handled {
 		return v, err
 	}
+	if v, handled, err := normalizeBusiness(id, category, name, value); handled {
+		return v, err
+	}
 	if v, handled, err := normalizePratica(id, category, name, value); handled {
 		return v, err
 	}
@@ -190,23 +193,30 @@ func NormalizeAndValidate(id, value string) (string, error) {
 			return "", &ValidationError{Field: id, Msg: "CIE number must look like CA12345AB (2 letters, 5 digits, 2 letters)"}
 		}
 		return n, nil
-	case (category == "residenza" || category == "domicilio") && name == "cap":
+	case addressPart(category, name, "cap"):
 		v := strings.TrimSpace(value)
 		if !reCAP.MatchString(v) {
 			return "", &ValidationError{Field: id, Msg: "CAP must be 5 digits"}
 		}
 		return v, nil
-	case (category == "residenza" || category == "domicilio") && name == "interno":
+	case addressPart(category, name, "interno"):
 		v := strings.TrimSpace(reInternoPrefix.ReplaceAllString(value, ""))
 		if v == "" || len(v) > 10 {
 			return "", &ValidationError{Field: id, Msg: "interno is the flat number, e.g. 13 or 4B"}
 		}
 		return v, nil
-	case (category == "residenza" || category == "domicilio") && name == "provincia",
+	case addressPart(category, name, "provincia"),
 		category == "identity" && name == "birth_province":
 		v := normalizeCode(value)
 		if !reProvincia.MatchString(v) {
 			return "", &ValidationError{Field: id, Msg: "provincia must be a 2-letter sigla (e.g. NA)"}
+		}
+		return v, nil
+	case category == "identity" && name == "birth_country":
+		v := strings.TrimSpace(value)
+		switch strings.ToLower(v) {
+		case "italia", "italy", "it", "ita", "repubblica italiana":
+			return "", &ValidationError{Field: id, Msg: "birth_country is only for births abroad; for Italy set identity.birth_comune and birth_province"}
 		}
 		return v, nil
 	case IsDateField(name):

@@ -34,7 +34,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "9",
+	Version: "10",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -49,8 +49,9 @@ var RecommendedSchema = Schema{
 				{ID: "identity.date_of_birth", Description: "Date of birth", Sensitivity: "sensitive"},
 				{ID: "identity.codice_fiscale", Description: "Italian codice fiscale (16 characters, validated)", Sensitivity: "sensitive"},
 				{ID: "identity.sex", Description: "Sex as on Italian documents (M or F)", Sensitivity: "standard"},
-				{ID: "identity.birth_comune", Description: "Comune (or foreign country) of birth", Sensitivity: "standard"},
+				{ID: "identity.birth_comune", Description: "Comune of birth; if born abroad, the place as written on your documents (and the country in identity.birth_country)", Sensitivity: "standard"},
 				{ID: "identity.birth_province", Description: "Provincia of birth as 2-letter sigla (e.g. NA), or EE if born abroad", Sensitivity: "standard"},
+				{ID: "identity.birth_country", Description: "Country of birth, only if born outside Italy (e.g. Regno Unito); forms ask for it as 'stato estero'", Sensitivity: "standard"},
 				{ID: "identity.citizenship", Description: "Citizenship (e.g. italiana, britannica)", Sensitivity: "standard"},
 			},
 		},
@@ -210,6 +211,36 @@ var RecommendedSchema = Schema{
 				{ID: "business.pec", Description: "PEC (certified email) address", Sensitivity: "standard"},
 				{ID: "business.rea", Description: "REA number (e.g. NA-123456)", Sensitivity: "standard"},
 				{ID: "business.data_apertura", Description: "Date the partita IVA was opened (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "business.qualita_dichiarante", Description: "Your role when you sign for the business: titolare or legale_rappresentante (validated)", Sensitivity: "standard"},
+				{ID: "business.email", Description: "Business email address (not the PEC)", Sensitivity: "standard"},
+				{ID: "business.descrizione_attivita", Description: "Short description of the activity carried on, as on SCIA and TARI forms", Sensitivity: "standard"},
+				{ID: "business.sede_legale_indirizzo", Description: "Registered office (sede legale): street (via/piazza) without number", Sensitivity: "standard"},
+				{ID: "business.sede_legale_civico", Description: "Registered office: street number", Sensitivity: "standard"},
+				{ID: "business.sede_legale_cap", Description: "Registered office: CAP (5 digits, validated)", Sensitivity: "standard"},
+				{ID: "business.sede_legale_comune", Description: "Registered office: comune", Sensitivity: "standard"},
+				{ID: "business.sede_legale_provincia", Description: "Registered office: provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name: "locale",
+			Description: "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, " +
+				"but with its own address. Catasto data is on the visura catastale. Attach the visura and the lease with 'pvault doc add locale <file>'.",
+			Fields: []SchemaField{
+				{ID: "locale.indirizzo", Description: "Street (via/piazza) of the premises, without number", Sensitivity: "standard"},
+				{ID: "locale.civico", Description: "Street number of the premises", Sensitivity: "standard"},
+				{ID: "locale.interno", Description: "Unit number (interno), if any; 'int. 3' is saved as 3", Sensitivity: "standard"},
+				{ID: "locale.cap", Description: "CAP of the premises (5 digits, validated)", Sensitivity: "standard"},
+				{ID: "locale.comune", Description: "Comune of the premises", Sensitivity: "standard"},
+				{ID: "locale.provincia", Description: "Provincia of the premises as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
+				{ID: "locale.titolo", Description: "How the business holds the premises: proprietario, locatario, comodatario, usufruttuario or altro (validated)", Sensitivity: "standard"},
+				{ID: "locale.data_inizio", Description: "Date occupation of the premises started (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "locale.catasto_sezione", Description: "Sezione urbana from the visura, if any", Sensitivity: "standard"},
+				{ID: "locale.catasto_foglio", Description: "Foglio from the visura (digits, validated)", Sensitivity: "standard"},
+				{ID: "locale.catasto_particella", Description: "Particella (mappale) from the visura (validated)", Sensitivity: "standard"},
+				{ID: "locale.catasto_subalterno", Description: "Subalterno from the visura, exactly as written (digits, validated)", Sensitivity: "standard"},
+				{ID: "locale.catasto_categoria", Description: "Categoria catastale, e.g. C/1 for a shop (validated; c1 becomes C/1)", Sensitivity: "standard"},
+				{ID: "locale.superficie_mq", Description: "Surface used for the activity, in m²", Sensitivity: "standard"},
+				{ID: "locale.destinazione_uso", Description: "Lawful use of the premises (e.g. negozio, ufficio, laboratorio, magazzino)", Sensitivity: "standard"},
 			},
 		},
 		{
