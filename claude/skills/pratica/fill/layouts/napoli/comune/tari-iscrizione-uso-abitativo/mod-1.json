@@ -5,7 +5,21 @@
   "note": "Positions in PDF points from the top-left of page 1 (595x842), measured on the form with this sha256. rect is the printed line's box [x0, top, x1, bottom]; text sits on it. Keyed by the library's row labels.",
   "font_size": 9,
   "optional_rows": {
-    "nato/a a (stato estero)": "Only for someone born abroad; the box has no asterisk.",
+    "nato/a a (stato estero)": {
+      "why": "Only for someone born abroad; then the country goes in brackets after the place.",
+      "required_if": [
+        {
+          "field": "identity.birth_province",
+          "matches": "^EE$",
+          "means": "is EE: born abroad"
+        },
+        {
+          "field": "identity.codice_fiscale",
+          "matches": "^.{11}Z",
+          "means": "has a foreign birthplace code (Z...): born abroad"
+        }
+      ]
+    },
     "pec": "Only if the dichiarante has one; the box has no asterisk."
   },
   "boxes": [
@@ -140,6 +154,23 @@
           {
             "x": [423, 558],
             "template": "{codice_fiscale}"
+          }
+        ],
+        "require": [
+          {
+            "field": "identity.birth_country",
+            "required_if": [
+              {
+                "field": "identity.birth_province",
+                "matches": "^EE$",
+                "means": "is EE: born abroad"
+              },
+              {
+                "field": "identity.codice_fiscale",
+                "matches": "^.{11}Z",
+                "means": "has a foreign birthplace code (Z...): born abroad"
+              }
+            ]
           }
         ]
       }
