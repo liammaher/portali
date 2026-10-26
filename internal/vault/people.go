@@ -65,33 +65,36 @@ func (v *Vault) checkPersonExists(id string, allow FieldFilter) error {
 		return err
 	}
 	if !exists {
-		return &ValidationError{Field: id, Msg: "there is no person \"" + person + "\" that you can see"}
+		return &ValidationError{Field: id, Msg: "there is no person \"" + person + "\" in the vault: only the user adds people"}
 	}
 	return nil
 }
 
 // checkPraticaPersona refuses to open a pratica whose persona names someone
 // no longer in the vault: RemovePerson lets a closed pratica keep naming
-// them (it is history), but an open one must name people who exist.
-func (v *Vault) checkPraticaPersona(vaultKey []byte, slug string, allow FieldFilter) error {
+// them (it is history), but an open one must name people who exist. It reads
+// persona whatever the caller may read; a service token (token) is told only
+// that it names someone gone, not who.
+func (v *Vault) checkPraticaPersona(vaultKey []byte, slug string, token bool) error {
 	id := "pratiche." + slug + "_persona"
 	f, err := v.db.GetField(id)
 	if err != nil || f == nil {
 		return err
 	}
-	if allow != nil && !allow(id, f.Sensitivity) {
-		return nil
-	}
 	persone, err := decryptValue(vaultKey, v.salt, "pratiche", f.Value)
 	if err != nil {
 		return err
 	}
-	if err := v.checkPersonRefs(id, persone, allow); err != nil {
+	if err := v.checkPersonRefs(id, persone, nil); err != nil {
 		var verr *ValidationError
-		if errors.As(err, &verr) {
-			return &ValidationError{Field: "pratiche." + slug + "_stato", Msg: "persona names someone who is not in the vault: " + verr.Msg}
+		if !errors.As(err, &verr) {
+			return err
 		}
-		return err
+		msg := "persona names someone who is not in the vault: " + verr.Msg
+		if token {
+			msg = "persona names someone who is no longer in the vault: ask the user to fix it first"
+		}
+		return &ValidationError{Field: "pratiche." + slug + "_stato", Msg: msg}
 	}
 	return nil
 }

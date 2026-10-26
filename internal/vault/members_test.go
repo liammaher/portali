@@ -554,3 +554,36 @@ func TestHouseholdRedactsHiddenPeople(t *testing.T) {
 		t.Fatalf("session view = %+v, %v", h, err)
 	}
 }
+
+// Every way of reopening a pratica checks its persona: a token that can't read
+// persona, and deleting the stato (a pratica without one counts as open).
+func TestReopenPraticaChecksPersonaWhateverTheRoute(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "leo:famiglia.relazione", "figlio")
+	mustSet(t, v, "pratiche.cie-leo_persona", "leo")
+	mustSet(t, v, "pratiche.cie-leo_stato", "completata")
+	if _, err := v.RemovePerson("leo"); err != nil {
+		t.Fatal(err)
+	}
+
+	narrow := tokenFilter("pratiche.cie-leo_stato") // can't read persona
+	err := v.SetChecked("pratiche.cie-leo_stato", "in_attesa", "", &FieldInfo{Sensitivity: "standard"}, narrow)
+	var verr *ValidationError
+	if !errors.As(err, &verr) || strings.Contains(err.Error(), `"leo"`) {
+		t.Fatalf("token reopening = %v, want a refusal that doesn't name leo", err)
+	}
+	if err := v.Delete("pratiche.cie-leo_stato"); !errors.As(err, &verr) {
+		t.Fatalf("deleting the stato = %v, want ValidationError", err)
+	}
+	if err := v.DeleteChecked("pratiche.cie-leo_stato", &FieldInfo{Sensitivity: "standard"}); !errors.As(err, &verr) || strings.Contains(err.Error(), `"leo"`) {
+		t.Fatalf("token deleting the stato = %v", err)
+	}
+	if f, _ := v.Get("pratiche.cie-leo_stato"); f == nil || f.Value != "completata" {
+		t.Fatalf("stato = %+v, want it still completata", f)
+	}
+	// Once persona is fixed, either route works.
+	mustSet(t, v, "pratiche.cie-leo_persona", "io")
+	if err := v.Delete("pratiche.cie-leo_stato"); err != nil {
+		t.Fatalf("delete after fixing persona: %v", err)
+	}
+}

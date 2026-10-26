@@ -597,7 +597,7 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 	category, fieldName := parts[0], parts[1]
 	slug, campo, _ := praticaField(category, fieldName)
 	if campo == "stato" && !isClosedStato(value) {
-		if err := v.checkPraticaPersona(vaultKey, slug, allow); err != nil {
+		if err := v.checkPraticaPersona(vaultKey, slug, allow != nil); err != nil {
 			return err
 		}
 	}
@@ -882,10 +882,20 @@ func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
 func (v *Vault) delete(id string, seen *store.Seen) error {
 	v.writeMu.RLock()
 	defer v.writeMu.RUnlock()
-	if err := v.checkUnlocked(); err != nil {
+	vaultKey, err := v.requireUnlocked()
+	if err != nil {
 		return err
 	}
+	defer clear(vaultKey)
 
+	// A pratica without a stato counts as open, so deleting a closed one's
+	// stato reopens it: its persona must still name people who exist.
+	category, name, _ := strings.Cut(id, ".")
+	if slug, campo, ok := praticaField(category, name); ok && campo == "stato" {
+		if err := v.checkPraticaPersona(vaultKey, slug, seen != nil); err != nil {
+			return err
+		}
+	}
 	if err := v.db.DeleteField(id, seen); err != nil {
 		return err
 	}

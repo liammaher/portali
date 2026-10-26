@@ -1647,6 +1647,9 @@ body::before{
   function init() {
   const BASE = window.location.origin;
   const inputs = document.querySelectorAll('[data-field]');
+  // The secrets (password inputs), fixed now: "show" turns an input into text,
+  // so its type can't say what is a secret later.
+  inputs.forEach(function(input) { if (input.type === 'password') input.dataset.secretField = '1'; });
   let totalCount = inputs.length;
   let filledCount = 0;
 
@@ -1723,24 +1726,37 @@ body::before{
     input.dataset.saved = '';
     input.dataset.secret = '1';
     input.placeholder = 'saved \u2014 type to replace';
+    hideSecret(input);
   }
   function clearSecretMark(input) {
     delete input.dataset.secret;
     if (input.dataset.placeholder !== undefined) input.placeholder = input.dataset.placeholder;
+    hideSecret(input);
+  }
+  function hideSecret(input) {
+    if (!input.dataset.secretField) return;
+    input.type = 'password';
+    const btn = input.parentElement.querySelector('[data-toggle]');
+    if (btn) btn.textContent = 'show';
   }
 
   function loadCategory(cat) {
     const p = prefix, g = gen;
     if (!canHold(holders.categories, cat, p !== '')) return Promise.resolve();
-    return api('GET', '/vault/fields/category/' + p + cat).then(function(fields) {
+    // The vault leaves the secrets of this category out of the answer: the page
+    // only learns that they are saved.
+    const secrets = Array.prototype.filter.call(inputs, function(i) {
+      return i.dataset.secretField && i.getAttribute('data-field').split('.')[0] === cat;
+    }).map(function(i) { return p + i.getAttribute('data-field'); });
+    const query = secrets.length ? '?omit=' + encodeURIComponent(secrets.join(',')) : '';
+    return api('GET', '/vault/fields/category/' + p + cat + query).then(function(fields) {
       if (g !== gen || !Array.isArray(fields)) return;
       fields.forEach(function(f) {
         // A field can appear in more than one section (business.denominazione).
         document.querySelectorAll('[data-field="' + f.id.slice(p.length) + '"]').forEach(function(input) {
-          if (!f.value) return;
-          if (input.type === 'password') {
-            markSecretSaved(input); // the value stays in the vault, off the screen
-          } else {
+          if (f.redacted) {
+            if (input.dataset.secretField) markSecretSaved(input);
+          } else if (f.value) {
             input.value = f.value;
             input.dataset.saved = f.value;
           }
@@ -1993,7 +2009,7 @@ body::before{
 
     input.addEventListener('blur', function() {
       // Secrets are saved exactly as typed: a password may start or end with a space.
-      const val = input.type === 'password' ? input.value : input.value.trim();
+      const val = input.dataset.secretField ? input.value : input.value.trim();
       const local = input.getAttribute('data-field');
       // The person whose field this is, fixed now: a switch can't redirect it.
       const p = prefix, g = gen;
@@ -2021,7 +2037,7 @@ body::before{
           }
           if (g !== gen) return; // the page shows someone else now
           input.dataset.saved = val;
-          if (input.type === 'password') {
+          if (input.dataset.secretField) {
             if (document.activeElement !== input) markSecretSaved(input); // not while they type again
           } else {
             // Show the stored form (e.g. an upper-cased codice fiscale)
