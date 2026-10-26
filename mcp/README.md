@@ -33,6 +33,24 @@ replaces, so only one Keychain token is ever valid:
 pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h --keychain pvault-mcp
 ```
 
+### A second vault (e.g. a business vault)
+
+Each vault (`pvault --vault <name>`) has its own server and port, so give it its own MCP
+server: its tools then appear as `mcp__<name>__vault_*`, next to the default vault's.
+Use the address `pvault --vault <name> status` prints, and a Keychain service of its own
+(a token stored under another vault's service would overwrite that vault's token):
+
+```sh
+claude mcp add studio --scope user \
+  -e VAULT_ADDR=http://127.0.0.1:7201 \
+  -e VAULT_NAME=studio \
+  -e VAULT_KEYCHAIN_SERVICE=pvault-studio-mcp \
+  -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+pvault --vault studio create-service-token claude --scope "business.*" --ttl 2h --keychain pvault-studio-mcp
+```
+
+`VAULT_NAME` only makes the server's messages say `pvault --vault studio ...`.
+
 Elsewhere, pass the token directly (stored in plain text in `~/.claude.json`):
 
 ```sh
@@ -45,8 +63,8 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 |------|-------------|
 | `vault_status` | Check if the vault is running and unlocked |
 | `vault_schema` | Recommended field IDs with descriptions and default tiers, plus the pratiche campi, stati and canali |
-| `vault_household` | Family members: slug, famiglia fields (relazione, stato di famiglia, a carico, genitori), name, age, ANPR relazione code and label |
-| `vault_get` | Get a single decrypted field by ID (a family member's is `leo:cie.numero`) |
+| `vault_household` | The vault's other people: family members (famiglia fields: relazione, stato di famiglia, a carico, genitori; age, ANPR relazione code and label), or in a business vault its people with their ruolo (and denominazione for a company) |
+| `vault_get` | Get a single decrypted field by ID (another person's is `leo:cie.numero`) |
 | `vault_list` | List all field metadata (no values) |
 | `vault_context` | Get all decrypted fields grouped by category |
 | `vault_set` | Set an encrypted field value in the vault |
@@ -127,7 +145,8 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address |
+| `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address (another vault's: what `pvault --vault <name> status` prints) |
+| `VAULT_NAME` | — | The vault's name when it isn't the default one (`pvault --vault <name>`), used in messages that name pvault commands |
 | `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (one token source is required) |
 | `VAULT_KEYCHAIN_SERVICE` | — | macOS: Keychain service the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
 | `VAULT_TOKEN_COMMAND` | — | Command run in the platform shell that prints the token (e.g. another secret store); used when neither of the above is set |

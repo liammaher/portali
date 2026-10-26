@@ -25,7 +25,8 @@ go test -race ./internal/api/     # Test HTTP API only
 ## CLI Usage
 
 ```sh
-pvault init                              # Create new vault (~/.pvault/)
+pvault init [--impresa]                  # Create new vault (~/.pvault/); --impresa: a business vault
+pvault --vault <name> <command>          # Any command on another vault (~/.pvault-<name>)
 pvault unlock                            # Start background server
 pvault lock                              # Stop server, zero keys
 pvault serve                             # Foreground server (debugging)
@@ -134,15 +135,18 @@ Profile Password + Secret Key (128-bit)
   if unset), and in a TTY a failed or denied prompt falls back to the typed password.
   When a scoped grant gets 403 `session_required` (an operation only the user's session
   may do), `authed` (`helpers.go`) asks once more for full access and resends.
-  `pvault ui` runs `checkVaultServer` too, so the password page never opens on an impostor.
+  `pvault ui` and `onboard` (before its grant) run `checkVaultServer` too, so the password
+  page never opens on an impostor and no grant goes to an unverified address.
   `pvault unlock` with Touch ID starts `pvault serve --locked` and the helper unlocks it.
   Rebuilding the helper changes its signature, and moving or rebuilding pvault changes
-  the trusted server, so re-run `pvault touchid enable`. Tokens still go over TCP:
-  pvault skips Touch ID when its `VAULT_ADDR` differs from the helper's 127.0.0.1:7200
-  (`status` prints `server <addr>`), and a `unlock` that started the server stops it again if no one
+  the trusted server, so re-run `pvault touchid enable`. The helper never talks TCP: the
+  token it returns goes to `serverAddr()`, which `checkVaultServer` (run before every
+  prompt) has checked is the socket-verified server's address, so any vault's port works.
+  Prompts name the vault from its dir (`.pvault-studio` → "your studio vault"; "your
+  vault" otherwise). A `unlock` that started the server stops it again if no one
   can unlock it. `touchid enable`/`disable` are interactive only, and the helper's own
   `enroll`/`remove` refuse unless stderr is a terminal, so an agent can't switch it off.
-  Debug builds (`-D DEBUG`) honor `VAULT_ADDR`, `PVAULT_TOUCHID_TEST_APPROVE=1` and
+  Debug builds (`-D DEBUG`) honor `PVAULT_TOUCHID_TEST_APPROVE=1` and
   `PVAULT_TOUCHID_TEST_PASSWORD`/`_SERVER` (enrollment without the Keychain) for tests, and
   add `describe-grant` (prints the prompt; `TestTouchIDHelper_*` compiles it with swiftc and
   runs it against real `pvault serve --locked` builds and impostors)
@@ -281,6 +285,31 @@ Profile Password + Secret Key (128-bit)
   status counts only the owner's data, so it never reveals other people. Bulk reads parse
   the scope once (`ParseScope`). No slug rename yet. Business and client vaults:
   `docs/design/business-vaults.md`.
+- Vault kinds and named vaults (`kind.go`, `ruolo.go`, `cmd/pvault/vaults.go`): meta `kind`
+  (`persona`, the default and every vault from before kinds, or `impresa`, set by
+  `pvault init --impresa` via `InitWithOptions`) is loaded by `Open` and reported in
+  `/vault/status` (`kind`) and `/vault/schema` (`vault_kind`). Schema categories carry
+  `subject` (persona/impresa) and `kinds`; fields may carry `kinds`
+  (`business.qualita_dichiarante` is persona-only). Additive keys only: pratiche-napoli's
+  `gen-fields` refuses new `scope` or `for` values. `checkKind` (in `Vault.set` and
+  `AddDocument`, not the pure `NormalizeAndValidate`, so `TestPersonRulesMatchOwner` holds)
+  refuses a category kept for the other kind (`famiglia` persona, `ruolo` impresa), a
+  persona-subject category in an impresa vault's own data, and in an impresa vault any
+  person's SPID/CieID category or credential field/document (CIE and `firma`/`cns` PINs
+  included), even at the personal tier. `MigrateNucleo` refuses in impresa vaults.
+  `ruolo.tipo` is a validated list (`normalizeRuoli`); the people listing carries `ruolo`
+  and `denominazione`. Named vaults: `--vault <name>` (first argument only) or
+  `PVAULT_VAULT` becomes `VAULT_DIR=~/.pvault-<name>` via `os.Setenv` before dispatch, so
+  `serve` and the Touch ID helper (which read only `VAULT_DIR`) follow; a different
+  `VAULT_DIR` is an error. Each vault's TCP port is in a plain `<dir>/port` file (0600):
+  init and restore write it (`ensurePort`: 7200 for `~/.pvault`, else the lowest free
+  7201-7299 no sibling vault's port file names), `serve` and `serverAddr()` read it, and the
+  CLI never opens `vault.db` for it; it isn't trusted, since `checkVaultServer` compares it
+  with the socket-verified status `addr` (and records the verified `kind` for `person`).
+  Hints in messages use `pvCmd` so they name `--vault`. Tests: `kind_test.go`,
+  `vaults_test.go`, `TestTouchIDHelper_PromptNamesVault`, and the onboarding page's
+  `TestOnboardingRuoliComplete`/`TestOnboardingKindMarkers` (the page hides what a person
+  can't hold from `/vault/schema`'s `subject`/`kinds`, mirroring `checkKind`).
 
 ## Conventions
 
@@ -299,8 +328,9 @@ Profile Password + Secret Key (128-bit)
 ## Environment Variables
 
 - `VAULT_DIR` — vault directory (default: `~/.pvault`)
-- `VAULT_ADDR` — server address for CLI (default: `http://127.0.0.1:7200`)
-- `VAULT_PORT` — server port for `pvault serve` (default: `7200`)
+- `PVAULT_VAULT` — like `--vault <name>`: the vault in `~/.pvault-<name>`
+- `VAULT_ADDR` — server address for CLI (default: from the vault's `port` file, else `http://127.0.0.1:7200`)
+- `VAULT_PORT` — server port for `pvault serve` (default: the vault's `port` file, else `7200`)
 
 ## Testing
 

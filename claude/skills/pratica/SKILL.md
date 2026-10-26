@@ -1,6 +1,6 @@
 ---
 name: pratica
-description: Run an Italian bureaucratic procedure (pratica) end to end with data from the personal vault - research it, check what's missing, fill the form or portal, hand the user the steps only they can do, and track it until the ente answers. Use when the user asks to do, file, renew, register, declare, pay or check on something with a comune, Agenzia delle Entrate, INPS, ASL, Questura or another ente (TARI, residenza, ISEE, CIE, tessera sanitaria, 730, ...), or asks what pratiche are open.
+description: Run an Italian bureaucratic procedure (pratica) end to end with data from the personal vault or a business vault - research it, check what's missing, fill the form or portal, hand the user the steps only they can do, and track it until the ente answers. Use when the user asks to do, file, renew, register, declare, pay or check on something with a comune, Agenzia delle Entrate, INPS, ASL, Questura or another ente (TARI, residenza, ISEE, CIE, tessera sanitaria, 730, ...), or asks what pratiche are open.
 ---
 
 # Pratiche
@@ -20,6 +20,16 @@ this user's runs.
 
 Read data only through the vault skill and follow its hard rules (no passwords,
 secret key or tokens; never open the vault UI in a browser you control).
+
+**Which vault.** The user's own and their family's pratiche use the default vault. A
+business's pratiche (SCIA, TARI non domestica, INAIL, ComUnica, or a client's CILA filed
+by a professional) use its business vault: add `--vault <name>` to every `pvault`
+command and use that vault's MCP server (vault skill, "Several vaults"). There `io` is the
+business, the form's people are people in the vault with a `ruolo` (the legale
+rappresentante is whoever's `ruolo.tipo` says so; a client is `ruolo.tipo` cliente), and
+the pratica record lives in that vault. Never ask for or store a client's SPID or CIE
+credentials: a professional files with their own identity and the client's signed procura
+(stored as the client's document, e.g. `rossi:procura`).
 
 **Touch ID first.** Check `pvault touchid status` once at the start. When it's on,
 read with `pvault get` from Bash (vault skill §2d): each command shows one fingerprint
@@ -90,7 +100,8 @@ give. Give the user a short brief:
 
 ## 2. Check what's missing
 
-Map every form field to a vault field ID (`curl -s http://127.0.0.1:7200/vault/schema`).
+Map every form field to a vault field ID (`curl -s http://127.0.0.1:7200/vault/schema`, or the
+address `pvault --vault <name> status` prints for a business vault).
 A library entry's `forms[].fields` already does this; each `map` is one of:
 
 - `direct: <id>`: that field. `concat: [a, b]`: the fields joined in order.
@@ -139,8 +150,9 @@ Slug: lower-case words joined by hyphens, `<topic>-<procedure>-<year>`, e.g.
 (`/vault/schema` lists the campi, stati and canali). Set at least `titolo`, `ente`,
 `stato`, `canale`, `destinatario`, `data_scadenza`, `playbook` and `prossimo_passo`.
 
-When the pratica is for a family member (a child's CIE, a parent's ISEE), set
-`persona` to their slug: `pvault expiring` then labels its deadline with them. The
+When the pratica is for a family member (a child's CIE, a parent's ISEE), or in a
+business vault for a client, set `persona` to their slug: `pvault expiring` then labels
+its deadline with them. The
 user still signs and submits; for a minor check `<slug>:famiglia.genitori` (both
 parents usually have to consent, e.g. CIE valid for travel, SPID minori, INPS delega),
 and for an adult `<slug>:famiglia.rappresentanza` (tutore, amministratore di sostegno,

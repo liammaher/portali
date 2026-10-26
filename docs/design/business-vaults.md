@@ -1,9 +1,9 @@
 # Business and client vaults
 
-Status: proposal (2026-10-26). Phase 0 (the cleanup) is done: the code now says "person"
-(`SplitPerson`, `RemovePerson`, `people.go`/`household.go`, `pvault person`) and the schema
-holds `For` and `PersonRef`; the "where we are" section below describes the code before it.
-Nothing else is built yet. Open decisions are marked
+Status: proposal (2026-10-26). Phase 0 (the cleanup) and phase 1 (business vaults: kind,
+`ruolo`, business fields, named vaults with their own port, kind-aware Touch ID prompts, MCP and
+the onboarding page) are done; the "where we are" section below describes the code before
+phase 0. Phases 2 and 3 are not built yet. Open decisions are marked
 **Decision D1, D2, …**, each with a recommendation; they are collected at the end.
 
 ## Goal
@@ -290,12 +290,12 @@ owner fields. It can stay; migrating it to a party is optional.
   `pvault member` stays as the family alias; the API route, JSON keys and MCP tool names
   kept their old names.
 - **D2. `famiglia` and `ruolo`: two categories or one.** Recommendation: two.
-- **D3. A vault kind (`persona` / `impresa`).** Recommendation: yes, one meta key set at
+- **D3. A vault kind (`persona` / `impresa`).** Decided in phase 1: yes. Recommendation was: one meta key set at
   init.
 - **D4. Clients in the studio vault or a vault each.** Recommendation: in the studio vault;
   revisit only for a different titolare or much larger scale.
-- **D5. Where named vaults live.** Recommendation: sibling dirs (`~/.pvault-<name>`), each
-  with its own port.
+- **D5. Where named vaults live.** Decided in phase 1: sibling dirs (`~/.pvault-<name>`),
+  each with its own port, kept in a plain `<dir>/port` file and picked automatically.
 - **D6. More than one premises unit** (`locale2.*`, `locale.immobile<N>_*`, or units as
   something new). Not decided; pratiche-napoli's TARI non domestica procedures need it.
 - **D7. Several users** (staff sharing a studio vault). Recommendation: out of scope for
