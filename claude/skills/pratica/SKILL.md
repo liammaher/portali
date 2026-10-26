@@ -59,7 +59,8 @@ the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks 
 **With a library entry**, start from it rather than from a web search:
 
 - `deadline`, `channels`, `payment`, `documents`, `steps` (`human_only: true` steps go
-  to step 5), `after` and `pitfalls` give most of the brief below.
+  to step 5), `after` and `pitfalls` give most of the brief below. `records` lists the
+  data the procedure produces (field ID, and the document it is read from), for step 6.
 - Every claim has a `status`. Only `verified` ones may be stated as fact; say
   "unverified" or "sources disagree" (`disputed`) for the others, and check them
   against the official source when they decide something (a deadline, a fee).
@@ -199,9 +200,11 @@ prompt each) instead of asking for a write token.
 - Protocol number or receipt arrives: save `protocollo`; archive the receipt with
   `pvault doc add <category> <file>` (Touch ID) or `vault_document_add` (files in
   `~/Downloads` only) after asking.
-- The ente answers: save the result in the subject category too (e.g.
-  `tari.codice_contribuente`, `tari.protocollo`, `tari.data_dichiarazione`), set
-  `data_esito` and `stato` `completata` or `respinta`.
+- The ente answers: save the result in the subject category too. With a library
+  entry, its `records` say which field each result goes in and which document it is
+  read from (e.g. `tari.codice_contribuente` from the Comune's reply); without one,
+  pick the fields from `/vault/schema`. Set `data_esito` and `stato` `completata` or
+  `respinta`.
 - Paid: `importo`, `data_pagamento`.
 
 ## 7. Write or update the playbook

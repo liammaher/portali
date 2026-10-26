@@ -49,10 +49,9 @@ Signature, sending the PEC/email (or the raccomandata), paying the F24.
 
 - Save `pratiche.<slug>_data_invio`, `_stato` = `inviata`; archive the PEC receipt with
   `pvault doc add tari <file>`.
-- The Comune replies (or a payment notice arrives) with the Cod.Contr.: save
-  `tari.codice_contribuente`, `tari.data_dichiarazione`, `tari.protocollo`; from the notice
-  also `tari.superficie_tassata_mq` and `tari.componenti_tassati`, and check they match
-  `abitazione.superficie_calpestabile_mq` and the household.
+- The Comune replies (or a payment notice arrives): save the library entry's `records`
+  (codice contribuente, date and protocollo; taxed area and occupants from the notice), and
+  check the notice matches `abitazione.superficie_calpestabile_mq` and the household.
 - Close the pratica: `_stato` = `completata`, `_data_esito`.
 - The F24 is tracked as its own pratica: `importo`, `data_scadenza`, then
   `data_pagamento` when paid.
