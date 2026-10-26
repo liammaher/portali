@@ -114,7 +114,7 @@ func normalizeBusiness(id, category, name, value string) (out string, handled bo
 }
 
 // addressPart reports whether name is the given part (cap, provincia,
-// interno) of an address: residenza, domicilio and locale name it directly,
+// interno, stato) of an address: residenza, domicilio and locale name it directly,
 // business as the sede legale's (sede_legale_cap).
 func addressPart(category, name, part string) bool {
 	switch category {

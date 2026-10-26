@@ -130,13 +130,18 @@ Housing (the home at residenza/domicilio; the address itself stays there):
 `utenze.{luce_pod,gas_pdr,<servizio>_fornitore,<servizio>_codice_cliente}`, `tari.{codice_contribuente,data_dichiarazione}`.
 A TARI form needs `identity.*,residenza.*,abitazione.*,tari.*`; leave `locazione.*` out
 unless the task needs the contract (rent and landlord details are sensitive).
-Business (an impresa): `business.{partita_iva,denominazione,forma_giuridica,rea,cciaa,codice_ateco,pec,email,telefono,sede_legale_*,data_inizio_attivita,data_cessazione,inps_matricola,inail_*,ccnl,pec_data_scadenza,durc_data_scadenza}`,
-and its premises in `locale.{indirizzo,civico,cap,comune,provincia,titolo,data_inizio,catasto_*,superficie_mq,destinazione_uso}`
-(like `abitazione`, but with their own address). In the personal vault `business.*` is the
+Business (an impresa): `business.{partita_iva,denominazione,forma_giuridica,rea,cciaa,codice_ateco,pec,email,telefono,sede_legale_*,data_inizio_attivita,data_cessazione,inps_matricola,inail_*,ccnl,pec_data_scadenza,durc_data_scadenza,tari_codice_contribuente}`,
+and its premises in `locale.{indirizzo,civico,cap,comune,provincia,telefono,titolo,data_inizio,catasto_*,superficie_mq,destinazione_uso}`
+(like `abitazione`, but with their own address), with their TARI position in
+`locale.tari_{data_dichiarazione,protocollo,superficie_tassata_mq,categoria}` (the home's is `tari.*`).
+A second premises is `locale2.*`, a numbered copy with the same fields and rules (also `cie2`,
+`procura2`; never `famiglia2`, `ruolo2` or `pratiche2`). In the personal vault `business.*` is the
 user's own ditta or partita IVA (with `qualita_dichiarante`); a business with employees,
 clients or its own legal personality has a business vault. A person's professional
 details: `albo.{ordine,provincia,numero,data_iscrizione}`, `cassa.{ente,matricola}`,
-`firma_digitale.{ente_emittente,data_scadenza}`. `identity.birth_country` only if born abroad.
+`firma_digitale.{ente_emittente,data_scadenza}`. `identity.birth_country` only if born abroad;
+likewise `residenza.stato` and `business.sede_legale_stato` only for an address abroad (empty is
+Italia, and the vault refuses Italia there).
 To run a whole procedure (research, filling, hand-off, tracking), use the pratica skill;
 its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
 

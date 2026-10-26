@@ -532,17 +532,24 @@ body::before{
         <input type="text" data-field="locale.provincia" placeholder="NA" maxlength="2" autocapitalize="characters">
       </div>
     </div>
-    <div class="field">
-      <label>Titolo</label>
-      <span class="status idle"></span>
-      <select data-field="locale.titolo">
-        <option value=""></option>
-        <option value="proprietario">Proprietario</option>
-        <option value="locatario">In affitto</option>
-        <option value="comodatario">In comodato</option>
-        <option value="usufruttuario">Usufrutto</option>
-        <option value="altro">Altro</option>
-      </select>
+    <div class="field-row">
+      <div class="field">
+        <label>Titolo</label>
+        <span class="status idle"></span>
+        <select data-field="locale.titolo">
+          <option value=""></option>
+          <option value="proprietario">Proprietario</option>
+          <option value="locatario">In affitto</option>
+          <option value="comodatario">In comodato</option>
+          <option value="usufruttuario">Usufrutto</option>
+          <option value="altro">Altro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Telefono del locale</label>
+        <span class="status idle"></span>
+        <input type="tel" data-field="locale.telefono" placeholder="+39 081 123 4567">
+      </div>
     </div>
 
     <h3 class="subhead">Dipendenti e scadenze</h3>

@@ -149,7 +149,8 @@ the page never copies a rule.
   Rules read stored IDs as they are, never ignoring case.
 - **Numbered copies** of a schema category (`cie2`, `abitazione-2`) follow every rule of the
   original: rules read `canonicalLocalID`/`schemaCategoryOf`. `famiglia`, `ruolo` and
-  `pratiche` (one per holder) have none (`oneOnly`).
+  `pratiche` (one per holder) have none (`oneOnly`, `one_only` in `schema.json`); the
+  library names a second premises `locale2.*`.
 - **Credentials** (`IsCredentialField`: a secret word like pin/puk/password/otp in the
   category or field name, wider words next to spid/cie/firma) are stored only as
   `personal`; SPID/CieID categories and their documents default to it.
