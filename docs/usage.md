@@ -25,6 +25,36 @@ While the vault is unlocked, every CLI command that reads or changes data asks f
 
 With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs, so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password. The few things only your own session may do (deleting a field or document stored above its default tier, or storing a document below it) need full access: the command then shows a second prompt asking for that. Touch ID only sends your password to the `pvault` build it was enabled with, over the vault's socket (see Security Model), so after rebuilding or moving `pvault` or `pvault-touchid` run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`. `pvault touchid status` shows whether it's on; `pvault touchid disable` removes the saved password.
 
+## Other people and business vaults
+
+A vault holds your own data and, if you add them, other people's: a family (`pvault person add giulia --relazione moglie`) or, in a business vault, the business's people with a ruolo (`--ruolo cliente`).
+
+```sh
+pvault person list                              # the other people in this vault
+pvault person show leo                          # one person's fields
+pvault person add leo --relazione figlio --nome Leo --data-nascita 2019-10-27
+pvault person remove leo                        # their fields, documents and the tokens naming them; refused while another field names them (closed pratiche don't count)
+pvault person export leo [--to <folder>] [--include-personal]   # a new, unencrypted folder leo-export-<date> (GDPR art. 20)
+pvault person migrate [--dry-run]               # old nucleo_familiare.membro<N> fields → people
+```
+
+`pvault member ...` is an alias. A person's field IDs carry their slug (`leo:cie.numero`); `io` is you. The export holds their fields, their documents and the fields of every pratica that names them (files attached to pratiche are not kept per person, so they are not in it). Personal-tier items are left out unless `--include-personal`.
+
+A business (an SRL, a studio, a ditta) gets its own vault, with its own password, server, port, Touch ID and backups. Every command takes `--vault <name>` first (or set `PVAULT_VAULT`); the vault lives in `~/.pvault-<name>`, and its port is in its `port` file (7201-7299; `~/.pvault` keeps 7200):
+
+```sh
+pvault --vault studio init --impresa
+pvault --vault studio unlock
+pvault --vault studio person add rossi --ruolo cliente --nome Mario --cognome Rossi
+pvault --vault studio doc add rossi:procura procura-firmata.pdf    # the client's signed procura
+pvault --vault studio retention set 10          # keep people's data 10 years after ruolo.data_fine (no default)
+pvault --vault studio retention scans 90        # keep clients' ID scans 90 days after their pratiche close (no default)
+pvault --vault studio retention                 # show both
+pvault --vault studio expiring                  # also lists data past those periods
+```
+
+A business vault refuses what only a person has: family data, a home, other people's SPID/CieID accounts and login secrets (a CIE or digital-signature secret is never the business's own), and a ruolo on the business itself. Nothing is ever deleted automatically: `expiring` reports `retention` (a person past their period) and `pratiche_closed` (a client's ID and procura scans, once every pratica naming them has closed; a procura's scans wait until its `data_scadenza` has passed, and a procura with no date counts as still in force). Only your own session can set the periods.
+
 ## Fields
 
 Fields use dot notation: `category.field_name`. A family member's fields have their slug in front: `leo:identity.first_name` (see `pvault person`).
@@ -71,7 +101,7 @@ pvault set-sensitivity preferences.timezone public
 
 Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `leo:cie.data_scadenza`), `date_of_<x>` or `<x>_date` (e.g. `identity.date_of_birth`) must be a real calendar date; hyphens count as underscores, and names like `date_format` are not treated as dates. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
 
-`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`).
+`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`). In a business vault with retention periods set, entries with `kind: retention` and `kind: pratiche_closed` appear too (see Other people and business vaults).
 
 ## Document scans
 
@@ -144,7 +174,8 @@ POST /vault/session                      # { password, secret_key?, ttl? } → {
 
 ```
 GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fields and open pratiche deadlines;
-                                         #   a family member's carry "member": "<slug>"
+                                         #   a family member's carry "member": "<slug>"; with retention periods set, also
+                                         #   "kind": "retention" and "kind": "pratiche_closed" entries
 ```
 
 ### Other people (family members, or a business vault's people)
@@ -156,6 +187,10 @@ DELETE /vault/members/{slug}             # Your session, or a grant you approved
                                          #   delete a member's fields and documents, revoke tokens naming them
                                          #   (409 member_in_use while another field names them; closed pratiche don't count)
 POST   /vault/members/migrate[?dry_run=1]  # Session only: nucleo_familiare.membro<N>_* → members (dry_run: 1/true/0/false)
+GET    /vault/members/{slug}/export[?include_personal=1]
+                                         # Session only, audited: their fields (and those of the pratiche naming them) and documents with content
+GET    /vault/retention                  # { years?, scan_days? } — how long people's data and clients' ID scans are kept (unset: omitted)
+PUT    /vault/retention                  # Session only: { "years": N } or { "scan_days": N }
 ```
 
 Field IDs and document categories take the member prefix everywhere (`/vault/fields/leo:cie.numero`, `?category=leo:cie`). The public `/vault/status` counts only your own data.

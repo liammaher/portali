@@ -144,7 +144,8 @@ type idScans struct {
 // pratiche closed (ClosedAt; times are to the second, so a scan from the same
 // second counts as after), so a scan handed over for a new job, or for a later
 // person given a removed person's slug, is never due; and a procura category
-// is kept while a procura.data_scadenza is still ahead.
+// is kept while its data_scadenza is still ahead, or missing: a mandate with
+// no end date (valid until revoked) is still in force.
 //
 // It reads every pratica, not just those allow accepts, so a pratica the
 // caller can't see still counts as open; but a person counts only if the
@@ -165,8 +166,8 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 		return nil, err
 	}
 	visible := func(f FieldInfo) bool { return allow == nil || allow(f.ID, f.Sensitivity) }
-	client, blocked := map[string]bool{}, map[string]bool{} // blocked: a ruolo.tipo or procura date the caller can't read
-	procuraInForce := map[string]bool{}
+	client, blocked := map[string]bool{}, map[string]bool{}              // blocked: a ruolo.tipo or procura date the caller can't read
+	procuraDated, procuraInForce := map[string]bool{}, map[string]bool{} // by category (rossi:procura2)
 	for _, fields := range ctx.Categories {
 		for _, f := range fields {
 			person, local := SplitPerson(f.Category)
@@ -177,8 +178,9 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 			case local == "ruolo":
 				client[person] = client[person] || slices.Contains(strings.Split(f.Value, ","), "cliente")
 			default: // a procura's data_scadenza
+				procuraDated[f.Category] = true
 				if d, err := NormalizeDate(f.Value); err != nil || d >= today.Format(dateLayout) {
-					procuraInForce[person] = true
+					procuraInForce[f.Category] = true
 				}
 			}
 		}
@@ -210,7 +212,7 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 		}
 		ok := (allow == nil || allow(DocumentScopeID(doc.Category), doc.Sensitivity)) &&
 			doc.CreatedAt.Before(lastClosed[person]) && // same second: maybe after, so kept
-			!(procuraInForce[person] && schemaCategoryOf(base).Name == "procura")
+			!(schemaCategoryOf(base).Name == "procura" && (procuraInForce[doc.Category] || !procuraDated[doc.Category]))
 		if prev, seen := due[doc.Category]; seen {
 			ok = ok && prev
 		}

@@ -23,9 +23,9 @@
     "directory": "mcp"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "imapflow": "2.2.10",
-    "mailparser": "3.9.36",
+    "mailparser": "3.12.4",
     "zod": "^3.25.0"
   },
   "devDependencies": {
