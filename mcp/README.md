@@ -35,22 +35,23 @@ pvault create-service-token claude --scope "residenza.*" --access read --ttl 2h 
 
 ### A second vault (e.g. a business vault)
 
-Each vault (`pvault --vault <name>`) has its own server and port, so give it its own MCP
-server: its tools then appear as `mcp__<name>__vault_*`, next to the default vault's.
-Use the address `pvault --vault <name> status` prints, and a Keychain service of its own
-(a token stored under another vault's service would overwrite that vault's token, which
-stays valid on that vault until it expires or is revoked there):
+Each vault (`pvault --vault <name>`) has its own server, so give it its own MCP server:
+its tools then appear as `mcp__<name>__vault_*`, next to the default vault's. Name the
+vault, and give it a Keychain service of its own (a token stored under another vault's
+service would overwrite that vault's token, which stays valid on that vault until it
+expires or is revoked there):
 
 ```sh
 claude mcp add studio --scope user \
-  -e VAULT_ADDR=http://127.0.0.1:7201 \
   -e VAULT_NAME=studio \
   -e VAULT_KEYCHAIN_SERVICE=pvault-studio-mcp \
   -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
 pvault --vault studio create-service-token claude --scope "business.*" --ttl 2h --keychain pvault-studio-mcp
 ```
 
-`VAULT_NAME` only makes the server's messages say `pvault --vault studio ...`.
+The MCP server talks to the vault only over its socket, `<vault folder>/run/pvault.sock`
+(`~/.pvault-studio` here), never over TCP: while a vault is locked anything can listen on
+its port, but only you can put a socket in that private folder.
 
 Elsewhere, pass the token directly (stored in plain text in `~/.claude.json`):
 
@@ -146,8 +147,9 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `VAULT_ADDR` | `http://127.0.0.1:7200` | Vault server address (another vault's: what `pvault --vault <name> status` prints) |
-| `VAULT_NAME` | — | The vault's name when it isn't the default one (`pvault --vault <name>`), used in messages that name pvault commands |
+| `VAULT_NAME` | — | The vault when it isn't the default one (`pvault --vault <name>`): requests go to `~/.pvault-<name>`'s socket, and messages name `pvault --vault <name>` |
+| `VAULT_DIR` | `~/.pvault` | The vault folder, for one outside `~/.pvault-<name>`; wins over `VAULT_NAME` |
+| `VAULT_ADDR` | — | Optional check: the address `pvault status` prints; a request is refused unless the vault's server listens there. Requests never go to it |
 | `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (one token source is required) |
 | `VAULT_KEYCHAIN_SERVICE` | — | macOS: Keychain service the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
 | `VAULT_TOKEN_COMMAND` | — | Command run in the platform shell that prints the token (e.g. another secret store); used when neither of the above is set |

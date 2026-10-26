@@ -221,8 +221,8 @@ Validation done by the vault (expect errors otherwise):
 ## 4. Granting MCP access (per task, on demand)
 
 The MCP server is registered user-wide as `vault` with `VAULT_KEYCHAIN_SERVICE=pvault-mcp`.
-A business vault has its own MCP server (e.g. `studio`, with `VAULT_ADDR` set to that
-vault's address, `VAULT_NAME=studio` and its own Keychain service such as
+A business vault has its own MCP server (e.g. `studio`, with `VAULT_NAME=studio`, which
+makes it talk to `~/.pvault-studio`'s socket, and its own Keychain service such as
 `pvault-studio-mcp`), so its tools are `mcp__studio__vault_*`. Tokens for it are created
 with `pvault --vault studio create-service-token ... --keychain pvault-studio-mcp`: never
 reuse another vault's Keychain service (it would overwrite that vault's stored token, which

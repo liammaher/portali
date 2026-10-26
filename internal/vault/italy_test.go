@@ -124,7 +124,9 @@ var credentialIDs = []string{"spid.password", "spid.username", "spid.otp", "SPID
 	// Any login secret, not just SPID/CIE ones: portal logins (Fisconline,
 	// Entratel, INPS), a PEC mailbox, a bank PIN, a password hint.
 	"fisconline.pin", "fisconline.password", "entratel.password", "agenzia_entrate.pin", "business.fisconline_pin",
-	"inps.pin", "leo:fisconline.pin", "pec.password", "accounts.bank_pin", "identity.password_hint", "pin.numero"}
+	"inps.pin", "leo:fisconline.pin", "pec.password", "accounts.bank_pin", "identity.password_hint", "pin.numero",
+	// A payment card's security code, which the card number's critical tier would let an agent read.
+	"payment.cvv", "payment.card_cvv", "payment.cvc", "payment.cvc2", "carta.cvv2", "leo:payment.cvn"}
 
 var nonCredentialIDs = []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
 	"cie.pinterest", "documents.cie_scan", "spid.provider", "spid.data_scadenza", "fisconline.data_scadenza",

@@ -25,8 +25,9 @@ func (e *ValidationError) Error() string {
 }
 
 const (
-	// secretWords name a secret in any category (fisconline.pin).
-	secretWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco)s?[0-9]*`
+	// secretWords name a secret in any category (fisconline.pin), a card's
+	// security code (payment.cvv, cvc2) included.
+	secretWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco|cvv|cvc|cvn)s?[0-9]*`
 	// credentialWords add words that name a login detail only next to SPID,
 	// CieID or the CIE (spid.username, spid.pass): elsewhere they are
 	// everyday words (pec.username, locazione.chiavi_consegnate, pass_ztl).

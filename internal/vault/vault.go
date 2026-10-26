@@ -589,6 +589,9 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 	if err := v.checkPersonExists(id, allow); err != nil {
 		return err
 	}
+	if err := v.checkNewPersonSlug(id); err != nil {
+		return err
+	}
 	if err := v.checkPersonRefs(id, value, allow); err != nil {
 		return err
 	}

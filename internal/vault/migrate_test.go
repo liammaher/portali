@@ -135,3 +135,21 @@ func TestMigrate_SkipsUnreadableFields(t *testing.T) {
 		t.Error("no migrate_failed entry naming Notes.X")
 	}
 }
+
+// A public field keeps its tier when its spelling is made lower-case: public
+// ranks like no tier at all, which must not win.
+func TestMigrate_LowerCaseKeepsPublicTier(t *testing.T) {
+	v, _ := tmpVault(t)
+	setLegacy(t, v, "Notes.Motto", "carpe diem") // the only spelling
+	mustSet(t, v, "notes.colore", "blu")
+	setLegacyAt(t, v, "Notes.Colore", "rosso", time.Now().Add(-time.Hour)) // older
+	execSQL(t, v, "UPDATE vault_fields SET sensitivity = 'public'")
+	relock(t, v)
+
+	for _, id := range []string{"notes.motto", "notes.colore"} {
+		if f, _ := v.FieldMeta(id); f == nil || f.Sensitivity != "public" {
+			t.Errorf("%s tier = %+v, want public", id, f)
+		}
+		mustSet(t, v, id, "changed") // a field with no tier refuses every write
+	}
+}

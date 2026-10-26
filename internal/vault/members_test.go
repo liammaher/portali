@@ -587,3 +587,74 @@ func TestReopenPraticaChecksPersonaWhateverTheRoute(t *testing.T) {
 		t.Fatalf("delete after fixing persona: %v", err)
 	}
 }
+
+// A slug a closed pratica still names stays the removed person's: a new
+// person can't take it (and so inherit the pratica in expiring, their export,
+// or by reopening it), until those pratiche are gone.
+func TestNewPersonCantTakeSlugAPraticaNames(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "leo:famiglia.relazione", "figlio")
+	mustSet(t, v, "pratiche.cie-leo_persona", "leo")
+	mustSet(t, v, "pratiche.cie-leo_stato", "completata")
+	if _, err := v.RemovePerson("leo"); err != nil {
+		t.Fatal(err)
+	}
+	var verr *ValidationError
+	if err := v.Set("leo:famiglia.relazione", "altro", ""); !errors.As(err, &verr) || !strings.Contains(err.Error(), "pratiche.cie-leo_persona") {
+		t.Fatalf("new person with the slug = %v, want a refusal naming the pratica", err)
+	}
+	if _, err := v.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("scan"), ""); !errors.As(err, &verr) {
+		t.Fatalf("document for a new person with the slug = %v, want ValidationError", err)
+	}
+	if exists, _ := v.db.PersonExists("leo"); exists {
+		t.Fatal("leo was added")
+	}
+
+	// The nucleo migration picks another slug for a membro of that name.
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Leo")
+	report, err := v.MigrateNucleo(false)
+	if err != nil || len(report.Members) != 1 || report.Members[0].Slug != "leo-2" {
+		t.Fatalf("migration = %+v, %v; want membro1 as leo-2", report, err)
+	}
+
+	// Once the pratica is deleted, the slug is free.
+	for _, id := range []string{"pratiche.cie-leo_persona", "pratiche.cie-leo_stato"} { // persona first: no stato is open
+		if err := v.Delete(id); err != nil {
+			t.Fatal(err)
+		}
+	}
+	mustSet(t, v, "leo:famiglia.relazione", "altro")
+}
+
+// A second run of the nucleo migration (after fixing what the first left)
+// adds the leftover fields to the person the first run made, not to a new
+// one named membro<N>; removing that person forgets it.
+func TestMigrateNucleo_RerunJoinsSamePerson(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Giulia")
+	mustSet(t, v, "nucleo_familiare.membro1_relazione", "zia acquisita") // not a relazione: left
+	if _, err := v.MigrateNucleo(false); err != nil {
+		t.Fatal(err)
+	}
+	mustSet(t, v, "nucleo_familiare.membro1_relazione", "altro_affine")
+	report, err := v.MigrateNucleo(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(report.Members) != 1 || report.Members[0].Slug != "giulia" {
+		t.Fatalf("second run members = %+v, want giulia", report.Members)
+	}
+	if slugs, _ := v.db.PersonSlugs(); strings.Join(slugs, ",") != "giulia" {
+		t.Fatalf("people = %v, want only giulia", slugs)
+	}
+	if f, err := v.Get("giulia:famiglia.relazione"); err != nil || f.Value != "altro_affine" {
+		t.Fatalf("giulia:famiglia.relazione = %+v, %v", f, err)
+	}
+
+	if _, err := v.RemovePerson("giulia"); err != nil {
+		t.Fatal(err)
+	}
+	if m, _ := v.db.MetaWithPrefix(metaNucleoMembro); len(m) != 0 {
+		t.Errorf("migration record kept after removing giulia: %v", m)
+	}
+}

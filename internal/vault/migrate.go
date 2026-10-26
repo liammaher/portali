@@ -91,7 +91,9 @@ func (v *Vault) lowerCaseFieldIDs() error {
 	for _, id := range ids {
 		rows := spellings[id]
 		sort.Slice(rows, func(i, j int) bool { return rows[i].ID < rows[j].ID })
-		winner, tier := rows[0], ""
+		// The highest tier of any spelling: public ranks 0, like "", so start
+		// from a real one or a public field would come out with none.
+		winner, tier := rows[0], rows[0].Sensitivity
 		for _, f := range rows {
 			deletes = append(deletes, f.ID)
 			if f.UpdatedAt.After(winner.UpdatedAt) {

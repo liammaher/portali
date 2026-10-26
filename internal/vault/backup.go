@@ -44,8 +44,9 @@ const (
 	backupKeep     = 10
 	backupKeepDays = 30
 
-	metaBackupDir  = "backup_dir"
-	metaBackupLast = "backup_last"
+	metaBackupDir    = "backup_dir"
+	metaBackupLast   = "backup_last"
+	metaBackupSeries = "backup_series"
 )
 
 // backupDelay is how long after the last change an automatic backup runs.
@@ -59,6 +60,7 @@ var (
 	// damaged file: authenticated encryption can't tell them apart.
 	ErrBackupUnreadable = errors.New("cannot decrypt backup: wrong password or secret key, or the file is damaged")
 
+	reBackupSeries = regexp.MustCompile(`^[0-9a-f]{8}$`)
 	reBackupName   = regexp.MustCompile(`^pvault-([0-9a-f]{8})-(\d{8}T\d{6}\.\d{3}Z)\.pvbackup$`)
 	reBackupDocEnt = regexp.MustCompile(`^documents/[0-9a-f]{32}\.enc$`)
 )
@@ -177,7 +179,7 @@ func (v *Vault) backupLocked() (string, error) {
 	}
 
 	v.db.SetMeta(metaBackupLast, now.Format(time.RFC3339))
-	pruneBackups(dir, backupVaultID(v.salt), now)
+	pruneBackups(dir, v.backupSeries(), now)
 	return path, nil
 }
 
@@ -338,7 +340,7 @@ func (v *Vault) writeBackup(vaultKey []byte, dir string, now time.Time) (string,
 		return "", fmt.Errorf("write backup: %w", err)
 	}
 
-	path := filepath.Join(dir, backupFileName(v.salt, now))
+	path := filepath.Join(dir, backupFileName(v.backupSeries(), now))
 	if err := os.Rename(tmp.Name(), path); err != nil {
 		return "", err
 	}
@@ -363,15 +365,39 @@ func addTarFile(tw *tar.Writer, name, path string) error {
 }
 
 // backupVaultID names the vault in backup file names, so vaults sharing a
-// folder never prune each other's backups. A restored vault keeps its salt
-// and so continues the same series. The salt is not secret.
+// folder never prune each other's backups. The salt is not secret.
 func backupVaultID(salt []byte) string {
 	h := sha256.Sum256(salt)
 	return hex.EncodeToString(h[:4])
 }
 
-func backupFileName(salt []byte, created time.Time) string {
-	return "pvault-" + backupVaultID(salt) + "-" + created.Format(backupTimeFormat) + ".pvbackup"
+// backupSeries is the ID in this vault's backup file names: its own after a
+// restore (newBackupSeries), else the salt's.
+func (v *Vault) backupSeries() string {
+	if id, err := v.db.GetMeta(metaBackupSeries); err == nil && reBackupSeries.MatchString(id) {
+		return id
+	}
+	return backupVaultID(v.salt)
+}
+
+// newBackupSeries gives a restored vault a series of its own. It keeps the
+// salt (and the backup folder), so with the salt's series a copy restored
+// next to the original would prune the original's backups as its own.
+func newBackupSeries(v *Vault) error {
+	old := v.backupSeries()
+	b := make([]byte, 4)
+	for {
+		if _, err := crand.Read(b); err != nil {
+			return err
+		}
+		if id := hex.EncodeToString(b); id != old && id != backupVaultID(v.salt) {
+			return v.db.SetMeta(metaBackupSeries, id)
+		}
+	}
+}
+
+func backupFileName(series string, created time.Time) string {
+	return "pvault-" + series + "-" + created.Format(backupTimeFormat) + ".pvbackup"
 }
 
 // pruneBackups deletes this vault's old backups in dir, keeping the
@@ -480,6 +506,9 @@ func CheckBackup(path, password, secretKeyHex string) (*BackupInfo, error) {
 // another run treats it as left behind by an interrupted one.
 const staleWorkDirAge = 10 * time.Minute
 
+// restoreWorkPrefix names RestoreBackup's work dirs.
+const restoreWorkPrefix = ".pvault.restore-"
+
 // removeStaleWorkDirs removes the work dirs named prefix* in dir that an
 // interrupted restore or check left behind (Ctrl-C skips their cleanup).
 // They hold a decrypted database snapshot: field names and the audit log.
@@ -512,9 +541,11 @@ func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error
 	if err := os.MkdirAll(parent, 0700); err != nil {
 		return nil, err
 	}
-	// Stage next to dir so the final step is a rename on the same disk.
-	removeStaleWorkDirs(parent, ".pvault-restore-")
-	work, err := os.MkdirTemp(parent, ".pvault-restore-")
+	// Stage next to dir so the final step is a rename on the same disk, under
+	// a name no vault folder (.pvault, .pvault-<name>) can have: the sweep
+	// must never take a vault named restore-<x> for a work dir.
+	removeStaleWorkDirs(parent, restoreWorkPrefix)
+	work, err := os.MkdirTemp(parent, restoreWorkPrefix)
 	if err != nil {
 		return nil, err
 	}
@@ -598,6 +629,9 @@ func restoreInto(path, target, password, secretKeyHex string, writeKey bool) (*B
 		return nil, err
 	}
 	if writeKey {
+		if err := newBackupSeries(v); err != nil {
+			return nil, err
+		}
 		if err := os.WriteFile(filepath.Join(target, "secret.key"), []byte(hex.EncodeToString(sk)+"\n"), 0600); err != nil {
 			return nil, err
 		}

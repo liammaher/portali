@@ -25,6 +25,24 @@ func (d *DB) GetMeta(key string) (string, error) {
 	return value, nil
 }
 
+// MetaWithPrefix returns the vault_meta pairs whose key starts with prefix.
+func (d *DB) MetaWithPrefix(prefix string) (map[string]string, error) {
+	rows, err := d.conn.Query("SELECT key, value FROM vault_meta WHERE substr(key, 1, ?) = ?", len(prefix), prefix)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := map[string]string{}
+	for rows.Next() {
+		var k, v string
+		if err := rows.Scan(&k, &v); err != nil {
+			return nil, err
+		}
+		out[k] = v
+	}
+	return out, rows.Err()
+}
+
 // IsInitialized checks if the vault has been initialized.
 func (d *DB) IsInitialized() (bool, error) {
 	salt, err := d.GetMeta("salt")

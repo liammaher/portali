@@ -3,6 +3,7 @@ package vault
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -225,12 +226,13 @@ func TestRestoreDropsTokensAndKeepsBackupTime(t *testing.T) {
 }
 
 // Work dirs an interrupted restore or check left behind are removed by the
-// next one; a recent one (maybe still in use) is kept.
+// next one; a recent one (maybe still in use) is kept, and so is a vault
+// whose name looks like one (pvault --vault restore-test keeps ~/.pvault-restore-test).
 func TestRestoreRemovesStaleWorkDirs(t *testing.T) {
 	_, sk, path := backedUpVault(t)
 	parent := t.TempDir()
-	stale := filepath.Join(parent, ".pvault-restore-1")
-	fresh := filepath.Join(parent, ".pvault-restore-2")
+	stale := filepath.Join(parent, restoreWorkPrefix+"1")
+	fresh := filepath.Join(parent, restoreWorkPrefix+"2")
 	checkStale := filepath.Join(os.TempDir(), "pvault-check-test-stale")
 	for _, d := range []string{stale, fresh, checkStale} {
 		if err := os.MkdirAll(filepath.Join(d, "vault"), 0700); err != nil {
@@ -238,9 +240,14 @@ func TestRestoreRemovesStaleWorkDirs(t *testing.T) {
 		}
 	}
 	defer os.RemoveAll(checkStale)
+	named := filepath.Join(parent, ".pvault-restore-test")
+	if _, err := Init(named, testPassword); err != nil {
+		t.Fatal(err)
+	}
 	old := time.Now().Add(-time.Hour)
-	os.Chtimes(stale, old, old)
-	os.Chtimes(checkStale, old, old)
+	for _, d := range []string{stale, checkStale, named} {
+		os.Chtimes(d, old, old)
+	}
 
 	if _, err := RestoreBackup(path, filepath.Join(parent, "restored"), testPassword, sk); err != nil {
 		t.Fatal(err)
@@ -248,10 +255,60 @@ func TestRestoreRemovesStaleWorkDirs(t *testing.T) {
 	if _, err := CheckBackup(path, testPassword, sk); err != nil {
 		t.Fatal(err)
 	}
-	for d, want := range map[string]bool{stale: false, fresh: true, checkStale: false} {
+	for d, want := range map[string]bool{stale: false, fresh: true, checkStale: false, filepath.Join(named, "secret.key"): true} {
 		if _, err := os.Stat(d); (err == nil) != want {
 			t.Errorf("%s exists = %v, want %v", d, err == nil, want)
 		}
+	}
+}
+
+// A copy restored next to the original (to look at an old backup) keeps the
+// backup folder but writes its own series there, so its backups never prune
+// the original's.
+func TestRestoredCopyKeepsOriginalBackups(t *testing.T) {
+	v, sk, dir := backupVault(t)
+	for i := 0; i < backupKeep; i++ {
+		if _, err := v.Backup(); err != nil {
+			t.Fatal(err)
+		}
+		time.Sleep(2 * time.Millisecond) // file names are to the millisecond
+	}
+	originals := backupFiles(t, dir)
+	if len(originals) != backupKeep {
+		t.Fatalf("%d backups, want %d", len(originals), backupKeep)
+	}
+
+	target := filepath.Join(t.TempDir(), "copy")
+	if _, err := RestoreBackup(filepath.Join(dir, originals[0]), target, testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(target)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	if _, err := r.Unlock(testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	if r.backupSeries() == v.backupSeries() {
+		t.Fatal("restored copy continues the original's backup series")
+	}
+	for i := 0; i < 3; i++ {
+		if err := r.Set("notes.motto", fmt.Sprintf("copy %d", i), ""); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := r.Backup(); err != nil {
+			t.Fatal(err)
+		}
+		time.Sleep(2 * time.Millisecond)
+	}
+	for _, name := range originals {
+		if _, err := os.Stat(filepath.Join(dir, name)); err != nil {
+			t.Errorf("original's backup %s pruned by the restored copy: %v", name, err)
+		}
+	}
+	if got := len(backupFiles(t, dir)); got != backupKeep+3 {
+		t.Errorf("%d backups in the folder, want %d", got, backupKeep+3)
 	}
 }
 

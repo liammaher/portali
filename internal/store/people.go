@@ -89,6 +89,8 @@ type Change struct {
 	DeleteTokens             []string // a token already gone (expired, revoked) is no error
 	Insert                   []Field  // each must not exist yet
 	DeletePerson             string   // the person removed with their rows, if any
+	SetMeta                  map[string]string
+	DeleteMeta               []string // a key already gone is no error
 }
 
 // ApplyChange makes c in one transaction, so removing or migrating a person
@@ -131,6 +133,16 @@ func (d *DB) ApplyChange(c Change) error {
 	}
 	if c.DeletePerson != "" {
 		if err := oneRow(tx.Exec(`DELETE FROM vault_people WHERE slug = ?`, c.DeletePerson)); err != nil {
+			return err
+		}
+	}
+	for k, v := range c.SetMeta {
+		if _, err := tx.Exec(`INSERT INTO vault_meta (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value`, k, v); err != nil {
+			return err
+		}
+	}
+	for _, k := range c.DeleteMeta {
+		if _, err := tx.Exec(`DELETE FROM vault_meta WHERE key = ?`, k); err != nil {
 			return err
 		}
 	}
