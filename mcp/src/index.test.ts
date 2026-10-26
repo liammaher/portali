@@ -6,16 +6,18 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir, homedir } from "node:os";
 import { join } from "node:path";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { fakeVaultSocket } from "./vault-socket.testutil.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 // The real MCP server over stdio, against a fake vault whose token may read
 // everything, so only the server's own import rules apply.
 let vault: Server;
+let vaultDir: string;
 let importDir: string;
 let client: Client;
 
 before(async () => {
-  vault = createServer((req, res) => {
+  ({ dir: vaultDir, server: vault } = await fakeVaultSocket((req, res) => {
     res.setHeader("Content-Type", "application/json");
     if (req.url?.startsWith("/vault/expiring")) {
       res.end(JSON.stringify([
@@ -36,8 +38,7 @@ before(async () => {
       return;
     }
     res.end("{}");
-  });
-  await new Promise<void>((r) => vault.listen(0, "127.0.0.1", r));
+  }));
   importDir = await mkdtemp(join(tmpdir(), "vault-mcp-import-"));
   client = new Client({ name: "test", version: "1" });
   await client.connect(new StdioClientTransport({
@@ -45,7 +46,8 @@ before(async () => {
     args: ["--import", "tsx", "src/index.ts"],
     env: {
       ...(process.env as Record<string, string>),
-      VAULT_ADDR: `http://127.0.0.1:${(vault.address() as AddressInfo).port}`,
+      VAULT_DIR: vaultDir,
+      VAULT_ADDR: "",
       VAULT_TOKEN: "pvs_" + "a".repeat(64),
       VAULT_IMPORT_DIRS: importDir,
       PEC_ADDRESS: "",
@@ -57,6 +59,7 @@ after(async () => {
   await client?.close();
   vault?.close();
   await rm(importDir, { recursive: true, force: true });
+  await rm(vaultDir, { recursive: true, force: true });
 });
 
 const text = (r: unknown) => ((r as { content: { text: string }[] }).content[0]?.text ?? "");

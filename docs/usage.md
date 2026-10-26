@@ -132,7 +132,7 @@ pvault restore <file>                   # recreate the vault (only into a missin
 
 A backup is a snapshot of `vault.db` plus the encrypted documents, in a tar encrypted again with chunked AES-256-GCM under a key derived from your vault key, so field names and the audit log are hidden too. Files are named `pvault-<vault id>-<time>.pvbackup` and written with mode 0600. Once a folder is set (an absolute path outside the vault directory), the server backs up a minute after the last change and again before it locks; `pvault lock` waits for that. Pruning keeps this vault's 10 newest backups plus the newest per day for 30 days, and never touches other files. `pvault status` shows when the last backup ran or why it failed, never the folder.
 
-`secret.key` is never in a backup: restoring needs your profile password and the secret key you saved at `pvault init`. Service tokens are left out too (a token revoked after the backup must not come back), so create new ones after a restore. A restore or check interrupted with Ctrl-C leaves a work folder (`.pvault-restore-*` next to the target, `pvault-check-*` in the temp folder); the next restore or check removes it. Backing up needs your own session (password or Touch ID), not a service token.
+`secret.key` is never in a backup: restoring needs your profile password and the secret key you saved at `pvault init`. Service tokens are left out too (a token revoked after the backup must not come back), so create new ones after a restore. A restore or check interrupted with Ctrl-C leaves a work folder (`.pvault.restore-*` next to the target, `pvault-check-*` in the temp folder); the next restore or check removes it. Backing up needs your own session (password or Touch ID), not a service token.
 
 ## Service Tokens
 

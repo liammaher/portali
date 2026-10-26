@@ -1,5 +1,8 @@
 import { exec } from "node:child_process";
-import { userInfo } from "node:os";
+import { lstat } from "node:fs/promises";
+import { request } from "node:http";
+import { homedir, userInfo } from "node:os";
+import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 import {
   findGenericPassword, KEYCHAIN_SERVICE_PATTERN, LOOKUP_MAX_BYTES, LOOKUP_TIMEOUT_MS,
@@ -36,14 +39,116 @@ class VaultError extends Error {
   }
 }
 
-function serverAddr(): string {
-  const addr = process.env.VAULT_ADDR;
-  // A named vault has its own port: without VAULT_ADDR every request would
-  // go to the default vault, and its errors would send the user in circles.
-  if (!addr && process.env.VAULT_NAME) {
-    throw new VaultError(`vault: VAULT_NAME is ${process.env.VAULT_NAME} but VAULT_ADDR isn't set — set it to the address \`${pvCmd("status")}\` prints`);
+/** A vault name, as pvault's ValidPersonSlug has it ("io" is the owner). */
+const VAULT_NAME = /^(?!io$)[a-z][a-z0-9-]{0,31}$/;
+
+/** The vault's folder: VAULT_DIR, else ~/.pvault-<VAULT_NAME>, else ~/.pvault. */
+function vaultDir(): string {
+  const dir = process.env.VAULT_DIR?.trim();
+  if (dir) return dir;
+  const name = process.env.VAULT_NAME?.trim();
+  if (name) {
+    if (!VAULT_NAME.test(name)) {
+      throw new VaultError(`vault: VAULT_NAME ${JSON.stringify(name)} isn't a vault name (lower-case letters, digits and hyphens)`);
+    }
+    return join(homedir(), `.pvault-${name}`);
   }
-  return addr ?? "http://127.0.0.1:7200";
+  return join(homedir(), ".pvault");
+}
+
+const REQUEST_TIMEOUT_MS = 30_000;
+
+function notRunning(): VaultError {
+  return new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
+}
+
+/**
+ * Requests, the token included, go only to the server's socket in the vault
+ * folder, never over TCP: anything can listen on 127.0.0.1:7200 while the
+ * vault is locked, but only this user can put a socket in <vault dir>/run,
+ * which the server keeps private (0700).
+ */
+async function checkSocket(path: string): Promise<void> {
+  const uid = process.getuid?.();
+  const dir = await lstat(dirname(path)).catch(() => undefined);
+  if (!dir) throw notRunning();
+  if (!dir.isDirectory() || dir.uid !== uid || (dir.mode & 0o077) !== 0) {
+    throw new VaultError(`vault: refusing to send the token: ${dirname(path)} must be a private folder of yours (mode 0700)`);
+  }
+  const sock = await lstat(path).catch(() => undefined);
+  if (!sock) throw notRunning();
+  if (!sock.isSocket() || sock.uid !== uid) {
+    throw new VaultError(`vault: refusing to send the token: ${path} is not your vault server's socket`);
+  }
+}
+
+interface SocketInit {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string | Uint8Array;
+}
+
+/** One HTTP request over the socket, answered as a fetch Response. */
+function socketRequest(socketPath: string, path: string, init: SocketInit): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    const req = request({
+      socketPath, path, method: init.method ?? "GET",
+      // The server wants a loopback Host on every request.
+      headers: {
+        ...init.headers, Host: "localhost",
+        ...(init.body !== undefined && { "Content-Length": String(Buffer.byteLength(init.body)) }),
+      },
+      timeout: REQUEST_TIMEOUT_MS,
+    }, (res) => {
+      const chunks: Buffer[] = [];
+      res.on("data", (c: Buffer) => chunks.push(c));
+      res.on("error", reject);
+      res.on("end", () => {
+        const headers = new Headers();
+        for (const [k, v] of Object.entries(res.headers)) {
+          if (v !== undefined) headers.set(k, Array.isArray(v) ? v.join(", ") : v);
+        }
+        const status = res.statusCode ?? 500;
+        const body = status === 204 || status === 304 ? null : Buffer.concat(chunks);
+        resolve(new Response(body, { status, headers }));
+      });
+    });
+    req.on("timeout", () => req.destroy(new Error("timed out")));
+    req.on("error", reject);
+    req.end(init.body);
+  });
+}
+
+/**
+ * Sends a request to this vault's server over its socket. With VAULT_ADDR
+ * set, the server there must be the one it names (pvault status prints it),
+ * so an MCP server set up for one vault never answers from another's.
+ */
+async function vaultFetch(path: string, init: SocketInit): Promise<Response> {
+  const sock = join(vaultDir(), "run", "pvault.sock");
+  await checkSocket(sock);
+  const send = async (p: string, i: SocketInit) => {
+    try {
+      return await socketRequest(sock, p, i);
+    } catch {
+      throw notRunning();
+    }
+  };
+  const addr = process.env.VAULT_ADDR?.trim();
+  if (addr) {
+    let want = "";
+    try {
+      want = new URL(addr).host;
+    } catch {
+      throw new VaultError(`vault: VAULT_ADDR ${addr} isn't an address like http://127.0.0.1:7200`);
+    }
+    const status = await send("/vault/status", {});
+    const got = status.ok ? ((await status.json().catch(() => ({}))) as { addr?: string }).addr : undefined;
+    if (got !== want) {
+      throw new VaultError(`vault: VAULT_ADDR ${addr} isn't the server of ${vaultDir()}, which listens on ${got ?? "an unknown address"} — set VAULT_NAME (or VAULT_DIR) to the vault you mean, and VAULT_ADDR to what \`${pvCmd("status")}\` prints, or unset it`);
+    }
+  }
+  return send(path, init);
 }
 
 const TOKEN_LOOKUP_TIMEOUT_MS = LOOKUP_TIMEOUT_MS;
@@ -191,18 +296,11 @@ export function assertTokenConfigured(): void {
   }
 }
 
-async function authedFetch(path: string, init: RequestInit): Promise<Response> {
-  // First, and outside the try below: a misconfigured address must say so,
-  // not read as a missing token or "server not running".
-  const url = `${serverAddr()}${path}`;
-  const headers = new Headers(init.headers);
-  headers.set("Authorization", `Bearer ${await resolveToken()}`);
-  let resp: Response;
-  try {
-    resp = await fetch(url, { ...init, headers });
-  } catch {
-    throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
-  }
+async function authedFetch(path: string, init: SocketInit): Promise<Response> {
+  // First: a misconfigured vault must say so, not read as a missing token.
+  vaultDir();
+  const headers = { ...init.headers, Authorization: `Bearer ${await resolveToken()}` };
+  const resp = await vaultFetch(path, { ...init, headers });
   if (!resp.ok) {
     throw mapError(resp.status, await resp.text());
   }
@@ -287,13 +385,7 @@ async function apiRequest(
 
 export async function getStatus(): Promise<VaultStatus> {
   // Public endpoint — works without auth
-  const url = `${serverAddr()}/vault/status`;
-  let resp: Response;
-  try {
-    resp = await fetch(url);
-  } catch {
-    throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
-  }
+  const resp = await vaultFetch("/vault/status", {});
   if (!resp.ok) {
     throw new VaultError(`vault: status check failed — HTTP ${resp.status}`);
   }
@@ -302,13 +394,7 @@ export async function getStatus(): Promise<VaultStatus> {
 
 export async function getSchema(): Promise<unknown> {
   // Public endpoint — works without auth
-  const url = `${serverAddr()}/vault/schema`;
-  let resp: Response;
-  try {
-    resp = await fetch(url);
-  } catch {
-    throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
-  }
+  const resp = await vaultFetch("/vault/schema", {});
   if (!resp.ok) {
     throw new VaultError(`vault: schema fetch failed — HTTP ${resp.status}`);
   }
@@ -427,7 +513,7 @@ export async function addDocument(
   const resp = await authedFetch(`/vault/documents?${q}`, {
     method: "POST",
     headers: { "Content-Type": contentType },
-    body: new Blob([new Uint8Array(data)]),
+    body: data,
   });
   return (await resp.json()) as DocumentInfo;
 }

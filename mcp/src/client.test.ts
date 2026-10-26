@@ -4,20 +4,27 @@ import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir, userInfo } from "node:os";
 import { join } from "node:path";
 import { assertTokenConfigured, getField } from "./client.js";
+import { fakeVaultSocket } from "./vault-socket.testutil.js";
 
 // Fake vault: each valid token may read fields under one category prefix.
 const tokens = new Map<string, string>();
 const seen: string[] = [];
 let server: Server;
+let vaultDir: string;
+let statusAddr = "127.0.0.1:7200";
 let dir: string;
 let tokenFile: string;
 
 before(async () => {
-  server = createServer((req, res) => {
+  ({ dir: vaultDir, server } = await fakeVaultSocket((req, res) => {
+    if (req.url === "/vault/status") {
+      res.end(JSON.stringify({ locked: false, addr: statusAddr }));
+      return;
+    }
     const token = (req.headers.authorization ?? "").replace(/^Bearer /, "");
     seen.push(token);
     const id = decodeURIComponent((req.url ?? "").replace("/vault/fields/", ""));
@@ -30,9 +37,10 @@ before(async () => {
     } else {
       res.end(JSON.stringify({ id, value: `value-of-${id}` }));
     }
-  });
-  await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
-  process.env.VAULT_ADDR = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  }));
+  process.env.VAULT_DIR = vaultDir;
+  delete process.env.VAULT_ADDR;
+  delete process.env.VAULT_NAME;
   dir = await mkdtemp(join(tmpdir(), "vault-mcp-test-"));
   tokenFile = join(dir, "token");
 });
@@ -40,6 +48,7 @@ before(async () => {
 after(async () => {
   server.close();
   await rm(dir, { recursive: true, force: true });
+  await rm(vaultDir, { recursive: true, force: true });
 });
 
 beforeEach(async () => {
@@ -195,14 +204,90 @@ test("refuses field IDs that would leave /vault/fields/", async () => {
   assert.equal((await getField("leo:identity.first_name")).value, "value-of-leo:identity.first_name");
 });
 
-test("a named vault without VAULT_ADDR says so instead of reaching the default vault", async () => {
-  const addr = process.env.VAULT_ADDR;
-  delete process.env.VAULT_ADDR;
-  process.env.VAULT_NAME = "studio";
+// While the vault is locked anything can listen on its port: the token goes
+// only to the server's socket in the vault folder, never over TCP.
+test("never sends the token to whatever answers on VAULT_ADDR", async () => {
+  const heard: string[] = [];
+  const squatter = createServer((req, res) => {
+    heard.push(req.headers.authorization ?? "");
+    res.end(JSON.stringify({ locked: false, addr: "127.0.0.1:0", id: "x", value: "fake" }));
+  });
+  await new Promise<void>((r) => squatter.listen(0, "127.0.0.1", r));
+  const locked = await mkdtemp("/tmp/vmcp-locked-"); // a vault with no server: no socket
+  process.env.VAULT_DIR = locked;
+  process.env.VAULT_ADDR = `http://127.0.0.1:${(squatter.address() as AddressInfo).port}`;
+  tokens.set("t-1", "identity.");
+  await writeFile(tokenFile, "t-1\n");
   try {
-    await assert.rejects(getField("business.denominazione"), /VAULT_NAME is studio but VAULT_ADDR isn't set.*pvault --vault studio status/);
+    await assert.rejects(getField("identity.first_name"), /server not running/);
+    assert.deepEqual(heard, []);
   } finally {
-    process.env.VAULT_ADDR = addr;
-    delete process.env.VAULT_NAME;
+    squatter.close();
+    process.env.VAULT_DIR = vaultDir;
+    delete process.env.VAULT_ADDR;
+    await rm(locked, { recursive: true, force: true });
   }
 });
+
+test("refuses a socket in a folder others can enter", async () => {
+  tokens.set("t-1", "identity.");
+  await writeFile(tokenFile, "t-1\n");
+  await chmod(join(vaultDir, "run"), 0o755);
+  try {
+    await assert.rejects(getField("identity.first_name"), /refusing to send the token.*0700/);
+    assert.equal(seen.length, 0);
+  } finally {
+    await chmod(join(vaultDir, "run"), 0o700);
+  }
+  assert.equal((await getField("identity.first_name")).value, "value-of-identity.first_name");
+});
+
+test("VAULT_ADDR must be the address of this vault's server", async () => {
+  tokens.set("t-1", "identity.");
+  await writeFile(tokenFile, "t-1\n");
+  statusAddr = "127.0.0.1:7201";
+  process.env.VAULT_ADDR = "http://127.0.0.1:7200";
+  try {
+    await assert.rejects(getField("identity.first_name"), /VAULT_ADDR http:\/\/127.0.0.1:7200 isn't the server of .* which listens on 127.0.0.1:7201/);
+    assert.equal(seen.length, 0, "the token went to the wrong vault");
+    process.env.VAULT_ADDR = "http://127.0.0.1:7201";
+    assert.equal((await getField("identity.first_name")).value, "value-of-identity.first_name");
+  } finally {
+    statusAddr = "127.0.0.1:7200";
+    delete process.env.VAULT_ADDR;
+  }
+});
+
+test("VAULT_NAME means ~/.pvault-<name>", async () => {
+  const home = await mkdtemp("/tmp/vmcp-home-");
+  const studio = join(home, ".pvault-studio");
+  await mkdir(studio);
+  const { server: other } = await fakeVaultSocketAt(studio);
+  const saved = { home: process.env.HOME, dir: process.env.VAULT_DIR };
+  process.env.HOME = home;
+  delete process.env.VAULT_DIR;
+  process.env.VAULT_NAME = "studio";
+  await writeFile(tokenFile, "t-1\n");
+  try {
+    assert.equal((await getField("business.denominazione")).value, "studio-business.denominazione");
+    process.env.VAULT_NAME = "../x";
+    await assert.rejects(getField("business.denominazione"), /isn't a vault name/);
+  } finally {
+    other.close();
+    process.env.HOME = saved.home;
+    process.env.VAULT_DIR = saved.dir;
+    delete process.env.VAULT_NAME;
+    await rm(home, { recursive: true, force: true });
+  }
+});
+
+/** A second fake vault in an existing folder, answering every field. */
+async function fakeVaultSocketAt(folder: string): Promise<{ server: Server }> {
+  await mkdir(join(folder, "run"), { mode: 0o700 });
+  const other = createServer((req, res) => {
+    const id = decodeURIComponent((req.url ?? "").replace("/vault/fields/", ""));
+    res.end(JSON.stringify({ id, value: `studio-${id}` }));
+  });
+  await new Promise<void>((r) => other.listen(join(folder, "run", "pvault.sock"), r));
+  return { server: other };
+}

@@ -222,6 +222,9 @@ the page never copies a rule.
 - Uses only a service token (`VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`, else
   `VAULT_TOKEN_COMMAND`), looked up per request; the server enforces its scope. It refuses
   to start with the old `VAULT_SCOPE` set.
+- Sends every request, the token included, only over `<vault dir>/run/pvault.sock` (a dir
+  of this user's, 0700), never TCP; the vault is `VAULT_DIR`, else `~/.pvault-<VAULT_NAME>`.
+  A set `VAULT_ADDR` must be the address that server reports.
 - PEC (`pec.ts`): read-only IMAP (EXAMINE + BODY.PEEK), registered only with
   `PEC_ADDRESS`, app password from Keychain per request, no SMTP code by design. Saved
   attachments go to the first import dir (0600, quarantined). Mailparser needs

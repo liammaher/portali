@@ -432,3 +432,20 @@ func TestNumberedCopiesCheckPersonRefs(t *testing.T) {
 		t.Error("leo:famiglia2.genitori named a person who doesn't exist")
 	}
 }
+
+// A SPID account written with its provider run on (spidposte) is a SPID
+// account in a business vault too: the business may hold its own, a person
+// may not.
+func TestKind_RunTogetherSPIDAccount(t *testing.T) {
+	v := tmpVaultKind(t, KindImpresa)
+	if err := v.Set("spidposte.username", "studio-rossi", ""); err != nil {
+		t.Fatalf("the business's own spidposte.username: %v", err)
+	}
+	if f, _ := v.FieldMeta("spidposte.username"); f == nil || f.Sensitivity != TierPersonal {
+		t.Errorf("spidposte.username tier = %+v, want personal", f)
+	}
+	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
+	if err := v.Set("rossi:spidaruba.login", "rossi", TierPersonal); err == nil {
+		t.Error("a person's spidaruba.login stored in a business vault")
+	}
+}

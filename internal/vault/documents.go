@@ -100,6 +100,9 @@ func (v *Vault) AddDocumentIf(allow FieldFilter, category, name, contentType str
 	if err := v.checkPersonExists(DocumentScopeID(category), allow); err != nil {
 		return nil, err
 	}
+	if err := v.checkNewPersonSlug(DocumentScopeID(category)); err != nil {
+		return nil, err
+	}
 	// SPID/CieID documents (e.g. recovery codes) are always personal.
 	personalOnly := DefaultDocumentTier(category) == TierPersonal
 	switch {

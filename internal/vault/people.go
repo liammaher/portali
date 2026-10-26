@@ -90,13 +90,68 @@ func (v *Vault) checkPraticaPersona(vaultKey []byte, slug string, token bool) er
 		if !errors.As(err, &verr) {
 			return err
 		}
-		msg := "persona names someone who is not in the vault: " + verr.Msg
+		// Not "add them first": the slug stays a removed person's while a
+		// pratica names it (checkNewPersonSlug).
+		msg := "persona names someone who is no longer in the vault (" + persone + "): to reopen it, set persona to io or someone in the vault; to delete the pratica, delete its persona field first"
 		if token {
 			msg = "persona names someone who is no longer in the vault: ask the user to fix it first"
 		}
 		return &ValidationError{Field: "pratiche." + slug + "_stato", Msg: msg}
 	}
 	return nil
+}
+
+// checkNewPersonSlug refuses to start a person (id's prefix, not in the
+// vault yet) whose slug a pratica still names. A closed pratica may keep
+// naming a removed person (RemovePerson); a new person with that slug would
+// inherit it: in expiring, in their export, and by reopening it.
+func (v *Vault) checkNewPersonSlug(id string) error {
+	person, _ := SplitPerson(id)
+	if person == "" {
+		return nil
+	}
+	exists, err := v.db.PersonExists(person)
+	if err != nil || exists {
+		return err
+	}
+	named, err := v.praticheNaming()
+	if err != nil {
+		return err
+	}
+	if refs := named[person]; len(refs) > 0 {
+		// Not which pratiche: a grant for this person may not read them.
+		return &ValidationError{Field: id, Msg: fmt.Sprintf("%d pratica(s) still name %q, a person who was removed: give the new person another slug, or delete those pratiche (each one's persona field first; 'pvault list pratiche' shows them)",
+			len(refs), person)}
+	}
+	return nil
+}
+
+// praticheNaming maps each person a pratica's persona names, open or closed,
+// to those persona fields.
+func (v *Vault) praticheNaming() (map[string][]string, error) {
+	ctx, err := v.decryptFields(func(id, _ string) bool {
+		person, local := SplitPerson(id)
+		category, name, ok := strings.Cut(canonicalLocalID(local), ".")
+		_, campo, isPratica := praticaField(category, name)
+		return person == "" && ok && isPratica && campo == "persona"
+	})
+	if err != nil {
+		return nil, err
+	}
+	named := map[string][]string{}
+	for _, fs := range ctx.Categories {
+		for _, f := range fs {
+			for _, ref := range PersonRefs(f.Value) {
+				if ref != OwnerRef {
+					named[ref] = append(named[ref], f.ID)
+				}
+			}
+		}
+	}
+	for _, ids := range named {
+		sort.Strings(ids)
+	}
+	return named, nil
 }
 
 // visibleRefs drops from a value naming people the ones allow can't see a row
@@ -227,7 +282,19 @@ func (v *Vault) RemovePerson(slug string) (*RemovedPerson, error) {
 			out.RevokedTokens = append(out.RevokedTokens, t.Consumer)
 		}
 	}
-	if err := v.db.ApplyChange(store.Change{DeleteFields: fieldIDs, DeleteDocs: docIDs, DeleteTokens: revoke, DeletePerson: slug}); err != nil {
+	// The nucleo migration's record of who a membro became goes too, or a
+	// later person with this slug would get that membro's leftover fields.
+	migrated, err := v.db.MetaWithPrefix(metaNucleoMembro)
+	if err != nil {
+		return nil, err
+	}
+	var forget []string
+	for k, s := range migrated {
+		if s == slug {
+			forget = append(forget, k)
+		}
+	}
+	if err := v.db.ApplyChange(store.Change{DeleteFields: fieldIDs, DeleteDocs: docIDs, DeleteTokens: revoke, DeletePerson: slug, DeleteMeta: forget}); err != nil {
 		return nil, err
 	}
 	v.mu.RLock()

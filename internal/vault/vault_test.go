@@ -2,11 +2,15 @@ package vault
 
 import (
 	"bytes"
+	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/store"
 )
 
 const testPassword = "test-password-123"
@@ -898,5 +902,41 @@ func TestVaultKeyCopiesClearedSafely(t *testing.T) {
 	v.Lock()
 	if err := v.checkUnlocked(); err != ErrLocked {
 		t.Fatalf("checkUnlocked after lock = %v", err)
+	}
+}
+
+// An init stopped before its last write (Ctrl-C during Argon2, power loss)
+// leaves a vault.db without verification: init and open say so and how to
+// start again, instead of "already initialized" and "wrong password".
+func TestInterruptedInitIsReported(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		t.Fatal(err)
+	}
+	db, err := store.Open(filepath.Join(dir, "vault.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMeta("salt", "c2FsdA==") // what an older init wrote before verification
+	db.Close()
+	os.WriteFile(filepath.Join(dir, "secret.key"), []byte("00\n"), 0600)
+
+	if err := CanInit(dir); !errors.Is(err, ErrInitInterrupted) || !strings.Contains(err.Error(), "delete "+dir) {
+		t.Errorf("CanInit = %v, want ErrInitInterrupted naming the folder", err)
+	}
+	if _, err := Init(dir, testPassword); !errors.Is(err, ErrInitInterrupted) {
+		t.Errorf("Init = %v, want ErrInitInterrupted", err)
+	}
+	if _, err := Open(dir); !errors.Is(err, ErrInitInterrupted) {
+		t.Errorf("Open = %v, want ErrInitInterrupted", err)
+	}
+
+	// A finished init is "already initialized", as before.
+	done := filepath.Join(t.TempDir(), ".pvault")
+	if _, err := Init(done, testPassword); err != nil {
+		t.Fatal(err)
+	}
+	if err := CanInit(done); !errors.Is(err, ErrAlreadyInit) {
+		t.Errorf("CanInit on a finished vault = %v", err)
 	}
 }

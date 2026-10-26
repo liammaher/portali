@@ -51,6 +51,13 @@ func cmdList() {
 		}
 		fields = kept
 	}
+	// Secrets stay off the screen, as in 'pvault person show': a category
+	// read returns values, and 'pvault get <id>' shows one on purpose.
+	for i := range fields {
+		if fields[i].Sensitivity == vault.TierPersonal {
+			fields[i].Value = ""
+		}
+	}
 	if len(fields) == 0 {
 		fmt.Println("No fields found.")
 		return

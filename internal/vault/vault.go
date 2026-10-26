@@ -23,6 +23,10 @@ var (
 	ErrAlreadyUnlocked = errors.New("vault is already unlocked")
 	ErrNotInitialized  = errors.New("vault is not initialized")
 	ErrAlreadyInit     = errors.New("vault is already initialized")
+	// ErrInitInterrupted is a vault.db an init stopped before finishing
+	// (Ctrl-C, power loss): it has no verification, so nothing unlocks it,
+	// and the secret key next to it was never shown.
+	ErrInitInterrupted = errors.New("an earlier 'pvault init' here was interrupted before it finished, so this vault can't be opened")
 	ErrWrongPassword   = errors.New("wrong password or secret key")
 	ErrInvalidTier     = errors.New("invalid sensitivity tier: must be public, standard, sensitive, or critical")
 	ErrAmbiguousToken  = errors.New("token prefix matches more than one service token; use a longer prefix")
@@ -109,6 +113,13 @@ func Open(dir string) (*Vault, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open database: %w", err)
 	}
+	if verification, err := db.GetMeta(metaVerification); err != nil || verification == "" {
+		db.Close()
+		if err != nil {
+			return nil, fmt.Errorf("read vault: %w", err)
+		}
+		return nil, errInitInterrupted(dir)
+	}
 	stored, err := db.GetMeta(metaKind)
 	if err != nil {
 		db.Close()
@@ -166,6 +177,16 @@ func (v *Vault) raiseCredentialTiers() error {
 // asking for a password.
 func CanInit(dir string) error {
 	if _, err := os.Stat(filepath.Join(dir, "vault.db")); err == nil {
+		db, err := store.Open(filepath.Join(dir, "vault.db"))
+		if err != nil {
+			return fmt.Errorf("open database: %w", err)
+		}
+		defer db.Close()
+		if verification, err := db.GetMeta(metaVerification); err != nil {
+			return err
+		} else if verification == "" {
+			return errInitInterrupted(dir)
+		}
 		return ErrAlreadyInit
 	}
 	if skPath := filepath.Join(dir, "secret.key"); fileExists(skPath) {
@@ -178,6 +199,14 @@ func fileExists(path string) bool {
 	_, err := os.Lstat(path)
 	return err == nil
 }
+
+func errInitInterrupted(dir string) error {
+	return fmt.Errorf("%w: delete %s and run init again", ErrInitInterrupted, dir)
+}
+
+// metaVerification is the ciphertext the right password and key decrypt.
+// Init writes it last, in the same transaction as the rest.
+const metaVerification = "verification"
 
 func errSecretKeyExists(path string) error {
 	return fmt.Errorf("%s already exists, maybe the key for an earlier vault's backups — move it somewhere safe, then run init again", path)
@@ -215,6 +244,15 @@ func InitWithOptions(dir, password string, opts InitOptions) (secretKey string, 
 	sk, err := crypto.GenerateSecretKey()
 	if err != nil {
 		return "", fmt.Errorf("generate secret key: %w", err)
+	}
+
+	// The slow part first (Argon2id), so an interruption almost always
+	// comes before anything is on disk.
+	vaultKey := crypto.DeriveVaultKey([]byte(password), sk, salt)
+	verifyCipher, err := crypto.EncryptToBase64(vaultKey, []byte("personal-vault-verification"))
+	clear(vaultKey)
+	if err != nil {
+		return "", fmt.Errorf("create verification: %w", err)
 	}
 
 	// Write the secret key first, never over an existing one: a key left
@@ -255,31 +293,16 @@ func InitWithOptions(dir, password string, opts InitOptions) (secretKey string, 
 		}
 	}()
 
-	// Store salt and secret key hash in DB
-	if err := db.SetMeta("salt", base64.StdEncoding.EncodeToString(salt)); err != nil {
+	// One transaction: a vault.db is either usable or has no verification
+	// (Open then says the init was interrupted).
+	if err := db.SetMetas(map[string]string{
+		"salt":            base64.StdEncoding.EncodeToString(salt),
+		"secret_key_hash": hex.EncodeToString(crypto.HashSecretKey(sk)),
+		metaKind:          kind,
+		metaVerification:  verifyCipher,
+	}); err != nil {
 		return "", err
 	}
-	if err := db.SetMeta("secret_key_hash", hex.EncodeToString(crypto.HashSecretKey(sk))); err != nil {
-		return "", err
-	}
-	if err := db.SetMeta(metaKind, kind); err != nil {
-		return "", err
-	}
-
-	// Derive vault key and create verification ciphertext
-	vaultKey := crypto.DeriveVaultKey([]byte(password), sk, salt)
-	verifyPlaintext := []byte("personal-vault-verification")
-	verifyCipher, err := crypto.EncryptToBase64(vaultKey, verifyPlaintext)
-	if err != nil {
-		return "", fmt.Errorf("create verification: %w", err)
-	}
-	if err := db.SetMeta("verification", verifyCipher); err != nil {
-		return "", err
-	}
-
-	// Zero vault key
-	clear(vaultKey)
-
 	return hex.EncodeToString(sk), nil
 }
 
@@ -400,7 +423,7 @@ func (v *Vault) verifyCredentials(password string, sk []byte) (vaultKey, salt []
 	vaultKey = crypto.DeriveVaultKey([]byte(password), sk, salt)
 
 	// Verify with stored ciphertext
-	verifyCipher, err := v.db.GetMeta("verification")
+	verifyCipher, err := v.db.GetMeta(metaVerification)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -587,6 +610,9 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow Field
 	}
 	defer clear(vaultKey)
 	if err := v.checkPersonExists(id, allow); err != nil {
+		return err
+	}
+	if err := v.checkNewPersonSlug(id); err != nil {
 		return err
 	}
 	if err := v.checkPersonRefs(id, value, allow); err != nil {

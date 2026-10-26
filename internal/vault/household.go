@@ -219,6 +219,9 @@ type MigrationReport struct {
 	Left    map[string]string `json:"left"`    // old ID -> why it stays
 }
 
+// metaNucleoMembro + N records whom MigrateNucleo made nucleo_familiare's membro<N>.
+const metaNucleoMembro = "nucleo_membro"
+
 // MigrateNucleo turns nucleo_familiare.membro<N>_<campo> fields into family
 // members (membro1_nome Giulia becomes giulia:identity.first_name), in one
 // transaction. Tiers are never lowered; a field that can't move (unknown
@@ -262,6 +265,22 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	taken := map[string]bool{}
 	for _, s := range existing {
 		taken[s] = true
+	}
+	// A slug a pratica still names belonged to someone removed: not for a new member.
+	named, err := v.praticheNaming()
+	if err != nil {
+		return nil, err
+	}
+	for s := range named {
+		taken[s] = true
+	}
+	// Who an earlier run made each membro, so fields it left behind (fixed
+	// since) join that person instead of a new one named membro<N>. Kept only
+	// while that membro has fields left, and used only for a group without a
+	// nome: a nome there is someone entered since, a new person.
+	migrated, err := v.db.MetaWithPrefix(metaNucleoMembro)
+	if err != nil {
+		return nil, err
 	}
 	ns := make([]int, 0, len(byN))
 	for n := range byN {
@@ -332,23 +351,29 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		return true
 	}
 
+	slugOf := map[int]string{}
 	for _, n := range ns {
 		fields := byN[n]
-		slug := ""
-		for _, f := range fields {
-			if campi[f.ID] == "nome" {
-				slug = slugFromName(f.Value)
+		hasNome := slices.ContainsFunc(fields, func(f FieldInfo) bool { return campi[f.ID] == "nome" })
+		slug := migrated[metaNucleoMembro+strconv.Itoa(n)]
+		if hasNome || !slices.Contains(existing, slug) {
+			slug = ""
+			for _, f := range fields {
+				if campi[f.ID] == "nome" {
+					slug = slugFromName(f.Value)
+				}
 			}
+			if slug == "" {
+				slug = fmt.Sprintf("membro%d", n)
+			}
+			base := slug
+			for i := 2; taken[slug]; i++ {
+				slug = fmt.Sprintf("%s-%d", base, i)
+			}
+			taken[slug] = true
 		}
-		if slug == "" {
-			slug = fmt.Sprintf("membro%d", n)
-		}
-		base := slug
-		for i := 2; taken[slug]; i++ {
-			slug = fmt.Sprintf("%s-%d", base, i)
-		}
-		taken[slug] = true
 
+		slugOf[n] = slug
 		mm := MigratedMember{N: n, Slug: slug, Fields: map[string]string{}}
 		for _, f := range fields {
 			target, ok := membroCampi[campi[f.ID]]
@@ -398,7 +423,23 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	if dryRun || len(deletes) == 0 {
 		return report, nil
 	}
-	if err := v.db.ApplyChange(store.Change{DeleteFields: deletes, Insert: inserts}); err != nil {
+	// Remember who each membro with fields left became; forget the rest.
+	remember := map[string]string{}
+	for n, fields := range byN {
+		left := slices.ContainsFunc(fields, func(f FieldInfo) bool { return report.Left[f.ID] != "" })
+		made := slices.Contains(existing, slugOf[n]) ||
+			slices.ContainsFunc(report.Members, func(m MigratedMember) bool { return m.Slug == slugOf[n] })
+		if left && made {
+			remember[metaNucleoMembro+strconv.Itoa(n)] = slugOf[n]
+		}
+	}
+	var forget []string
+	for k := range migrated {
+		if _, ok := remember[k]; !ok {
+			forget = append(forget, k)
+		}
+	}
+	if err := v.db.ApplyChange(store.Change{DeleteFields: deletes, Insert: inserts, SetMeta: remember, DeleteMeta: forget}); err != nil {
 		return nil, err
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "nucleo_familiare.*", Action: "member_migrate",
