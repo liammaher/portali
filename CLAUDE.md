@@ -18,6 +18,7 @@ business's and its people), served to the CLI, an onboarding page and an MCP ser
 make build                        # Build bin/pvault (+ bin/pvault-touchid on macOS)
 make touchid                      # Rebuild only the Touch ID helper
 make test                         # Go tests with race detector (not the MCP ones)
+make schema                       # Regenerate schema.json after a schema change (a test checks)
 make clean                        # Remove build artifacts
 go test -race ./internal/vault/   # One layer: crypto, store, vault, api
 ```
@@ -29,7 +30,7 @@ pvault init [--impresa]                  # Create new vault (~/.pvault/); --impr
 pvault --vault <name> <command>          # Any command on another vault (~/.pvault-<name>)
 pvault unlock | lock | serve             # Background server / stop it, zero keys / foreground
 pvault set <category.field> <value>      # Set encrypted field
-pvault get <category.field> [...]        # Get decrypted field(s); several → JSON, one grant
+pvault get <category.field|category.*> [...]  # Get decrypted field(s); several → JSON, one grant
 pvault list [category]                   # List fields
 pvault delete <category.field>           # Delete field
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
@@ -156,7 +157,9 @@ the page never copies a rule.
   and normalized (`italy.go`, `dates.go`, `housing.go`, `business.go`). Housing categories
   (`abitazione`, `locazione`, `utenze`, `tari`) describe the home at residenza/domicilio.
   New fields the pratiche-napoli library needs are added here, then dropped from its
-  `contract/extensions.json`.
+  `contract/extensions.json`. `schema.json` is `pvault schema --json`, credential words
+  included (`Credentials`, the expressions `IsCredentialField` compiles); the library's CI
+  compares its copy with the one on main.
 - **Pratiche** (`pratiche.go`): `pratiche.<slug>_<campo>`, campo/stato/canale from fixed
   lists, never credentials. A deadline shows in `Expiring` until the stato closes. The
   store dates each closing (`closed_at`, kept across corrections between closed stati).

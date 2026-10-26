@@ -1,4 +1,4 @@
-.PHONY: build touchid test install clean
+.PHONY: build touchid test schema install clean
 
 # On macOS pvault is signed with the hardened runtime too: pvault-touchid sends
 # the password only to a vault server running a hardened build, so no library
@@ -20,6 +20,11 @@ touchid:
 
 test:
 	go test -v -race ./...
+
+# schema.json is the recommended schema as 'pvault schema --json' prints it;
+# pratiche-napoli's CI compares its copy with the one on main.
+schema:
+	go run ./cmd/pvault schema --json > schema.json
 
 # Remove before copying: overwriting a signed binary in place can get the
 # running copy killed by macOS.

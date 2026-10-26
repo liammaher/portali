@@ -95,7 +95,9 @@ Commands:
   schema                           Show recommended field names (--json for raw JSON)
   set <id> [value]                 Set a field; leave out the value to type it hidden (for secrets).
                                    Another person's fields are <slug>:<id>, e.g. leo:cie.numero
-  get <id> [<id>...]               Get field values (up to 10; several print as JSON)
+  get <id | category.*> [...]      Get field values (up to 10 IDs or categories, e.g. residenza.*,
+                                   leo:identity.*, *:identity.*; several print as JSON). A category
+                                   leaves out personal fields (PINs, passwords): name one to read it
   list [category | slug: | slug:category]
                                    List fields (yours, or another person's)
   delete <id>                      Delete a field

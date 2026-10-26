@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -18,9 +17,7 @@ func cmdSchema() {
 	}
 
 	if jsonFlag {
-		enc := json.NewEncoder(os.Stdout)
-		enc.SetIndent("", "  ")
-		enc.Encode(vault.RecommendedSchema)
+		os.Stdout.Write(vault.SchemaJSON())
 		return
 	}
 

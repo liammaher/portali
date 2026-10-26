@@ -1,6 +1,9 @@
 package vault
 
-import "strings"
+import (
+	"encoding/json"
+	"strings"
+)
 
 // SchemaField describes a recommended field in the vault schema.
 type SchemaField struct {
@@ -54,10 +57,41 @@ const (
 type Schema struct {
 	Version    string           `json:"version"`
 	Categories []SchemaCategory `json:"categories"`
+	// Credentials are the words IsCredentialField reads, for tools that
+	// check field IDs on their own (pratiche-napoli's validator) rather
+	// than keep a copy.
+	Credentials CredentialWords `json:"credentials"`
+}
+
+// CredentialWords are whole-word patterns (a field ID's category and name
+// split at _ and -), the same expressions the vault compiles.
+type CredentialWords struct {
+	// Secret is a secret in any category: fisconline.pin, cie.puk2.
+	Secret string `json:"secret"`
+	// Credential adds the words that name a login detail next to an
+	// Identity word (spid.username); it includes Secret.
+	Credential string `json:"credential"`
+	// Identity names SPID, CieID, the CIE or a digital signature.
+	Identity string `json:"identity"`
+}
+
+// SchemaJSON is RecommendedSchema as 'pvault schema --json' prints it and
+// schema.json at the repository root holds it.
+func SchemaJSON() []byte {
+	data, err := json.MarshalIndent(RecommendedSchema, "", "  ")
+	if err != nil {
+		panic(err) // a fixed value of plain types
+	}
+	return append(data, '\n')
 }
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
+	Credentials: CredentialWords{
+		Secret:     `^(` + secretWords + `)$`,
+		Credential: `^(` + credentialWords + `)$`,
+		Identity:   `^(` + identityWords + `)$`,
+	},
 	Version: "12",
 	Categories: []SchemaCategory{
 		{

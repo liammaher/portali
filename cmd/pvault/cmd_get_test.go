@@ -27,7 +27,10 @@ func TestParseGetIDs(t *testing.T) {
 	if ids, err := parseGetIDs([]string{"leo:cie.numero", "cie.numero"}); err != nil || len(ids) != 2 {
 		t.Fatalf("member IDs: %v %v", ids, err)
 	}
-	for _, bad := range []string{"residenza.*", "*", "nodot", "a.b,c.d", "leo:*", "leo:", ":cie.numero", "io:cie.numero", "Leo:cie.numero", "a:b:c.d"} {
+	if ids, err := parseGetIDs([]string{"residenza.*", "leo:identity.*", "*:identity.*", "cie.numero"}); err != nil || len(ids) != 4 {
+		t.Fatalf("category patterns: %v %v", ids, err)
+	}
+	for _, bad := range []string{"*", "*:*", "io:cie.*", "Leo:cie.*", "*:leo:cie.*", "cie.*.*", ".*", "nodot", "a.b,c.d", "leo:*", "leo:", ":cie.numero", "io:cie.numero", "Leo:cie.numero", "a:b:c.d"} {
 		if _, err := parseGetIDs([]string{bad}); err == nil {
 			t.Errorf("%q should be rejected", bad)
 		}
@@ -80,7 +83,7 @@ func TestGetFields_OneTouchIDPromptForAll(t *testing.T) {
 	t.Cleanup(func() { cliToken = "" })
 
 	ids := []string{"identity.full_name", "cie.numero", "identity.missing"}
-	values, err := getFields(ids, true)
+	ids, values, err := getFields(ids, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -106,7 +109,7 @@ func TestGetFields_SingleMissingIsError(t *testing.T) {
 	cliToken = ""
 	t.Cleanup(func() { cliToken = "" })
 
-	if _, err := getFields([]string{"identity.missing"}, false); err == nil || !strings.Contains(err.Error(), "not found") {
+	if _, _, err := getFields([]string{"identity.missing"}, false); err == nil || !strings.Contains(err.Error(), "not found") {
 		t.Fatalf("err = %v, want not found", err)
 	}
 }
@@ -199,7 +202,7 @@ func TestGet_EndToEnd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	values, err := getFields(ids, true)
+	ids, values, err := getFields(ids, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -239,6 +242,53 @@ func TestGet_EndToEnd(t *testing.T) {
 	resp.Body.Close()
 	if resp.StatusCode != http.StatusForbidden {
 		t.Fatalf("write with a read grant: status %d, want 403", resp.StatusCode)
+	}
+}
+
+// A form's fields come from a few whole categories: one get, one approval,
+// each category's fields in its place, and its personal fields left out
+// unless named.
+func TestGet_CategoryPatterns(t *testing.T) {
+	_, argsFile := touchIDVault(t, map[string]string{
+		"identity.last_name":        "Rossi",
+		"identity.first_name":       "Mario",
+		"leo:identity.first_name":   "Leo",
+		"giulia:identity.last_name": "Bianchi",
+		"cie.numero":                "CA00000AA",
+		"cie.pin":                   "12345678",
+		"residenza.comune":          "Napoli",
+	})
+	args := []string{"cie.*", "*:identity.*", "identity.missing", "cie.pin"}
+	ids, values, err := getFields(args, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := formatGetJSON(ids, values)
+	want := "{\n" +
+		"  \"cie.numero\": \"CA00000AA\",\n" +
+		"  \"giulia:identity.last_name\": \"Bianchi\",\n" +
+		"  \"identity.first_name\": \"Mario\",\n" +
+		"  \"identity.last_name\": \"Rossi\",\n" +
+		"  \"leo:identity.first_name\": \"Leo\",\n" +
+		"  \"identity.missing\": null,\n" +
+		"  \"cie.pin\": \"12345678\"\n" +
+		"}"
+	if got != want {
+		t.Fatalf("output:\n%s\nwant:\n%s", got, want)
+	}
+	data, _ := os.ReadFile(argsFile)
+	if string(data) != "grant --scope cie.*,*:identity.*,identity.missing,cie.pin --access read\n" {
+		t.Fatalf("helper runs:\n%s", data)
+	}
+
+	// One person's category, without the PIN: it isn't named.
+	cliToken = ""
+	ids, values, err = getFields([]string{"leo:identity.*", "cie.*"}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := formatGetJSON(ids, values); got != "{\n  \"leo:identity.first_name\": \"Leo\",\n  \"cie.numero\": \"CA00000AA\"\n}" {
+		t.Fatalf("output:\n%s", got)
 	}
 }
 
