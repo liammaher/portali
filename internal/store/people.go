@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-// Household members' fields and documents are stored in categories
-// prefixed with the member's slug and a colon (leo:cie). ';' sorts right
-// after ':', so [slug:, slug;) is exactly one member's categories, without
+// Other people's fields and documents are stored in categories
+// prefixed with the person's slug and a colon (leo:cie). ';' sorts right
+// after ':', so [slug:, slug;) is exactly one person's categories, without
 // LIKE (where '_' would be a wildcard).
 
-// MemberExists reports whether a member has any field or document.
-func (d *DB) MemberExists(slug string) (bool, error) {
+// PersonExists reports whether a person has any field or document.
+func (d *DB) PersonExists(slug string) (bool, error) {
 	lo, hi := slug+":", slug+";"
 	var n int
 	err := d.conn.QueryRow(
@@ -23,9 +23,9 @@ func (d *DB) MemberExists(slug string) (bool, error) {
 	return n == 1, err
 }
 
-// MemberSlugs returns the slugs of every member with a field or document,
+// PersonSlugs returns the slugs of every person with a field or document,
 // sorted.
-func (d *DB) MemberSlugs() ([]string, error) {
+func (d *DB) PersonSlugs() ([]string, error) {
 	rows, err := d.conn.Query(
 		`SELECT DISTINCT substr(category, 1, instr(category, ':') - 1) FROM vault_fields WHERE instr(category, ':') > 0
 		 UNION
@@ -47,8 +47,8 @@ func (d *DB) MemberSlugs() ([]string, error) {
 	return slugs, rows.Err()
 }
 
-// MemberRows returns the IDs of a member's fields and documents.
-func (d *DB) MemberRows(slug string) (fields, docs []string, err error) {
+// PersonRows returns the IDs of a person's fields and documents.
+func (d *DB) PersonRows(slug string) (fields, docs []string, err error) {
 	lo, hi := slug+":", slug+";"
 	if fields, err = d.ids(`SELECT id FROM vault_fields WHERE category >= ? AND category < ? ORDER BY id`, lo, hi); err != nil {
 		return nil, nil, err
@@ -74,11 +74,11 @@ func (d *DB) ids(query string, args ...any) ([]string, error) {
 	return ids, rows.Err()
 }
 
-// ApplyMemberChange deletes fields and documents and inserts new fields in
-// one transaction, so removing or migrating a member never half-happens.
+// ApplyPersonChange deletes fields and documents and inserts new fields in
+// one transaction, so removing or migrating a person never half-happens.
 // Every row to delete must still exist and every field to insert must not
 // exist yet; otherwise nothing changes and it returns ErrChanged.
-func (d *DB) ApplyMemberChange(deleteFields, deleteDocs []string, insert []Field) error {
+func (d *DB) ApplyPersonChange(deleteFields, deleteDocs []string, insert []Field) error {
 	tx, err := d.conn.Begin()
 	if err != nil {
 		return err

@@ -41,7 +41,7 @@ pvault audit                             # Show access audit log
 pvault status                            # Show vault status
 pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
 pvault doc add|list|get|delete           # Encrypted document scans
-pvault member list|show|add|remove|migrate  # Family members (leo:cie.numero)
+pvault person list|show|add|remove|migrate  # Other people, e.g. family (leo:cie.numero); alias: member
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
@@ -245,37 +245,47 @@ Profile Password + Secret Key (128-bit)
   `RestoreBackup` only fills a missing or empty dir and checks the result unlocks
   (`--ask-key` tests a hand-kept secret key); public status shows backup state, never the folder
 
-- Household (`scope.go`, `famiglia.go`, `members.go`): a family member's IDs are
+- People (`scope.go`, `people.go`; the family view in `famiglia.go`, `household.go`): besides
+  the owner, a vault holds other people (today: family members). A person's IDs are
   `<slug>:category.field` (slug `^[a-z][a-z0-9-]{0,31}$`, `io` reserved for the owner, who
-  has no prefix); documents in `<slug>:<category>`. The stored category (`leo:cie`) is the
-  HKDF info, so each person has their own subkeys and no DB change was needed. Every
+  has no prefix); documents in `<slug>:<category>`. The general layer says "person"
+  (`SplitPerson`, `ValidPersonSlug`, `RemovePerson`, `store.PersonRows`); `pvault person`
+  is the command, with `pvault member` as an alias. The API route `/vault/members`, the
+  JSON keys (`member`, `members`, `"for": "member"`), the audit actions (`member_remove`)
+  and the MCP tool `vault_household` keep their old names. The stored category (`leo:cie`)
+  is the HKDF info, so each person has their own subkeys and no DB change was needed. Every
   category-keyed rule (`IsCredentialField`, `IsPersonalCategory`, `DefaultSensitivity`,
   `DefaultDocumentTier`, `NormalizeAndValidate`, `SuggestCanonical`) strips the prefix
-  first with `SplitMember` (whatever the slug looks like), so `leo:spid.password` is
-  personal like `spid.password`; `TestMemberRulesMatchOwner` checks every schema ID and the
+  first with `SplitPerson` (whatever the slug looks like), so `leo:spid.password` is
+  personal like `spid.password`; `TestPersonRulesMatchOwner` checks every schema ID and the
   credential tables with a prefix. Owner-only categories (housing, `pratiche`) refuse a
-  prefix. Scopes: unprefixed patterns are the owner's only; `leo:cat.*`, `leo:cat.field`,
-  `leo:*` and `*:cat.*` (owner and every member) reach members; `*` everyone; `*:*` and `io:`
-  are refused. Go, `mcp/src/scope.ts` and the Touch ID helper parse the same grammar, and
-  the Go and TS matchers share `internal/vault/testdata/scopes.json`. `famiglia` holds facts
-  only (relazione → ANPR Tabella 05 code and gendered label, stato_famiglia, a_carico,
-  genitori, rappresentanza; the owner's `intestatario_scheda`); procedure rules live in
-  playbooks. Values naming people (`genitori`, `intestatario_scheda`, pratiche `persona`)
-  must name `io` or an existing member. `GET /vault/members` derives age/minor/label only
-  from fields the caller can read. `MigrateNucleo` is session-only; `DELETE
-  /vault/members/{slug}` also accepts a grant the user approved with write access to
-  `<slug>:*` (`ScopeAllowsWholeMember`), so `pvault member remove` asks one Touch ID prompt
-  worded "read, change and delete everything about <slug>" (service tokens never may).
-  Both hold `backup.mu` and `writeMu` (every single write holds `writeMu` for reading),
-  change rows in one `store.ApplyMemberChange` transaction; remove refuses while another
-  field names the member (closed pratiche don't count), then revokes tokens and drops
-  grants whose scope names the slug. The public status counts only the owner's data, so it
-  never reveals members. Bulk reads parse the scope once (`ParseScope`). No rename yet.
+  prefix. The schema is the only list of owner-only and person-only fields
+  (`SchemaField.For`: `ForOwner`/`ForPerson`, enforced by `checkFieldFor`) and of fields
+  whose value names people (`PersonRef`: `famiglia.genitori`, `famiglia.intestatario_scheda`;
+  plus pratiche `persona`, in `isPersonRefField`). Such values must name `io` or an
+  existing person. Scopes: unprefixed patterns are the owner's only; `leo:cat.*`,
+  `leo:cat.field`, `leo:*` and `*:cat.*` (owner and every person) reach other people; `*`
+  everyone; `*:*` and `io:` are refused. Go, `mcp/src/scope.ts` and the Touch ID helper
+  parse the same grammar, and the Go and TS matchers share
+  `internal/vault/testdata/scopes.json`. `famiglia` holds facts only (relazione → ANPR
+  Tabella 05 code and gendered label, stato_famiglia, a_carico, genitori, rappresentanza;
+  the owner's `intestatario_scheda`); procedure rules live in playbooks. `GET
+  /vault/members` (`Household`) derives age/minor/label only from fields the caller can
+  read. `MigrateNucleo` is session-only; `DELETE /vault/members/{slug}` also accepts a grant
+  the user approved with write access to `<slug>:*` (`ScopeAllowsWholePerson`), so `pvault
+  person remove` asks one Touch ID prompt worded "read, change and delete everything about
+  <slug>" (service tokens never may). Both hold `backup.mu` and `writeMu` (every single
+  write holds `writeMu` for reading), change rows in one `store.ApplyPersonChange`
+  transaction; remove refuses while another field names the person (closed pratiche don't
+  count), then revokes tokens and drops grants whose scope names the slug. The public
+  status counts only the owner's data, so it never reveals other people. Bulk reads parse
+  the scope once (`ParseScope`). No slug rename yet. Business and client vaults:
+  `docs/design/business-vaults.md`.
 
 ## Conventions
 
 - Field IDs are `category.field_name` (e.g., `identity.full_name`), or
-  `member:category.field_name` for a family member (`leo:identity.full_name`)
+  `person:category.field_name` for another person (`leo:identity.full_name`)
 - Sensitivity tiers: `public`, `standard`, `sensitive`, `critical`
 - All timestamps stored as RFC3339 strings in SQLite
 - WAL mode enabled, busy_timeout=5000ms; the vault path can't contain `?` (the driver

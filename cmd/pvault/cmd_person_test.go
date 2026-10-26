@@ -8,8 +8,8 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
-func TestMemberAddFields(t *testing.T) {
-	fields, err := memberAddFields("giulia", []string{"--nome", "Giulia", "--relazione", "moglie", "--sesso", "F"})
+func TestPersonAddFields(t *testing.T) {
+	fields, err := personAddFields("giulia", []string{"--nome", "Giulia", "--relazione", "moglie", "--sesso", "F"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,7 +23,7 @@ func TestMemberAddFields(t *testing.T) {
 	}
 	for _, bad := range [][]string{{"--nome", "Giulia"}, {"--relazione"}, {"--relazione", "x", "--relazione", "y"}, {"--eta", "3"},
 		{"--relazione", "amico"}, {"--relazione", "moglie", "--codice-fiscale", "XYZ"}, {"--relazione", "figlio", "--data-nascita", "31/02/2020"}} {
-		if _, err := memberAddFields("giulia", bad); err == nil {
+		if _, err := personAddFields("giulia", bad); err == nil {
 			t.Errorf("%v accepted", bad)
 		}
 	}
@@ -31,12 +31,12 @@ func TestMemberAddFields(t *testing.T) {
 
 // member add goes through one Touch ID approval scoped to the new member,
 // and never overwrites someone already there.
-func TestMemberAdd_EndToEnd(t *testing.T) {
+func TestPersonAdd_EndToEnd(t *testing.T) {
 	v, argsFile := touchIDVault(t, map[string]string{"leo:famiglia.relazione": "figlio"})
 
 	needGrant("giulia:famiglia.*,giulia:identity.*", "append")
-	fields, _ := memberAddFields("giulia", []string{"--relazione", "moglie", "--nome", "Giulia"})
-	if err := addMember("giulia", fields); err != nil {
+	fields, _ := personAddFields("giulia", []string{"--relazione", "moglie", "--nome", "Giulia"})
+	if err := addPerson("giulia", fields); err != nil {
 		t.Fatal(err)
 	}
 	if f, err := v.Get("giulia:famiglia.relazione"); err != nil || f.Value != "coniuge" {
@@ -49,8 +49,8 @@ func TestMemberAdd_EndToEnd(t *testing.T) {
 
 	cliToken = ""
 	needGrant("leo:famiglia.*,leo:identity.*", "append")
-	fields, _ = memberAddFields("leo", []string{"--relazione", "nipote"})
-	if err := addMember("leo", fields); err == nil || !strings.Contains(err.Error(), "already has leo:famiglia.relazione") {
+	fields, _ = personAddFields("leo", []string{"--relazione", "nipote"})
+	if err := addPerson("leo", fields); err == nil || !strings.Contains(err.Error(), "already has leo:famiglia.relazione") {
 		t.Fatalf("adding an existing member = %v", err)
 	}
 	if f, _ := v.Get("leo:famiglia.relazione"); f.Value != "figlio" {
@@ -76,7 +76,7 @@ func TestFormatHousehold(t *testing.T) {
 }
 
 func TestExpiryLabel(t *testing.T) {
-	if got := expiryLabel(vault.ExpiryInfo{Document: "cie", Member: "leo"}); got != "cie (leo)" {
+	if got := expiryLabel(vault.ExpiryInfo{Document: "cie", Person: "leo"}); got != "cie (leo)" {
 		t.Errorf("member label = %q", got)
 	}
 	if got := expiryLabel(vault.ExpiryInfo{Document: "pratica tari"}); got != "pratica tari" {
@@ -100,14 +100,14 @@ func TestFormatMigration(t *testing.T) {
 
 // member remove needs one approval, worded for exactly that member, and no
 // second prompt for full access.
-func TestMemberRemove_OneScopedApproval(t *testing.T) {
+func TestPersonRemove_OneScopedApproval(t *testing.T) {
 	v, argsFile := touchIDVault(t, map[string]string{"leo:famiglia.relazione": "figlio", "leo:cie.numero": "CA12345AB"})
 	needGrant("leo:*", "write")
 	resp, err := apiRequest("DELETE", "/vault/members/leo", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	var out vault.RemovedMember
+	var out vault.RemovedPerson
 	if err := apiResult(resp, &out); err != nil || out.Fields != 2 {
 		t.Fatalf("remove = %+v, %v", out, err)
 	}

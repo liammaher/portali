@@ -71,7 +71,7 @@ func (d *DB) DeleteDocument(id string) (int64, error) {
 }
 
 // DocumentCount returns the number of the owner's documents (family
-// members' aren't counted), leaving out those of the exclude tier ("" counts
+// other people's aren't counted), leaving out those of the exclude tier ("" counts
 // all).
 func (d *DB) DocumentCount(exclude string) (int, error) {
 	var n int

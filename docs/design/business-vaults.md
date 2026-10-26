@@ -1,6 +1,9 @@
 # Business and client vaults
 
-Status: proposal (2026-10-26). Nothing here is built yet. Open decisions are marked
+Status: proposal (2026-10-26). Phase 0 (the cleanup) is done: the code now says "person"
+(`SplitPerson`, `RemovePerson`, `people.go`/`household.go`, `pvault person`) and the schema
+holds `For` and `PersonRef`; the "where we are" section below describes the code before it.
+Nothing else is built yet. Open decisions are marked
 **Decision D1, D2, …**, each with a recommendation; they are collected at the end.
 
 ## Goal
@@ -282,10 +285,10 @@ owner fields. It can stay; migrating it to a party is optional.
 
 ## Open decisions
 
-- **D1. The general word for a party.** Options: member, person, party, subject.
-  Recommendation: **person** in the CLI and API (`pvault person add rossi --ruolo
-  cliente`), since persona fisica / giuridica covers companies too; keep
-  `pvault member` as the family alias. The internal rename can follow mechanically.
+- **D1. The general word for a party.** Decided in phase 0: **person** (`pvault person add
+  rossi --ruolo cliente` later), since persona fisica / giuridica covers companies too.
+  `pvault member` stays as the family alias; the API route, JSON keys and MCP tool names
+  kept their old names.
 - **D2. `famiglia` and `ruolo`: two categories or one.** Recommendation: two.
 - **D3. A vault kind (`persona` / `impresa`).** Recommendation: yes, one meta key set at
   init.

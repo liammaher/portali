@@ -338,13 +338,13 @@ func serverError(_ json: [String: Any], _ status: Int) -> String {
 // MARK: - Prompt wording
 
 // \A and \z, not ^ and $: ICU's $ also matches before a trailing line break,
-// which would then show up in the prompt. A pattern may start with a family
-// member's slug (vault.ValidMemberSlug) or "*" for everyone: leo:cie.*,
+// which would then show up in the prompt. A pattern may start with another
+// person's slug (vault.ValidPersonSlug) or "*" for everyone: leo:cie.*,
 // *:identity.*, or leo:* for everything about leo.
-let memberSlug = "[a-z][a-z0-9-]{0,31}"
-let categoryPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(memberSlug)|\\*):)?[A-Za-z0-9_-]+\\.\\*\\z")
-let fieldPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(memberSlug)|\\*):)?[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\z")
-let memberPattern = try! NSRegularExpression(pattern: "\\A\(memberSlug):\\*\\z")
+let personSlug = "[a-z][a-z0-9-]{0,31}"
+let categoryPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(personSlug)|\\*):)?[A-Za-z0-9_-]+\\.\\*\\z")
+let fieldPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(personSlug)|\\*):)?[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\z")
+let personPattern = try! NSRegularExpression(pattern: "\\A\(personSlug):\\*\\z")
 
 func matches(_ re: NSRegularExpression, _ s: String) -> Bool {
     re.firstMatch(in: s, range: NSRange(s.startIndex..., in: s)) != nil
@@ -357,7 +357,7 @@ func parseScope(_ scope: String) -> [String] {
         fail("scope must list 1 to \(maxScopePatterns) patterns")
     }
     for p in parts where p.count > maxPatternLength || p.hasPrefix("io:")
-        || !(p == "*" || matches(categoryPattern, p) || matches(fieldPattern, p) || matches(memberPattern, p)) {
+        || !(p == "*" || matches(categoryPattern, p) || matches(fieldPattern, p) || matches(personPattern, p)) {
         fail("invalid scope pattern \"\(p)\"")
     }
     return parts
@@ -365,15 +365,15 @@ func parseScope(_ scope: String) -> [String] {
 
 func describe(_ pattern: String) -> String {
     if pattern == "*" { return "everything in your vault, your family's data included" }
-    // Whose data: yours (no prefix), one member's, or everyone's.
+    // Whose data: yours (no prefix), one person's, or everyone's.
     var whose = "your", all = "all your"
     var rest = Substring(pattern)
     if let colon = pattern.firstIndex(of: ":") {
-        let member = pattern[..<colon]
+        let person = pattern[..<colon]
         rest = pattern[pattern.index(after: colon)...]
-        if rest == "*" { return "everything about \(member)" }
-        whose = member == "*" ? "everyone's" : "\(member)'s"
-        all = member == "*" ? "everyone's" : "all of \(member)'s"
+        if rest == "*" { return "everything about \(person)" }
+        whose = person == "*" ? "everyone's" : "\(person)'s"
+        all = person == "*" ? "everyone's" : "all of \(person)'s"
     }
     // A category pattern also covers <category>.documents (vault.ScopeAllows).
     if rest.hasSuffix(".*") { return "\(all) \(rest.dropLast(2)) fields and documents" }

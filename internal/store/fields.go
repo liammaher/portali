@@ -228,7 +228,7 @@ func affectedOne(res sql.Result, err error, checked bool) error {
 }
 
 // FieldCount returns the number of fields, only the owner's with ownerOnly
-// (family members' left out). Pass a tier as exclude to leave fields of
+// (other people's left out). Pass a tier as exclude to leave fields of
 // that tier out ("" counts all).
 func (d *DB) FieldCount(exclude string, ownerOnly bool) (int, error) {
 	var count int
@@ -237,7 +237,7 @@ func (d *DB) FieldCount(exclude string, ownerOnly bool) (int, error) {
 }
 
 // CategoryCounts returns a map of the owner's category -> field count
-// (family members' categories are left out). Pass a tier as exclude to
+// (other people's categories are left out). Pass a tier as exclude to
 // leave fields of that tier out ("" counts all).
 func (d *DB) CategoryCounts(exclude string) (map[string]int, error) {
 	rows, err := d.conn.Query("SELECT category, COUNT(*) FROM vault_fields WHERE (? = '' OR sensitivity != ?) AND instr(category, ':') = 0 GROUP BY category", exclude, exclude)

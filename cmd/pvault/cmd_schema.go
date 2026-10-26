@@ -42,9 +42,9 @@ func cmdSchema() {
 				fmt.Printf(" [%s]", f.Sensitivity)
 			}
 			switch f.For {
-			case "member":
+			case vault.ForPerson:
 				fmt.Print(" [family members only: <slug>:" + f.ID + "]")
-			case "owner":
+			case vault.ForOwner:
 				fmt.Print(" [yours only]")
 			}
 			fmt.Println()

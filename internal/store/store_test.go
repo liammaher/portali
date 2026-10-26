@@ -227,21 +227,21 @@ func TestMembers(t *testing.T) {
 	db.SetField(Field{ID: "leo_x:a.b", Category: "leo_x:a", FieldName: "b", Value: "v", UpdatedAt: now}) // '_' is no wildcard
 	db.CreateDocument(Document{ID: "d1", Category: "giulia:cie", Name: "n", ContentType: "x", Size: 1, Sensitivity: "sensitive", CreatedAt: now})
 
-	if slugs, _ := db.MemberSlugs(); strings.Join(slugs, ",") != "giulia,leo,leo_x" {
-		t.Fatalf("MemberSlugs = %v", slugs)
+	if slugs, _ := db.PersonSlugs(); strings.Join(slugs, ",") != "giulia,leo,leo_x" {
+		t.Fatalf("PersonSlugs = %v", slugs)
 	}
 	for slug, want := range map[string]bool{"leo": true, "giulia": true, "le": false, "leon": false} {
-		if got, _ := db.MemberExists(slug); got != want {
-			t.Errorf("MemberExists(%q) = %v", slug, got)
+		if got, _ := db.PersonExists(slug); got != want {
+			t.Errorf("PersonExists(%q) = %v", slug, got)
 		}
 	}
-	fields, docs, _ := db.MemberRows("leo")
+	fields, docs, _ := db.PersonRows("leo")
 	if strings.Join(fields, ",") != "leo:cie.numero" || len(docs) != 0 {
-		t.Fatalf("MemberRows(leo) = %v %v", fields, docs)
+		t.Fatalf("PersonRows(leo) = %v %v", fields, docs)
 	}
 
 	// Inserting a field that exists changes nothing.
-	err := db.ApplyMemberChange([]string{"leo:cie.numero"}, []string{"d1"}, []Field{{ID: "cie.numero", Category: "cie", FieldName: "numero", Value: "w", Sensitivity: "standard", UpdatedAt: now}})
+	err := db.ApplyPersonChange([]string{"leo:cie.numero"}, []string{"d1"}, []Field{{ID: "cie.numero", Category: "cie", FieldName: "numero", Value: "w", Sensitivity: "standard", UpdatedAt: now}})
 	if err != ErrChanged {
 		t.Fatalf("insert over an existing field = %v, want ErrChanged", err)
 	}
@@ -249,14 +249,14 @@ func TestMembers(t *testing.T) {
 		t.Fatal("a failed change still deleted a field")
 	}
 	// Deleting a row that's gone changes nothing either.
-	if err := db.ApplyMemberChange([]string{"leo:cie.numero", "leo:cie.missing"}, nil, nil); err != ErrChanged {
+	if err := db.ApplyPersonChange([]string{"leo:cie.numero", "leo:cie.missing"}, nil, nil); err != ErrChanged {
 		t.Fatalf("delete of a missing field = %v, want ErrChanged", err)
 	}
-	if err := db.ApplyMemberChange([]string{"leo:cie.numero"}, []string{"d1"}, nil); err != nil {
+	if err := db.ApplyPersonChange([]string{"leo:cie.numero"}, []string{"d1"}, nil); err != nil {
 		t.Fatal(err)
 	}
-	if slugs, _ := db.MemberSlugs(); strings.Join(slugs, ",") != "leo_x" {
-		t.Fatalf("after removal MemberSlugs = %v", slugs)
+	if slugs, _ := db.PersonSlugs(); strings.Join(slugs, ",") != "leo_x" {
+		t.Fatalf("after removal PersonSlugs = %v", slugs)
 	}
 }
 

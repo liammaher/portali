@@ -3,9 +3,7 @@ package vault
 import (
 	"errors"
 	"fmt"
-	"os"
 	"regexp"
-	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -15,32 +13,6 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/crypto"
 	"github.com/lovincyrus/personal-vault/internal/store"
 )
-
-// ErrMemberNotFound means no family member has that slug.
-var ErrMemberNotFound = errors.New("member not found")
-
-// checkPersonRefs refuses a value naming a member who isn't in the vault
-// (famiglia.genitori, famiglia.intestatario_scheda, pratiche persona).
-func (v *Vault) checkPersonRefs(id, value string) error {
-	_, local := SplitMember(id)
-	parts := strings.SplitN(strings.ToLower(local), ".", 2)
-	if len(parts) != 2 || !isPersonRefField(parts[0], parts[1]) {
-		return nil
-	}
-	for _, ref := range PersonRefs(value) {
-		if ref == OwnerRef {
-			continue
-		}
-		ok, err := v.db.MemberExists(ref)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &ValidationError{Field: id, Msg: "there is no member \"" + ref + "\" yet: add them first with 'pvault member add " + ref + " --relazione ...'"}
-		}
-	}
-	return nil
-}
 
 // MemberInfo describes a family member as far as the caller may see:
 // derived values appear only when the fields they come from are visible.
@@ -68,7 +40,7 @@ type Household struct {
 
 // householdField reports the fields Household decrypts.
 func householdField(id string) bool {
-	member, local := SplitMember(id)
+	member, local := SplitPerson(id)
 	if member == "" {
 		return local == "famiglia.intestatario_scheda"
 	}
@@ -101,7 +73,7 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 		return nil, err
 	}
 	for _, f := range fields {
-		if slug, _ := SplitMember(f.Category); slug != "" && allow.allows(f) {
+		if slug, _ := SplitPerson(f.Category); slug != "" && allow.allows(f) {
 			member(slug).Fields++
 		}
 	}
@@ -110,7 +82,7 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 		return nil, err
 	}
 	for _, d := range docs {
-		if slug, _ := SplitMember(d.Category); slug != "" && (allow == nil || allow(DocumentScopeID(d.Category), d.Sensitivity)) {
+		if slug, _ := SplitPerson(d.Category); slug != "" && (allow == nil || allow(DocumentScopeID(d.Category), d.Sensitivity)) {
 			member(slug).Documents++
 		}
 	}
@@ -125,7 +97,7 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 	values := map[string]map[string]string{} // slug -> local ID -> value
 	for _, fs := range ctx.Categories {
 		for _, f := range fs {
-			slug, local := SplitMember(f.ID)
+			slug, local := SplitPerson(f.ID)
 			if slug == "" {
 				h.IntestatarioScheda = f.Value
 				continue
@@ -182,130 +154,6 @@ func ageOn(dob string, now time.Time) (int, bool) {
 		age--
 	}
 	return age, age >= 0
-}
-
-// MemberInUseError lists the fields that still name a member being removed.
-type MemberInUseError struct {
-	Slug string
-	Refs []string
-}
-
-func (e *MemberInUseError) Error() string {
-	return fmt.Sprintf("%s is still named in %s: change or delete those first", e.Slug, strings.Join(e.Refs, ", "))
-}
-
-// RemovedMember reports what RemoveMember deleted.
-type RemovedMember struct {
-	Fields        int      `json:"fields"`
-	Documents     int      `json:"documents"`
-	RevokedTokens []string `json:"revoked_tokens"` // consumers of service tokens that named the member
-	DroppedGrants int      `json:"dropped_grants"`
-}
-
-// RemoveMember deletes every field and document of a family member, in one
-// transaction, and revokes the service tokens and scoped grants whose scope
-// names them, so a later member with the same slug can't inherit them. It
-// refuses while another field names the member (MemberInUseError).
-func (v *Vault) RemoveMember(slug string) (*RemovedMember, error) {
-	if !ValidMemberSlug(slug) {
-		return nil, &ValidationError{Field: "member", Msg: errMemberSlug(slug).Error()}
-	}
-	// Lock order: backup.mu, then writeMu, then v.mu. Holding backup.mu
-	// keeps a backup from snapshotting rows whose files are being removed.
-	v.backup.mu.Lock()
-	defer v.backup.mu.Unlock()
-	v.writeMu.Lock()
-	defer v.writeMu.Unlock()
-	if err := v.checkUnlocked(); err != nil {
-		return nil, err
-	}
-
-	fieldIDs, docIDs, err := v.db.MemberRows(slug)
-	if err != nil {
-		return nil, err
-	}
-	if len(fieldIDs) == 0 && len(docIDs) == 0 {
-		return nil, ErrMemberNotFound
-	}
-	refs, err := v.personRefsTo(slug)
-	if err != nil {
-		return nil, err
-	}
-	if len(refs) > 0 {
-		return nil, &MemberInUseError{Slug: slug, Refs: refs}
-	}
-	if err := v.db.ApplyMemberChange(fieldIDs, docIDs, nil); err != nil {
-		return nil, err
-	}
-	for _, id := range docIDs {
-		if err := os.Remove(v.documentPath(id)); err != nil && !errors.Is(err, os.ErrNotExist) {
-			return nil, fmt.Errorf("remove document file: %w", err)
-		}
-	}
-
-	out := &RemovedMember{Fields: len(fieldIDs), Documents: len(docIDs), RevokedTokens: []string{}}
-	tokens, err := v.db.ListTokensByUsage("service")
-	if err != nil {
-		return nil, err
-	}
-	for _, t := range tokens {
-		if ScopeNamesMember(t.Scope, slug) {
-			if _, err := v.db.DeleteToken(t.TokenStr); err != nil {
-				return nil, err
-			}
-			out.RevokedTokens = append(out.RevokedTokens, t.Consumer)
-		}
-	}
-	v.mu.RLock()
-	if v.session != nil {
-		out.DroppedGrants = v.session.DropGrantsNaming(slug)
-	}
-	v.mu.RUnlock()
-
-	v.db.LogAccess(store.AuditEntry{
-		Consumer: "vault", Scope: slug + ":*", Action: "member_remove",
-		Purpose: fmt.Sprintf("%d fields, %d documents, %d tokens revoked", out.Fields, out.Documents, len(out.RevokedTokens)),
-	})
-	v.markChanged()
-	return out, nil
-}
-
-// personRefsTo returns the IDs of fields outside the member's own data whose
-// value names slug. A closed pratica (completata, respinta, annullata) is
-// history, not a reference: it doesn't keep a member from being removed.
-func (v *Vault) personRefsTo(slug string) ([]string, error) {
-	ctx, err := v.decryptFields(func(id, _ string) bool {
-		member, local := SplitMember(id)
-		parts := strings.SplitN(strings.ToLower(local), ".", 2)
-		if member == slug || len(parts) != 2 {
-			return false
-		}
-		_, campo, _ := praticaField(parts[0], parts[1])
-		return isPersonRefField(parts[0], parts[1]) || campo == "stato"
-	})
-	if err != nil {
-		return nil, err
-	}
-	closed := map[string]bool{}
-	for _, f := range ctx.Categories["pratiche"] {
-		if pslug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" && isClosedStato(f.Value) {
-			closed[pslug] = true
-		}
-	}
-	var refs []string
-	for _, fs := range ctx.Categories {
-		for _, f := range fs {
-			pslug, campo, isPratica := praticaField(f.Category, f.FieldName)
-			if campo == "stato" || (isPratica && closed[pslug]) {
-				continue
-			}
-			if slices.Contains(PersonRefs(f.Value), slug) {
-				refs = append(refs, f.ID)
-			}
-		}
-	}
-	sort.Strings(refs)
-	return refs, nil
 }
 
 // Migration of the old nucleo_familiare.membro<N>_<campo> fields.
@@ -372,7 +220,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 			campi[f.ID] = strings.ToLower(m[2])
 		}
 	}
-	existing, err := v.db.MemberSlugs()
+	existing, err := v.db.PersonSlugs()
 	if err != nil {
 		return nil, err
 	}
@@ -472,7 +320,7 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	if dryRun || len(deletes) == 0 {
 		return report, nil
 	}
-	if err := v.db.ApplyMemberChange(deletes, nil, inserts); err != nil {
+	if err := v.db.ApplyPersonChange(deletes, nil, inserts); err != nil {
 		return nil, err
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "nucleo_familiare.*", Action: "member_migrate",
@@ -523,7 +371,7 @@ func slugFromName(name string) string {
 	if len(s) > 32 {
 		s = strings.TrimSuffix(s[:32], "-")
 	}
-	if !ValidMemberSlug(s) {
+	if !ValidPersonSlug(s) {
 		return ""
 	}
 	return s

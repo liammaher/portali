@@ -11,8 +11,8 @@ import (
 // ExpiryInfo describes a document expiry date found in the vault.
 type ExpiryInfo struct {
 	FieldID   string `json:"field_id"`
-	Document  string `json:"document"`         // category without the member, e.g. permesso_soggiorno, or "pratica <slug>"
-	Member    string `json:"member,omitempty"` // whose it is: a family member's slug, empty for the owner
+	Document  string `json:"document"`         // category without the person, e.g. permesso_soggiorno, or "pratica <slug>"
+	Person    string `json:"member,omitempty"` // whose it is: a person's slug, empty for the owner (JSON key from before the rename)
 	ExpiresOn string `json:"expires_on"`       // YYYY-MM-DD
 	DaysLeft  int    `json:"days_left"`        // negative once expired
 	Expired   bool   `json:"expired"`
@@ -68,15 +68,15 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 				continue
 			}
 			days := int(expires.Sub(today).Hours() / 24)
-			member, document := SplitMember(f.Category)
+			person, document := SplitPerson(f.Category)
 			if isPratica {
 				document = "pratica " + slug // a pratica's deadline
-				member = persona[slug]
+				person = persona[slug]
 			}
 			result = append(result, ExpiryInfo{
 				FieldID:   f.ID,
 				Document:  document,
-				Member:    member,
+				Person:    person,
 				ExpiresOn: normalized,
 				DaysLeft:  days,
 				Expired:   days < 0,

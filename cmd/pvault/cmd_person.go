@@ -16,41 +16,42 @@ import (
 	"golang.org/x/term"
 )
 
-const memberUsage = `usage:
-  pvault member list
-  pvault member show <slug>
-  pvault member add <slug> --relazione <relazione> [--nome N] [--cognome C] [--codice-fiscale CF]
+const personUsage = `usage:
+  pvault person list
+  pvault person show <slug>
+  pvault person add <slug> --relazione <relazione> [--nome N] [--cognome C] [--codice-fiscale CF]
                     [--data-nascita YYYY-MM-DD] [--sesso M|F]
-      e.g. pvault member add giulia --relazione moglie --nome Giulia
-  pvault member remove <slug>
-  pvault member migrate [--dry-run]
-A member's fields are <slug>:<category>.<field>, e.g. pvault set leo:cie.numero CA12345AB.`
+      e.g. pvault person add giulia --relazione moglie --nome Giulia
+  pvault person remove <slug>
+  pvault person migrate [--dry-run]
+Another person's fields are <slug>:<category>.<field>, e.g. pvault set leo:cie.numero CA12345AB.
+(pvault member is an alias for pvault person.)`
 
-func cmdMember() {
+func cmdPerson() {
 	if len(os.Args) < 3 {
-		fatal(memberUsage)
+		fatal(personUsage)
 	}
 	switch os.Args[2] {
 	case "list":
-		positionalArgs(os.Args[3:], memberUsage, 0, 0)
-		cmdMemberList()
+		positionalArgs(os.Args[3:], personUsage, 0, 0)
+		cmdPersonList()
 	case "show":
-		cmdMemberShow(positionalArgs(os.Args[3:], memberUsage, 1, 1)[0])
+		cmdPersonShow(positionalArgs(os.Args[3:], personUsage, 1, 1)[0])
 	case "add":
-		cmdMemberAdd()
+		cmdPersonAdd()
 	case "remove":
-		cmdMemberRemove(positionalArgs(os.Args[3:], memberUsage, 1, 1)[0])
+		cmdPersonRemove(positionalArgs(os.Args[3:], personUsage, 1, 1)[0])
 	case "migrate":
-		cmdMemberMigrate()
+		cmdPersonMigrate()
 	default:
-		fatal(memberUsage)
+		fatal(personUsage)
 	}
 }
 
-// checkSlug fails unless slug is a valid member slug.
+// checkSlug fails unless slug is a valid person slug.
 func checkSlug(slug string) {
-	if !vault.ValidMemberSlug(slug) {
-		fatal("invalid member %q: lower-case letters, digits and hyphens, starting with a letter (\"io\" is you)", slug)
+	if !vault.ValidPersonSlug(slug) {
+		fatal("invalid person %q: lower-case letters, digits and hyphens, starting with a letter (\"io\" is you)", slug)
 	}
 }
 
@@ -66,7 +67,7 @@ func fetchHousehold() (*vault.Household, error) {
 	return &h, nil
 }
 
-func cmdMemberList() {
+func cmdPersonList() {
 	needGrant("*:famiglia.*,*:identity.*", "read")
 	h, err := fetchHousehold()
 	if err != nil {
@@ -78,7 +79,7 @@ func cmdMemberList() {
 // formatHousehold prints one line per member.
 func formatHousehold(h *vault.Household) string {
 	if len(h.Members) == 0 {
-		return "No family members yet. Add one with 'pvault member add <slug> --relazione <relazione>'.\n"
+		return "No family members yet. Add one with 'pvault person add <slug> --relazione <relazione>'.\n"
 	}
 	var b strings.Builder
 	width := len("slug")
@@ -119,7 +120,7 @@ func formatHousehold(h *vault.Household) string {
 	return b.String()
 }
 
-func cmdMemberShow(slug string) {
+func cmdPersonShow(slug string) {
 	checkSlug(slug)
 	needGrant(slug+":*", "read")
 	resp, err := apiRequest("GET", "/vault/context", nil)
@@ -132,7 +133,7 @@ func cmdMemberShow(slug string) {
 	}
 	var fields []vault.FieldInfo
 	for cat, fs := range ctx.Categories {
-		if member, _ := vault.SplitMember(cat); member == slug {
+		if person, _ := vault.SplitPerson(cat); person == slug {
 			fields = append(fields, fs...)
 		}
 	}
@@ -143,7 +144,7 @@ func cmdMemberShow(slug string) {
 		}
 	}
 	if len(fields) == 0 {
-		fatal("no fields for %s (see 'pvault member list')", slug)
+		fatal("no fields for %s (see 'pvault person list')", slug)
 	}
 	printFields(fields)
 }
@@ -169,9 +170,9 @@ func printFields(fields []vault.FieldInfo) {
 	}
 }
 
-// memberAddFlags maps member add's options to the member's fields, in the
-// order they're written (relazione first, so the member exists).
-var memberAddFlags = []struct{ flag, field string }{
+// personAddFlags maps person add's options to the person's fields, in the
+// order they're written (relazione first, so the person exists).
+var personAddFlags = []struct{ flag, field string }{
 	{"--relazione", "famiglia.relazione"},
 	{"--nome", "identity.first_name"},
 	{"--cognome", "identity.last_name"},
@@ -180,13 +181,13 @@ var memberAddFlags = []struct{ flag, field string }{
 	{"--sesso", "identity.sex"},
 }
 
-// memberAddFields reads member add's options into the fields to write, and
+// personAddFields reads person add's options into the fields to write, and
 // checks every value first, so a bad one (e.g. the codice fiscale) is
 // refused before anything is written or any prompt is shown.
-func memberAddFields(slug string, args []string) ([][2]string, error) {
-	values := make([]string, len(memberAddFlags))
+func personAddFields(slug string, args []string) ([][2]string, error) {
+	values := make([]string, len(personAddFlags))
 	flags := map[string]*string{}
-	for i, f := range memberAddFlags {
+	for i, f := range personAddFlags {
 		flags[f.flag] = &values[i]
 	}
 	if err := parseFlags(args, flags); err != nil {
@@ -196,7 +197,7 @@ func memberAddFields(slug string, args []string) ([][2]string, error) {
 		return nil, errors.New("--relazione is required (e.g. coniuge, figlio, genitore)")
 	}
 	var out [][2]string
-	for i, f := range memberAddFlags {
+	for i, f := range personAddFlags {
 		if values[i] != "" {
 			id := slug + ":" + f.field
 			if _, err := vault.NormalizeAndValidate(id, values[i]); err != nil {
@@ -208,26 +209,26 @@ func memberAddFields(slug string, args []string) ([][2]string, error) {
 	return out, nil
 }
 
-func cmdMemberAdd() {
+func cmdPersonAdd() {
 	if len(os.Args) < 4 {
-		fatal(memberUsage)
+		fatal(personUsage)
 	}
 	slug := os.Args[3]
 	checkSlug(slug)
-	fields, err := memberAddFields(slug, os.Args[4:])
+	fields, err := personAddFields(slug, os.Args[4:])
 	if err != nil {
-		fatal("%v\n%s", err, memberUsage)
+		fatal("%v\n%s", err, personUsage)
 	}
 	needGrant(slug+":famiglia.*,"+slug+":identity.*", "append")
-	if err := addMember(slug, fields); err != nil {
+	if err := addPerson(slug, fields); err != nil {
 		fatal("%v", err)
 	}
 	fmt.Printf("Added %s. Their fields are %s:<category>.<field>, e.g. pvault set %s:cie.numero <numero>\n", slug, slug, slug)
 }
 
-// addMember writes a new member's fields, refusing a slug that already has
+// addPerson writes a new person's fields, refusing a slug that already has
 // any of them, so adding never overwrites someone.
-func addMember(slug string, fields [][2]string) error {
+func addPerson(slug string, fields [][2]string) error {
 	for _, f := range fields {
 		resp, err := apiRequest("GET", "/vault/fields/"+f[0], nil)
 		if err != nil {
@@ -255,7 +256,7 @@ func addMember(slug string, fields [][2]string) error {
 	return nil
 }
 
-func cmdMemberRemove(slug string) {
+func cmdPersonRemove(slug string) {
 	checkSlug(slug)
 	if term.IsTerminal(int(syscall.Stdin)) {
 		fmt.Fprintf(os.Stderr, "This deletes every field and document of %s and revokes tokens that name them.\nType %s to confirm: ", slug, slug)
@@ -270,7 +271,7 @@ func cmdMemberRemove(slug string) {
 	if err != nil {
 		fatal("request failed: %v", err)
 	}
-	var out vault.RemovedMember
+	var out vault.RemovedPerson
 	if err := apiResult(resp, &out); err != nil {
 		fatal("%v", err)
 	}
@@ -280,13 +281,13 @@ func cmdMemberRemove(slug string) {
 	}
 }
 
-func cmdMemberMigrate() {
+func cmdPersonMigrate() {
 	var dryRun bool
 	switch args := os.Args[3:]; {
 	case len(args) == 1 && args[0] == "--dry-run":
 		dryRun = true
 	case len(args) != 0:
-		fatal(memberUsage)
+		fatal(personUsage)
 	}
 	needGrant("", "") // only your own session may migrate
 	path := "/vault/members/migrate"
@@ -324,13 +325,13 @@ func formatMigration(r *vault.MigrationReport) string {
 		fmt.Fprintf(&b, "%s %s → %s\n", verb, old, r.Moved[old])
 	}
 	for _, id := range r.Deleted {
-		fmt.Fprintf(&b, "Drop %s (now counted from the members)\n", id)
+		fmt.Fprintf(&b, "Drop %s (now counted from the people in the vault)\n", id)
 	}
 	for _, id := range sortedKeys(r.Left) {
 		fmt.Fprintf(&b, "Left %s: %s\n", id, r.Left[id])
 	}
 	if r.DryRun {
-		b.WriteString("Dry run: nothing changed. Run 'pvault member migrate' to apply.\n")
+		b.WriteString("Dry run: nothing changed. Run 'pvault person migrate' to apply.\n")
 	}
 	return b.String()
 }

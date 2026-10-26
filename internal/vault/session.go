@@ -183,15 +183,15 @@ func (s *Session) AddGrant(ttl time.Duration, scope, access string) (string, tim
 	return token, expires, nil
 }
 
-// DropGrantsNaming removes the scoped grants whose scope names a member's
-// slug, so a removed member's grants can't reach a later member with the
+// DropGrantsNaming removes the scoped grants whose scope names a person's
+// slug, so a removed person's grants can't reach a later person with the
 // same slug. Returns how many it removed.
 func (s *Session) DropGrantsNaming(slug string) int {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	n := 0
 	for k, g := range s.grants {
-		if g.scope != "" && ScopeNamesMember(g.scope, slug) {
+		if g.scope != "" && ScopeNamesPerson(g.scope, slug) {
 			delete(s.grants, k)
 			n++
 		}

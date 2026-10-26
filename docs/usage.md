@@ -27,7 +27,7 @@ With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the pa
 
 ## Fields
 
-Fields use dot notation: `category.field_name`. A family member's fields have their slug in front: `leo:identity.first_name` (see `pvault member`).
+Fields use dot notation: `category.field_name`. A family member's fields have their slug in front: `leo:identity.first_name` (see `pvault person`).
 
 ```sh
 pvault set identity.full_name "Mario Rossi"

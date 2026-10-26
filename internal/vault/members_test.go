@@ -70,7 +70,7 @@ func TestHousehold(t *testing.T) {
 	}
 }
 
-func TestRemoveMember(t *testing.T) {
+func TestRemovePerson(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "giulia:famiglia.relazione", "moglie")
 	mustSet(t, v, "leo:famiglia.relazione", "figlio")
@@ -89,23 +89,23 @@ func TestRemoveMember(t *testing.T) {
 	}
 
 	// Named by leo's genitori: giulia can't go yet.
-	var inUse *MemberInUseError
-	if _, err := v.RemoveMember("giulia"); !errors.As(err, &inUse) || inUse.Refs[0] != "leo:famiglia.genitori" {
-		t.Fatalf("remove giulia = %v, want MemberInUseError naming leo:famiglia.genitori", err)
+	var inUse *PersonInUseError
+	if _, err := v.RemovePerson("giulia"); !errors.As(err, &inUse) || inUse.Refs[0] != "leo:famiglia.genitori" {
+		t.Fatalf("remove giulia = %v, want PersonInUseError naming leo:famiglia.genitori", err)
 	}
-	if _, err := v.RemoveMember("leo"); !errors.As(err, &inUse) || inUse.Refs[0] != "pratiche.cie-leo_persona" {
-		t.Fatalf("remove leo = %v, want MemberInUseError naming the pratica", err)
+	if _, err := v.RemovePerson("leo"); !errors.As(err, &inUse) || inUse.Refs[0] != "pratiche.cie-leo_persona" {
+		t.Fatalf("remove leo = %v, want PersonInUseError naming the pratica", err)
 	}
 	mustSet(t, v, "pratiche.cie-leo_persona", "io")
 
-	out, err := v.RemoveMember("leo")
+	out, err := v.RemovePerson("leo")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if out.Fields != 3 || out.Documents != 1 || strings.Join(out.RevokedTokens, ",") != "leo-agent" || out.DroppedGrants != 1 {
 		t.Fatalf("removed = %+v", out)
 	}
-	if fields, docs, _ := v.db.MemberRows("leo"); len(fields)+len(docs) != 0 {
+	if fields, docs, _ := v.db.PersonRows("leo"); len(fields)+len(docs) != 0 {
 		t.Fatalf("leo still has %v %v", fields, docs)
 	}
 	if _, err := os.Stat(v.documentPath(doc.ID)); !errors.Is(err, os.ErrNotExist) {
@@ -120,14 +120,14 @@ func TestRemoveMember(t *testing.T) {
 	if _, _, ok := v.ScopedGrant(grant); ok {
 		t.Error("leo:* grant survived")
 	}
-	if _, err := v.RemoveMember("leo"); err != ErrMemberNotFound {
-		t.Fatalf("second remove = %v, want ErrMemberNotFound", err)
+	if _, err := v.RemovePerson("leo"); err != ErrPersonNotFound {
+		t.Fatalf("second remove = %v, want ErrPersonNotFound", err)
 	}
 	// giulia is no longer named, so she can go now.
-	if _, err := v.RemoveMember("giulia"); err != nil {
+	if _, err := v.RemovePerson("giulia"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := v.RemoveMember("io"); err == nil {
+	if _, err := v.RemovePerson("io"); err == nil {
 		t.Fatal("removed the owner")
 	}
 }
@@ -249,17 +249,17 @@ func TestBackupRestoresMembers(t *testing.T) {
 }
 
 // A closed pratica is history: it names a member without keeping them.
-func TestRemoveMember_ClosedPraticaDoesNotBlock(t *testing.T) {
+func TestRemovePerson_ClosedPraticaDoesNotBlock(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:famiglia.relazione", "figlio")
 	mustSet(t, v, "pratiche.cie-leo_persona", "leo")
 	mustSet(t, v, "pratiche.cie-leo_stato", "in_attesa")
-	var inUse *MemberInUseError
-	if _, err := v.RemoveMember("leo"); !errors.As(err, &inUse) {
-		t.Fatalf("open pratica: remove = %v, want MemberInUseError", err)
+	var inUse *PersonInUseError
+	if _, err := v.RemovePerson("leo"); !errors.As(err, &inUse) {
+		t.Fatalf("open pratica: remove = %v, want PersonInUseError", err)
 	}
 	mustSet(t, v, "pratiche.cie-leo_stato", "completata")
-	if _, err := v.RemoveMember("leo"); err != nil {
+	if _, err := v.RemovePerson("leo"); err != nil {
 		t.Fatalf("closed pratica: remove = %v", err)
 	}
 }

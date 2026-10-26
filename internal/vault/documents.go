@@ -52,7 +52,7 @@ const DefaultDocumentSensitivity = "sensitive"
 // without one: personal for SPID/CieID and credential categories, else
 // DefaultDocumentSensitivity.
 func DefaultDocumentTier(category string) string {
-	_, category = SplitMember(category)
+	_, category = SplitPerson(category)
 	if IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category)) {
 		return TierPersonal
 	}
@@ -64,9 +64,9 @@ func DefaultDocumentTier(category string) string {
 // bound to the document ID, so ciphertexts cannot be swapped between records.
 func (v *Vault) AddDocument(category, name, contentType string, data []byte, sensitivity string) (*DocumentInfo, error) {
 	if !ValidCategoryName(category) {
-		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed, with an optional member: prefix"}
+		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed, with an optional person: prefix"}
 	}
-	if err := checkMemberCategory(category, DocumentScopeID(category)); err != nil {
+	if err := checkPersonCategory(category, DocumentScopeID(category)); err != nil {
 		return nil, err
 	}
 	name, err := cleanDocumentName(name)

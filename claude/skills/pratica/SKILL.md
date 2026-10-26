@@ -97,7 +97,7 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
 - `fallback: [a, b]`: the first one with a value (keep its sibling fields from the
   same category, as the field's `notes` say).
 - `repeat: famiglia`: one row per family member in the user's stato di famiglia
-  (`vault_household` or `pvault member list`; members whose `famiglia.stato_famiglia`
+  (`vault_household` or `pvault person list`; members whose `famiglia.stato_famiglia`
   is `si`), each mapped from `<slug>:identity.*`, with `relazione_label` (moglie,
   figlia) for the form's rapporto/parentela. Read their fields with one
   `pvault get <slug>:identity.first_name ...` or a `*:identity.*` scope.
