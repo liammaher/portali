@@ -2,6 +2,7 @@ package vault
 
 import (
 	"fmt"
+	"regexp"
 	"slices"
 	"strings"
 )
@@ -49,6 +50,8 @@ func (v *Vault) Kind() string {
 //     itself (identity.codice_fiscale belongs to someone: bianchi:identity...);
 //   - in a business vault, other people's SPID/CieID accounts and login
 //     secrets (CIE PIN, firma digitale PIN): a business may never hold them.
+//     Its own data may hold only its own SPID (per uso professionale): a
+//     CIE, CieID or digital signature is always a person's.
 func (v *Vault) checkKind(id string) error {
 	person, local := SplitPerson(id)
 	category, _, _ := strings.Cut(local, ".")
@@ -63,6 +66,9 @@ func (v *Vault) checkKind(id string) error {
 	if v.kind == KindImpresa && person != "" && (IsCredentialField(id) || IsPersonalCategory(category)) {
 		return &ValidationError{Field: id, Msg: errPartyCredential}
 	}
+	if v.kind == KindImpresa && person == "" && (IsCredentialField(id) || IsPersonalCategory(category)) && !isSPIDCategory(category) {
+		return &ValidationError{Field: id, Msg: errBusinessCredential}
+	}
 	return nil
 }
 
@@ -73,18 +79,46 @@ func (v *Vault) checkKindDocument(category string) error {
 	if err := v.checkKindCategory(person, base, field); err != nil {
 		return err
 	}
-	if v.kind == KindImpresa && person != "" && DefaultDocumentTier(category) == TierPersonal {
-		return &ValidationError{Field: field, Msg: errPartyCredential}
+	if v.kind == KindImpresa && DefaultDocumentTier(category) == TierPersonal {
+		if person != "" {
+			return &ValidationError{Field: field, Msg: errPartyCredential}
+		}
+		if !isSPIDCategory(base) {
+			return &ValidationError{Field: field, Msg: errBusinessCredential}
+		}
 	}
 	return nil
 }
 
-const errPartyCredential = "a business vault never holds other people's SPID/CieID accounts or login secrets (PIN, PUK, passwords): each person keeps their own"
+const (
+	errPartyCredential    = "a business vault never holds other people's SPID/CieID accounts or login secrets (PIN, PUK, passwords): each person keeps their own"
+	errBusinessCredential = "a business vault holds login secrets only for the business's own SPID (spid.*): a CIE, CieID or digital signature is always a person's, and each person keeps their own"
+)
+
+// isSPIDCategory reports a SPID category (spid, spid2, spid_poste): the only
+// account a business has itself.
+func isSPIDCategory(category string) bool {
+	words := idWords(strings.ToLower(category))
+	return len(words) > 0 && reSPIDWord.MatchString(words[0])
+}
+
+var reSPIDWord = regexp.MustCompile(`^spid[0-9]*$`)
+
+// schemaCategoryOf returns the schema category a category is, or is a
+// numbered copy of: cie2 and identity-2 follow the rules of cie and
+// identity, as spid2 is a second SPID account.
+func schemaCategoryOf(category string) *SchemaCategory {
+	name := strings.ToLower(category)
+	if c := GetSchemaCategory(name); c != nil {
+		return c
+	}
+	return GetSchemaCategory(strings.TrimRight(strings.TrimRight(name, "0123456789"), "_-"))
+}
 
 // checkKindCategory applies the category rules of checkKind. field names the
 // ID in the error.
 func (v *Vault) checkKindCategory(person, category, field string) error {
-	c := GetSchemaCategory(strings.ToLower(category))
+	c := schemaCategoryOf(category)
 	if c == nil {
 		return nil // user-defined categories are allowed anywhere
 	}

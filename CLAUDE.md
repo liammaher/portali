@@ -294,9 +294,12 @@ Profile Password + Secret Key (128-bit)
   `gen-fields` refuses new `scope` or `for` values. `checkKind` (in `Vault.set` and
   `AddDocument`, not the pure `NormalizeAndValidate`, so `TestPersonRulesMatchOwner` holds)
   refuses a category kept for the other kind (`famiglia` persona, `ruolo` impresa), a
-  persona-subject category in an impresa vault's own data, and in an impresa vault any
+  persona-subject category in an impresa vault's own data (numbered copies such as `cie2`,
+  `identity-2` count as their category, `schemaCategoryOf`), in an impresa vault any
   person's SPID/CieID category or credential field/document (CIE and `firma`/`cns` PINs
-  included), even at the personal tier. `MigrateNucleo` refuses in impresa vaults.
+  included), even at the personal tier, and in an impresa vault's own data any credential or
+  personal category except its own SPID (`isSPIDCategory`): a CIE, CieID or digital
+  signature is always a person's. `MigrateNucleo` refuses in impresa vaults.
   `ruolo.tipo` is a validated list (`normalizeRuoli`); the people listing carries `ruolo`
   and `denominazione`. Named vaults: `--vault <name>` (first argument only) or
   `PVAULT_VAULT` becomes `VAULT_DIR=~/.pvault-<name>` via `os.Setenv` before dispatch, so
@@ -307,9 +310,11 @@ Profile Password + Secret Key (128-bit)
   CLI never opens `vault.db` for it; it isn't trusted, since `checkVaultServer` compares it
   with the socket-verified status `addr` (and records the verified `kind` for `person`).
   Hints in messages use `pvCmd` so they name `--vault`. Tests: `kind_test.go`,
-  `vaults_test.go`, `TestTouchIDHelper_PromptNamesVault`, and the onboarding page's
-  `TestOnboardingRuoliComplete`/`TestOnboardingKindMarkers` (the page hides what a person
-  can't hold from `/vault/schema`'s `subject`/`kinds`, mirroring `checkKind`).
+  `vaults_test.go`, `TestTouchIDHelper_PromptNamesVault`, `TestTouchIDHelper_UnlocksNamedVault`.
+  The onboarding page hides what a person can't hold from `/vault/schema`'s `subject`/`kinds`,
+  mirroring `checkKind` in JS (`allowed`/`inputAllowed`); no test runs that JS, so change both
+  together (`TestOnboardingRuoliComplete`/`TestOnboardingKindMarkers` check only the option
+  lists and markers).
 
 ## Conventions
 

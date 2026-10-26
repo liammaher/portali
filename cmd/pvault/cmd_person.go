@@ -255,6 +255,8 @@ func personAddFields(slug, kind string, args []string) ([][2]string, error) {
 		return nil, errors.New("--ruolo is required (e.g. titolare, socio, dipendente, cliente)")
 	case kind != vault.KindImpresa && ruolo != "":
 		return nil, errors.New("--ruolo is for business vaults; family members have a --relazione")
+	case kind != vault.KindImpresa && values[2] != "":
+		return nil, errors.New("--denominazione is for business vaults (a company among a business's people)")
 	case kind != vault.KindImpresa && relazione == "":
 		return nil, errors.New("--relazione is required (e.g. coniuge, figlio, genitore)")
 	}

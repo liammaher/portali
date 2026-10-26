@@ -60,9 +60,9 @@ func cmdServe() {
 	// Accept this limitation — use []byte for passwords if zeroing is critical.
 
 	// VAULT_PORT, else the vault's port file (7200 without one).
-	addr := fmt.Sprintf("127.0.0.1:%d", vaultPort())
-	if a := os.Getenv("VAULT_PORT"); a != "" {
-		addr = "127.0.0.1:" + a
+	addr := "127.0.0.1:" + os.Getenv("VAULT_PORT")
+	if os.Getenv("VAULT_PORT") == "" {
+		addr = fmt.Sprintf("127.0.0.1:%d", vaultPort())
 	}
 
 	// The socket comes first: once the TCP port answers, the socket that

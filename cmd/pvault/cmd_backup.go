@@ -57,7 +57,7 @@ func cmdBackup() {
 		fmt.Println("From now on the vault also backs itself up to this folder a minute after each change and when it locks.")
 	}
 	fmt.Println("Restoring needs your profile password and secret key, which are not in the backup.")
-	fmt.Println("Check a backup with: pvault restore <file> --check")
+	fmt.Printf("Check a backup with: %s\n", pvCmd("restore <file> --check"))
 }
 
 func cmdRestore() {
@@ -123,11 +123,13 @@ func cmdRestore() {
 	}
 
 	// A port isn't part of the backup: the restored vault gets one here.
-	if _, err := ensurePort(dir); err != nil {
+	port, err := ensurePort(dir)
+	if err != nil {
 		fatal("restored, but %v", err)
 	}
 	fmt.Printf("Restored the backup made %s (%d fields, %d documents) into %s.\n",
 		info.Created.Local().Format("2006-01-02 15:04"), info.Fields, info.Documents, dir)
+	fmt.Printf("Server address: http://127.0.0.1:%d (update VAULT_ADDR wherever an MCP server points at this vault)\n", port)
 	v := vaultFlag()
 	fmt.Printf("Next: run 'pvault %sunlock'. If you use Touch ID, run 'pvault %stouchid enable' again,\n", v, v)
 	fmt.Printf("and 'pvault %sbackup --to <folder>' if the backup folder isn't on this machine.\n", v)

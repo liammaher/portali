@@ -200,7 +200,8 @@ A business vault has its own MCP server (e.g. `studio`, with `VAULT_ADDR` set to
 vault's address, `VAULT_NAME=studio` and its own Keychain service such as
 `pvault-studio-mcp`), so its tools are `mcp__studio__vault_*`. Tokens for it are created
 with `pvault --vault studio create-service-token ... --keychain pvault-studio-mcp`: never
-reuse another vault's Keychain service.
+reuse another vault's Keychain service (it would overwrite that vault's stored token, which
+then stays valid on that vault until it expires or is revoked there).
 It reads its token from the macOS Keychain on every request, so a new or replaced token
 works immediately. No restart needed. Creating a new token with `--keychain pvault-mcp`
 revokes the one it replaces.

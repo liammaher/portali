@@ -732,7 +732,7 @@ body::before{
   </section>
 
   <!-- 03 Casa -->
-  <section class="section" data-section="2" data-chapter="Casa">
+  <section data-owner-only class="section" data-section="2" data-chapter="Casa">
     <div class="section-number">03</div>
     <h2>La tua casa</h2>
     <p class="subtitle">The home at the address above. Catasto data is on the visura catastale; TARI, the rental registration and ISEE all ask for it.</p>
@@ -835,7 +835,7 @@ body::before{
   </section>
 
   <!-- 04 Affitto e utenze -->
-  <section class="section" data-section="3" data-chapter="Affitto e utenze">
+  <section data-owner-only class="section" data-section="3" data-chapter="Affitto e utenze">
     <div class="section-number">04</div>
     <h2>Affitto e utenze</h2>
     <p class="subtitle">Skip the contract if you own the home. Registration details are on the RLI receipt; the POD and PDR are on any electricity or gas bill.</p>
@@ -1640,7 +1640,9 @@ body::before{
       document.querySelector('.header h1').textContent = 'Your business vault';
       personSelect.options[0].textContent = "L'impresa";
     }
-  }).catch(function() {});
+  }).catch(function() {
+    showError("Couldn't load the vault's schema: reload this page.");
+  });
 
   // allowed mirrors the vault's kind rules (checkKind) and owner-only
   // categories: person is true for another person's fields (prefix set).
@@ -1732,8 +1734,15 @@ body::before{
     const hidden = checksInput(box);
     box.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
       cb.addEventListener('change', function() {
-        hidden.value = Array.prototype.filter.call(box.querySelectorAll('input[type="checkbox"]'), function(c) { return c.checked; })
+        const value = Array.prototype.filter.call(box.querySelectorAll('input[type="checkbox"]'), function(c) { return c.checked; })
           .map(function(c) { return c.value; }).join(',');
+        if (!value) {
+          // A person has at least one ruolo; the vault refuses an empty list.
+          cb.checked = true;
+          setStatus(hidden.closest('.field').querySelector('.status'), 'error', 'Keep at least one ruolo (remove the person with pvault person remove)');
+          return;
+        }
+        hidden.value = value;
         hidden.dispatchEvent(new Event('blur'));
       });
     });
@@ -1830,8 +1839,10 @@ body::before{
       const rel = section.getAttribute('data-relation');
       if (k && k !== kind) hide = true;
       if (rel) {
-        const c = catInfo[rel];
-        if (c && c.kinds && c.kinds.indexOf(kind) < 0) hide = true;
+        // Without the schema (still loading, or it failed), famiglia is a
+        // personal vault's and ruolo a business vault's, as the schema says.
+        const kinds = catInfo[rel] ? catInfo[rel].kinds : { famiglia: ['persona'], ruolo: ['impresa'] }[rel];
+        if (kinds && kinds.indexOf(kind) < 0) hide = true;
       } else if (!Array.prototype.some.call(section.querySelectorAll('[data-field]'), function(input) { return !input.closest('[hidden]'); })) {
         hide = true;
       }
@@ -1954,7 +1965,13 @@ body::before{
 
       setStatus(statusEl, 'saving');
 
-      api('PUT', '/vault/fields/' + fieldId, { value: val })
+      // One save at a time per input, in order: two quick changes (ticking
+      // two ruoli) must not reach the server out of order and store the older.
+      const save = (input._saving || Promise.resolve()).catch(function() {}).then(function() {
+        return api('PUT', '/vault/fields/' + fieldId, { value: val });
+      });
+      input._saving = save;
+      save
         .then(function() {
           if (fullName) {
             api('PUT', '/vault/fields/' + p + 'identity.full_name', { value: fullName }).catch(function() {});
@@ -1963,7 +1980,9 @@ body::before{
           input.dataset.saved = val;
           // Show the stored form (e.g. an upper-cased codice fiscale)
           api('GET', '/vault/fields/' + fieldId).then(function(f) {
-            if (g === gen && f && f.value && document.activeElement !== input) {
+            // A hidden input (the ruolo checkboxes) is never focused, so check
+            // instead that no newer choice was made while this read was out.
+            if (g === gen && f && f.value && document.activeElement !== input && (input.type !== 'hidden' || input.value === val)) {
               input.value = f.value;
               input.dataset.saved = f.value;
               if (input.type === 'hidden') syncChecks();

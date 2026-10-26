@@ -38,7 +38,8 @@ pvault create-service-token claude --scope "residenza.*" --access write --ttl 2h
 Each vault (`pvault --vault <name>`) has its own server and port, so give it its own MCP
 server: its tools then appear as `mcp__<name>__vault_*`, next to the default vault's.
 Use the address `pvault --vault <name> status` prints, and a Keychain service of its own
-(a token stored under another vault's service would overwrite that vault's token):
+(a token stored under another vault's service would overwrite that vault's token, which
+stays valid on that vault until it expires or is revoked there):
 
 ```sh
 claude mcp add studio --scope user \

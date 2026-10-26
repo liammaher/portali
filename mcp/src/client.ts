@@ -37,7 +37,13 @@ class VaultError extends Error {
 }
 
 function serverAddr(): string {
-  return process.env.VAULT_ADDR ?? "http://127.0.0.1:7200";
+  const addr = process.env.VAULT_ADDR;
+  // A named vault has its own port: without VAULT_ADDR every request would
+  // go to the default vault, and its errors would send the user in circles.
+  if (!addr && process.env.VAULT_NAME) {
+    throw new VaultError(`vault: VAULT_NAME is ${process.env.VAULT_NAME} but VAULT_ADDR isn't set — set it to the address \`${pvCmd("status")}\` prints`);
+  }
+  return addr ?? "http://127.0.0.1:7200";
 }
 
 const TOKEN_LOOKUP_TIMEOUT_MS = LOOKUP_TIMEOUT_MS;
@@ -59,11 +65,6 @@ function tokenCommand(): string | undefined {
 }
 
 /**
- * How to get on without a working token: Touch ID first, since with it on the user
- * approves `pvault get`/`pvault set` from the shell and no token is needed; else a
- * new token, matching whichever source is actually used.
- */
-/**
  * A pvault command line for messages. VAULT_NAME names a vault other than the
  * default one (pvault --vault <name>), e.g. a business vault.
  */
@@ -72,6 +73,11 @@ export function pvCmd(args: string): string {
   return name ? `pvault --vault ${name} ${args}` : `pvault ${args}`;
 }
 
+/**
+ * How to get on without a working token: Touch ID first, since with it on the user
+ * approves `pvault get`/`pvault set` from the shell and no token is needed; else a
+ * new token, matching whichever source is actually used.
+ */
 function createTokenHelp(): string {
   const touchID = `if \`${pvCmd("touchid status")}\` says on, use \`${pvCmd("get <id> ...")}\` or \`${pvCmd("set")}\` ` +
     "from the shell instead (the user approves with Touch ID, no token needed); otherwise ";
@@ -186,11 +192,14 @@ export function assertTokenConfigured(): void {
 }
 
 async function authedFetch(path: string, init: RequestInit): Promise<Response> {
+  // First, and outside the try below: a misconfigured address must say so,
+  // not read as a missing token or "server not running".
+  const url = `${serverAddr()}${path}`;
   const headers = new Headers(init.headers);
   headers.set("Authorization", `Bearer ${await resolveToken()}`);
   let resp: Response;
   try {
-    resp = await fetch(`${serverAddr()}${path}`, { ...init, headers });
+    resp = await fetch(url, { ...init, headers });
   } catch {
     throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
   }

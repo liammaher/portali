@@ -64,7 +64,8 @@ func TestSelectVault(t *testing.T) {
 		t.Errorf("a later --vault was consumed: %v", args)
 	}
 
-	for _, bad := range [][]string{{"pvault", "--vault"}, {"pvault", "--vault", "Studio", "status"}, {"pvault", "--vault", "../x", "status"}} {
+	for _, bad := range [][]string{{"pvault", "--vault"}, {"pvault", "--vault", "", "status"}, {"pvault", "--vault=", "status"},
+		{"pvault", "--vault", "Studio", "status"}, {"pvault", "--vault", "../x", "status"}} {
 		isolatedHome(t)
 		if _, err := selectVault(bad); err == nil {
 			t.Errorf("%v accepted", bad)
@@ -107,8 +108,10 @@ func TestPorts(t *testing.T) {
 	studio := filepath.Join(home, ".pvault-studio")
 	os.MkdirAll(studio, 0700)
 	p, err := ensurePort(studio)
-	if err != nil || p != firstNamedPort+2 {
-		t.Fatalf("studio port = %d, %v; want %d", p, err, firstNamedPort+2)
+	// Not 7201 (busy) nor 7202 (another vault's); the next free one, which
+	// is 7203 unless something on this machine already listens there.
+	if err != nil || p <= firstNamedPort+1 || p > lastNamedPort {
+		t.Fatalf("studio port = %d, %v; want above %d", p, err, firstNamedPort+1)
 	}
 	// It is kept, and read back by serverAddr.
 	if p2, _ := ensurePort(studio); p2 != p {

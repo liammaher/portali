@@ -47,6 +47,7 @@ type Household struct {
 // householdField reports the fields Household decrypts.
 func householdField(id string) bool {
 	member, local := SplitPerson(id)
+	local = strings.ToLower(local) // IDs ignore case, like validation (Ruolo.tipo is ruolo.tipo)
 	if member == "" {
 		return local == "famiglia.intestatario_scheda"
 	}
@@ -111,7 +112,7 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 			if values[slug] == nil {
 				values[slug] = map[string]string{}
 			}
-			values[slug][local] = f.Value
+			values[slug][strings.ToLower(local)] = f.Value
 		}
 	}
 

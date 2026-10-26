@@ -24,10 +24,11 @@ func (e *ValidationError) Error() string {
 }
 
 const (
-	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreta|segreti|segrete|chiave|chiavi|credenziale|credenziali)s?[0-9]*`
-	// A trailing number names a second account or card: spid2, cie2. firma
-	// and cns cover a digital signature or CNS (firma_digitale.pin).
-	identityWords = `(?:spid|cieid|cie|firma|cns)[0-9]*`
+	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreta|segreti|segrete|chiave|chiavi|credenziale|credenziali|sblocco)s?[0-9]*`
+	// A trailing number names a second account or card: spid2, cie2. firma,
+	// firmadigitale, cns and smartcard cover a digital signature or CNS
+	// (firma_digitale.pin, cns.puk).
+	identityWords = `(?:spid|cieid|cie|firma|firmadigitale|cns|smartcard)[0-9]*`
 )
 
 var (

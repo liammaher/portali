@@ -43,6 +43,9 @@ func TestPersonAddFields(t *testing.T) {
 	if _, err := personAddFields("giulia", vault.KindPersona, []string{"--relazione", "moglie", "--ruolo", "socio"}); err == nil {
 		t.Error("personal vault accepted --ruolo")
 	}
+	if _, err := personAddFields("giulia", vault.KindPersona, []string{"--relazione", "moglie", "--denominazione", "X SRL"}); err == nil {
+		t.Error("personal vault accepted --denominazione")
+	}
 }
 
 // member add goes through one Touch ID approval scoped to the new member,

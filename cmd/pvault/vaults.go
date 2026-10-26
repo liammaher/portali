@@ -46,6 +46,11 @@ func selectVault(args []string) ([]string, error) {
 		name = v
 	}
 	os.Unsetenv("PVAULT_VAULT")
+	if fromFlag && name == "" {
+		// An empty name (e.g. an unset shell variable) must not quietly mean
+		// the default vault.
+		return nil, errors.New("--vault needs a name, e.g. pvault --vault studio status")
+	}
 	if name == "" {
 		return args, nil
 	}

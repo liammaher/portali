@@ -200,7 +200,7 @@ func checkVaultServer() error {
 	}
 	if u, err := url.Parse(serverAddr()); err != nil || u.Host != status.Addr {
 		if os.Getenv("VAULT_ADDR") == "" {
-			return fmt.Errorf("this vault's server listens on %s, but its port file (%s) says %s — run '%s', then '%s'", status.Addr, portPath(vaultDir()), serverAddr(), pvCmd("lock"), pvCmd("unlock"))
+			return fmt.Errorf("this vault's server listens on %s, but pvault expects %s (from %s, or 7200 without one; a server started with VAULT_PORT needs VAULT_ADDR too) — run '%s', then '%s'", status.Addr, serverAddr(), portPath(vaultDir()), pvCmd("lock"), pvCmd("unlock"))
 		}
 		return fmt.Errorf("VAULT_ADDR %s isn't this vault's server, which listens on %s — set VAULT_ADDR=http://%s or unset it", serverAddr(), status.Addr, status.Addr)
 	}

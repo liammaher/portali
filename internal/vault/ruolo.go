@@ -29,15 +29,13 @@ var ruoloAliases = map[string]string{
 	"rappresentantelegale": "legale_rappresentante", "legalerapp": "legale_rappresentante", "legalrepresentative": "legale_rappresentante",
 	"socia": "socio", "partner": "socio", "shareholder": "socio",
 	"amministratrice": "amministratore", "amministratoreunico": "amministratore", "consigliere": "amministratore",
-	"consigliera": "amministratore", "director": "amministratore",
-	"procuratrice": "procuratore",
-	"responsabiletecnica": "responsabile_tecnico",
-	"dipendenti": "dipendente", "employee": "dipendente", "lavoratore": "dipendente", "lavoratrice": "dipendente",
+	"consigliera": "amministratore", "director": "amministratore", "procuratrice": "procuratore",
+	"responsabiletecnica": "responsabile_tecnico", "dipendenti": "dipendente", "employee": "dipendente",
+	"lavoratore": "dipendente", "lavoratrice": "dipendente",
 	"collaboratrice": "collaboratore", "consulente": "collaboratore", "freelance": "collaboratore",
 	"committente": "cliente", "client": "cliente", "customer": "cliente",
-	"supplier": "fornitore",
+	"supplier": "fornitore", "other": "altro",
 	"impresa": "impresa_esecutrice", "dittaesecutrice": "impresa_esecutrice",
-	"other": "altro",
 }
 
 func init() {

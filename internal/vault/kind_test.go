@@ -91,6 +91,21 @@ func TestKind_FieldRules(t *testing.T) {
 		{impresa, "bianchi:cie.pin", "12345678", true},
 		{impresa, "bianchi:firma_digitale.pin", "12345678", true},
 		{impresa, "bianchi:identity.spid_password", "x", true},
+		// Numbered copies of a person's categories, and secrets that are
+		// always a person's (CIE, CieID, digital signature), are refused as
+		// the business's own data; its own SPID is allowed.
+		{impresa, "identity2.codice_fiscale", "RSSMRA85T10A562S", true},
+		{impresa, "cie2.numero", "CA12345AB", true},
+		{impresa, "identity-2.first_name", "Anna", true},
+		{impresa, "cieid.username", "x", true},
+		{impresa, "custom.cie_pin", "12345678", true},
+		{impresa, "firma.pin", "12345678", true},
+		{impresa, "cns.puk", "12345678", true},
+		{impresa, "spid.provider", "posteid", false},
+		{impresa, "spid2.livello", "2", false},
+		{impresa, "bianchi:firmadigitale.pin", "12345678", true},
+		{impresa, "bianchi:smartcard.pin", "12345678", true},
+		{impresa, "bianchi:cie.codice_sblocco", "12345678", true},
 		// Personal vaults: as before, plus no ruolo.
 		{persona, "identity.codice_fiscale", "RSSMRA85T10A562S", false},
 		{persona, "business.qualita_dichiarante", "titolare", false},
@@ -100,7 +115,11 @@ func TestKind_FieldRules(t *testing.T) {
 		{persona, "leo:ruolo.tipo", "dipendente", true},
 	}
 	for _, tt := range tests {
-		err := tt.v.Set(tt.id, tt.val, "")
+		tier := ""
+		if IsCredentialField(tt.id) || IsPersonalCategory(strings.SplitN(tt.id, ".", 2)[0]) {
+			tier = TierPersonal // only the kind rules may refuse these, not the tier rule
+		}
+		err := tt.v.Set(tt.id, tt.val, tier)
 		var verr *ValidationError
 		switch {
 		case tt.wantFail && !errors.As(err, &verr):
@@ -136,6 +155,9 @@ func TestKind_DocumentRules(t *testing.T) {
 		{impresa, "famiglia", true},
 		{impresa, "bianchi:spid", true},
 		{impresa, "bianchi:cieid_poste", true},
+		{impresa, "cieid", true},
+		{impresa, "cie2", true},
+		{impresa, "spid", false},
 		{persona, "cie", false},
 		{persona, "leo:spid", false},
 		{persona, "ruolo", true},
@@ -164,6 +186,17 @@ func TestKind_PersonRefMessageNamesRuolo(t *testing.T) {
 	err := v.Set("pratiche.cila-rossi_persona", "rossi", "")
 	if err == nil || !strings.Contains(err.Error(), "--ruolo") {
 		t.Errorf("Set naming a missing person = %v, want a hint with --ruolo", err)
+	}
+}
+
+func TestKind_HouseholdIgnoresCategoryCase(t *testing.T) {
+	v := tmpVaultKind(t, KindImpresa)
+	if err := v.Set("bianchi:Ruolo.tipo", "socio", ""); err != nil {
+		t.Fatal(err)
+	}
+	h, err := v.Household(nil, time.Now())
+	if err != nil || len(h.Members) != 1 || h.Members[0].Ruolo["tipo"] != "socio" {
+		t.Fatalf("household = %+v, %v", h, err)
 	}
 }
 
