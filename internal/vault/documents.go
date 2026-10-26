@@ -69,6 +69,9 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if err := checkPersonCategory(category, DocumentScopeID(category)); err != nil {
 		return nil, err
 	}
+	if err := v.checkKindDocument(category); err != nil {
+		return nil, err
+	}
 	name, err := cleanDocumentName(name)
 	if err != nil {
 		return nil, err

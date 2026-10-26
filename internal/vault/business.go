@@ -24,6 +24,36 @@ var qualitaDichiarante = map[string]string{
 	"legale_rapp": "legale_rappresentante",
 }
 
+// formeGiuridiche are the accepted legal forms, in the order the schema lists
+// them. lavoratore_autonomo is a libero professionista or other self-employed
+// person with a partita IVA but no impresa.
+var formeGiuridiche = []string{
+	"ditta_individuale", "lavoratore_autonomo", "srl", "srls", "snc", "sas", "spa", "sapa",
+	"cooperativa", "studio_associato", "stp", "altro",
+}
+
+// formaGiuridicaAliases maps ways of writing a legal form, compared with
+// lettersAndDigits, to its key. Every key also names itself.
+var formaGiuridicaAliases = map[string]string{
+	"ditta": "ditta_individuale", "impresaindividuale": "ditta_individuale",
+	"liberoprofessionista": "lavoratore_autonomo", "professionista": "lavoratore_autonomo", "autonomo": "lavoratore_autonomo",
+	"societaaresponsabilitalimitata": "srl", "srlsemplificata": "srls", "srlunipersonale": "srl",
+	"societainnomecollettivo": "snc", "societainaccomanditasemplice": "sas", "societaperazioni": "spa",
+	"coop": "cooperativa", "societacooperativa": "cooperativa", "scarl": "cooperativa",
+	"associazioneprofessionale": "studio_associato", "societatraprofessionisti": "stp",
+	"other": "altro",
+}
+
+func init() {
+	for _, f := range formeGiuridiche {
+		formaGiuridicaAliases[lettersAndDigits(f)] = f
+	}
+	// Accents fold away in lettersAndDigits-compared words like società.
+	for k, v := range formaGiuridicaAliases {
+		formaGiuridicaAliases[strings.ReplaceAll(k, "societa", "società")] = v
+	}
+}
+
 // isBusinessCategory reports the categories about the user's impresa.
 func isBusinessCategory(category string) bool {
 	return category == "business" || category == "locale"
@@ -46,6 +76,23 @@ func normalizeBusiness(id, category, name, value string) (out string, handled bo
 		}
 	}
 	switch {
+	case key == "business.forma_giuridica":
+		if f, ok := formaGiuridicaAliases[lettersAndDigits(value)]; ok {
+			return f, true, nil
+		}
+		return fail("must be one of " + strings.Join(formeGiuridiche, ", "))
+	case key == "business.cciaa":
+		v := strings.ToUpper(strings.TrimSpace(value))
+		if !reProvincia.MatchString(v) {
+			return fail("must be the provincia's 2-letter sigla (e.g. NA)")
+		}
+		return v, true, nil
+	case key == "business.capitale_sociale":
+		v, ok := normalizeEuro(value)
+		if !ok {
+			return fail("must be an amount in euro (e.g. 10.000,00 or 10000)")
+		}
+		return v, true, nil
 	case key == "business.qualita_dichiarante":
 		if q, ok := qualitaDichiarante[normalizeChoice(value)]; ok {
 			return q, true, nil

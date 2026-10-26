@@ -689,6 +689,38 @@ func TestSchema_Public(t *testing.T) {
 	}
 }
 
+// The schema and status say what kind of vault this is, without auth.
+func TestSchemaAndStatus_Kind(t *testing.T) {
+	env := setup(t)
+	var schema struct {
+		VaultKind  string `json:"vault_kind"`
+		Categories []struct {
+			Name    string   `json:"name"`
+			Subject string   `json:"subject"`
+			Kinds   []string `json:"kinds"`
+		} `json:"categories"`
+	}
+	w := env.doRequest(t, "GET", "/vault/schema", nil, false)
+	if err := json.NewDecoder(w.Body).Decode(&schema); err != nil || schema.VaultKind != vault.KindPersona {
+		t.Fatalf("schema vault_kind = %q, %v", schema.VaultKind, err)
+	}
+	for _, c := range schema.Categories {
+		if c.Name == "ruolo" && (len(c.Kinds) != 1 || c.Kinds[0] != vault.KindImpresa) {
+			t.Errorf("ruolo kinds = %v", c.Kinds)
+		}
+		if c.Name == "identity" && c.Subject != vault.SubjectPersona {
+			t.Errorf("identity subject = %q", c.Subject)
+		}
+	}
+	var status struct {
+		Kind string `json:"kind"`
+	}
+	w = env.doRequest(t, "GET", "/vault/status", nil, false)
+	if err := json.NewDecoder(w.Body).Decode(&status); err != nil || status.Kind != vault.KindPersona {
+		t.Fatalf("status kind = %q, %v", status.Kind, err)
+	}
+}
+
 func TestSetField_WithSuggestion(t *testing.T) {
 	env := setup(t)
 

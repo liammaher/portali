@@ -6,6 +6,7 @@ import "time"
 type VaultStatus struct {
 	Initialized bool           `json:"initialized"`
 	Locked      bool           `json:"locked"`
+	Kind        string         `json:"kind"` // KindPersona or KindImpresa
 	FieldCount  int            `json:"field_count"`
 	Documents   int            `json:"documents"`
 	Categories  map[string]int `json:"categories"`

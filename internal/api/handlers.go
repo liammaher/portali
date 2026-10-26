@@ -402,7 +402,12 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 
 // GET /vault/schema
 func (s *Server) handleSchema(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, vault.RecommendedSchema)
+	// The schema is the same for every vault; vault_kind says which of its
+	// categories this one's own data and people can hold (subject, kinds).
+	writeJSON(w, http.StatusOK, struct {
+		vault.Schema
+		VaultKind string `json:"vault_kind"`
+	}{vault.RecommendedSchema, s.vault.Kind()})
 }
 
 // DELETE /vault/fields/{id...}
