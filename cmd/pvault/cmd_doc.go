@@ -16,6 +16,7 @@ import (
 
 const docUsage = `usage:
   pvault doc add <category> <file> [--sensitivity tier]   e.g. pvault doc add permesso_soggiorno ~/Desktop/permesso.pdf
+                                                          or pvault doc add leo:cie ~/Desktop/cie-leo.pdf
   pvault doc list [category]
   pvault doc get <id> [--out path]
   pvault doc delete <id>`
@@ -47,6 +48,7 @@ func cmdDocAdd() {
 	if err := parseFlags(os.Args[5:], map[string]*string{"--sensitivity": &sensitivity}); err != nil {
 		fatal("%v\n%s", err, docUsage)
 	}
+	checkDocCategory(category)
 	needGrant(category+".documents", "append")
 
 	f, err := os.Open(path)
@@ -85,6 +87,7 @@ func cmdDocList() {
 	path := "/vault/documents"
 	needGrant("*", "read")
 	if args := positionalArgs(os.Args[3:], docUsage, 0, 1); len(args) == 1 {
+		checkDocCategory(args[0])
 		path += "?" + url.Values{"category": {args[0]}}.Encode()
 		needGrant(args[0]+".documents", "read")
 	}
@@ -100,8 +103,20 @@ func cmdDocList() {
 		fmt.Println("No documents stored.")
 		return
 	}
+	width := 20
 	for _, d := range docs {
-		fmt.Printf("%s  %-20s %-40s %8s  %s  [%s]\n", d.ID, d.Category, d.Name, humanSize(d.Size), d.CreatedAt.Format("2006-01-02"), d.Sensitivity)
+		width = max(width, len(d.Category))
+	}
+	for _, d := range docs {
+		fmt.Printf("%s  %-*s %-40s %8s  %s  [%s]\n", d.ID, width, d.Category, d.Name, humanSize(d.Size), d.CreatedAt.Format("2006-01-02"), d.Sensitivity)
+	}
+}
+
+// checkDocCategory fails on a malformed category before any prompt, so the
+// Touch ID prompt names a real one.
+func checkDocCategory(category string) {
+	if !vault.ValidCategoryName(category) {
+		fatal("invalid category %q: only letters, digits, underscore and hyphen, with an optional member: prefix (e.g. leo:cie)", category)
 	}
 }
 

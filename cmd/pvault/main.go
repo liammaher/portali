@@ -50,6 +50,8 @@ func main() {
 		cmdRevokeServiceToken()
 	case "doc":
 		cmdDoc()
+	case "member":
+		cmdMember()
 	case "expiring":
 		cmdExpiring()
 	case "onboard":
@@ -80,9 +82,11 @@ Commands:
   serve                            Run server in foreground
   status                           Show vault status
   schema                           Show recommended field names (--json for raw JSON)
-  set <id> [value]                 Set a field; leave out the value to type it hidden (for secrets)
+  set <id> [value]                 Set a field; leave out the value to type it hidden (for secrets).
+                                   A family member's fields are <slug>:<id>, e.g. leo:cie.numero
   get <id> [<id>...]               Get field values (up to 10; several print as JSON)
-  list [category]                  List fields
+  list [category | slug: | slug:category]
+                                   List fields (yours, or a family member's)
   delete <id>                      Delete a field
   set-sensitivity <id> <tier>      Set field sensitivity (public|standard|sensitive|critical|personal)
   export [--include-personal]      Export decrypted fields as JSON (personal fields left out by default)
@@ -98,6 +102,12 @@ Commands:
   doc list [category]              List stored documents
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
+  member list                      List family members (relazione, age, stato di famiglia)
+  member show <slug>               Show a family member's fields
+  member add <slug> --relazione <r> [--nome --cognome --codice-fiscale --data-nascita --sesso]
+                                   Add a family member (spouse, child, parent...)
+  member remove <slug>             Delete a family member's fields and documents
+  member migrate [--dry-run]       Turn old nucleo_familiare.membro<N> fields into members
   ui                               Open vault onboarding form in browser
   touchid enable|disable|status    Approve requests with Touch ID instead of typing the password
   create-service-token <consumer> --scope <patterns> [--access read|append|write]
