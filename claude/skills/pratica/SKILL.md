@@ -95,7 +95,13 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
 - `direct: <id>`: that field. `concat: [a, b]`: the fields joined in order.
 - `fallback: [a, b]`: the first one with a value (keep its sibling fields from the
   same category, as the field's `notes` say).
-- `repeat: <cat>.membro<N>_*`: one row per N (`pvault list <cat>` to see how many).
+- `repeat: famiglia`: one row per family member in the user's stato di famiglia
+  (`vault_household` or `pvault member list`; members whose `famiglia.stato_famiglia`
+  is `si`), each mapped from `<slug>:identity.*`, with `relazione_label` (moglie,
+  figlia) for the form's rapporto/parentela. Read their fields with one
+  `pvault get <slug>:identity.first_name ...` or a `*:identity.*` scope.
+  The library's older `repeat: nucleo_familiare.membro<N>_*` means the same thing
+  until it is updated: read it as `repeat: famiglia`.
 - `ask: <question>`: not in the vault; ask the user. `blank_with_reason`: leave empty.
 
 An ID the vault schema doesn't list yet (the library's `contract/extensions.json`)
@@ -112,7 +118,8 @@ whether they'd rather approve each one or run one token command for `pratiche.*`
 stored at a time (a new one replaces the last), so work in two phases (vault skill §4):
 
 - **Preparing**: `--access append` scoped to exactly the form's categories plus
-  `pratiche.*`. It can read them, open the pratica and add missing fields, but
+  `pratiche.*` (family members' data needs their prefix: `*:identity.*,*:famiglia.*`
+  for a list of conviventi, `leo:*` for a pratica about leo). It can read them, open the pratica and add missing fields, but
   never overwrite your data. When a portal login is involved, add
   `preferences.accesso_pa,spid.provider` to the scope (exact fields, not whole categories).
 - **Tracking** (step 6, overwriting `stato` and friends): `--access write` scoped
@@ -130,6 +137,13 @@ Slug: lower-case words joined by hyphens, `<topic>-<procedure>-<year>`, e.g.
 `tari-iscrizione-2026`. Fields are `pratiche.<slug>_<campo>`; the vault validates them
 (`/vault/schema` lists the campi, stati and canali). Set at least `titolo`, `ente`,
 `stato`, `canale`, `destinatario`, `data_scadenza`, `playbook` and `prossimo_passo`.
+
+When the pratica is for a family member (a child's CIE, a parent's ISEE), set
+`persona` to their slug: `pvault expiring` then labels its deadline with them. The
+user still signs and submits; for a minor check `<slug>:famiglia.genitori` (both
+parents usually have to consent, e.g. CIE valid for travel, SPID minori, INPS delega),
+and for an adult `<slug>:famiglia.rappresentanza` (tutore, amministratore di sostegno,
+delega) before acting in their name.
 
 Keep `stato` and `prossimo_passo` current: they are what the next session reads first.
 `data_scadenza` shows in `pvault expiring` until `stato` is `completata`,

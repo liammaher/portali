@@ -27,7 +27,7 @@ With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the pa
 
 ## Fields
 
-Fields use dot notation: `category.field_name`.
+Fields use dot notation: `category.field_name`. A family member's fields have their slug in front: `leo:identity.first_name` (see `pvault member`).
 
 ```sh
 pvault set identity.full_name "Mario Rossi"
@@ -40,6 +40,8 @@ pvault get identity.full_name
 pvault get identity.full_name residenza.comune      # Several fields as JSON (max 10)
 pvault list                      # All fields
 pvault list identity             # One category
+pvault list leo:                 # Everything about family member leo
+pvault list leo:cie              # One of leo's categories
 pvault delete identity.date_of_birth
 pvault export                    # All fields as JSON
 ```
@@ -67,7 +69,7 @@ pvault set-sensitivity preferences.timezone public
 
 ## Dates and expiry tracking
 
-Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `nucleo_familiare.membro1_data_nascita`), `date_of_<x>` or `<x>_date` (e.g. `identity.date_of_birth`) must be a real calendar date; hyphens count as underscores, and names like `date_format` are not treated as dates. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
+Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `leo:cie.data_scadenza`), `date_of_<x>` or `<x>_date` (e.g. `identity.date_of_birth`) must be a real calendar date; hyphens count as underscores, and names like `date_format` are not treated as dates. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
 
 `pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`).
 
@@ -141,8 +143,21 @@ POST /vault/session                      # { password, secret_key?, ttl? } → {
 ### Expiry
 
 ```
-GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fields and open pratiche deadlines
+GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fields and open pratiche deadlines;
+                                         #   a family member's carry "member": "<slug>"
 ```
+
+### Family members
+
+```
+GET    /vault/members                    # { intestatario_scheda?, members: [{ slug, famiglia, first_name, last_name, age, minor,
+                                         #   anpr_relazione, relazione_label, fields, documents }] } — only what the caller's scope reaches
+DELETE /vault/members/{slug}             # Session only: delete a member's fields and documents, revoke tokens naming them
+                                         #   (409 member_in_use while another field names them)
+POST   /vault/members/migrate[?dry_run=1]  # Session only: nucleo_familiare.membro<N>_* → members
+```
+
+Field IDs and document categories take the member prefix everywhere (`/vault/fields/leo:cie.numero`, `?category=leo:cie`). The public `/vault/status` counts only your own data.
 
 ### Fields
 

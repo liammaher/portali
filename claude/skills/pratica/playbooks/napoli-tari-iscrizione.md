@@ -62,12 +62,12 @@ Phone: 081 795 3711, every day 9:00–13:00.
 | Appartamento sito in via | `domicilio.*` if set, else `residenza.*`, with `abitazione.piano` and `*.interno` |
 | Sez., Foglio, Part., Sub. | `abitazione.catasto_sezione`, `_foglio`, `_particella`, `_subalterno` |
 | Superficie calpestabile in mq | `abitazione.superficie_calpestabile_mq` |
-| Conviventi (nome, luogo e data di nascita, rapporto, C.F.) | `nucleo_familiare.membro<N>_*` |
+| Conviventi (nome, luogo e data di nascita, rapporto, C.F.) | `repeat: famiglia`: each member with `<slug>:famiglia.stato_famiglia` si: `<slug>:identity.{last_name,first_name,birth_comune,date_of_birth,codice_fiscale}`, rapporto = `relazione_label` from `vault_household` / `pvault member list` |
 | Cod.Contr. | leave blank on a new iscrizione; the Comune assigns it (`tari.codice_contribuente`) |
 
 Tokens for this pratica (see the skill's step 2):
 
-- preparing: `--scope "identity.*,residenza.*,domicilio.*,abitazione.*,nucleo_familiare.*,tari.*,pratiche.*" --access append`
+- preparing: `--scope "*:identity.*,*:famiglia.*,residenza.*,domicilio.*,abitazione.*,tari.*,pratiche.*" --access append`
 - tracking: `--scope "pratiche.*,tari.*" --access write`
 
 Leave `locazione.*` out: the form doesn't need the rent or the landlord.
@@ -92,7 +92,8 @@ Signature, sending the email/PEC (or the raccomandata), paying the F24.
 - The Comune replies (or a payment notice arrives) with the Cod.Contr.: save
   `tari.codice_contribuente`, `tari.data_dichiarazione`, `tari.protocollo`; from the notice
   also `tari.superficie_tassata_mq` and `tari.componenti_tassati`, and check they match
-  `abitazione.superficie_calpestabile_mq` and the household.
+  `abitazione.superficie_calpestabile_mq` and the household (1 + the members whose
+  `famiglia.stato_famiglia` is si).
 - Close the pratica: `_stato` = `completata`, `_data_esito`.
 
 ## Gotchas
