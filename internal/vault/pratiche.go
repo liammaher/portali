@@ -118,7 +118,7 @@ func praticheDescription() string {
 		"canale is one of " + strings.Join(praticaCanali, ", ") + ". " +
 		"data_scadenza is the deadline, tracked by 'pvault expiring' until stato is " + orList(praticaStatiChiusi) + ". " +
 		"playbook names the procedure's playbook file. " +
-		"persona is who it is for: io (you, the default) or a family member's slug. Attach submitted files with 'pvault doc add pratiche <file>'."
+		"persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche <file>'."
 }
 
 // normalizePratica applies the pratiche rules. handled is false outside the
