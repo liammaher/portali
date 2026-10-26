@@ -332,6 +332,8 @@ func GetSchemaField(id string) *SchemaField {
 // codice fiscale fields (e.g. nucleo_familiare.membro1_codice_fiscale)
 // default to "sensitive".
 func DefaultSensitivity(id string) string {
+	// A member's field (leo:cie.numero) defaults like the owner's.
+	_, id = SplitMember(id)
 	// Validation ignores case, so the default must too (financial.SSN is
 	// still critical).
 	if f, ok := schemaIndex[strings.ToLower(id)]; ok {

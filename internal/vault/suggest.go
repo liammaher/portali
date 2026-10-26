@@ -139,7 +139,17 @@ var synonyms = map[string]string{
 // SuggestCanonical returns a suggestion if the given field ID is not canonical
 // but matches a synonym or is similar to a canonical field in the same category.
 // Returns nil if the field is already canonical or no match is found.
+// A member's field (leo:identity.nome) gets the member's canonical ID.
 func SuggestCanonical(id string) *Suggestion {
+	member, local := SplitMember(id)
+	s := suggestCanonical(local)
+	if s != nil && member != "" {
+		s.Canonical = member + ":" + s.Canonical
+	}
+	return s
+}
+
+func suggestCanonical(id string) *Suggestion {
 	if IsCanonicalField(id) {
 		return nil
 	}
