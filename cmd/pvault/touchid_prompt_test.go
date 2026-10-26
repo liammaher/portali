@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -67,6 +68,34 @@ func TestTouchIDHelper_PromptWording(t *testing.T) {
 		}
 		if got := strings.TrimSpace(string(out)); got != c.want {
 			t.Errorf("%q:\n got  %q\n want %q", c.args, got, c.want)
+		}
+	}
+}
+
+// With several vaults the prompt names the one a fingerprint is for.
+func TestTouchIDHelper_PromptNamesVault(t *testing.T) {
+	helper := buildDebugHelper(t)
+	cases := []struct {
+		dir  string
+		args []string
+		want string
+	}{
+		{".pvault-studio", []string{"--scope", "business.*"}, "read all your business fields and documents from your studio vault for 2 minutes"},
+		{".pvault-studio", []string{"--scope", "*"}, "read everything in your studio vault, everyone's data in it included for 2 minutes"},
+		{".pvault-studio", nil, "get full access to your studio vault, including settings and agent tokens, for 2 minutes"},
+		{".pvault", []string{"--scope", "*"}, "read everything in your vault, your family's data included for 2 minutes"},
+		{"elsewhere", []string{"--scope", "cie.*"}, "read all your cie fields and documents from your vault for 2 minutes"},
+	}
+	for _, c := range cases {
+		cmd := exec.Command(helper, append([]string{"describe-grant"}, c.args...)...)
+		cmd.Env = append(os.Environ(), "VAULT_DIR="+filepath.Join(t.TempDir(), c.dir))
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Errorf("%s %q: %v\n%s", c.dir, c.args, err, out)
+			continue
+		}
+		if got := strings.TrimSpace(string(out)); got != c.want {
+			t.Errorf("%s %q:\n got  %q\n want %q", c.dir, c.args, got, c.want)
 		}
 	}
 }

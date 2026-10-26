@@ -6,6 +6,11 @@ import (
 )
 
 func main() {
+	args, err := selectVault(os.Args)
+	if err != nil {
+		fatal("%v", err)
+	}
+	os.Args = args
 	if len(os.Args) < 2 {
 		printUsage()
 		os.Exit(1)
@@ -72,11 +77,15 @@ func main() {
 func printUsage() {
 	fmt.Println(`pvault — Personal Context Protocol vault
 
-Usage: pvault <command> [args]
+Usage: pvault [--vault <name>] <command> [args]
+
+  --vault <name> (or PVAULT_VAULT) picks another vault, e.g. a business vault:
+  ~/.pvault-<name>, with its own server, port and Touch ID. Without it: ~/.pvault.
 
 Commands:
   onboard                          Create vault, unlock, and populate common fields
-  init                             Create a new vault
+  init [--impresa]                 Create a new vault; --impresa makes a business vault, whose own data
+                                   is the business's and whose people each have a ruolo
   unlock                           Unlock vault (starts background server)
   lock                             Lock vault (stops server)
   serve                            Run server in foreground
@@ -103,10 +112,12 @@ Commands:
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
   person list                      List the other people in your vault: family members
-                                   (relazione, age, stato di famiglia)
+                                   (relazione, age, stato di famiglia), or a business's people (ruolo)
   person show <slug>               Show a person's fields
   person add <slug> --relazione <r> [--nome --cognome --codice-fiscale --data-nascita --sesso]
                                    Add a family member (spouse, child, parent...)
+  person add <slug> --ruolo <r> [--nome --cognome --denominazione ...]
+                                   In a business vault: add its titolare, a socio, an employee, a client...
   person remove <slug>             Delete a person's fields and documents
   person migrate [--dry-run]       Turn old nucleo_familiare.membro<N> fields into people
                                    (pvault member ... is an alias for pvault person ...)

@@ -35,10 +35,10 @@ exit $code
 }
 
 func resetTouchID(t *testing.T) {
-	touchIDCached, touchIDWarned = nil, false
+	touchIDCached = nil
 	cliGrant.scope, cliGrant.access = "", ""
 	t.Cleanup(func() {
-		touchIDCached, touchIDWarned = nil, false
+		touchIDCached = nil
 		cliGrant.scope, cliGrant.access = "", ""
 	})
 }
@@ -82,16 +82,14 @@ func TestTouchIDGrant_ExitCodes(t *testing.T) {
 	}
 }
 
-// The helper only talks to its fixed address; with another VAULT_ADDR pvault
-// must not use it, or this vault's password would go to the wrong server.
-func TestTouchIDEnrolled_ServerMismatch(t *testing.T) {
+// The helper never talks TCP: it sends the password only over this vault's
+// socket. So another VAULT_ADDR (a named vault's port) doesn't turn Touch ID
+// off; checkVaultServer, run before every prompt, refuses a VAULT_ADDR that
+// isn't the verified server's (TestCheckVaultServer_RefusesOtherAddress).
+func TestTouchIDEnrolled_AnyServerAddress(t *testing.T) {
 	fakeTouchID(t, "http://127.0.0.1:7200", 0)
 	t.Setenv("VAULT_ADDR", "http://127.0.0.1:7299")
-	if touchIDEnrolled() {
-		t.Fatal("Touch ID must be skipped when VAULT_ADDR differs from the helper's server")
-	}
-	t.Setenv("VAULT_ADDR", "")
 	if !touchIDEnrolled() {
-		t.Fatal("default address should match")
+		t.Fatal("Touch ID should not depend on VAULT_ADDR")
 	}
 }

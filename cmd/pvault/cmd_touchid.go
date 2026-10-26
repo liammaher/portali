@@ -36,9 +36,7 @@ func cmdTouchID() {
 		case st.helper == "":
 			fmt.Printf("Touch ID: not available (%s is not installed next to pvault)\n", touchIDHelperName)
 		case !st.enrolled:
-			fmt.Println("Touch ID: off — run 'pvault touchid enable'")
-		case st.addr != serverAddr():
-			fmt.Printf("Touch ID: on, but only for the vault at %s (VAULT_ADDR is %s)\n", st.addr, serverAddr())
+			fmt.Printf("Touch ID: off — run 'pvault %stouchid enable'\n", vaultFlag())
 		default:
 			fmt.Println("Touch ID: on")
 		}

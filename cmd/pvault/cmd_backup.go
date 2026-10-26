@@ -122,8 +122,13 @@ func cmdRestore() {
 		return
 	}
 
+	// A port isn't part of the backup: the restored vault gets one here.
+	if _, err := ensurePort(dir); err != nil {
+		fatal("restored, but %v", err)
+	}
 	fmt.Printf("Restored the backup made %s (%d fields, %d documents) into %s.\n",
 		info.Created.Local().Format("2006-01-02 15:04"), info.Fields, info.Documents, dir)
-	fmt.Println("Next: run 'pvault unlock'. If you use Touch ID, run 'pvault touchid enable' again,")
-	fmt.Println("and 'pvault backup --to <folder>' if the backup folder isn't on this machine.")
+	v := vaultFlag()
+	fmt.Printf("Next: run 'pvault %sunlock'. If you use Touch ID, run 'pvault %stouchid enable' again,\n", v, v)
+	fmt.Printf("and 'pvault %sbackup --to <folder>' if the backup folder isn't on this machine.\n", v)
 }

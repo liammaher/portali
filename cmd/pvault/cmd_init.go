@@ -7,8 +7,19 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
+const initUsage = `usage: pvault [--vault <name>] init [--impresa]
+  --impresa creates a business vault: its own data is the business's, and its
+  people (titolare, soci, employees, clients) each have a ruolo.
+  --vault <name> creates it in ~/.pvault-<name>, with its own server port.`
+
 func cmdInit() {
-	positionalArgs(os.Args[2:], "usage: pvault init", 0, 0)
+	opts := vault.InitOptions{}
+	for _, arg := range os.Args[2:] {
+		if arg != "--impresa" || opts.Kind != "" {
+			fatal(initUsage)
+		}
+		opts.Kind = vault.KindImpresa
+	}
 	dir := vaultDir()
 	if err := vault.CanInit(dir); err != nil {
 		fatal("%v", err)
@@ -30,18 +41,27 @@ func cmdInit() {
 		fatal("passwords do not match")
 	}
 
-	sk, err := vault.Init(dir, pw)
+	sk, err := vault.InitWithOptions(dir, pw, opts)
 	if err != nil {
 		fatal("%v", err)
 	}
+	port, err := ensurePort(dir)
+	if err != nil {
+		fatal("vault created, but %v", err)
+	}
 
-	fmt.Println("Vault initialized successfully.")
+	if opts.Kind == vault.KindImpresa {
+		fmt.Println("Business vault initialized successfully.")
+	} else {
+		fmt.Println("Vault initialized successfully.")
+	}
 	fmt.Println()
 	fmt.Println("Your secret key (save this somewhere safe):")
 	fmt.Printf("  %s\n", sk)
 	fmt.Println()
 	fmt.Printf("Secret key also saved to: %s\n", secretKeyPath())
 	fmt.Printf("Vault database: %s/vault.db\n", dir)
+	fmt.Printf("Server address: http://127.0.0.1:%d\n", port)
 	fmt.Println()
-	fmt.Println("Next: run 'pvault unlock' to start using your vault.")
+	fmt.Printf("Next: run 'pvault %sunlock' to start using your vault.\n", vaultFlag())
 }

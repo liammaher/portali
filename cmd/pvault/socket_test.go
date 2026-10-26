@@ -263,4 +263,19 @@ func TestCheckVaultServer_RefusesOtherAddress(t *testing.T) {
 	if err := checkVaultServer(); err != nil {
 		t.Fatalf("matching VAULT_ADDR: %v", err)
 	}
+	// Without VAULT_ADDR the address comes from the vault's port file, and
+	// the verified server must listen there too.
+	t.Setenv("VAULT_ADDR", "")
+	if err := writePort(vaultDir(), 7300); err != nil {
+		t.Fatal(err)
+	}
+	if err := checkVaultServer(); err != nil {
+		t.Fatalf("port file matching the server: %v", err)
+	}
+	if err := writePort(vaultDir(), 7301); err != nil {
+		t.Fatal(err)
+	}
+	if err := checkVaultServer(); err == nil {
+		t.Fatal("a port file naming another port was accepted")
+	}
 }

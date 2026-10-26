@@ -43,7 +43,7 @@ func cmdUnlock() {
 		}
 		if !verified {
 			stopOwnServer()
-			fatal("vault server didn't start in time — run 'pvault unlock' again")
+			fatal("vault server didn't start in time — run '%s' again", pvCmd("unlock"))
 		}
 		unlockRunningServer(true)
 		return
@@ -126,7 +126,7 @@ func checkCredentials(pw, sk string) error {
 	// vault.Open creates a missing database, which would make a later
 	// 'pvault init' refuse; check first.
 	if _, err := os.Stat(filepath.Join(vaultDir(), "vault.db")); err != nil {
-		return fmt.Errorf("no vault found in %s — run 'pvault init' first", vaultDir())
+		return fmt.Errorf("no vault found in %s — run '%s' first", vaultDir(), pvCmd("init"))
 	}
 	v, err := vault.Open(vaultDir())
 	if err != nil {

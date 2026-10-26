@@ -22,6 +22,8 @@ const personUsage = `usage:
   pvault person add <slug> --relazione <relazione> [--nome N] [--cognome C] [--codice-fiscale CF]
                     [--data-nascita YYYY-MM-DD] [--sesso M|F]
       e.g. pvault person add giulia --relazione moglie --nome Giulia
+  pvault --vault <name> person add <slug> --ruolo <ruolo> [--nome N] [--cognome C] [--denominazione D] ...
+      in a business vault, e.g. pvault --vault studio person add rossi --ruolo cliente --nome Mario
   pvault person remove <slug>
   pvault person migrate [--dry-run]
 Another person's fields are <slug>:<category>.<field>, e.g. pvault set leo:cie.numero CA12345AB.
@@ -68,16 +70,28 @@ func fetchHousehold() (*vault.Household, error) {
 }
 
 func cmdPersonList() {
-	needGrant("*:famiglia.*,*:identity.*", "read")
+	kind, err := serverKind()
+	if err != nil {
+		fatal("%v", err)
+	}
+	if kind == vault.KindImpresa {
+		needGrant("*:ruolo.*,*:identity.*,*:business.denominazione", "read")
+	} else {
+		needGrant("*:famiglia.*,*:identity.*", "read")
+	}
 	h, err := fetchHousehold()
 	if err != nil {
 		fatal("%v", err)
 	}
-	fmt.Print(formatHousehold(h))
+	fmt.Print(formatHousehold(h, kind))
 }
 
-// formatHousehold prints one line per member.
-func formatHousehold(h *vault.Household) string {
+// formatHousehold prints one line per person: their relazione (a personal
+// vault) or ruolo (a business vault), name and the facts that matter.
+func formatHousehold(h *vault.Household, kind string) string {
+	if kind == vault.KindImpresa {
+		return formatBusinessPeople(h)
+	}
 	if len(h.Members) == 0 {
 		return "No family members yet. Add one with 'pvault person add <slug> --relazione <relazione>'.\n"
 	}
@@ -144,7 +158,7 @@ func cmdPersonShow(slug string) {
 		}
 	}
 	if len(fields) == 0 {
-		fatal("no fields for %s (see 'pvault person list')", slug)
+		fatal("no fields for %s (see '%s')", slug, pvCmd("person list"))
 	}
 	printFields(fields)
 }
@@ -170,10 +184,50 @@ func printFields(fields []vault.FieldInfo) {
 	}
 }
 
-// personAddFlags maps person add's options to the person's fields, in the
-// order they're written (relazione first, so the person exists).
+// formatBusinessPeople is formatHousehold for a business vault.
+func formatBusinessPeople(h *vault.Household) string {
+	if len(h.Members) == 0 {
+		return "No people yet. Add one with 'pvault " + vaultFlag() + "person add <slug> --ruolo <ruolo>'.\n"
+	}
+	var b strings.Builder
+	width := len("slug")
+	for _, m := range h.Members {
+		width = max(width, len(m.Slug))
+	}
+	for _, m := range h.Members {
+		ruolo := strings.ReplaceAll(strings.ReplaceAll(m.Ruolo["tipo"], "_", " "), ",", ", ")
+		if ruolo == "" {
+			ruolo = "(no ruolo)"
+		}
+		parts := []string{ruolo}
+		name := strings.TrimSpace(m.FirstName + " " + m.LastName)
+		if m.Denominazione != "" {
+			name = m.Denominazione
+		}
+		if name != "" {
+			parts = append(parts, name)
+		}
+		if q := m.Ruolo["quota_percentuale"]; q != "" {
+			parts = append(parts, "quota "+q+"%")
+		}
+		if d := m.Ruolo["data_inizio"]; d != "" {
+			parts = append(parts, "dal "+d)
+		}
+		if d := m.Ruolo["data_fine"]; d != "" {
+			parts = append(parts, "fino al "+d)
+		}
+		fmt.Fprintf(&b, "%-*s  %s\n", width, m.Slug, strings.Join(parts, " · "))
+	}
+	return b.String()
+}
+
+// personAddFlags maps person add's options to the person's fields. The
+// relation (relazione in a personal vault, ruolo in a business one) is
+// written first, so the person exists before the rest.
 var personAddFlags = []struct{ flag, field string }{
 	{"--relazione", "famiglia.relazione"},
+	{"--ruolo", "ruolo.tipo"},
+	{"--denominazione", "business.denominazione"},
 	{"--nome", "identity.first_name"},
 	{"--cognome", "identity.last_name"},
 	{"--codice-fiscale", "identity.codice_fiscale"},
@@ -184,7 +238,7 @@ var personAddFlags = []struct{ flag, field string }{
 // personAddFields reads person add's options into the fields to write, and
 // checks every value first, so a bad one (e.g. the codice fiscale) is
 // refused before anything is written or any prompt is shown.
-func personAddFields(slug string, args []string) ([][2]string, error) {
+func personAddFields(slug, kind string, args []string) ([][2]string, error) {
 	values := make([]string, len(personAddFlags))
 	flags := map[string]*string{}
 	for i, f := range personAddFlags {
@@ -193,7 +247,15 @@ func personAddFields(slug string, args []string) ([][2]string, error) {
 	if err := parseFlags(args, flags); err != nil {
 		return nil, err
 	}
-	if values[0] == "" {
+	relazione, ruolo := values[0], values[1]
+	switch {
+	case kind == vault.KindImpresa && relazione != "":
+		return nil, errors.New("this is a business vault: people have a --ruolo, not a --relazione")
+	case kind == vault.KindImpresa && ruolo == "":
+		return nil, errors.New("--ruolo is required (e.g. titolare, socio, dipendente, cliente)")
+	case kind != vault.KindImpresa && ruolo != "":
+		return nil, errors.New("--ruolo is for business vaults; family members have a --relazione")
+	case kind != vault.KindImpresa && relazione == "":
 		return nil, errors.New("--relazione is required (e.g. coniuge, figlio, genitore)")
 	}
 	var out [][2]string
@@ -215,15 +277,23 @@ func cmdPersonAdd() {
 	}
 	slug := os.Args[3]
 	checkSlug(slug)
-	fields, err := personAddFields(slug, os.Args[4:])
+	kind, err := serverKind()
+	if err != nil {
+		fatal("%v", err)
+	}
+	fields, err := personAddFields(slug, kind, os.Args[4:])
 	if err != nil {
 		fatal("%v\n%s", err, personUsage)
 	}
-	needGrant(slug+":famiglia.*,"+slug+":identity.*", "append")
+	if kind == vault.KindImpresa {
+		needGrant(slug+":ruolo.*,"+slug+":identity.*,"+slug+":business.*", "append")
+	} else {
+		needGrant(slug+":famiglia.*,"+slug+":identity.*", "append")
+	}
 	if err := addPerson(slug, fields); err != nil {
 		fatal("%v", err)
 	}
-	fmt.Printf("Added %s. Their fields are %s:<category>.<field>, e.g. pvault set %s:cie.numero <numero>\n", slug, slug, slug)
+	fmt.Printf("Added %s. Their fields are %s:<category>.<field>, e.g. pvault %sset %s:cie.numero <numero>\n", slug, slug, vaultFlag(), slug)
 }
 
 // addPerson writes a new person's fields, refusing a slug that already has
@@ -239,7 +309,7 @@ func addPerson(slug string, fields [][2]string) error {
 			resp.Body.Close()
 		case http.StatusOK:
 			resp.Body.Close()
-			return fmt.Errorf("%s already has %s: change it with 'pvault set %s <value>', or pick another slug", slug, f[0], f[0])
+			return fmt.Errorf("%s already has %s: change it with '%s', or pick another slug", slug, f[0], pvCmd("set "+f[0]+" <value>"))
 		default:
 			return apiResult(resp, nil) // closes the body after reading the server's reason
 		}
@@ -331,7 +401,7 @@ func formatMigration(r *vault.MigrationReport) string {
 		fmt.Fprintf(&b, "Left %s: %s\n", id, r.Left[id])
 	}
 	if r.DryRun {
-		b.WriteString("Dry run: nothing changed. Run 'pvault person migrate' to apply.\n")
+		b.WriteString("Dry run: nothing changed. Run '" + pvCmd("person migrate") + "' to apply.\n")
 	}
 	return b.String()
 }

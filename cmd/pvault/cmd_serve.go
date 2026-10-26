@@ -59,7 +59,8 @@ func cmdServe() {
 	// Note: Go strings are immutable; setting pw="" does not zero heap memory.
 	// Accept this limitation — use []byte for passwords if zeroing is critical.
 
-	addr := "127.0.0.1:7200"
+	// VAULT_PORT, else the vault's port file (7200 without one).
+	addr := fmt.Sprintf("127.0.0.1:%d", vaultPort())
 	if a := os.Getenv("VAULT_PORT"); a != "" {
 		addr = "127.0.0.1:" + a
 	}

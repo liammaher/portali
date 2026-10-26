@@ -63,7 +63,7 @@ func startBackgroundServer(pw, sk string) (verified bool, err error) {
 			if reason := lastLine(logFile); reason != "" {
 				return false, fmt.Errorf("vault server exited during startup: %s", strings.TrimPrefix(reason, "Error: "))
 			}
-			return false, errors.New("vault server exited during startup — is something else using " + serverAddr() + "? Run 'pvault serve' to see the error")
+			return false, errors.New("vault server exited during startup — is something else using " + serverAddr() + "? Run '" + pvCmd("serve") + "' to see the error")
 		case <-deadline:
 			writePID(cmd.Process.Pid)
 			return false, nil
@@ -76,7 +76,7 @@ func startBackgroundServer(pw, sk string) (verified bool, err error) {
 				// Our server unlocks before it binds, so a locked answer
 				// comes from some other server on the port.
 				cmd.Process.Kill()
-				return false, fmt.Errorf("server on %s is not the one we started (vault still locked) — run 'pvault lock' then 'pvault unlock'", serverAddr())
+				return false, fmt.Errorf("server on %s is not the one we started (vault still locked) — run '%s' then '%s'", serverAddr(), pvCmd("lock"), pvCmd("unlock"))
 			}
 			writePID(cmd.Process.Pid)
 			return true, nil

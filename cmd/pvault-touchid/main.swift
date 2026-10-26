@@ -33,16 +33,6 @@ let maxScopePatterns = 10
 let maxPatternLength = 100  // keeps every pattern visible in the prompt
 let notSetUp = "Touch ID is not set up — run 'pvault touchid enable'"
 
-// The TCP address pvault must use for the tokens this helper hands out. The
-// password itself never goes over TCP. Debug builds (-D DEBUG) accept
-// VAULT_ADDR for tests.
-func serverAddr() -> String {
-    #if DEBUG
-    if let a = ProcessInfo.processInfo.environment["VAULT_ADDR"], !a.isEmpty { return a }
-    #endif
-    return "http://127.0.0.1:7200"
-}
-
 // vaultDir matches pvault's: VAULT_DIR, else $HOME/.pvault (Go's
 // os.UserHomeDir reads $HOME, which NSHomeDirectory ignores).
 func vaultDir() -> String {
@@ -52,6 +42,20 @@ func vaultDir() -> String {
     }
     let home = env["HOME"].flatMap { $0.isEmpty ? nil : $0 } ?? NSHomeDirectory()
     return (home as NSString).appendingPathComponent(".pvault")
+}
+
+// vaultLabel names the vault in prompts: "your vault" for the default one,
+// "your studio vault" for ~/.pvault-studio (pvault --vault studio), so with
+// several vaults a fingerprint is never given for the wrong one.
+func vaultLabel() -> String {
+    let base = (vaultDir() as NSString).lastPathComponent
+    if base.hasPrefix(".pvault-") {
+        let name = String(base.dropFirst(".pvault-".count))
+        if !name.isEmpty, name.range(of: "\\A[a-z][a-z0-9-]{0,31}\\z", options: .regularExpression) != nil {
+            return "your \(name) vault"
+        }
+    }
+    return "your vault"
 }
 
 func fail(_ msg: String, code: Int32 = 1) -> Never {
@@ -364,7 +368,12 @@ func parseScope(_ scope: String) -> [String] {
 }
 
 func describe(_ pattern: String) -> String {
-    if pattern == "*" { return "everything in your vault, your family's data included" }
+    if pattern == "*" {
+        let label = vaultLabel()
+        return label == "your vault"
+            ? "everything in your vault, your family's data included"
+            : "everything in \(label), everyone's data in it included"
+    }
     // Whose data: yours (no prefix), one person's, or everyone's.
     var whose = "your", all = "all your"
     var rest = Substring(pattern)
@@ -390,7 +399,7 @@ func duration(_ seconds: Int) -> String {
 // grantReason completes macOS's '"pvault-touchid" is trying to …' sentence.
 func grantReason(scope: [String]?, access: String, seconds: Int) -> String {
     guard let scope else {
-        return "get full access to your vault, including settings and agent tokens, for \(duration(seconds))"
+        return "get full access to \(vaultLabel()), including settings and agent tokens, for \(duration(seconds))"
     }
     // "*" covers everything, so it is named alone rather than last in a list.
     let what = (scope.contains("*") ? describe("*") : scope.map(describe).joined(separator: ", ")) + " "
@@ -401,7 +410,7 @@ func grantReason(scope: [String]?, access: String, seconds: Int) -> String {
     case "write": verb = "read, change and delete"
     default: verb = "read"
     }
-    let place = scope.contains("*") ? "" : (access == "read" ? "from your vault " : "in your vault ")
+    let place = scope.contains("*") ? "" : (access == "read" ? "from \(vaultLabel()) " : "in \(vaultLabel()) ")
     return "\(verb) \(what)\(place)for \(duration(seconds))"
 }
 
@@ -469,7 +478,7 @@ func cmdGrant(_ args: [String]) {
 }
 
 func cmdUnlock() {
-    let (status, json) = sendCredentials(reason: "unlock your vault", path: "/vault/unlock")
+    let (status, json) = sendCredentials(reason: "unlock \(vaultLabel())", path: "/vault/unlock")
     switch status {
     case 200: print("unlocked")  // the unlock token is discarded on purpose
     case 409: print("already unlocked")
@@ -501,7 +510,7 @@ func cmdEnroll(_ args: [String]) {
     guard let line = readLine(strippingNewline: true), !line.isEmpty else {
         fail("expected the profile password on stdin")
     }
-    approve("turn on Touch ID for your vault")
+    approve("turn on Touch ID for \(vaultLabel())")
     storeEnrollment(Enrollment(password: line, server: server))
     print("enrolled")
 }
@@ -511,7 +520,6 @@ switch args.first {
 case "status":
     let enrolled = isEnrolled()
     print(enrolled ? "enrolled" : "not enrolled")
-    print("server \(serverAddr())")
     exit(enrolled ? 0 : 3)
 case "enroll":
     cmdEnroll(Array(args.dropFirst()))

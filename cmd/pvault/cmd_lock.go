@@ -60,7 +60,7 @@ func stopOwnServer() bool {
 	if !waitForServerExit(3 * time.Second) {
 		fmt.Fprintln(os.Stderr, "Writing the last backup before locking...")
 		if !waitForServerExit(2 * time.Minute) {
-			fatal("the vault server (pid %d) is still running and may still be unlocked — run 'pvault lock' again", pid)
+			fatal("the vault server (pid %d) is still running and may still be unlocked — run '%s' again", pid, pvCmd("lock"))
 		}
 	}
 	removeLegacySessionFile()
