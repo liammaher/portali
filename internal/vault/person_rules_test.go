@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-// memberRuleIDs are the IDs whose rules a member must share with the owner:
+// personRuleIDs are the IDs whose rules a member must share with the owner:
 // every schema field, the credential tables and the provider-named accounts.
-func memberRuleIDs() []string {
+func personRuleIDs() []string {
 	var ids []string
 	for _, c := range RecommendedSchema.Categories {
 		for _, f := range c.Fields {
@@ -24,8 +24,8 @@ func memberRuleIDs() []string {
 		"business.codice_fiscale", "custom.my_codice_fiscale", "custom.mio_iban", "custom.data_x")
 }
 
-// memberProbeValues exercise every format rule.
-var memberProbeValues = []string{
+// personProbeValues exercise every format rule.
+var personProbeValues = []string{
 	"", "x", "ca12345ab", "CA12345AB", "12345678", "1234 5678", " 80121 ", "8012", "na", "Napoli",
 	" int. 13 ", "2026-01-31", "31/01/2026", "31/02/2026", "rssmra85t10a562s", "RSSMRA85T10A562A",
 	"IT60X0542811101000000123456", "IT 00743110157", "00743110158", "spid", "Poste ID", "A/2",
@@ -34,9 +34,9 @@ var memberProbeValues = []string{
 // A member's field must get exactly the owner's tier defaults, credential
 // treatment and format rules: a rule that missed the prefix would store
 // leo:spid.password or leo:cie.pin where an agent can read it.
-func TestMemberRulesMatchOwner(t *testing.T) {
+func TestPersonRulesMatchOwner(t *testing.T) {
 	for _, prefix := range []string{"x:", "X:", "leo:"} {
-		for _, id := range memberRuleIDs() {
+		for _, id := range personRuleIDs() {
 			pid := prefix + id
 			category := strings.SplitN(id, ".", 2)[0]
 			if IsOwnerOnlyCategory(category) {
@@ -61,7 +61,7 @@ func TestMemberRulesMatchOwner(t *testing.T) {
 			if f := GetSchemaField(strings.ToLower(id)); f != nil && f.For != "" {
 				continue // owner and person fields differ on purpose (TestFamiglia*)
 			}
-			for _, value := range memberProbeValues {
+			for _, value := range personProbeValues {
 				got, gotErr := NormalizeAndValidate(pid, value)
 				want, wantErr := NormalizeAndValidate(id, value)
 				if got != want || errMsg(gotErr) != errMsg(wantErr) {
@@ -72,7 +72,7 @@ func TestMemberRulesMatchOwner(t *testing.T) {
 	}
 }
 
-func TestMemberCredentialsArePersonal(t *testing.T) {
+func TestPersonCredentialsArePersonal(t *testing.T) {
 	for _, id := range []string{"leo:spid.password", "leo:cie.pin", "leo:cie.puk", "Leo:spid.password", "leo:spid_poste.username", "leo:cieid.pin"} {
 		if !IsCredentialField(id) || DefaultSensitivity(id) != TierPersonal {
 			t.Errorf("%s: credential = %v, default tier %q", id, IsCredentialField(id), DefaultSensitivity(id))
@@ -125,7 +125,7 @@ func TestOwnerOnlyCategories(t *testing.T) {
 	}
 }
 
-func TestSuggestCanonical_Member(t *testing.T) {
+func TestSuggestCanonical_Person(t *testing.T) {
 	if s := SuggestCanonical("leo:identity.cf"); s == nil || s.Canonical != "leo:identity.codice_fiscale" {
 		t.Errorf("SuggestCanonical(leo:identity.cf) = %+v", s)
 	}

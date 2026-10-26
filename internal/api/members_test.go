@@ -144,7 +144,7 @@ func TestMembers_RemoveAndMigrate(t *testing.T) {
 		t.Fatalf("remove giulia while named: %d %+v", w.Code, conflict)
 	}
 	w = env.doRequest(t, "DELETE", "/vault/members/leo", nil, true)
-	var out vault.RemovedMember
+	var out vault.RemovedPerson
 	json.NewDecoder(w.Body).Decode(&out)
 	if w.Code != 200 || out.Fields != 6 || len(out.RevokedTokens) != 1 {
 		t.Fatalf("remove leo: %d %+v", w.Code, out)

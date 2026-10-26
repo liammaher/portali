@@ -129,8 +129,8 @@ type scopeFixture struct {
 		Scope, Category string
 		Want            bool
 	}
-	Members []struct {
-		Scope, Member string
+	People []struct {
+		Scope, Person string
 		Want          bool
 	}
 	ValidScopes   []string
@@ -162,9 +162,9 @@ func TestScopeFixture(t *testing.T) {
 			t.Errorf("ScopeAllowsCategory(%q, %q) = %v, want %v", c.Scope, c.Category, got, c.Want)
 		}
 	}
-	for _, c := range f.Members {
-		if got := ScopeAllowsMember(c.Scope, c.Member); got != c.Want {
-			t.Errorf("ScopeAllowsMember(%q, %q) = %v, want %v", c.Scope, c.Member, got, c.Want)
+	for _, c := range f.People {
+		if got := ScopeAllowsPerson(c.Scope, c.Person); got != c.Want {
+			t.Errorf("ScopeAllowsPerson(%q, %q) = %v, want %v", c.Scope, c.Person, got, c.Want)
 		}
 	}
 	for _, s := range f.ValidScopes {
@@ -179,7 +179,7 @@ func TestScopeFixture(t *testing.T) {
 	}
 }
 
-func TestSplitMember(t *testing.T) {
+func TestSplitPerson(t *testing.T) {
 	tests := []struct{ id, member, local string }{
 		{"cie.numero", "", "cie.numero"},
 		{"leo:cie.numero", "leo", "cie.numero"},
@@ -189,14 +189,14 @@ func TestSplitMember(t *testing.T) {
 		{"cie.a:b", "", "cie.a:b"}, // a colon after the dot isn't a prefix
 	}
 	for _, tt := range tests {
-		m, l := SplitMember(tt.id)
+		m, l := SplitPerson(tt.id)
 		if m != tt.member || l != tt.local {
-			t.Errorf("SplitMember(%q) = %q, %q; want %q, %q", tt.id, m, l, tt.member, tt.local)
+			t.Errorf("SplitPerson(%q) = %q, %q; want %q, %q", tt.id, m, l, tt.member, tt.local)
 		}
 	}
 }
 
-func TestScopeNamesMember(t *testing.T) {
+func TestScopeNamesPerson(t *testing.T) {
 	tests := []struct {
 		scope, member string
 		want          bool
@@ -208,8 +208,8 @@ func TestScopeNamesMember(t *testing.T) {
 		{"leonardo:*", "leo", false},
 	}
 	for _, tt := range tests {
-		if got := ScopeNamesMember(tt.scope, tt.member); got != tt.want {
-			t.Errorf("ScopeNamesMember(%q, %q) = %v, want %v", tt.scope, tt.member, got, tt.want)
+		if got := ScopeNamesPerson(tt.scope, tt.member); got != tt.want {
+			t.Errorf("ScopeNamesPerson(%q, %q) = %v, want %v", tt.scope, tt.member, got, tt.want)
 		}
 	}
 }

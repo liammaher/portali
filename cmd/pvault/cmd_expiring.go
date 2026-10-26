@@ -47,11 +47,11 @@ func cmdExpiring() {
 	}
 }
 
-// expiryLabel names the document and, for a family member's, whose it is:
+// expiryLabel names the document and, for another person's, whose it is:
 // "cie (leo)".
 func expiryLabel(it vault.ExpiryInfo) string {
-	if it.Member != "" {
-		return it.Document + " (" + it.Member + ")"
+	if it.Person != "" {
+		return it.Document + " (" + it.Person + ")"
 	}
 	return it.Document
 }

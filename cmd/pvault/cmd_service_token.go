@@ -13,7 +13,7 @@ func cmdCreateServiceToken() {
 		"  example: pvault create-service-token tari-agent --scope \"identity.*,residenza.*\" --ttl 2h\n" +
 		"  --scope is required; pass \"*\" explicitly for full access (you and your family members).\n" +
 		"    category.* and category.field are yours only; leo:* is everything about family member leo,\n" +
-		"    leo:cie.* one of leo's categories, and *:identity.* that category for you and every member.\n" +
+		"    leo:cie.* one of leo's categories, and *:identity.* that category for you and every person.\n" +
 		"  --ttl defaults to 24h (max 2160h = 90 days).\n" +
 		"  --access defaults to read: the agent can only read. append also lets it add new fields and\n" +
 		"    documents (e.g. archive a receipt) but never overwrite or delete; write allows everything.\n" +

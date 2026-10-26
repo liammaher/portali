@@ -22,21 +22,22 @@ func (s *Server) handleListMembers(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, h)
 }
 
-// DELETE /vault/members/{slug}
-// Deletes every field and document of a member and revokes the tokens and
+// DELETE /vault/members/{slug} (the route keeps its name from before the
+// rename to "person")
+// Deletes every field and document of a person and revokes the tokens and
 // grants that name them. Only the user may: their session, or a grant they
 // approved in person (Touch ID) for write access to everything about that
-// member, whose prompt names exactly that. Service tokens never may.
-func (s *Server) handleRemoveMember(w http.ResponseWriter, r *http.Request) {
+// person, whose prompt names exactly that. Service tokens never may.
+func (s *Server) handleRemovePerson(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug")
 	approved := reachesPersonal(r) && accessFromRequest(r) == vault.AccessWrite &&
-		vault.ValidMemberSlug(slug) && vault.ScopeAllowsWholeMember(scopeFromRequest(r), slug)
+		vault.ValidPersonSlug(slug) && vault.ScopeAllowsWholePerson(scopeFromRequest(r), slug)
 	if !isSessionAuth(r) && !approved {
 		sessionRequired(w)
 		return
 	}
-	out, err := s.vault.RemoveMember(slug)
-	var inUse *vault.MemberInUseError
+	out, err := s.vault.RemovePerson(slug)
+	var inUse *vault.PersonInUseError
 	switch {
 	case errors.As(err, &inUse):
 		writeJSON(w, http.StatusConflict, map[string]any{"error": inUse.Error(), "constraint": "member_in_use", "refs": inUse.Refs})

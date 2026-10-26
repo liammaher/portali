@@ -9,8 +9,9 @@ import (
 // validIDPart matches alphanumeric, underscores, and hyphens.
 var validIDPart = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 
-// Household members. A member's fields and documents live in the same
-// categories as the owner's, with the member's slug in front:
+// People. Besides its owner, a vault can hold other people: family members
+// in the personal vault (famiglia.*). A person's fields and documents live in
+// the same categories as the owner's, with the person's slug in front:
 // leo:identity.codice_fiscale, leo:cie (documents). The owner's IDs have no
 // prefix. The stored category (leo:cie) is the HKDF info, so each person's
 // data has its own keys.
@@ -19,18 +20,18 @@ var validIDPart = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 // (famiglia.genitori, famiglia.intestatario_scheda, pratiche persona).
 const OwnerRef = "io"
 
-// reMemberSlug matches a member's slug: lower-case only, so the stored
+// rePersonSlug matches a person's slug: lower-case only, so the stored
 // category is always byte-identical to what the user types.
-var reMemberSlug = regexp.MustCompile(`^[a-z][a-z0-9-]{0,31}$`)
+var rePersonSlug = regexp.MustCompile(`^[a-z][a-z0-9-]{0,31}$`)
 
-// ValidMemberSlug reports a well-formed member slug that isn't reserved.
-func ValidMemberSlug(slug string) bool {
-	return slug != OwnerRef && reMemberSlug.MatchString(slug)
+// ValidPersonSlug reports a well-formed person slug that isn't reserved.
+func ValidPersonSlug(slug string) bool {
+	return slug != OwnerRef && rePersonSlug.MatchString(slug)
 }
 
-// cutMember splits a field ID or category at a ':' that comes before the
+// cutPerson splits a field ID or category at a ':' that comes before the
 // first '.'; prefixed is false when there is none (an owner ID).
-func cutMember(id string) (member, local string, prefixed bool) {
+func cutPerson(id string) (person, local string, prefixed bool) {
 	i := strings.IndexByte(id, ':')
 	if i < 0 {
 		return "", id, false
@@ -41,34 +42,34 @@ func cutMember(id string) (member, local string, prefixed bool) {
 	return id[:i], id[i+1:], true
 }
 
-// SplitMember splits a field ID or category into the member's slug ("" for
+// SplitPerson splits a field ID or category into the person's slug ("" for
 // the owner) and the rest: "leo:cie.numero" gives "leo" and "cie.numero".
 // It doesn't validate the slug, so rules keyed by category can strip any
 // prefix before matching.
-func SplitMember(id string) (member, local string) {
-	member, local, _ = cutMember(id)
-	return member, local
+func SplitPerson(id string) (person, local string) {
+	person, local, _ = cutPerson(id)
+	return person, local
 }
 
-// errMemberSlug explains a bad member prefix.
-func errMemberSlug(member string) error {
-	if member == OwnerRef {
+// errPersonSlug explains a bad person prefix.
+func errPersonSlug(person string) error {
+	if person == OwnerRef {
 		return fmt.Errorf("%q is reserved for the vault's owner: owner fields have no prefix", OwnerRef)
 	}
-	return fmt.Errorf("invalid member %q: lower-case letters, digits and hyphens, starting with a letter (at most 32)", member)
+	return fmt.Errorf("invalid person %q: lower-case letters, digits and hyphens, starting with a letter (at most 32)", person)
 }
 
-// ValidateFieldID checks that a field ID is safe: [member:]category.field_name
+// ValidateFieldID checks that a field ID is safe: [person:]category.field_name
 // where category and field name contain only alphanumeric characters,
-// underscores, and hyphens, and member is a valid slug.
+// underscores, and hyphens, and person is a valid slug.
 func ValidateFieldID(id string) error {
-	member, local, prefixed := cutMember(id)
-	if prefixed && !ValidMemberSlug(member) {
-		return errMemberSlug(member)
+	person, local, prefixed := cutPerson(id)
+	if prefixed && !ValidPersonSlug(person) {
+		return errPersonSlug(person)
 	}
 	parts := strings.SplitN(local, ".", 2)
 	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
-		return fmt.Errorf("field ID must be category.field_name or member:category.field_name, got %q", id)
+		return fmt.Errorf("field ID must be category.field_name or person:category.field_name, got %q", id)
 	}
 	if !validIDPart.MatchString(parts[0]) {
 		return fmt.Errorf("invalid category %q: only alphanumeric, underscore, hyphen allowed", parts[0])
@@ -79,27 +80,27 @@ func ValidateFieldID(id string) error {
 	return nil
 }
 
-// ValidCategoryName checks that a category name ([member:]category) contains
+// ValidCategoryName checks that a category name ([person:]category) contains
 // only safe characters.
 func ValidCategoryName(name string) bool {
-	member, local, prefixed := cutMember(name)
-	if prefixed && !ValidMemberSlug(member) {
+	person, local, prefixed := cutPerson(name)
+	if prefixed && !ValidPersonSlug(person) {
 		return false
 	}
 	return local != "" && validIDPart.MatchString(local)
 }
 
 // IsOwnerOnlyCategory reports categories about the home and the owner's own
-// procedures, which a member can't have: the housing categories and pratiche.
+// procedures, which a person can't have: the housing categories and pratiche.
 func IsOwnerOnlyCategory(category string) bool {
-	_, category = SplitMember(category)
+	_, category = SplitPerson(category)
 	return IsHousingCategory(strings.ToLower(category)) || isPraticheCategory(category)
 }
 
-// checkMemberCategory refuses an owner-only category with a member prefix.
+// checkPersonCategory refuses an owner-only category with a person prefix.
 // field names the ID (or document scope ID) in the error.
-func checkMemberCategory(category, field string) error {
-	if member, base := SplitMember(category); member != "" && IsOwnerOnlyCategory(base) {
+func checkPersonCategory(category, field string) error {
+	if person, base := SplitPerson(category); person != "" && IsOwnerOnlyCategory(base) {
 		return &ValidationError{Field: field, Msg: base + " is about the household or your own procedures: store it without a person prefix"}
 	}
 	return nil
@@ -109,7 +110,7 @@ func checkMemberCategory(category, field string) error {
 // with a person prefix, or one it keeps for other people (ForPerson)
 // without one.
 func checkFieldFor(id string) error {
-	person, local := SplitMember(id)
+	person, local := SplitPerson(id)
 	f := GetSchemaField(strings.ToLower(local))
 	switch {
 	case f == nil:
@@ -123,9 +124,9 @@ func checkFieldFor(id string) error {
 
 // scopePattern is one parsed pattern of a scope.
 type scopePattern struct {
-	all         bool   // "*": everything, owner and members
-	member      string // "" (owner), a slug, or "*" (everyone)
-	wholeMember bool   // "leo:*": everything about one member
+	all         bool   // "*": everything, owner and people
+	person      string // "" (owner), a slug, or "*" (everyone)
+	wholePerson bool   // "leo:*": everything about one person
 	category    string
 	field       string // "" for category.*
 }
@@ -137,16 +138,16 @@ func parseScopePattern(p string) (scopePattern, bool) {
 		return scopePattern{all: true}, true
 	}
 	var sp scopePattern
-	member, local, prefixed := cutMember(p)
+	person, local, prefixed := cutPerson(p)
 	if prefixed {
-		if member != "*" && !ValidMemberSlug(member) {
+		if person != "*" && !ValidPersonSlug(person) {
 			return sp, false
 		}
-		sp.member = member
+		sp.person = person
 		if local == "*" {
 			// *:* would be "everything" under another name; "*" says it.
-			sp.wholeMember = true
-			return sp, member != "*"
+			sp.wholePerson = true
+			return sp, person != "*"
 		}
 	}
 	category, field, ok := strings.Cut(local, ".")
@@ -163,23 +164,23 @@ func parseScopePattern(p string) (scopePattern, bool) {
 	return sp, true
 }
 
-// allowsMember reports a pattern that can reach some of member's data
+// allowsPerson reports a pattern that can reach some of a person's data
 // ("" is the owner).
-func (sp scopePattern) allowsMember(member string) bool {
-	return sp.all || sp.member == "*" || sp.member == member
+func (sp scopePattern) allowsPerson(person string) bool {
+	return sp.all || sp.person == "*" || sp.person == person
 }
 
 // allowsCategory reports a pattern that reaches some of a category.
-func (sp scopePattern) allowsCategory(member, category string) bool {
-	if !sp.allowsMember(member) {
+func (sp scopePattern) allowsCategory(person, category string) bool {
+	if !sp.allowsPerson(person) {
 		return false
 	}
-	return sp.all || sp.wholeMember || sp.category == category
+	return sp.all || sp.wholePerson || sp.category == category
 }
 
 // allows reports a pattern that reaches the field.
-func (sp scopePattern) allows(member, category, field string) bool {
-	return sp.allowsCategory(member, category) && (sp.all || sp.wholeMember || sp.field == "" || sp.field == field)
+func (sp scopePattern) allows(person, category, field string) bool {
+	return sp.allowsCategory(person, category) && (sp.all || sp.wholePerson || sp.field == "" || sp.field == field)
 }
 
 // Scope is a parsed token scope. Parse it once with ParseScope when matching
@@ -201,10 +202,10 @@ func ParseScope(scope string) Scope {
 // Allows reports whether the scope reaches a field ID. An ID without a
 // category and field (no dot) is reached only by "*".
 func (s Scope) Allows(fieldID string) bool {
-	member, local, _ := cutMember(fieldID)
+	person, local, _ := cutPerson(fieldID)
 	category, field, ok := strings.Cut(local, ".")
 	for _, sp := range s {
-		if sp.all || (ok && sp.allows(member, category, field)) {
+		if sp.all || (ok && sp.allows(person, category, field)) {
 			return true
 		}
 	}
@@ -212,11 +213,11 @@ func (s Scope) Allows(fieldID string) bool {
 }
 
 // AllowsCategory reports whether the scope reaches any field in a category
-// ([member:]category).
+// ([person:]category).
 func (s Scope) AllowsCategory(category string) bool {
-	member, local, _ := cutMember(category)
+	person, local, _ := cutPerson(category)
 	for _, sp := range s {
-		if sp.allowsCategory(member, local) {
+		if sp.allowsCategory(person, local) {
 			return true
 		}
 	}
@@ -225,47 +226,47 @@ func (s Scope) AllowsCategory(category string) bool {
 
 // ScopeAllows checks if a comma-separated scope pattern allows access to a field ID.
 // Patterns: "*" (all, every person), "identity.*" (an owner category),
-// "identity.full_name" (exact), "leo:identity.*" (a member's category),
-// "*:identity.*" (that category for the owner and every member), "leo:*"
-// (everything about a member). A pattern without a member prefix never
-// reaches a member's data.
+// "identity.full_name" (exact), "leo:identity.*" (a person's category),
+// "*:identity.*" (that category for the owner and every person), "leo:*"
+// (everything about a person). A pattern without a person prefix never
+// reaches a person's data.
 func ScopeAllows(scope, fieldID string) bool {
 	return ParseScope(scope).Allows(fieldID)
 }
 
 // ScopeAllowsCategory checks if a scope pattern allows access to any field in
-// a category ([member:]category).
+// a category ([person:]category).
 func ScopeAllowsCategory(scope, category string) bool {
 	return ParseScope(scope).AllowsCategory(category)
 }
 
-// ScopeAllowsMember checks if a scope reaches any data of a member ("" is
+// ScopeAllowsPerson checks if a scope reaches any data of a person ("" is
 // the owner).
-func ScopeAllowsMember(scope, member string) bool {
+func ScopeAllowsPerson(scope, person string) bool {
 	for _, sp := range ParseScope(scope) {
-		if sp.allowsMember(member) {
+		if sp.allowsPerson(person) {
 			return true
 		}
 	}
 	return false
 }
 
-// ScopeAllowsWholeMember checks if a scope reaches all of a member's data:
+// ScopeAllowsWholePerson checks if a scope reaches all of a person's data:
 // "*" or "slug:*".
-func ScopeAllowsWholeMember(scope, member string) bool {
+func ScopeAllowsWholePerson(scope, person string) bool {
 	for _, sp := range ParseScope(scope) {
-		if sp.all || (sp.wholeMember && sp.member == member) {
+		if sp.all || (sp.wholePerson && sp.person == person) {
 			return true
 		}
 	}
 	return false
 }
 
-// ScopeNamesMember reports a scope with a pattern naming the member's slug
+// ScopeNamesPerson reports a scope with a pattern naming the person's slug
 // (not "*" or "*:..."), i.e. one that was granted for that person.
-func ScopeNamesMember(scope, member string) bool {
+func ScopeNamesPerson(scope, person string) bool {
 	for _, sp := range ParseScope(scope) {
-		if !sp.all && sp.member == member {
+		if !sp.all && sp.person == person {
 			return true
 		}
 	}
@@ -273,7 +274,7 @@ func ScopeNamesMember(scope, member string) bool {
 }
 
 // ValidateScope checks that every comma-separated pattern in a token scope is
-// "*", "[P:]category.*", "[P:]category.field" or "slug:*" (P a member slug
+// "*", "[P:]category.*", "[P:]category.field" or "slug:*" (P a person slug
 // or "*"). Empty scopes are rejected so that full access always has to be
 // requested explicitly.
 func ValidateScope(scope string) error {
@@ -286,7 +287,7 @@ func ValidateScope(scope string) error {
 			return fmt.Errorf("invalid scope pattern %q: use \"*\" for full access", p)
 		}
 		if _, ok := parseScopePattern(p); !ok {
-			return fmt.Errorf("invalid scope pattern %q: use \"*\", \"category.*\", \"category.field\", \"member:category.*\", \"*:category.*\" or \"member:*\"", p)
+			return fmt.Errorf("invalid scope pattern %q: use \"*\", \"category.*\", \"category.field\", \"person:category.*\", \"*:category.*\" or \"person:*\"", p)
 		}
 	}
 	return nil

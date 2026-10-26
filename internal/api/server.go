@@ -128,7 +128,7 @@ func (s *Server) registerRoutes() {
 	protected.HandleFunc("GET /vault/context", s.handleGetContext)
 	protected.HandleFunc("GET /vault/expiring", s.handleExpiring)
 	protected.HandleFunc("GET /vault/members", s.handleListMembers)
-	protected.HandleFunc("DELETE /vault/members/{slug}", s.handleRemoveMember)
+	protected.HandleFunc("DELETE /vault/members/{slug}", s.handleRemovePerson)
 	protected.HandleFunc("POST /vault/members/migrate", s.handleMigrateMembers)
 	protected.HandleFunc("POST /vault/documents", s.handleAddDocument)
 	protected.HandleFunc("GET /vault/documents", s.handleListDocuments)

@@ -46,12 +46,12 @@ var (
 // IsCredentialField reports whether a field holds a login secret: a
 // credential word (pin, puk, password, otp, username, ...) in a field about
 // SPID, CieID or the CIE, e.g. spid.password, cie.pin1, identity.spid_password,
-// cie_id.pin (the category's words count too). A member's field
+// cie_id.pin (the category's words count too). A person's field
 // (leo:spid.password) is judged like the owner's.
 // Credentials are strictly personal (AgID), so they can only be stored with
 // TierPersonal and never reach an agent.
 func IsCredentialField(id string) bool {
-	_, id = SplitMember(id)
+	_, id = SplitPerson(id)
 	parts := strings.SplitN(strings.ToLower(id), ".", 2)
 	if len(parts) != 2 {
 		return false
@@ -95,9 +95,9 @@ func isNonSecretAccountField(name string) bool {
 
 // IsPersonalCategory reports categories whose fields and documents default to
 // TierPersonal: SPID and CieID accounts, including ones named per provider
-// such as spid_poste, cieid-2 or spid2, for the owner or a member (leo:spid).
+// such as spid_poste, cieid-2 or spid2, for the owner or another person (leo:spid).
 func IsPersonalCategory(category string) bool {
-	_, category = SplitMember(category)
+	_, category = SplitPerson(category)
 	words := idWords(strings.ToLower(category))
 	return len(words) > 0 && rePersonalCategoryWord.MatchString(words[0])
 }
@@ -127,23 +127,23 @@ var (
 // NormalizeAndValidate applies Italian format rules to a field value based on
 // its ID (matched case-insensitively). It returns the normalized value (e.g.
 // upper-cased codice fiscale) or a *ValidationError. Fields without a rule
-// are returned unchanged. A member's field (leo:cie.numero) gets the same
+// are returned unchanged. A person's field (leo:cie.numero) gets the same
 // rules as the owner's; errors name the full ID.
 func NormalizeAndValidate(id, value string) (string, error) {
-	member, local := SplitMember(id)
+	person, local := SplitPerson(id)
 	parts := strings.SplitN(strings.ToLower(local), ".", 2)
 	if len(parts) != 2 {
 		return value, nil
 	}
 	category, name := parts[0], parts[1]
 
-	if err := checkMemberCategory(strings.SplitN(id, ".", 2)[0], id); err != nil {
+	if err := checkPersonCategory(strings.SplitN(id, ".", 2)[0], id); err != nil {
 		return "", err
 	}
 	if err := checkFieldFor(id); err != nil {
 		return "", err
 	}
-	if v, handled, err := normalizeFamiglia(id, member, category, name, value); handled {
+	if v, handled, err := normalizeFamiglia(id, person, category, name, value); handled {
 		return v, err
 	}
 

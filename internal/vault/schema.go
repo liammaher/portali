@@ -389,7 +389,7 @@ func GetSchemaField(id string) *SchemaField {
 // codice fiscale fields (e.g. custom.coniuge_codice_fiscale) default to
 // "sensitive". A member's field defaults like the owner's.
 func DefaultSensitivity(id string) string {
-	_, id = SplitMember(id)
+	_, id = SplitPerson(id)
 	// Validation ignores case, so the default must too (financial.SSN is
 	// still critical).
 	if f, ok := schemaIndex[strings.ToLower(id)]; ok {

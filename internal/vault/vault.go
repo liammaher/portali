@@ -86,7 +86,7 @@ var ErrInvalidAccess = errors.New("invalid access: must be read, append, or writ
 type Vault struct {
 	mu sync.RWMutex
 	// writeMu is held for reading by every single write (field, tier,
-	// document) and for writing by changes to a whole member (RemoveMember,
+	// document) and for writing by changes to a whole person (RemovePerson,
 	// MigrateNucleo), so those see no write land halfway. Lock order:
 	// backup.mu, writeMu, mu.
 	writeMu sync.RWMutex
@@ -453,7 +453,7 @@ func (v *Vault) Status() (*VaultStatus, error) {
 	if init {
 		// Status is public, so personal fields and documents are left out of
 		// every count: agents must not even learn that they exist. Nor that
-		// family members exist: only the owner's data is counted.
+		// other people exist: only the owner's data is counted.
 		count, _ := v.db.FieldCount(TierPersonal, true)
 		status.FieldCount = count
 		cats, _ := v.db.CategoryCounts(TierPersonal)

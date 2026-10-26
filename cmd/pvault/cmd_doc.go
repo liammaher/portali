@@ -116,7 +116,7 @@ func cmdDocList() {
 // Touch ID prompt names a real one.
 func checkDocCategory(category string) {
 	if !vault.ValidCategoryName(category) {
-		fatal("invalid category %q: only letters, digits, underscore and hyphen, with an optional member: prefix (e.g. leo:cie)", category)
+		fatal("invalid category %q: only letters, digits, underscore and hyphen, with an optional person: prefix (e.g. leo:cie)", category)
 	}
 }
 

@@ -142,7 +142,7 @@ func normalizePersonRefs(value, self string, max int) (string, string) {
 		return "", "must name 1 or 2 people: io (you) or members' slugs, e.g. io,giulia"
 	}
 	for i, ref := range refs {
-		if ref != OwnerRef && !ValidMemberSlug(ref) {
+		if ref != OwnerRef && !ValidPersonSlug(ref) {
 			return "", "\"" + ref + "\" is not io or a member's slug"
 		}
 		if ref == self {

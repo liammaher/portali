@@ -32,7 +32,7 @@ The library's `forms[mod-1].fields` is the mapping. Its conviventi row (`repeat:
 nucleo_familiare.membro<N>_*` until the library is updated) means the family members
 whose `<slug>:famiglia.stato_famiglia` is si: `<slug>:identity.{last_name,first_name,
 birth_comune,date_of_birth,codice_fiscale}`, rapporto = `relazione_label` from
-`vault_household` / `pvault member list`. Tokens for this pratica, if Touch ID is off
+`vault_household` / `pvault person list`. Tokens for this pratica, if Touch ID is off
 (the skill's step 2):
 
 - preparing: `--scope "*:identity.*,*:famiglia.*,residenza.*,domicilio.*,abitazione.*,tari.*,pratiche.*" --access append`

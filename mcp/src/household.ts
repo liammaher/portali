@@ -1,5 +1,5 @@
 import type { Household, MemberInfo } from "./client.js";
-import { scopeAllows, scopeAllowsMember, scopeAllowsWholeMember } from "./scope.js";
+import { scopeAllows, scopeAllowsPerson, scopeAllowsWholePerson } from "./scope.js";
 
 /**
  * Limits a household listing to VAULT_SCOPE, like every other tool: a member
@@ -9,7 +9,7 @@ import { scopeAllows, scopeAllowsMember, scopeAllowsWholeMember } from "./scope.
  */
 export function filterHousehold(h: Household, scope: string): Household {
   const members = h.members
-    .filter((m) => scopeAllowsMember(scope, m.slug))
+    .filter((m) => scopeAllowsPerson(scope, m.slug))
     .map((m) => {
       const can = (local: string) => scopeAllows(scope, `${m.slug}:${local}`);
       const out: MemberInfo = { slug: m.slug };
@@ -25,7 +25,7 @@ export function filterHousehold(h: Household, scope: string): Household {
         out.anpr_relazione = m.anpr_relazione;
         if (can("identity.sex")) out.relazione_label = m.relazione_label;
       }
-      if (scopeAllowsWholeMember(scope, m.slug)) {
+      if (scopeAllowsWholePerson(scope, m.slug)) {
         out.fields = m.fields;
         out.documents = m.documents;
       }

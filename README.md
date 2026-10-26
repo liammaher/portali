@@ -59,15 +59,15 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 Keep your spouse's, children's or parents' data in the same vault: each family member has the same categories as you under a prefix, e.g. `leo:identity.codice_fiscale`, `leo:cie.data_scadenza`, documents in `leo:cie`. Only the home (`abitazione`, `locazione`, `utenze`, `tari`) and your `pratiche` are yours alone.
 
 ```sh
-pvault member add giulia --relazione moglie --nome Giulia
-pvault member add leo --relazione figlio --nome Leo --data-nascita 2019-05-01
+pvault person add giulia --relazione moglie --nome Giulia
+pvault person add leo --relazione figlio --nome Leo --data-nascita 2019-05-01
 pvault set leo:famiglia.genitori io,giulia      # who holds responsabilità genitoriale
 pvault set leo:famiglia.stato_famiglia si       # lives with you (stato di famiglia)
 pvault set leo:cie.data_scadenza 20/11/2026     # tracked by pvault expiring as "cie (leo)"
-pvault member list                              # relazione, age, stato di famiglia, a carico
-pvault member remove giulia                     # refused while another field still names her; with Touch ID
+pvault person list                              # relazione, age, stato di famiglia, a carico
+pvault person remove giulia                     # refused while another field still names her; with Touch ID
                                                 # the prompt reads "read, change and delete everything about giulia"
-pvault member migrate --dry-run                 # turn old nucleo_familiare.membro<N> fields into members
+pvault person migrate --dry-run                 # turn old nucleo_familiare.membro<N> fields into people
 ```
 
 Relationships are recorded relative to you, as ANPR records them relative to the intestatario della scheda; each procedure's playbook decides who counts (stato di famiglia for TARI, the ISEE nucleo, dependants for the 730). The onboarding page (`pvault ui`) has a person switcher and an "Aggiungi persona" form. Removing a member deletes their fields and documents and revokes the agent tokens that named them.

@@ -58,6 +58,6 @@ func cmdStatus() {
 		for _, cat := range cats {
 			fmt.Printf("  %-*s %d fields\n", width, cat, status.Categories[cat])
 		}
-		fmt.Println("Family members aren't counted here; see 'pvault member list'.")
+		fmt.Println("Family members aren't counted here; see 'pvault person list'.")
 	}
 }

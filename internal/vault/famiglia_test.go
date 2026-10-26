@@ -143,7 +143,7 @@ func TestExpiring_Members(t *testing.T) {
 	}
 	var got []string
 	for _, it := range items {
-		got = append(got, it.Document+"/"+it.Member)
+		got = append(got, it.Document+"/"+it.Person)
 	}
 	if want := "cie/leo,pratica cie-leo/leo,pratica tari/,cie/"; strings.Join(got, ",") != want {
 		t.Fatalf("expiring = %v, want %s", got, want)

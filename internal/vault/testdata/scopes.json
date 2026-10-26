@@ -57,17 +57,17 @@
     {"scope": "*:identity.*", "category": "identity", "want": true},
     {"scope": "*:identity.*", "category": "giulia:cie", "want": false}
   ],
-  "members": [
-    {"scope": "*", "member": "leo", "want": true},
-    {"scope": "*", "member": "", "want": true},
-    {"scope": "identity.*", "member": "", "want": true},
-    {"scope": "identity.*", "member": "leo", "want": false},
-    {"scope": "leo:*", "member": "leo", "want": true},
-    {"scope": "leo:cie.*", "member": "leo", "want": true},
-    {"scope": "leo:cie.*", "member": "giulia", "want": false},
-    {"scope": "leo:cie.*", "member": "", "want": false},
-    {"scope": "*:identity.*", "member": "giulia", "want": true},
-    {"scope": "*:identity.*", "member": "", "want": true}
+  "people": [
+    {"scope": "*", "person": "leo", "want": true},
+    {"scope": "*", "person": "", "want": true},
+    {"scope": "identity.*", "person": "", "want": true},
+    {"scope": "identity.*", "person": "leo", "want": false},
+    {"scope": "leo:*", "person": "leo", "want": true},
+    {"scope": "leo:cie.*", "person": "leo", "want": true},
+    {"scope": "leo:cie.*", "person": "giulia", "want": false},
+    {"scope": "leo:cie.*", "person": "", "want": false},
+    {"scope": "*:identity.*", "person": "giulia", "want": true},
+    {"scope": "*:identity.*", "person": "", "want": true}
   ],
   "validScopes": [
     "*", "identity.*", "identity.full_name", "cie.documents", "identity.*,residenza.*",
