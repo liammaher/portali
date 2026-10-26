@@ -39,10 +39,10 @@ func TestSuggestCanonical_Typos(t *testing.T) {
 		id            string
 		wantCanonical string
 	}{
-		{"identity.fist_name", "identity.first_name"},   // missing 'r'
-		{"identity.ful_name", "identity.full_name"},     // missing 'l'
-		{"addresses.home_cty", "addresses.home_city"},   // missing 'i'
-		{"payment.card_bran", "payment.card_brand"},     // missing 'd'
+		{"identity.fist_name", "identity.first_name"}, // missing 'r'
+		{"identity.ful_name", "identity.full_name"},   // missing 'l'
+		{"addresses.home_cty", "addresses.home_city"}, // missing 'i'
+		{"payment.card_bran", "payment.card_brand"},   // missing 'd'
 	}
 	for _, tt := range tests {
 		s := SuggestCanonical(tt.id)

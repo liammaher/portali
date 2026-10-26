@@ -1,6 +1,6 @@
 # Business and client vaults
 
-Status: proposal (2026-10-26). Phase 0 (the cleanup), phase 1 (business vaults: kind,
+Status: shipped (2026-10-26); kept as the record of the decisions. Phase 0 (the cleanup), phase 1 (business vaults: kind,
 `ruolo`, business fields, named vaults with their own port, kind-aware Touch ID prompts, MCP and
 the onboarding page), phase 2 (clients: procura, per-person export, the retention report) and
 phase 3 (the pratiche-napoli library) are done; the "where we are" section below describes the
@@ -24,15 +24,15 @@ What makes it work, and should be kept:
 
 - **No database change.** The stored category (`leo:cie`) is the HKDF info, so each person
   gets their own subkeys for free.
-- **One set of rules.** Every category-keyed rule strips the prefix with `SplitMember`
-  first; `TestMemberRulesMatchOwner` checks that a party gets exactly the owner's rules.
+- **One set of rules.** Every category-keyed rule strips the prefix with `SplitPerson`
+  first; `TestPersonRulesMatchOwner` checks that a party gets exactly the owner's rules.
 - **A small scope grammar** (`leo:*`, `leo:cat.*`, `*:cat.*`, `*`) parsed the same way in
   Go and the Touch ID helper, tested against
   `internal/vault/testdata/scopes.json`.
 - **Facts, not procedure rules.** `famiglia` stores the relazione (with its ANPR Tabella
   05 code), a_carico, genitori, rappresentanza. Who counts for an ISEE or a 730 is up to
   each playbook.
-- **Safe removal.** `RemoveMember` runs in one transaction, refuses while another field
+- **Safe removal.** `RemovePerson` runs in one transaction, refuses while another field
   still names the person, and revokes the tokens and grants whose scope names them.
 
 ### Cleanup before extending it (phase 0)
@@ -146,7 +146,7 @@ one titolare party.
 
 Professional details belong to the person, not the business: `bianchi:albo.ordine`,
 `albo.provincia`, `albo.numero`, `albo.data_iscrizione`, and the cassa
-(`bianchi:inarcassa.matricola`). In a studio associato each architect has their own albo
+(`bianchi:cassa.ente`, `bianchi:cassa.matricola`). In a studio associato each architect has their own albo
 entry, so these can't sit on the business.
 
 A client can be a company: `edilnapoli-srl:business.*` already validates, because
@@ -158,7 +158,7 @@ A party-only category, validated like `famiglia`:
 
 | Field | Meaning |
 |---|---|
-| `ruolo.tipo` | One or more of titolare, legale_rappresentante, socio, amministratore, dipendente, collaboratore, preposto, responsabile_tecnico, procuratore, cliente, impresa. A list, like `famiglia.genitori`, since one person can hold several. |
+| `ruolo.tipo` | One or more of titolare, legale_rappresentante, socio, amministratore, dipendente, collaboratore, preposto, responsabile_tecnico, procuratore, cliente, fornitore, impresa_esecutrice, altro. A list, like `famiglia.genitori`, since one person can hold several. |
 | `ruolo.data_inizio`, `ruolo.data_fine` | When the relationship started and ended. `data_fine` starts the retention clock (see GDPR). |
 | `ruolo.quota_percentuale` | A socio's share. |
 | `ruolo.poteri` | Powers of an amministratore or procuratore, as on the visura. |
@@ -167,9 +167,9 @@ Employee data that UniLav and the LUL need (titolo di studio, contract type, hou
 mansione, CCNL level, place of work) can go in an `impiego` category on the party later;
 it is not needed to start.
 
-Fields that name people (`business.legale_rappresentante`, pratiche `persona`, a
-procedure's committente) use the schema flag from phase 0 and must name `io` or an
-existing party.
+Fields that name people (pratiche `persona`, `famiglia.genitori`) use the schema flag from
+phase 0 and must name `io` or an existing person. The business has no field naming its
+legale rappresentante: it is whoever's `ruolo.tipo` says so.
 
 **D2:** `famiglia` and `ruolo` as two categories, or one relation category with a
 vocabulary per vault kind. Recommendation: two. The vocabularies are legally distinct
@@ -213,7 +213,7 @@ Most obligations map onto what already exists:
 
 | Obligation | In pvault |
 |---|---|
-| Erasure (art. 17) | `RemoveMember`, already transactional and revoking tokens |
+| Erasure (art. 17) | `RemovePerson`, already transactional and revoking tokens |
 | Accountability (art. 5(2)) | The audit log |
 | Minimisation | Scoping each pratica to `rossi:*` instead of `*` |
 | Security (art. 32) | Encryption at rest, per-party subkeys, Touch ID approvals, encrypted backups |
@@ -249,8 +249,8 @@ Each vault stays exactly today's product: its own dir, server, socket and port. 
   `http://127.0.0.1:7200` (`cmd/pvault-touchid/main.swift:43`), and pvault skips Touch ID
   when `VAULT_ADDR` differs; store the vault's address in the enrollment JSON next to
   `server` instead.
-- **MCP: no code change.** Register one instance per vault (`vault`, `studio`), each with
-  its own `VAULT_ADDR` and token; the tools are namespaced by server name automatically.
+- **MCP: one instance per vault** (`vault`, `studio`), each with its own `VAULT_ADDR`, token
+  and `VAULT_NAME` (so its errors name the right `--vault`); the tools are namespaced by server name automatically.
   The vault and pratica skills learn which instance holds what.
 - **Not one server hosting many vaults.** It would multiply lock state, grants and
   auto-lock inside one process; the process boundary between vaults is a feature.

@@ -74,6 +74,7 @@ func cmdPersonExport() {
 	if out.Omitted > 0 {
 		fmt.Printf("%d personal item(s) left out; add --include-personal to include them.\n", out.Omitted)
 	}
+	fmt.Println("Fields of the pratiche that name them are included; files attached to pratiche are not (they aren't kept per person): hand those over from 'pvault doc list pratiche'.")
 	fmt.Println("This copy is NOT encrypted: hand it over, then delete it. Don't keep it in a synced folder.")
 }
 
@@ -110,7 +111,10 @@ func writePersonExport(dir string, out *vault.PersonExport) (err error) {
 		Exported  time.Time         `json:"exported"`
 		Fields    []vault.FieldInfo `json:"fields"`
 		Documents []exportedFile    `json:"documents"`
-	}{out.Person, out.Exported, out.Fields, files}, "", "  ")
+		// So the recipient can tell the copy is partial.
+		Omitted int                  `json:"omitted,omitempty"`
+		Missing []vault.DocumentInfo `json:"missing,omitempty"`
+	}{out.Person, out.Exported, out.Fields, files, out.Omitted, out.Missing}, "", "  ")
 	if err != nil {
 		return err
 	}

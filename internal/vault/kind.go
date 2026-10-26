@@ -52,7 +52,8 @@ func (v *Vault) Kind() string {
 //     secrets (CIE PIN, Fisconline PIN): a business may never hold them.
 //     Its own data may hold its own SPID (per uso professionale) and portal
 //     logins (entratel.password), but no CIE, CieID or digital signature
-//     secret, which is always a person's.
+//     secret, which is always a person's, not even under a SPID category
+//     (spid.cie_pin).
 //
 // A document category is checked as its scope ID (DocumentScopeID), so its
 // documents follow the same rules.
@@ -70,7 +71,8 @@ func (v *Vault) checkKind(id string) error {
 	if v.kind == KindImpresa && person != "" && (IsCredentialField(id) || IsPersonalCategory(category)) {
 		return &ValidationError{Field: id, Msg: errPartyCredential}
 	}
-	if v.kind == KindImpresa && person == "" && (IsIdentityCredential(id) || IsPersonalCategory(category)) && !isSPIDCategory(category) {
+	if v.kind == KindImpresa && person == "" && (IsIdentityCredential(id) || IsPersonalCategory(category)) &&
+		(!isSPIDCategory(category) || namesNonSPIDIdentity(local)) {
 		return &ValidationError{Field: id, Msg: errBusinessCredential}
 	}
 	return nil
@@ -100,6 +102,18 @@ func isSPIDCategory(category string) bool {
 }
 
 var reSPIDWord = regexp.MustCompile(`^spid[0-9]*$`)
+
+// namesNonSPIDIdentity reports a word of a field's category or name that
+// names a CIE, CieID or digital signature, so spid.cie_pin or spid_firma.puk
+// can't pass as the business's own SPID.
+func namesNonSPIDIdentity(local string) bool {
+	for _, w := range idWords(strings.ReplaceAll(strings.ToLower(local), ".", "_")) {
+		if reIdentityWord.MatchString(w) && !reSPIDWord.MatchString(w) {
+			return true
+		}
+	}
+	return false
+}
 
 // schemaCategoryOf returns the schema category a category is, or is a
 // numbered copy of: cie2 and identity-2 follow the rules of cie and

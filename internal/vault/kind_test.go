@@ -103,6 +103,16 @@ func TestKind_FieldRules(t *testing.T) {
 		{impresa, "cns.puk", "12345678", true},
 		{impresa, "spid.provider", "posteid", false},
 		{impresa, "spid2.livello", "2", false},
+		{impresa, "spid.password", "x", false},
+		// A SPID category is no cover for a CIE or signature secret.
+		{impresa, "spid.cie_pin", "12345678", true},
+		{impresa, "spid_cie.pin", "12345678", true},
+		{impresa, "spid-firma.puk", "12345678", true},
+		{impresa, "spid.firma_digitale_pin", "12345678", true},
+		// ruolo is a person's, never the business's own.
+		{impresa, "ruolo.note", "x", true},
+		{impresa, "ruolo.tipo", "cliente", true},
+		{impresa, "rossi:ruolo.tipo", "cliente", false},
 		{impresa, "bianchi:firmadigitale.pin", "12345678", true},
 		{impresa, "bianchi:smartcard.pin", "12345678", true},
 		{impresa, "bianchi:cie.codice_sblocco", "12345678", true},

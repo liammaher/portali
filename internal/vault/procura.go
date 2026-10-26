@@ -12,10 +12,11 @@ import "strings"
 // Person: rossi:procura.ente, oggetto, data_conferimento, data_scadenza
 
 // isPersonOnlyCategory reports a category only other people can have: the
-// procura they gave, and its numbered copies (procura2).
+// procura they gave and their ruolo in the business, and numbered copies
+// (procura2).
 func isPersonOnlyCategory(category string) bool {
 	c := schemaCategoryOf(category)
-	return c != nil && c.Name == "procura"
+	return c != nil && (c.Name == "procura" || c.Name == "ruolo")
 }
 
 // procuraDescription documents the category in the schema.
@@ -45,5 +46,8 @@ func procuraFields() []SchemaField {
 // errPersonOnlyCategory is the message for procura without a person.
 func errPersonOnlyCategory(category string) string {
 	base := strings.ToLower(category)
+	if c := schemaCategoryOf(base); c != nil && c.Name == "ruolo" {
+		return base + " is a person's role in the business: store it on them, e.g. rossi:" + base + ".tipo"
+	}
 	return base + " is a delega another person gave you: store it on them, e.g. rossi:" + base + ".ente"
 }
