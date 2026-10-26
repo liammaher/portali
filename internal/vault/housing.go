@@ -20,6 +20,8 @@ var (
 	rePDR              = regexp.MustCompile(`^[0-9]{14}$`)
 	reRLICode          = regexp.MustCompile(`^[A-Z0-9]{10,20}$`)
 	reDecimal          = regexp.MustCompile(`^[0-9]+(\.[0-9]+)?$`)
+	reEuroGroups       = regexp.MustCompile(`^[1-9][0-9]{0,2}([.,][0-9]{3})+$`)
+	reEuroDecimals     = regexp.MustCompile(`^[0-9]{1,2}$`)
 )
 
 // catastoGroupMax is the highest category number in each cadastral group
@@ -35,7 +37,9 @@ var energyClasses = map[string]bool{
 var titoli = map[string]string{
 	"proprietario": "proprietario", "proprietaria": "proprietario", "owner": "proprietario",
 	"locatario": "locatario", "conduttore": "locatario", "inquilino": "locatario", "affittuario": "locatario", "tenant": "locatario",
-	"comodatario": "comodatario", "usufruttuario": "usufruttuario", "ospite": "ospite", "altro": "altro",
+	"inquilina": "locatario", "locataria": "locatario", "affittuaria": "locatario",
+	"comodatario": "comodatario", "comodataria": "comodatario", "usufruttuario": "usufruttuario", "usufruttuaria": "usufruttuario",
+	"ospite": "ospite", "altro": "altro",
 }
 
 // euroFields hold amounts in euro, stored as 1234.56.
@@ -166,35 +170,41 @@ func normalizeDecimal(s string) (string, bool) {
 // normalizeEuro accepts Italian (1.250,50) and plain (1250.50) amounts, with or
 // without a € sign, and returns two decimals. A lone dot followed by exactly
 // three digits is read as a thousands separator, as in Italian (1.250 = 1250).
+// Thousands groups must have three digits and decimals at most two, so a
+// mistyped separator (1.234.56) is refused rather than stored 100 times larger.
 func normalizeEuro(s string) (string, bool) {
 	s = strings.ToLower(s)
 	for _, cut := range []string{"€", "euro", "eur", " "} {
 		s = strings.ReplaceAll(s, cut, "")
 	}
-	lastDot, lastComma := strings.LastIndex(s, "."), strings.LastIndex(s, ",")
-	switch {
-	case lastDot >= 0 && lastComma >= 0:
-		if lastComma > lastDot {
-			s = strings.ReplaceAll(s, ".", "")
-			s = strings.Replace(s, ",", ".", 1)
-		} else {
-			s = strings.ReplaceAll(s, ",", "")
-		}
-	case lastComma >= 0:
-		if strings.Count(s, ",") > 1 {
-			s = strings.ReplaceAll(s, ",", "")
-		} else {
-			s = strings.Replace(s, ",", ".", 1)
-		}
-	case lastDot >= 0:
-		if strings.Count(s, ".") > 1 || len(s)-lastDot-1 == 3 {
-			s = strings.ReplaceAll(s, ".", "")
+	intPart, decPart := s, ""
+	if i := strings.LastIndexAny(s, ".,"); i >= 0 {
+		sep, digits := s[i], s[i+1:]
+		lone := strings.Count(s, string(sep)) == 1
+		mixed := strings.ContainsAny(s[:i], ".,")
+		switch {
+		case lone && (mixed || len(digits) <= 2):
+			intPart, decPart = s[:i], digits
+		case lone && sep == ',' && len(digits) == 3:
+			return "", false // 1,250: thousands or three decimals, can't tell
 		}
 	}
-	if !reDecimal.MatchString(s) {
+	if decPart != "" && !reEuroDecimals.MatchString(decPart) {
 		return "", false
 	}
-	f, err := strconv.ParseFloat(s, 64)
+	if strings.ContainsAny(intPart, ".,") {
+		if !reEuroGroups.MatchString(intPart) || strings.ContainsRune(intPart, '.') && strings.ContainsRune(intPart, ',') {
+			return "", false
+		}
+		intPart = strings.NewReplacer(".", "", ",", "").Replace(intPart)
+	}
+	if decPart != "" {
+		intPart += "." + decPart
+	}
+	if !reDecimal.MatchString(intPart) {
+		return "", false
+	}
+	f, err := strconv.ParseFloat(intPart, 64)
 	if err != nil {
 		return "", false
 	}

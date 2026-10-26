@@ -93,7 +93,7 @@ type BackupInfo struct {
 // SetBackupDir chooses the folder backups are written to. It must already
 // exist and lie outside the vault folder.
 func (v *Vault) SetBackupDir(dir string) error {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return err
 	}
 	if !filepath.IsAbs(dir) {

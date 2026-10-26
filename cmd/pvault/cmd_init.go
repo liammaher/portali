@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func cmdInit() {
+	positionalArgs(os.Args[2:], "usage: pvault init", 0, 0)
 	dir := vaultDir()
 	if err := vault.CanInit(dir); err != nil {
 		fatal("%v", err)

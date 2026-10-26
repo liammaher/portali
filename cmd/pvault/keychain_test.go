@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"os/user"
 	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -66,5 +67,15 @@ func TestStoreInKeychain(t *testing.T) {
 	}
 	if got, err := readKeychain(service); err != nil || got != "bbbb2222" {
 		t.Fatalf("got %q, %v", got, err)
+	}
+}
+
+// A token with a line break would add a second `security -i` command; it is
+// refused before security runs.
+func TestStoreInKeychain_RefusesNonHexToken(t *testing.T) {
+	for _, bad := range []string{"", "abc\ndelete-keychain login.keychain", "abc def", "ABC", "x"} {
+		if err := storeInKeychain("pvault-test-never-used", bad); err == nil || !strings.Contains(err.Error(), "malformed") {
+			t.Errorf("storeInKeychain(%q) = %v, want malformed token", bad, err)
+		}
 	}
 }

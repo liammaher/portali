@@ -5,6 +5,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -25,7 +26,7 @@ import (
 func echoMux(passwords *atomic.Int32) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /vault/status", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{"locked":true}`))
+		fmt.Fprintf(w, `{"locked":true,"addr":%q}`, serverHost())
 	})
 	mux.HandleFunc("POST /vault/unlock", func(w http.ResponseWriter, r *http.Request) {
 		var body map[string]string
@@ -241,5 +242,25 @@ func TestUIRefusesUnverifiedServer(t *testing.T) {
 	shortVaultDir(t) // no socket: this vault's server isn't running
 	if url, err := uiURL(); err == nil {
 		t.Fatalf("opened %s on an unverified server", url)
+	}
+}
+
+// A server verified over the socket but listening elsewhere than VAULT_ADDR:
+// whatever answers on VAULT_ADDR must not get tokens or the UI's password.
+func TestCheckVaultServer_RefusesOtherAddress(t *testing.T) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /vault/status", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{"locked":false,"addr":"127.0.0.1:7300"}`))
+	})
+	serveOnSocket(t, serveHandler(t, mux))
+	squatter := httptest.NewServer(mux)
+	t.Cleanup(squatter.Close)
+	t.Setenv("VAULT_ADDR", squatter.URL)
+	if err := checkVaultServer(); err == nil || !strings.Contains(err.Error(), "127.0.0.1:7300") {
+		t.Fatalf("err = %v, want a VAULT_ADDR mismatch", err)
+	}
+	t.Setenv("VAULT_ADDR", "http://127.0.0.1:7300")
+	if err := checkVaultServer(); err != nil {
+		t.Fatalf("matching VAULT_ADDR: %v", err)
 	}
 }

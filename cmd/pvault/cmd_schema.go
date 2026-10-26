@@ -11,9 +11,10 @@ import (
 func cmdSchema() {
 	jsonFlag := false
 	for _, arg := range os.Args[2:] {
-		if arg == "--json" {
-			jsonFlag = true
+		if arg != "--json" {
+			fatal("unknown option %q\nusage: pvault schema [--json]", arg)
 		}
+		jsonFlag = true
 	}
 
 	if jsonFlag {

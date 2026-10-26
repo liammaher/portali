@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 )
 
 func cmdUI() {
+	positionalArgs(os.Args[2:], "usage: pvault ui", 0, 0)
 	url, err := uiURL()
 	if err != nil {
 		fatal("%v", err)

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 )
 
@@ -72,5 +73,29 @@ func TestRemoveStalePIDKeepsLiveServer(t *testing.T) {
 	removeStalePID()
 	if _, err := readPID(); err == nil {
 		t.Fatal("kept the PID file of a finished process")
+	}
+}
+
+// A repeated flag is an error: with the last one winning,
+// --max-sensitivity public --max-sensitivity critical made a critical token.
+func TestParseFlags_RefusesRepeat(t *testing.T) {
+	var tier string
+	err := parseFlags([]string{"--max-sensitivity", "public", "--max-sensitivity", "critical"}, map[string]*string{"--max-sensitivity": &tier})
+	if err == nil || !strings.Contains(err.Error(), "twice") {
+		t.Fatalf("err = %v, want given twice", err)
+	}
+}
+
+func TestParseServeArgs(t *testing.T) {
+	if stdin, locked, err := parseServeArgs([]string{"--password-stdin"}); err != nil || !stdin || locked {
+		t.Fatalf("--password-stdin: %v %v %v", stdin, locked, err)
+	}
+	if stdin, locked, err := parseServeArgs(nil); err != nil || stdin || locked {
+		t.Fatalf("no options: %v %v %v", stdin, locked, err)
+	}
+	for _, bad := range [][]string{{"--pasword-stdin"}, {"extra"}, {"--password-stdin", "--locked"}} {
+		if _, _, err := parseServeArgs(bad); err == nil {
+			t.Errorf("parseServeArgs(%q) accepted", bad)
+		}
 	}
 }

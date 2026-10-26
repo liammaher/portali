@@ -27,6 +27,9 @@ const securityItemNotFound = 44
 // option, and which usually means a flag value was forgotten).
 var keychainNamePattern = regexp.MustCompile(`^[A-Za-z0-9._][A-Za-z0-9._-]{0,63}$`)
 
+// hexTokenPattern matches a service token as the server makes them.
+var hexTokenPattern = regexp.MustCompile(`^[0-9a-f]{1,128}$`)
+
 // keychainAccount is the Keychain account the token is stored under: the
 // current macOS user. The MCP server's VAULT_KEYCHAIN_SERVICE lookup uses
 // the same account.
@@ -80,6 +83,11 @@ func readKeychain(service string) (string, error) {
 // never on a command line where other processes could see it, and is read
 // back to confirm it was stored.
 func storeInKeychain(service, token string) error {
+	// The token comes from the server over TCP and is written into a
+	// `security -i` command line, so anything but hex could add a command.
+	if !hexTokenPattern.MatchString(token) {
+		return errors.New("the server returned a malformed token; not storing it")
+	}
 	account, err := keychainAccount()
 	if err != nil {
 		return err

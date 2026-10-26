@@ -830,3 +830,73 @@ func TestListServiceTokensLeavesOutExpired(t *testing.T) {
 		t.Fatalf("tokens = %+v, %v", tokens, err)
 	}
 }
+
+// GetIf checks the row it decrypts, so a field that turned personal after the
+// caller's own tier check is not returned.
+func TestGetIf_FilterSeesDecryptedRow(t *testing.T) {
+	v, _ := tmpVault(t)
+	if err := v.Set("cie.pin", "12345678", ""); err != nil {
+		t.Fatal(err)
+	}
+	belowPersonal := func(id, sensitivity string) bool { return TierAllows("critical", sensitivity) }
+	f, err := v.GetIf("cie.pin", belowPersonal)
+	if err != nil || f != nil {
+		t.Fatalf("GetIf returned %v, %v; want the personal field hidden", f, err)
+	}
+	if f, err := v.GetIf("cie.pin", nil); err != nil || f == nil || f.Value != "12345678" {
+		t.Fatalf("GetIf with no filter = %v, %v", f, err)
+	}
+}
+
+func TestOpen_DoesNotCreateDatabase(t *testing.T) {
+	dir := t.TempDir()
+	if _, err := Open(dir); err != ErrNotInitialized {
+		t.Fatalf("Open on an empty dir = %v, want ErrNotInitialized", err)
+	}
+	if err := CanInit(dir); err != nil {
+		t.Fatalf("CanInit after Open = %v, want nil", err)
+	}
+}
+
+func TestInit_FailedDatabaseLeavesNothing(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	if err := os.MkdirAll(filepath.Join(dir, "vault.db-shm"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Init(dir, testPassword); err == nil {
+		t.Fatal("Init succeeded despite the blocked -shm file")
+	}
+	os.Remove(filepath.Join(dir, "vault.db-shm"))
+	if err := CanInit(dir); err != nil {
+		t.Fatalf("CanInit after a failed Init = %v, want nil", err)
+	}
+	if _, err := Init(dir, testPassword); err != nil {
+		t.Fatalf("Init after cleanup: %v", err)
+	}
+}
+
+// Every caller clears its copy of the vault key when done, so the copy must
+// never be the session's own key: clearing it would wipe the vault key.
+func TestVaultKeyCopiesClearedSafely(t *testing.T) {
+	v, _ := tmpVault(t)
+	k, err := v.requireUnlocked()
+	if err != nil {
+		t.Fatal(err)
+	}
+	clear(k)
+	if again, _ := v.requireUnlocked(); bytes.Equal(again, make([]byte, len(again))) {
+		t.Fatal("clearing a copy zeroed the session's vault key")
+	}
+	for i := 0; i < 3; i++ {
+		if err := v.Set("identity.full_name", "Mario Rossi", ""); err != nil {
+			t.Fatal(err)
+		}
+		if f, err := v.Get("identity.full_name"); err != nil || f.Value != "Mario Rossi" {
+			t.Fatalf("round %d: %v, %v", i, f, err)
+		}
+	}
+	v.Lock()
+	if err := v.checkUnlocked(); err != ErrLocked {
+		t.Fatalf("checkUnlocked after lock = %v", err)
+	}
+}

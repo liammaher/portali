@@ -28,7 +28,7 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !reachesPersonal(r) &&
-		(q.Get("sensitivity") == vault.TierPersonal || vault.IsPersonalCategory(category)) {
+		(q.Get("sensitivity") == vault.TierPersonal || vault.DefaultDocumentTier(category) == vault.TierPersonal) {
 		personalOnlyDenied(w)
 		return
 	}

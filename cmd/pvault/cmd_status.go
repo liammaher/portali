@@ -3,10 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 	"time"
 )
 
 func cmdStatus() {
+	positionalArgs(os.Args[2:], "usage: pvault status", 0, 0)
 	status, err := serverStatus()
 	if errors.Is(err, errServerDown) {
 		fmt.Println("Vault is locked (server not running).")

@@ -8,6 +8,7 @@ import (
 )
 
 func cmdLock() {
+	positionalArgs(os.Args[2:], "usage: pvault lock", 0, 0)
 	// Stopping our own server locks the vault and zeroes the key. Locking is
 	// always safe, so this path needs no password. The PID is only trusted
 	// if it still belongs to a pvault process, never a reused PID, and it is

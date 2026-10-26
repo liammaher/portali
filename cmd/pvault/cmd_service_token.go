@@ -118,6 +118,7 @@ func revokeReplacedToken(previous string) string {
 }
 
 func cmdListServiceTokens() {
+	positionalArgs(os.Args[2:], "usage: pvault list-service-tokens", 0, 0)
 	resp, err := apiRequest("GET", "/vault/tokens/service", nil)
 	if err != nil {
 		fatal("request failed: %v", err)
@@ -147,10 +148,7 @@ func cmdListServiceTokens() {
 }
 
 func cmdRevokeServiceToken() {
-	if len(os.Args) < 3 {
-		fatal("usage: pvault revoke-service-token <token-or-prefix>\n  prefix: the token_prefix shown by list-service-tokens (at least 8 characters)")
-	}
-	ref := os.Args[2]
+	ref := positionalArgs(os.Args[2:], "usage: pvault revoke-service-token <token-or-prefix>\n  prefix: the token_prefix shown by list-service-tokens (at least 8 characters)", 1, 1)[0]
 	// A full token is sent as its hash, so the raw token never goes in a URL.
 	if len(ref) == 64 {
 		ref = tokenRef(ref)

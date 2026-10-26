@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/signal"
 	"strings"
@@ -13,20 +15,11 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
-var passwordFromStdin, startLocked bool
-
-func init() {
-	for _, arg := range os.Args {
-		switch arg {
-		case "--password-stdin":
-			passwordFromStdin = true
-		case "--locked":
-			startLocked = true
-		}
-	}
-}
-
 func cmdServe() {
+	passwordFromStdin, startLocked, err := parseServeArgs(os.Args[2:])
+	if err != nil {
+		fatal("%v\nusage: pvault serve [--password-stdin | --locked]", err)
+	}
 	dir := vaultDir()
 	v, err := vault.Open(dir)
 	if err != nil {
@@ -40,15 +33,8 @@ func cmdServe() {
 	switch {
 	case startLocked:
 	case passwordFromStdin:
-		scanner := bufio.NewScanner(os.Stdin)
-		if scanner.Scan() {
-			pw = strings.TrimSpace(scanner.Text())
-		}
-		if scanner.Scan() {
-			sk = strings.TrimSpace(scanner.Text())
-		}
-		if pw == "" || sk == "" {
-			fatal("failed to read credentials from stdin")
+		if pw, sk, err = readStdinCredentials(os.Stdin); err != nil {
+			fatal("%v", err)
 		}
 	default:
 		pw, err = promptPassword("Profile password: ")
@@ -109,4 +95,41 @@ func cmdServe() {
 	srv.Stop(context.Background())
 	removeLegacySessionFile()
 	removePID()
+}
+
+// readStdinCredentials reads the password and secret key that 'pvault unlock'
+// pipes in, one per line. The password is kept as typed, spaces included;
+// only the line ending is dropped.
+func readStdinCredentials(r io.Reader) (pw, sk string, err error) {
+	scanner := bufio.NewScanner(r)
+	if scanner.Scan() {
+		pw = strings.TrimRight(scanner.Text(), "\r")
+	}
+	if scanner.Scan() {
+		sk = strings.TrimSpace(scanner.Text())
+	}
+	if pw == "" || sk == "" {
+		return "", "", errors.New("failed to read credentials from stdin")
+	}
+	return pw, sk, nil
+}
+
+// parseServeArgs reads serve's options: --password-stdin (used by 'pvault
+// unlock') or --locked (Touch ID unlocks it later). Anything else is an error,
+// so a typo never falls back to a password prompt.
+func parseServeArgs(args []string) (passwordFromStdin, startLocked bool, err error) {
+	for _, arg := range args {
+		switch arg {
+		case "--password-stdin":
+			passwordFromStdin = true
+		case "--locked":
+			startLocked = true
+		default:
+			return false, false, fmt.Errorf("unknown option %q", arg)
+		}
+	}
+	if passwordFromStdin && startLocked {
+		return false, false, errors.New("--password-stdin and --locked can't be combined")
+	}
+	return passwordFromStdin, startLocked, nil
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"testing"
 )
@@ -41,4 +42,11 @@ func serveHandler(t *testing.T, h http.Handler) func(net.Listener) {
 		go srv.Serve(ln)
 		t.Cleanup(func() { srv.Close() })
 	}
+}
+
+// serverHost is the host:port of VAULT_ADDR, which a genuine server reports
+// as its address in /vault/status.
+func serverHost() string {
+	u, _ := url.Parse(serverAddr())
+	return u.Host
 }

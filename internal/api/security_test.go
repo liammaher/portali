@@ -937,3 +937,17 @@ func TestAuditLogFieldNames(t *testing.T) {
 		}
 	}
 }
+
+// Only wrong credentials count toward the unlock limit, so junk requests from
+// another local process can't lock the user out.
+func TestUnlock_JunkRequestsDontUseUpAttempts(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	for i := 0; i < 10; i++ {
+		env.doRequest(t, "POST", "/vault/unlock", map[string]string{}, false)
+	}
+	env.vault.Lock()
+	w := env.doRequest(t, "POST", "/vault/unlock", map[string]string{"password": testPassword, "secret_key": sk}, false)
+	if w.Code != 200 {
+		t.Fatalf("unlock after junk requests: %d %s", w.Code, w.Body.String())
+	}
+}

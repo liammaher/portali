@@ -115,7 +115,10 @@ func TestIsCredentialField(t *testing.T) {
 	forbidden := []string{"spid.password", "spid.username", "spid.otp", "SPID.Password", "cie.pin", "cie.puk", "cie.pin_1", "cie.second_pin",
 		"cie.pin1", "cie.puk2", "cieid.pin", "identity.spid_password", "documents.cie_pin", "credentials.spid-otp", "Identity.SPID_Password",
 		"spid.login", "cieid.username", "spid.pass", "spid.pw", "spid.recovery_codes", "cieid.codice", "identity.spid_secret",
-		"identity.spidPassword", "identity.spidpassword", "identity.ciePin1", "notes.pinspid"}
+		"identity.spidPassword", "identity.spidpassword", "identity.ciePin1", "notes.pinspid",
+		// A second account or card, and Italian words for a secret answer or credentials.
+		"spid2.password", "spid1.pin", "cieid2.username", "cie2.pin", "identity.spid2_password", "identity.cie2_puk",
+		"identity.spid_risposta_segreta", "identity.spid_credenziali"}
 	for _, id := range forbidden {
 		if !IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = false, want true", id)
@@ -123,7 +126,7 @@ func TestIsCredentialField(t *testing.T) {
 	}
 	allowed := []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
 		"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza",
-		"identity.passaporto", "notes.specie", "identity.cieloazzurro"}
+		"identity.passaporto", "notes.specie", "identity.cieloazzurro", "cie2.numero", "spid2.provider"}
 	for _, id := range allowed {
 		if IsCredentialField(id) {
 			t.Errorf("IsCredentialField(%q) = true, want false", id)
@@ -321,5 +324,19 @@ func TestCodiceFiscaleDayOfMonth(t *testing.T) {
 func TestPartitaIVAOfficeCode(t *testing.T) {
 	if err := ValidatePartitaIVA("00000000000"); err == nil {
 		t.Error("00000000000 accepted")
+	}
+}
+
+func TestNumberedAccountsArePersonal(t *testing.T) {
+	for _, category := range []string{"spid2", "cieid2", "spid_poste2"} {
+		if !IsPersonalCategory(category) || DefaultDocumentTier(category) != TierPersonal {
+			t.Errorf("%s: personal category = %v, document tier %s", category, IsPersonalCategory(category), DefaultDocumentTier(category))
+		}
+	}
+	if IsPersonalCategory("cie2") {
+		t.Error("cie2 (a card, not an account) counted as a personal category")
+	}
+	if got := DefaultSensitivity("spid2.password"); got != TierPersonal {
+		t.Errorf("DefaultSensitivity(spid2.password) = %s, want personal", got)
 	}
 }

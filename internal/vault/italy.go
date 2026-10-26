@@ -24,8 +24,9 @@ func (e *ValidationError) Error() string {
 }
 
 const (
-	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreti|chiave|chiavi)s?[0-9]*`
-	identityWords   = `spid|cieid|cie`
+	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreta|segreti|segrete|chiave|chiavi|credenziale|credenziali)s?[0-9]*`
+	// A trailing number names a second account or card: spid2, cie2.
+	identityWords = `(?:spid|cieid|cie)[0-9]*`
 )
 
 var (
@@ -34,6 +35,9 @@ var (
 	reCredentialWord = regexp.MustCompile(`^(` + credentialWords + `)$`)
 	// reIdentityWord matches a word naming SPID, CieID or the CIE.
 	reIdentityWord = regexp.MustCompile(`^(` + identityWords + `)$`)
+	// rePersonalCategoryWord matches the first word of a SPID or CieID
+	// account category (not the CIE itself, whose number isn't secret).
+	rePersonalCategoryWord = regexp.MustCompile(`^(spid|cieid)[0-9]*$`)
 	// reJoinedCredential matches an identity word and a credential word run
 	// together, as in identity.spidPassword (lower-cased to spidpassword).
 	reJoinedCredential = regexp.MustCompile(`^(` + identityWords + `)(` + credentialWords + `)$|^(` + credentialWords + `)(` + identityWords + `)$`)
@@ -89,10 +93,10 @@ func isNonSecretAccountField(name string) bool {
 
 // IsPersonalCategory reports categories whose fields and documents default to
 // TierPersonal: SPID and CieID accounts, including ones named per provider
-// such as spid_poste or cieid-2.
+// such as spid_poste, cieid-2 or spid2.
 func IsPersonalCategory(category string) bool {
 	words := idWords(strings.ToLower(category))
-	return len(words) > 0 && (words[0] == "spid" || words[0] == "cieid")
+	return len(words) > 0 && rePersonalCategoryWord.MatchString(words[0])
 }
 
 // idWords splits a category or field name into its words.

@@ -4,8 +4,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"net"
 	"net/http"
@@ -183,7 +185,19 @@ func checkVaultServer() error {
 		}
 		return err
 	}
-	resp.Body.Close()
+	defer resp.Body.Close()
+	// Tokens and the UI's password go to VAULT_ADDR over TCP, so it must be
+	// the server just verified, not something else on another port or on
+	// localhost's other address.
+	var status struct {
+		Addr string `json:"addr"`
+	}
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&status); err != nil {
+		return fmt.Errorf("vault server status: %w", err)
+	}
+	if u, err := url.Parse(serverAddr()); err != nil || u.Host != status.Addr {
+		return fmt.Errorf("VAULT_ADDR %s isn't this vault's server, which listens on %s — set VAULT_ADDR=http://%s or unset it", serverAddr(), status.Addr, status.Addr)
+	}
 	return nil
 }
 

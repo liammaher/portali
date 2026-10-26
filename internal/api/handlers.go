@@ -109,10 +109,19 @@ func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
 	if !requireJSON(w, r) {
 		return
 	}
-	if _, ok := s.unlockLimit.allow(); !ok {
+	attempt, ok := s.unlockLimit.allow()
+	if !ok {
 		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many unlock attempts, try again later")
 		return
 	}
+	// As with grants, only a wrong password or secret key keeps the attempt, so
+	// junk requests can't use up the user's own unlocks.
+	wrongPassword := false
+	defer func() {
+		if !wrongPassword {
+			s.unlockLimit.refund(attempt)
+		}
+	}()
 
 	var req struct {
 		Password  string `json:"password"`
@@ -131,6 +140,7 @@ func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch err {
 		case vault.ErrWrongPassword:
+			wrongPassword = true
 			writeError(w, http.StatusUnauthorized, "unauthenticated", "wrong password or secret key")
 		case vault.ErrAlreadyUnlocked:
 			writeError(w, http.StatusConflict, "conflict", "vault is already unlocked")
@@ -248,7 +258,10 @@ func (s *Server) handleStatus(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, "internal", "internal error")
 		return
 	}
-	writeJSON(w, http.StatusOK, status)
+	writeJSON(w, http.StatusOK, struct {
+		*vault.VaultStatus
+		Addr string `json:"addr,omitempty"`
+	}{status, s.tcpAddr})
 }
 
 // GET /vault/fields
@@ -287,7 +300,9 @@ func (s *Server) handleGetField(w http.ResponseWriter, r *http.Request) {
 	if _, ok := s.requireFieldTier(w, r, id, false); !ok {
 		return
 	}
-	field, err := s.vault.Get(id)
+	// The filter re-checks the tier on the row actually decrypted, in case the
+	// field was created or raised to personal since requireFieldTier looked.
+	field, err := s.vault.GetIf(id, callerFilter(r))
 	if err != nil {
 		handleVaultError(w, err)
 		return

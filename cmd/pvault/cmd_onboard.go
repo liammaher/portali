@@ -27,6 +27,7 @@ var onboardFields = []struct {
 }
 
 func cmdOnboard() {
+	positionalArgs(os.Args[2:], "usage: pvault onboard", 0, 0)
 	dir := vaultDir()
 
 	// Check if vault already exists
