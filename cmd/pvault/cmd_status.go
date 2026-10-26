@@ -6,13 +6,18 @@ import (
 	"os"
 	"sort"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func cmdStatus() {
 	positionalArgs(os.Args[2:], "usage: pvault status", 0, 0)
+	if name := vaultName(); name != "" {
+		fmt.Printf("Vault:   %s (%s)\n", name, vaultDir())
+	}
 	status, err := serverStatus()
 	if errors.Is(err, errServerDown) {
-		fmt.Println("Vault is locked (server not running).")
+		fmt.Printf("Vault is locked (server not running; it listens on %s when unlocked).\n", serverAddr())
 		return
 	}
 	if err != nil {
@@ -20,7 +25,7 @@ func cmdStatus() {
 	}
 
 	if !status.Initialized {
-		fmt.Println("Vault is not initialized. Run 'pvault init' first.")
+		fmt.Printf("Vault is not initialized. Run 'pvault %sinit' first.\n", vaultFlag())
 		return
 	}
 
@@ -29,11 +34,17 @@ func cmdStatus() {
 	} else {
 		fmt.Println("Status:  unlocked")
 	}
+	if status.Kind == vault.KindImpresa {
+		fmt.Println("Kind:    business (impresa)")
+	} else {
+		fmt.Println("Kind:    personal")
+	}
+	fmt.Printf("Server:  %s\n", serverAddr())
 	fmt.Printf("Fields:  %d\n", status.FieldCount)
 	if b := status.Backup; b != nil {
 		switch {
 		case !b.Configured:
-			fmt.Println("Backup:  off — run 'pvault backup --to <folder>'")
+			fmt.Printf("Backup:  off — run 'pvault %sbackup --to <folder>'\n", vaultFlag())
 		case b.Error != "":
 			fmt.Printf("Backup:  FAILING — %s\n", b.Error)
 		case b.Last == "":
@@ -58,6 +69,10 @@ func cmdStatus() {
 		for _, cat := range cats {
 			fmt.Printf("  %-*s %d fields\n", width, cat, status.Categories[cat])
 		}
-		fmt.Println("Family members aren't counted here; see 'pvault person list'.")
+		if status.Kind == vault.KindImpresa {
+			fmt.Printf("Only the business's own data is counted here; see 'pvault %sperson list' for its people.\n", vaultFlag())
+		} else {
+			fmt.Printf("Family members aren't counted here; see 'pvault %sperson list'.\n", vaultFlag())
+		}
 	}
 }

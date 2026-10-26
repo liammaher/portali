@@ -258,6 +258,35 @@ body::before{
 .members-list button:hover{color:var(--gold)}
 .members-list .muted{color:var(--text-muted)}
 .add-error{color:var(--danger);min-height:1.2em;font-size:13px;margin-top:12px}
+.section .subhead{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-muted);
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  margin:12px 0 20px;
+}
+.checks{display:flex;flex-wrap:wrap;gap:8px 20px;padding:8px 0}
+.field label.check{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:0;
+  font-family:var(--font-mono);
+  font-size:14px;
+  text-transform:none;
+  letter-spacing:0;
+  color:var(--text);
+  cursor:pointer;
+}
+.field label.check input{
+  width:auto;
+  -webkit-appearance:auto;
+  appearance:auto;
+  accent-color:var(--gold);
+  padding:0;
+  border:none;
+}
 
 /* Error banner */
 .error-banner{
@@ -324,6 +353,244 @@ body::before{
     <label for="person">Persona</label>
     <select id="person"><option value="">Io</option></select>
   </div>
+
+  <!-- Impresa: a business vault's own data -->
+  <section data-owner-only class="section" data-section="impresa" data-chapter="Impresa" data-kind="impresa">
+    <div class="section-number">--</div>
+    <h2>La tua impresa</h2>
+    <p class="subtitle">The business itself, as on the visura camerale. Its people (titolare, soci, employees, clients) are under Persone.</p>
+
+    <div class="field">
+      <label>Denominazione / ragione sociale</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="business.denominazione" placeholder="Studio Bianchi S.r.l.">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Forma giuridica</label>
+        <span class="status idle"></span>
+        <select data-field="business.forma_giuridica">
+          <option value=""></option>
+          <option value="ditta_individuale">Ditta individuale</option>
+          <option value="lavoratore_autonomo">Libero professionista / lavoratore autonomo</option>
+          <option value="srl">S.r.l.</option>
+          <option value="srls">S.r.l.s.</option>
+          <option value="snc">S.n.c.</option>
+          <option value="sas">S.a.s.</option>
+          <option value="spa">S.p.A.</option>
+          <option value="sapa">S.a.p.a.</option>
+          <option value="cooperativa">Cooperativa</option>
+          <option value="studio_associato">Studio associato</option>
+          <option value="stp">Società tra professionisti (STP)</option>
+          <option value="altro">Altro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Regime fiscale</label>
+        <span class="status idle"></span>
+        <select data-field="business.regime_fiscale">
+          <option value=""></option>
+          <option value="forfettario">Forfettario</option>
+          <option value="ordinario">Ordinario</option>
+          <option value="semplificato">Semplificato</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Partita IVA</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.partita_iva" placeholder="01234567890" inputmode="numeric" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Codice fiscale (se diverso)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.codice_fiscale" autocapitalize="characters" spellcheck="false">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Numero REA</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.rea" placeholder="NA-123456">
+      </div>
+      <div class="field">
+        <label>Camera di Commercio</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.cciaa" placeholder="NA" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Codice ATECO</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.codice_ateco" placeholder="71.11.00">
+      </div>
+      <div class="field">
+        <label>Capitale sociale (€)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.capitale_sociale" placeholder="10.000,00">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Data costituzione</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="business.data_costituzione">
+      </div>
+      <div class="field">
+        <label>Inizio attività</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="business.data_inizio_attivita">
+      </div>
+    </div>
+    <div class="field">
+      <label>Descrizione attività</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="business.descrizione_attivita" placeholder="Progettazione architettonica">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>PEC</label>
+        <span class="status idle"></span>
+        <input type="email" data-field="business.pec" placeholder="studio@pec.it">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <span class="status idle"></span>
+        <input type="email" data-field="business.email" placeholder="info@studio.it">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Telefono</label>
+        <span class="status idle"></span>
+        <input type="tel" data-field="business.telefono" placeholder="+39 081 123 4567">
+      </div>
+      <div class="field">
+        <label>Sito web</label>
+        <span class="status idle"></span>
+        <input type="url" data-field="business.sito_web" placeholder="https://studio.it">
+      </div>
+    </div>
+
+    <h3 class="subhead">Sede legale</h3>
+    <div class="field-row">
+      <div class="field">
+        <label>Indirizzo</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.sede_legale_indirizzo" placeholder="Via Toledo">
+      </div>
+      <div class="field">
+        <label>Civico</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.sede_legale_civico" placeholder="12">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>CAP</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.sede_legale_cap" placeholder="80134" inputmode="numeric" maxlength="5">
+      </div>
+      <div class="field">
+        <label>Comune</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.sede_legale_comune" placeholder="Napoli">
+      </div>
+      <div class="field">
+        <label>Provincia</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.sede_legale_provincia" placeholder="NA" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+
+    <h3 class="subhead">Locale (where the activity is carried on)</h3>
+    <div class="field-row">
+      <div class="field">
+        <label>Indirizzo</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locale.indirizzo" placeholder="Via Toledo">
+      </div>
+      <div class="field">
+        <label>Civico</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locale.civico" placeholder="12">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>CAP</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locale.cap" placeholder="80134" inputmode="numeric" maxlength="5">
+      </div>
+      <div class="field">
+        <label>Comune</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locale.comune" placeholder="Napoli">
+      </div>
+      <div class="field">
+        <label>Provincia</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="locale.provincia" placeholder="NA" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+    <div class="field">
+      <label>Titolo</label>
+      <span class="status idle"></span>
+      <select data-field="locale.titolo">
+        <option value=""></option>
+        <option value="proprietario">Proprietario</option>
+        <option value="locatario">In affitto</option>
+        <option value="comodatario">In comodato</option>
+        <option value="usufruttuario">Usufrutto</option>
+        <option value="altro">Altro</option>
+      </select>
+    </div>
+
+    <h3 class="subhead">Dipendenti e scadenze</h3>
+    <div class="field-row">
+      <div class="field">
+        <label>Matricola INPS</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.inps_matricola">
+      </div>
+      <div class="field">
+        <label>CCNL</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.ccnl" placeholder="Commercio">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>INAIL codice ditta</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.inail_codice_ditta">
+      </div>
+      <div class="field">
+        <label>INAIL PAT</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.inail_pat">
+      </div>
+      <div class="field">
+        <label>INAIL codice sede</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="business.inail_codice_sede">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Scadenza PEC</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="business.pec_data_scadenza">
+      </div>
+      <div class="field">
+        <label>Scadenza DURC</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="business.durc_data_scadenza">
+      </div>
+    </div>
+  </section>
 
   <!-- 01 Identità -->
   <section class="section" data-section="0" data-chapter="Identità">
@@ -722,7 +989,7 @@ body::before{
   </section>
 
   <!-- 06 Lavoro -->
-  <section class="section" data-section="5" data-chapter="Lavoro">
+  <section class="section" data-section="5" data-chapter="Lavoro" data-kind="persona">
     <div class="section-number">06</div>
     <h2>What do you do?</h2>
     <p class="subtitle">Employment, or your partita IVA if you are self-employed</p>
@@ -967,6 +1234,61 @@ body::before{
     </div>
   </section>
 
+  <!-- Professione: albo, cassa and digital signature of a person in a business vault -->
+  <section class="section" data-section="professione" data-chapter="Professione" data-kind="impresa">
+    <div class="section-number">--</div>
+    <h2>Professione e firma</h2>
+    <p class="subtitle">For a professional who signs as tecnico (albo, cassa), and anyone with a digital signature. Never enter its PIN: a business vault refuses it.</p>
+    <div class="field-row">
+      <div class="field">
+        <label>Ordine / collegio</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="albo.ordine" placeholder="Ordine degli Architetti P.P.C.">
+      </div>
+      <div class="field">
+        <label>Provincia</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="albo.provincia" placeholder="NA" maxlength="2" autocapitalize="characters">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Numero di iscrizione</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="albo.numero">
+      </div>
+      <div class="field">
+        <label>Data di iscrizione</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="albo.data_iscrizione">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Cassa di previdenza</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="cassa.ente" placeholder="Inarcassa">
+      </div>
+      <div class="field">
+        <label>Matricola</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="cassa.matricola">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Firma digitale: emessa da</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="firma_digitale.ente_emittente" placeholder="Camera di Commercio">
+      </div>
+      <div class="field">
+        <label>Scadenza firma digitale</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="firma_digitale.data_scadenza">
+      </div>
+    </div>
+  </section>
+
   <!-- 10 Pagamento -->
   <section data-owner-only class="section" data-section="9" data-chapter="Pagamento">
     <div class="section-number">10</div>
@@ -1051,7 +1373,7 @@ body::before{
   </section>
 
   <!-- 12 Famiglia -->
-  <section class="section" data-section="11" data-chapter="Famiglia">
+  <section class="section" data-section="11" data-chapter="Famiglia" data-relation="famiglia">
     <div class="section-number">12</div>
     <h2 data-owner-only>Your family</h2>
     <h2 data-member-only>Family</h2>
@@ -1151,6 +1473,105 @@ body::before{
     </div>
   </section>
 
+
+  <!-- Persone: a business vault's people, each with a ruolo -->
+  <section class="section" data-section="ruolo" data-chapter="Persone" data-relation="ruolo">
+    <div class="section-number">--</div>
+    <h2 data-owner-only>Persone</h2>
+    <h2 data-member-only>Ruolo</h2>
+    <p class="subtitle" data-owner-only>The business's titolare, soci, employees and clients. Each one gets their own fields: pick them under Persona at the top of the page to fill them in.</p>
+    <p class="subtitle" data-member-only>What this person is to the business</p>
+
+    <div data-owner-only>
+      <ul class="members-list" id="ruoloList"></ul>
+      <div class="field-row">
+        <div class="field">
+          <label for="addRuoloName">Nome, o ragione sociale</label>
+          <input type="text" id="addRuoloName" placeholder="Mario Rossi" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="addRuolo">Ruolo</label>
+          <select id="addRuolo"><option value=""></option>
+            <option value="titolare">Titolare</option>
+            <option value="legale_rappresentante">Legale rappresentante</option>
+            <option value="socio">Socio/a</option>
+            <option value="amministratore">Amministratore</option>
+            <option value="procuratore">Procuratore</option>
+            <option value="preposto">Preposto</option>
+            <option value="responsabile_tecnico">Responsabile tecnico</option>
+            <option value="dipendente">Dipendente</option>
+            <option value="collaboratore">Collaboratore/consulente</option>
+            <option value="cliente">Cliente / committente</option>
+            <option value="fornitore">Fornitore</option>
+            <option value="impresa_esecutrice">Impresa esecutrice</option>
+            <option value="altro">Altro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="addRuoloSubject">È</label>
+          <select id="addRuoloSubject">
+            <option value="persona">una persona</option>
+            <option value="impresa">un'impresa</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" class="gate-btn" id="addRuoloPerson">Aggiungi persona</button>
+      <p class="add-error" id="addRuoloError" role="alert"></p>
+    </div>
+
+    <div data-member-only>
+      <div class="field">
+        <label>Ruolo (uno o più)</label>
+        <span class="status idle"></span>
+        <input type="hidden" data-field="ruolo.tipo">
+        <div class="checks" data-checks="ruolo.tipo">
+        <label class="check"><input type="checkbox" value="titolare"> Titolare</label>
+        <label class="check"><input type="checkbox" value="legale_rappresentante"> Legale rappresentante</label>
+        <label class="check"><input type="checkbox" value="socio"> Socio/a</label>
+        <label class="check"><input type="checkbox" value="amministratore"> Amministratore</label>
+        <label class="check"><input type="checkbox" value="procuratore"> Procuratore</label>
+        <label class="check"><input type="checkbox" value="preposto"> Preposto</label>
+        <label class="check"><input type="checkbox" value="responsabile_tecnico"> Responsabile tecnico</label>
+        <label class="check"><input type="checkbox" value="dipendente"> Dipendente</label>
+        <label class="check"><input type="checkbox" value="collaboratore"> Collaboratore/consulente</label>
+        <label class="check"><input type="checkbox" value="cliente"> Cliente / committente</label>
+        <label class="check"><input type="checkbox" value="fornitore"> Fornitore</label>
+        <label class="check"><input type="checkbox" value="impresa_esecutrice"> Impresa esecutrice</label>
+        <label class="check"><input type="checkbox" value="altro"> Altro</label>
+        </div>
+      </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Dal</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="ruolo.data_inizio">
+      </div>
+      <div class="field">
+        <label>Fino al</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="ruolo.data_fine">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Quota (%)</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="ruolo.quota_percentuale" placeholder="50" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>Poteri</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="ruolo.poteri" placeholder="amministratore unico, firma disgiunta">
+      </div>
+    </div>
+    <div class="field">
+      <label>Ragione sociale (se è un'impresa)</label>
+      <span class="status idle"></span>
+      <input type="text" data-field="business.denominazione" placeholder="Edil S.r.l.">
+    </div>
+    </div>
+  </section>
+
   <div class="footer">
     <span class="count" id="filledCount">0</span> of <span id="totalCount">0</span> fields filled
   </div>
@@ -1203,10 +1624,45 @@ body::before{
   document.getElementById('totalCount').textContent = totalCount;
 
   // Categories to load
-  const categories = ['identity', 'residenza', 'domicilio', 'abitazione', 'locazione', 'utenze', 'tari', 'financial', 'employment', 'business', 'cie', 'spid',
-    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'payment', 'preferences', 'famiglia'];
-  // The home belongs to the owner: family members don't have these.
-  const ownerOnly = ['abitazione', 'locazione', 'utenze', 'tari'];
+  const categories = ['identity', 'residenza', 'domicilio', 'abitazione', 'locazione', 'utenze', 'tari', 'financial', 'employment', 'business', 'locale', 'cie', 'spid',
+    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'albo', 'cassa', 'firma_digitale', 'payment', 'preferences', 'famiglia', 'ruolo'];
+
+  // What the vault is (persona or impresa) and what each category is about
+  // come from the public schema: which categories the vault's own data and
+  // its people can hold is the vault's rule, mirrored here to show only
+  // what can be saved.
+  let kind = 'persona';
+  let catInfo = {};
+  const schemaReady = fetch(BASE + '/vault/schema').then(readJSON).then(function(schema) {
+    kind = schema.vault_kind || 'persona';
+    (schema.categories || []).forEach(function(c) { catInfo[c.name] = c; });
+    if (kind === 'impresa') {
+      document.querySelector('.header h1').textContent = 'Your business vault';
+      personSelect.options[0].textContent = "L'impresa";
+    }
+  }).catch(function() {
+    showError("Couldn't load the vault's schema: reload this page.");
+  });
+
+  // allowed mirrors the vault's kind rules (checkKind) and owner-only
+  // categories: person is true for another person's fields (prefix set).
+  function allowed(cat, person) {
+    const c = catInfo[cat];
+    if (!c) return true;
+    if (c.kinds && c.kinds.indexOf(kind) < 0) return false;
+    if (person && c.scope === 'owner') return false;
+    if (!person && kind === 'impresa' && c.subject === 'persona') return false;
+    // A business vault never holds other people's SPID/CieID accounts.
+    if (person && kind === 'impresa' && /^(spid|cieid)[0-9]*([_-]|$)/.test(cat)) return false;
+    return true;
+  }
+
+  // inputAllowed is allowed for one input; secrets (password inputs: PINs,
+  // passwords) are never another person's in a business vault.
+  function inputAllowed(input, person) {
+    if (!allowed(input.getAttribute('data-field').split('.')[0], person)) return false;
+    return !(person && kind === 'impresa' && input.type === 'password');
+  }
 
   // Whose fields the page shows: '' for you, 'leo:' for family member leo.
   // gen changes on every switch, so a response for the previous person is
@@ -1238,15 +1694,17 @@ body::before{
 
   function loadCategory(cat) {
     const p = prefix, g = gen;
-    if (p && ownerOnly.indexOf(cat) >= 0) return Promise.resolve();
+    if (!allowed(cat, p !== '')) return Promise.resolve();
     return api('GET', '/vault/fields/category/' + p + cat).then(function(fields) {
       if (g !== gen || !Array.isArray(fields)) return;
       fields.forEach(function(f) {
-        const input = document.querySelector('[data-field="' + f.id.slice(p.length) + '"]');
-        if (input && f.value) {
-          input.value = f.value;
-          input.dataset.saved = f.value;
-        }
+        // A field can appear in more than one section (business.denominazione).
+        document.querySelectorAll('[data-field="' + f.id.slice(p.length) + '"]').forEach(function(input) {
+          if (f.value) {
+            input.value = f.value;
+            input.dataset.saved = f.value;
+          }
+        });
       });
     }).catch(function() {});
   }
@@ -1255,23 +1713,56 @@ body::before{
     const g = gen;
     return Promise.all(categories.map(loadCategory)).then(function() {
       if (g !== gen) return;
+      syncChecks();
       updatePermesso();
       updateProgress();
     });
   }
+
+  // --- Checkbox lists (ruolo.tipo): a hidden input holds "socio,amministratore" ---
+
+  function checksInput(box) {
+    return box.parentElement.querySelector('input[type="hidden"][data-field="' + box.getAttribute('data-checks') + '"]');
+  }
+  function syncChecks() {
+    document.querySelectorAll('[data-checks]').forEach(function(box) {
+      const values = checksInput(box).value.split(',');
+      box.querySelectorAll('input[type="checkbox"]').forEach(function(cb) { cb.checked = values.indexOf(cb.value) >= 0; });
+    });
+  }
+  document.querySelectorAll('[data-checks]').forEach(function(box) {
+    const hidden = checksInput(box);
+    box.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        const value = Array.prototype.filter.call(box.querySelectorAll('input[type="checkbox"]'), function(c) { return c.checked; })
+          .map(function(c) { return c.value; }).join(',');
+        if (!value) {
+          // A person has at least one ruolo; the vault refuses an empty list.
+          cb.checked = true;
+          setStatus(hidden.closest('.field').querySelector('.status'), 'error', 'Keep at least one ruolo (remove the person with pvault person remove)');
+          return;
+        }
+        hidden.value = value;
+        hidden.dispatchEvent(new Event('blur'));
+      });
+    });
+  });
 
   // --- Family members ---
 
   const personSelect = document.getElementById('person');
   const intestatario = document.getElementById('intestatario');
   const membersList = document.getElementById('membersList');
+  const ruoloList = document.getElementById('ruoloList');
   const addRelazione = document.getElementById('addRelazione');
   addRelazione.innerHTML = document.querySelector('[data-field="famiglia.relazione"]').innerHTML;
   let members = [];
 
   function personLabel(m) {
-    const name = m.first_name || m.slug;
-    return m.relazione_label ? name + ' (' + m.relazione_label + ')' : name;
+    const name = m.first_name || m.denominazione || m.slug;
+    const tipo = m.ruolo && m.ruolo.tipo ? m.ruolo.tipo.replace(/_/g, ' ').replace(/,/g, ', ') : '';
+    const rel = m.relazione_label || tipo;
+    return rel ? name + ' (' + rel + ')' : name;
   }
 
   // fillSelect replaces a select's options, keeping its value if still there.
@@ -1286,26 +1777,28 @@ body::before{
     return api('GET', '/vault/members').then(function(h) {
       members = h.members || [];
       const people = members.map(function(m) { return [m.slug, personLabel(m)]; });
-      fillSelect(personSelect, [['', 'Io']].concat(people));
+      fillSelect(personSelect, [['', kind === 'impresa' ? "L'impresa" : 'Io']].concat(people));
       fillSelect(intestatario, [['', ''], ['io', 'Io']].concat(people));
-      membersList.textContent = '';
-      if (!members.length) {
-        const li = document.createElement('li');
-        li.className = 'muted';
-        li.textContent = 'Nessuno ancora.';
-        membersList.append(li);
-      }
-      members.forEach(function(m) {
-        const li = document.createElement('li');
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = personLabel(m);
-        btn.addEventListener('click', function() { switchTo(m.slug); });
-        const slug = document.createElement('span');
-        slug.className = 'muted';
-        slug.textContent = '  ' + m.slug + ':';
-        li.append(btn, slug);
-        membersList.append(li);
+      [membersList, ruoloList].forEach(function(list) {
+        list.textContent = '';
+        if (!members.length) {
+          const li = document.createElement('li');
+          li.className = 'muted';
+          li.textContent = 'Nessuno ancora.';
+          list.append(li);
+        }
+        members.forEach(function(m) {
+          const li = document.createElement('li');
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = personLabel(m);
+          btn.addEventListener('click', function() { switchTo(m.slug); });
+          const slug = document.createElement('span');
+          slug.className = 'muted';
+          slug.textContent = '  ' + m.slug + ':';
+          li.append(btn, slug);
+          list.append(li);
+        });
       });
     }).catch(function() {});
   }
@@ -1319,18 +1812,49 @@ body::before{
       input.dataset.saved = '';
       setStatus(input.closest('.field').querySelector('.status'), 'idle');
     });
+    syncChecks();
     applyPerson();
     loadAll();
     window.scrollTo({ top: 0 });
   }
   personSelect.addEventListener('change', function() { switchTo(personSelect.value); });
 
-  // Sections about the home are yours only; famiglia shows your view or a member's.
+  // Show what the current person can have: each field by its category
+  // (allowed), each section if it has a field left to show. Sections marked
+  // data-kind are for one vault kind; data-relation sections (Famiglia,
+  // Persone) for the vault kinds their category is for, with the owner's view
+  // (the people list) or a person's (their relazione or ruolo).
   function applyPerson() {
     const member = prefix !== '';
     document.querySelectorAll('[data-owner-only]').forEach(function(el) { el.hidden = member; });
     document.querySelectorAll('[data-member-only]').forEach(function(el) { el.hidden = !member; });
-    chapters.forEach(function(c, i) { c.hidden = sections[i].hidden; });
+    inputs.forEach(function(input) { input.closest('.field').hidden = !inputAllowed(input, member); });
+    // Start from every section shown, so one hidden by an earlier pass (e.g.
+    // before the schema said which kind of vault this is) can come back.
+    sections.forEach(function(section) { section.hidden = false; });
+    let n = 0;
+    sections.forEach(function(section, i) {
+      let hide = section.hasAttribute('data-owner-only') && member;
+      const k = section.getAttribute('data-kind');
+      const rel = section.getAttribute('data-relation');
+      if (k && k !== kind) hide = true;
+      if (rel) {
+        // Without the schema (still loading, or it failed), famiglia is a
+        // personal vault's and ruolo a business vault's, as the schema says.
+        const kinds = catInfo[rel] ? catInfo[rel].kinds : { famiglia: ['persona'], ruolo: ['impresa'] }[rel];
+        if (kinds && kinds.indexOf(kind) < 0) hide = true;
+      } else if (!Array.prototype.some.call(section.querySelectorAll('[data-field]'), function(input) { return !input.closest('[hidden]'); })) {
+        hide = true;
+      }
+      section.hidden = hide;
+      chapters[i].hidden = hide;
+      if (!hide) {
+        n++;
+        const num = (n < 10 ? '0' : '') + n;
+        section.querySelector('.section-number').textContent = num;
+        chapters[i].querySelector('.chapter-num').textContent = num;
+      }
+    });
     updateActiveChapter();
   }
 
@@ -1372,7 +1896,41 @@ body::before{
     });
   });
 
-  loadPeople().then(loadAll);
+  // Adding someone to a business vault: their ruolo first (so they exist),
+  // then their name, or a company's ragione sociale.
+  document.getElementById('addRuoloPerson').addEventListener('click', function() {
+    const nameInput = document.getElementById('addRuoloName');
+    const ruoloSel = document.getElementById('addRuolo');
+    const subject = document.getElementById('addRuoloSubject').value;
+    const name = nameInput.value.trim();
+    const errEl = document.getElementById('addRuoloError');
+    errEl.textContent = '';
+    const slug = slugFromName(name);
+    if (!slug) { errEl.textContent = 'Scrivi il nome (con delle lettere).'; return; }
+    if (!ruoloSel.value) { errEl.textContent = 'Scegli il ruolo.'; return; }
+    api('GET', '/vault/members').then(function(h) {
+      if ((h.members || []).some(function(m) { return m.slug === slug; })) {
+        throw new Error(slug + ' è già nel vault: sceglilo in alto, o usa un altro nome.');
+      }
+      return api('PUT', '/vault/fields/' + slug + ':ruolo.tipo', { value: ruoloSel.value });
+    }).then(function() {
+      const field = subject === 'impresa' ? 'business.denominazione' : 'identity.first_name';
+      return api('PUT', '/vault/fields/' + slug + ':' + field, { value: name });
+    }).then(function() {
+      nameInput.value = '';
+      ruoloSel.value = '';
+      return loadPeople();
+    }).then(function() {
+      switchTo(slug);
+    }).catch(function(err) {
+      errEl.textContent = err.message.replace(/^invalid value for \S+: /, '');
+    });
+  });
+
+  schemaReady.then(function() {
+    applyPerson();
+    return loadPeople();
+  }).then(loadAll);
 
   // Italian citizens don't hold a permesso di soggiorno, so hide its fields.
   var citizenship = document.querySelector('[data-field="identity.citizenship"]');
@@ -1407,7 +1965,13 @@ body::before{
 
       setStatus(statusEl, 'saving');
 
-      api('PUT', '/vault/fields/' + fieldId, { value: val })
+      // One save at a time per input, in order: two quick changes (ticking
+      // two ruoli) must not reach the server out of order and store the older.
+      const save = (input._saving || Promise.resolve()).catch(function() {}).then(function() {
+        return api('PUT', '/vault/fields/' + fieldId, { value: val });
+      });
+      input._saving = save;
+      save
         .then(function() {
           if (fullName) {
             api('PUT', '/vault/fields/' + p + 'identity.full_name', { value: fullName }).catch(function() {});
@@ -1416,12 +1980,15 @@ body::before{
           input.dataset.saved = val;
           // Show the stored form (e.g. an upper-cased codice fiscale)
           api('GET', '/vault/fields/' + fieldId).then(function(f) {
-            if (g === gen && f && f.value && document.activeElement !== input) {
+            // A hidden input (the ruolo checkboxes) is never focused, so check
+            // instead that no newer choice was made while this read was out.
+            if (g === gen && f && f.value && document.activeElement !== input && (input.type !== 'hidden' || input.value === val)) {
               input.value = f.value;
               input.dataset.saved = f.value;
+              if (input.type === 'hidden') syncChecks();
             }
           }).catch(function() {});
-          if (p && (local === 'identity.first_name' || local === 'famiglia.relazione' || local === 'identity.sex')) {
+          if (p && ['identity.first_name', 'famiglia.relazione', 'identity.sex', 'ruolo.tipo', 'business.denominazione'].indexOf(local) >= 0) {
             loadPeople(); // the names in the Persona list
           }
           setStatus(statusEl, 'saved');

@@ -37,7 +37,13 @@ class VaultError extends Error {
 }
 
 function serverAddr(): string {
-  return process.env.VAULT_ADDR ?? "http://127.0.0.1:7200";
+  const addr = process.env.VAULT_ADDR;
+  // A named vault has its own port: without VAULT_ADDR every request would
+  // go to the default vault, and its errors would send the user in circles.
+  if (!addr && process.env.VAULT_NAME) {
+    throw new VaultError(`vault: VAULT_NAME is ${process.env.VAULT_NAME} but VAULT_ADDR isn't set — set it to the address \`${pvCmd("status")}\` prints`);
+  }
+  return addr ?? "http://127.0.0.1:7200";
 }
 
 const TOKEN_LOOKUP_TIMEOUT_MS = LOOKUP_TIMEOUT_MS;
@@ -59,14 +65,23 @@ function tokenCommand(): string | undefined {
 }
 
 /**
+ * A pvault command line for messages. VAULT_NAME names a vault other than the
+ * default one (pvault --vault <name>), e.g. a business vault.
+ */
+export function pvCmd(args: string): string {
+  const name = process.env.VAULT_NAME;
+  return name ? `pvault --vault ${name} ${args}` : `pvault ${args}`;
+}
+
+/**
  * How to get on without a working token: Touch ID first, since with it on the user
  * approves `pvault get`/`pvault set` from the shell and no token is needed; else a
  * new token, matching whichever source is actually used.
  */
 function createTokenHelp(): string {
-  const touchID = "if `pvault touchid status` says on, use `pvault get <id> ...` or `pvault set` " +
+  const touchID = `if \`${pvCmd("touchid status")}\` says on, use \`${pvCmd("get <id> ...")}\` or \`${pvCmd("set")}\` ` +
     "from the shell instead (the user approves with Touch ID, no token needed); otherwise ";
-  const create = "`pvault create-service-token <name> --scope \"identity.*,...\"";
+  const create = `\`${pvCmd("create-service-token")} <name> --scope "identity.*,..."`;
   const noRestart = "in their terminal; the next call uses it, no restart needed";
   let ask = `ask the user to create one with ${create}\` and set it as VAULT_TOKEN in this MCP server's env`;
   if (!staticToken()) {
@@ -177,13 +192,16 @@ export function assertTokenConfigured(): void {
 }
 
 async function authedFetch(path: string, init: RequestInit): Promise<Response> {
+  // First, and outside the try below: a misconfigured address must say so,
+  // not read as a missing token or "server not running".
+  const url = `${serverAddr()}${path}`;
   const headers = new Headers(init.headers);
   headers.set("Authorization", `Bearer ${await resolveToken()}`);
   let resp: Response;
   try {
-    resp = await fetch(`${serverAddr()}${path}`, { ...init, headers });
+    resp = await fetch(url, { ...init, headers });
   } catch {
-    throw new VaultError("vault: server not running — run 'pvault unlock'");
+    throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
   }
   if (!resp.ok) {
     throw mapError(resp.status, await resp.text());
@@ -205,7 +223,7 @@ function mapError(status: number, body: string): VaultError {
       // not JSON
     }
     if (constraint === "vault_locked") {
-      return new VaultError("vault: vault is locked — ask the user to run 'pvault unlock'");
+      return new VaultError(`vault: vault is locked — ask the user to run '${pvCmd("unlock")}'`);
     }
     if (constraint === "sensitivity_exceeded") {
       return new VaultError(
@@ -274,9 +292,7 @@ export async function getStatus(): Promise<VaultStatus> {
   try {
     resp = await fetch(url);
   } catch {
-    throw new VaultError(
-      "vault: server not running — run 'pvault unlock'"
-    );
+    throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
   }
   if (!resp.ok) {
     throw new VaultError(`vault: status check failed — HTTP ${resp.status}`);
@@ -291,9 +307,7 @@ export async function getSchema(): Promise<unknown> {
   try {
     resp = await fetch(url);
   } catch {
-    throw new VaultError(
-      "vault: server not running — run 'pvault unlock'"
-    );
+    throw new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
   }
   if (!resp.ok) {
     throw new VaultError(`vault: schema fetch failed — HTTP ${resp.status}`);
@@ -310,7 +324,7 @@ const FIELD_ID = /^(?:(?!io:)[a-z][a-z0-9-]{0,31}:)?[A-Za-z0-9_-]+\.[A-Za-z0-9_-
 function fieldPath(id: string): string {
   if (!FIELD_ID.test(id)) {
     throw new VaultError(
-      `vault: invalid field ID ${JSON.stringify(id)} — use category.field_name, or member:category.field_name for a family member (letters, digits, _ and -)`
+      `vault: invalid field ID ${JSON.stringify(id)} — use category.field_name, or person:category.field_name for another person in the vault, e.g. leo:cie.numero (letters, digits, _ and -)`
     );
   }
   return `/vault/fields/${encodeURIComponent(id)}`;
@@ -345,7 +359,7 @@ export async function setField(
 interface ExpiryInfo {
   field_id: string;
   document: string;
-  member?: string; // a family member's slug; absent for the owner
+  member?: string; // another person's slug; absent for the vault's own data
   expires_on: string;
   days_left: number;
   expired: boolean;
@@ -363,9 +377,11 @@ interface DocumentInfo {
 
 export interface MemberInfo {
   slug: string;
-  famiglia?: Record<string, string>;
+  famiglia?: Record<string, string>; // personal vaults
+  ruolo?: Record<string, string>; // business vaults
   first_name?: string;
   last_name?: string;
+  denominazione?: string; // a company's name
   age?: number;
   minor?: boolean;
   anpr_relazione?: string;

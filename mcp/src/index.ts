@@ -69,10 +69,12 @@ server.registerTool(
   "vault_household",
   {
     description:
-      "List the user's family members kept in the vault: each one's slug (their field IDs are <slug>:<category>.<field>, e.g. leo:identity.codice_fiscale), " +
-      "famiglia fields (relazione to the user, stato_famiglia si/no, a_carico_percentuale, genitori, rappresentanza), name, age and minor flag, " +
-      "the ANPR relazione code and the word forms use (moglie, figlia). Also who is intestatario_scheda (io = the user). " +
-      "Only what the token's scope reaches is shown.",
+      "List the other people kept in the vault, each with their slug (their field IDs are <slug>:<category>.<field>, e.g. leo:identity.codice_fiscale). " +
+      "In a personal vault (vault_status kind persona) they are the user's family: famiglia fields (relazione to the user, stato_famiglia si/no, " +
+      "a_carico_percentuale, genitori, rappresentanza), name, age and minor flag, the ANPR relazione code and the word forms use (moglie, figlia), " +
+      "and who is intestatario_scheda (io = the user). In a business vault (kind impresa; io = the business) they are the business's people: " +
+      "ruolo fields (tipo: titolare, legale_rappresentante, socio, dipendente, cliente...; data_inizio, data_fine, quota_percentuale, poteri), " +
+      "name, or denominazione for a company. Only what the token's scope reaches is shown.",
   },
   async (): Promise<CallToolResult> => {
     try {
@@ -93,7 +95,7 @@ server.registerTool(
       id: z
         .string()
         .describe(
-          "Field ID in category.field_name format, e.g. identity.full_name; a family member's is member:category.field_name, e.g. leo:identity.codice_fiscale (see vault_household)"
+          "Field ID in category.field_name format, e.g. identity.full_name; another person's (a family member, or in a business vault a client or socio) is person:category.field_name, e.g. leo:identity.codice_fiscale (see vault_household)"
         ),
     },
   },
@@ -164,7 +166,7 @@ server.registerTool(
       id: z
         .string()
         .describe(
-          "Field ID in category.field_name format, e.g. identity.tshirt_size; for a family member member:category.field_name, e.g. leo:cie.numero (see vault_household)"
+          "Field ID in category.field_name format, e.g. identity.tshirt_size; for another person in the vault person:category.field_name, e.g. leo:cie.numero (see vault_household)"
         ),
       value: z.string().describe("The value to encrypt and store"),
       sensitivity: z
@@ -213,7 +215,7 @@ server.registerTool(
     description:
       "List encrypted document scans stored in the vault (id, category, filename, type, size). Use vault_document_get to read one.",
     inputSchema: {
-      category: z.string().optional().describe("Only this category, e.g. permesso_soggiorno, or a family member's, e.g. leo:cie"),
+      category: z.string().optional().describe("Only this category, e.g. permesso_soggiorno, or another person's, e.g. leo:cie"),
     },
   },
   async ({ category }): Promise<CallToolResult> => {
@@ -291,7 +293,7 @@ server.registerTool(
       "Encrypt and archive a local file (e.g. a receipt, protocol confirmation or certificate you just downloaded from a government portal) in the user's vault. Only files inside the import folders (default ~/Downloads, set by VAULT_IMPORT_DIRS) can be archived. Needs a token with append or write access. Ask the user before archiving, and suggest deleting the unencrypted original afterwards.",
     inputSchema: {
       path: z.string().describe("Absolute path of the local file to store"),
-      category: z.string().describe("Category, e.g. permesso_soggiorno, passaporto, residenza, business; a family member's is member:category, e.g. leo:cie"),
+      category: z.string().describe("Category, e.g. permesso_soggiorno, passaporto, residenza, business; another person's is person:category, e.g. leo:cie"),
       sensitivity: z.enum(["sensitive", "critical"]).optional().describe("Sensitivity tier (default: sensitive; agents can't store documents lower)"),
     },
   },

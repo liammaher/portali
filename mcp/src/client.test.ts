@@ -194,3 +194,15 @@ test("refuses field IDs that would leave /vault/fields/", async () => {
   tokens.set("t-scope", "leo:identity.");
   assert.equal((await getField("leo:identity.first_name")).value, "value-of-leo:identity.first_name");
 });
+
+test("a named vault without VAULT_ADDR says so instead of reaching the default vault", async () => {
+  const addr = process.env.VAULT_ADDR;
+  delete process.env.VAULT_ADDR;
+  process.env.VAULT_NAME = "studio";
+  try {
+    await assert.rejects(getField("business.denominazione"), /VAULT_NAME is studio but VAULT_ADDR isn't set.*pvault --vault studio status/);
+  } finally {
+    process.env.VAULT_ADDR = addr;
+    delete process.env.VAULT_NAME;
+  }
+});

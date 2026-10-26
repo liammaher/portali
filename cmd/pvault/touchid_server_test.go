@@ -3,11 +3,19 @@
 package main
 
 import (
+	"encoding/json"
+	"net"
+	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"testing"
+	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 // runDebugHelper runs a debug helper as if enrolled with the test password
@@ -120,5 +128,79 @@ func TestTouchIDHelper_EnrollmentNeedsTerminal(t *testing.T) {
 		if err == nil || !strings.Contains(string(out), "only works in a terminal") {
 			t.Errorf("%q without a terminal: err %v, output %s", args, err, out)
 		}
+	}
+}
+
+// pvault --vault <name> unlock with Touch ID starts and unlocks that vault's
+// server, never the default vault's: --vault reaches the server it starts
+// and the helper (which find the vault only through VAULT_DIR), and each
+// vault listens on the port in its own port file.
+func TestTouchIDHelper_UnlocksNamedVault(t *testing.T) {
+	helper := buildDebugHelper(t)
+	pvault := buildPvault(t, true)
+	// pvault looks for the helper next to itself.
+	data, err := os.ReadFile(helper)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(filepath.Dir(pvault), touchIDHelperName), data, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	home, err := os.MkdirTemp("", "pvh") // short: socket paths are limited to 104 bytes
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { os.RemoveAll(home) })
+
+	freePort := func() int {
+		l, err := net.Listen("tcp", "127.0.0.1:0")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer l.Close()
+		return l.Addr().(*net.TCPAddr).Port
+	}
+	ports := map[string]int{}
+	for name, kind := range map[string]string{".pvault": vault.KindPersona, ".pvault-studio": vault.KindImpresa} {
+		dir := filepath.Join(home, name)
+		if _, err := vault.InitWithOptions(dir, "test-password", vault.InitOptions{Kind: kind}); err != nil {
+			t.Fatal(err)
+		}
+		ports[name] = freePort()
+		if err := writePort(dir, ports[name]); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	run := func(args ...string) (string, error) {
+		cmd := exec.Command(pvault, args...)
+		cmd.Env = append(os.Environ(), "HOME="+home, "VAULT_DIR=", "VAULT_ADDR=", "VAULT_PORT=", "PVAULT_VAULT=",
+			"PVAULT_TOUCHID_TEST_APPROVE=1", "PVAULT_TOUCHID_TEST_PASSWORD=test-password", "PVAULT_TOUCHID_TEST_SERVER="+pvault)
+		out, err := cmd.CombinedOutput()
+		return string(out), err
+	}
+	t.Cleanup(func() { run("--vault", "studio", "lock") })
+	out, err := run("--vault", "studio", "unlock")
+	if err != nil || !strings.Contains(out, "Touch ID") || !strings.Contains(out, strconv.Itoa(ports[".pvault-studio"])) {
+		t.Fatalf("unlock: %v\n%s", err, out)
+	}
+
+	client := http.Client{Timeout: 2 * time.Second}
+	resp, err := client.Get("http://127.0.0.1:" + strconv.Itoa(ports[".pvault-studio"]) + "/vault/status")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var status vault.VaultStatus
+	err = json.NewDecoder(resp.Body).Decode(&status)
+	resp.Body.Close()
+	if err != nil || status.Locked || status.Kind != vault.KindImpresa {
+		t.Fatalf("studio vault status = %+v, %v", status, err)
+	}
+	if resp, err := client.Get("http://127.0.0.1:" + strconv.Itoa(ports[".pvault"]) + "/vault/status"); err == nil {
+		resp.Body.Close()
+		t.Fatal("the default vault's server was started too")
+	}
+	if out, err := run("status"); err != nil || !strings.Contains(out, "locked (server not running") {
+		t.Fatalf("default vault status: %v\n%s", err, out)
 	}
 }

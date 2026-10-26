@@ -59,16 +59,12 @@ func touchIDHelper() (string, bool) {
 type touchIDInfo struct {
 	helper   string // path, or "" if not installed
 	enrolled bool   // a password is saved for this vault
-	addr     string // the only server the helper talks to
 }
 
-var (
-	touchIDCached *touchIDInfo
-	touchIDWarned bool
-)
+var touchIDCached *touchIDInfo
 
 // touchIDStatus asks the helper once per process whether it holds a password
-// for this vault and which server it uses.
+// for this vault (VAULT_DIR, which the helper reads too).
 func touchIDStatus() touchIDInfo {
 	if touchIDCached != nil {
 		return *touchIDCached
@@ -76,14 +72,10 @@ func touchIDStatus() touchIDInfo {
 	var st touchIDInfo
 	if helper, ok := touchIDHelper(); ok {
 		st.helper = helper
-		// Exit status 3 (not enrolled) still prints the server line.
 		out, _ := exec.Command(helper, "status").Output()
 		for _, line := range strings.Split(string(out), "\n") {
 			if line == "enrolled" {
 				st.enrolled = true
-			}
-			if addr, ok := strings.CutPrefix(line, "server "); ok {
-				st.addr = addr
 			}
 		}
 	}
@@ -92,22 +84,12 @@ func touchIDStatus() touchIDInfo {
 }
 
 // touchIDEnrolled reports whether Touch ID can serve this command: the
-// helper holds a password for this vault and talks to the same server as
-// pvault. The helper's server address is fixed, so with another VAULT_ADDR
-// it would send this vault's password to the wrong server.
+// helper holds a password for this vault. The helper sends it only over this
+// vault's socket, and the token it returns goes to serverAddr() over TCP,
+// which checkVaultServer (run before every prompt) has checked is the server
+// on that socket.
 func touchIDEnrolled() bool {
-	st := touchIDStatus()
-	if !st.enrolled {
-		return false
-	}
-	if st.addr != serverAddr() {
-		if !touchIDWarned {
-			touchIDWarned = true
-			fmt.Fprintf(os.Stderr, "Touch ID skipped: it only works with the vault at %s, and VAULT_ADDR is %s.\n", st.addr, serverAddr())
-		}
-		return false
-	}
-	return true
+	return touchIDStatus().enrolled
 }
 
 // runTouchID runs the helper with its prompt on screen and errors on
@@ -131,7 +113,7 @@ func runTouchID(stdin string, args ...string) (string, error) {
 		case touchIDDenied:
 			return "", errTouchIDDenied
 		case touchIDNotEnrolled:
-			return "", errors.New("Touch ID is not set up — run 'pvault touchid enable'")
+			return "", fmt.Errorf("Touch ID is not set up — run '%s'", pvCmd("touchid enable"))
 		}
 		return "", fmt.Errorf("%s failed", touchIDHelperName)
 	}

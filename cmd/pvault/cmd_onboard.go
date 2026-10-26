@@ -32,7 +32,7 @@ func cmdOnboard() {
 
 	// Check if vault already exists
 	if err := vault.CanInit(dir); errors.Is(err, vault.ErrAlreadyInit) {
-		fatal("vault already initialized at %s — use 'pvault unlock' instead", dir)
+		fatal("vault already initialized at %s — use 'pvault %sunlock' instead", dir, vaultFlag())
 	} else if err != nil {
 		fatal("%v", err)
 	}
@@ -59,6 +59,9 @@ func cmdOnboard() {
 	if err != nil {
 		fatal("%v", err)
 	}
+	if _, err := ensurePort(dir); err != nil {
+		fatal("vault created, but %v", err)
+	}
 
 	fmt.Println()
 	fmt.Println("Your secret key (save this somewhere safe):")
@@ -77,7 +80,12 @@ func cmdOnboard() {
 	fmt.Printf("Vault unlocked. Server running on %s\n", serverAddr())
 	fmt.Println()
 
-	// Reuse the credentials just entered for a grant covering the prompts below.
+	// Reuse the credentials just entered for a grant covering the prompts
+	// below. The grant goes to serverAddr() over TCP, so it must be the
+	// server just verified on the socket.
+	if err := checkVaultServer(); err != nil {
+		fatal("%v", err)
+	}
 	token, err := requestGrant(pw, sk, "10m")
 	if err != nil {
 		fatal("authenticating: %v", err)
@@ -126,5 +134,5 @@ func cmdOnboard() {
 	} else {
 		fmt.Println("Done — your vault is ready.")
 	}
-	fmt.Println("Run 'pvault status' to see what's stored.")
+	fmt.Printf("Run '%s' to see what's stored.\n", pvCmd("status"))
 }

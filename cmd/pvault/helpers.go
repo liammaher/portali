@@ -26,11 +26,13 @@ func vaultDir() string {
 	return filepath.Join(home, ".pvault")
 }
 
+// serverAddr is where the vault's server listens over TCP: VAULT_ADDR, else
+// the vault's port file (7200 without one).
 func serverAddr() string {
 	if a := os.Getenv("VAULT_ADDR"); a != "" {
 		return a
 	}
-	return "http://127.0.0.1:7200"
+	return fmt.Sprintf("http://127.0.0.1:%d", vaultPort())
 }
 
 // legacySessionPath is where older versions stored the session token.
@@ -153,7 +155,7 @@ func promptGrant(ttl string) (string, error) {
 		fmt.Fprintf(os.Stderr, "%v — enter your password instead.\n", err)
 	}
 	if !interactive {
-		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal (or turn on Touch ID with 'pvault touchid enable')")
+		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal (or turn on Touch ID with '%s')", pvCmd("touchid enable"))
 	}
 	pw, err := promptPassword("Profile password: ")
 	if err != nil {
@@ -167,13 +169,13 @@ func promptGrant(ttl string) (string, error) {
 }
 
 // errServerDown means nothing answered on the vault server's address.
-var errServerDown = errors.New("vault server not running — run 'pvault unlock'")
+var errServerDown = errors.New("vault server not running")
 
 // serverStatus returns the public status of the server at VAULT_ADDR.
 func serverStatus() (*vault.VaultStatus, error) {
 	resp, err := publicRequest("GET", "/vault/status", nil)
 	if err != nil {
-		return nil, errServerDown
+		return nil, fmt.Errorf("%w — run '%s'", errServerDown, pvCmd("unlock"))
 	}
 	var status vault.VaultStatus
 	if err := apiResult(resp, &status); err != nil {
@@ -190,7 +192,7 @@ func requireUnlockedServer() error {
 		return err
 	}
 	if status.Locked {
-		return fmt.Errorf("vault is locked — run 'pvault unlock'")
+		return fmt.Errorf("vault is locked — run '%s'", pvCmd("unlock"))
 	}
 	return nil
 }

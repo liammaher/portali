@@ -35,7 +35,11 @@ func (v *Vault) checkPersonRefs(id, value string) error {
 			return err
 		}
 		if !ok {
-			return &ValidationError{Field: id, Msg: "there is no person \"" + ref + "\" yet: add them first with 'pvault person add " + ref + " --relazione ...'"}
+			flag := "--relazione"
+			if v.kind == KindImpresa {
+				flag = "--ruolo"
+			}
+			return &ValidationError{Field: id, Msg: "there is no person \"" + ref + "\" yet: add them first with 'pvault person add " + ref + " " + flag + " ...'"}
 		}
 	}
 	return nil

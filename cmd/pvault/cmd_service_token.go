@@ -107,14 +107,18 @@ func cmdCreateServiceToken() {
 func revokeReplacedToken(previous string) string {
 	resp, err := apiRequest("DELETE", "/vault/tokens/service/"+tokenRef(previous), nil)
 	if err != nil {
-		return fmt.Sprintf("NOT revoked (%v); check `pvault list-service-tokens`", err)
+		return fmt.Sprintf("NOT revoked (%v); check `%s`", err, pvCmd("list-service-tokens"))
 	}
 	if resp.StatusCode == http.StatusNotFound {
 		resp.Body.Close()
-		return "already expired or revoked"
+		// Keychain items are keyed by service name only, so the token this
+		// one replaced may have been another vault's, which still works and
+		// now has no Keychain item: say so instead of assuming it expired.
+		return "not one of this vault's tokens: it had expired or been revoked, or it belongs to another vault " +
+			"(give each vault its own --keychain service, e.g. pvault-<name>-mcp, and revoke it there)"
 	}
 	if err := apiResult(resp, nil); err != nil {
-		return fmt.Sprintf("NOT revoked (%v); check `pvault list-service-tokens`", err)
+		return fmt.Sprintf("NOT revoked (%v); check `%s`", err, pvCmd("list-service-tokens"))
 	}
 	return "revoked"
 }

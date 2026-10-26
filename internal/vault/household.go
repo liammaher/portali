@@ -14,15 +14,20 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/store"
 )
 
-// MemberInfo describes a family member as far as the caller may see:
-// derived values appear only when the fields they come from are visible.
+// MemberInfo describes a person in the vault (a family member, or in a
+// business vault someone with a ruolo) as far as the caller may see: derived
+// values appear only when the fields they come from are visible.
 type MemberInfo struct {
 	Slug      string            `json:"slug"`
 	Famiglia  map[string]string `json:"famiglia,omitempty"` // famiglia fields by name
+	Ruolo     map[string]string `json:"ruolo,omitempty"`    // ruolo fields by name (business vaults)
 	FirstName string            `json:"first_name,omitempty"`
 	LastName  string            `json:"last_name,omitempty"`
-	Age       *int              `json:"age,omitempty"`   // from identity.date_of_birth
-	Minor     *bool             `json:"minor,omitempty"` // under 18
+	// Denominazione is a company's name (business.denominazione), e.g. a
+	// client that is an SRL.
+	Denominazione string `json:"denominazione,omitempty"`
+	Age           *int   `json:"age,omitempty"`   // from identity.date_of_birth
+	Minor         *bool  `json:"minor,omitempty"` // under 18
 	// ANPRRelazione is the relazione's code in ANPR Tabella 05, and
 	// RelazioneLabel the word forms use (moglie, figlia; neutral without
 	// identity.sex).
@@ -32,7 +37,8 @@ type MemberInfo struct {
 	Documents      int    `json:"documents"`
 }
 
-// Household lists the vault's family members.
+// Household lists the vault's other people: family members, or in a
+// business vault its people with their ruolo.
 type Household struct {
 	IntestatarioScheda string       `json:"intestatario_scheda,omitempty"`
 	Members            []MemberInfo `json:"members"`
@@ -41,21 +47,22 @@ type Household struct {
 // householdField reports the fields Household decrypts.
 func householdField(id string) bool {
 	member, local := SplitPerson(id)
+	local = strings.ToLower(local) // IDs ignore case, like validation (Ruolo.tipo is ruolo.tipo)
 	if member == "" {
 		return local == "famiglia.intestatario_scheda"
 	}
-	if strings.HasPrefix(local, "famiglia.") {
+	if strings.HasPrefix(local, "famiglia.") || strings.HasPrefix(local, "ruolo.") {
 		return true
 	}
 	switch local {
-	case "identity.first_name", "identity.last_name", "identity.date_of_birth", "identity.sex":
+	case "identity.first_name", "identity.last_name", "identity.date_of_birth", "identity.sex", "business.denominazione":
 		return true
 	}
 	return false
 }
 
-// Household returns the members whose data allow accepts at least one row
-// of, with the famiglia and name fields allow accepts.
+// Household returns the people whose data allow accepts at least one row
+// of, with the famiglia, ruolo and name fields allow accepts.
 func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) {
 	if err := v.checkUnlocked(); err != nil {
 		return nil, err
@@ -105,7 +112,7 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 			if values[slug] == nil {
 				values[slug] = map[string]string{}
 			}
-			values[slug][local] = f.Value
+			values[slug][strings.ToLower(local)] = f.Value
 		}
 	}
 
@@ -121,8 +128,15 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 				}
 				m.Famiglia[name] = value
 			}
+			if name, ok := strings.CutPrefix(local, "ruolo."); ok {
+				if m.Ruolo == nil {
+					m.Ruolo = map[string]string{}
+				}
+				m.Ruolo[name] = value
+			}
 		}
 		m.FirstName, m.LastName = vals["identity.first_name"], vals["identity.last_name"]
+		m.Denominazione = vals["business.denominazione"]
 		if dob, ok := vals["identity.date_of_birth"]; ok {
 			if age, ok := ageOn(dob, now); ok {
 				minor := age < 18
@@ -138,7 +152,11 @@ func (v *Vault) Household(allow FieldFilter, now time.Time) (*Household, error) 
 		h.Members = append(h.Members, *m)
 	}
 	sort.Slice(h.Members, func(i, j int) bool { return h.Members[i].Slug < h.Members[j].Slug })
-	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*:famiglia.*", Action: "household"})
+	scope := "*:famiglia.*"
+	if v.kind == KindImpresa {
+		scope = "*:ruolo.*"
+	}
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: scope, Action: "household"})
 	return h, nil
 }
 
@@ -190,6 +208,9 @@ type MigrationReport struct {
 // campo, invalid value, target already set) stays where it is and is
 // reported. With dryRun nothing is written.
 func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
+	if v.kind != KindPersona {
+		return nil, &ValidationError{Field: "nucleo_familiare", Msg: "a business vault has no family to migrate: famiglia is for personal vaults"}
+	}
 	v.backup.mu.Lock()
 	defer v.backup.mu.Unlock()
 	v.writeMu.Lock()

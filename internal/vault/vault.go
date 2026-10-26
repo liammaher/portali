@@ -93,6 +93,7 @@ type Vault struct {
 	db      *store.DB
 	session *Session
 	dir     string // ~/.pvault
+	kind    string // KindPersona or KindImpresa, loaded by Open
 	salt    []byte // loaded on unlock, used for HKDF subkey derivation
 	backup  backupState
 }
@@ -108,7 +109,17 @@ func Open(dir string) (*Vault, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open database: %w", err)
 	}
-	return &Vault{db: db, dir: dir}, nil
+	stored, err := db.GetMeta(metaKind)
+	if err != nil {
+		db.Close()
+		return nil, fmt.Errorf("read vault kind: %w", err)
+	}
+	kind, err := validKind(stored)
+	if err != nil {
+		db.Close()
+		return nil, err
+	}
+	return &Vault{db: db, dir: dir, kind: kind}, nil
 }
 
 // CanInit reports why Init would refuse dir, so the CLI can say so before
@@ -132,8 +143,18 @@ func errSecretKeyExists(path string) error {
 	return fmt.Errorf("%s already exists, maybe the key for an earlier vault's backups — move it somewhere safe, then run init again", path)
 }
 
-// Init creates a new vault: generates salt, secret key, and stores verification ciphertext.
+// Init creates a new personal vault: generates salt, secret key, and stores
+// verification ciphertext.
 func Init(dir, password string) (secretKey string, err error) {
+	return InitWithOptions(dir, password, InitOptions{})
+}
+
+// InitWithOptions is Init for a vault of the given kind.
+func InitWithOptions(dir, password string, opts InitOptions) (secretKey string, err error) {
+	kind, err := validKind(opts.Kind)
+	if err != nil {
+		return "", err
+	}
 	if err := CanInit(dir); err != nil {
 		return "", err
 	}
@@ -199,6 +220,9 @@ func Init(dir, password string) (secretKey string, err error) {
 		return "", err
 	}
 	if err := db.SetMeta("secret_key_hash", hex.EncodeToString(crypto.HashSecretKey(sk))); err != nil {
+		return "", err
+	}
+	if err := db.SetMeta(metaKind, kind); err != nil {
 		return "", err
 	}
 
@@ -442,6 +466,7 @@ func (v *Vault) Status() (*VaultStatus, error) {
 	status := &VaultStatus{
 		Initialized: init,
 		Locked:      true,
+		Kind:        v.kind,
 	}
 
 	v.mu.RLock()
@@ -489,6 +514,9 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 	}
 	value, err := NormalizeAndValidate(id, value)
 	if err != nil {
+		return err
+	}
+	if err := v.checkKind(id); err != nil {
 		return err
 	}
 

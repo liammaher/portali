@@ -14,6 +14,8 @@ type SchemaField struct {
 	// PersonRef marks a field whose value names people: io or the slugs of
 	// people in the vault, which must exist.
 	PersonRef bool `json:"person_ref,omitempty"`
+	// Kinds lists the vault kinds that can have the field; empty is all.
+	Kinds []string `json:"kinds,omitempty"`
 }
 
 // Who can have a field (SchemaField.For).
@@ -30,11 +32,23 @@ const (
 
 // SchemaCategory groups recommended fields under a category.
 type SchemaCategory struct {
-	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	Scope       string        `json:"scope"`
-	Fields      []SchemaField `json:"fields"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Scope       string `json:"scope"`
+	// Subject is what the category describes: SubjectPersona (a natural
+	// person), SubjectImpresa (a business), or "" (either). A business
+	// vault's own data can't be about a person.
+	Subject string `json:"subject,omitempty"`
+	// Kinds lists the vault kinds that can have the category; empty is all.
+	Kinds  []string      `json:"kinds,omitempty"`
+	Fields []SchemaField `json:"fields"`
 }
+
+// What a category describes (SchemaCategory.Subject).
+const (
+	SubjectPersona = "persona"
+	SubjectImpresa = "impresa"
+)
 
 // Schema is the full recommended schema for the vault.
 type Schema struct {
@@ -44,10 +58,11 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "10",
+	Version: "11",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
+			Subject:     SubjectPersona,
 			Description: "Personal identity information",
 			Fields: []SchemaField{
 				{ID: "identity.first_name", Description: "First/given name", Sensitivity: "standard"},
@@ -67,6 +82,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "cie",
+			Subject:     SubjectPersona,
 			Description: "Carta d'identità elettronica details. The PIN and PUK can only be stored as personal (never readable by agents).",
 			Fields: []SchemaField{
 				{ID: "cie.numero", Description: "CIE number printed top-right (e.g. CA12345AB, validated)", Sensitivity: "sensitive"},
@@ -90,6 +106,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "residenza",
+			Subject:     SubjectPersona,
 			Description: "Registered residence (residenza anagrafica, as recorded in ANPR)",
 			Fields: []SchemaField{
 				{ID: "residenza.indirizzo", Description: "Street (via/piazza) without house number", Sensitivity: "sensitive"},
@@ -103,6 +120,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "domicilio",
+			Subject:     SubjectPersona,
 			Description: "Domicile, only if different from residenza",
 			Fields: []SchemaField{
 				{ID: "domicilio.indirizzo", Description: "Street (via/piazza) without house number", Sensitivity: "sensitive"},
@@ -114,7 +132,8 @@ var RecommendedSchema = Schema{
 			},
 		},
 		{
-			Name: "abitazione",
+			Name:    "abitazione",
+			Subject: SubjectPersona,
 			Description: "The home you live in now (the unit at your residenza or domicilio; the address stays there). " +
 				"Catasto data is on the visura catastale and is needed for TARI, RLI registration and ISEE. " +
 				"Attach the visura and APE with 'pvault doc add abitazione <file>'.",
@@ -135,7 +154,8 @@ var RecommendedSchema = Schema{
 			},
 		},
 		{
-			Name: "locazione",
+			Name:    "locazione",
+			Subject: SubjectPersona,
 			Description: "Your rental contract, if you rent. Registration details (estremi di registrazione) are on the RLI receipt " +
 				"and are asked for by utility transfers and tax deductions. Attach the contract and receipt with 'pvault doc add locazione <file>'.",
 			Fields: []SchemaField{
@@ -164,6 +184,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "utenze",
+			Subject:     SubjectPersona,
 			Description: "Utility supplies at your home. The POD and PDR identify the meters and are needed for a voltura or subentro.",
 			Fields: []SchemaField{
 				{ID: "utenze.luce_pod", Description: "Electricity POD (e.g. IT001E12345678, validated)", Sensitivity: "standard"},
@@ -183,6 +204,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "tari",
+			Subject:     SubjectPersona,
 			Description: "Your TARI (waste tax) position with the Comune. Attach the filed declaration with 'pvault doc add tari <file>'.",
 			Fields: []SchemaField{
 				{ID: "tari.codice_contribuente", Description: "Codice contribuente assigned by the Comune (Cod.Contr. on the forms and payment notices)", Sensitivity: "standard"},
@@ -199,6 +221,8 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "famiglia",
+			Subject:     SubjectPersona,
+			Kinds:       []string{KindPersona},
 			Description: famigliaDescription(),
 			Fields: []SchemaField{
 				{ID: "famiglia.intestatario_scheda", Description: "Who is the intestatario della scheda anagrafica: io (you) or a member's slug (validated)", Sensitivity: "standard", For: ForOwner, PersonRef: true},
@@ -210,8 +234,21 @@ var RecommendedSchema = Schema{
 			},
 		},
 		{
+			Name:        "ruolo",
+			Kinds:       []string{KindImpresa},
+			Description: ruoloDescription(),
+			Fields: []SchemaField{
+				{ID: "ruolo.tipo", Description: "The person's roles for the business, one or more of: " + strings.Join(ruoloKeys(), ", ") + " (validated; e.g. socio,amministratore)", Sensitivity: "standard", For: ForPerson},
+				{ID: "ruolo.data_inizio", Description: "Date the relationship started (YYYY-MM-DD), e.g. hiring, appointment or engagement", Sensitivity: "standard", For: ForPerson},
+				{ID: "ruolo.data_fine", Description: "Date it ended (YYYY-MM-DD); the start of how long you keep their data", Sensitivity: "standard", For: ForPerson},
+				{ID: "ruolo.quota_percentuale", Description: "A socio's share of the capital, above 0 and up to 100 (e.g. 50 or 33.33)", Sensitivity: "standard", For: ForPerson},
+				{ID: "ruolo.poteri", Description: "Powers of an amministratore or procuratore, as on the visura camerale", Sensitivity: "standard", For: ForPerson},
+			},
+		},
+		{
 			Name:        "business",
-			Description: "Italian business or self-employment details",
+			Subject:     SubjectImpresa,
+			Description: "An Italian business: in a personal vault, your own ditta or partita IVA; in a business vault, the business itself; for a person in a business vault, a company (e.g. a client)",
 			Fields: []SchemaField{
 				{ID: "business.partita_iva", Description: "Partita IVA (11 digits, validated; IT prefix stripped)", Sensitivity: "standard"},
 				{ID: "business.denominazione", Description: "Business name or ditta individuale name", Sensitivity: "standard"},
@@ -221,7 +258,22 @@ var RecommendedSchema = Schema{
 				{ID: "business.pec", Description: "PEC (certified email) address", Sensitivity: "standard"},
 				{ID: "business.rea", Description: "REA number (e.g. NA-123456)", Sensitivity: "standard"},
 				{ID: "business.data_apertura", Description: "Date the partita IVA was opened (YYYY-MM-DD)", Sensitivity: "standard"},
-				{ID: "business.qualita_dichiarante", Description: "Your role when you sign for the business: titolare or legale_rappresentante (validated)", Sensitivity: "standard"},
+				{ID: "business.qualita_dichiarante", Description: "Your role when you sign for the business: titolare or legale_rappresentante (validated). In a business vault the signer's role is their ruolo.tipo", Sensitivity: "standard", Kinds: []string{KindPersona}},
+				{ID: "business.forma_giuridica", Description: "Legal form: " + strings.Join(formeGiuridiche, ", ") + " (validated; SRL, S.r.l.s., ditta... accepted)", Sensitivity: "standard"},
+				{ID: "business.telefono", Description: "Business phone number with country code", Sensitivity: "standard"},
+				{ID: "business.sito_web", Description: "Website address", Sensitivity: "standard"},
+				{ID: "business.cciaa", Description: "Camera di Commercio of the Registro Imprese registration, as 2-letter provincia sigla (e.g. NA)", Sensitivity: "standard"},
+				{ID: "business.data_costituzione", Description: "Date a società was constituted, from the atto costitutivo (YYYY-MM-DD); for a ditta use data_inizio_attivita", Sensitivity: "standard"},
+				{ID: "business.data_inizio_attivita", Description: "Date the activity started, as declared to the Registro Imprese (YYYY-MM-DD); may differ from data_apertura of the partita IVA", Sensitivity: "standard"},
+				{ID: "business.data_cessazione", Description: "Date the activity ended (YYYY-MM-DD), shared by SUAP, Registro Imprese, Agenzia delle Entrate and TARI", Sensitivity: "standard"},
+				{ID: "business.capitale_sociale", Description: "Share capital in euro (società di capitali), e.g. 10.000,00", Sensitivity: "standard"},
+				{ID: "business.inps_matricola", Description: "INPS matricola aziendale (employer position)", Sensitivity: "standard"},
+				{ID: "business.inail_codice_ditta", Description: "INAIL codice ditta", Sensitivity: "standard"},
+				{ID: "business.inail_pat", Description: "INAIL PAT (posizione assicurativa territoriale)", Sensitivity: "standard"},
+				{ID: "business.inail_codice_sede", Description: "INAIL codice sede, as on the F24 for the autoliquidazione", Sensitivity: "standard"},
+				{ID: "business.ccnl", Description: "Contratto collettivo applied to employees (e.g. Commercio Confcommercio)", Sensitivity: "standard"},
+				{ID: "business.pec_data_scadenza", Description: "Date the PEC mailbox subscription expires (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
+				{ID: "business.durc_data_scadenza", Description: "Date the last DURC stops being valid, 120 days after issue (YYYY-MM-DD); tracked by 'pvault expiring'", Sensitivity: "standard"},
 				{ID: "business.email", Description: "Business email address (not the PEC)", Sensitivity: "standard"},
 				{ID: "business.descrizione_attivita", Description: "Short description of the activity carried on, as on SCIA and TARI forms", Sensitivity: "standard"},
 				{ID: "business.sede_legale_indirizzo", Description: "Registered office (sede legale): street (via/piazza) without number", Sensitivity: "standard"},
@@ -232,7 +284,8 @@ var RecommendedSchema = Schema{
 			},
 		},
 		{
-			Name: "locale",
+			Name:    "locale",
+			Subject: SubjectImpresa,
 			Description: "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, " +
 				"but with its own address. Catasto data is on the visura catastale. Attach the visura and the lease with 'pvault doc add locale <file>'.",
 			Fields: []SchemaField{
@@ -254,7 +307,37 @@ var RecommendedSchema = Schema{
 			},
 		},
 		{
+			Name:        "albo",
+			Subject:     SubjectPersona,
+			Description: "A professional's registration in an albo (ordine or collegio), e.g. an architect, engineer or geometra; forms ask for it when the person signs as tecnico",
+			Fields: []SchemaField{
+				{ID: "albo.ordine", Description: "Ordine or collegio (e.g. Ordine degli Architetti P.P.C.)", Sensitivity: "standard"},
+				{ID: "albo.provincia", Description: "Provincia of the ordine as 2-letter sigla (e.g. NA)", Sensitivity: "standard"},
+				{ID: "albo.numero", Description: "Registration number in the albo", Sensitivity: "standard"},
+				{ID: "albo.data_iscrizione", Description: "Date of registration (YYYY-MM-DD)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "cassa",
+			Subject:     SubjectPersona,
+			Description: "A professional's pension fund (cassa di previdenza), e.g. Inarcassa or Cassa Geometri",
+			Fields: []SchemaField{
+				{ID: "cassa.ente", Description: "The cassa (e.g. Inarcassa, CIPAG, Cassa Forense)", Sensitivity: "standard"},
+				{ID: "cassa.matricola", Description: "Registration number (matricola) with the cassa", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name:        "firma_digitale",
+			Subject:     SubjectPersona,
+			Description: "A person's digital signature or CNS (smart card or remote signature). The PIN and PUK can only be stored as personal (never readable by agents), and a business vault never holds them",
+			Fields: []SchemaField{
+				{ID: "firma_digitale.ente_emittente", Description: "Who issued it (e.g. Camera di Commercio, InfoCert, Aruba, Namirial)", Sensitivity: "standard"},
+				{ID: "firma_digitale.data_scadenza", Description: "Date the certificate expires (YYYY-MM-DD; usually 3 years); tracked by 'pvault expiring'", Sensitivity: "standard"},
+			},
+		},
+		{
 			Name:        "permesso_soggiorno",
+			Subject:     SubjectPersona,
 			Description: "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement; not needed when identity.citizenship is italiana). Attach scans with 'pvault doc add permesso_soggiorno <file>'.",
 			Fields: []SchemaField{
 				{ID: "permesso_soggiorno.numero", Description: "Document number printed on the card", Sensitivity: "sensitive"},
@@ -266,6 +349,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "passaporto",
+			Subject:     SubjectPersona,
 			Description: "Passport (Italian or foreign)",
 			Fields: []SchemaField{
 				{ID: "passaporto.numero", Description: "Passport number", Sensitivity: "sensitive"},
@@ -277,6 +361,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "tessera_sanitaria",
+			Subject:     SubjectPersona,
 			Description: "Tessera sanitaria / TEAM card (also shows the codice fiscale)",
 			Fields: []SchemaField{
 				{ID: "tessera_sanitaria.numero", Description: "Card identification number on the back", Sensitivity: "sensitive"},
@@ -287,6 +372,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "patente",
+			Subject:     SubjectPersona,
 			Description: "Driving licence (Italian or foreign)",
 			Fields: []SchemaField{
 				{ID: "patente.numero", Description: "Licence number", Sensitivity: "sensitive"},
@@ -338,6 +424,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "employment",
+			Subject:     SubjectPersona,
 			Description: "Employment information",
 			Fields: []SchemaField{
 				{ID: "employment.employer", Description: "Current employer name", Sensitivity: "standard"},
@@ -346,6 +433,7 @@ var RecommendedSchema = Schema{
 		},
 		{
 			Name:        "medical",
+			Subject:     SubjectPersona,
 			Description: "Medical information (user-defined fields)",
 			Fields:      []SchemaField{},
 		},
@@ -357,12 +445,17 @@ var RecommendedSchema = Schema{
 	},
 }
 
-var schemaIndex map[string]*SchemaField
+var (
+	schemaIndex   map[string]*SchemaField
+	categoryIndex map[string]*SchemaCategory
+)
 
 func init() {
 	schemaIndex = make(map[string]*SchemaField)
+	categoryIndex = make(map[string]*SchemaCategory)
 	for i := range RecommendedSchema.Categories {
 		c := &RecommendedSchema.Categories[i]
+		categoryIndex[c.Name] = c
 		if c.Scope = ScopePerson; IsOwnerOnlyCategory(c.Name) {
 			c.Scope = ScopeOwner
 		}
@@ -382,6 +475,11 @@ func IsCanonicalField(id string) bool {
 // GetSchemaField returns the schema field for a canonical ID, or nil.
 func GetSchemaField(id string) *SchemaField {
 	return schemaIndex[id]
+}
+
+// GetSchemaCategory returns the schema category with that name, or nil.
+func GetSchemaCategory(name string) *SchemaCategory {
+	return categoryIndex[name]
 }
 
 // DefaultSensitivity returns the schema default sensitivity for a field ID,

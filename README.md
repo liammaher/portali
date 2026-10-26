@@ -46,8 +46,10 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 | `tari` | `codice_contribuente`, declaration date and protocollo, taxed area and occupants |
 | contacts & bank | `identity.phone` (+39…), `identity.pec`, `financial.iban` (validated) |
 | `famiglia` | how each family member relates to you: `relazione` (mapped to ANPR codes), `stato_famiglia`, `a_carico_percentuale`, `genitori`, `rappresentanza`; your `intestatario_scheda` |
-| `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA, `qualita_dichiarante` (titolare / legale_rappresentante), sede legale address (`sede_legale_cap`, `sede_legale_provincia` validated) |
+| `business` | `partita_iva` (validated), `forma_giuridica` (validated), PEC, ATECO, regime fiscale, REA, CCIAA, capital, start/end dates, INPS/INAIL positions, PEC and DURC expiry, `qualita_dichiarante` (titolare / legale_rappresentante; personal vaults), sede legale address (`sede_legale_cap`, `sede_legale_provincia` validated) |
 | `locale` | the business premises: address, `titolo`, `data_inizio`, catasto data and `catasto_categoria` (C/1, validated), `superficie_mq`, `destinazione_uso` |
+| `albo`, `cassa`, `firma_digitale` | a professional's albo registration and pension fund; a digital signature's issuer and expiry |
+| `ruolo` | business vaults: what each person is to the business (`tipo`: titolare, socio, dipendente, cliente…), dates, quota, poteri |
 | `spid` (personal) | provider, livello, username, password, renewal date — plus `cie.pin` / `cie.puk` |
 | `permesso_soggiorno` | numero, tipo, questura, issue/expiry date |
 | `passaporto`, `patente`, `tessera_sanitaria` | numero, issuing authority/country, expiry date |
@@ -71,6 +73,24 @@ pvault person migrate --dry-run                 # turn old nucleo_familiare.memb
 ```
 
 Relationships are recorded relative to you, as ANPR records them relative to the intestatario della scheda; each procedure's playbook decides who counts (stato di famiglia for TARI, the ISEE nucleo, dependants for the 730). The onboarding page (`pvault ui`) has a person switcher and an "Aggiungi persona" form. Removing a member deletes their fields and documents and revokes the agent tokens that named them.
+
+### A business vault
+
+A business (an SRL, a studio, a ditta with employees or clients) gets its own vault, separate from yours: its own password, server, port, Touch ID and backups. Every command takes `--vault <name>` first.
+
+```sh
+pvault --vault studio init --impresa             # ~/.pvault-studio, on its own port (pvault --vault studio status shows it)
+pvault --vault studio unlock
+pvault --vault studio set business.denominazione "Studio Bianchi"
+pvault --vault studio set business.forma_giuridica srls
+pvault --vault studio person add bianchi --ruolo "titolare, legale rappresentante" --nome Anna --cognome Bianchi
+pvault --vault studio set bianchi:albo.numero 1234
+pvault --vault studio person add rossi --ruolo cliente --nome Mario
+pvault --vault studio person add edil --ruolo "impresa esecutrice" --denominazione "Edil SRL"
+pvault --vault studio person list                # each person's ruolo
+```
+
+The vault's own data is the business's (`business.*`, `locale.*`, `pratiche.*`); people — the titolare, soci, employees, clients, suppliers — each have their own fields under a slug and a `ruolo` instead of `famiglia`. A business vault never holds other people's SPID/CieID accounts or PINs: each person logs in with their own. The onboarding page (`pvault --vault studio ui`) shows an Impresa section and a Persone section. See `docs/design/business-vaults.md` for the model.
 
 ```sh
 pvault set identity.codice_fiscale "RSSMRA85T10A562S"

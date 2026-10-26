@@ -24,9 +24,11 @@ func (e *ValidationError) Error() string {
 }
 
 const (
-	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreta|segreti|segrete|chiave|chiavi|credenziale|credenziali)s?[0-9]*`
-	// A trailing number names a second account or card: spid2, cie2.
-	identityWords = `(?:spid|cieid|cie)[0-9]*`
+	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreta|segreti|segrete|chiave|chiavi|credenziale|credenziali|sblocco)s?[0-9]*`
+	// A trailing number names a second account or card: spid2, cie2. firma,
+	// firmadigitale, cns and smartcard cover a digital signature or CNS
+	// (firma_digitale.pin, cns.puk).
+	identityWords = `(?:spid|cieid|cie|firma|firmadigitale|cns|smartcard)[0-9]*`
 )
 
 var (
@@ -144,6 +146,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 		return "", err
 	}
 	if v, handled, err := normalizeFamiglia(id, person, category, name, value); handled {
+		return v, err
+	}
+	if v, handled, err := normalizeRuolo(id, category, name, value); handled {
 		return v, err
 	}
 

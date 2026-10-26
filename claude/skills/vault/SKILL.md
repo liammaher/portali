@@ -1,17 +1,24 @@
 ---
 name: vault
-description: Read or change the user's encrypted personal vault (pvault) - Italian bureaucracy data like residenza, domicilio, codice fiscale, CIE, permesso di soggiorno, tessera sanitaria, plus stored documents. Use when the user asks to open, check, look up, update or fix anything in "my vault", or needs personal details for a form or government portal.
+description: Read or change the user's encrypted vaults (pvault) - Italian bureaucracy data like residenza, domicilio, codice fiscale, CIE, permesso di soggiorno, tessera sanitaria, plus stored documents; and, in a business vault, a business's data, people (titolare, soci, employees, clients) and their ruolo. Use when the user asks to open, check, look up, update or fix anything in "my vault" or their business vault, or needs personal or business details for a form or government portal.
 ---
 
 # Personal vault (pvault)
 
-Local encrypted vault. Server on `http://127.0.0.1:7200`, data in `~/.pvault/`.
+Local encrypted vault. The default vault (the user and their family) has its server on
+`http://127.0.0.1:7200` and its data in `~/.pvault/`. A user can have more vaults, e.g. a
+business vault in `~/.pvault-<name>` with its own port: every command takes
+`--vault <name>` first (`pvault --vault studio status` prints its address). See "Several
+vaults" below.
 Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md for internals).
 
 ## Hard rules
 
 - Never type, ask for, or echo the profile password, secret key, or any token value.
-- Never read `~/.pvault/secret.key` or `~/.pvault/vault.db` directly.
+- Never read any vault's `secret.key` or `vault.db` (`~/.pvault/`, `~/.pvault-<name>/`) directly.
+- A business vault never holds other people's SPID/CieID accounts or login secrets (CIE
+  or firma digitale PIN/PUK, passwords): the vault refuses them, and so should you. Each
+  person logs in with their own credentials.
 - Never create service tokens yourself; the user runs `pvault create-service-token`.
 - Never put tokens in URLs or command lines you show the user.
 - Fields with tier `personal` (SPID/CIE credentials) are invisible to tokens on purpose.
@@ -31,8 +38,12 @@ Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md fo
 ## 1. Check state (no auth needed)
 
 ```sh
+pvault status                    # the default vault; add --vault <name> for another
 curl -s http://127.0.0.1:7200/vault/status
 ```
+
+`pvault status` prints the vault's kind (personal or business) and server address; use
+that address for `curl` and `/vault/schema` with a vault other than the default.
 
 - Connection refused or `"locked":true`: the vault is locked. If `pvault touchid status`
   says on, tell the user a fingerprint prompt is coming and run `pvault unlock` from
@@ -50,8 +61,9 @@ If a tool says there's no token, or it's expired or revoked, and `pvault touchid
 says on, use d instead of asking for a new token.
 Before `vault_set` overwrites an existing value, show old and new value and confirm.
 
-**b. Web UI, in the user's own browser.** Run `pvault ui` from Bash: it opens
-`http://127.0.0.1:7200/ui` in their default browser. The user types their password
+**b. Web UI, in the user's own browser.** Run `pvault ui` from Bash (`pvault --vault <name> ui`
+for another vault): it opens the vault's page (`http://127.0.0.1:7200/ui` for the default
+one) in their default browser. The user types their password
 into the page; access lasts 15 minutes in that tab ("Session expired" means reload
 and sign in again). Tell them which section and field to edit. Don't look at or
 read that page; ask the user to confirm when they're done.
@@ -90,13 +102,16 @@ only that command and expires within 2 minutes.
 
 ## 3. Field IDs and formats
 
-Field IDs are `category.field` for the user, and `<slug>:category.field` for a family
-member they keep in the vault (`leo:identity.codice_fiscale`, `giulia:cie.numero`).
-Full list with descriptions, default tiers and which categories members can have
-(`scope`: `person` or `owner`):
+Field IDs are `category.field` for the vault's own data (the user, or in a business
+vault the business), and `<slug>:category.field` for another person kept in it: a family
+member (`leo:identity.codice_fiscale`, `giulia:cie.numero`), or in a business vault a
+titolare, socio, employee or client (`bianchi:albo.numero`, `rossi:cie.numero`).
+Full list with descriptions, default tiers, which categories other people can have
+(`scope`: `person` or `owner`), what each category is about (`subject`: persona or
+impresa) and which vault kinds can have it (`kinds`); `vault_kind` says which this one is:
 
 ```sh
-curl -s http://127.0.0.1:7200/vault/schema
+curl -s http://127.0.0.1:7200/vault/schema   # another vault: the address its pvault status prints
 ```
 
 Common ones: `residenza.{indirizzo,civico,interno,cap,comune,provincia,data_inizio}`,
@@ -112,9 +127,13 @@ Housing (the home at residenza/domicilio; the address itself stays there):
 `utenze.{luce_pod,gas_pdr,<servizio>_fornitore,<servizio>_codice_cliente}`, `tari.{codice_contribuente,data_dichiarazione}`.
 A TARI form needs `identity.*,residenza.*,abitazione.*,tari.*`; leave `locazione.*` out
 unless the task needs the contract (rent and landlord details are sensitive).
-Business (an impresa): `business.{partita_iva,denominazione,qualita_dichiarante,pec,email,sede_legale_*}`,
+Business (an impresa): `business.{partita_iva,denominazione,forma_giuridica,rea,cciaa,codice_ateco,pec,email,telefono,sede_legale_*,data_inizio_attivita,data_cessazione,inps_matricola,inail_*,ccnl,pec_data_scadenza,durc_data_scadenza}`,
 and its premises in `locale.{indirizzo,civico,cap,comune,provincia,titolo,data_inizio,catasto_*,superficie_mq,destinazione_uso}`
-(like `abitazione`, but with their own address). `identity.birth_country` only if born abroad.
+(like `abitazione`, but with their own address). In the personal vault `business.*` is the
+user's own ditta or partita IVA (with `qualita_dichiarante`); a business with employees,
+clients or its own legal personality has a business vault. A person's professional
+details: `albo.{ordine,provincia,numero,data_iscrizione}`, `cassa.{ente,matricola}`,
+`firma_digitale.{ente_emittente,data_scadenza}`. `identity.birth_country` only if born abroad.
 To run a whole procedure (research, filling, hand-off, tracking), use the pratica skill;
 its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
 
@@ -140,6 +159,29 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   minori, INPS delega, Assegno Unico). A parent who isn't the user's spouse can be a
   member too (relazione `altro`, `stato_famiglia` no).
 
+### Several vaults (a business vault)
+
+- Each vault is separate: its own password, server, port, Touch ID enrollment, backups
+  and MCP server. `pvault --vault <name> ...` (or `PVAULT_VAULT=<name>`) reaches
+  `~/.pvault-<name>`; without it, the default vault. A Touch ID prompt names the vault
+  ("from your studio vault").
+- Pick the vault by whose data it is: the user and their family are in the default vault;
+  a business's data, its people and its clients are in its business vault. Don't copy
+  data between vaults unless the user asks (a titolare's identity may be in both).
+- In a business vault (`kind` impresa): `io` is the business. Its own data is `business.*`,
+  `locale.*`, `pratiche.*`; never unprefixed `identity.*` or housing (the vault refuses
+  them). People each have a slug and `<slug>:ruolo.*`: `tipo` (one or more of titolare,
+  legale_rappresentante, socio, amministratore, procuratore, preposto,
+  responsabile_tecnico, dipendente, collaboratore, cliente, fornitore,
+  impresa_esecutrice, altro), `data_inizio`, `data_fine`, `quota_percentuale`, `poteri`.
+  Who signs as legale rappresentante is the person whose `ruolo.tipo` says so. A client or
+  supplier that is a company has `<slug>:business.*` (`denominazione`, `partita_iva`).
+  `famiglia` is for personal vaults only.
+- `vault_household` (MCP) or `pvault --vault <name> person list` lists the people and
+  their ruolo. Adding: the user runs `pvault --vault <name> person add <slug> --ruolo <r>
+  --nome <N>` (or `--denominazione <D>` for a company), or the page's Persone section.
+- A pratica in a business vault for a client has `persona` = the client's slug.
+
 Validation done by the vault (expect errors otherwise):
 - Fields named `data_*`, `date_of_*` or `*_date`: real dates as `YYYY-MM-DD`.
 - `cap`: 5 digits. `provincia`: 2-letter sigla (e.g. `NA`).
@@ -154,6 +196,12 @@ Validation done by the vault (expect errors otherwise):
 ## 4. Granting MCP access (per task, on demand)
 
 The MCP server is registered user-wide as `vault` with `VAULT_KEYCHAIN_SERVICE=pvault-mcp`.
+A business vault has its own MCP server (e.g. `studio`, with `VAULT_ADDR` set to that
+vault's address, `VAULT_NAME=studio` and its own Keychain service such as
+`pvault-studio-mcp`), so its tools are `mcp__studio__vault_*`. Tokens for it are created
+with `pvault --vault studio create-service-token ... --keychain pvault-studio-mcp`: never
+reuse another vault's Keychain service (it would overwrite that vault's stored token, which
+then stays valid on that vault until it expires or is revoked there).
 It reads its token from the macOS Keychain on every request, so a new or replaced token
 works immediately. No restart needed. Creating a new token with `--keychain pvault-mcp`
 revokes the one it replaces.

@@ -16,6 +16,8 @@ import (
 	"path/filepath"
 	"syscall"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 // The profile password and secret key only travel over a Unix socket in the
@@ -128,7 +130,7 @@ var errNoVaultSocket = errors.New("this vault's server isn't running")
 func verifyPeer(conn net.Conn) error {
 	uid, pid, exe, err := peerProcess(conn.(*net.UnixConn))
 	if err != nil {
-		return fmt.Errorf("cannot identify the vault server (%v) — run 'pvault lock', then 'pvault unlock'", err)
+		return fmt.Errorf("cannot identify the vault server (%v) — run '%s', then '%s'", err, pvCmd("lock"), pvCmd("unlock"))
 	}
 	if uid != os.Getuid() {
 		return fmt.Errorf("the vault server runs as another user (uid %d)", uid)
@@ -138,10 +140,10 @@ func verifyPeer(conn net.Conn) error {
 		return err
 	}
 	if !samePath(exe, self) {
-		return fmt.Errorf("the vault server is %s, not this pvault (%s) — stop it with '%s lock', then run 'pvault unlock'", exe, self, exe)
+		return fmt.Errorf("the vault server is %s, not this pvault (%s) — stop it with '%s %slock', then run '%s'", exe, self, exe, vaultFlag(), pvCmd("unlock"))
 	}
 	if err := checkSameBuild(pid); err != nil {
-		return fmt.Errorf("%w (pvault was rebuilt or reinstalled since it started) — run 'pvault lock', then 'pvault unlock'", err)
+		return fmt.Errorf("%w (pvault was rebuilt or reinstalled since it started) — run '%s', then '%s'", err, pvCmd("lock"), pvCmd("unlock"))
 	}
 	return nil
 }
@@ -181,7 +183,7 @@ func checkVaultServer() error {
 	if err != nil {
 		// A server from before the socket, or a program squatting the port.
 		if errors.Is(err, errNoVaultSocket) && portHasVault() {
-			return fmt.Errorf("%w: the server on %s is an older pvault or another program — run 'pvault lock', then 'pvault unlock'", errNoVaultSocket, serverAddr())
+			return fmt.Errorf("%w: the server on %s is an older pvault or another program — run '%s', then '%s'", errNoVaultSocket, serverAddr(), pvCmd("lock"), pvCmd("unlock"))
 		}
 		return err
 	}
@@ -191,12 +193,20 @@ func checkVaultServer() error {
 	// localhost's other address.
 	var status struct {
 		Addr string `json:"addr"`
+		Kind string `json:"kind"`
 	}
 	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&status); err != nil {
 		return fmt.Errorf("vault server status: %w", err)
 	}
 	if u, err := url.Parse(serverAddr()); err != nil || u.Host != status.Addr {
+		if os.Getenv("VAULT_ADDR") == "" {
+			return fmt.Errorf("this vault's server listens on %s, but pvault expects %s (from %s, or 7200 without one; a server started with VAULT_PORT needs VAULT_ADDR too) — run '%s', then '%s'", status.Addr, serverAddr(), portPath(vaultDir()), pvCmd("lock"), pvCmd("unlock"))
+		}
 		return fmt.Errorf("VAULT_ADDR %s isn't this vault's server, which listens on %s — set VAULT_ADDR=http://%s or unset it", serverAddr(), status.Addr, status.Addr)
+	}
+	verifiedKind = status.Kind
+	if verifiedKind == "" {
+		verifiedKind = vault.KindPersona // a server from before vault kinds
 	}
 	return nil
 }

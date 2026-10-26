@@ -31,3 +31,19 @@ test("values only from fields the scope reaches", () => {
   const named = filterHousehold(household, "*:identity.*,*:famiglia.relazione");
   assert.deepEqual(named.members[0], { slug: "giulia", famiglia: { relazione: "coniuge" }, first_name: "Giulia", anpr_relazione: "2", relazione_label: "moglie" });
 });
+
+test("business vault: ruolo and company names, by scope", () => {
+  const people: Household = {
+    members: [
+      { slug: "bianchi", ruolo: { tipo: "titolare", quota_percentuale: "100" }, first_name: "Anna", fields: 4, documents: 1 },
+      { slug: "edil", ruolo: { tipo: "impresa_esecutrice" }, denominazione: "Edil SRL", fields: 2, documents: 0 },
+    ],
+  };
+  assert.deepEqual(filterHousehold(people, "*"), people);
+  assert.deepEqual(filterHousehold(people, "*:ruolo.tipo").members, [
+    { slug: "bianchi", ruolo: { tipo: "titolare" } },
+    { slug: "edil", ruolo: { tipo: "impresa_esecutrice" } },
+  ]);
+  assert.deepEqual(filterHousehold(people, "edil:business.*").members, [{ slug: "edil", denominazione: "Edil SRL" }]);
+  assert.deepEqual(filterHousehold(people, "business.*").members, []);
+});

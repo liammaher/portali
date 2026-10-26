@@ -125,13 +125,13 @@ pvault revoke-service-token 3f9a1c2b7d4e...   # token_prefix from the list, or t
 
 ## HTTP API
 
-The vault runs at `http://127.0.0.1:7200`. All protected endpoints require `Authorization: Bearer <token>`.
+The vault runs at `http://127.0.0.1:7200` (another vault at the port in its `port` file; `pvault --vault <name> status` prints it). All protected endpoints require `Authorization: Bearer <token>`.
 
 ### Public
 
 ```
-GET  /vault/status                       # { initialized, locked, field_count, documents, categories, backup? } (personal items not counted)
-GET  /vault/schema                       # Recommended field names and sensitivity tiers
+GET  /vault/status                       # { initialized, locked, kind, field_count, documents, categories, backup? } (personal items not counted)
+GET  /vault/schema                       # Recommended field names and sensitivity tiers; categories' subject and kinds, and vault_kind
 POST /vault/unlock                       # { password, secret_key } → { token }
 POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
                                          # + { scope, access? } → grant limited to that scope (max 10m), used by Touch ID;
@@ -147,11 +147,11 @@ GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fi
                                          #   a family member's carry "member": "<slug>"
 ```
 
-### Family members
+### Other people (family members, or a business vault's people)
 
 ```
-GET    /vault/members                    # { intestatario_scheda?, members: [{ slug, famiglia, first_name, last_name, age, minor,
-                                         #   anpr_relazione, relazione_label, fields, documents }] } — only what the caller's scope reaches
+GET    /vault/members                    # { intestatario_scheda?, members: [{ slug, famiglia, ruolo, first_name, last_name, denominazione,
+                                         #   age, minor, anpr_relazione, relazione_label, fields, documents }] } — only what the caller's scope reaches
 DELETE /vault/members/{slug}             # Your session, or a grant you approved for <slug>:* with write access (Touch ID):
                                          #   delete a member's fields and documents, revoke tokens naming them
                                          #   (409 member_in_use while another field names them; closed pratiche don't count)
@@ -253,8 +253,9 @@ Profile Password + Secret Key (128-bit)
 | Variable | Default | Purpose |
 |----------|---------|---------|
 | `VAULT_DIR` | `~/.pvault` | Vault directory |
-| `VAULT_ADDR` | `http://127.0.0.1:7200` | Server address for CLI |
-| `VAULT_PORT` | `7200` | Server listen port |
+| `PVAULT_VAULT` | — | Like `--vault <name>`: the vault in `~/.pvault-<name>` |
+| `VAULT_ADDR` | the vault's `port` file, else `http://127.0.0.1:7200` | Server address for CLI |
+| `VAULT_PORT` | the vault's `port` file, else `7200` | Server listen port |
 
 ## File Layout
 
@@ -264,5 +265,6 @@ Profile Password + Secret Key (128-bit)
 ├── secret.key     # 128-bit secret key (mode 0600)
 ├── documents/     # Encrypted document files, <id>.enc (mode 0600); created with the first document
 ├── run/           # pvault.sock, the server's credential socket (dir 0700, socket 0600)
+├── port           # the server's TCP port (7200 here; another vault's in ~/.pvault-<name>/port)
 └── pvault.pid     # PID of the server 'pvault unlock' started (not written by 'pvault serve')
 ```
