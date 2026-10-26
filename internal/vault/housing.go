@@ -20,8 +20,7 @@ var (
 	rePDR              = regexp.MustCompile(`^[0-9]{14}$`)
 	reRLICode          = regexp.MustCompile(`^[A-Z0-9]{10,20}$`)
 	reDecimal          = regexp.MustCompile(`^[0-9]+(\.[0-9]+)?$`)
-	reEuroGroups       = regexp.MustCompile(`^[1-9][0-9]{0,2}([.,][0-9]{3})+$`)
-	reEuroDecimals     = regexp.MustCompile(`^[0-9]{1,2}$`)
+	reThousands        = regexp.MustCompile(`^[1-9][0-9]{0,2}([.,][0-9]{3})+$`)
 )
 
 // catastoGroupMax is the highest category number in each cadastral group
@@ -158,17 +157,18 @@ func wholeNumber(value string, lo, hi int, fail func(string) (string, bool, erro
 	return strconv.Itoa(n), true, nil
 }
 
-// normalizeDecimal accepts 72, 72.5, 72,5 or "72 mq" and returns the plain number.
+// normalizeDecimal accepts 72, 72.5, 72,5, 1.200 or "72 mq" and returns the plain
+// number. Separators are read as in normalizeEuro, so an Italian 1.200 m² is 1200.
 func normalizeDecimal(s string) (string, bool) {
 	s = strings.ToLower(strings.TrimSpace(s))
 	for _, unit := range []string{"mq", "m²", "m2", "vani"} {
 		s = strings.TrimSpace(strings.TrimSuffix(s, unit))
 	}
-	s = strings.ReplaceAll(s, ",", ".")
-	if !reDecimal.MatchString(s) {
+	n, ok := parseItalianNumber(s)
+	if !ok {
 		return "", false
 	}
-	f, err := strconv.ParseFloat(s, 64)
+	f, err := strconv.ParseFloat(n, 64)
 	if err != nil || f <= 0 {
 		return "", false
 	}
@@ -176,15 +176,30 @@ func normalizeDecimal(s string) (string, bool) {
 }
 
 // normalizeEuro accepts Italian (1.250,50) and plain (1250.50) amounts, with or
-// without a € sign, and returns two decimals. A lone dot followed by exactly
-// three digits is read as a thousands separator, as in Italian (1.250 = 1250).
-// Thousands groups must have three digits and decimals at most two, so a
-// mistyped separator (1.234.56) is refused rather than stored 100 times larger.
+// without a € sign, and returns two decimals.
 func normalizeEuro(s string) (string, bool) {
 	s = strings.ToLower(s)
 	for _, cut := range []string{"€", "euro", "eur", " "} {
 		s = strings.ReplaceAll(s, cut, "")
 	}
+	n, ok := parseItalianNumber(s)
+	if _, decimals, _ := strings.Cut(n, "."); !ok || len(decimals) > 2 {
+		return "", false
+	}
+	f, err := strconv.ParseFloat(n, 64)
+	if err != nil {
+		return "", false
+	}
+	return strconv.FormatFloat(f, 'f', 2, 64), true
+}
+
+// parseItalianNumber returns s as a plain number (1250.5). A lone dot followed by
+// exactly three digits is read as a thousands separator, as in Italian
+// (1.250 = 1250), and a lone comma followed by three digits is refused (1,250:
+// thousands or three decimals, can't tell). Thousands groups must have three
+// digits, so a mistyped separator (1.234.56) is refused rather than stored 100
+// times larger.
+func parseItalianNumber(s string) (string, bool) {
 	intPart, decPart := s, ""
 	if i := strings.LastIndexAny(s, ".,"); i >= 0 {
 		sep, digits := s[i], s[i+1:]
@@ -194,14 +209,11 @@ func normalizeEuro(s string) (string, bool) {
 		case lone && (mixed || len(digits) <= 2):
 			intPart, decPart = s[:i], digits
 		case lone && sep == ',' && len(digits) == 3:
-			return "", false // 1,250: thousands or three decimals, can't tell
+			return "", false
 		}
 	}
-	if decPart != "" && !reEuroDecimals.MatchString(decPart) {
-		return "", false
-	}
 	if strings.ContainsAny(intPart, ".,") {
-		if !reEuroGroups.MatchString(intPart) || strings.ContainsRune(intPart, '.') && strings.ContainsRune(intPart, ',') {
+		if !reThousands.MatchString(intPart) || strings.ContainsRune(intPart, '.') && strings.ContainsRune(intPart, ',') {
 			return "", false
 		}
 		intPart = strings.NewReplacer(".", "", ",", "").Replace(intPart)
@@ -212,9 +224,5 @@ func normalizeEuro(s string) (string, bool) {
 	if !reDecimal.MatchString(intPart) {
 		return "", false
 	}
-	f, err := strconv.ParseFloat(intPart, 64)
-	if err != nil {
-		return "", false
-	}
-	return strconv.FormatFloat(f, 'f', 2, 64), true
+	return intPart, true
 }

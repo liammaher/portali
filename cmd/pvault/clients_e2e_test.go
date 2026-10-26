@@ -77,10 +77,14 @@ func TestClients_EndToEnd(t *testing.T) {
 	}
 
 	out := runCmd(t, cmdExpiring, "expiring")
-	for _, want := range []string{"procura (rossi)", soon, "cie scans (rossi)", "procura scans (rossi)", "their pratiche are closed", "No retention period set"} {
+	for _, want := range []string{"procura (rossi)", soon, "cie scans (rossi)", "their pratiche are closed", "No retention period set"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("expiring without retention: missing %q in:\n%s", want, out)
 		}
+	}
+	// The procura is still in force (it expires soon), so its scan waits.
+	if strings.Contains(out, "procura scans (rossi)") {
+		t.Errorf("expiring listed the scan of a procura still in force:\n%s", out)
 	}
 	if strings.Contains(out, "verdi") || strings.Contains(out, "data of") {
 		t.Errorf("expiring listed verdi or retention without a setting:\n%s", out)

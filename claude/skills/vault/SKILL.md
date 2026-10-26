@@ -204,7 +204,8 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
 Validation done by the vault (expect errors otherwise):
 - Fields named `data_*`, `date_of_*` or `*_date`: real dates as `YYYY-MM-DD`.
 - `cap`: 5 digits. `provincia`: 2-letter sigla (e.g. `NA`).
-- Housing: `catasto_categoria` (A/2), foglio/subalterno digits, `*_mq` and `vani` numbers,
+- Housing: `catasto_categoria` (A/2), foglio/subalterno digits, `*_mq` and `vani` numbers
+  (Italian `1.200` is 1200),
   euro amounts stored as `1250.50` (Italian `1.250,50` accepted), `luce_pod`
   (IT001E12345678), `gas_pdr` (14 digits), `cedolare_secca` si/no, `abitazione.titolo` from a fixed list.
 - Business: `locale.*` uses the same catasto, `cap`/`provincia`/`interno` and `*_mq` rules (also

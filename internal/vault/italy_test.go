@@ -2,6 +2,7 @@ package vault
 
 import (
 	"errors"
+	"path/filepath"
 	"testing"
 )
 
@@ -342,5 +343,72 @@ func TestNumberedAccountsArePersonal(t *testing.T) {
 	}
 	if got := DefaultSensitivity("spid2.password"); got != TierPersonal {
 		t.Errorf("DefaultSensitivity(spid2.password) = %s, want personal", got)
+	}
+}
+
+// A credential stored below personal before its word counted as one (sblocco
+// came later) is raised when the vault is opened, fields and documents alike.
+func TestOpenRaisesStaleCredentialTiers(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), ".pvault")
+	sk, err := Init(dir, testPassword)
+	if err != nil {
+		t.Fatal(err)
+	}
+	v, err := Open(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := v.Unlock(testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	for _, id := range []string{"cie.codice_sblocco", "identity.first_name"} {
+		if err := v.Set(id, "x", ""); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := v.Set("spid.provider", "PosteID", ""); err != nil {
+		t.Fatal(err)
+	}
+	doc, err := v.AddDocument("spid", "spid.pdf", "application/pdf", []byte("x"), "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// What an older build stored.
+	for _, id := range []string{"cie.codice_sblocco", "spid.provider"} {
+		if err := v.db.SetSensitivity(id, "standard"); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := v.db.RaiseTier("sensitive", nil, []string{doc.ID}); err != nil {
+		t.Fatal(err)
+	}
+	v.Close()
+
+	v, err = Open(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer v.Close()
+	fields, err := v.db.ListFields()
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]string{
+		"cie.codice_sblocco":  TierPersonal,
+		"spid.provider":       "standard", // not a secret, may be lowered
+		"identity.first_name": DefaultSensitivity("identity.first_name"),
+	}
+	for _, f := range fields {
+		if f.Sensitivity != want[f.ID] {
+			t.Errorf("%s: tier %q, want %q", f.ID, f.Sensitivity, want[f.ID])
+		}
+	}
+	docs, err := v.db.ListDocuments()
+	if err != nil || len(docs) != 1 || docs[0].Sensitivity != TierPersonal {
+		t.Fatalf("documents = %+v, %v; want the spid scan at personal", docs, err)
+	}
+	entries, _ := v.db.GetAuditLog(10)
+	if len(entries) == 0 || entries[0].Action != "tier_raise" || entries[0].Scope != "cie.codice_sblocco" {
+		t.Errorf("audit = %+v, want a tier_raise entry for cie.codice_sblocco", entries)
 	}
 }

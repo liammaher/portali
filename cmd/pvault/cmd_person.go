@@ -354,6 +354,9 @@ func cmdPersonRemove(slug string) {
 	if len(out.RevokedTokens) > 0 {
 		fmt.Printf("Revoked service tokens that named %s: %s\n", slug, strings.Join(out.RevokedTokens, ", "))
 	}
+	if len(out.FilesLeft) > 0 {
+		fmt.Fprintf(os.Stderr, "Could not delete these encrypted document files; delete them by hand:\n  %s\n", strings.Join(out.FilesLeft, "\n  "))
+	}
 }
 
 func cmdPersonMigrate() {

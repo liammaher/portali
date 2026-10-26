@@ -2,9 +2,11 @@ package vault
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -134,7 +136,7 @@ func TestRemovePerson(t *testing.T) {
 
 func TestMigrateNucleo(t *testing.T) {
 	v, _ := tmpVault(t)
-	mustSet(t, v, "nucleo_familiare.numero_componenti", "3")
+	mustSet(t, v, "nucleo_familiare.numero_componenti", "4") // you and three membri
 	mustSet(t, v, "nucleo_familiare.intestatario_scheda", "si")
 	mustSet(t, v, "nucleo_familiare.membro1_nome", "Giulia")
 	mustSet(t, v, "nucleo_familiare.membro1_cognome", "Bianchi")
@@ -175,6 +177,8 @@ func TestMigrateNucleo(t *testing.T) {
 		"leo:identity.first_name":            "Leò",
 		"membro3:identity.codice_fiscale":    "RSSMRA85T10A562S",
 		"famiglia.intestatario_scheda":       "io",
+		"giulia-2:famiglia.stato_famiglia":   "si", // so the count stays 4
+		"membro3:famiglia.stato_famiglia":    "si",
 		"nucleo_familiare.membro2_relazione": "amico del cuore", // left in place
 		"nucleo_familiare.membro2_scarpe":    "32",
 	} {
@@ -249,6 +253,99 @@ func TestBackupRestoresMembers(t *testing.T) {
 }
 
 // A closed pratica is history: it names a member without keeping them.
+// A person's last field or document can't be deleted on its own, which would
+// skip RemovePerson's checks and leave their tokens for a later person with
+// the same slug.
+func TestDeletePersonLastRowRefused(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "leo:identity.first_name", "Leo")
+	mustSet(t, v, "leo:identity.last_name", "Rossi")
+	doc, err := v.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("%PDF"), "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := v.Delete("leo:identity.last_name"); err != nil {
+		t.Fatal(err)
+	}
+	if ok, err := v.DeleteDocument(doc.ID, nil); !ok || err != nil {
+		t.Fatalf("delete document = %v, %v", ok, err)
+	}
+	var verr *ValidationError
+	if err := v.Delete("leo:identity.first_name"); !errors.As(err, &verr) || !strings.Contains(verr.Msg, "pvault person remove leo") {
+		t.Fatalf("delete last field = %v, want a ValidationError pointing to person remove", err)
+	}
+	if f, _ := v.db.GetField("leo:identity.first_name"); f == nil {
+		t.Fatal("last field deleted")
+	}
+
+	doc, _ = v.AddDocument("anna:cie", "cie.pdf", "application/pdf", []byte("%PDF"), "")
+	if ok, err := v.DeleteDocument(doc.ID, nil); ok || !errors.As(err, &verr) {
+		t.Fatalf("delete last document = %v, %v; want refused", ok, err)
+	}
+	// The owner's fields are not people's rows.
+	mustSet(t, v, "identity.first_name", "Liam")
+	if err := v.Delete("identity.first_name"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// Two deletes racing on a person's last two rows can't both succeed.
+func TestDeletePersonLastRow_Concurrent(t *testing.T) {
+	v, _ := tmpVault(t)
+	for i := range 10 {
+		slug := fmt.Sprintf("p%d", i)
+		mustSet(t, v, slug+":identity.first_name", "A")
+		mustSet(t, v, slug+":identity.last_name", "B")
+		var wg sync.WaitGroup
+		errs := make([]error, 2)
+		for j, id := range []string{slug + ":identity.first_name", slug + ":identity.last_name"} {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				errs[j] = v.Delete(id)
+			}()
+		}
+		wg.Wait()
+		if (errs[0] == nil) == (errs[1] == nil) {
+			t.Fatalf("%s: deletes returned %v and %v; want exactly one refused", slug, errs[0], errs[1])
+		}
+	}
+}
+
+// When a document file can't be deleted, the person is still removed whole
+// (tokens revoked, grants dropped) and the file is reported, not left for a
+// retry that would find no person.
+func TestRemovePerson_FileErrorStillRevokes(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "leo:identity.first_name", "Leo")
+	if _, err := v.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
+		t.Fatal(err)
+	}
+	token, _ := v.CreateServiceToken("leo-agent", "leo:*", time.Hour, "", "")
+	if _, _, err := v.session.AddGrant(time.Minute, "leo:*", "read"); err != nil {
+		t.Fatal(err)
+	}
+	docsDir := filepath.Join(v.dir, "documents")
+	if err := os.Chmod(docsDir, 0o500); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { os.Chmod(docsDir, 0o700) })
+
+	out, err := v.RemovePerson("leo")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(out.FilesLeft) != 1 || len(out.RevokedTokens) != 1 || out.DroppedGrants != 1 {
+		t.Fatalf("removed = %+v", out)
+	}
+	if _, ok := v.ValidateServiceToken(token); ok {
+		t.Error("leo:* token survived a removal whose file delete failed")
+	}
+	if fields, docs, _ := v.db.PersonRows("leo"); len(fields)+len(docs) != 0 {
+		t.Fatalf("leo still has %v %v", fields, docs)
+	}
+}
+
 func TestRemovePerson_ClosedPraticaDoesNotBlock(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:famiglia.relazione", "figlio")
@@ -261,6 +358,42 @@ func TestRemovePerson_ClosedPraticaDoesNotBlock(t *testing.T) {
 	mustSet(t, v, "pratiche.cie-leo_stato", "completata")
 	if _, err := v.RemovePerson("leo"); err != nil {
 		t.Fatalf("closed pratica: remove = %v", err)
+	}
+}
+
+// A numero_componenti the migrated members don't account for stays, so the
+// household size the TARI tariff uses isn't silently changed.
+func TestMigrateNucleo_KeepsMismatchedCount(t *testing.T) {
+	v, _ := tmpVault(t)
+	mustSet(t, v, "nucleo_familiare.numero_componenti", "3")
+	mustSet(t, v, "nucleo_familiare.membro1_nome", "Giulia")
+	mustSet(t, v, "leo:identity.first_name", "Leo")
+	mustSet(t, v, "leo:famiglia.stato_famiglia", "si")
+	mustSet(t, v, "anna:identity.first_name", "Anna")
+	mustSet(t, v, "anna:famiglia.stato_famiglia", "no")
+
+	// You, leo and giulia make 3: the count is derived and goes.
+	report, err := v.MigrateNucleo(true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(report.Deleted) != 1 || report.Left["nucleo_familiare.numero_componenti"] != "" {
+		t.Fatalf("matching count: deleted %v, left %v", report.Deleted, report.Left)
+	}
+
+	mustSet(t, v, "nucleo_familiare.numero_componenti", "5")
+	report, err = v.MigrateNucleo(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if msg := report.Left["nucleo_familiare.numero_componenti"]; !strings.Contains(msg, "make 3") {
+		t.Errorf("left = %v, want numero_componenti kept with the derived 3", report.Left)
+	}
+	if f, err := v.Get("nucleo_familiare.numero_componenti"); err != nil || f.Value != "5" {
+		t.Errorf("numero_componenti = %+v, %v; want it kept", f, err)
+	}
+	if f, err := v.Get("giulia:famiglia.stato_famiglia"); err != nil || f.Value != "si" {
+		t.Errorf("giulia:famiglia.stato_famiglia = %+v, %v; want si", f, err)
 	}
 }
 
