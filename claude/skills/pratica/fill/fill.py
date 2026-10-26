@@ -1,36 +1,48 @@
 #!/usr/bin/env python3
 """Fill a pratiche-napoli form from the vault, and check the result.
 
-  fill.py needs --entry E.json --form ID --layout L.json
+  fill.py needs --entry E.json --form ID --layout L.json [--draft]
       The service tokens a run needs, as the pratica skill asks for them:
       prepare (append, the form's categories and pratiche.*) and track
-      (write, pratiche.* and the categories the entry's records go to).
+      (write, pratiche.* and the categories the entry's records go to); with
+      --draft, one read token for the form's categories.
 
-  fill.py run --entry E.json --form ID --layout L.json --server S.json
-              --pdf FORM.pdf --out DIR [--answers A.json] [--reply R.json]
+  fill.py run --entry E.json --form ID --layout L.json --pdf FORM.pdf --out DIR
+              (--server S.json | --vault-dir DIR [--keychain SERVICE])
+              [--draft] [--answers A.json] [--reply R.json]
               [--deadline-from FIELD --deadline-days N] [--playbook NAME]
       Reads the vault over its HTTP API with the prepare token, resolves each
       of the entry's form rows, fills the PDF at the layout's positions, reads
       the PDF back to check every value landed in its box, and, only if every
-      check passed, opens the pratica record and checks its deadline in
-      /vault/expiring. With --reply it then plays the ente's answer with the
-      track token: sent, records saved, closed. Writes DIR/filled.pdf,
-      DIR/page-1.png and DIR/report.json; exits 1 if a check failed.
+      check passed and this isn't a --draft, opens the pratica record and
+      checks its deadline in /vault/expiring. With --reply it then plays the
+      ente's answer with the track token: sent, records saved, closed. Writes
+      DIR/filled.pdf, DIR/page-1.png and DIR/report.json; exits 1 if a check
+      failed. A --draft writes nothing to the vault.
 
-The entry is a library procedure as JSON (its YAML, converted). S.json is
-{"url": ..., "tokens": {"prepare": ..., "track": ...}}. Needs PyMuPDF (fitz).
+The vault: --server S.json, {"url": ..., "tokens": {"prepare": ..., "track":
+...}}, is the synthetic vault over TCP. --vault-dir is a real one (~/.pvault,
+or ~/.pvault-<name>): requests, the token included, go only to its
+run/pvault.sock, after checking that folder is yours and private, as the MCP
+server does; the token is the one `pvault create-service-token ... --keychain
+SERVICE` stored, else $VAULT_TOKEN.
+
+The entry is a library procedure as JSON (its YAML, converted). Needs PyMuPDF (fitz).
 """
 
 import argparse
 import datetime as dt
+import getpass
 import hashlib
+import http.client
 import json
 import os
 import re
+import socket
+import stat
+import subprocess
 import sys
-import urllib.error
 import urllib.parse
-import urllib.request
 
 # The vault's word for a library channel type (it takes the library's as is,
 # saving these three as the Italian word).
@@ -46,6 +58,8 @@ UNICODE_FONTS = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/dejavu/DejaVuSans.ttf",
 ]
+# Answers confirming that nobody else lives in the home.
+NOBODY = {"nessuno", "nessuna", "none", "nobody"}
 # Typographic marks typed on phones, as the plain ones Latin-1 has.
 PLAIN = str.maketrans({"’": "'", "‘": "'", "“": '"', "”": '"', "–": "-"})
 
@@ -108,7 +122,7 @@ def template_refs(layout):
     return out
 
 
-def needs(entry, form, layout):
+def needs(entry, form, layout, draft=False):
     check_supported(entry, form)
     patterns = set()
     for row in form["fields"]:
@@ -122,6 +136,8 @@ def needs(entry, form, layout):
     patterns |= {f"{category(ref)}.*" for ref in template_refs(layout)}
     # *:x.* reaches the owner too, so x.* beside it adds nothing.
     patterns = {p for p in patterns if f"*:{p}" not in patterns}
+    if draft:
+        return {"tokens": {"draft": {"scope": ",".join(sorted(patterns)), "access": "read"}}}
     records = {f"{category(r['field'])}.*" for r in entry.get("records", [])}
     return {
         "tokens": {
@@ -133,22 +149,94 @@ def needs(entry, form, layout):
 
 # --- The vault, over HTTP ----------------------------------------------------
 
+class UnixHTTPConnection(http.client.HTTPConnection):
+    def __init__(self, socket_path, timeout):
+        super().__init__("localhost", timeout=timeout)
+        self.socket_path = socket_path
+
+    def connect(self):
+        self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.sock.settimeout(self.timeout)
+        self.sock.connect(self.socket_path)
+
+
+def vault_socket(vault_dir):
+    """<vault dir>/run/pvault.sock, once it is this user's vault server's:
+    the run folder ours and private (0700), the socket ours. Anything can
+    listen on 127.0.0.1:7200 while the vault is locked; only this user can
+    put a socket there. The MCP server makes the same check."""
+    run = os.path.join(vault_dir, "run")
+    sock = os.path.join(run, "pvault.sock")
+    try:
+        folder, entry = os.lstat(run), os.lstat(sock)
+    except FileNotFoundError:
+        sys.exit(f"no vault server for {vault_dir}: run pvault unlock")
+    if not stat.S_ISDIR(folder.st_mode) or folder.st_uid != os.getuid() or folder.st_mode & 0o077:
+        sys.exit(f"refusing to send the token: {run} must be a private folder of yours (mode 0700)")
+    if not stat.S_ISSOCK(entry.st_mode) or entry.st_uid != os.getuid():
+        sys.exit(f"refusing to send the token: {sock} is not your vault server's socket")
+    return sock
+
+
+def keychain_token(service):
+    """What `pvault create-service-token --keychain SERVICE` stored for this user."""
+    if not re.fullmatch(r"[A-Za-z0-9._][A-Za-z0-9._-]{0,63}", service):
+        sys.exit(f"{service!r} isn't a Keychain service name")
+    # By absolute path, so nothing earlier in PATH can stand in for it.
+    got = subprocess.run(["/usr/bin/security", "find-generic-password", "-a", getpass.getuser(), "-s", service, "-w"],
+                         capture_output=True, text=True, timeout=10)
+    if got.returncode == 44:
+        sys.exit(f"nothing in Keychain service {service!r}: create the token with pvault create-service-token ... --keychain {service}")
+    if got.returncode != 0:
+        sys.exit(f"reading Keychain service {service!r} failed: {got.stderr.strip()}")
+    return got.stdout.strip()
+
+
+def connect(a):
+    """The vault, and its tokens by name (prepare, track; a real vault has one
+    token for both)."""
+    if not a.vault_dir:
+        server = load(a.server)
+        return {name: Vault(token, url=server["url"]) for name, token in server["tokens"].items()}
+    sock = vault_socket(os.path.expanduser(a.vault_dir))
+    token = keychain_token(a.keychain) if a.keychain else os.environ.get("VAULT_TOKEN", "").strip()
+    if not re.fullmatch(r"[\x21-\x7e]+", token):
+        sys.exit("no service token: pass --keychain SERVICE, or set VAULT_TOKEN")
+    vault = Vault(token, socket_path=sock)
+    status, info = vault.call("GET", "/vault/status")
+    if status != 200 or info.get("locked", True):
+        sys.exit(f"the vault in {a.vault_dir} is locked: run pvault unlock")
+    # As the MCP server: a set VAULT_ADDR must be this vault's own server.
+    addr = os.environ.get("VAULT_ADDR", "").strip()
+    if addr and urllib.parse.urlsplit(addr).netloc != info.get("addr"):
+        sys.exit(f"VAULT_ADDR {addr} isn't the server of {a.vault_dir}, which listens on {info.get('addr')}")
+    return {"prepare": vault, "track": vault, "draft": vault}
+
+
 class Vault:
-    def __init__(self, url, token):
-        self.url, self.token = url.rstrip("/"), token
+    """The vault's HTTP API: over TCP to the synthetic vault, or over a real
+    vault's socket (vault_socket checked it)."""
+
+    def __init__(self, token, url=None, socket_path=None):
+        self.token, self.url, self.socket_path = token, url, socket_path
 
     def call(self, method, path, body=None):
         data = json.dumps(body).encode() if body is not None else None
-        req = urllib.request.Request(self.url + path, data=data, method=method)
-        req.add_header("Authorization", "Bearer " + self.token)
-        req.add_header("Content-Type", "application/json")
+        headers = {"Authorization": "Bearer " + self.token, "Content-Type": "application/json"}
+        if self.socket_path:
+            conn = UnixHTTPConnection(self.socket_path, timeout=15)
+            headers["Host"] = "localhost"  # the server wants a loopback Host
+        else:
+            u = urllib.parse.urlsplit(self.url)
+            conn = http.client.HTTPConnection(u.hostname, u.port, timeout=15)
         try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                status, raw = resp.status, resp.read()
-        except urllib.error.HTTPError as e:
-            status, raw = e.code, e.read()
-        except (urllib.error.URLError, TimeoutError) as e:
-            sys.exit(f"the vault at {self.url} didn't answer {method} {path}: {e}")
+            conn.request(method, path, body=data, headers=headers)
+            resp = conn.getresponse()
+            status, raw = resp.status, resp.read()
+        except (OSError, http.client.HTTPException) as e:
+            sys.exit(f"the vault didn't answer {method} {path}: {e}")
+        finally:
+            conn.close()
         try:
             return status, json.loads(raw or b"null")
         except ValueError:
@@ -204,9 +292,13 @@ def resolve(form, values, household, answers):
             else:
                 out.update(status="missing", missing=m["fallback"])
         elif "repeat" in m:
-            people = []
+            people, unknown = [], []
             for member in household.get("members", []):
-                if member.get("famiglia", {}).get("stato_famiglia") != "si":
+                stato = member.get("famiglia", {}).get("stato_famiglia")
+                if stato is None:
+                    # Unset isn't no: who lives with the dichiarante can't be guessed.
+                    unknown.append(f"{member['slug']}:famiglia.stato_famiglia")
+                if stato != "si":
                     continue
                 person = {"slug": member["slug"], "relazione_label": member.get("relazione_label", "")}
                 for ref in m["fields"]:
@@ -215,10 +307,16 @@ def resolve(form, values, household, answers):
                 people.append(person)
             # The entry's step 2: whoever is intestatario della scheda declares.
             intestatario = values.get("famiglia.intestatario_scheda")
-            if people and intestatario is None:
+            if unknown:
+                out.update(status="missing", missing=unknown)
+            elif people and intestatario is None:
                 out.update(status="missing", missing=["famiglia.intestatario_scheda"])
             elif intestatario not in (None, "io"):
                 sys.exit(f"the intestatario della scheda is {intestatario}: they sign, which this tool doesn't do yet")
+            elif not people and said(answers.get(row["label"], "")) not in NOBODY:
+                # An empty stato di famiglia may only mean nobody was added to the vault.
+                out.update(status="ask", question="Nessuno nello stato di famiglia del vault: confermare che non convive "
+                           "nessuno (risposta \"nessuno\"), oppure aggiungere i conviventi al vault")
             else:
                 out.update(status="value", value=people)
         elif "ask" in m:
@@ -231,6 +329,15 @@ def resolve(form, values, household, answers):
             out.update(status="blank", reason=m["blank_with_reason"])
         rows.append(out)
     return rows
+
+
+def required_by(rule, lookup):
+    """Why an optional row or field is needed after all: the first of its
+    required_if conditions the data meets, or None."""
+    for cond in rule.get("required_if", []) if isinstance(rule, dict) else []:
+        if re.search(cond["matches"], lookup(cond["field"]) or ""):
+            return f"{cond['field']} {cond['means']}"
+    return None
 
 
 def parse_template(template):
@@ -380,6 +487,10 @@ def fill_pdf(fitz, pdf_in, pdf_out, layout, rows, values):
             if len(value) > len(table["rows"]):
                 pen.problems.append(f"{labels[0]}: {len(value)} people for {len(table['rows'])} rows")
             for (top, bottom), person in zip(table["rows"], value):
+                for need in table.get("require", []):
+                    why = required_by(need, lambda f: values.get(f"{person['slug']}:{f}"))
+                    if why and not values.get(f"{person['slug']}:{need['field']}"):
+                        pen.problems.append(f"{labels[0]}: {person['slug']} has no {need['field']} ({why})")
                 for col in table["columns"]:
                     text, missing = render(col["template"], lambda n: person.get(n, ""))
                     if missing:
@@ -510,7 +621,7 @@ def run(a):
     entry, layout = load(a.entry), load(a.layout)
     form = form_of(entry, a.form)
     check_supported(entry, form)
-    server = load(a.server)
+    vaults = connect(a)
     answers = load(a.answers)["answers"] if a.answers else {}
     checks = []
 
@@ -520,6 +631,7 @@ def run(a):
         return ok
 
     print(f"{entry['id']} #{form['id']}")
+    os.makedirs(a.out, exist_ok=True)
     with open(a.pdf, "rb") as f:
         pdf_hash = hashlib.sha256(f.read()).hexdigest()
     check("form is the version the library maps", pdf_hash == form.get("sha256"), pdf_hash[:12])
@@ -533,16 +645,20 @@ def run(a):
     check("every layout box is a library row", layout_labels <= library_labels,
           ", ".join(sorted(layout_labels - library_labels)))
 
-    prepare = Vault(server["url"], server["tokens"]["prepare"])
+    prepare = vaults["draft"] if a.draft and "draft" in vaults else vaults["prepare"]
     values = prepare.values()
     status, household = prepare.call("GET", "/vault/members")
     check("prepare token reads the household", status == 200, str(status))
     rows = resolve(form, values, household if status == 200 else {}, answers)
     optional = layout.get("optional_rows", {})
     for r in rows:
-        if r["status"] == "missing" and r["label"] not in optional:
-            check(f"row {r['label']!r} has a value", False,
-                  "; ".join(f"{ref} {prepare.why_missing(ref)}" for ref in r["missing"]))
+        if r["status"] == "missing":
+            # An optional row is still needed when its required_if holds (born abroad).
+            rule = optional.get(r["label"])
+            why = required_by(rule, values.get) if rule is not None else None
+            if rule is None or why:
+                check(f"row {r['label']!r} has a value", False,
+                      "; ".join(f"{ref} {prepare.why_missing(ref)}" for ref in r["missing"]) + (f" (needed: {why})" if why else ""))
         if r["status"] == "ask":
             check(f"row {r['label']!r} is answered", False, r["question"])
 
@@ -559,7 +675,11 @@ def run(a):
     start = values.get(a.deadline_from) if a.deadline_from else None
     slug = a.slug or f"{procedure}-{(start or dt.date.today().isoformat())[:4]}"
     failed = [c["check"] for c in checks if not c["ok"]]
-    if not check("the form is ready, so the pratica is opened", not failed, f"{len(failed)} checks failed" if failed else ""):
+    ready = check("the form is ready", not failed, f"{len(failed)} checks failed" if failed else "")
+    if a.draft:
+        print("  draft: nothing written to the vault")
+        return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    if not ready:
         return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
 
     # As the skill's step 0: an open pratica is resumed, never opened again; a
@@ -607,7 +727,7 @@ def run(a):
 
     if a.reply:
         # Step 6 of the skill: sent, then the ente answers.
-        track = Vault(server["url"], server["tokens"]["track"])
+        track = vaults["track"]
         today = dt.date.today().isoformat()
         reply = load(a.reply)["records"]
         steps = [("stato", "inviata"), ("data_invio", today)]
@@ -646,7 +766,12 @@ def main():
         s.add_argument("--form", required=True)
         s.add_argument("--layout", required=True)
     r = sub.choices["run"]
-    r.add_argument("--server", required=True)
+    for s in sub.choices.values():
+        s.add_argument("--draft", action="store_true", help="read only: no pratica record, no reply")
+    where = r.add_mutually_exclusive_group(required=True)
+    where.add_argument("--server", help="the synthetic vault's server.json")
+    where.add_argument("--vault-dir", help="a real vault's folder, e.g. ~/.pvault")
+    r.add_argument("--keychain", help="Keychain service holding the token (else $VAULT_TOKEN)")
     r.add_argument("--pdf", required=True)
     r.add_argument("--out", required=True)
     r.add_argument("--answers")
@@ -658,8 +783,10 @@ def main():
     a = p.parse_args()
     if a.cmd == "needs":
         entry = load(a.entry)
-        print(json.dumps(needs(entry, form_of(entry, a.form), load(a.layout)), indent=2))
+        print(json.dumps(needs(entry, form_of(entry, a.form), load(a.layout), a.draft), indent=2))
         return 0
+    if a.draft and a.reply:
+        p.error("--draft writes nothing, so it takes no --reply")
     return run(a)
 
 

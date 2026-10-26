@@ -1,8 +1,9 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
-	"net/http/httptest"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,8 +18,9 @@ import (
 // over HTTP, with service tokens scoped as the pratica skill asks for them.
 // It runs only with PVAULT_PILOT_DIR set. From that directory it reads
 // fixture.json (the vault's kind and fields, set as the user would) and
-// needs.json (the tokens to create), writes server.json (the address and the
-// tokens), and serves until a file named done appears there.
+// needs.json (the tokens to create), writes server.json (the TCP address, a
+// vault_dir whose run/pvault.sock it also serves, and the tokens), and serves
+// until a file named done appears there.
 func TestPraticaPilotVault(t *testing.T) {
 	dir := os.Getenv("PVAULT_PILOT_DIR")
 	if dir == "" {
@@ -68,9 +70,28 @@ func TestPraticaPilotVault(t *testing.T) {
 		tokens[name] = token
 	}
 
-	srv := httptest.NewServer(New(v, ":0").handler)
-	defer srv.Close()
-	out, _ := json.Marshal(map[string]any{"url": srv.URL, "tokens": tokens})
+	// As pvault serve: TCP, and a socket in a private run/ folder, which a
+	// client that sends tokens must check (fill.py --vault-dir does). The
+	// socket's folder is short: temp paths exceed the 104-byte socket limit.
+	s := New(v, "127.0.0.1:0")
+	if _, err := s.Start(); err != nil {
+		t.Fatal(err)
+	}
+	defer s.Stop(context.Background())
+	sockDir, err := os.MkdirTemp("", "pvp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(sockDir)
+	if err := os.Mkdir(filepath.Join(sockDir, "run"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	ln, err := net.Listen("unix", filepath.Join(sockDir, "run", "pvault.sock"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.Serve(ln)
+	out, _ := json.Marshal(map[string]any{"url": "http://" + s.tcpAddr, "vault_dir": sockDir, "tokens": tokens})
 	// Whole or not at all: run.sh starts as soon as the file is there.
 	tmp := filepath.Join(dir, "server.json.tmp")
 	if err := os.WriteFile(tmp, out, 0o600); err != nil {

@@ -37,6 +37,11 @@ def without(*ids):
     return lambda fx: fx.update(fields=[f for f in fx["fields"] if f[0] not in ids])
 
 
+def nobody(fx):
+    """The vault's owner alone: no other person in it."""
+    fx["fields"] = [f for f in fx["fields"] if ":" not in f[0].split(".", 1)[0]]
+
+
 def with_fields(*fields):
     return lambda fx: fx.update(fields=fx["fields"] + [list(f) for f in fields])
 
@@ -79,12 +84,17 @@ def people(n):
     return with_fields(*rows)
 
 
+CONVIVENTI = "Conviventi (nominativo, luogo e data di nascita, rapporto, codice fiscale)"
 LONG_NOTE = ("Contratto di locazione registrato presso l'Agenzia delle Entrate; conviventi come da stato di "
              "famiglia; il box auto non è pertinenza dell'abitazione e sarà dichiarato a parte se necessario.")
 
 # name: (description, changes, expected exit, lines the output must contain)
 CASES = {
-    "baseline": ("the pilot as it is", {}, 0, ["the form is ready, so the pratica is opened", "a closed pratica leaves expiring"]),
+    "baseline": ("the pilot as it is", {}, 0, ["ok   the form is ready", "opens pratiche.", "a closed pratica leaves expiring"]),
+    "socket-draft": ("a draft over the vault's socket, as on a real vault: filled, nothing written",
+                     {"socket": True}, 0, ["ok   the form is ready", "draft: nothing written to the vault", "no pratiche fields in the vault"]),
+    "socket-not-private": ("the socket's run folder isn't private: the token isn't sent",
+                           {"socket": True, "chmod_run": 0o755}, 1, ["must be a private folder of yours"]),
     "convivente-gaps": ("a convivente lacks a date of birth, another a codice fiscale",
                         {"fixture": without("giulia:identity.date_of_birth", "luca:identity.codice_fiscale")}, 1,
                         ["giulia has no date_of_birth", "luca has no codice_fiscale", "FAIL the form is ready"]),
@@ -100,6 +110,20 @@ CASES = {
     "no-intestatario": ("conviventi but no intestatario della scheda",
                         {"fixture": without("famiglia.intestatario_scheda")}, 1,
                         ["famiglia.intestatario_scheda not in the vault"]),
+    "empty-household": ("nobody else in the vault: the empty table must be confirmed, not assumed",
+                        {"fixture": nobody}, 1, ["Nessuno nello stato di famiglia del vault"]),
+    "empty-household-confirmed": ("nobody else, confirmed: the form is ready, and the Comune's 3 occupants don't match 1",
+                                  {"fixture": nobody, "answers": {CONVIVENTI: "Nessuno."}}, 1,
+                                  ["ok   the form is ready", "FAIL the ente's tari.componenti_tassati matches what was declared: 3 vs 1"]),
+    "member-no-stato": ("a person without famiglia.stato_famiglia: asked, not read as no",
+                        {"fixture": without("luca:famiglia.stato_famiglia")}, 1,
+                        ["luca:famiglia.stato_famiglia not in the vault"]),
+    "owner-born-abroad": ("the owner was born abroad (EE) and has no birth country: needed after all",
+                          {"fixture": setting({"identity.birth_province": ["EE"]})}, 1,
+                          ["identity.birth_country not in the vault (needed: identity.birth_province is EE: born abroad)"]),
+    "member-born-abroad": ("a convivente born abroad, known only from her CF (Z114), without a birth country",
+                           {"fixture": without("giulia:identity.birth_country", "giulia:identity.birth_province")}, 1,
+                           ["giulia has no identity.birth_country (identity.codice_fiscale has a foreign birthplace code"]),
     "too-many-people": ("six people in the stato di famiglia, five rows on the form",
                         {"fixture": people(4)}, 1, ["6 people for 5 rows"]),
     "unicode-names": ("names Helvetica can't print",
@@ -117,7 +141,7 @@ CASES = {
     "open-same-slug": ("an open pratica already has the slug: resume it",
                        {"fixture": with_fields([f"pratiche.{SLUG}_titolo", "TARI"])}, 1, ["resume it instead"]),
     "shifted-column": ("the codice fiscale column moved off the table's lines",
-                       {"layout": box("Conviventi (nominativo, luogo e data di nascita, rapporto, codice fiscale)", column=(3, [300, 435]))}, 1,
+                       {"layout": box(CONVIVENTI, column=(3, [300, 435]))}, 1,
                        ["isn't between the table's lines"]),
     "box-over-label": ("the Via box stretched over the printed n°",
                        {"layout": box("Via", rect=[55, 177.7, 380, 188.2])}, 1, ["covers the printed"]),
@@ -135,6 +159,14 @@ CASES = {
     "unanswered": ("no answers to the ask rows (an empty answers map replaces them)", {"answers": {}}, 1,
                    ["'Eventuali note' is answered"]),
 }
+
+
+def written_pratiche(server):
+    """What the run left in the vault's pratiche, said as a line to look for."""
+    req = urllib.request.Request(server["url"] + "/vault/fields", headers={"Authorization": "Bearer " + server["tokens"]["prepare"]})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        ids = [f["id"] for f in json.load(resp) if f["id"].startswith("pratiche.")]
+    return "\nno pratiche fields in the vault\n" if not ids else f"\npratiche fields in the vault: {ids}\n"
 
 
 def main():
@@ -209,11 +241,21 @@ def case(base, name, entry, pdf, needs, changes, want_exit, want_lines):
                 with open(os.path.join(work, "harness.log")) as f:
                     return False, "harness: " + f.read()[-800:]
             time.sleep(0.1)
-        run = subprocess.run([sys.executable, "-I", FILL, "run", "--entry", os.path.join(work, "entry.json"), "--form", FORM,
-                              "--layout", os.path.join(work, "layout.json"), "--server", os.path.join(work, "server.json"),
-                              "--pdf", os.path.join(work, "form.pdf"), "--out", out, "--answers", os.path.join(work, "answers.json"),
-                              "--reply", os.path.join(HERE, "reply.json"), "--deadline-from", "abitazione.data_inizio",
-                              "--deadline-days", "90"], capture_output=True, text=True)
+        server = load(os.path.join(work, "server.json"))
+        common = [sys.executable, "-I", FILL, "run", "--entry", os.path.join(work, "entry.json"), "--form", FORM,
+                  "--layout", os.path.join(work, "layout.json"), "--pdf", os.path.join(work, "form.pdf"), "--out", out,
+                  "--answers", os.path.join(work, "answers.json")]
+        if changes.get("socket"):
+            # As on a real vault: its folder, the token from the environment, a draft.
+            if "chmod_run" in changes:
+                os.chmod(os.path.join(server["vault_dir"], "run"), changes["chmod_run"])
+            run = subprocess.run(common + ["--vault-dir", server["vault_dir"], "--draft"], capture_output=True, text=True,
+                                 env={**os.environ, "VAULT_TOKEN": server["tokens"]["prepare"]})
+            run.stdout += written_pratiche(server)
+        else:
+            run = subprocess.run(common + ["--server", os.path.join(work, "server.json"), "--reply", os.path.join(HERE, "reply.json"),
+                                           "--deadline-from", "abitazione.data_inizio", "--deadline-days", "90"],
+                                 capture_output=True, text=True)
     finally:
         open(os.path.join(work, "done"), "w").close()
         harness.wait()
