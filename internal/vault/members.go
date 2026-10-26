@@ -42,6 +42,17 @@ func (v *Vault) checkPersonRefs(id, value string) error {
 	return nil
 }
 
+// isPersonRefField reports the fields whose value names people: those the
+// schema marks PersonRef, and a pratica's persona. category and name are
+// lower-case.
+func isPersonRefField(category, name string) bool {
+	if f := GetSchemaField(category + "." + name); f != nil && f.PersonRef {
+		return true
+	}
+	_, campo, ok := praticaField(category, name)
+	return ok && campo == "persona"
+}
+
 // MemberInfo describes a family member as far as the caller may see:
 // derived values appear only when the fields they come from are visible.
 type MemberInfo struct {

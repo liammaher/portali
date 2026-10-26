@@ -7,10 +7,20 @@ type SchemaField struct {
 	ID          string `json:"id"`
 	Description string `json:"description"`
 	Sensitivity string `json:"sensitivity"`
-	// For is "owner" or "member" when only the vault's owner or only a
-	// family member (with a prefix) can have the field.
+	// For is ForOwner or ForPerson when only the vault's owner or only
+	// another person (with a prefix) can have the field. NormalizeAndValidate
+	// enforces it.
 	For string `json:"for,omitempty"`
+	// PersonRef marks a field whose value names people: io or the slugs of
+	// people in the vault, which must exist.
+	PersonRef bool `json:"person_ref,omitempty"`
 }
+
+// Who can have a field (SchemaField.For).
+const (
+	ForOwner  = "owner"
+	ForPerson = "member" // the JSON value from before the rename to "person"
+)
 
 // Category scopes: who can have a category's fields.
 const (
@@ -191,12 +201,12 @@ var RecommendedSchema = Schema{
 			Name:        "famiglia",
 			Description: famigliaDescription(),
 			Fields: []SchemaField{
-				{ID: "famiglia.intestatario_scheda", Description: "Who is the intestatario della scheda anagrafica: io (you) or a member's slug (validated)", Sensitivity: "standard", For: "owner"},
-				{ID: "famiglia.relazione", Description: "How the member relates to you: " + strings.Join(relazioneKeys(), ", ") + " (validated; moglie, figlia, madre... accepted)", Sensitivity: "standard", For: "member"},
-				{ID: "famiglia.stato_famiglia", Description: "Whether the member is in your stato di famiglia (famiglia anagrafica): si or no", Sensitivity: "standard", For: "member"},
-				{ID: "famiglia.a_carico_percentuale", Description: "Share of the member you claim as an IRPEF dependant: 0, 50 or 100", Sensitivity: "sensitive", For: "member"},
-				{ID: "famiglia.genitori", Description: "For a child: who holds responsabilità genitoriale, io and/or members' slugs (e.g. io,giulia)", Sensitivity: "standard", For: "member"},
-				{ID: "famiglia.rappresentanza", Description: "How you can act for an adult member: " + strings.Join(rappresentanze, ", "), Sensitivity: "standard", For: "member"},
+				{ID: "famiglia.intestatario_scheda", Description: "Who is the intestatario della scheda anagrafica: io (you) or a member's slug (validated)", Sensitivity: "standard", For: ForOwner, PersonRef: true},
+				{ID: "famiglia.relazione", Description: "How the member relates to you: " + strings.Join(relazioneKeys(), ", ") + " (validated; moglie, figlia, madre... accepted)", Sensitivity: "standard", For: ForPerson},
+				{ID: "famiglia.stato_famiglia", Description: "Whether the member is in your stato di famiglia (famiglia anagrafica): si or no", Sensitivity: "standard", For: ForPerson},
+				{ID: "famiglia.a_carico_percentuale", Description: "Share of the member you claim as an IRPEF dependant: 0, 50 or 100", Sensitivity: "sensitive", For: ForPerson},
+				{ID: "famiglia.genitori", Description: "For a child: who holds responsabilità genitoriale, io and/or members' slugs (e.g. io,giulia)", Sensitivity: "standard", For: ForPerson, PersonRef: true},
+				{ID: "famiglia.rappresentanza", Description: "How you can act for an adult member: " + strings.Join(rappresentanze, ", "), Sensitivity: "standard", For: ForPerson},
 			},
 		},
 		{

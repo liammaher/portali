@@ -105,6 +105,22 @@ func checkMemberCategory(category, field string) error {
 	return nil
 }
 
+// checkFieldFor refuses a field the schema keeps for the owner (ForOwner)
+// with a person prefix, or one it keeps for other people (ForPerson)
+// without one.
+func checkFieldFor(id string) error {
+	person, local := SplitMember(id)
+	f := GetSchemaField(strings.ToLower(local))
+	switch {
+	case f == nil:
+	case f.For == ForOwner && person != "":
+		return &ValidationError{Field: id, Msg: "is about you, the vault's owner: store it as " + f.ID + " without a person prefix"}
+	case f.For == ForPerson && person == "":
+		return &ValidationError{Field: id, Msg: "describes another person in the vault: store it as <person>:" + f.ID + " (e.g. leo:" + f.ID + ")"}
+	}
+	return nil
+}
+
 // scopePattern is one parsed pattern of a scope.
 type scopePattern struct {
 	all         bool   // "*": everything, owner and members

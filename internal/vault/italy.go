@@ -140,6 +140,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 	if err := checkMemberCategory(strings.SplitN(id, ".", 2)[0], id); err != nil {
 		return "", err
 	}
+	if err := checkFieldFor(id); err != nil {
+		return "", err
+	}
 	if v, handled, err := normalizeFamiglia(id, member, category, name, value); handled {
 		return v, err
 	}

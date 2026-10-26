@@ -58,8 +58,8 @@ func TestMemberRulesMatchOwner(t *testing.T) {
 			if got, want := DefaultDocumentTier(prefix+category), DefaultDocumentTier(category); got != want {
 				t.Errorf("DefaultDocumentTier(%q) = %q, %q gives %q", prefix+category, got, category, want)
 			}
-			if strings.EqualFold(category, "famiglia") {
-				continue // owner and member fields differ on purpose (TestFamiglia*)
+			if f := GetSchemaField(strings.ToLower(id)); f != nil && f.For != "" {
+				continue // owner and person fields differ on purpose (TestFamiglia*)
 			}
 			for _, value := range memberProbeValues {
 				got, gotErr := NormalizeAndValidate(pid, value)

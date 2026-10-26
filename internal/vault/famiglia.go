@@ -13,13 +13,8 @@ import (
 // Owner:  famiglia.intestatario_scheda (io or a member's slug)
 // Member: leo:famiglia.relazione, stato_famiglia, a_carico_percentuale,
 //         genitori, rappresentanza
-
-// famigliaOwnerFields can only be stored without a member prefix,
-// famigliaMemberFields only with one.
-var (
-	famigliaOwnerFields  = []string{"intestatario_scheda"}
-	famigliaMemberFields = []string{"relazione", "stato_famiglia", "a_carico_percentuale", "genitori", "rappresentanza"}
-)
+//
+// Which of these take a prefix is the schema's For; checkFieldFor enforces it.
 
 // relazione is one way a member relates to the owner.
 type relazione struct {
@@ -136,16 +131,6 @@ func PersonRefs(value string) []string {
 	return strings.FieldsFunc(strings.ToLower(value), func(r rune) bool { return r == ',' || r == ' ' || r == ';' })
 }
 
-// isPersonRefField reports the fields whose value names people.
-func isPersonRefField(category, name string) bool {
-	switch category + "." + name {
-	case "famiglia.genitori", "famiglia.intestatario_scheda":
-		return true
-	}
-	_, campo, ok := praticaField(category, name)
-	return ok && campo == "persona"
-}
-
 // normalizePersonRefs checks a list of 1..max people and stores them as
 // "io,giulia". self is the member whose field it is, who can't be named.
 func normalizePersonRefs(value, self string, max int) (string, string) {
@@ -179,13 +164,6 @@ func normalizeFamiglia(id, member, category, name, value string) (out string, ha
 	fail := func(msg string) (string, bool, error) {
 		return "", true, &ValidationError{Field: id, Msg: msg}
 	}
-	switch {
-	case member != "" && slices.Contains(famigliaOwnerFields, name):
-		return fail("is about you, the vault's owner: store it as famiglia." + name + " without a person prefix")
-	case member == "" && slices.Contains(famigliaMemberFields, name):
-		return fail("describes a family member: store it as <member>:famiglia." + name + " (e.g. leo:famiglia." + name + ")")
-	}
-
 	switch name {
 	case "relazione":
 		if key, ok := relazioneAliases[lettersAndDigits(value)]; ok {
