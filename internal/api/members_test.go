@@ -227,3 +227,62 @@ func TestMembers_MigrateDryRunValues(t *testing.T) {
 		t.Fatal("a dry run moved the field")
 	}
 }
+
+// Exporting a person is for the user's own session only, never a token or a
+// scoped grant, even one for everything about that person.
+func TestMembers_Export(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	seedHousehold(t, env)
+	if w := env.upload(t, env.token, "category=leo:cie&name=fronte.jpg", "image/jpeg", []byte("JPEG")); w.Code != 201 && w.Code != 200 {
+		t.Fatalf("upload: %d %s", w.Code, w.Body.String())
+	}
+
+	token := createTokenWithTier(t, env, "*", "critical")
+	if w := env.doRequestWithToken(t, "GET", "/vault/members/leo/export", nil, token); w.Code != 403 {
+		t.Fatalf("service token exported leo: %d", w.Code)
+	}
+	g := scopedGrant(t, env, sk, "leo:*", "write")
+	if w := env.doRequestWithToken(t, "GET", "/vault/members/leo/export", nil, g); w.Code != 403 {
+		t.Fatalf("scoped grant exported leo: %d", w.Code)
+	}
+
+	w := env.doRequest(t, "GET", "/vault/members/leo/export", nil, true)
+	var out vault.PersonExport
+	if err := json.NewDecoder(w.Body).Decode(&out); err != nil || w.Code != 200 {
+		t.Fatalf("session export: %d %v", w.Code, err)
+	}
+	if out.Person != "leo" || len(out.Fields) != 5 || out.Omitted != 1 || len(out.Documents) != 1 || string(out.Documents[0].Data) != "JPEG" {
+		t.Fatalf("export = %+v", out)
+	}
+	w = env.doRequest(t, "GET", "/vault/members/leo/export?include_personal=1", nil, true)
+	if !strings.Contains(w.Body.String(), "hunter2-secret") {
+		t.Fatal("include_personal left out leo:spid.password")
+	}
+	if w := env.doRequest(t, "GET", "/vault/members/marco/export", nil, true); w.Code != 404 {
+		t.Fatalf("missing person: %d", w.Code)
+	}
+	if w := env.doRequest(t, "GET", "/vault/members/leo/export?include_personal=maybe", nil, true); w.Code != 400 {
+		t.Fatalf("bad include_personal: %d", w.Code)
+	}
+}
+
+func TestRetention_API(t *testing.T) {
+	env := setup(t)
+	token := createTokenWithAccess(t, env, "*", "write")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/retention", map[string]int{"years": 5}, token); w.Code != 403 {
+		t.Fatalf("service token set retention: %d", w.Code)
+	}
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]int{"years": 1000}, true); w.Code != 400 {
+		t.Fatalf("1000 years: %d", w.Code)
+	}
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]string{}, true); w.Code != 400 {
+		t.Fatalf("no years: %d", w.Code)
+	}
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]int{"years": 10}, true); w.Code != 200 {
+		t.Fatalf("session set retention: %d %s", w.Code, w.Body.String())
+	}
+	w := env.doRequestWithToken(t, "GET", "/vault/retention", nil, token)
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `"years":10`) {
+		t.Fatalf("get retention: %d %s", w.Code, w.Body.String())
+	}
+}

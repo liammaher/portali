@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -69,4 +70,64 @@ func (s *Server) handleMigrateMembers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, report)
+}
+
+// GET /vault/members/{slug}/export[?include_personal=1]
+// Session only: every field and document of one person, documents with
+// their content, for their right to data portability. Personal-tier items
+// are left out unless include_personal.
+func (s *Server) handleExportPerson(w http.ResponseWriter, r *http.Request) {
+	if !isSessionAuth(r) {
+		sessionRequired(w)
+		return
+	}
+	includePersonal := false
+	if v := r.URL.Query().Get("include_personal"); v != "" {
+		var err error
+		if includePersonal, err = strconv.ParseBool(v); err != nil {
+			writeError(w, http.StatusBadRequest, "invalid_request", "include_personal must be 1/true or 0/false")
+			return
+		}
+	}
+	out, err := s.vault.ExportPerson(r.PathValue("slug"), includePersonal)
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, out)
+}
+
+// GET /vault/retention
+// The retention period in years, 0 when not set.
+func (s *Server) handleGetRetention(w http.ResponseWriter, r *http.Request) {
+	years, err := s.vault.RetentionYears()
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]int{"years": years})
+}
+
+// PUT /vault/retention {"years": N}
+// Session only: sets the retention period (0 removes it).
+func (s *Server) handleSetRetention(w http.ResponseWriter, r *http.Request) {
+	if !isSessionAuth(r) {
+		sessionRequired(w)
+		return
+	}
+	if !requireJSON(w, r) {
+		return
+	}
+	var req struct {
+		Years *int `json:"years"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Years == nil {
+		writeError(w, http.StatusBadRequest, "invalid_request", `body must be {"years": N}`)
+		return
+	}
+	if err := s.vault.SetRetentionYears(*req.Years); err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]int{"years": *req.Years})
 }

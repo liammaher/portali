@@ -1,9 +1,10 @@
 # Business and client vaults
 
-Status: proposal (2026-10-26). Phase 0 (the cleanup) and phase 1 (business vaults: kind,
+Status: proposal (2026-10-26). Phase 0 (the cleanup), phase 1 (business vaults: kind,
 `ruolo`, business fields, named vaults with their own port, kind-aware Touch ID prompts, MCP and
-the onboarding page) are done; the "where we are" section below describes the code before
-phase 0. Phases 2 and 3 are not built yet. Open decisions are marked
+the onboarding page), phase 2 (clients: procura, per-person export, the retention report) and
+phase 3 (the pratiche-napoli library) are done; the "where we are" section below describes the
+code before phase 0. Open decisions are marked
 **Decision D1, D2, …**, each with a recommendation; they are collected at the end.
 
 ## Goal
@@ -279,9 +280,15 @@ owner fields. It can stay; migrating it to a party is optional.
 1. **Business vaults:** vault kind (D3), `--vault`, the Touch ID address, the business
    principal schema, `ruolo`, refusing other parties' credentials in impresa vaults.
 2. **Clients:** `--ruolo cliente`, procura documents and expiry, per-party export, the
-   retention report.
+   retention report. **Done:** `<slug>:procura.*` and `<slug>:procura` documents (person-only,
+   every vault kind; `procura2` for a second), schema 12; `pvault person export <slug>`
+   (session-only, audited, a new unencrypted folder); `pvault retention set <years>` with no
+   default, and `pvault expiring` listing people past it and, in business vaults, clients' ID
+   and procura scans once all their pratiche are closed; the art. 28 note in the vault skill and
+   on the onboarding page.
 3. **Library:** replace those proposed fields with party references in the
-   pratiche-napoli contract (`contract/extensions.json`, `fields.json`).
+   pratiche-napoli contract (`contract/extensions.json`, `fields.json`). **Done** (library
+   PR #17 on schema 11, pratica skill #38).
 
 ## Open decisions
 
@@ -302,4 +309,9 @@ owner fields. It can stay; migrating it to a party is optional.
   businesses under 5 people, where the titolare runs the agents; it would be a different
   product (sync, per-user keys).
 - **D8. Retention periods.** The 10-year figure for architects and the timing for deleting
-  ID copies need checking against sources before any code reports on them.
+  ID copies need checking against sources before any code reports on them. Phase 2 built only
+  the mechanism: the period is a setting with no default (`pvault retention set <years>`),
+  one period for everyone with `ruolo.data_fine`, and a client's ID and procura scans are
+  flagged as soon as every pratica naming them is closed, with no waiting period. Only
+  clients: the business's own pratiche (persona `io`) use its titolare's and soci's ID copies
+  without naming them.

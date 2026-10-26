@@ -27,6 +27,7 @@ func cmdExpiring() {
 	if err := apiResult(resp, &items); err != nil {
 		fatal("%v", err)
 	}
+	defer retentionHint()
 	if len(items) == 0 {
 		fmt.Printf("Nothing expired or expiring in the next %d days.\n", days)
 		return
@@ -38,6 +39,12 @@ func cmdExpiring() {
 	for _, it := range items {
 		when := fmt.Sprintf("in %d days", it.DaysLeft)
 		switch {
+		case it.Kind == vault.ExpiryPraticheClosed:
+			when = "their pratiche are closed: delete the scans unless still needed"
+		case it.Kind == vault.ExpiryRetention && it.Expired:
+			when = fmt.Sprintf("retention ended %d days ago: delete their data unless still needed", -it.DaysLeft)
+		case it.Kind == vault.ExpiryRetention:
+			when = fmt.Sprintf("retention ends in %d days", it.DaysLeft)
 		case it.Expired:
 			when = fmt.Sprintf("EXPIRED %d days ago", -it.DaysLeft)
 		case it.DaysLeft == 0:
@@ -48,10 +55,27 @@ func cmdExpiring() {
 }
 
 // expiryLabel names the document and, for another person's, whose it is:
-// "cie (leo)".
+// "cie (leo)"; "data of rossi" for a retention entry, "cie scans (rossi)"
+// for ID scans whose pratiche are closed.
 func expiryLabel(it vault.ExpiryInfo) string {
-	if it.Person != "" {
+	switch {
+	case it.Kind == vault.ExpiryRetention:
+		return "data of " + it.Person
+	case it.Kind == vault.ExpiryPraticheClosed:
+		return it.Document + " scans (" + it.Person + ")"
+	case it.Person != "":
 		return it.Document + " (" + it.Person + ")"
 	}
 	return it.Document
+}
+
+// retentionHint says, once, that a business vault without a retention period
+// doesn't check people whose relationship ended.
+func retentionHint() {
+	if kind, err := serverKind(); err != nil || kind != vault.KindImpresa {
+		return
+	}
+	if years, err := fetchRetention(); err == nil && years == 0 {
+		fmt.Printf("No retention period set, so people whose ruolo.data_fine has passed aren't checked: see '%s'.\n", pvCmd("retention"))
+	}
 }

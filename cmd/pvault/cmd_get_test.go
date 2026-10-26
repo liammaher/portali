@@ -118,8 +118,14 @@ func TestGetFields_SingleMissingIsError(t *testing.T) {
 // arguments are appended to the returned file.
 func touchIDVault(t *testing.T, fields map[string]string) (*vault.Vault, string) {
 	t.Helper()
+	return touchIDVaultKind(t, vault.KindPersona, fields)
+}
+
+// touchIDVaultKind is touchIDVault for a vault of the given kind.
+func touchIDVaultKind(t *testing.T, kind string, fields map[string]string) (*vault.Vault, string) {
+	t.Helper()
 	dir := filepath.Join(t.TempDir(), ".vault")
-	sk, err := vault.Init(dir, "test-password")
+	sk, err := vault.InitWithOptions(dir, "test-password", vault.InitOptions{Kind: kind})
 	if err != nil {
 		t.Fatal(err)
 	}

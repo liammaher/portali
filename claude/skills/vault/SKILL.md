@@ -181,6 +181,25 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   their ruolo. Adding: the user runs `pvault --vault <name> person add <slug> --ruolo <r>
   --nome <N>` (or `--denominazione <D>` for a company), or the page's Persone section.
 - A pratica in a business vault for a client has `persona` = the client's slug.
+- A delega or procura someone gave the user (or the business) is on that person:
+  `<slug>:procura.{ente,oggetto,data_conferimento,data_scadenza}`, the signed copy in
+  `<slug>:procura` documents, a second one in `procura2`. It is never unprefixed (the vault
+  refuses it). Its `data_scadenza` shows in `vault_expiring`. Acting for a client means the
+  user's own SPID/CIE and the procura, never the client's credentials.
+- Client data in a business vault is the business's to protect (GDPR). Before reading
+  clients' data through a cloud AI model, the user's plan must be a business tier with a
+  data processing agreement (art. 28 DPA) and no training on their data. If you don't know
+  that it is, say so once before you read clients' data. This is a note for the user, not a
+  check the vault makes.
+- `vault_expiring` also lists what may be due for deletion, with a `kind`: `retention` (a
+  person whose retention period after `ruolo.data_fine`, set by the user with
+  `pvault --vault <name> retention set <years>`, has ended (`expired`) or ends within the
+  window; there is no default, so suggest no number) and `pratiche_closed` (a client's ID
+  or procura scans once every pratica naming them is closed). Point them out; never delete anything yourself (`person remove` and
+  `doc delete` are the user's).
+- A person's own copy of their data (GDPR art. 20): the user runs
+  `pvault --vault <name> person export <slug>`, which writes an unencrypted folder. Only
+  their session can; don't suggest keeping the folder in a synced place.
 
 Validation done by the vault (expect errors otherwise):
 - Fields named `data_*`, `date_of_*` or `*_date`: real dates as `YYYY-MM-DD`.

@@ -215,22 +215,31 @@ func (v *Vault) GetDocument(id string) (*DocumentInfo, []byte, error) {
 		return nil, nil, err
 	}
 
-	ciphertext, err := os.ReadFile(v.documentPath(id))
-	if err != nil {
-		return nil, nil, fmt.Errorf("read document %s: %w", id, err)
-	}
-	subkey, err := crypto.DeriveSubkey(vaultKey, v.salt, documentKeyInfo(doc.Category))
+	data, err := v.decryptDocumentContent(vaultKey, *doc)
 	if err != nil {
 		return nil, nil, err
-	}
-	defer clear(subkey)
-	data, err := crypto.DecryptWithAAD(subkey, ciphertext, documentAAD(id))
-	if err != nil {
-		return nil, nil, fmt.Errorf("decrypt document %s: %w", id, err)
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: DocumentScopeID(doc.Category), Action: "document_read"})
 	return info, data, nil
+}
+
+// decryptDocumentContent reads and decrypts a document's file.
+func (v *Vault) decryptDocumentContent(vaultKey []byte, doc store.Document) ([]byte, error) {
+	ciphertext, err := os.ReadFile(v.documentPath(doc.ID))
+	if err != nil {
+		return nil, fmt.Errorf("read document %s: %w", doc.ID, err)
+	}
+	subkey, err := crypto.DeriveSubkey(vaultKey, v.salt, documentKeyInfo(doc.Category))
+	if err != nil {
+		return nil, err
+	}
+	defer clear(subkey)
+	data, err := crypto.DecryptWithAAD(subkey, ciphertext, documentAAD(doc.ID))
+	if err != nil {
+		return nil, fmt.Errorf("decrypt document %s: %w", doc.ID, err)
+	}
+	return data, nil
 }
 
 // DeleteDocument removes a document's encrypted file and metadata.
