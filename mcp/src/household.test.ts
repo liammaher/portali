@@ -1,8 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { filterHousehold } from "./household.js";
+import type { Household } from "./client.js";
 
-const household = {
+const household: Household = {
   intestatario_scheda: "io",
   members: [
     { slug: "giulia", famiglia: { relazione: "coniuge" }, first_name: "Giulia", relazione_label: "moglie", anpr_relazione: "2", fields: 3, documents: 0 },
