@@ -33,13 +33,16 @@ func TestTouchIDHelper_UnlocksGenuineServer(t *testing.T) {
 	if err != nil || !strings.HasSuffix(strings.TrimSpace(out), "unlocked") {
 		t.Fatalf("unlock: %v\n%s", err, out)
 	}
-	out, err = runDebugHelper(t, helper, pvault, "grant", "--scope", "identity.*")
-	if err != nil {
-		t.Fatalf("grant: %v\n%s", err, out)
-	}
-	lines := strings.Split(strings.TrimSpace(out), "\n")
-	if token := lines[len(lines)-1]; len(token) < 32 || strings.Contains(token, " ") {
-		t.Fatalf("grant printed %q, want a token", out)
+	// Owner and family-member scopes are both accepted by the real server.
+	for _, scope := range []string{"identity.*", "leo:*", "*:identity.*,leo:cie.numero"} {
+		out, err = runDebugHelper(t, helper, pvault, "grant", "--scope", scope)
+		if err != nil {
+			t.Fatalf("grant %s: %v\n%s", scope, err, out)
+		}
+		lines := strings.Split(strings.TrimSpace(out), "\n")
+		if token := lines[len(lines)-1]; len(token) < 32 || strings.Contains(token, " ") {
+			t.Fatalf("grant %s printed %q, want a token", scope, out)
+		}
 	}
 }
 

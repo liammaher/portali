@@ -338,9 +338,13 @@ func serverError(_ json: [String: Any], _ status: Int) -> String {
 // MARK: - Prompt wording
 
 // \A and \z, not ^ and $: ICU's $ also matches before a trailing line break,
-// which would then show up in the prompt.
-let categoryPattern = try! NSRegularExpression(pattern: "\\A[A-Za-z0-9_-]+\\.\\*\\z")
-let fieldPattern = try! NSRegularExpression(pattern: "\\A[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\z")
+// which would then show up in the prompt. A pattern may start with a family
+// member's slug (vault.ValidMemberSlug) or "*" for everyone: leo:cie.*,
+// *:identity.*, or leo:* for everything about leo.
+let memberSlug = "[a-z][a-z0-9-]{0,31}"
+let categoryPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(memberSlug)|\\*):)?[A-Za-z0-9_-]+\\.\\*\\z")
+let fieldPattern = try! NSRegularExpression(pattern: "\\A(?:(?:\(memberSlug)|\\*):)?[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\z")
+let memberPattern = try! NSRegularExpression(pattern: "\\A\(memberSlug):\\*\\z")
 
 func matches(_ re: NSRegularExpression, _ s: String) -> Bool {
     re.firstMatch(in: s, range: NSRange(s.startIndex..., in: s)) != nil
@@ -352,17 +356,28 @@ func parseScope(_ scope: String) -> [String] {
     if parts.isEmpty || parts.count > maxScopePatterns {
         fail("scope must list 1 to \(maxScopePatterns) patterns")
     }
-    for p in parts where p.count > maxPatternLength || !(p == "*" || matches(categoryPattern, p) || matches(fieldPattern, p)) {
+    for p in parts where p.count > maxPatternLength || p.hasPrefix("io:")
+        || !(p == "*" || matches(categoryPattern, p) || matches(fieldPattern, p) || matches(memberPattern, p)) {
         fail("invalid scope pattern \"\(p)\"")
     }
     return parts
 }
 
 func describe(_ pattern: String) -> String {
-    if pattern == "*" { return "everything in your vault" }
+    if pattern == "*" { return "everything in your vault, your family's data included" }
+    // Whose data: yours (no prefix), one member's, or everyone's.
+    var whose = "your", all = "all your"
+    var rest = Substring(pattern)
+    if let colon = pattern.firstIndex(of: ":") {
+        let member = pattern[..<colon]
+        rest = pattern[pattern.index(after: colon)...]
+        if rest == "*" { return "everything about \(member)" }
+        whose = member == "*" ? "everyone's" : "\(member)'s"
+        all = member == "*" ? "everyone's" : "all of \(member)'s"
+    }
     // A category pattern also covers <category>.documents (vault.ScopeAllows).
-    if pattern.hasSuffix(".*") { return "all \(pattern.dropLast(2)) fields and documents" }
-    if pattern.hasSuffix(".documents") { return "\(pattern.dropLast(10)) documents" }
+    if rest.hasSuffix(".*") { return "\(all) \(rest.dropLast(2)) fields and documents" }
+    if rest.hasSuffix(".documents") { return "\(whose) \(rest.dropLast(10)) documents" }
     return pattern
 }
 
