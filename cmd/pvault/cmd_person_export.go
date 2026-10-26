@@ -90,17 +90,17 @@ func writePersonExport(dir string, out *vault.PersonExport) (err error) {
 		}
 	}()
 	files := make([]exportedFile, 0, len(out.Documents))
-	used := map[string]bool{}
 	for _, d := range out.Documents {
 		_, category := vault.SplitPerson(d.Category)
-		rel := filepath.Join("documents", category, exportFileName(d.Name, d.ID, used))
-		if err := os.MkdirAll(filepath.Join(dir, "documents", category), 0700); err != nil {
+		folder := filepath.Join(dir, "documents", category)
+		if err := os.MkdirAll(folder, 0700); err != nil {
 			return err
 		}
-		if err := writeNewFile(filepath.Join(dir, rel), d.Data); err != nil {
+		name, err := writeUniqueFile(folder, d.Name, d.ID, d.Data)
+		if err != nil {
 			return err
 		}
-		files = append(files, exportedFile{DocumentInfo: d.DocumentInfo, File: filepath.ToSlash(rel)})
+		files = append(files, exportedFile{DocumentInfo: d.DocumentInfo, File: "documents/" + category + "/" + name})
 	}
 	data, err := json.MarshalIndent(struct {
 		Person    string            `json:"person"`
@@ -114,22 +114,28 @@ func writePersonExport(dir string, out *vault.PersonExport) (err error) {
 	return writeNewFile(filepath.Join(dir, "fields.json"), append(data, '\n'))
 }
 
-// exportFileName is a document's file name in an export: its stored name
-// without any path, made unique among used (by category and name) with
-// " (2)" before the extension. A name that is nothing but dots becomes the
-// document ID.
-func exportFileName(name, id string, used map[string]bool) string {
+// writeUniqueFile writes data to a new file in folder named after a
+// document's stored name, without any path (a name that is nothing but dots
+// becomes the document ID). If that name is taken, by an earlier document
+// or by one the disk treats as the same (case, Unicode normalization), it
+// adds " (2)", " (3)"... before the extension. It returns the name used.
+func writeUniqueFile(folder, name, id string, data []byte) (string, error) {
 	name = strings.TrimLeft(filepath.Base(filepath.Clean("/"+name)), ".")
 	if name == "" || name == "/" {
 		name = id
 	}
 	ext := filepath.Ext(name)
 	stem := strings.TrimSuffix(name, ext)
-	for n := 2; used[strings.ToLower(name)]; n++ {
+	for n := 2; ; n++ {
+		err := writeNewFile(filepath.Join(folder, name), data)
+		if !errors.Is(err, os.ErrExist) {
+			return name, err
+		}
+		if n > 1000 {
+			return "", fmt.Errorf("can't find a free name for %s in %s", name, folder)
+		}
 		name = stem + " (" + strconv.Itoa(n) + ")" + ext
 	}
-	used[strings.ToLower(name)] = true
-	return name
 }
 
 // writeNewFile writes data to a file that must not exist yet (0600).

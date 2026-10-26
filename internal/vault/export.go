@@ -36,6 +36,10 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 	if !ValidPersonSlug(slug) {
 		return nil, &ValidationError{Field: "person", Msg: errPersonSlug(slug).Error()}
 	}
+	// Held for reading, so RemovePerson (which holds it to write) can't
+	// delete rows and files between the listing and the reads.
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
