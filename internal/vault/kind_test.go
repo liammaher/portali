@@ -104,6 +104,8 @@ func TestKind_FieldRules(t *testing.T) {
 		{impresa, "spid.provider", "posteid", false},
 		{impresa, "spid2.livello", "2", false},
 		{impresa, "spid.password", "x", false},
+		{impresa, "spid.attivato_con_cie", "si", false},
+		{impresa, "spid.firma_remota", "si", false},
 		// A SPID category is no cover for a CIE or signature secret.
 		{impresa, "spid.cie_pin", "12345678", true},
 		{impresa, "spid_cie.pin", "12345678", true},

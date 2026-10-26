@@ -103,16 +103,17 @@ func isSPIDCategory(category string) bool {
 
 var reSPIDWord = regexp.MustCompile(`^spid[0-9]*$`)
 
-// namesNonSPIDIdentity reports a word of a field's category or name that
-// names a CIE, CieID or digital signature, so spid.cie_pin or spid_firma.puk
-// can't pass as the business's own SPID.
+// namesNonSPIDIdentity reports a secret of a CIE, CieID or digital signature
+// stored under a SPID category: a word naming one of them next to a credential
+// word, as in spid.cie_pin or spid_firma.puk. A plain detail (spid.attivato_con_cie)
+// is no secret and passes.
 func namesNonSPIDIdentity(local string) bool {
+	other, credential := false, false
 	for _, w := range idWords(strings.ReplaceAll(strings.ToLower(local), ".", "_")) {
-		if reIdentityWord.MatchString(w) && !reSPIDWord.MatchString(w) {
-			return true
-		}
+		other = other || (reIdentityWord.MatchString(w) && !reSPIDWord.MatchString(w))
+		credential = credential || reCredentialWord.MatchString(w)
 	}
-	return false
+	return other && credential
 }
 
 // schemaCategoryOf returns the schema category a category is, or is a
