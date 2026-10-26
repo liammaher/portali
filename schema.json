@@ -1,0 +1,1231 @@
+{
+  "version": "12",
+  "categories": [
+    {
+      "name": "identity",
+      "description": "Personal identity information",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "identity.first_name",
+          "description": "First/given name",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.last_name",
+          "description": "Last/family name",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.full_name",
+          "description": "Full display name",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.email",
+          "description": "Primary email address",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.phone",
+          "description": "Mobile number with country code (e.g. +39 333 123 4567)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "identity.pec",
+          "description": "Personal PEC (posta elettronica certificata) address",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.date_of_birth",
+          "description": "Date of birth",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "identity.codice_fiscale",
+          "description": "Italian codice fiscale (16 characters, validated)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "identity.sex",
+          "description": "Sex as on Italian documents (M or F)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.birth_comune",
+          "description": "Comune of birth; if born abroad, the place as written on your documents (and the country in identity.birth_country)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.birth_province",
+          "description": "Provincia of birth as 2-letter sigla (e.g. NA), or EE if born abroad",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.birth_country",
+          "description": "Country of birth, only if born outside Italy (e.g. Regno Unito); forms ask for it as 'stato estero'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "identity.citizenship",
+          "description": "Citizenship (e.g. italiana, britannica)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "cie",
+      "description": "Carta d'identità elettronica details. The PIN and PUK can only be stored as personal (never readable by agents).",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "cie.numero",
+          "description": "CIE number printed top-right (e.g. CA12345AB, validated)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "cie.data_rilascio",
+          "description": "Issue date (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "cie.data_scadenza",
+          "description": "Expiry date (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "cie.comune_rilascio",
+          "description": "Comune that issued the card",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "cie.pin",
+          "description": "CIE PIN (8 digits) — personal only",
+          "sensitivity": "personal"
+        },
+        {
+          "id": "cie.puk",
+          "description": "CIE PUK (8 digits) — personal only",
+          "sensitivity": "personal"
+        }
+      ]
+    },
+    {
+      "name": "spid",
+      "description": "Your SPID identity. Everything here is personal by default: only you can see it, never an agent. Lower provider/level/renewal to standard if you want agents to see them.",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "spid.provider",
+          "description": "Identity provider: PosteID, Aruba, InfoCert, Namirial, Sielte, Lepida, Register, TIM id, Intesi Group, EtnaID, TeamSystem or InfoCamere (validated). Lower it to standard so agents can pick it at a SPID login",
+          "sensitivity": "personal"
+        },
+        {
+          "id": "spid.livello",
+          "description": "Highest active level (1, 2 or 3)",
+          "sensitivity": "personal"
+        },
+        {
+          "id": "spid.username",
+          "description": "Login username (usually email or codice fiscale)",
+          "sensitivity": "personal"
+        },
+        {
+          "id": "spid.password",
+          "description": "Login password",
+          "sensitivity": "personal"
+        },
+        {
+          "id": "spid.data_scadenza",
+          "description": "Next renewal/payment date (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "personal"
+        }
+      ]
+    },
+    {
+      "name": "residenza",
+      "description": "Registered residence (residenza anagrafica, as recorded in ANPR)",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "residenza.indirizzo",
+          "description": "Street (via/piazza) without house number",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "residenza.civico",
+          "description": "House number (numero civico) only, e.g. 544; scala or esponente like 12/B may follow",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "residenza.interno",
+          "description": "Flat number (interno), e.g. 13; 'int. 13' is saved as 13",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "residenza.cap",
+          "description": "CAP (5 digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "residenza.comune",
+          "description": "Comune of residence",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "residenza.provincia",
+          "description": "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "residenza.data_inizio",
+          "description": "Date residence began (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "domicilio",
+      "description": "Domicile, only if different from residenza",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "domicilio.indirizzo",
+          "description": "Street (via/piazza) without house number",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "domicilio.civico",
+          "description": "House number (numero civico) only, e.g. 544; scala or esponente like 12/B may follow",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "domicilio.interno",
+          "description": "Flat number (interno), e.g. 13; 'int. 13' is saved as 13",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "domicilio.cap",
+          "description": "CAP (5 digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "domicilio.comune",
+          "description": "Comune of domicile",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "domicilio.provincia",
+          "description": "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "abitazione",
+      "description": "The home you live in now (the unit at your residenza or domicilio; the address stays there). Catasto data is on the visura catastale and is needed for TARI, RLI registration and ISEE. Attach the visura and APE with 'pvault doc add abitazione \u003cfile\u003e'.",
+      "scope": "owner",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "abitazione.titolo",
+          "description": "How you hold it: proprietario, locatario, comodatario, usufruttuario, ospite or altro (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.data_inizio",
+          "description": "Date you started living there (YYYY-MM-DD); the 'a decorrere dal' date on TARI forms",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.catasto_sezione",
+          "description": "Sezione urbana from the visura, if any",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.catasto_foglio",
+          "description": "Foglio from the visura (digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.catasto_particella",
+          "description": "Particella (mappale) from the visura (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.catasto_subalterno",
+          "description": "Subalterno from the visura, exactly as written (digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.catasto_categoria",
+          "description": "Categoria catastale, e.g. A/2 or A/3 (validated; a2 becomes A/2)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.catasto_rendita",
+          "description": "Rendita catastale in euro (e.g. 512.30)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.superficie_calpestabile_mq",
+          "description": "Walkable floor area in m² excluding balconies and terraces; the area TARI uses",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.superficie_catastale_mq",
+          "description": "Superficie catastale in m² from the visura",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.vani",
+          "description": "Consistenza in vani from the visura (e.g. 4.5)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.piano",
+          "description": "Floor (e.g. terra, rialzato, 3)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "abitazione.classe_energetica",
+          "description": "Energy class from the APE: A4, A3, A2, A1, B, C, D, E, F or G (validated)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "locazione",
+      "description": "Your rental contract, if you rent. Registration details (estremi di registrazione) are on the RLI receipt and are asked for by utility transfers and tax deductions. Attach the contract and receipt with 'pvault doc add locazione \u003cfile\u003e'.",
+      "scope": "owner",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "locazione.tipo_contratto",
+          "description": "Contract type (e.g. 4+4 libero, 3+2 concordato, transitorio, studenti)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.data_stipula",
+          "description": "Date the contract was signed (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.data_decorrenza",
+          "description": "Date the contract starts (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.data_scadenza",
+          "description": "Date the current term ends (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.preavviso_disdetta_mesi",
+          "description": "Months of notice needed to leave (whole number)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.canone_mensile",
+          "description": "Monthly rent in euro (e.g. 750.00)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.spese_condominiali_mensili",
+          "description": "Monthly condominium charges in euro",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.deposito_cauzionale",
+          "description": "Security deposit in euro",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.cedolare_secca",
+          "description": "Whether the landlord chose cedolare secca (si/no)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.registrazione_codice_identificativo",
+          "description": "Codice identificativo del contratto from the RLI receipt (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.data_registrazione",
+          "description": "Registration date from the RLI receipt (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.registrazione_serie",
+          "description": "Registration serie (e.g. 3T)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.registrazione_numero",
+          "description": "Registration numero (and sottonumero, if any)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.registrazione_ufficio",
+          "description": "Agenzia delle Entrate office code (e.g. TNM)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locazione.locatore_nome",
+          "description": "Landlord's name (person or company)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.locatore_codice_fiscale",
+          "description": "Landlord's codice fiscale (validated)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.locatore_iban",
+          "description": "IBAN you pay the rent to (validated; spaces removed)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.locatore_email",
+          "description": "Landlord's email",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.locatore_pec",
+          "description": "Landlord's PEC",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.locatore_telefono",
+          "description": "Landlord's phone",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "locazione.amministratore_condominio",
+          "description": "Building manager's name and contact",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "utenze",
+      "description": "Utility supplies at your home. The POD and PDR identify the meters and are needed for a voltura or subentro.",
+      "scope": "owner",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "utenze.luce_pod",
+          "description": "Electricity POD (e.g. IT001E12345678, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.luce_fornitore",
+          "description": "Electricity supplier",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.luce_codice_cliente",
+          "description": "Electricity customer code",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "utenze.luce_intestatario",
+          "description": "Who the electricity contract is in the name of",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.gas_pdr",
+          "description": "Gas PDR (14 digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.gas_fornitore",
+          "description": "Gas supplier",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.gas_codice_cliente",
+          "description": "Gas customer code",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "utenze.gas_intestatario",
+          "description": "Who the gas contract is in the name of",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.acqua_fornitore",
+          "description": "Water supplier (e.g. ABC Napoli)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.acqua_codice_cliente",
+          "description": "Water customer or utenza code",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "utenze.acqua_intestatario",
+          "description": "Who the water contract is in the name of",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.internet_fornitore",
+          "description": "Internet provider",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "utenze.internet_codice_cliente",
+          "description": "Internet customer code",
+          "sensitivity": "sensitive"
+        }
+      ]
+    },
+    {
+      "name": "tari",
+      "description": "Your TARI (waste tax) position with the Comune. Attach the filed declaration with 'pvault doc add tari \u003cfile\u003e'.",
+      "scope": "owner",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "tari.codice_contribuente",
+          "description": "Codice contribuente assigned by the Comune (Cod.Contr. on the forms and payment notices)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "tari.data_dichiarazione",
+          "description": "Date you filed the TARI declaration (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "tari.protocollo",
+          "description": "Protocol number the Comune gave the declaration",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "tari.superficie_tassata_mq",
+          "description": "Area the Comune taxes, in m², from the payment notice",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "tari.componenti_tassati",
+          "description": "Number of occupants the Comune taxes, from the payment notice",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "pratiche",
+      "description": "Procedures in progress with an ente, one set of fields per pratica as \u003cslug\u003e_\u003ccampo\u003e. The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. Campi: titolo, ente, stato, canale, destinatario, protocollo, data_invio, data_scadenza, data_esito, importo, data_pagamento, prossimo_passo, playbook, note, persona. stato is one of da_fare, in_preparazione, pronta, inviata, in_attesa, completata, respinta, annullata; canale is one of portale, pec, email, sportello, posta, app. data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. playbook names the procedure's playbook file. persona is who it is for: io (you, the default) or a family member's slug. Attach submitted files with 'pvault doc add pratiche \u003cfile\u003e'.",
+      "scope": "owner",
+      "fields": []
+    },
+    {
+      "name": "famiglia",
+      "description": "How your family members relate to you, the vault's owner (as ANPR records every relazione against the intestatario della scheda). Each member is a person with their own data under a prefix, e.g. leo:identity.codice_fiscale, leo:cie.numero; add one with 'pvault member add \u003cslug\u003e --relazione \u003crelazione\u003e'. Member fields: relazione (coniuge, unito_civilmente, convivente, figlio, nipote, genitore, nonno, fratello, nipote_collaterale, zio, cugino, altro_parente, genero_nuora, suocero, cognato, altro_affine, altro); stato_famiglia (si/no: in your stato di famiglia); a_carico_percentuale (0, 50 or 100); genitori (io and/or member slugs, e.g. io,giulia); rappresentanza (tutore, amministratore_sostegno, curatore, delega). Yours: intestatario_scheda (io or a member's slug).",
+      "scope": "person",
+      "subject": "persona",
+      "kinds": [
+        "persona"
+      ],
+      "fields": [
+        {
+          "id": "famiglia.intestatario_scheda",
+          "description": "Who is the intestatario della scheda anagrafica: io (you) or a member's slug (validated)",
+          "sensitivity": "standard",
+          "for": "owner",
+          "person_ref": true
+        },
+        {
+          "id": "famiglia.relazione",
+          "description": "How the member relates to you: coniuge, unito_civilmente, convivente, figlio, nipote, genitore, nonno, fratello, nipote_collaterale, zio, cugino, altro_parente, genero_nuora, suocero, cognato, altro_affine, altro (validated; moglie, figlia, madre... accepted)",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "famiglia.stato_famiglia",
+          "description": "Whether the member is in your stato di famiglia (famiglia anagrafica): si or no",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "famiglia.a_carico_percentuale",
+          "description": "Share of the member you claim as an IRPEF dependant: 0, 50 or 100",
+          "sensitivity": "sensitive",
+          "for": "member"
+        },
+        {
+          "id": "famiglia.genitori",
+          "description": "For a child: who holds responsabilità genitoriale, io and/or members' slugs (e.g. io,giulia)",
+          "sensitivity": "standard",
+          "for": "member",
+          "person_ref": true
+        },
+        {
+          "id": "famiglia.rappresentanza",
+          "description": "How you can act for an adult member: tutore, amministratore_sostegno, curatore, delega",
+          "sensitivity": "standard",
+          "for": "member"
+        }
+      ]
+    },
+    {
+      "name": "ruolo",
+      "description": "What each person in a business vault is to the business (business vaults only; personal vaults use famiglia). Each person has their own data under a prefix, e.g. bianchi:identity.codice_fiscale, bianchi:albo.numero; add one with 'pvault person add \u003cslug\u003e --ruolo \u003cruolo\u003e'. Fields: tipo (one or more of titolare, legale_rappresentante, socio, amministratore, procuratore, preposto, responsabile_tecnico, dipendente, collaboratore, cliente, fornitore, impresa_esecutrice, altro); data_inizio, data_fine; quota_percentuale (a socio's share, up to 100); poteri (an amministratore's or procuratore's powers). A business vault never holds other people's SPID/CieID accounts or login secrets.",
+      "scope": "person",
+      "kinds": [
+        "impresa"
+      ],
+      "fields": [
+        {
+          "id": "ruolo.tipo",
+          "description": "The person's roles for the business, one or more of: titolare, legale_rappresentante, socio, amministratore, procuratore, preposto, responsabile_tecnico, dipendente, collaboratore, cliente, fornitore, impresa_esecutrice, altro (validated; e.g. socio,amministratore)",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "ruolo.data_inizio",
+          "description": "Date the relationship started (YYYY-MM-DD), e.g. hiring, appointment or engagement",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "ruolo.data_fine",
+          "description": "Date it ended (YYYY-MM-DD); the start of how long you keep their data",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "ruolo.quota_percentuale",
+          "description": "A socio's share of the capital, above 0 and up to 100 (e.g. 50 or 33.33)",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "ruolo.poteri",
+          "description": "Powers of an amministratore or procuratore, as on the visura camerale",
+          "sensitivity": "standard",
+          "for": "member"
+        }
+      ]
+    },
+    {
+      "name": "procura",
+      "description": "A delega or procura a person gave you (or, in a business vault, the business): e.g. a client's procura speciale for a SUE/SUAP filing, the Agenzia delle Entrate delega unica, an INPS delega. Only on another person, e.g. rossi:procura.ente; a second one goes in procura2. Attach the signed procura with 'pvault doc add rossi:procura \u003cfile\u003e'. data_scadenza is tracked by 'pvault expiring'. Never store the person's SPID or CIE credentials instead: act with your own and the procura.",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "procura.ente",
+          "description": "Who the procura is for: the ente or portal (e.g. SUE Comune di Napoli, Agenzia delle Entrate, INPS)",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "procura.oggetto",
+          "description": "What it allows, as written in it (e.g. presentazione CILA per l'immobile di via Roma 1)",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "procura.data_conferimento",
+          "description": "Date it was given or signed (YYYY-MM-DD)",
+          "sensitivity": "standard",
+          "for": "member"
+        },
+        {
+          "id": "procura.data_scadenza",
+          "description": "Date it ends (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard",
+          "for": "member"
+        }
+      ]
+    },
+    {
+      "name": "business",
+      "description": "An Italian business: in a personal vault, your own ditta or partita IVA; in a business vault, the business itself; for a person in a business vault, a company (e.g. a client)",
+      "scope": "person",
+      "subject": "impresa",
+      "fields": [
+        {
+          "id": "business.partita_iva",
+          "description": "Partita IVA (11 digits, validated; IT prefix stripped)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.denominazione",
+          "description": "Business name or ditta individuale name",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.codice_fiscale",
+          "description": "Business codice fiscale if different from the partita IVA (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.codice_ateco",
+          "description": "Primary ATECO activity code (e.g. 62.01.00)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.regime_fiscale",
+          "description": "Tax regime (e.g. forfettario, ordinario)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.pec",
+          "description": "PEC (certified email) address",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.rea",
+          "description": "REA number (e.g. NA-123456)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.data_apertura",
+          "description": "Date the partita IVA was opened (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.qualita_dichiarante",
+          "description": "Your role when you sign for the business: titolare or legale_rappresentante (validated). In a business vault the signer's role is their ruolo.tipo",
+          "sensitivity": "standard",
+          "kinds": [
+            "persona"
+          ]
+        },
+        {
+          "id": "business.forma_giuridica",
+          "description": "Legal form: ditta_individuale, lavoratore_autonomo, srl, srls, snc, sas, spa, sapa, cooperativa, studio_associato, stp, altro (validated; SRL, S.r.l.s., ditta... accepted)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.telefono",
+          "description": "Business phone number with country code",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.sito_web",
+          "description": "Website address",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.cciaa",
+          "description": "Camera di Commercio of the Registro Imprese registration, as 2-letter provincia sigla (e.g. NA)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.data_costituzione",
+          "description": "Date a società was constituted, from the atto costitutivo (YYYY-MM-DD); for a ditta use data_inizio_attivita",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.data_inizio_attivita",
+          "description": "Date the activity started, as declared to the Registro Imprese (YYYY-MM-DD); may differ from data_apertura of the partita IVA",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.data_cessazione",
+          "description": "Date the activity ended (YYYY-MM-DD), shared by SUAP, Registro Imprese, Agenzia delle Entrate and TARI",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.capitale_sociale",
+          "description": "Share capital in euro (società di capitali), e.g. 10.000,00",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.inps_matricola",
+          "description": "INPS matricola aziendale (employer position)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.inail_codice_ditta",
+          "description": "INAIL codice ditta",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.inail_pat",
+          "description": "INAIL PAT (posizione assicurativa territoriale)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.inail_codice_sede",
+          "description": "INAIL codice sede, as on the F24 for the autoliquidazione",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.ccnl",
+          "description": "Contratto collettivo applied to employees (e.g. Commercio Confcommercio)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.pec_data_scadenza",
+          "description": "Date the PEC mailbox subscription expires (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.durc_data_scadenza",
+          "description": "Date the last DURC stops being valid, 120 days after issue (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.email",
+          "description": "Business email address (not the PEC)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.descrizione_attivita",
+          "description": "Short description of the activity carried on, as on SCIA and TARI forms",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.sede_legale_indirizzo",
+          "description": "Registered office (sede legale): street (via/piazza) without number",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.sede_legale_civico",
+          "description": "Registered office: street number",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.sede_legale_cap",
+          "description": "Registered office: CAP (5 digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.sede_legale_comune",
+          "description": "Registered office: comune",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.sede_legale_provincia",
+          "description": "Registered office: provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "locale",
+      "description": "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, but with its own address. Catasto data is on the visura catastale. Attach the visura and the lease with 'pvault doc add locale \u003cfile\u003e'.",
+      "scope": "person",
+      "subject": "impresa",
+      "fields": [
+        {
+          "id": "locale.indirizzo",
+          "description": "Street (via/piazza) of the premises, without number",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.civico",
+          "description": "Street number of the premises",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.interno",
+          "description": "Unit number (interno), if any; 'int. 3' is saved as 3",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.cap",
+          "description": "CAP of the premises (5 digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.comune",
+          "description": "Comune of the premises",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.provincia",
+          "description": "Provincia of the premises as 2-letter sigla (e.g. NA; the format is checked, not the list)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.titolo",
+          "description": "How the business holds the premises: proprietario, locatario, comodatario, usufruttuario or altro (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.data_inizio",
+          "description": "Date occupation of the premises started (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.catasto_sezione",
+          "description": "Sezione urbana from the visura, if any",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.catasto_foglio",
+          "description": "Foglio from the visura (digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.catasto_particella",
+          "description": "Particella (mappale) from the visura (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.catasto_subalterno",
+          "description": "Subalterno from the visura, exactly as written (digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.catasto_categoria",
+          "description": "Categoria catastale, e.g. C/1 for a shop (validated; c1 becomes C/1)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.superficie_mq",
+          "description": "Surface used for the activity, in m²",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.destinazione_uso",
+          "description": "Lawful use of the premises (e.g. negozio, ufficio, laboratorio, magazzino)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "albo",
+      "description": "A professional's registration in an albo (ordine or collegio), e.g. an architect, engineer or geometra; forms ask for it when the person signs as tecnico",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "albo.ordine",
+          "description": "Ordine or collegio (e.g. Ordine degli Architetti P.P.C.)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "albo.provincia",
+          "description": "Provincia of the ordine as 2-letter sigla (e.g. NA)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "albo.numero",
+          "description": "Registration number in the albo",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "albo.data_iscrizione",
+          "description": "Date of registration (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "cassa",
+      "description": "A professional's pension fund (cassa di previdenza), e.g. Inarcassa or Cassa Geometri",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "cassa.ente",
+          "description": "The cassa (e.g. Inarcassa, CIPAG, Cassa Forense)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "cassa.matricola",
+          "description": "Registration number (matricola) with the cassa",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "firma_digitale",
+      "description": "A person's digital signature or CNS (smart card or remote signature). The PIN and PUK can only be stored as personal (never readable by agents), and a business vault never holds them",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "firma_digitale.ente_emittente",
+          "description": "Who issued it (e.g. Camera di Commercio, InfoCert, Aruba, Namirial)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "firma_digitale.data_scadenza",
+          "description": "Date the certificate expires (YYYY-MM-DD; usually 3 years); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "permesso_soggiorno",
+      "description": "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement; not needed when identity.citizenship is italiana). Attach scans with 'pvault doc add permesso_soggiorno \u003cfile\u003e'.",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "permesso_soggiorno.numero",
+          "description": "Document number printed on the card",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "permesso_soggiorno.tipo",
+          "description": "Type or reason (e.g. Art. 50 TUE, lavoro subordinato, soggiornante di lungo periodo)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "permesso_soggiorno.data_rilascio",
+          "description": "Issue date (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "permesso_soggiorno.data_scadenza",
+          "description": "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "permesso_soggiorno.questura_rilascio",
+          "description": "Issuing Questura (e.g. Napoli)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "passaporto",
+      "description": "Passport (Italian or foreign)",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "passaporto.numero",
+          "description": "Passport number",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "passaporto.paese_rilascio",
+          "description": "Issuing country (e.g. Regno Unito)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "passaporto.data_rilascio",
+          "description": "Issue date (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "passaporto.data_scadenza",
+          "description": "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "passaporto.autorita_rilascio",
+          "description": "Issuing authority (e.g. Questura di Napoli, HM Passport Office)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "tessera_sanitaria",
+      "description": "Tessera sanitaria / TEAM card (also shows the codice fiscale)",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "tessera_sanitaria.numero",
+          "description": "Card identification number on the back",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "tessera_sanitaria.data_scadenza",
+          "description": "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "tessera_sanitaria.regione",
+          "description": "Region / ASL of enrolment in the SSN",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "tessera_sanitaria.medico_base",
+          "description": "Medico di base (GP) name",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "patente",
+      "description": "Driving licence (Italian or foreign)",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "patente.numero",
+          "description": "Licence number",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "patente.categorie",
+          "description": "Categories (e.g. B, A2)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "patente.paese_rilascio",
+          "description": "Issuing country",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "patente.data_rilascio",
+          "description": "Issue date (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "patente.data_scadenza",
+          "description": "Expiry date (YYYY-MM-DD); tracked by 'pvault expiring'",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "patente.autorita_rilascio",
+          "description": "Issuing authority (e.g. MIT-UCO, DVLA)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "addresses",
+      "description": "Other or foreign addresses (e.g. a previous address abroad). For your Italian address use residenza and domicilio.",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "addresses.home_street",
+          "description": "Home street address",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "addresses.home_city",
+          "description": "Home city",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "addresses.home_state",
+          "description": "Region, county or state",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "addresses.home_zip",
+          "description": "Postal code",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "addresses.home_country",
+          "description": "Country code (e.g. GB)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "financial",
+      "description": "Financial and tax information",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "financial.iban",
+          "description": "IBAN for refunds (730, INPS) and payments (validated; spaces removed)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "financial.filing_status",
+          "description": "US tax filing status (US taxpayers only)",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "financial.ssn",
+          "description": "US Social Security Number (US taxpayers only)",
+          "sensitivity": "critical"
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "description": "Payment card details",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "payment.card_number",
+          "description": "Payment card number",
+          "sensitivity": "critical"
+        },
+        {
+          "id": "payment.card_expiry",
+          "description": "Card expiration date",
+          "sensitivity": "critical"
+        },
+        {
+          "id": "payment.cardholder_name",
+          "description": "Name on payment card",
+          "sensitivity": "critical"
+        },
+        {
+          "id": "payment.card_brand",
+          "description": "Card brand (e.g. Visa, Mastercard)",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "preferences",
+      "description": "User preferences",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "preferences.timezone",
+          "description": "Preferred timezone (e.g. Europe/Rome)",
+          "sensitivity": "public"
+        },
+        {
+          "id": "preferences.language",
+          "description": "Preferred language (e.g. it, en)",
+          "sensitivity": "public"
+        },
+        {
+          "id": "preferences.accesso_pa",
+          "description": "How you log in to government portals by default: spid or cie (validated). With spid, agents use spid.provider",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "employment",
+      "description": "Employment information",
+      "scope": "person",
+      "subject": "persona",
+      "fields": [
+        {
+          "id": "employment.employer",
+          "description": "Current employer name",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "employment.title",
+          "description": "Job title",
+          "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "medical",
+      "description": "Medical information (user-defined fields)",
+      "scope": "person",
+      "subject": "persona",
+      "fields": []
+    },
+    {
+      "name": "documents",
+      "description": "Document references (user-defined fields)",
+      "scope": "person",
+      "fields": []
+    }
+  ],
+  "credentials": {
+    "secret": "^((?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco)s?[0-9]*)$",
+    "credential": "^((?:(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco)s?[0-9]*|(?:pass|username|login|chiave|chiavi)s?[0-9]*))$",
+    "identity": "^((?:spid|cieid|cie|firma|firmadigitale|cns|smartcard)[0-9]*)$"
+  }
+}

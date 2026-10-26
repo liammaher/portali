@@ -1,6 +1,12 @@
 package vault
 
-import "testing"
+import (
+	"bytes"
+	"os"
+	"path/filepath"
+	"regexp"
+	"testing"
+)
 
 func TestIsCanonicalField(t *testing.T) {
 	tests := []struct {
@@ -87,5 +93,43 @@ func TestSchemaIndex_MatchesData(t *testing.T) {
 	}
 	if len(schemaIndex) != count {
 		t.Errorf("schemaIndex has %d entries, but schema has %d fields", len(schemaIndex), count)
+	}
+}
+
+// The exported credential words are the expressions the vault compiles, so a
+// tool reading them refuses exactly the words IsCredentialField reads.
+func TestSchemaCredentialWordsAreTheVaultsOwn(t *testing.T) {
+	words := RecommendedSchema.Credentials
+	for _, tt := range []struct {
+		exported string
+		re       *regexp.Regexp
+	}{
+		{words.Secret, reSecretWord},
+		{words.Credential, reCredentialWord},
+		{words.Identity, reIdentityWord},
+	} {
+		if regexp.MustCompile(tt.exported).String() != tt.re.String() {
+			t.Errorf("exported %q, the vault compiles %q", tt.exported, tt.re)
+		}
+	}
+	for _, w := range []string{"pin", "pincode", "credenziali", "sblocco", "passwords", "password2"} {
+		if !regexp.MustCompile(words.Secret).MatchString(w) || !regexp.MustCompile(words.Credential).MatchString(w) {
+			t.Errorf("%s should be a secret word", w)
+		}
+	}
+	if regexp.MustCompile(words.Secret).MatchString("username") || !regexp.MustCompile(words.Credential).MatchString("username") {
+		t.Error("username is a credential word only next to an identity word")
+	}
+}
+
+// schema.json is what pratiche-napoli's CI compares its copy with, so it
+// must be exactly what 'pvault schema --json' prints.
+func TestSchemaJSONIsCommitted(t *testing.T) {
+	committed, err := os.ReadFile(filepath.Join("..", "..", "schema.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(committed, SchemaJSON()) {
+		t.Fatal("schema.json is out of date: run 'make schema'")
 	}
 }

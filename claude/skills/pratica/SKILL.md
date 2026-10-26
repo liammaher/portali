@@ -34,8 +34,9 @@ credentials: a professional files with their own identity and the client's signe
 **Touch ID first.** Check `pvault touchid status` once at the start. When it's on,
 read with `pvault get` from Bash (vault skill §2d): each command shows one fingerprint
 prompt scoped to exactly the fields it names, so nobody has to create a token. Gather
-the field IDs a step needs and read them in one `get` (up to 10; `pvault list <category>`
-for a whole category). Before each command, say in chat what the prompt will ask.
+what a step needs and read it in one `get`: up to 10 field IDs or whole categories
+(`pvault get 'business.*' 'locale.*' 'identity.*'`, quoted for the shell), which covers
+most forms in one prompt. Before each command, say in chat what the prompt will ask.
 "not approved" means the user said no or is away: don't retry, ask them. Fall back to
 the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
 
@@ -111,7 +112,7 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
   (`vault_household` or `pvault person list`; members whose `famiglia.stato_famiglia`
   is `si`), each mapped from `<slug>:identity.*`, with `relazione_label` (moglie,
   figlia) for the form's rapporto/parentela. Read their fields with one
-  `pvault get <slug>:identity.first_name ...` or a `*:identity.*` scope.
+  `pvault get '*:identity.*'` (quoted for the shell), or a `*:identity.*` token scope.
 - `party: { ruolo: X }` next to `direct`, `concat` or `fallback`: the same fields (written
   without a prefix), read from the person whose `ruolo.tipo` includes X (or any of a
   list): `<slug>:identity.codice_fiscale`. Find them with `pvault --vault <name> person list`
@@ -141,8 +142,10 @@ categories with `subject` persona and `scope` person: `identity`, `residenza`, `
 An ID the vault schema doesn't list yet (the library's `contract/extensions.json`)
 is an `ask` too.
 
-**With Touch ID**: read the mapped fields with as few `pvault get` calls as you can
-(one per 10 IDs; `null` means the field isn't set). Write with `pvault set <id> <value>`,
+**With Touch ID**: read the mapped fields with one `pvault get` of their categories
+(in a business vault, the signer's and each party's as `'<slug>:identity.*'`); a field
+missing from the output isn't set. A category leaves out personal fields, which no form
+needs. Write with `pvault set <id> <value>`,
 one prompt per field, so it suits the few fields a step changes. When a step writes
 more than about four fields (opening the pratica record in step 3), ask the user
 whether they'd rather approve each one or run one token command for `pratiche.*`
