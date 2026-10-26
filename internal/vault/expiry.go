@@ -109,7 +109,7 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 		}
 	}
 	if v.kind == KindImpresa {
-		due, err := v.scansAfterPratiche(allow)
+		due, err := v.scansAfterPratiche(allow, today)
 		if err != nil {
 			return nil, err
 		}
@@ -127,19 +127,23 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 // procura scans, sorted, of each client (ruolo.tipo includes cliente) whom
 // at least one pratica names in persona and every pratica naming them is
 // closed. Only clients: the business's own pratiche (persona io) use its
-// titolare's and soci's documents too, without naming them.
+// titolare's and soci's documents too, without naming them. A category is
+// returned only if every scan in it was there when the last of those pratiche
+// closed (its stato was last written), so a scan handed over for a new job, or
+// for a later person given a removed person's slug, is never due; and a
+// procura category is kept while a procura.data_scadenza is still ahead.
 //
 // It reads every pratica, not just those allow accepts, so a pratica the
 // caller can't see still counts as open; but a person counts only if the
-// caller can read the persona and stato of every pratica naming them and
-// their ruolo.tipo, and only scans the caller can see are returned. A
+// caller can read the persona and stato of every pratica naming them, their
+// ruolo.tipo and procura.data_scadenza, and every scan in the category. A
 // partial view never says scans can go.
-func (v *Vault) scansAfterPratiche(allow FieldFilter) ([]string, error) {
+func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]string, error) {
 	ctx, err := v.decryptFields(func(id, _ string) bool {
 		person, local := SplitPerson(id)
 		category, name, _ := strings.Cut(local, ".")
 		if person != "" {
-			return strings.EqualFold(category, "ruolo") && strings.EqualFold(name, "tipo")
+			return isRuoloTipo(category, name) || isProcuraScadenza(category, name)
 		}
 		_, campo, _ := praticaField(category, name)
 		return campo == "persona" || campo == "stato"
@@ -151,13 +155,24 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter) ([]string, error) {
 	type pratica struct {
 		persona          string
 		closed, readable bool
+		closedAt         time.Time
 	}
 	pratiche := map[string]*pratica{}
-	clients := map[string]bool{}
+	client, blocked := map[string]bool{}, map[string]bool{} // blocked: a ruolo.tipo or procura date the caller can't read
+	procuraInForce := map[string]bool{}
 	for _, fields := range ctx.Categories {
 		for _, f := range fields {
-			if person, _ := SplitPerson(f.Category); person != "" {
-				clients[person] = visible(f) && slices.Contains(strings.Split(f.Value, ","), "cliente")
+			if person, local := SplitPerson(f.Category); person != "" {
+				switch {
+				case !visible(f):
+					blocked[person] = true
+				case isRuoloTipo(local, f.FieldName):
+					client[person] = client[person] || slices.Contains(strings.Split(f.Value, ","), "cliente")
+				default: // a procura's data_scadenza
+					if d, err := NormalizeDate(f.Value); err != nil || d >= today.Format(dateLayout) {
+						procuraInForce[person] = true
+					}
+				}
 				continue
 			}
 			slug, campo, _ := praticaField(f.Category, f.FieldName)
@@ -168,37 +183,62 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter) ([]string, error) {
 			}
 			p.readable = p.readable && visible(f)
 			if campo == "stato" {
-				p.closed = isClosedStato(f.Value)
+				p.closed, p.closedAt = isClosedStato(f.Value), f.UpdatedAt
 			} else {
 				p.persona = f.Value
 			}
 		}
 	}
-	done := map[string]bool{} // client → every pratica naming them is closed, and readable
+	done := map[string]bool{}            // client → every pratica naming them is closed, and readable
+	lastClosed := map[string]time.Time{} // client → when the last of those closed
 	for _, p := range pratiche {
 		for _, person := range PersonRefs(p.persona) {
-			ok := clients[person] && p.closed && p.readable
+			ok := client[person] && !blocked[person] && p.closed && p.readable
 			if prev, seen := done[person]; seen {
 				ok = ok && prev
 			}
 			done[person] = ok
+			if p.closedAt.After(lastClosed[person]) {
+				lastClosed[person] = p.closedAt
+			}
 		}
 	}
 	docs, err := v.db.ListDocuments()
 	if err != nil {
 		return nil, err
 	}
-	seen := map[string]bool{}
-	var out []string
+	due := map[string]bool{} // category → every scan in it may go
 	for _, doc := range docs {
 		person, base := SplitPerson(doc.Category)
-		if person == "" || !done[person] || !isIDScanCategory(base) || seen[doc.Category] ||
-			(allow != nil && !allow(DocumentScopeID(doc.Category), doc.Sensitivity)) {
+		if person == "" || !done[person] || !isIDScanCategory(base) {
 			continue
 		}
-		seen[doc.Category] = true
-		out = append(out, doc.Category)
+		ok := (allow == nil || allow(DocumentScopeID(doc.Category), doc.Sensitivity)) &&
+			!doc.CreatedAt.After(lastClosed[person]) &&
+			!(procuraInForce[person] && schemaCategoryOf(base).Name == "procura")
+		if prev, seen := due[doc.Category]; seen {
+			ok = ok && prev
+		}
+		due[doc.Category] = ok
+	}
+	var out []string
+	for category, ok := range due {
+		if ok {
+			out = append(out, category)
+		}
 	}
 	sort.Strings(out)
 	return out, nil
+}
+
+// isRuoloTipo reports a person's ruolo.tipo (category and name without the
+// person, any case).
+func isRuoloTipo(category, name string) bool {
+	return strings.EqualFold(category, "ruolo") && strings.EqualFold(name, "tipo")
+}
+
+// isProcuraScadenza reports a procura's data_scadenza, numbered copies too.
+func isProcuraScadenza(category, name string) bool {
+	c := schemaCategoryOf(category)
+	return c != nil && c.Name == "procura" && strings.EqualFold(name, "data_scadenza")
 }

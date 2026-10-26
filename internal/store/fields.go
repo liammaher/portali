@@ -202,10 +202,8 @@ func (d *DB) DeleteField(id string, seen *Seen) error {
 // SetSensitivity updates the sensitivity tier of a field (ErrNotFound if
 // there is none).
 func (d *DB) SetSensitivity(id, tier string) error {
-	res, err := d.conn.Exec(
-		"UPDATE vault_fields SET sensitivity = ?, updated_at = ? WHERE id = ?",
-		tier, time.Now().UTC().Format(time.RFC3339), id,
-	)
+	// updated_at is when the value last changed, so a tier change leaves it.
+	res, err := d.conn.Exec("UPDATE vault_fields SET sensitivity = ? WHERE id = ?", tier, id)
 	return affectedOne(res, err, false)
 }
 
@@ -256,4 +254,25 @@ func (d *DB) CategoryCounts(exclude string) (map[string]int, error) {
 		counts[cat] = count
 	}
 	return counts, rows.Err()
+}
+
+// RaiseTier sets tier on the given fields and documents in one transaction,
+// leaving updated_at alone: it corrects a classification, not the data.
+func (d *DB) RaiseTier(tier string, fieldIDs, docIDs []string) error {
+	tx, err := d.conn.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	for _, id := range fieldIDs {
+		if _, err := tx.Exec(`UPDATE vault_fields SET sensitivity = ? WHERE id = ?`, tier, id); err != nil {
+			return err
+		}
+	}
+	for _, id := range docIDs {
+		if _, err := tx.Exec(`UPDATE vault_documents SET sensitivity = ? WHERE id = ?`, tier, id); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }

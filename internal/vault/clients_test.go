@@ -160,8 +160,8 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 
 	// Not when the caller can't see every pratica naming the client: a
 	// hidden one may be open.
-	hideScia := func(id, _ string) bool { return !strings.HasPrefix(id, "pratiche.docfa-roma_") }
-	if items, _ := v.Expiring(window, hideScia, now); len(items) != 0 {
+	hideDocfa := func(id, _ string) bool { return !strings.HasPrefix(id, "pratiche.docfa-roma_") }
+	if items, _ := v.Expiring(window, hideDocfa, now); len(items) != 0 {
 		t.Fatalf("partial view of rossi's pratiche: %+v", items)
 	}
 	// Nor without their ruolo.
@@ -265,4 +265,71 @@ func hasAudit(entries []store.AuditEntry, action string) bool {
 		}
 	}
 	return false
+}
+
+// A scan handed over after the client's pratiche closed (for a new job, or
+// for a later person given a removed person's slug) is not due, and neither is
+// a procura still in force. Two spellings of ruolo always give one answer.
+func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
+	now := time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC)
+	window := 90 * 24 * time.Hour
+	v := tmpVaultKind(t, KindImpresa)
+	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
+	mustSet(t, v, "rossi:Ruolo.tipo", "titolare") // IDs are case-sensitive in the store
+	for _, cat := range []string{"cie", "procura"} {
+		if _, err := v.AddDocument("rossi:"+cat, cat+".pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
+			t.Fatal(err)
+		}
+	}
+	mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
+	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
+	due := func() string {
+		t.Helper()
+		items, err := v.Expiring(window, nil, now)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var got []string
+		for _, it := range items {
+			if it.Kind == ExpiryPraticheClosed {
+				got = append(got, it.FieldID)
+			}
+		}
+		return strings.Join(got, " ")
+	}
+	for range 20 {
+		if got := due(); got != "rossi:cie.documents rossi:procura.documents" {
+			t.Fatalf("scans due = %q", got)
+		}
+	}
+
+	mustSet(t, v, "rossi:procura.data_scadenza", "2028-06-30")
+	if got := due(); got != "rossi:cie.documents" {
+		t.Fatalf("procura in force: scans due = %q", got)
+	}
+	mustSet(t, v, "rossi:procura.data_scadenza", "2026-01-31")
+	if got := due(); got != "rossi:cie.documents rossi:procura.documents" {
+		t.Fatalf("procura expired: scans due = %q", got)
+	}
+
+	// The pratica closed an hour ago; a new CIE arrives now.
+	stato, err := v.db.GetField("pratiche.cila-roma_stato")
+	if err != nil || stato == nil {
+		t.Fatal(stato, err)
+	}
+	stato.UpdatedAt = time.Now().Add(-time.Hour)
+	if err := v.db.SetField(*stato); err != nil {
+		t.Fatal(err)
+	}
+	if got := due(); got != "" {
+		t.Fatalf("scans uploaded after the close: due = %q", got)
+	}
+	// Saving the same stato again, or changing its tier, isn't a new close.
+	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
+	if err := v.SetSensitivity("pratiche.cila-roma_stato", "sensitive"); err != nil {
+		t.Fatal(err)
+	}
+	if got := due(); got != "" {
+		t.Fatalf("after re-saving the stato: due = %q", got)
+	}
 }

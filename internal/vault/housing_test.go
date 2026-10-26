@@ -25,6 +25,8 @@ func TestNormalizeAndValidate_Housing(t *testing.T) {
 		{"abitazione.superficie_catastale_mq", "80", "80"},
 		{"abitazione.vani", "4,5", "4.5"},
 		{"tari.superficie_tassata_mq", "65 m²", "65"},
+		{"tari.superficie_tassata_mq", "1.200 m²", "1200"}, // Italian thousands dot, as on a visura
+		{"abitazione.superficie_catastale_mq", "1.200,50", "1200.5"},
 		{"abitazione.catasto_rendita", "€ 512,30", "512.30"},
 		{"locazione.canone_mensile", "750", "750.00"},
 		{"locazione.canone_mensile", "1.250,50", "1250.50"},
@@ -79,6 +81,8 @@ func TestNormalizeAndValidate_HousingRejects(t *testing.T) {
 		{"abitazione.classe_energetica", "A+"},
 		{"abitazione.superficie_calpestabile_mq", "0"},
 		{"abitazione.superficie_calpestabile_mq", "about 70"},
+		{"abitazione.superficie_calpestabile_mq", "1,200"}, // thousands or three decimals
+		{"abitazione.superficie_calpestabile_mq", "1.20.0"},
 		{"abitazione.vani", "-2"},
 		{"locazione.canone_mensile", "seven hundred"},
 		{"locazione.canone_mensile", "1e3"},

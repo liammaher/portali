@@ -442,7 +442,7 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusForbidden, "session_required", "only your own session can delete a field stored above its default sensitivity tier")
 			return
 		}
-		del = func(id string) error { return s.vault.DeleteChecked(id, existing) }
+		del = func(id string) error { return s.vault.DeleteChecked(id, existing, callerFilter(r)) }
 	}
 	if err := del(id); err != nil {
 		handleVaultError(w, err)

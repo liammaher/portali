@@ -25,6 +25,7 @@ func TestNormalizeAndValidate_Business(t *testing.T) {
 		{"locale.catasto_particella", "34b", "34B"},
 		{"locale.catasto_subalterno", "5", "5"},
 		{"locale.superficie_mq", "45,5 mq", "45.5"},
+		{"locale.superficie_mq", "2.500 m²", "2500"},
 		{"identity.birth_country", " Regno Unito ", "Regno Unito"},
 		// Generic rules still apply in business.
 		{"business.partita_iva", "IT 00743110157", "00743110157"},

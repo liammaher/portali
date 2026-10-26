@@ -72,6 +72,7 @@ type RemovedPerson struct {
 	Documents     int      `json:"documents"`
 	RevokedTokens []string `json:"revoked_tokens"` // consumers of service tokens that named the person
 	DroppedGrants int      `json:"dropped_grants"`
+	FilesLeft     []string `json:"files_left,omitempty"` // encrypted document files that could not be deleted
 }
 
 // RemovePerson deletes every field and document of a person, in one
@@ -106,27 +107,23 @@ func (v *Vault) RemovePerson(slug string) (*RemovedPerson, error) {
 	if len(refs) > 0 {
 		return nil, &PersonInUseError{Slug: slug, Refs: refs}
 	}
-	if err := v.db.ApplyPersonChange(fieldIDs, docIDs, nil); err != nil {
-		return nil, err
-	}
-	for _, id := range docIDs {
-		if err := os.Remove(v.documentPath(id)); err != nil && !errors.Is(err, os.ErrNotExist) {
-			return nil, fmt.Errorf("remove document file: %w", err)
-		}
-	}
-
-	out := &RemovedPerson{Fields: len(fieldIDs), Documents: len(docIDs), RevokedTokens: []string{}}
+	// Tokens go in the same transaction as the rows: a removal that half
+	// failed would leave them valid for a later person with the same slug,
+	// and could not be retried once the rows were gone.
 	tokens, err := v.db.ListTokensByUsage("service")
 	if err != nil {
 		return nil, err
 	}
+	out := &RemovedPerson{Fields: len(fieldIDs), Documents: len(docIDs), RevokedTokens: []string{}}
+	var revoke []string
 	for _, t := range tokens {
 		if ScopeNamesPerson(t.Scope, slug) {
-			if _, err := v.db.DeleteToken(t.TokenStr); err != nil {
-				return nil, err
-			}
+			revoke = append(revoke, t.TokenStr)
 			out.RevokedTokens = append(out.RevokedTokens, t.Consumer)
 		}
+	}
+	if err := v.db.ApplyPersonChange(fieldIDs, docIDs, revoke, nil); err != nil {
+		return nil, err
 	}
 	v.mu.RLock()
 	if v.session != nil {
@@ -140,7 +137,69 @@ func (v *Vault) RemovePerson(slug string) (*RemovedPerson, error) {
 		Purpose: fmt.Sprintf("%d fields, %d documents, %d tokens revoked", out.Fields, out.Documents, len(out.RevokedTokens)),
 	})
 	v.markChanged()
+
+	// Files last: the rows are gone, so a file left behind is an unreadable
+	// encrypted orphan, but the user should know it is still on disk.
+	for _, id := range docIDs {
+		if err := os.Remove(v.documentPath(id)); err != nil && !errors.Is(err, os.ErrNotExist) {
+			out.FilesLeft = append(out.FilesLeft, v.documentPath(id))
+		}
+	}
 	return out, nil
+}
+
+// checkNotLastPersonRow refuses to delete a person's last field or document
+// on its own: the person would be gone without RemovePerson's checks, leaving
+// fields that name them and tokens and grants that a later person with the
+// same slug would inherit. id is the field or document ID and category its
+// category. Only rows allow accepts count as others, so a token's answer
+// never depends on rows it can't see (it may be refused although hidden rows
+// remain). The caller holds writeMu exclusively (lockWrite), so two deletes
+// can't each leave the other's row as the last one.
+func (v *Vault) checkNotLastPersonRow(category, id string, allow FieldFilter) error {
+	person, _ := SplitPerson(category)
+	if person == "" {
+		return nil
+	}
+	fields, docs, err := v.db.PersonRowTiers(person)
+	if err != nil {
+		return err
+	}
+	visible := func(id, tier string) bool { return allow == nil || allow(id, tier) }
+	found, others := false, 0
+	for _, f := range fields {
+		switch {
+		case f.ID == id:
+			found = true
+		case visible(f.ID, f.Sensitivity):
+			others++
+		}
+	}
+	for _, d := range docs {
+		switch {
+		case d.ID == id:
+			found = true
+		case visible(DocumentScopeID(d.Category), d.Sensitivity):
+			others++
+		}
+	}
+	if found && others == 0 {
+		return &ValidationError{Field: person, Msg: fmt.Sprintf(
+			"this would leave %s with no fields or documents you can see: remove %s with 'pvault person remove %s' instead, which also revokes the tokens that name them",
+			person, person, person)}
+	}
+	return nil
+}
+
+// lockWrite takes writeMu for a write to category and returns its unlock:
+// exclusively for a person's rows (see checkNotLastPersonRow), else shared.
+func (v *Vault) lockWrite(category string) (unlock func()) {
+	if person, _ := SplitPerson(category); person != "" {
+		v.writeMu.Lock()
+		return v.writeMu.Unlock
+	}
+	v.writeMu.RLock()
+	return v.writeMu.RUnlock
 }
 
 // personRefsTo returns the IDs of fields outside the person's own data whose

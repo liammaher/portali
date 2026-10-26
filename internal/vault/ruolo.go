@@ -88,13 +88,28 @@ func normalizeRuolo(id, category, name, value string) (out string, handled bool,
 		}
 		return v, true, nil
 	case "quota_percentuale":
-		v, ok := normalizeDecimal(strings.TrimSuffix(strings.TrimSpace(value), "%"))
+		v, ok := normalizePercent(value)
 		if !ok || !percentAtMost100(v) {
 			return fail("must be a share above 0 and up to 100 (e.g. 50 or 33.33)")
 		}
 		return v, true, nil
 	}
 	return value, false, nil
+}
+
+// normalizePercent accepts 50, 33.333, 33,333 or "50%" and returns the plain
+// number. A share up to 100 has no thousands, so a lone dot or comma is always
+// the decimal point (unlike areas, normalizeDecimal).
+func normalizePercent(s string) (string, bool) {
+	s = strings.ReplaceAll(strings.TrimSpace(strings.TrimSuffix(strings.TrimSpace(s), "%")), ",", ".")
+	if !reDecimal.MatchString(s) {
+		return "", false
+	}
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil || f <= 0 {
+		return "", false
+	}
+	return strconv.FormatFloat(f, 'f', -1, 64), true
 }
 
 // percentAtMost100 reports a normalized decimal no greater than 100.

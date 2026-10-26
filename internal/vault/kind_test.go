@@ -250,7 +250,7 @@ func TestRuolo_Normalize(t *testing.T) {
 			t.Errorf("ruolo.tipo %q accepted", in)
 		}
 	}
-	for in, want := range map[string]string{"50": "50", "33,33": "33.33", "100%": "100"} {
+	for in, want := range map[string]string{"50": "50", "33,33": "33.33", "100%": "100", "33.333": "33.333", "33,333 %": "33.333", "0.125": "0.125"} {
 		if got, err := NormalizeAndValidate("x:ruolo.quota_percentuale", in); err != nil || got != want {
 			t.Errorf("quota %q = %q, %v; want %q", in, got, err, want)
 		}

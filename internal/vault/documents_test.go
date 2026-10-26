@@ -65,7 +65,7 @@ func TestDocument_InvalidIDsAndInputs(t *testing.T) {
 		if info, _, err := v.GetDocument(id); info != nil || err != nil {
 			t.Errorf("GetDocument(%q) = %v, %v; want nil, nil", id, info, err)
 		}
-		if ok, err := v.DeleteDocument(id); ok || err != nil {
+		if ok, err := v.DeleteDocument(id, nil); ok || err != nil {
 			t.Errorf("DeleteDocument(%q) = %v, %v", id, ok, err)
 		}
 	}
@@ -116,7 +116,7 @@ func TestDocument_DeleteListAndStatus(t *testing.T) {
 		t.Fatalf("status documents = %d", st.Documents)
 	}
 
-	if ok, err := v.DeleteDocument(a.ID); !ok || err != nil {
+	if ok, err := v.DeleteDocument(a.ID, nil); !ok || err != nil {
 		t.Fatalf("delete: %v %v", ok, err)
 	}
 	if _, err := os.Stat(v.documentPath(a.ID)); !os.IsNotExist(err) {
@@ -224,7 +224,7 @@ func TestDocumentMeta_NoNameAndDeleteOrder(t *testing.T) {
 	}
 	// If the file is already gone, delete still removes the listing.
 	os.Remove(v.documentPath(doc.ID))
-	if ok, err := v.DeleteDocument(doc.ID); !ok || err != nil {
+	if ok, err := v.DeleteDocument(doc.ID, nil); !ok || err != nil {
 		t.Fatalf("delete with missing file: %v %v", ok, err)
 	}
 	if list, _ := v.ListDocuments(nil); len(list) != 0 {

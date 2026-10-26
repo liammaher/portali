@@ -196,7 +196,10 @@ Profile Password + Secret Key (128-bit)
   never reachable by service tokens: they can't be capped at it, and the API hides
   personal items from them (404 on read/delete, 403 personal_only on write, omitted
   from every listing; a single-field read re-checks the tier on the row it decrypts,
-  `GetIf`). Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
+  `GetIf`). Reads trust the stored tier, so `Open` raises to personal any field or document
+  the current rules call a credential but that is stored below it (`raiseCredentialTiers`, audited
+  as `tier_raise`: a word added later, like `sblocco`, must not leave old rows agent-readable).
+  Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
   `spid.provider` (fixed spellings matching the onboarding select,
   `TestOnboardingSelectOptionsValidate`) are validated in `access.go`; the provider
   stays lowerable to `standard` so agents can pick it. Fields named with the word
@@ -206,7 +209,9 @@ Profile Password + Secret Key (128-bit)
   residenza/domicilio (address not duplicated). Their format rules live in
   `internal/vault/housing.go` and run before the generic ones in `NormalizeAndValidate`,
   scoped to those categories. Euro amounts need 3-digit thousands groups and at most 2
-  decimals (`1.234.56` and the ambiguous `1,250` are refused). Every onboarding `data-field` category must be in the
+  decimals (`1.234.56` and the ambiguous `1,250` are refused); `*_mq` and `vani` read
+  separators the same way (`parseItalianNumber`), so `1.200 m²` is 1200; a share
+  (`ruolo.quota_percentuale`) has no thousands, so there `33.333` is a decimal. Every onboarding `data-field` category must be in the
   page's `categories` list (`TestOnboardingFieldsAreLoaded`)
 - `business` (incl. `sede_legale_*`) and `locale` (the business premises, one unit, with its
   own address) have their rules in `internal/vault/business.go`; address parts share the
@@ -280,9 +285,16 @@ Profile Password + Secret Key (128-bit)
   the user approved with write access to `<slug>:*` (`ScopeAllowsWholePerson`), so `pvault
   person remove` asks one Touch ID prompt worded "read, change and delete everything about
   <slug>" (service tokens never may). Both hold `backup.mu` and `writeMu` (every single
-  write holds `writeMu` for reading), change rows in one `store.ApplyPersonChange`
-  transaction; remove refuses while another field names the person (closed pratiche don't
-  count), then revokes tokens and drops grants whose scope names the slug. The public
+  write holds `writeMu` for reading; deleting a person's field or document holds it
+  exclusively, `lockWrite`), change rows in one `store.ApplyPersonChange` transaction; remove
+  refuses while another field names the person (closed pratiche don't count), revokes the
+  tokens whose scope names the slug in that same transaction, then drops grants and deletes
+  the files (any it can't are reported in `files_left`, never left for a retry that would
+  find no person). A person's last field or document can't be deleted on its own
+  (`checkNotLastPersonRow`, 400): that would skip these checks. For a token only rows it can
+  see count, so the answer never reveals hidden ones. Migration marks each new
+  member `famiglia.stato_famiglia=si` and drops `numero_componenti` only when you plus the
+  people in your stato di famiglia match it; otherwise it stays, reported in `left`. The public
   status counts only the owner's data, so it never reveals other people. Bulk reads parse
   the scope once (`ParseScope`). No slug rename yet. Business and client vaults:
   `docs/design/business-vaults.md`.
@@ -326,9 +338,13 @@ Profile Password + Secret Key (128-bit)
   adds `kind: retention` entries (`ruolo.data_fine` + years, within the window) and, in
   impresa vaults only, `kind: pratiche_closed` entries (today) for a client's (ruolo.tipo
   includes cliente) ID/procura document categories (`idScanCategories`) once at least one
-  pratica names them in `persona` and all of those are closed. That check reads every
-  pratica, but counts a client only if the caller can read every pratica naming them and
-  their ruolo.tipo, so a partial view never says scans can go; entries are only what the
+  pratica names them in `persona` and all of those are closed, and only if every scan in
+  the category predates the last closing (the stato's `updated_at`, which a re-save of the
+  same stato keeps and a tier change never moves), so a new job's or a
+  reused slug's scans are never due; a `procura` category waits while a
+  `procura.data_scadenza` is ahead. That check reads every pratica, but counts a client
+  only if the caller can read every pratica naming them, their ruolo.tipo and procura date,
+  and every scan in the category, so a partial view never says scans can go; entries are only what the
   caller's filter reads. A document whose file is gone is listed in the export's `missing`
   instead of failing it. `pvault expiring` prints a hint in an impresa vault with no period set.
   `GET /vault/members/{slug}/export[?include_personal=1]` is session-only (not even an

@@ -119,7 +119,67 @@ func Open(dir string) (*Vault, error) {
 		db.Close()
 		return nil, err
 	}
-	return &Vault{db: db, dir: dir, kind: kind}, nil
+	v := &Vault{db: db, dir: dir, kind: kind}
+	if err := v.raiseCredentialTiers(); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("raise credential tiers: %w", err)
+	}
+	return v, nil
+}
+
+// statoUpdatedAt is the updated_at for a write of value: now, except that a
+// pratica's stato saved again unchanged keeps its time, which
+// scansAfterPratiche reads as when the pratica closed.
+func (v *Vault) statoUpdatedAt(id, category, fieldName, value string, subkey []byte) (time.Time, error) {
+	now := time.Now()
+	if _, campo, ok := praticaField(category, fieldName); !ok || campo != "stato" {
+		return now, nil
+	}
+	existing, err := v.db.GetField(id)
+	if err != nil || existing == nil {
+		return now, err
+	}
+	old, err := crypto.DecryptFromBase64(subkey, existing.Value)
+	defer clear(old)
+	if err != nil || string(old) != value {
+		return now, nil
+	}
+	return existing.UpdatedAt, nil
+}
+
+// raiseCredentialTiers moves to TierPersonal every field and document that the
+// current rules call a credential but that is stored below it. Reads trust the
+// stored tier, so a field stored before a credential word was added
+// (cie.codice_sblocco before sblocco) would otherwise stay readable by agents.
+func (v *Vault) raiseCredentialTiers() error {
+	fields, err := v.db.ListFields()
+	if err != nil {
+		return err
+	}
+	var fieldIDs, docIDs []string
+	for _, f := range fields {
+		if f.Sensitivity != TierPersonal && IsCredentialField(f.ID) {
+			fieldIDs = append(fieldIDs, f.ID)
+		}
+	}
+	docs, err := v.db.ListDocuments()
+	if err != nil {
+		return err
+	}
+	for _, d := range docs {
+		if d.Sensitivity != TierPersonal && DefaultDocumentTier(d.Category) == TierPersonal {
+			docIDs = append(docIDs, d.ID)
+		}
+	}
+	if len(fieldIDs) == 0 && len(docIDs) == 0 {
+		return nil
+	}
+	if err := v.db.RaiseTier(TierPersonal, fieldIDs, docIDs); err != nil {
+		return err
+	}
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: strings.Join(fieldIDs, ","), Action: "tier_raise",
+		Purpose: fmt.Sprintf("credentials stored below personal: %d fields, %d documents", len(fieldIDs), len(docIDs))})
+	return nil
 }
 
 // CanInit reports why Init would refuse dir, so the CLI can say so before
@@ -575,13 +635,17 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 		return errCredentialTier(id)
 	}
 
+	updatedAt, err := v.statoUpdatedAt(id, category, fieldName, value, subkey)
+	if err != nil {
+		return err
+	}
 	err = v.db.SetField(store.Field{
 		ID:          id,
 		Category:    category,
 		FieldName:   fieldName,
 		Value:       encrypted,
 		Sensitivity: sensitivity,
-		UpdatedAt:   time.Now(),
+		UpdatedAt:   updatedAt,
 		KeepTier:    keepTier,
 		Seen:        seen,
 	})
@@ -828,19 +892,22 @@ func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 
 // Delete removes a field (ErrFieldNotFound if there is none).
 func (v *Vault) Delete(id string) error {
-	return v.delete(id, nil)
+	return v.delete(id, nil, nil)
 }
 
 // DeleteChecked is Delete for a caller that checked the field first: it
 // deletes only if the field still has existing's tier (ErrFieldChanged).
-func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
-	return v.delete(id, &store.Seen{Exists: true, Tier: existing.Sensitivity})
+// allow is what the caller can see (checkNotLastPersonRow).
+func (v *Vault) DeleteChecked(id string, existing *FieldInfo, allow FieldFilter) error {
+	return v.delete(id, &store.Seen{Exists: true, Tier: existing.Sensitivity}, allow)
 }
 
-func (v *Vault) delete(id string, seen *store.Seen) error {
-	v.writeMu.RLock()
-	defer v.writeMu.RUnlock()
+func (v *Vault) delete(id string, seen *store.Seen, allow FieldFilter) error {
+	defer v.lockWrite(id)()
 	if err := v.checkUnlocked(); err != nil {
+		return err
+	}
+	if err := v.checkNotLastPersonRow(id, id, allow); err != nil {
 		return err
 	}
 

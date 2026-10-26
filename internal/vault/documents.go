@@ -243,18 +243,26 @@ func (v *Vault) decryptDocumentContent(vaultKey []byte, doc store.Document) ([]b
 }
 
 // DeleteDocument removes a document's encrypted file and metadata.
-// Returns false if it did not exist.
-func (v *Vault) DeleteDocument(id string) (bool, error) {
+// Returns false if it did not exist. allow is what the caller can see
+// (checkNotLastPersonRow); nil for the user's session.
+func (v *Vault) DeleteDocument(id string, allow FieldFilter) (bool, error) {
 	if !reDocumentID.MatchString(id) {
 		return false, nil
 	}
-	v.writeMu.RLock()
-	defer v.writeMu.RUnlock()
+	// The category picks the lock; a document's category never changes, so
+	// only its existence is read again under it.
+	doc, err := v.db.GetDocument(id)
+	if err != nil || doc == nil {
+		return false, err
+	}
+	defer v.lockWrite(doc.Category)()
 	if err := v.checkUnlocked(); err != nil {
 		return false, err
 	}
-	doc, err := v.db.GetDocument(id)
-	if err != nil || doc == nil {
+	if doc, err = v.db.GetDocument(id); err != nil || doc == nil {
+		return false, err
+	}
+	if err := v.checkNotLastPersonRow(doc.Category, id, allow); err != nil {
 		return false, err
 	}
 	// Remove the row first: if removing the file then fails, only an

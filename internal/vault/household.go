@@ -258,19 +258,22 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	var inserts []store.Field
 	var deletes []string
 	planned := map[string]bool{}
+	inStato, err := v.countInStatoFamiglia() // the people already marked, before this migration
+	if err != nil {
+		return nil, err
+	}
 	now := time.Now()
-	move := func(f FieldInfo, newID string) bool {
-		value, err := NormalizeAndValidate(newID, f.Value)
+	// add plans a new field, never below its schema default tier or minTier.
+	add := func(newID, value, minTier string) error {
+		value, err := NormalizeAndValidate(newID, value)
 		if err != nil {
-			report.Left[f.ID] = errMsg(err)
-			return false
+			return errors.New(errMsg(err))
 		}
 		if existing, err := v.db.GetField(newID); err != nil || existing != nil || planned[newID] {
-			report.Left[f.ID] = newID + " is already set"
-			return false
+			return errors.New(newID + " is already set")
 		}
 		planned[newID] = true
-		tier := f.Sensitivity
+		tier := minTier
 		if d := DefaultSensitivity(newID); tierRank[d] > tierRank[tier] {
 			tier = d
 		}
@@ -280,10 +283,16 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 		category, fieldName, _ := strings.Cut(newID, ".")
 		encrypted, err := encryptValue(vaultKey, v.salt, category, value)
 		if err != nil {
+			return err
+		}
+		inserts = append(inserts, store.Field{ID: newID, Category: category, FieldName: fieldName, Value: encrypted, Sensitivity: tier, UpdatedAt: now})
+		return nil
+	}
+	move := func(f FieldInfo, newID string) bool {
+		if err := add(newID, f.Value, f.Sensitivity); err != nil {
 			report.Left[f.ID] = err.Error()
 			return false
 		}
-		inserts = append(inserts, store.Field{ID: newID, Category: category, FieldName: fieldName, Value: encrypted, Sensitivity: tier, UpdatedAt: now})
 		deletes = append(deletes, f.ID)
 		return true
 	}
@@ -317,6 +326,10 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 			}
 		}
 		if len(mm.Fields) > 0 {
+			// Being in nucleo_familiare meant being in the stato di famiglia.
+			if add(slug+":famiglia.stato_famiglia", "si", "standard") == nil {
+				inStato++
+			}
 			report.Members = append(report.Members, mm)
 		}
 	}
@@ -324,7 +337,13 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	for _, f := range old {
 		switch strings.ToLower(f.FieldName) {
 		case "numero_componenti":
-			// Derived now: you plus the members in your stato di famiglia.
+			// Derived now: you plus the members in your stato di famiglia. A
+			// count that doesn't match stays, so it isn't lost.
+			if derived := strconv.Itoa(1 + inStato); strings.TrimSpace(f.Value) != derived {
+				report.Left[f.ID] = "you plus the members in your stato di famiglia make " + derived +
+					": check each one's famiglia.stato_famiglia, then delete this field"
+				continue
+			}
 			deletes = append(deletes, f.ID)
 			report.Deleted = append(report.Deleted, f.ID)
 		case "intestatario_scheda":
@@ -341,13 +360,33 @@ func (v *Vault) MigrateNucleo(dryRun bool) (*MigrationReport, error) {
 	if dryRun || len(deletes) == 0 {
 		return report, nil
 	}
-	if err := v.db.ApplyPersonChange(deletes, nil, inserts); err != nil {
+	if err := v.db.ApplyPersonChange(deletes, nil, nil, inserts); err != nil {
 		return nil, err
 	}
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "nucleo_familiare.*", Action: "member_migrate",
 		Purpose: fmt.Sprintf("%d members, %d fields moved", len(report.Members), len(inserts))})
 	v.markChanged()
 	return report, nil
+}
+
+// countInStatoFamiglia counts the people whose famiglia.stato_famiglia is si.
+func (v *Vault) countInStatoFamiglia() (int, error) {
+	ctx, err := v.decryptFields(func(id, _ string) bool {
+		person, rest := SplitPerson(id)
+		return person != "" && strings.EqualFold(rest, "famiglia.stato_famiglia")
+	})
+	if err != nil {
+		return 0, err
+	}
+	n := 0
+	for _, fields := range ctx.Categories {
+		for _, f := range fields {
+			if f.Value == "si" {
+				n++
+			}
+		}
+	}
+	return n, nil
 }
 
 // encryptValue encrypts a field value with its category's subkey.
