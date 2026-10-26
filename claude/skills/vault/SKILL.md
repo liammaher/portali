@@ -192,10 +192,10 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   that it is, say so once before you read clients' data. This is a note for the user, not a
   check the vault makes.
 - `vault_expiring` also lists what may be due for deletion, with a `kind`: `retention` (a
-  person whose `ruolo.data_fine` is past the retention period the user set with
-  `pvault --vault <name> retention set <years>`; there is no default, so suggest no
-  number) and `pratiche_closed` (a person's ID or procura scans once every pratica naming
-  them is closed). Point them out; never delete anything yourself (`person remove` and
+  person whose retention period after `ruolo.data_fine`, set by the user with
+  `pvault --vault <name> retention set <years>`, has ended (`expired`) or ends within the
+  window; there is no default, so suggest no number) and `pratiche_closed` (a client's ID
+  or procura scans once every pratica naming them is closed). Point them out; never delete anything yourself (`person remove` and
   `doc delete` are the user's).
 - A person's own copy of their data (GDPR art. 20): the user runs
   `pvault --vault <name> person export <slug>`, which writes an unencrypted folder. Only

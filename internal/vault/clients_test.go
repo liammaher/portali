@@ -2,6 +2,7 @@ package vault
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -157,6 +158,35 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 		t.Fatalf("filtered scans = %+v", items)
 	}
 
+	// Not when the caller can't see every pratica naming the client: a
+	// hidden one may be open.
+	hideScia := func(id, _ string) bool { return !strings.HasPrefix(id, "pratiche.docfa-roma_") }
+	if items, _ := v.Expiring(window, hideScia, now); len(items) != 0 {
+		t.Fatalf("partial view of rossi's pratiche: %+v", items)
+	}
+	// Nor without their ruolo.
+	hideRuolo := func(id, _ string) bool { return !strings.HasSuffix(id, ":ruolo.tipo") }
+	if items, _ := v.Expiring(window, hideRuolo, now); len(items) != 0 {
+		t.Fatalf("without ruolo.tipo: %+v", items)
+	}
+	// Only clients: the titolare's ID is used by the business's own pratiche
+	// (persona io), which don't name them.
+	mustSet(t, v, "bianchi:ruolo.tipo", "titolare")
+	if _, err := v.AddDocument("bianchi:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
+		t.Fatal(err)
+	}
+	mustSet(t, v, "pratiche.albo-bianchi_persona", "bianchi")
+	mustSet(t, v, "pratiche.albo-bianchi_stato", "completata")
+	mustSet(t, v, "pratiche.scia-bar_stato", "in_attesa")
+	if items, _ := v.Expiring(window, nil, now); len(items) != 2 {
+		t.Fatalf("titolare's scans flagged: %+v", items)
+	}
+	// A client who is also a socio stays a client.
+	mustSet(t, v, "bianchi:ruolo.tipo", "socio,cliente")
+	if items, _ := v.Expiring(window, nil, now); len(items) != 3 || items[0].Person != "bianchi" {
+		t.Fatalf("socio and cliente: %+v", items)
+	}
+
 	// A personal vault keeps family scans: no such entries.
 	p := tmpVaultKind(t, KindPersona)
 	mustSet(t, p, "leo:famiglia.relazione", "figlio")
@@ -199,6 +229,18 @@ func TestExportPerson(t *testing.T) {
 	out, err = v.ExportPerson("leo", true)
 	if err != nil || len(out.Fields) != 3 || out.Omitted != 0 {
 		t.Fatalf("include personal: %+v %v", out, err)
+	}
+	// A lost file is reported, not fatal.
+	lost, err := v.AddDocument("leo:passaporto", "pass.pdf", "application/pdf", []byte("P"), "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(v.documentPath(lost.ID)); err != nil {
+		t.Fatal(err)
+	}
+	out, err = v.ExportPerson("leo", false)
+	if err != nil || len(out.Documents) != 1 || len(out.Missing) != 1 || out.Missing[0].Name != "pass.pdf" {
+		t.Fatalf("export with a lost file: %+v %v", out, err)
 	}
 	if _, err := v.ExportPerson("marco", false); !errors.Is(err, ErrPersonNotFound) {
 		t.Fatalf("missing person: %v", err)

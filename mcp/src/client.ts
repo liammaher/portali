@@ -363,9 +363,10 @@ interface ExpiryInfo {
   expires_on: string;
   days_left: number;
   expired: boolean;
-  // "retention": a person past the retention period after ruolo.data_fine;
-  // "pratiche_closed": a person's ID or procura scans, every pratica naming
-  // them closed (business vaults). Absent for a document or pratica deadline.
+  // "retention": a person whose retention period after ruolo.data_fine has
+  // ended (expired) or ends within the window; "pratiche_closed": a client's
+  // ID or procura scans, every pratica naming them closed (business vaults).
+  // Absent for a document or pratica deadline.
   kind?: "retention" | "pratiche_closed";
 }
 

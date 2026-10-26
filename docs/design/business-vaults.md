@@ -283,8 +283,8 @@ owner fields. It can stay; migrating it to a party is optional.
    retention report. **Done:** `<slug>:procura.*` and `<slug>:procura` documents (person-only,
    every vault kind; `procura2` for a second), schema 12; `pvault person export <slug>`
    (session-only, audited, a new unencrypted folder); `pvault retention set <years>` with no
-   default, and `pvault expiring` listing people past it and, in business vaults, ID and
-   procura scans once all their pratiche are closed; the art. 28 note in the vault skill and
+   default, and `pvault expiring` listing people past it and, in business vaults, clients' ID
+   and procura scans once all their pratiche are closed; the art. 28 note in the vault skill and
    on the onboarding page.
 3. **Library:** replace those proposed fields with party references in the
    pratiche-napoli contract (`contract/extensions.json`, `fields.json`). **Done** (library

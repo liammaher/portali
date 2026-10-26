@@ -1,7 +1,9 @@
 package vault
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"sort"
 	"time"
 
@@ -20,6 +22,9 @@ type PersonExport struct {
 	Documents []ExportedDocument `json:"documents"`
 	// Omitted counts the personal-tier fields and documents left out.
 	Omitted int `json:"omitted,omitempty"`
+	// Missing lists documents whose encrypted file is gone (only the
+	// metadata is left), so one lost file doesn't block the export.
+	Missing []DocumentInfo `json:"missing,omitempty"`
 }
 
 // ExportedDocument is a document with its decrypted content.
@@ -79,6 +84,10 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 			return nil, err
 		}
 		data, err := v.decryptDocumentContent(vaultKey, doc)
+		if errors.Is(err, os.ErrNotExist) {
+			out.Missing = append(out.Missing, *info)
+			continue
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -92,13 +101,13 @@ func (v *Vault) ExportPerson(slug string, includePersonal bool) (*PersonExport, 
 		return a.Name < b.Name
 	})
 
-	if len(out.Fields) == 0 && len(out.Documents) == 0 && out.Omitted == 0 {
+	if len(out.Fields) == 0 && len(out.Documents) == 0 && len(out.Missing) == 0 && out.Omitted == 0 {
 		return nil, ErrPersonNotFound
 	}
 	// The audit action follows member_remove's naming.
 	v.db.LogAccess(store.AuditEntry{
 		Consumer: "vault", Scope: slug + ":*", Action: "member_export",
-		Purpose: fmt.Sprintf("%d fields, %d documents, %d personal left out", len(out.Fields), len(out.Documents), out.Omitted),
+		Purpose: fmt.Sprintf("%d fields, %d documents, %d personal left out, %d files missing", len(out.Fields), len(out.Documents), out.Omitted, len(out.Missing)),
 	})
 	return out, nil
 }

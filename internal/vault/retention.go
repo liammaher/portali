@@ -25,7 +25,7 @@ const (
 	// ExpiryRetention: a person whose ruolo.data_fine plus the retention
 	// period has passed or falls within the window. ExpiresOn is that date.
 	ExpiryRetention = "retention"
-	// ExpiryPraticheClosed: a person's ID or procura scans in a business
+	// ExpiryPraticheClosed: a client's ID or procura scans in a business
 	// vault once every pratica naming them is closed. ExpiresOn is today:
 	// they are due now.
 	ExpiryPraticheClosed = "pratiche_closed"

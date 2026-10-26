@@ -17,7 +17,7 @@ func cmdRetention() {
 	args := positionalArgs(os.Args[2:], retentionUsage, 0, 2)
 	switch {
 	case len(args) == 0:
-		needGrant("*", "read")
+		needGrant("*:ruolo.data_fine", "read") // the setting is about these; any grant may read it
 		years, err := fetchRetention()
 		if err != nil {
 			fatal("%v", err)

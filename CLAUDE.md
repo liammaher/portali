@@ -324,10 +324,13 @@ Profile Password + Secret Key (128-bit)
   Retention is meta `retention_years`, no default (D8 unverified, so none is hard-coded),
   set only by the session (`PUT /vault/retention`; `GET` for any caller). `Expiring` then
   adds `kind: retention` entries (`ruolo.data_fine` + years, within the window) and, in
-  impresa vaults only, `kind: pratiche_closed` entries (today) for a person's ID/procura
-  document categories (`idScanCategories`) once at least one pratica names them in
-  `persona` and all of those are closed; both come only from what the caller's filter
-  reads. `pvault expiring` prints a hint in an impresa vault with no period set.
+  impresa vaults only, `kind: pratiche_closed` entries (today) for a client's (ruolo.tipo
+  includes cliente) ID/procura document categories (`idScanCategories`) once at least one
+  pratica names them in `persona` and all of those are closed. That check reads every
+  pratica, but counts a client only if the caller can read every pratica naming them and
+  their ruolo.tipo, so a partial view never says scans can go; entries are only what the
+  caller's filter reads. A document whose file is gone is listed in the export's `missing`
+  instead of failing it. `pvault expiring` prints a hint in an impresa vault with no period set.
   `GET /vault/members/{slug}/export[?include_personal=1]` is session-only (not even an
   approved `<slug>:*` grant), returns fields and documents with content, and logs one
   `member_export` audit entry; personal-tier items are left out (counted in `omitted`)

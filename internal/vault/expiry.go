@@ -1,6 +1,7 @@
 package vault
 
 import (
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -27,9 +28,9 @@ type ExpiryInfo struct {
 // older version) are skipped, and so are the deadlines of closed pratiche.
 // It also reports what may be due for deletion (retention.go): a person whose
 // ruolo.data_fine plus the retention period, if one is set, falls in the
-// window, and, in a business vault, a person's ID and procura scans once
-// every pratica naming them is closed. Both come only from fields and
-// documents allow accepts.
+// window, and, in a business vault, a client's ID and procura scans once
+// every pratica naming them is closed (scansAfterPratiche). Both report only
+// what allow accepts.
 func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time) ([]ExpiryInfo, error) {
 	years, err := v.RetentionYears()
 	if err != nil {
@@ -108,7 +109,7 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 		}
 	}
 	if v.kind == KindImpresa {
-		due, err := v.scansAfterPratiche(persona, closed, allow)
+		due, err := v.scansAfterPratiche(allow)
 		if err != nil {
 			return nil, err
 		}
@@ -123,18 +124,64 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 }
 
 // scansAfterPratiche returns the document categories (rossi:cie) of ID and
-// procura scans whose person is named by at least one pratica and every
-// pratica naming them is closed, sorted. persona and closed are Expiring's,
-// by pratica slug.
-func (v *Vault) scansAfterPratiche(persona map[string]string, closed map[string]bool, allow FieldFilter) ([]string, error) {
-	done := map[string]bool{} // person → every pratica naming them is closed
-	for slug, value := range persona {
-		for _, p := range PersonRefs(value) {
-			if allClosed, ok := done[p]; ok {
-				done[p] = allClosed && closed[slug]
-			} else {
-				done[p] = closed[slug]
+// procura scans, sorted, of each client (ruolo.tipo includes cliente) whom
+// at least one pratica names in persona and every pratica naming them is
+// closed. Only clients: the business's own pratiche (persona io) use its
+// titolare's and soci's documents too, without naming them.
+//
+// It reads every pratica, not just those allow accepts, so a pratica the
+// caller can't see still counts as open; but a person counts only if the
+// caller can read the persona and stato of every pratica naming them and
+// their ruolo.tipo, and only scans the caller can see are returned. A
+// partial view never says scans can go.
+func (v *Vault) scansAfterPratiche(allow FieldFilter) ([]string, error) {
+	ctx, err := v.decryptFields(func(id, _ string) bool {
+		person, local := SplitPerson(id)
+		category, name, _ := strings.Cut(local, ".")
+		if person != "" {
+			return strings.EqualFold(category, "ruolo") && strings.EqualFold(name, "tipo")
+		}
+		_, campo, _ := praticaField(category, name)
+		return campo == "persona" || campo == "stato"
+	})
+	if err != nil {
+		return nil, err
+	}
+	visible := func(f FieldInfo) bool { return allow == nil || allow(f.ID, f.Sensitivity) }
+	type pratica struct {
+		persona          string
+		closed, readable bool
+	}
+	pratiche := map[string]*pratica{}
+	clients := map[string]bool{}
+	for _, fields := range ctx.Categories {
+		for _, f := range fields {
+			if person, _ := SplitPerson(f.Category); person != "" {
+				clients[person] = visible(f) && slices.Contains(strings.Split(f.Value, ","), "cliente")
+				continue
 			}
+			slug, campo, _ := praticaField(f.Category, f.FieldName)
+			p := pratiche[slug]
+			if p == nil {
+				p = &pratica{readable: true}
+				pratiche[slug] = p
+			}
+			p.readable = p.readable && visible(f)
+			if campo == "stato" {
+				p.closed = isClosedStato(f.Value)
+			} else {
+				p.persona = f.Value
+			}
+		}
+	}
+	done := map[string]bool{} // client → every pratica naming them is closed, and readable
+	for _, p := range pratiche {
+		for _, person := range PersonRefs(p.persona) {
+			ok := clients[person] && p.closed && p.readable
+			if prev, seen := done[person]; seen {
+				ok = ok && prev
+			}
+			done[person] = ok
 		}
 	}
 	docs, err := v.db.ListDocuments()

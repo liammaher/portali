@@ -68,6 +68,9 @@ func cmdPersonExport() {
 		fatal("%v", err)
 	}
 	fmt.Printf("Exported %s to %s: %d fields, %d documents.\n", slug, dir, len(out.Fields), len(out.Documents))
+	for _, d := range out.Missing {
+		fmt.Printf("Missing: %s (%s), its encrypted file is gone; restore it from a backup to export it.\n", d.Name, d.Category)
+	}
 	if out.Omitted > 0 {
 		fmt.Printf("%d personal item(s) left out; add --include-personal to include them.\n", out.Omitted)
 	}

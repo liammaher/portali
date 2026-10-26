@@ -189,8 +189,8 @@ use or ask for the client's own SPID/CIE.
 Keep `stato` and `prossimo_passo` current: they are what the next session reads first.
 `data_scadenza` shows in `pvault expiring` until `stato` is `completata`,
 `respinta` or `annullata`.
-Once every pratica naming a client is closed, `pvault expiring` (business vaults) lists
-their ID and procura scans as due for deletion. Mention it when you close the last one; the
+Once every pratica naming a client (ruolo cliente) is closed, `pvault expiring` (business
+vaults) lists their ID and procura scans as due for deletion. Mention it when you close the last one; the
 user decides.
 
 ## 4. Prepare
