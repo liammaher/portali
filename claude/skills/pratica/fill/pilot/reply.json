@@ -1,0 +1,10 @@
+{
+  "description": "A made-up answer from the Comune: the entry's records, as the payment notice would give them.",
+  "records": {
+    "tari.codice_contribuente": "9000001",
+    "tari.data_dichiarazione": "2026-10-26",
+    "tari.protocollo": "PG/2026/0000001",
+    "tari.superficie_tassata_mq": "85",
+    "tari.componenti_tassati": "3"
+  }
+}

@@ -61,6 +61,7 @@ internal/
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
+  pratica/fill/      pilot: fills a library form from the vault (fill.py, layouts/, pilot/)
 ```
 
 ## Security Model
@@ -255,7 +256,9 @@ Tests use temp directories and run with `-race`. `internal/vault` and `internal/
 API requests go through `newTestRequest` (loopback Host); socket tests use
 `serveOnSocket`/`shortVaultDir` (temp paths exceed the 104-byte socket limit). The Touch ID
 tests compile the helper with `-D DEBUG`, which adds `describe-grant` and test enrollment
-(`PVAULT_TOUCHID_TEST_*`). Keychain tests run only with `PVAULT_KEYCHAIN_TEST=1`.
+(`PVAULT_TOUCHID_TEST_*`). Keychain tests run only with `PVAULT_KEYCHAIN_TEST=1`. The fill pilot's synthetic vault
+(`TestPraticaPilotVault`) runs only with `PVAULT_PILOT_DIR`; run it through
+`claude/skills/pratica/fill/pilot/run.sh` or `regress.py` (both need `PRATICHE_NAPOLI_DIR` and PyMuPDF).
 
 ```go
 // Pattern: create temp vault, run test
