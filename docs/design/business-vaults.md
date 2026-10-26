@@ -188,7 +188,9 @@ identity providers' terms
 the AgID rule itself is probably in DPCM 24 ottobre 2014 (not verified). In an impresa
 vault, `IsCredentialField` on any party's field should be refused outright, not stored at
 the personal tier. (In the personal vault a member's credentials stay allowed at the
-personal tier, as today.)
+personal tier, as today.) **Done:** any field with a credential word is a credential, in any
+category (`fisconline.pin`, `inps.pin`, not just SPID/CIE ones); a party's are refused, and
+the business's own portal logins (`entratel.password`) are allowed at the personal tier.
 
 The legitimate mechanisms, and what the vault should keep for each:
 
@@ -284,7 +286,8 @@ owner fields. It can stay; migrating it to a party is optional.
    every vault kind; `procura2` for a second), schema 12; `pvault person export <slug>`
    (session-only, audited, a new unencrypted folder); `pvault retention set <years>` with no
    default, and `pvault expiring` listing people past it and, in business vaults, clients' ID
-   and procura scans once all their pratiche are closed; the art. 28 note in the vault skill and
+   and procura scans once all their pratiche are closed plus `pvault retention scans <days>`
+   (also no default); the art. 28 note in the vault skill and
    on the onboarding page.
 3. **Library:** replace those proposed fields with party references in the
    pratiche-napoli contract (`contract/extensions.json`, `fields.json`). **Done** (library
@@ -312,6 +315,8 @@ owner fields. It can stay; migrating it to a party is optional.
   ID copies need checking against sources before any code reports on them. Phase 2 built only
   the mechanism: the period is a setting with no default (`pvault retention set <years>`),
   one period for everyone with `ruolo.data_fine`, and a client's ID and procura scans are
-  flagged as soon as every pratica naming them is closed, with no waiting period. Only
+  flagged once every pratica naming them is closed plus a second setting with no default
+  either (`pvault retention scans <days>`; 0 means right away), so nothing about ID copies
+  is reported until the user has checked and set a period. Only
   clients: the business's own pratiche (persona `io`) use its titolare's and soci's ID copies
   without naming them.

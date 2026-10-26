@@ -59,6 +59,18 @@ func errPersonSlug(person string) error {
 	return fmt.Errorf("invalid person %q: lower-case letters, digits and hyphens, starting with a letter (at most 32)", person)
 }
 
+// CheckLowerCase refuses a new field ID or document category with upper-case
+// letters. The rules read IDs ignoring case, but the store doesn't, so
+// pratiche.x_stato and Pratiche.x_stato would be two rows saying different
+// things about one pratica. Rows stored before this rule can still be read,
+// re-tiered and deleted.
+func CheckLowerCase(id string) error {
+	if lower := strings.ToLower(id); id != lower {
+		return &ValidationError{Field: id, Msg: "IDs are lower-case: use " + lower}
+	}
+	return nil
+}
+
 // ValidateFieldID checks that a field ID is safe: [person:]category.field_name
 // where category and field name contain only alphanumeric characters,
 // underscores, and hyphens, and person is a valid slug.

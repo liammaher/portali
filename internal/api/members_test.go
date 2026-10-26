@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"net/http"
 	"strings"
 	"testing"
 
@@ -282,8 +283,64 @@ func TestRetention_API(t *testing.T) {
 		t.Fatalf("session set retention: %d %s", w.Code, w.Body.String())
 	}
 	w := env.doRequestWithToken(t, "GET", "/vault/retention", nil, token)
-	if w.Code != 200 || !strings.Contains(w.Body.String(), `"years":10`) {
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `"years":10`) || strings.Contains(w.Body.String(), "scan_days") {
 		t.Fatalf("get retention: %d %s", w.Code, w.Body.String())
+	}
+
+	// The period for clients' ID scans: 0 is a period, -1 removes it.
+	if w := env.doRequestWithToken(t, "PUT", "/vault/retention", map[string]int{"scan_days": 0}, token); w.Code != 403 {
+		t.Fatalf("service token set scan_days: %d", w.Code)
+	}
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]int{"scan_days": vault.MaxScanDays + 1}, true); w.Code != 400 {
+		t.Fatalf("too many scan_days: %d", w.Code)
+	}
+	// Both are checked before either changes.
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]int{"years": 5, "scan_days": vault.MaxScanDays + 1}, true); w.Code != 400 {
+		t.Fatalf("valid years, bad scan_days: %d", w.Code)
+	}
+	if w := env.doRequest(t, "GET", "/vault/retention", nil, true); !strings.Contains(w.Body.String(), `"years":10`) {
+		t.Fatalf("a refused update changed years: %s", w.Body.String())
+	}
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]int{"scan_days": 0}, true); w.Code != 200 || !strings.Contains(w.Body.String(), `"scan_days":0`) || !strings.Contains(w.Body.String(), `"years":10`) {
+		t.Fatalf("session set scan_days: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "PUT", "/vault/retention", map[string]int{"scan_days": -1}, true); w.Code != 200 || strings.Contains(w.Body.String(), "scan_days") {
+		t.Fatalf("session removed scan_days: %d %s", w.Code, w.Body.String())
+	}
+}
+
+// A service token naming a person in a field (pratiche persona, famiglia)
+// gets the same answer for a person it can't see as for one who doesn't exist,
+// so it can't find out who is in the vault. A grant the user approved in
+// person (Touch ID: 'pvault set pratiche.x_persona zed') may name anyone.
+func TestMembers_HiddenPersonRef(t *testing.T) {
+	env, sk := setupWithSecretKey(t)
+	// zed exists only through a personal-tier field, which no token sees.
+	if w := env.doRequest(t, "PUT", "/vault/fields/zed:spid.password", map[string]string{"value": "hunter2-secret"}, true); w.Code != 200 {
+		t.Fatalf("seed zed: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "PUT", "/vault/fields/leo:identity.first_name", map[string]string{"value": "Leo"}, true); w.Code != 200 {
+		t.Fatalf("seed leo: %d %s", w.Code, w.Body.String())
+	}
+	token := createToken(t, env, map[string]string{"scope": "pratiche.*,leo:*", "access": "write"})
+	answer := func(slug string) string {
+		w := env.doRequestWithToken(t, "PUT", "/vault/fields/pratiche.cie-"+slug+"_persona", map[string]string{"value": slug}, token)
+		return strings.ReplaceAll(w.Body.String(), slug, "SLUG") + " " + http.StatusText(w.Code)
+	}
+	hidden, missing := answer("zed"), answer("nobody")
+	if hidden != missing || !strings.Contains(hidden, "Bad Request") {
+		t.Fatalf("hidden person: %s\nmissing person: %s", hidden, missing)
+	}
+	if got := answer("leo"); !strings.HasSuffix(got, " OK") {
+		t.Fatalf("visible person: %s", got)
+	}
+	// An approved grant for just that field, and the session, see everyone.
+	g := scopedGrant(t, env, sk, "pratiche.cie-zed_persona", "write")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/pratiche.cie-zed_persona", map[string]string{"value": "zed"}, g); w.Code != 200 {
+		t.Fatalf("approved grant naming zed: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "PUT", "/vault/fields/pratiche.scia-zed_persona", map[string]string{"value": "zed"}, true); w.Code != 200 {
+		t.Fatalf("session naming zed: %d %s", w.Code, w.Body.String())
 	}
 }
 

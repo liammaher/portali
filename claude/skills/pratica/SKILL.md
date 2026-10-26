@@ -153,7 +153,7 @@ stored at a time (a new one replaces the last), so work in two phases (vault ski
 
 - **Preparing**: `--access append` scoped to exactly the form's categories plus
   `pratiche.*` (family members' data needs their prefix: `*:identity.*,*:famiglia.*`
-  for a list of conviventi, `leo:*` for a pratica about leo; in a business vault, the
+  for a list of conviventi, `leo:*` for a pratica about leo, which a token also needs to name leo in `persona`; in a business vault, the
   signer and the people picked by ruolo likewise: `*:identity.*,*:residenza.*,*:ruolo.*`,
   or `rossi:*` for one person). It can read them, open the pratica and add missing fields, but
   never overwrite your data. When a portal login is involved, add

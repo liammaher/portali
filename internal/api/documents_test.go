@@ -207,10 +207,37 @@ func TestDocuments_TokenCannotLowerTier(t *testing.T) {
 func TestDocuments_TokenCannotUploadToCredentialCategory(t *testing.T) {
 	env := setup(t)
 	tok := createTokenWithAccess(t, env, "*", "append")
-	for _, category := range []string{"cie_pin", "cie_puk", "spid"} {
+	for _, category := range []string{"cie_pin", "cie_puk", "spid", "fisconline_pin"} {
 		w := env.upload(t, tok, "category="+category+"&name=letter.pdf", "application/pdf", []byte("PIN"))
 		if w.Code != 403 || !strings.Contains(w.Body.String(), "personal_only") {
 			t.Errorf("upload to %s: %d %s, want 403 personal_only", category, w.Code, w.Body.String())
 		}
+	}
+}
+
+// Any login secret is personal, not just SPID/CIE ones, and new IDs and
+// document categories are lower-case; both refusals are a 400 or 403, never
+// a 500.
+func TestFields_CredentialsAndLowerCase(t *testing.T) {
+	env := setup(t)
+	tok := createTokenWithAccess(t, env, "*", "write")
+	if w := env.doRequestWithToken(t, "PUT", "/vault/fields/inps.pin", map[string]string{"value": "123456"}, tok); w.Code != 403 || !strings.Contains(w.Body.String(), "personal_only") {
+		t.Errorf("token created inps.pin: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "PUT", "/vault/fields/fisconline.pin", map[string]string{"value": "1234567890", "sensitivity": "standard"}, true); w.Code != 400 {
+		t.Errorf("session stored fisconline.pin below personal: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequest(t, "PUT", "/vault/fields/fisconline.pin", map[string]string{"value": "1234567890"}, true); w.Code != 200 {
+		t.Errorf("session stored fisconline.pin: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.doRequestWithToken(t, "GET", "/vault/fields/fisconline.pin", nil, tok); w.Code != 404 {
+		t.Errorf("token read fisconline.pin: %d %s", w.Code, w.Body.String())
+	}
+
+	if w := env.doRequest(t, "PUT", "/vault/fields/Pratiche.cila-roma_stato", map[string]string{"value": "in_attesa"}, true); w.Code != 400 || !strings.Contains(w.Body.String(), "pratiche.cila-roma_stato") {
+		t.Errorf("upper-case ID: %d %s", w.Code, w.Body.String())
+	}
+	if w := env.upload(t, env.token, "category=Cie&name=c.pdf", "application/pdf", []byte("c")); w.Code != 400 {
+		t.Errorf("upper-case document category: %d %s", w.Code, w.Body.String())
 	}
 }

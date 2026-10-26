@@ -120,11 +120,32 @@ var credentialIDs = []string{"spid.password", "spid.username", "spid.otp", "SPID
 	"identity.spidPassword", "identity.spidpassword", "identity.ciePin1", "notes.pinspid",
 	// A second account or card, and Italian words for a secret answer or credentials.
 	"spid2.password", "spid1.pin", "cieid2.username", "cie2.pin", "identity.spid2_password", "identity.cie2_puk",
-	"identity.spid_risposta_segreta", "identity.spid_credenziali"}
+	"identity.spid_risposta_segreta", "identity.spid_credenziali",
+	// Any login secret, not just SPID/CIE ones: portal logins (Fisconline,
+	// Entratel, INPS), a PEC mailbox, a bank PIN, a password hint.
+	"fisconline.pin", "fisconline.password", "entratel.password", "agenzia_entrate.pin", "business.fisconline_pin",
+	"inps.pin", "leo:fisconline.pin", "pec.password", "accounts.bank_pin", "identity.password_hint", "pin.numero"}
 
 var nonCredentialIDs = []string{"cie.numero", "cie.data_scadenza", "identity.codice_fiscale", "identity.pinterest", "custom.spid",
-	"cie.pinterest", "documents.cie_scan", "identity.password_hint", "accounts.bank_pin", "spid.provider", "spid.data_scadenza",
-	"identity.passaporto", "notes.specie", "identity.cieloazzurro", "cie2.numero", "spid2.provider"}
+	"cie.pinterest", "documents.cie_scan", "spid.provider", "spid.data_scadenza", "fisconline.data_scadenza",
+	"identity.passaporto", "notes.specie", "identity.cieloazzurro", "cie2.numero", "spid2.provider", "pratiche.inps-pin_stato",
+	// Words that name a login detail only next to SPID/CIE are everyday words
+	// elsewhere.
+	"locazione.chiavi_consegnate", "veicolo.pass_ztl", "identity.green_pass", "pec.username", "preferences.login_portale"}
+
+func TestIsIdentityCredential(t *testing.T) {
+	for _, id := range []string{"spid.password", "spid2.username", "cieid.codice", "cie.pin", "firma_digitale.pin", "cns.puk",
+		"identity.spid_password", "identity.ciePin1", "leo:cie.puk"} {
+		if !IsIdentityCredential(id) {
+			t.Errorf("IsIdentityCredential(%q) = false, want true", id)
+		}
+	}
+	for _, id := range []string{"entratel.password", "fisconline.pin", "inps.pin", "pec.password", "spid.provider", "cie.numero"} {
+		if IsIdentityCredential(id) {
+			t.Errorf("IsIdentityCredential(%q) = true, want false", id)
+		}
+	}
+}
 
 func TestIsCredentialField(t *testing.T) {
 	for _, id := range credentialIDs {
@@ -410,5 +431,17 @@ func TestOpenRaisesStaleCredentialTiers(t *testing.T) {
 	entries, _ := v.db.GetAuditLog(10)
 	if len(entries) == 0 || entries[0].Action != "tier_raise" || entries[0].Scope != "cie.codice_sblocco" {
 		t.Errorf("audit = %+v, want a tier_raise entry for cie.codice_sblocco", entries)
+	}
+}
+
+// Every schema field the credential rule matches is personal in the schema,
+// or Set would refuse its default tier.
+func TestSchemaCredentialsArePersonal(t *testing.T) {
+	for _, c := range RecommendedSchema.Categories {
+		for _, f := range c.Fields {
+			if IsCredentialField(f.ID) && f.Sensitivity != TierPersonal {
+				t.Errorf("%s is a credential but its schema tier is %s", f.ID, f.Sensitivity)
+			}
+		}
 	}
 }

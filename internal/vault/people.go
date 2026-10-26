@@ -19,8 +19,10 @@ import (
 var ErrPersonNotFound = errors.New("person not found")
 
 // checkPersonRefs refuses a value naming a person who isn't in the vault
-// (famiglia.genitori, famiglia.intestatario_scheda, pratiche persona).
-func (v *Vault) checkPersonRefs(id, value string) error {
+// (famiglia.genitori, famiglia.intestatario_scheda, pratiche persona). With
+// a filter (a service token's), a person counts only if the caller can see
+// one of their rows, so a hidden person is refused like a missing one.
+func (v *Vault) checkPersonRefs(id, value string, allow FieldFilter) error {
 	_, local := SplitPerson(id)
 	parts := strings.SplitN(strings.ToLower(local), ".", 2)
 	if len(parts) != 2 || !isPersonRefField(parts[0], parts[1]) {
@@ -30,19 +32,46 @@ func (v *Vault) checkPersonRefs(id, value string) error {
 		if ref == OwnerRef {
 			continue
 		}
-		ok, err := v.db.PersonExists(ref)
+		ok, err := v.personVisible(ref, allow)
 		if err != nil {
 			return err
 		}
-		if !ok {
-			flag := "--relazione"
-			if v.kind == KindImpresa {
-				flag = "--ruolo"
-			}
-			return &ValidationError{Field: id, Msg: "there is no person \"" + ref + "\" yet: add them first with 'pvault person add " + ref + " " + flag + " ...'"}
+		if ok {
+			continue
 		}
+		if allow != nil {
+			return &ValidationError{Field: id, Msg: "there is no person \"" + ref + "\" that you can see"}
+		}
+		flag := "--relazione"
+		if v.kind == KindImpresa {
+			flag = "--ruolo"
+		}
+		return &ValidationError{Field: id, Msg: "there is no person \"" + ref + "\" yet: add them first with 'pvault person add " + ref + " " + flag + " ...'"}
 	}
 	return nil
+}
+
+// personVisible reports whether slug has a field or document allow accepts
+// (any, if allow is nil).
+func (v *Vault) personVisible(slug string, allow FieldFilter) (bool, error) {
+	if allow == nil {
+		return v.db.PersonExists(slug)
+	}
+	fields, docs, err := v.db.PersonRowTiers(slug)
+	if err != nil {
+		return false, err
+	}
+	for _, f := range fields {
+		if allow(f.ID, f.Sensitivity) {
+			return true, nil
+		}
+	}
+	for _, d := range docs {
+		if allow(DocumentScopeID(d.Category), d.Sensitivity) {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 // isPersonRefField reports the fields whose value names people: those the
@@ -218,10 +247,15 @@ func (v *Vault) personRefsTo(slug string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Closed only if every stato says so (a pratica stored under two
+	// spellings of pratiche, from before IDs had to be lower-case).
 	closed := map[string]bool{}
-	for _, f := range ctx.Categories["pratiche"] {
-		if pslug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" && isClosedStato(f.Value) {
-			closed[pslug] = true
+	for _, fs := range ctx.Categories {
+		for _, f := range fs {
+			if pslug, campo, _ := praticaField(f.Category, f.FieldName); campo == "stato" {
+				prev, seen := closed[pslug]
+				closed[pslug] = isClosedStato(f.Value) && (prev || !seen)
+			}
 		}
 	}
 	var refs []string

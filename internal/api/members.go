@@ -97,19 +97,41 @@ func (s *Server) handleExportPerson(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, out)
 }
 
+// retentionSettings is the body of /vault/retention: years is 0 when not
+// set; scan_days is left out when not set (0 is a period: right away).
+type retentionSettings struct {
+	Years    *int `json:"years,omitempty"`
+	ScanDays *int `json:"scan_days,omitempty"`
+}
+
 // GET /vault/retention
-// The retention period in years, 0 when not set.
+// The retention period in years and the period for clients' ID scans.
 func (s *Server) handleGetRetention(w http.ResponseWriter, r *http.Request) {
-	years, err := s.vault.RetentionYears()
+	out, err := s.retentionSettings()
 	if err != nil {
 		handleVaultError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]int{"years": years})
+	writeJSON(w, http.StatusOK, out)
 }
 
-// PUT /vault/retention {"years": N}
-// Session only: sets the retention period (0 removes it).
+func (s *Server) retentionSettings() (retentionSettings, error) {
+	years, err := s.vault.RetentionYears()
+	if err != nil {
+		return retentionSettings{}, err
+	}
+	out := retentionSettings{Years: &years}
+	if days, set, err := s.vault.ScanDays(); err != nil {
+		return retentionSettings{}, err
+	} else if set {
+		out.ScanDays = &days
+	}
+	return out, nil
+}
+
+// PUT /vault/retention {"years": N} and/or {"scan_days": N}
+// Session only: sets the retention period (years 0 removes it) and the
+// period for clients' ID scans (scan_days -1 removes it).
 func (s *Server) handleSetRetention(w http.ResponseWriter, r *http.Request) {
 	if !isSessionAuth(r) {
 		sessionRequired(w)
@@ -118,16 +140,14 @@ func (s *Server) handleSetRetention(w http.ResponseWriter, r *http.Request) {
 	if !requireJSON(w, r) {
 		return
 	}
-	var req struct {
-		Years *int `json:"years"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Years == nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", `body must be {"years": N}`)
+	var req retentionSettings
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || (req.Years == nil && req.ScanDays == nil) {
+		writeError(w, http.StatusBadRequest, "invalid_request", `body must be {"years": N} or {"scan_days": N}`)
 		return
 	}
-	if err := s.vault.SetRetentionYears(*req.Years); err != nil {
+	if err := s.vault.SetRetention(req.Years, req.ScanDays); err != nil {
 		handleVaultError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]int{"years": *req.Years})
+	s.handleGetRetention(w, r)
 }

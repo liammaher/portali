@@ -56,13 +56,16 @@ func splitPraticaField(name string) (slug, campo string, ok bool) {
 	return slug, campo, true
 }
 
-// praticaField is splitPraticaField for a field in the pratiche category;
-// ok is false for any other category.
+// praticaField is splitPraticaField for a stored field in the pratiche
+// category, ignoring case, so a row from before IDs had to be lower-case
+// (pratiche.cila-roma_STATO) counts as the pratica it names; ok is false for
+// any other category. Validation calls splitPraticaField itself, which
+// refuses upper case.
 func praticaField(category, name string) (slug, campo string, ok bool) {
 	if !isPraticheCategory(category) {
 		return "", "", false
 	}
-	return splitPraticaField(name)
+	return splitPraticaField(strings.ToLower(name))
 }
 
 // praticheDescription documents the naming convention in the schema.

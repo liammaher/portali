@@ -49,9 +49,13 @@ func (v *Vault) Kind() string {
 //   - in a business vault, a category about a person stored for the business
 //     itself (identity.codice_fiscale belongs to someone: bianchi:identity...);
 //   - in a business vault, other people's SPID/CieID accounts and login
-//     secrets (CIE PIN, firma digitale PIN): a business may never hold them.
-//     Its own data may hold only its own SPID (per uso professionale): a
-//     CIE, CieID or digital signature is always a person's.
+//     secrets (CIE PIN, Fisconline PIN): a business may never hold them.
+//     Its own data may hold its own SPID (per uso professionale) and portal
+//     logins (entratel.password), but no CIE, CieID or digital signature
+//     secret, which is always a person's.
+//
+// A document category is checked as its scope ID (DocumentScopeID), so its
+// documents follow the same rules.
 func (v *Vault) checkKind(id string) error {
 	person, local := SplitPerson(id)
 	category, _, _ := strings.Cut(local, ".")
@@ -66,33 +70,15 @@ func (v *Vault) checkKind(id string) error {
 	if v.kind == KindImpresa && person != "" && (IsCredentialField(id) || IsPersonalCategory(category)) {
 		return &ValidationError{Field: id, Msg: errPartyCredential}
 	}
-	if v.kind == KindImpresa && person == "" && (IsCredentialField(id) || IsPersonalCategory(category)) && !isSPIDCategory(category) {
+	if v.kind == KindImpresa && person == "" && (IsIdentityCredential(id) || IsPersonalCategory(category)) && !isSPIDCategory(category) {
 		return &ValidationError{Field: id, Msg: errBusinessCredential}
-	}
-	return nil
-}
-
-// checkKindDocument is checkKind for a document category ([person:]category).
-func (v *Vault) checkKindDocument(category string) error {
-	person, base := SplitPerson(category)
-	field := DocumentScopeID(category)
-	if err := v.checkKindCategory(person, base, field); err != nil {
-		return err
-	}
-	if v.kind == KindImpresa && DefaultDocumentTier(category) == TierPersonal {
-		if person != "" {
-			return &ValidationError{Field: field, Msg: errPartyCredential}
-		}
-		if !isSPIDCategory(base) {
-			return &ValidationError{Field: field, Msg: errBusinessCredential}
-		}
 	}
 	return nil
 }
 
 const (
 	errPartyCredential    = "a business vault never holds other people's SPID/CieID accounts or login secrets (PIN, PUK, passwords): each person keeps their own"
-	errBusinessCredential = "a business vault holds login secrets only for the business's own SPID (spid.*): a CIE, CieID or digital signature is always a person's, and each person keeps their own"
+	errBusinessCredential = "a business vault holds identity login secrets only for the business's own SPID (spid.*): a CIE, CieID or digital signature is always a person's, and each person keeps their own"
 )
 
 // isSPIDCategory reports a SPID category (spid, spid2, spid_poste): the only

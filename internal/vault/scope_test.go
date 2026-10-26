@@ -2,7 +2,9 @@ package vault
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -224,5 +226,32 @@ func TestValidCategoryName(t *testing.T) {
 		if ValidCategoryName(c) {
 			t.Errorf("ValidCategoryName(%q) = true, want false", c)
 		}
+	}
+}
+
+// New fields and document categories must be lower-case, so one pratica or
+// ruolo can't be stored twice under two spellings; rows from before the rule
+// can still be read, re-tiered and deleted.
+func TestLowerCaseIDs(t *testing.T) {
+	v, _ := tmpVault(t)
+	for _, id := range []string{"Pratiche.cila-roma_stato", "identity.First_name", "leo:Cie.numero", "custom.X"} {
+		var verr *ValidationError
+		if err := v.Set(id, "x", ""); !errors.As(err, &verr) || !strings.Contains(err.Error(), strings.ToLower(id)) {
+			t.Errorf("Set(%q) = %v, want a ValidationError naming the lower-case ID", id, err)
+		}
+	}
+	if _, err := v.AddDocument("Cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err == nil {
+		t.Error("AddDocument stored an upper-case category")
+	}
+
+	setLegacy(t, v, "custom.Old", "kept")
+	if f, err := v.Get("custom.Old"); err != nil || f == nil || f.Value != "kept" {
+		t.Fatalf("Get(legacy) = %+v, %v", f, err)
+	}
+	if err := v.SetSensitivity("custom.Old", "sensitive"); err != nil {
+		t.Fatalf("SetSensitivity(legacy) = %v", err)
+	}
+	if err := v.Delete("custom.Old"); err != nil {
+		t.Fatalf("Delete(legacy) = %v", err)
 	}
 }

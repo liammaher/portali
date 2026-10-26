@@ -49,6 +49,9 @@ func cmdDocAdd() {
 		fatal("%v\n%s", err, docUsage)
 	}
 	checkDocCategory(category)
+	if err := vault.CheckLowerCase(category); err != nil {
+		fatal("%v", err)
+	}
 	needGrant(category+".documents", "append")
 
 	f, err := os.Open(path)

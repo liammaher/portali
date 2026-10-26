@@ -26,6 +26,9 @@ func cmdSet() {
 	if err := vault.ValidateFieldID(id); err != nil {
 		fatal("%v", err)
 	}
+	if err := vault.CheckLowerCase(id); err != nil {
+		fatal("%v", err)
+	}
 	needGrant(id, "write")
 
 	value, given, err := setValueArg(os.Args[3:])

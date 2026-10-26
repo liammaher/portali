@@ -795,17 +795,17 @@ func TestMissingFieldErrors(t *testing.T) {
 // A checked write or delete happens only if the field is still as checked.
 func TestCheckedWritesRefuseChangedFields(t *testing.T) {
 	v, _ := tmpVault(t)
-	if err := v.SetChecked("notes.a", "agent", "", nil); err != nil {
+	if err := v.SetChecked("notes.a", "agent", "", nil, nil); err != nil {
 		t.Fatalf("checked create: %v", err)
 	}
-	if err := v.SetChecked("notes.a", "again", "", nil); err != ErrFieldChanged {
+	if err := v.SetChecked("notes.a", "again", "", nil, nil); err != ErrFieldChanged {
 		t.Errorf("create over an existing field: %v", err)
 	}
 	seen, _ := v.FieldMeta("notes.a")
 	if err := v.SetSensitivity("notes.a", "critical"); err != nil {
 		t.Fatal(err)
 	}
-	if err := v.SetChecked("notes.a", "agent", "", seen); err != ErrFieldChanged {
+	if err := v.SetChecked("notes.a", "agent", "", seen, nil); err != ErrFieldChanged {
 		t.Errorf("write after a tier change: %v", err)
 	}
 	if err := v.DeleteChecked("notes.a", seen, nil); err != ErrFieldChanged {
