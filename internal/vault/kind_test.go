@@ -426,6 +426,12 @@ func TestKind_HousingInBusinessVault(t *testing.T) {
 	if _, err := v.AddDocument("bianchi:locazione", "contratto.pdf", "application/pdf", []byte("%PDF"), ""); err == nil || !strings.Contains(err.Error(), "locale.*") {
 		t.Errorf("AddDocument(bianchi:locazione) = %v, want it to point to locale.*", err)
 	}
+	// The schema says so too, for readers that don't run checkKind.
+	for _, name := range []string{"abitazione", "locazione", "utenze", "tari"} {
+		if c := GetSchemaCategory(name); c == nil || !slices.Equal(c.Kinds, []string{KindPersona}) {
+			t.Errorf("schema category %s: want kinds [persona]", name)
+		}
+	}
 }
 
 // A numbered copy of a field that names people is checked like the original.

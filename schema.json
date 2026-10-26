@@ -1,5 +1,5 @@
 {
-  "version": "13",
+  "version": "14",
   "categories": [
     {
       "name": "identity",
@@ -235,6 +235,9 @@
       "description": "The home you live in now (the unit at your residenza or domicilio; the address stays there). Catasto data is on the visura catastale and is needed for TARI, RLI registration and ISEE. Attach the visura and APE with 'pvault doc add abitazione \u003cfile\u003e'.",
       "scope": "owner",
       "subject": "persona",
+      "kinds": [
+        "persona"
+      ],
       "fields": [
         {
           "id": "abitazione.titolo",
@@ -308,6 +311,9 @@
       "description": "Your rental contract, if you rent. Registration details (estremi di registrazione) are on the RLI receipt and are asked for by utility transfers and tax deductions. Attach the contract and receipt with 'pvault doc add locazione \u003cfile\u003e'.",
       "scope": "owner",
       "subject": "persona",
+      "kinds": [
+        "persona"
+      ],
       "fields": [
         {
           "id": "locazione.tipo_contratto",
@@ -421,6 +427,9 @@
       "description": "Utility supplies at your home. The POD and PDR identify the meters and are needed for a voltura or subentro.",
       "scope": "owner",
       "subject": "persona",
+      "kinds": [
+        "persona"
+      ],
       "fields": [
         {
           "id": "utenze.luce_pod",
@@ -494,6 +503,9 @@
       "description": "Your TARI (waste tax) position with the Comune. Attach the filed declaration with 'pvault doc add tari \u003cfile\u003e'.",
       "scope": "owner",
       "subject": "persona",
+      "kinds": [
+        "persona"
+      ],
       "fields": [
         {
           "id": "tari.codice_contribuente",
@@ -524,7 +536,7 @@
     },
     {
       "name": "pratiche",
-      "description": "Procedures in progress with an ente, one set of fields per pratica as \u003cslug\u003e_\u003ccampo\u003e. The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. Campi: titolo, ente, stato, canale, destinatario, protocollo, data_invio, data_scadenza, data_esito, importo, data_pagamento, prossimo_passo, playbook, note, persona. stato is one of da_fare, in_preparazione, pronta, inviata, in_attesa, completata, respinta, annullata; canale is one of portale, pec, email, sportello, posta, app. data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. playbook names the procedure's playbook file. persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche \u003cfile\u003e'.",
+      "description": "Procedures in progress with an ente, one set of fields per pratica as \u003cslug\u003e_\u003ccampo\u003e. The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. Campi: titolo, ente, stato, canale, destinatario, protocollo, data_invio, data_scadenza, data_esito, importo, data_pagamento, prossimo_passo, playbook, note, persona. stato is one of da_fare, in_preparazione, pronta, inviata, in_attesa, completata, respinta, annullata; canale is one of portale, pec, email, sportello, posta, app (a pratiche-napoli channel type is accepted as it is: desk is sportello, portal is portale, post is posta). data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. playbook names the procedure's playbook file. persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche \u003cfile\u003e'.",
       "scope": "owner",
       "one_only": true,
       "fields": []

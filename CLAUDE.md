@@ -156,13 +156,15 @@ the page never copies a rule.
   `personal`; SPID/CieID categories and their documents default to it.
 - **Formats**: Italian codes, dates (`YYYY-MM-DD`), euro amounts and areas are validated
   and normalized (`italy.go`, `dates.go`, `housing.go`, `business.go`). Housing categories
-  (`abitazione`, `locazione`, `utenze`, `tari`) describe the home at residenza/domicilio.
+  (`abitazione`, `locazione`, `utenze`, `tari`) describe the home at residenza/domicilio;
+  the schema exports them as `kinds: [persona]` (set from `IsHousingCategory`).
   New fields the pratiche-napoli library needs are added here, then dropped from its
   `contract/extensions.json`. `schema.json` is `pvault schema --json`, credential words
   included (`Credentials`, the expressions `IsCredentialField` compiles); the library's CI
   compares its copy with the one on main.
 - **Pratiche** (`pratiche.go`): `pratiche.<slug>_<campo>`, campo/stato/canale from fixed
-  lists, never credentials. A deadline shows in `Expiring` until the stato closes. The
+  lists (canale also takes the library's channel types, `praticaCanaleAliases`), never
+  credentials. A deadline shows in `Expiring` until the stato closes. The
   store dates each closing (`closed_at`, kept across corrections between closed stati).
   `praticheIn` is the one reading of "is this pratica closed, and for whom".
 - **Documents** (`documents.go`): AAD bound to the document ID, encrypted filename,

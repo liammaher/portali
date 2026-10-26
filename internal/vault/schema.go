@@ -101,7 +101,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "13",
+	Version: "14",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -515,6 +515,11 @@ func init() {
 		categoryIndex[c.Name] = c
 		if c.Scope = ScopePerson; IsOwnerOnlyCategory(c.Name) {
 			c.Scope = ScopeOwner
+		}
+		// checkKind keeps the home to personal vaults; saying so here lets
+		// readers of the schema (pratiche-napoli) know it too.
+		if IsHousingCategory(c.Name) {
+			c.Kinds = []string{KindPersona}
 		}
 		c.OneOnly = slices.Contains(oneOnly, c.Name)
 		for j := range RecommendedSchema.Categories[i].Fields {
