@@ -311,5 +311,7 @@ owner fields. It can stay; migrating it to a party is optional.
 - **D8. Retention periods.** The 10-year figure for architects and the timing for deleting
   ID copies need checking against sources before any code reports on them. Phase 2 built only
   the mechanism: the period is a setting with no default (`pvault retention set <years>`),
-  one period for everyone with `ruolo.data_fine`, and ID and procura scans are flagged as soon
-  as every pratica naming the person is closed, with no waiting period.
+  one period for everyone with `ruolo.data_fine`, and a client's ID and procura scans are
+  flagged as soon as every pratica naming them is closed, with no waiting period. Only
+  clients: the business's own pratiche (persona `io`) use its titolare's and soci's ID copies
+  without naming them.
