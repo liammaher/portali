@@ -97,11 +97,16 @@ func IsOwnerOnlyCategory(category string) bool {
 	return IsHousingCategory(strings.ToLower(category)) || isPraticheCategory(category)
 }
 
-// checkPersonCategory refuses an owner-only category with a person prefix.
-// field names the ID (or document scope ID) in the error.
+// checkPersonCategory refuses an owner-only category with a person prefix,
+// and a person-only one (procura) without. field names the ID (or document
+// scope ID) in the error.
 func checkPersonCategory(category, field string) error {
-	if person, base := SplitPerson(category); person != "" && IsOwnerOnlyCategory(base) {
+	person, base := SplitPerson(category)
+	switch {
+	case person != "" && IsOwnerOnlyCategory(base):
 		return &ValidationError{Field: field, Msg: base + " is about the household or your own procedures: store it without a person prefix"}
+	case person == "" && isPersonOnlyCategory(base):
+		return &ValidationError{Field: field, Msg: errPersonOnlyCategory(base)}
 	}
 	return nil
 }

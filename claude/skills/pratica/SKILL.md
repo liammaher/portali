@@ -180,11 +180,18 @@ its deadline with them. The
 user still signs and submits; for a minor check `<slug>:famiglia.genitori` (both
 parents usually have to consent, e.g. CIE valid for travel, SPID minori, INPS delega),
 and for an adult `<slug>:famiglia.rappresentanza` (tutore, amministratore di sostegno,
-delega) before acting in their name.
+delega) before acting in their name. In a business vault, a filing made on a client's
+behalf (SUE, SUAP, Agenzia delle Entrate, INPS) needs their procura: check
+`<slug>:procura.*` (ente, oggetto, data_scadenza) and the signed copy in `<slug>:procura`
+documents, and if it is missing or expired, tell the user before preparing anything. Never
+use or ask for the client's own SPID/CIE.
 
 Keep `stato` and `prossimo_passo` current: they are what the next session reads first.
 `data_scadenza` shows in `pvault expiring` until `stato` is `completata`,
 `respinta` or `annullata`.
+Once every pratica naming a client is closed, `pvault expiring` (business vaults) lists
+their ID and procura scans as due for deletion. Mention it when you close the last one; the
+user decides.
 
 ## 4. Prepare
 

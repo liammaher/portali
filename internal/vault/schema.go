@@ -58,7 +58,7 @@ type Schema struct {
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
-	Version: "11",
+	Version: "12",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -244,6 +244,11 @@ var RecommendedSchema = Schema{
 				{ID: "ruolo.quota_percentuale", Description: "A socio's share of the capital, above 0 and up to 100 (e.g. 50 or 33.33)", Sensitivity: "standard", For: ForPerson},
 				{ID: "ruolo.poteri", Description: "Powers of an amministratore or procuratore, as on the visura camerale", Sensitivity: "standard", For: ForPerson},
 			},
+		},
+		{
+			Name:        "procura",
+			Description: procuraDescription(),
+			Fields:      procuraFields(),
 		},
 		{
 			Name:        "business",

@@ -1480,6 +1480,7 @@ body::before{
     <h2 data-owner-only>Persone</h2>
     <h2 data-member-only>Ruolo</h2>
     <p class="subtitle" data-owner-only>The business's titolare, soci, employees and clients. Each one gets their own fields: pick them under Persona at the top of the page to fill them in.</p>
+    <p class="subtitle" data-owner-only>Clients' data is the business's responsibility under the GDPR. If an AI agent reads it, its provider processes that data for you (art. 28): use a business plan with a data processing agreement (DPA) and no training on your data, not a consumer plan.</p>
     <p class="subtitle" data-member-only>What this person is to the business</p>
 
     <div data-owner-only>
@@ -1572,6 +1573,37 @@ body::before{
     </div>
   </section>
 
+  <!-- Procura: a delega another person gave you, on that person only -->
+  <section class="section" data-section="procura" data-chapter="Procura" data-member-only>
+    <div class="section-number">--</div>
+    <h2>Procura</h2>
+    <p class="subtitle">A delega or procura this person gave you, e.g. for a SUE or SUAP filing, the Agenzia delle Entrate or INPS. Store the signed copy with <code>pvault doc add &lt;slug&gt;:procura &lt;file&gt;</code>; a second one goes in <code>procura2</code>. The expiry shows in <code>pvault expiring</code>.</p>
+    <div class="field-row">
+      <div class="field">
+        <label>Ente</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="procura.ente" placeholder="SUE Comune di Napoli">
+      </div>
+      <div class="field">
+        <label>Oggetto</label>
+        <span class="status idle"></span>
+        <input type="text" data-field="procura.oggetto" placeholder="presentazione CILA">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Conferita il</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="procura.data_conferimento">
+      </div>
+      <div class="field">
+        <label>Scade il</label>
+        <span class="status idle"></span>
+        <input type="date" data-field="procura.data_scadenza">
+      </div>
+    </div>
+  </section>
+
   <div class="footer">
     <span class="count" id="filledCount">0</span> of <span id="totalCount">0</span> fields filled
   </div>
@@ -1625,7 +1657,7 @@ body::before{
 
   // Categories to load
   const categories = ['identity', 'residenza', 'domicilio', 'abitazione', 'locazione', 'utenze', 'tari', 'financial', 'employment', 'business', 'locale', 'cie', 'spid',
-    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'albo', 'cassa', 'firma_digitale', 'payment', 'preferences', 'famiglia', 'ruolo'];
+    'permesso_soggiorno', 'passaporto', 'tessera_sanitaria', 'patente', 'albo', 'cassa', 'firma_digitale', 'payment', 'preferences', 'famiglia', 'ruolo', 'procura'];
 
   // What the vault is (persona or impresa) and what each category is about
   // come from the public schema: which categories the vault's own data and
@@ -1651,6 +1683,8 @@ body::before{
     if (!c) return true;
     if (c.kinds && c.kinds.indexOf(kind) < 0) return false;
     if (person && c.scope === 'owner') return false;
+    // A procura is always another person's (isPersonOnlyCategory).
+    if (!person && /^procura[0-9]*$/.test(cat)) return false;
     if (!person && kind === 'impresa' && c.subject === 'persona') return false;
     // A business vault never holds other people's SPID/CieID accounts.
     if (person && kind === 'impresa' && /^(spid|cieid)[0-9]*([_-]|$)/.test(cat)) return false;
@@ -1834,7 +1868,7 @@ body::before{
     sections.forEach(function(section) { section.hidden = false; });
     let n = 0;
     sections.forEach(function(section, i) {
-      let hide = section.hasAttribute('data-owner-only') && member;
+      let hide = (section.hasAttribute('data-owner-only') && member) || (section.hasAttribute('data-member-only') && !member);
       const k = section.getAttribute('data-kind');
       const rel = section.getAttribute('data-relation');
       if (k && k !== kind) hide = true;

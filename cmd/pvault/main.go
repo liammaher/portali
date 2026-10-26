@@ -59,6 +59,8 @@ func main() {
 		cmdPerson()
 	case "expiring":
 		cmdExpiring()
+	case "retention":
+		cmdRetention()
 	case "onboard":
 		cmdOnboard()
 	case "ui":
@@ -105,7 +107,9 @@ Commands:
   restore <file> [--check] [--ask-key]
                                    Recreate the vault from a backup (needs password + secret key);
                                    --check only verifies it, --ask-key types the key to test your copy
-  expiring [days]                  Show documents and pratiche deadlines expired or due within days (default 90)
+  expiring [days]                  Show documents and pratiche deadlines expired or due within days (default 90);
+                                   in a business vault also people past retention and ID scans whose pratiche are closed
+  retention [set <years> | unset]  How long people's data is kept after their ruolo.data_fine (no default)
   doc add <category> <file> [--sensitivity tier]
                                    Encrypt and store a document scan (max 20 MB)
   doc list [category]              List stored documents
@@ -119,6 +123,9 @@ Commands:
   person add <slug> --ruolo <r> [--nome --cognome --denominazione ...]
                                    In a business vault: add its titolare, a socio, an employee, a client...
   person remove <slug>             Delete a person's fields and documents
+  person export <slug> [--to <folder>] [--include-personal]
+                                   Write a person's fields and documents to a new, unencrypted folder
+                                   <slug>-export-<date> (data portability, GDPR art. 20)
   person migrate [--dry-run]       Turn old nucleo_familiare.membro<N> fields into people
                                    (pvault member ... is an alias for pvault person ...)
   ui                               Open vault onboarding form in browser

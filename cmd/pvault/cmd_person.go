@@ -25,6 +25,7 @@ const personUsage = `usage:
   pvault --vault <name> person add <slug> --ruolo <ruolo> [--nome N] [--cognome C] [--denominazione D] ...
       in a business vault, e.g. pvault --vault studio person add rossi --ruolo cliente --nome Mario
   pvault person remove <slug>
+  pvault person export <slug> [--to <folder>] [--include-personal]
   pvault person migrate [--dry-run]
 Another person's fields are <slug>:<category>.<field>, e.g. pvault set leo:cie.numero CA12345AB.
 (pvault member is an alias for pvault person.)`
@@ -43,6 +44,8 @@ func cmdPerson() {
 		cmdPersonAdd()
 	case "remove":
 		cmdPersonRemove(positionalArgs(os.Args[3:], personUsage, 1, 1)[0])
+	case "export":
+		cmdPersonExport()
 	case "migrate":
 		cmdPersonMigrate()
 	default:

@@ -42,7 +42,8 @@ pvault audit                             # Show access audit log
 pvault status                            # Show vault status
 pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
 pvault doc add|list|get|delete           # Encrypted document scans
-pvault person list|show|add|remove|migrate  # Other people, e.g. family (leo:cie.numero); alias: member
+pvault person list|show|add|remove|export|migrate  # Other people, e.g. family (leo:cie.numero); alias: member
+pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
@@ -315,6 +316,25 @@ Profile Password + Secret Key (128-bit)
   mirroring `checkKind` in JS (`allowed`/`inputAllowed`); no test runs that JS, so change both
   together (`TestOnboardingRuoliComplete`/`TestOnboardingKindMarkers` check only the option
   lists and markers).
+- Clients (phase 2: `procura.go`, `retention.go`, `export.go`): `procura` is a person-only
+  category in every kind (`isPersonOnlyCategory`, numbered copies too; `checkPersonCategory`
+  refuses it unprefixed, for fields and documents): `<slug>:procura.{ente,oggetto,
+  data_conferimento,data_scadenza}` (standard tier, `For: ForPerson`) and the signed copy in
+  `<slug>:procura` (sensitive). Its `data_scadenza` shows in `Expiring` like any other.
+  Retention is meta `retention_years`, no default (D8 unverified, so none is hard-coded),
+  set only by the session (`PUT /vault/retention`; `GET` for any caller). `Expiring` then
+  adds `kind: retention` entries (`ruolo.data_fine` + years, within the window) and, in
+  impresa vaults only, `kind: pratiche_closed` entries (today) for a person's ID/procura
+  document categories (`idScanCategories`) once at least one pratica names them in
+  `persona` and all of those are closed; both come only from what the caller's filter
+  reads. `pvault expiring` prints a hint in an impresa vault with no period set.
+  `GET /vault/members/{slug}/export[?include_personal=1]` is session-only (not even an
+  approved `<slug>:*` grant), returns fields and documents with content, and logs one
+  `member_export` audit entry; personal-tier items are left out (counted in `omitted`)
+  unless asked. `pvault person export` writes a new `<slug>-export-<date>/` (0700, never an
+  existing one, removed on failure) with `fields.json` and `documents/<category>/<name>`
+  (0600, names made unique). The onboarding page's Procura section is `data-member-only`
+  and `allowed` mirrors the person-only rule. The skills carry the art. 28 (cloud AI) note.
 
 ## Conventions
 
