@@ -188,3 +188,25 @@ func TestUIFields(t *testing.T) {
 		}
 	}
 }
+
+// The page holds a grant and shows decrypted values: it loads nothing from
+// elsewhere, sends no Referer, and runs only the script the server shipped.
+func TestOnboardingPageIsLockedDown(t *testing.T) {
+	env := setup(t)
+	w := env.doRequest(t, "GET", "/ui", nil, false)
+	csp := w.Header().Get("Content-Security-Policy")
+	for _, want := range []string{"default-src 'none'", "script-src 'sha256-", "style-src 'sha256-", "connect-src 'self'", "frame-ancestors 'none'"} {
+		if !strings.Contains(csp, want) {
+			t.Errorf("CSP %q lacks %q", csp, want)
+		}
+	}
+	if scriptSrc := regexp.MustCompile(`script-src [^;]*`).FindString(csp); strings.Contains(scriptSrc, "unsafe") {
+		t.Errorf("script-src allows inline script: %q", scriptSrc)
+	}
+	if got := w.Header().Get("Referrer-Policy"); got != "no-referrer" {
+		t.Errorf("Referrer-Policy = %q", got)
+	}
+	if ext := regexp.MustCompile(`(?:src|href)="https?://`).FindString(w.Body.String()); ext != "" {
+		t.Errorf("the page loads %s...: it must be self-contained", ext)
+	}
+}

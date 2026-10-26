@@ -90,7 +90,8 @@ Profile Password + Secret Key (128-bit)
   the listener is this same pvault build (peer uid, exe path, cdhash; `peer_darwin.go`,
   Linux `SO_PEERCRED`) and that `VAULT_ADDR` is the address that server reports. It runs
   before every password or Touch ID prompt. The onboarding page is the one exception (a
-  browser can't use a socket).
+  browser can't use a socket). The page is self-contained under a hash-pinned CSP
+  (`pageCSP`), and never shows a secret again: password inputs read "saved".
 - Limits: this catches stale or impostor servers, not a process that can already write to
   the vault dir or replace the pvault binary.
 
@@ -180,8 +181,10 @@ the page never copies a rule.
   while another field names the person (a closed pratica doesn't count), and deletes their
   rows, the person and the tokens naming them in one transaction; then drops grants and
   files (`files_left` if one stays).
-- Service tokens never learn of people they can't see a row of; public status counts only
-  the owner's data.
+- Service tokens never learn of people they can't see a row of (the household view drops
+  such slugs; a field in scope reads as written) and never create one (`checkPersonExists`);
+  public status counts only the owner's data.
+- A closed pratica may keep naming a removed person; reopening it checks `persona` again.
 - Old JSON and audit names stay for compatibility: `/vault/members`, `member`, `members`,
   `"for": "member"`, `member_remove`, MCP `vault_household`.
 

@@ -116,14 +116,20 @@ func (v *Vault) Household(allow FieldFilter, everyone bool, now time.Time) (*Hou
 	for _, fs := range ctx.Categories {
 		for _, f := range fs {
 			slug, local := SplitPerson(f.ID)
+			value := f.Value
+			if !everyone && isPersonRefID(local) {
+				if value, err = v.visibleRefs(value, allow); err != nil {
+					return nil, err
+				}
+			}
 			if slug == "" {
-				h.IntestatarioScheda = f.Value
+				h.IntestatarioScheda = value
 				continue
 			}
 			if values[slug] == nil {
 				values[slug] = map[string]string{}
 			}
-			values[slug][local] = f.Value
+			values[slug][local] = value
 		}
 	}
 

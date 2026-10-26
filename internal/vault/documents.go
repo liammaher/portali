@@ -63,6 +63,12 @@ func DefaultDocumentTier(category string) string {
 // original filename are encrypted with the category's documents subkey and
 // bound to the document ID, so ciphertexts cannot be swapped between records.
 func (v *Vault) AddDocument(category, name, contentType string, data []byte, sensitivity string) (*DocumentInfo, error) {
+	return v.AddDocumentIf(nil, category, name, contentType, data, sensitivity)
+}
+
+// AddDocumentIf is AddDocument for a caller with a filter (a service token's):
+// the document must belong to a person already in the vault, as for SetChecked.
+func (v *Vault) AddDocumentIf(allow FieldFilter, category, name, contentType string, data []byte, sensitivity string) (*DocumentInfo, error) {
 	if !ValidCategoryName(category) {
 		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed, with an optional person: prefix"}
 	}
@@ -91,6 +97,9 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	}
 	v.writeMu.RLock()
 	defer v.writeMu.RUnlock()
+	if err := v.checkPersonExists(DocumentScopeID(category), allow); err != nil {
+		return nil, err
+	}
 	// SPID/CieID documents (e.g. recovery codes) are always personal.
 	personalOnly := DefaultDocumentTier(category) == TierPersonal
 	switch {
