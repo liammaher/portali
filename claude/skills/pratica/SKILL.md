@@ -176,6 +176,9 @@ Slug: lower-case words joined by hyphens, `<topic>-<procedure>-<year>`, e.g.
 `tari-iscrizione-2026`. Fields are `pratiche.<slug>_<campo>`; the vault validates them
 (`/vault/schema` lists the campi, stati and canali). Set at least `titolo`, `ente`,
 `stato`, `canale`, `destinatario`, `data_scadenza`, `playbook` and `prossimo_passo`.
+`canale` is the vault's word for the library channel's `type`: `portal` → `portale`,
+`desk` → `sportello`, `post` → `posta`; `pec`, `email` and `app` stay as they are. A
+`phone` channel is for questions, not a way to file, so it is never a `canale`.
 
 When the pratica is for a family member (a child's CIE, a parent's ISEE), or in a
 business vault for a client, set `persona` to their slug: `pvault expiring` then labels
