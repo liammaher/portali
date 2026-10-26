@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -82,6 +83,18 @@ func TestSchemaIntegrity(t *testing.T) {
 			if !validTiers[f.Sensitivity] {
 				t.Errorf("field %s has invalid sensitivity %q", f.ID, f.Sensitivity)
 			}
+		}
+	}
+}
+
+// one_only tells tools that read schema.json (pratiche-napoli's validator)
+// which categories have no numbered copies, the ones NormalizeAndValidate refuses.
+func TestSchemaOneOnlyIsTheVaultsOwn(t *testing.T) {
+	for _, c := range RecommendedSchema.Categories {
+		_, err := NormalizeAndValidate("x:"+c.Name+"2.y", "z")
+		refused := err != nil && strings.Contains(err.Error(), "no numbered copies")
+		if c.OneOnly != refused {
+			t.Errorf("%s: one_only %v, but a numbered copy refused %v (%v)", c.Name, c.OneOnly, refused, err)
 		}
 	}
 }

@@ -27,6 +27,13 @@ func TestNormalizeAndValidate_Business(t *testing.T) {
 		{"locale.superficie_mq", "45,5 mq", "45.5"},
 		{"locale.superficie_mq", "2.500 m²", "2500"},
 		{"identity.birth_country", " Regno Unito ", "Regno Unito"},
+		{"residenza.stato", " Regno Unito ", "Regno Unito"},
+		{"business.sede_legale_stato", "Francia", "Francia"},
+		{"locale.tari_superficie_tassata_mq", "45,5", "45.5"},
+		{"locale.tari_data_dichiarazione", "01/03/2026", "2026-03-01"},
+		// A second premises follows locale's rules.
+		{"locale2.tari_superficie_tassata_mq", "1.200", "1200"},
+		{"locale2.cap", "80125", "80125"},
 		// Generic rules still apply in business.
 		{"business.partita_iva", "IT 00743110157", "00743110157"},
 		{"business.data_apertura", "02/01/2025", "2025-01-02"},
@@ -63,6 +70,11 @@ func TestNormalizeAndValidate_BusinessRejects(t *testing.T) {
 		{"locale.superficie_mq", "0"},
 		{"identity.birth_country", "Italia"},
 		{"identity.birth_country", " italy "},
+		// Empty is Italia: the country fields are for an address abroad.
+		{"residenza.stato", "Italia"},
+		{"business.sede_legale_stato", " ITALY "},
+		{"locale.tari_superficie_tassata_mq", "tanti"},
+		{"locale2.tari_data_dichiarazione", "31/02/2026"},
 	}
 	for _, tt := range tests {
 		_, err := NormalizeAndValidate(tt.id, tt.in)

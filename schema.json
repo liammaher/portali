@@ -1,5 +1,5 @@
 {
-  "version": "12",
+  "version": "13",
   "categories": [
     {
       "name": "identity",
@@ -178,6 +178,11 @@
         {
           "id": "residenza.provincia",
           "description": "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "residenza.stato",
+          "description": "Country of residence, only if outside Italy (e.g. Regno Unito); empty means Italia, which forms asking for the 'stato' take",
           "sensitivity": "standard"
         },
         {
@@ -521,6 +526,7 @@
       "name": "pratiche",
       "description": "Procedures in progress with an ente, one set of fields per pratica as \u003cslug\u003e_\u003ccampo\u003e. The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. Campi: titolo, ente, stato, canale, destinatario, protocollo, data_invio, data_scadenza, data_esito, importo, data_pagamento, prossimo_passo, playbook, note, persona. stato is one of da_fare, in_preparazione, pronta, inviata, in_attesa, completata, respinta, annullata; canale is one of portale, pec, email, sportello, posta, app. data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. playbook names the procedure's playbook file. persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche \u003cfile\u003e'.",
       "scope": "owner",
+      "one_only": true,
       "fields": []
     },
     {
@@ -531,6 +537,7 @@
       "kinds": [
         "persona"
       ],
+      "one_only": true,
       "fields": [
         {
           "id": "famiglia.intestatario_scheda",
@@ -579,6 +586,7 @@
       "kinds": [
         "impresa"
       ],
+      "one_only": true,
       "fields": [
         {
           "id": "ruolo.tipo",
@@ -806,12 +814,22 @@
           "id": "business.sede_legale_provincia",
           "description": "Registered office: provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)",
           "sensitivity": "standard"
+        },
+        {
+          "id": "business.sede_legale_stato",
+          "description": "Registered office: country, only if outside Italy; empty means Italia",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "business.tari_codice_contribuente",
+          "description": "Codice contribuente the Comune assigned the business for TARI on its premises (utenza non domestica; not tari.codice_contribuente, the home's)",
+          "sensitivity": "standard"
         }
       ]
     },
     {
       "name": "locale",
-      "description": "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, but with its own address. Catasto data is on the visura catastale. Attach the visura and the lease with 'pvault doc add locale \u003cfile\u003e'.",
+      "description": "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, but with its own address. A second unit is locale2. Catasto data is on the visura catastale; the tari_ fields are the TARI position of these premises. Attach the visura and the lease with 'pvault doc add locale \u003cfile\u003e'.",
       "scope": "person",
       "subject": "impresa",
       "fields": [
@@ -888,6 +906,31 @@
         {
           "id": "locale.destinazione_uso",
           "description": "Lawful use of the premises (e.g. negozio, ufficio, laboratorio, magazzino)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.telefono",
+          "description": "Phone of the premises, with country code (the shop's or the lab's, not business.telefono)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.tari_data_dichiarazione",
+          "description": "Date the TARI declaration for these premises was filed (YYYY-MM-DD)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.tari_protocollo",
+          "description": "Protocol number the Comune gave that TARI declaration",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.tari_superficie_tassata_mq",
+          "description": "Area of these premises the Comune taxes for TARI, in m², from the payment notice",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "locale.tari_categoria",
+          "description": "TARI tariff category the Comune applies to these premises, as on the payment notice (e.g. 22 ristoranti, trattorie, pizzerie)",
           "sensitivity": "standard"
         }
       ]

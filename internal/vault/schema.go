@@ -2,6 +2,7 @@ package vault
 
 import (
 	"encoding/json"
+	"slices"
 	"strings"
 )
 
@@ -43,8 +44,12 @@ type SchemaCategory struct {
 	// vault's own data can't be about a person.
 	Subject string `json:"subject,omitempty"`
 	// Kinds lists the vault kinds that can have the category; empty is all.
-	Kinds  []string      `json:"kinds,omitempty"`
-	Fields []SchemaField `json:"fields"`
+	Kinds []string `json:"kinds,omitempty"`
+	// OneOnly marks a category a holder has one of (oneOnly): no numbered
+	// copies such as famiglia2. Any other category can have them (locale2 is
+	// a second premises) and they follow its rules.
+	OneOnly bool          `json:"one_only,omitempty"`
+	Fields  []SchemaField `json:"fields"`
 }
 
 // What a category describes (SchemaCategory.Subject).
@@ -96,7 +101,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "12",
+	Version: "13",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -153,6 +158,7 @@ var RecommendedSchema = Schema{
 				{ID: "residenza.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "residenza.comune", Description: "Comune of residence", Sensitivity: "standard"},
 				{ID: "residenza.provincia", Description: "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
+				{ID: "residenza.stato", Description: "Country of residence, only if outside Italy (e.g. Regno Unito); empty means Italia, which forms asking for the 'stato' take", Sensitivity: "standard"},
 				{ID: "residenza.data_inizio", Description: "Date residence began (YYYY-MM-DD)", Sensitivity: "standard"},
 			},
 		},
@@ -324,13 +330,16 @@ var RecommendedSchema = Schema{
 				{ID: "business.sede_legale_cap", Description: "Registered office: CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "business.sede_legale_comune", Description: "Registered office: comune", Sensitivity: "standard"},
 				{ID: "business.sede_legale_provincia", Description: "Registered office: provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
+				{ID: "business.sede_legale_stato", Description: "Registered office: country, only if outside Italy; empty means Italia", Sensitivity: "standard"},
+				{ID: "business.tari_codice_contribuente", Description: "Codice contribuente the Comune assigned the business for TARI on its premises (utenza non domestica; not tari.codice_contribuente, the home's)", Sensitivity: "standard"},
 			},
 		},
 		{
 			Name:    "locale",
 			Subject: SubjectImpresa,
 			Description: "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, " +
-				"but with its own address. Catasto data is on the visura catastale. Attach the visura and the lease with 'pvault doc add locale <file>'.",
+				"but with its own address. A second unit is locale2. Catasto data is on the visura catastale; the tari_ fields are the TARI " +
+				"position of these premises. Attach the visura and the lease with 'pvault doc add locale <file>'.",
 			Fields: []SchemaField{
 				{ID: "locale.indirizzo", Description: "Street (via/piazza) of the premises, without number", Sensitivity: "standard"},
 				{ID: "locale.civico", Description: "Street number of the premises", Sensitivity: "standard"},
@@ -347,6 +356,11 @@ var RecommendedSchema = Schema{
 				{ID: "locale.catasto_categoria", Description: "Categoria catastale, e.g. C/1 for a shop (validated; c1 becomes C/1)", Sensitivity: "standard"},
 				{ID: "locale.superficie_mq", Description: "Surface used for the activity, in m²", Sensitivity: "standard"},
 				{ID: "locale.destinazione_uso", Description: "Lawful use of the premises (e.g. negozio, ufficio, laboratorio, magazzino)", Sensitivity: "standard"},
+				{ID: "locale.telefono", Description: "Phone of the premises, with country code (the shop's or the lab's, not business.telefono)", Sensitivity: "standard"},
+				{ID: "locale.tari_data_dichiarazione", Description: "Date the TARI declaration for these premises was filed (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "locale.tari_protocollo", Description: "Protocol number the Comune gave that TARI declaration", Sensitivity: "standard"},
+				{ID: "locale.tari_superficie_tassata_mq", Description: "Area of these premises the Comune taxes for TARI, in m², from the payment notice", Sensitivity: "standard"},
+				{ID: "locale.tari_categoria", Description: "TARI tariff category the Comune applies to these premises, as on the payment notice (e.g. 22 ristoranti, trattorie, pizzerie)", Sensitivity: "standard"},
 			},
 		},
 		{
@@ -502,6 +516,7 @@ func init() {
 		if c.Scope = ScopePerson; IsOwnerOnlyCategory(c.Name) {
 			c.Scope = ScopeOwner
 		}
+		c.OneOnly = slices.Contains(oneOnly, c.Name)
 		for j := range RecommendedSchema.Categories[i].Fields {
 			f := &RecommendedSchema.Categories[i].Fields[j]
 			schemaIndex[f.ID] = f

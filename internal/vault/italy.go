@@ -176,6 +176,7 @@ var (
 
 // oneOnly are the categories a holder has one of, so no numbered copies:
 // the rules that read them (Household, retention, Expiring) read these names.
+// The schema says so as one_only.
 var oneOnly = []string{"famiglia", "pratiche", "ruolo"}
 
 // NormalizeAndValidate applies Italian format rules to a field value based on
@@ -274,9 +275,15 @@ func NormalizeAndValidate(id, value string) (string, error) {
 		return v, nil
 	case category == "identity" && name == "birth_country":
 		v := strings.TrimSpace(value)
-		switch strings.ToLower(v) {
-		case "italia", "italy", "it", "ita", "repubblica italiana":
+		if isItaly(v) {
 			return "", &ValidationError{Field: id, Msg: "birth_country is only for births abroad; for Italy set identity.birth_comune and birth_province"}
+		}
+		return v, nil
+	case addressPart(category, name, "stato"):
+		// Empty means Italia, so a form's "stato" box needs nothing stored.
+		v := strings.TrimSpace(value)
+		if isItaly(v) {
+			return "", &ValidationError{Field: id, Msg: "the stato is only for an address abroad; leave it empty for Italia"}
 		}
 		return v, nil
 	case IsDateField(name):
@@ -287,6 +294,16 @@ func NormalizeAndValidate(id, value string) (string, error) {
 		return d, nil
 	}
 	return value, nil
+}
+
+// isItaly reports a country written as Italy, which the country fields
+// that are only for abroad refuse.
+func isItaly(country string) bool {
+	switch strings.ToLower(strings.TrimSpace(country)) {
+	case "italia", "italy", "it", "ita", "repubblica italiana":
+		return true
+	}
+	return false
 }
 
 // hasFieldSuffix matches "suffix" exactly or as a trailing "_suffix",

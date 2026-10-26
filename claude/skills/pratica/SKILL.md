@@ -126,6 +126,11 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
   only the acconciatori): ask the user when the vault can't tell.
 - `ask: <question>`: not in the vault; ask the user. `blank_with_reason`: leave empty.
 
+A numbered category (`locale2.indirizzo`) is the vault's copy of that category, here a second
+premises; the vault may spell it `locale2`, `locale-2` or `locale_2`, so look for each. Its rows
+are filled only when the vault has it. A row's `notes` can say what an empty field means
+(`residenza.stato` empty is Italia): follow them rather than asking.
+
 An entry with a top-level `dichiarante: { ruolo: [titolare, legale_rappresentante] }`
 names who signs. In it, unprefixed fields of a person's own categories (`/vault/schema`
 categories with `subject` persona and `scope` person: `identity`, `residenza`, `cie`,
@@ -265,7 +270,9 @@ prompt each) instead of asking for a write token.
   `~/Downloads` only) after asking.
 - The ente answers: save the result in the subject category too. With a library
   entry, its `records` say which field each result goes in and which document it is
-  read from (e.g. `tari.codice_contribuente` from the Comune's reply); without one,
+  read from (e.g. `tari.codice_contribuente` from the Comune's reply; for a business's premises,
+  `business.tari_codice_contribuente` and `locale.tari_*`, or `locale2.tari_*` when the pratica
+  is about the second one); without one,
   pick the fields from `/vault/schema`. Set `data_esito` and `stato` `completata` or
   `respinta`.
 - Paid: `importo`, `data_pagamento`.

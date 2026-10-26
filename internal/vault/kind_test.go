@@ -395,6 +395,10 @@ func TestNumberedCopiesFollowTheirCategory(t *testing.T) {
 		{impresa, "bianchi:ruolo-2.data_fine", "2020-01-01", true},
 		{persona, "leo:famiglia2.relazione", "figlio", true},
 		{impresa, "business2.qualita_dichiarante", "titolare", true},
+		// A second premises, and its TARI position.
+		{impresa, "locale2.telefono", "+39 081 123 4567", false},
+		{impresa, "locale2.tari_superficie_tassata_mq", "abc", true},
+		{impresa, "business.tari_codice_contribuente", "1234567", false},
 	}
 	for _, tt := range tests {
 		err := tt.v.Set(tt.id, tt.val, "")
