@@ -66,10 +66,13 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if !ValidCategoryName(category) {
 		return nil, &ValidationError{Field: "category", Msg: "only letters, digits, underscore and hyphen allowed, with an optional person: prefix"}
 	}
+	if err := CheckLowerCase(category); err != nil {
+		return nil, err
+	}
 	if err := checkPersonCategory(category, DocumentScopeID(category)); err != nil {
 		return nil, err
 	}
-	if err := v.checkKindDocument(category); err != nil {
+	if err := v.checkKind(DocumentScopeID(category)); err != nil {
 		return nil, err
 	}
 	name, err := cleanDocumentName(name)

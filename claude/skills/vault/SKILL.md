@@ -21,7 +21,7 @@ Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md fo
   person logs in with their own credentials.
 - Never create service tokens yourself; the user runs `pvault create-service-token`.
 - Never put tokens in URLs or command lines you show the user.
-- Fields with tier `personal` (SPID/CIE credentials) are invisible to tokens on purpose.
+- Fields with tier `personal` (login secrets: SPID/CIE credentials, any PIN or password) are invisible to tokens on purpose.
   Reach them only through a Touch ID request the user approves (2d), and only when the
   task needs that exact field; otherwise send the user to the UI. Don't try to work
   around the 404/403.
@@ -195,7 +195,9 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   person whose retention period after `ruolo.data_fine`, set by the user with
   `pvault --vault <name> retention set <years>`, has ended (`expired`) or ends within the
   window; there is no default, so suggest no number) and `pratiche_closed` (a client's ID
-  or procura scans once every pratica naming them is closed). Point them out; never delete anything yourself (`person remove` and
+  or procura scans once every pratica naming them is closed plus the period the user set
+  with `pvault --vault <name> retention scans <days>`; again no default, so nothing is
+  listed until they set one, and suggest no number). Point them out; never delete anything yourself (`person remove` and
   `doc delete` are the user's).
 - A person's own copy of their data (GDPR art. 20): the user runs
   `pvault --vault <name> person export <slug>`, which writes an unencrypted folder. Only

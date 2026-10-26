@@ -552,24 +552,30 @@ func (v *Vault) Status() (*VaultStatus, error) {
 
 // Set encrypts and stores a field value.
 func (v *Vault) Set(id, value, sensitivity string) error {
-	return v.set(id, value, sensitivity, nil)
+	return v.set(id, value, sensitivity, nil, nil)
 }
 
 // SetChecked is Set for a caller that checked the field first: it writes
 // only if the field is still as checked (absent if existing is nil, else
-// with existing's tier), and returns ErrFieldChanged otherwise.
-func (v *Vault) SetChecked(id, value, sensitivity string, existing *FieldInfo) error {
+// with existing's tier), and returns ErrFieldChanged otherwise. With allow
+// (a service token's filter), a value naming people (checkPersonRefs) may
+// name only people with a row allow accepts, so the answer never says whether
+// a hidden person exists; nil lets it name anyone.
+func (v *Vault) SetChecked(id, value, sensitivity string, existing *FieldInfo, allow FieldFilter) error {
 	seen := &store.Seen{}
 	if existing != nil {
 		seen = &store.Seen{Exists: true, Tier: existing.Sensitivity}
 	}
-	return v.set(id, value, sensitivity, seen)
+	return v.set(id, value, sensitivity, seen, allow)
 }
 
-func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
+func (v *Vault) set(id, value, sensitivity string, seen *store.Seen, allow FieldFilter) error {
 	v.writeMu.RLock()
 	defer v.writeMu.RUnlock()
 	if err := ValidateFieldID(id); err != nil {
+		return err
+	}
+	if err := CheckLowerCase(id); err != nil {
 		return err
 	}
 	value, err := NormalizeAndValidate(id, value)
@@ -585,7 +591,7 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 		return err
 	}
 	defer clear(vaultKey)
-	if err := v.checkPersonRefs(id, value); err != nil {
+	if err := v.checkPersonRefs(id, value, allow); err != nil {
 		return err
 	}
 
@@ -929,6 +935,12 @@ func (v *Vault) SetSensitivity(id, tier string) error {
 	}
 	if !validTiers[tier] {
 		return ErrInvalidTier
+	}
+	// A missing field is not found, whatever its name would make it.
+	if existing, err := v.db.GetField(id); err != nil {
+		return err
+	} else if existing == nil {
+		return store.ErrNotFound
 	}
 	if IsCredentialField(id) && tier != TierPersonal {
 		return errCredentialTier(id)

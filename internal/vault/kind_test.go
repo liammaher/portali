@@ -106,6 +106,13 @@ func TestKind_FieldRules(t *testing.T) {
 		{impresa, "bianchi:firmadigitale.pin", "12345678", true},
 		{impresa, "bianchi:smartcard.pin", "12345678", true},
 		{impresa, "bianchi:cie.codice_sblocco", "12345678", true},
+		// Any login secret is a credential: a person's portal logins are
+		// theirs, while the business's own (Entratel, Fisconline) are allowed.
+		{impresa, "bianchi:fisconline.pin", "1234567890", true},
+		{impresa, "bianchi:pec.password", "x", true},
+		{impresa, "bianchi:inps.pin", "x", true},
+		{impresa, "entratel.password", "x", false},
+		{impresa, "fisconline.pin", "1234567890", false},
 		// Personal vaults: as before, plus no ruolo.
 		{persona, "identity.codice_fiscale", "RSSMRA85T10A562S", false},
 		{persona, "business.qualita_dichiarante", "titolare", false},
@@ -158,6 +165,9 @@ func TestKind_DocumentRules(t *testing.T) {
 		{impresa, "cieid", true},
 		{impresa, "cie2", true},
 		{impresa, "spid", false},
+		{impresa, "fisconline_pin", false},
+		{impresa, "bianchi:fisconline_pin", true},
+		{impresa, "firma_pin", true},
 		{persona, "cie", false},
 		{persona, "leo:spid", false},
 		{persona, "ruolo", true},
@@ -191,9 +201,7 @@ func TestKind_PersonRefMessageNamesRuolo(t *testing.T) {
 
 func TestKind_HouseholdIgnoresCategoryCase(t *testing.T) {
 	v := tmpVaultKind(t, KindImpresa)
-	if err := v.Set("bianchi:Ruolo.tipo", "socio", ""); err != nil {
-		t.Fatal(err)
-	}
+	setLegacy(t, v, "bianchi:Ruolo.tipo", "socio")
 	h, err := v.Household(nil, time.Now())
 	if err != nil || len(h.Members) != 1 || h.Members[0].Ruolo["tipo"] != "socio" {
 		t.Fatalf("household = %+v, %v", h, err)

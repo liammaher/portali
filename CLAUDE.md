@@ -44,6 +44,7 @@ pvault expiring [days]                   # Expired/expiring *data_scadenza field
 pvault doc add|list|get|delete           # Encrypted document scans
 pvault person list|show|add|remove|export|migrate  # Other people, e.g. family (leo:cie.numero); alias: member
 pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
+pvault retention scans <days>|unset      # How long clients' ID scans are kept after their pratiche close (no default)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
@@ -187,9 +188,12 @@ Profile Password + Secret Key (128-bit)
   Messages are unwrapped from `postacert.eml` and `daticert.xml` is parsed
   (mailparser needs `ignoreEmbedded: true` or it splices the inner message into the envelope)
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
-  SPID/CIE credentials (`IsCredentialField`: a credential word, plurals, digits and
-  `pincode`/`pukcode` included, with spid/cie/cieid among the category's or field's
-  words, a trailing number allowed: spid2, cie2) can only be stored with tier `personal`;
+  credentials (`IsCredentialField`: a secret word such as pin/puk/password/otp among the
+  category's or field's words in any category, `fisconline.pin`, `entratel.password`; the
+  wider credential words username/login/pass/chiave only next to spid/cie/cieid/firma/cns,
+  `spid.username` but not `pec.username`; plurals, digits and `pincode`/`pukcode` included;
+  pratiche campi never) can only be stored with tier `personal`; `IsIdentityCredential` is
+  the narrower SPID/CieID/CIE/firma kind;
   categories whose first word is `spid`/`cieid` (`spid_poste`, `spid2`) default to it, and so
   do their documents (`DefaultDocumentTier`, which the upload check uses, so a token can't
   create a personal document in `cie_pin` either). `personal` (rank 4) is
@@ -273,7 +277,9 @@ Profile Password + Secret Key (128-bit)
   (`SchemaField.For`: `ForOwner`/`ForPerson`, enforced by `checkFieldFor`) and of fields
   whose value names people (`PersonRef`: `famiglia.genitori`, `famiglia.intestatario_scheda`;
   plus pratiche `persona`, in `isPersonRefField`). Such values must name `io` or an
-  existing person. Scopes: unprefixed patterns are the owner's only; `leo:cat.*`,
+  existing person; for a service token, one with a row its filter reads (`SetChecked`'s
+  `allow`, `personVisible`), so a hidden person gets the same 400 as a missing one (the
+  session and approved grants may name anyone). Scopes: unprefixed patterns are the owner's only; `leo:cat.*`,
   `leo:cat.field`, `leo:*` and `*:cat.*` (owner and every person) reach other people; `*`
   everyone; `*:*` and `io:` are refused. Go, `mcp/src/scope.ts` and the Touch ID helper
   parse the same grammar, and the Go and TS matchers share
@@ -309,10 +315,12 @@ Profile Password + Secret Key (128-bit)
   refuses a category kept for the other kind (`famiglia` persona, `ruolo` impresa), a
   persona-subject category in an impresa vault's own data (numbered copies such as `cie2`,
   `identity-2` count as their category, `schemaCategoryOf`), in an impresa vault any
-  person's SPID/CieID category or credential field/document (CIE and `firma`/`cns` PINs
-  included), even at the personal tier, and in an impresa vault's own data any credential or
-  personal category except its own SPID (`isSPIDCategory`): a CIE, CieID or digital
-  signature is always a person's. `MigrateNucleo` refuses in impresa vaults.
+  person's SPID/CieID category or credential field/document (CIE and `firma`/`cns` PINs,
+  portal logins like `fisconline.pin` included), even at the personal tier, and in an
+  impresa vault's own data any identity credential (`IsIdentityCredential`) or personal
+  category except its own SPID (`isSPIDCategory`): a CIE, CieID or digital signature is
+  always a person's, while its own portal logins (`entratel.password`) are allowed at
+  personal. Documents are checked as their scope ID (`checkKind(DocumentScopeID(cat))`). `MigrateNucleo` refuses in impresa vaults.
   `ruolo.tipo` is a validated list (`normalizeRuoli`); the people listing carries `ruolo`
   and `denominazione`. Named vaults: `--vault <name>` (first argument only) or
   `PVAULT_VAULT` becomes `VAULT_DIR=~/.pvault-<name>` via `os.Setenv` before dispatch, so
@@ -336,7 +344,8 @@ Profile Password + Secret Key (128-bit)
   Retention is meta `retention_years`, no default (D8 unverified, so none is hard-coded),
   set only by the session (`PUT /vault/retention`; `GET` for any caller). `Expiring` then
   adds `kind: retention` entries (`ruolo.data_fine` + years, within the window) and, in
-  impresa vaults only, `kind: pratiche_closed` entries (today) for a client's (ruolo.tipo
+  impresa vaults only and once the user set meta `scan_days` (`pvault retention scans <days>`,
+  no default, 0 allowed), `kind: pratiche_closed` entries (last closing + days) for a client's (ruolo.tipo
   includes cliente) ID/procura document categories (`idScanCategories`) once at least one
   pratica names them in `persona` and all of those are closed, and only if every scan in
   the category predates the last closing (the stato's `updated_at`, which a re-save of the
@@ -346,7 +355,7 @@ Profile Password + Secret Key (128-bit)
   only if the caller can read every pratica naming them, their ruolo.tipo and procura date,
   and every scan in the category, so a partial view never says scans can go; entries are only what the
   caller's filter reads. A document whose file is gone is listed in the export's `missing`
-  instead of failing it. `pvault expiring` prints a hint in an impresa vault with no period set.
+  instead of failing it. `pvault expiring` prints a hint in an impresa vault for each period not set.
   `GET /vault/members/{slug}/export[?include_personal=1]` is session-only (not even an
   approved `<slug>:*` grant), returns fields and documents with content, and logs one
   `member_export` audit entry; personal-tier items are left out (counted in `omitted`)
@@ -358,7 +367,11 @@ Profile Password + Secret Key (128-bit)
 ## Conventions
 
 - Field IDs are `category.field_name` (e.g., `identity.full_name`), or
-  `person:category.field_name` for another person (`leo:identity.full_name`)
+  `person:category.field_name` for another person (`leo:identity.full_name`), lower-case:
+  `Set` and `AddDocument` refuse upper-case letters (`CheckLowerCase`, which the CLI also runs before any prompt), since the rules
+  ignore case but the store doesn't. Older mixed-case rows can still be read, re-tiered and
+  deleted, and the pratiche checks (`Expiring`, `scansAfterPratiche`, `personRefsTo`) count a
+  pratica as closed only if every spelling's stato says so
 - Sensitivity tiers: `public`, `standard`, `sensitive`, `critical`
 - All timestamps stored as RFC3339 strings in SQLite
 - WAL mode enabled, busy_timeout=5000ms; the vault path can't contain `?` (the driver

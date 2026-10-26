@@ -245,7 +245,7 @@ function mapError(status: number, body: string): VaultError {
     }
     if (constraint === "personal_only") {
       return new VaultError(
-        "vault: personal items (SPID/CIE credentials) can only be changed by the user — send them to the vault UI"
+        "vault: personal items (login secrets such as SPID/CIE credentials or a PIN) can only be changed by the user — send them to the vault UI"
       );
     }
     if (constraint === "session_required") {
@@ -365,7 +365,8 @@ interface ExpiryInfo {
   expired: boolean;
   // "retention": a person whose retention period after ruolo.data_fine has
   // ended (expired) or ends within the window; "pratiche_closed": a client's
-  // ID or procura scans, every pratica naming them closed (business vaults).
+  // ID or procura scans, every pratica naming them closed plus the period the
+  // user set for scans (business vaults; nothing until it is set).
   // Absent for a document or pratica deadline.
   kind?: "retention" | "pratiche_closed";
 }

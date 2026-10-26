@@ -9,12 +9,40 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/crypto"
+	"github.com/lovincyrus/personal-vault/internal/store"
 )
 
 func mustSet(t *testing.T, v *Vault, id, value string) {
 	t.Helper()
 	if err := v.Set(id, value, ""); err != nil {
 		t.Fatalf("Set(%s): %v", id, err)
+	}
+}
+
+// setLegacy stores a field the way an older version could, without Set's
+// checks: IDs didn't have to be lower-case (Pratiche.x_stato).
+func setLegacy(t *testing.T, v *Vault, id, value string) {
+	t.Helper()
+	vaultKey, err := v.requireUnlocked()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer clear(vaultKey)
+	category, name, _ := strings.Cut(id, ".")
+	subkey, err := crypto.DeriveSubkey(vaultKey, v.salt, category)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer clear(subkey)
+	encrypted, err := crypto.EncryptToBase64(subkey, []byte(value))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := v.db.SetField(store.Field{ID: id, Category: category, FieldName: name, Value: encrypted,
+		Sensitivity: DefaultSensitivity(id), UpdatedAt: time.Now()}); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -397,11 +425,12 @@ func TestMigrateNucleo_KeepsMismatchedCount(t *testing.T) {
 	}
 }
 
-// Field IDs ignore case elsewhere, so migration does too.
+// Field IDs from before they had to be lower-case are read ignoring case, so
+// migration does too.
 func TestMigrateNucleo_MixedCase(t *testing.T) {
 	v, _ := tmpVault(t)
-	mustSet(t, v, "Nucleo_Familiare.Membro1_Nome", "Anna")
-	mustSet(t, v, "nucleo_familiare.MEMBRO1_relazione", "Madre")
+	setLegacy(t, v, "Nucleo_Familiare.Membro1_Nome", "Anna")
+	setLegacy(t, v, "nucleo_familiare.MEMBRO1_relazione", "Madre")
 	report, err := v.MigrateNucleo(false)
 	if err != nil {
 		t.Fatal(err)

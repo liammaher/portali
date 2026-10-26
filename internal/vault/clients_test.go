@@ -23,7 +23,7 @@ func TestProcura_PersonOnly(t *testing.T) {
 		if err := v.Set(slug+":procura.data_scadenza", "not a date", ""); err == nil {
 			t.Errorf("%s: a bad procura date was accepted", kind)
 		}
-		for _, id := range []string{"procura.ente", "procura2.ente", "Procura.oggetto"} {
+		for _, id := range []string{"procura.ente", "procura2.ente", "procura-3.oggetto"} {
 			var verr *ValidationError
 			if err := v.Set(id, "x", ""); !errors.As(err, &verr) || !strings.Contains(err.Error(), "another person gave you") {
 				t.Errorf("%s: %s without a person: %v", kind, id, err)
@@ -114,7 +114,7 @@ func TestRetention(t *testing.T) {
 }
 
 func TestRetention_ScansAfterPratiche(t *testing.T) {
-	now := time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC)
+	now := time.Now().UTC() // pratiche close now
 	window := 90 * 24 * time.Hour
 	v := tmpVaultKind(t, KindImpresa)
 	for _, slug := range []string{"rossi", "verdi", "neri"} {
@@ -138,13 +138,20 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 	mustSet(t, v, "pratiche.suap-verdi_persona", "verdi")
 	mustSet(t, v, "pratiche.suap-verdi_stato", "in_attesa")
 
+	// Nothing until the user sets a period for scans (D8: none is verified).
+	if items, err := v.Expiring(window, nil, now); err != nil || len(items) != 0 {
+		t.Fatalf("no period set: %+v, %v", items, err)
+	}
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
 	items, err := v.Expiring(window, nil, now)
 	if err != nil {
 		t.Fatal(err)
 	}
 	var got []string
 	for _, it := range items {
-		if it.Kind != ExpiryPraticheClosed || it.ExpiresOn != "2026-10-26" {
+		if it.Kind != ExpiryPraticheClosed || it.ExpiresOn != now.Format(dateLayout) {
 			t.Fatalf("unexpected entry %+v", it)
 		}
 		got = append(got, it.FieldID)
@@ -189,6 +196,9 @@ func TestRetention_ScansAfterPratiche(t *testing.T) {
 
 	// A personal vault keeps family scans: no such entries.
 	p := tmpVaultKind(t, KindPersona)
+	if err := p.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
 	mustSet(t, p, "leo:famiglia.relazione", "figlio")
 	p.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("%PDF"), "")
 	mustSet(t, p, "pratiche.cie-leo_persona", "leo")
@@ -271,11 +281,14 @@ func hasAudit(entries []store.AuditEntry, action string) bool {
 // for a later person given a removed person's slug) is not due, and neither is
 // a procura still in force. Two spellings of ruolo always give one answer.
 func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
-	now := time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC)
+	now := time.Now().UTC()
 	window := 90 * 24 * time.Hour
 	v := tmpVaultKind(t, KindImpresa)
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
 	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
-	mustSet(t, v, "rossi:Ruolo.tipo", "titolare") // IDs are case-sensitive in the store
+	setLegacy(t, v, "rossi:Ruolo.tipo", "titolare") // IDs are case-sensitive in the store
 	for _, cat := range []string{"cie", "procura"} {
 		if _, err := v.AddDocument("rossi:"+cat, cat+".pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
 			t.Fatal(err)
@@ -303,11 +316,11 @@ func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
 		}
 	}
 
-	mustSet(t, v, "rossi:procura.data_scadenza", "2028-06-30")
+	mustSet(t, v, "rossi:procura.data_scadenza", now.AddDate(2, 0, 0).Format(dateLayout))
 	if got := due(); got != "rossi:cie.documents" {
 		t.Fatalf("procura in force: scans due = %q", got)
 	}
-	mustSet(t, v, "rossi:procura.data_scadenza", "2026-01-31")
+	mustSet(t, v, "rossi:procura.data_scadenza", now.AddDate(-1, 0, 0).Format(dateLayout))
 	if got := due(); got != "rossi:cie.documents rossi:procura.documents" {
 		t.Fatalf("procura expired: scans due = %q", got)
 	}
@@ -331,5 +344,101 @@ func TestRetention_ScansAfterPratiche_DatesAndProcura(t *testing.T) {
 	}
 	if got := due(); got != "" {
 		t.Fatalf("after re-saving the stato: due = %q", got)
+	}
+}
+
+// The period for scans is counted from the day the last pratica closed, and
+// an entry shows once that day plus the period is within the window.
+func TestRetention_ScanDays(t *testing.T) {
+	v := tmpVaultKind(t, KindImpresa)
+	for _, bad := range []int{MaxScanDays + 1, -2} {
+		if err := v.SetScanDays(bad); err == nil {
+			t.Errorf("SetScanDays(%d) accepted", bad)
+		}
+	}
+	if _, set, _ := v.ScanDays(); set {
+		t.Fatal("scan days set by default")
+	}
+	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
+	if _, err := v.AddDocument("rossi:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
+		t.Fatal(err)
+	}
+	mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
+	mustSet(t, v, "pratiche.cila-roma_stato", "completata")
+	closedOn := time.Now().UTC()
+	due := func(days int, within time.Duration) []ExpiryInfo {
+		t.Helper()
+		if err := v.SetScanDays(days); err != nil {
+			t.Fatal(err)
+		}
+		items, err := v.Expiring(within, nil, closedOn)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return items
+	}
+	items := due(30, 90*24*time.Hour)
+	if len(items) != 1 || items[0].ExpiresOn != closedOn.AddDate(0, 0, 30).Format(dateLayout) || items[0].Expired {
+		t.Fatalf("30 days, 90-day window: %+v", items)
+	}
+	if items := due(30, 10*24*time.Hour); len(items) != 0 {
+		t.Fatalf("30 days, 10-day window: %+v", items)
+	}
+	if days, set, _ := v.ScanDays(); !set || days != 30 {
+		t.Fatalf("ScanDays() = %d, %v", days, set)
+	}
+	if err := v.SetScanDays(-1); err != nil {
+		t.Fatal(err)
+	}
+	if _, set, _ := v.ScanDays(); set {
+		t.Fatal("scan days still set after -1")
+	}
+	if items, _ := v.Expiring(90*24*time.Hour, nil, closedOn); len(items) != 0 {
+		t.Fatalf("unset again: %+v", items)
+	}
+	entries, _ := v.AuditLog(50)
+	if !hasAudit(entries, "scan_days_set") {
+		t.Error("no scan_days_set audit entry")
+	}
+}
+
+// A pratica stored under two spellings (from before IDs had to be
+// lower-case, in the category, the slug or the campo) is closed only if every
+// stato says so, whatever order the rows are read in: its client's scans
+// aren't due, its deadline still shows, it still keeps its person from being
+// removed, and its deadline names everyone its persona fields name.
+func TestRetention_LegacyCaseVariants(t *testing.T) {
+	now := time.Now().UTC()
+	for _, legacy := range []string{"Pratiche.cila-roma", "pratiche.CILA-ROMA", "pratiche.cila-roma_STATO"} {
+		v := tmpVaultKind(t, KindImpresa)
+		if err := v.SetScanDays(0); err != nil {
+			t.Fatal(err)
+		}
+		mustSet(t, v, "rossi:ruolo.tipo", "cliente")
+		mustSet(t, v, "verdi:ruolo.tipo", "cliente")
+		if _, err := v.AddDocument("rossi:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {
+			t.Fatal(err)
+		}
+		mustSet(t, v, "pratiche.cila-roma_persona", "rossi")
+		mustSet(t, v, "pratiche.cila-roma_stato", "completata")
+		mustSet(t, v, "pratiche.cila-roma_data_scadenza", now.AddDate(0, 0, 10).Format(dateLayout))
+		stato, persona := legacy+"_stato", legacy+"_persona"
+		if strings.HasSuffix(legacy, "_STATO") {
+			stato, persona = legacy, strings.TrimSuffix(legacy, "_STATO")+"_PERSONA"
+		}
+		setLegacy(t, v, stato, "in_attesa")
+		setLegacy(t, v, persona, "verdi")
+		for range 30 {
+			items, err := v.Expiring(90*24*time.Hour, nil, now)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(items) != 1 || items[0].Kind != "" || items[0].Document != "pratica cila-roma" || items[0].Person != "rossi,verdi" {
+				t.Fatalf("%s: open under one spelling: %+v", legacy, items)
+			}
+		}
+		if _, err := v.RemovePerson("rossi"); err == nil {
+			t.Fatalf("%s: removed a person an open pratica names", legacy)
+		}
 	}
 }

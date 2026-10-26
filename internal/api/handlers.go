@@ -382,10 +382,17 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 
 	// A token's checks above hold only for the field as it was looked up;
 	// SetChecked refuses the write if it changed meanwhile.
+	// A service token may name only people it can see (pratiche persona,
+	// famiglia), so it can't find out who else is in the vault; a grant the
+	// user approved in person may name anyone, as the session can.
 	set := s.vault.Set
 	if !isSessionAuth(r) {
+		var allow vault.FieldFilter
+		if !reachesPersonal(r) {
+			allow = callerFilter(r)
+		}
 		set = func(id, value, sensitivity string) error {
-			return s.vault.SetChecked(id, value, sensitivity, existing)
+			return s.vault.SetChecked(id, value, sensitivity, existing, allow)
 		}
 	}
 	if err := set(id, req.Value, req.Sensitivity); err != nil {

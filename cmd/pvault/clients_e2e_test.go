@@ -45,7 +45,8 @@ func runCmd(t *testing.T, f func(), args ...string) string {
 
 // TestClients_EndToEnd drives the phase 2 commands against a real business
 // vault and API server: procura expiry, the retention setting and report,
-// ID scans once a client's pratiche are closed, and a person's export.
+// ID scans once a client's pratiche are closed and the period for them is
+// set, and a person's export.
 func TestClients_EndToEnd(t *testing.T) {
 	today := time.Now().Format("2006-01-02")
 	soon := time.Now().AddDate(0, 0, 20).Format("2006-01-02")
@@ -76,11 +77,33 @@ func TestClients_EndToEnd(t *testing.T) {
 		}
 	}
 
+	// With Touch ID, 'set' gets a grant for that one field, which can still
+	// name a client it can't otherwise see.
+	runCmd(t, cmdSet, "set", "pratiche.docfa-rossi_persona", "rossi")
+	runCmd(t, cmdSet, "set", "pratiche.docfa-rossi_stato", "annullata")
+
+	// No period for scans yet: they aren't checked, and the output says so.
 	out := runCmd(t, cmdExpiring, "expiring")
-	for _, want := range []string{"procura (rossi)", soon, "cie scans (rossi)", "their pratiche are closed", "No retention period set"} {
+	for _, want := range []string{"procura (rossi)", soon, "No retention period set", "No period set for clients' ID scans"} {
 		if !strings.Contains(out, want) {
-			t.Errorf("expiring without retention: missing %q in:\n%s", want, out)
+			t.Errorf("expiring without settings: missing %q in:\n%s", want, out)
 		}
+	}
+	if strings.Contains(out, "scans (rossi)") {
+		t.Errorf("expiring listed scans with no period set:\n%s", out)
+	}
+	runCmd(t, cmdRetention, "retention", "scans", "0")
+	if out := runCmd(t, cmdRetention, "retention"); !strings.Contains(out, "kept 0 days after the last pratica") {
+		t.Errorf("retention after scans 0: %s", out)
+	}
+	out = runCmd(t, cmdExpiring, "expiring")
+	for _, want := range []string{"cie scans (rossi)", "their pratiche are closed"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("expiring with scans 0: missing %q in:\n%s", want, out)
+		}
+	}
+	if strings.Contains(out, "No period set for clients' ID scans") {
+		t.Errorf("hint shown with the period set:\n%s", out)
 	}
 	// The procura is still in force (it expires soon), so its scan waits.
 	if strings.Contains(out, "procura scans (rossi)") {
@@ -104,6 +127,16 @@ func TestClients_EndToEnd(t *testing.T) {
 	t.Logf("pvault expiring:\n%s", out)
 	if !strings.Contains(out, "data of rossi") || !strings.Contains(out, "2025-01-10") || !strings.Contains(out, "retention ended") || strings.Contains(out, "No retention period set") {
 		t.Errorf("expiring with retention:\n%s", out)
+	}
+
+	runCmd(t, cmdRetention, "retention", "scans", "30")
+	if out := runCmd(t, cmdExpiring, "expiring"); !strings.Contains(out, "cie scans (rossi)") || !strings.Contains(out, "scans due in 30 days") ||
+		!strings.Contains(out, time.Now().AddDate(0, 0, 30).Format("2006-01-02")) {
+		t.Errorf("expiring with scans 30:\n%s", out)
+	}
+	runCmd(t, cmdRetention, "retention", "scans", "unset")
+	if out := runCmd(t, cmdExpiring, "expiring"); strings.Contains(out, "scans (rossi)") {
+		t.Errorf("expiring after scans unset:\n%s", out)
 	}
 
 	to := t.TempDir()
@@ -141,7 +174,7 @@ func TestClients_EndToEnd(t *testing.T) {
 	for _, e := range entries {
 		actions = append(actions, e.Action)
 	}
-	if a := strings.Join(actions, " "); !strings.Contains(a, "member_export") || !strings.Contains(a, "retention_set") {
+	if a := strings.Join(actions, " "); !strings.Contains(a, "member_export") || !strings.Contains(a, "retention_set") || !strings.Contains(a, "scan_days_set") {
 		t.Errorf("audit log: %s", a)
 	}
 }

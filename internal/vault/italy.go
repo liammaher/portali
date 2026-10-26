@@ -24,7 +24,12 @@ func (e *ValidationError) Error() string {
 }
 
 const (
-	credentialWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|pass|passcode|otp|totp|username|login|secret|segreto|segreta|segreti|segrete|chiave|chiavi|credenziale|credenziali|sblocco)s?[0-9]*`
+	// secretWords name a secret in any category (fisconline.pin).
+	secretWords = `(?:pin|puk|pincode|pukcode|password|passwd|pwd|pw|passcode|otp|totp|secret|segreto|segreta|segreti|segrete|credenziale|credenziali|sblocco)s?[0-9]*`
+	// credentialWords add words that name a login detail only next to SPID,
+	// CieID or the CIE (spid.username, spid.pass): elsewhere they are
+	// everyday words (pec.username, locazione.chiavi_consegnate, pass_ztl).
+	credentialWords = `(?:` + secretWords + `|(?:pass|username|login|chiave|chiavi)s?[0-9]*)`
 	// A trailing number names a second account or card: spid2, cie2. firma,
 	// firmadigitale, cns and smartcard cover a digital signature or CNS
 	// (firma_digitale.pin, cns.puk).
@@ -35,6 +40,8 @@ var (
 	// reCredentialWord matches a field-name word that names a login secret
 	// (pin, pin1, puk2, password, passwords, password2, otp, username, ...).
 	reCredentialWord = regexp.MustCompile(`^(` + credentialWords + `)$`)
+	// reSecretWord matches the credential words that are a secret anywhere.
+	reSecretWord = regexp.MustCompile(`^(` + secretWords + `)$`)
 	// reIdentityWord matches a word naming SPID, CieID or the CIE.
 	reIdentityWord = regexp.MustCompile(`^(` + identityWords + `)$`)
 	// rePersonalCategoryWord matches the first word of a SPID or CieID
@@ -45,14 +52,29 @@ var (
 	reJoinedCredential = regexp.MustCompile(`^(` + identityWords + `)(` + credentialWords + `)$|^(` + credentialWords + `)(` + identityWords + `)$`)
 )
 
-// IsCredentialField reports whether a field holds a login secret: a
-// credential word (pin, puk, password, otp, username, ...) in a field about
-// SPID, CieID or the CIE, e.g. spid.password, cie.pin1, identity.spid_password,
-// cie_id.pin (the category's words count too). A person's field
-// (leo:spid.password) is judged like the owner's.
-// Credentials are strictly personal (AgID), so they can only be stored with
-// TierPersonal and never reach an agent.
+// IsCredentialField reports whether a field holds a login secret: any field
+// whose category or name has a secret word (pin, puk, password, otp, ...),
+// e.g. fisconline.pin, entratel.password, cie.pin1; one with a wider
+// credential word (username, login, pass, chiave) next to SPID, CieID or the
+// CIE, e.g. spid.username, identity.spid_login; and every field of a
+// SPID/CieID account.
+// A person's field (leo:spid.password) is judged like the owner's.
+// Credentials can only be stored with TierPersonal, so they never reach an
+// agent without the user's approval.
 func IsCredentialField(id string) bool {
+	return isCredential(id, false)
+}
+
+// IsIdentityCredential reports a credential tied to a person's identity: a
+// SPID/CieID account, or a credential word in a field about SPID, CieID, the
+// CIE or a digital signature (cie.pin, firma_digitale.puk,
+// identity.spid_password). Unlike a portal login such as Entratel's, only a
+// SPID account can be a business's own (checkKind).
+func IsIdentityCredential(id string) bool {
+	return isCredential(id, true)
+}
+
+func isCredential(id string, identityOnly bool) bool {
 	_, id = SplitPerson(id)
 	parts := strings.SplitN(strings.ToLower(id), ".", 2)
 	if len(parts) != 2 {
@@ -71,7 +93,7 @@ func IsCredentialField(id string) bool {
 		return false
 	}
 
-	aboutIdentity, credentialWord := false, false
+	aboutIdentity, credentialWord, secretWord := false, false, false
 	for _, w := range idWords(category + "_" + name) {
 		switch {
 		case reJoinedCredential.MatchString(w):
@@ -80,9 +102,10 @@ func IsCredentialField(id string) bool {
 			aboutIdentity = true
 		case reCredentialWord.MatchString(w):
 			credentialWord = true
+			secretWord = secretWord || reSecretWord.MatchString(w)
 		}
 	}
-	return aboutIdentity && credentialWord
+	return credentialWord && aboutIdentity || secretWord && !identityOnly
 }
 
 // isNonSecretAccountField lists SPID/CieID fields that may be lowered from
@@ -112,7 +135,7 @@ func idWords(s string) []string {
 // errCredentialTier is returned when a credential would be stored below
 // TierPersonal.
 func errCredentialTier(field string) error {
-	return &ValidationError{Field: field, Msg: "SPID/CIE credentials can only be stored as personal (never readable by agents)"}
+	return &ValidationError{Field: field, Msg: "login secrets (PIN, password, ...) can only be stored as personal (never readable by agents)"}
 }
 
 var (

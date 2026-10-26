@@ -202,7 +202,7 @@ Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, 
 
 The rules match command text, so they stop direct or accidental access, not a determined attempt (a script that reads the Keychain internally isn't caught). For a hard boundary, also enable Claude Code's sandbox with `~/.pvault` in `sandbox.filesystem.denyRead`.
 
-Whatever a token allows, Claude sees: values returned by the MCP tools enter the conversation like any other text. What it never sees is your password, your secret key, `personal`-tier items (SPID/CIE credentials) unless you approve them by fingerprint (see Touch ID), and anything outside the token's scope or after it expires.
+Whatever a token allows, Claude sees: values returned by the MCP tools enter the conversation like any other text. What it never sees is your password, your secret key, `personal`-tier items (login secrets such as SPID/CIE credentials or a PIN) unless you approve them by fingerprint (see Touch ID), and anything outside the token's scope or after it expires.
 
 ### Touch ID (macOS)
 
@@ -228,7 +228,7 @@ Profile password + 128-bit secret key
 - On macOS and Linux the CLI sends your password only over a private Unix socket (`~/.pvault/run/pvault.sock`) and only after checking that the server on it is this same `pvault`, so a program squatting on port 7200 while the vault is down never sees it. (The onboarding page still uses the port; browsers can't use sockets.)
 - No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password (or approving with Touch ID). Wrong passwords are rate-limited.
 - Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
-- Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session. SPID/CIE credentials (under any field name) can only be stored as `personal`, and SPID/CieID categories default to it.
+- Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session. Login secrets (any field whose name has a word like pin, puk, password or otp: `spid.password`, `fisconline.pin`) can only be stored as `personal`, and SPID/CieID categories default to it. Field IDs are lower-case.
 
 **What it can't protect against:** malware or an agent running as your macOS user can still stop the vault, read `~/.pvault/secret.key` (useless without your password), or tamper with the `pvault` binary to capture your password. Keep the vault locked when you're not using it.
 

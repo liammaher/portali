@@ -108,8 +108,9 @@ Commands:
                                    Recreate the vault from a backup (needs password + secret key);
                                    --check only verifies it, --ask-key types the key to test your copy
   expiring [days]                  Show documents and pratiche deadlines expired or due within days (default 90);
-                                   in a business vault also people past retention and ID scans whose pratiche are closed
+                                   in a business vault also people past retention and clients' ID scans past their period
   retention [set <years> | unset]  How long people's data is kept after their ruolo.data_fine (no default)
+  retention scans <days> | unset   How long clients' ID scans are kept after their pratiche close (no default)
   doc add <category> <file> [--sensitivity tier]
                                    Encrypt and store a document scan (max 20 MB)
   doc list [category]              List stored documents

@@ -39,6 +39,8 @@ func cmdExpiring() {
 	for _, it := range items {
 		when := fmt.Sprintf("in %d days", it.DaysLeft)
 		switch {
+		case it.Kind == vault.ExpiryPraticheClosed && it.DaysLeft > 0:
+			when = fmt.Sprintf("their pratiche are closed: scans due in %d days", it.DaysLeft)
 		case it.Kind == vault.ExpiryPraticheClosed:
 			when = "their pratiche are closed: delete the scans unless still needed"
 		case it.Kind == vault.ExpiryRetention && it.Expired:
@@ -69,13 +71,21 @@ func expiryLabel(it vault.ExpiryInfo) string {
 	return it.Document
 }
 
-// retentionHint says, once, that a business vault without a retention period
-// doesn't check people whose relationship ended.
+// retentionHint says, once each, that a business vault without a retention
+// period doesn't check people whose relationship ended, and without a period
+// for scans doesn't check clients' ID scans.
 func retentionHint() {
 	if kind, err := serverKind(); err != nil || kind != vault.KindImpresa {
 		return
 	}
-	if years, err := fetchRetention(); err == nil && years == 0 {
+	r, err := fetchRetention()
+	if err != nil {
+		return
+	}
+	if r.Years == 0 {
 		fmt.Printf("No retention period set, so people whose ruolo.data_fine has passed aren't checked: see '%s'.\n", pvCmd("retention"))
+	}
+	if r.ScanDays == nil {
+		fmt.Printf("No period set for clients' ID scans, so scans whose pratiche are closed aren't checked: see '%s'.\n", pvCmd("retention"))
 	}
 }
