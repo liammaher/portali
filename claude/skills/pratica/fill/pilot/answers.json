@@ -1,0 +1,8 @@
+{
+  "description": "What the user would answer to the entry's ask rows, by label.",
+  "answers": {
+    "Autorimessa/cantinola/posto auto (via, dati catastali, superficie, pertinenza)": "no",
+    "Richiesta di riduzione del 40% \"Uso stagionale\"": "no",
+    "Eventuali note": "Contratto di locazione registrato; conviventi come da stato di famiglia."
+  }
+}
