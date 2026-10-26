@@ -72,18 +72,6 @@ func TestMemberRulesMatchOwner(t *testing.T) {
 	}
 }
 
-// errMsg is a ValidationError's message without the field ID.
-func errMsg(err error) string {
-	var verr *ValidationError
-	if errors.As(err, &verr) {
-		return verr.Msg
-	}
-	if err != nil {
-		return err.Error()
-	}
-	return ""
-}
-
 func TestMemberCredentialsArePersonal(t *testing.T) {
 	for _, id := range []string{"leo:spid.password", "leo:cie.pin", "leo:cie.puk", "Leo:spid.password", "leo:spid_poste.username", "leo:cieid.pin"} {
 		if !IsCredentialField(id) || DefaultSensitivity(id) != TierPersonal {

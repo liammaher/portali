@@ -13,8 +13,8 @@ type ExpiryInfo struct {
 	FieldID   string `json:"field_id"`
 	Document  string `json:"document"`         // category without the member, e.g. permesso_soggiorno, or "pratica <slug>"
 	Member    string `json:"member,omitempty"` // whose it is: a family member's slug, empty for the owner
-	ExpiresOn string `json:"expires_on"` // YYYY-MM-DD
-	DaysLeft  int    `json:"days_left"`  // negative once expired
+	ExpiresOn string `json:"expires_on"`       // YYYY-MM-DD
+	DaysLeft  int    `json:"days_left"`        // negative once expired
 	Expired   bool   `json:"expired"`
 }
 

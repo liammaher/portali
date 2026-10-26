@@ -227,18 +227,20 @@ func affectedOne(res sql.Result, err error, checked bool) error {
 	return ErrNotFound
 }
 
-// FieldCount returns total number of fields.
-// Pass a tier as exclude to leave fields of that tier out ("" counts all).
-func (d *DB) FieldCount(exclude string) (int, error) {
+// FieldCount returns the number of fields, only the owner's with ownerOnly
+// (family members' left out). Pass a tier as exclude to leave fields of
+// that tier out ("" counts all).
+func (d *DB) FieldCount(exclude string, ownerOnly bool) (int, error) {
 	var count int
-	err := d.conn.QueryRow("SELECT COUNT(*) FROM vault_fields WHERE ? = '' OR sensitivity != ?", exclude, exclude).Scan(&count)
+	err := d.conn.QueryRow("SELECT COUNT(*) FROM vault_fields WHERE (? = '' OR sensitivity != ?) AND (NOT ? OR instr(category, ':') = 0)", exclude, exclude, ownerOnly).Scan(&count)
 	return count, err
 }
 
-// CategoryCounts returns a map of category -> field count.
-// Pass a tier as exclude to leave fields of that tier out ("" counts all).
+// CategoryCounts returns a map of the owner's category -> field count
+// (family members' categories are left out). Pass a tier as exclude to
+// leave fields of that tier out ("" counts all).
 func (d *DB) CategoryCounts(exclude string) (map[string]int, error) {
-	rows, err := d.conn.Query("SELECT category, COUNT(*) FROM vault_fields WHERE ? = '' OR sensitivity != ? GROUP BY category", exclude, exclude)
+	rows, err := d.conn.Query("SELECT category, COUNT(*) FROM vault_fields WHERE (? = '' OR sensitivity != ?) AND instr(category, ':') = 0 GROUP BY category", exclude, exclude)
 	if err != nil {
 		return nil, err
 	}

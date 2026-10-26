@@ -83,6 +83,8 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if len(data) > MaxDocumentSize {
 		return nil, &ValidationError{Field: "document", Msg: fmt.Sprintf("file is larger than %d MB", MaxDocumentSize>>20)}
 	}
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	// SPID/CieID documents (e.g. recovery codes) are always personal.
 	personalOnly := DefaultDocumentTier(category) == TierPersonal
 	switch {
@@ -234,6 +236,8 @@ func (v *Vault) DeleteDocument(id string) (bool, error) {
 	if !reDocumentID.MatchString(id) {
 		return false, nil
 	}
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
 	if err := v.checkUnlocked(); err != nil {
 		return false, err
 	}
