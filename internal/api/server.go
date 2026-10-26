@@ -74,6 +74,10 @@ type Server struct {
 	unlockLimit *rateLimiter
 	grantLimit  *rateLimiter
 	uploadSlots chan struct{} // bounds concurrent document uploads
+	// tcpAddr is the address Start listens on. Status reports it, so a client
+	// that verified the server over its Unix socket can tell whether its TCP
+	// address reaches the same server or something else.
+	tcpAddr string
 }
 
 // maxConcurrentUploads caps memory used by in-flight document uploads.
@@ -143,6 +147,7 @@ func (s *Server) Start() (net.Listener, error) {
 	if err != nil {
 		return nil, err
 	}
+	s.tcpAddr = ln.Addr().String()
 	go s.server.Serve(ln)
 	return ln, nil
 }

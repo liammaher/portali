@@ -69,7 +69,9 @@ Profile Password + Secret Key (128-bit)
 ```
 
 - App-layer encryption: encrypt before INSERT, decrypt after SELECT
-- Vault key exists only in memory while unlocked
+- Vault key exists only in memory while unlocked. `requireUnlocked` hands out a copy
+  that each caller clears (`defer clear(vaultKey)`, and its subkeys likewise); callers
+  that don't need the key use `checkUnlocked`
 - Auto-lock after 30 min idle
 - Session token: 32 bytes crypto/rand, constant-time comparison; never written to disk
 - CLI auth: each command re-enters the password (interactive TTY only) and
@@ -80,13 +82,16 @@ Profile Password + Secret Key (128-bit)
 - Credential endpoints (`/vault/unlock`, `/vault/session`) require
   `Content-Type: application/json` so web pages can't call them cross-origin,
   and every request must carry a loopback Host (127.0.0.1/localhost/::1) to
-  block DNS rebinding. Grant attempts are counted on entry and refunded unless
-  the password was wrong, so concurrent guesses can't bypass the limit.
+  block DNS rebinding. Grant and unlock attempts are counted on entry and refunded unless
+  the password was wrong, so concurrent guesses can't bypass the limit and junk requests
+  can't use up the user's own attempts.
   API tests build requests with `newTestRequest` (loopback Host)
 - Writing a field without a tier keeps its existing tier (schema default for
   new fields), so overwrites never silently downgrade sensitivity
 - Secret key at `~/.pvault/secret.key` (0600), never in database. `Init` never replaces an
-  existing one (it may be the only key to old backups) and removes a half-made vault on failure
+  existing one (it may be the only key to old backups) and removes a half-made vault on failure.
+  `Open` never creates `vault.db` (`ErrNotInitialized`), so `pvault serve` in an empty dir
+  can't make a later `init` refuse
 - Credentials (password + secret key) never go over TCP, where anything can listen on
   7200 while the server is down. `pvault serve` also listens on `<vault dir>/run/pvault.sock`
   (dir 0700, socket 0600; bound before TCP, never taken over from a live server, stale
@@ -96,7 +101,8 @@ Profile Password + Secret Key (128-bit)
   resolved `os.Executable()`, and the same running cdhash as this process via `csops`, so a
   server left running across a reinstall is refused before any prompt; Linux: `SO_PEERCRED`
   + `/proc/<pid>/exe`; other OSes keep TCP). `checkVaultServer` runs before any password or
-  Touch ID prompt. The Go side doesn't require the hardened runtime, so `go build` and
+  Touch ID prompt, and also requires `VAULT_ADDR` to be the TCP address the verified server
+  reports in `/vault/status` (`addr`), since tokens and the UI's password go there. The Go side doesn't require the hardened runtime, so `go build` and
   release binaries work; the helper does (`make build` signs pvault that way).
   Limits: the private run dir is the protection. The peer check catches stale or
   mismatched servers but is not a guarantee against a process that can already write to
@@ -164,7 +170,11 @@ Profile Password + Secret Key (128-bit)
   replaces (by hash, so no raw token goes in a URL). `TestStoreInKeychain` and the
   MCP Keychain test touch the real Keychain and only run with `PVAULT_KEYCHAIN_TEST=1`
 - PEC (`mcp/src/pec.ts`): read-only IMAP tools `pec_folders`/`pec_list`/`pec_read`/
-  `pec_attachment`/`pec_save_attachment` (writes into the first import dir, `wx` + 0600), registered only when `PEC_ADDRESS` is set. No SMTP code by design.
+  `pec_attachment`/`pec_save_attachment` (writes into the first import dir, `wx` + 0600, then
+  sets `com.apple.quarantine` so Gatekeeper warns on open; names are cut to 200 UTF-8 bytes
+  with control characters removed, so `vault_document_add` accepts them), registered only
+  when `PEC_ADDRESS` is set. No SMTP code by design. Only png/jpeg/gif/webp go out as inline
+  images (`content.ts`); HEIC, TIFF and the rest as an embedded resource.
   EXAMINE + BODY.PEEK so nothing is marked read. The app password comes from Keychain
   (`PEC_KEYCHAIN_SERVICE`, account = the PEC address) per request, never cached.
   Messages are unwrapped from `postacert.eml` and `daticert.xml` is parsed
@@ -172,12 +182,14 @@ Profile Password + Secret Key (128-bit)
 - Italian fields are validated/normalized in `Vault.Set` (`internal/vault/italy.go`);
   SPID/CIE credentials (`IsCredentialField`: a credential word, plurals, digits and
   `pincode`/`pukcode` included, with spid/cie/cieid among the category's or field's
-  words) can only be stored with tier `personal`; categories whose first word is
-  `spid`/`cieid` (`spid_poste`) default to it, and so do their documents
-  (`DefaultDocumentTier`). `personal` (rank 4) is
+  words, a trailing number allowed: spid2, cie2) can only be stored with tier `personal`;
+  categories whose first word is `spid`/`cieid` (`spid_poste`, `spid2`) default to it, and so
+  do their documents (`DefaultDocumentTier`, which the upload check uses, so a token can't
+  create a personal document in `cie_pin` either). `personal` (rank 4) is
   never reachable by service tokens: they can't be capped at it, and the API hides
   personal items from them (404 on read/delete, 403 personal_only on write, omitted
-  from every listing). Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
+  from every listing; a single-field read re-checks the tier on the row it decrypts,
+  `GetIf`). Only session auth and scoped grants the user approved reach it. Portal login: `preferences.accesso_pa` (`spid`/`cie`) and
   `spid.provider` (fixed spellings matching the onboarding select,
   `TestOnboardingSelectOptionsValidate`) are validated in `access.go`; the provider
   stays lowerable to `standard` so agents can pick it. Fields named with the word
@@ -186,7 +198,8 @@ Profile Password + Secret Key (128-bit)
 - Housing categories `abitazione`, `locazione`, `utenze`, `tari` describe the home at
   residenza/domicilio (address not duplicated). Their format rules live in
   `internal/vault/housing.go` and run before the generic ones in `NormalizeAndValidate`,
-  scoped to those categories. Every onboarding `data-field` category must be in the
+  scoped to those categories. Euro amounts need 3-digit thousands groups and at most 2
+  decimals (`1.234.56` and the ambiguous `1,250` are refused). Every onboarding `data-field` category must be in the
   page's `categories` list (`TestOnboardingFieldsAreLoaded`)
 - Pratiche (`pratiche.go`): procedures in progress are fields `pratiche.<slug>_<campo>`,
   slug lower-case words joined by hyphens, campo/stato/canale from fixed lists (validated).
@@ -232,7 +245,9 @@ Profile Password + Secret Key (128-bit)
 - WAL mode enabled, busy_timeout=5000ms; the vault path can't contain `?` (the driver
   cuts its DSN there)
 - CLI arguments: commands without flags use `positionalArgs`, so an unknown option is an
-  error, never ignored or read as a name; `pvault set` takes one value (quote spaces)
+  error, never ignored or read as a name; `pvault set` takes one value (quote spaces).
+  `parseFlags` refuses a repeated flag, and `serve` accepts only `--password-stdin` or
+  `--locked`; the stdin password is kept as typed (only the line ending is dropped)
 - No CGO — pure Go for portability
 
 ## Environment Variables

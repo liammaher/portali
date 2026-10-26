@@ -12,6 +12,12 @@ usually somewhere else). A playbook records how the procedure went last time: so
 deadline, channels, form fields mapped to vault field IDs, steps and gotchas. The
 first run of a procedure is research; later runs follow and re-check the playbook.
 
+Before researching, look the procedure up in the **pratiche-napoli library**
+(github.com/liammaher/pratiche-napoli): shared, source-cited procedures for Naples
+and national enti, with form fields mapped to the same field IDs the vault uses. A
+library entry replaces most of the research; the playbook keeps what is personal to
+this user's runs.
+
 Read data only through the vault skill and follow its hard rules (no passwords,
 secret key or tokens; never open the vault UI in a browser you control).
 
@@ -23,19 +29,51 @@ for a whole category). Before each command, say in chat what the prompt will ask
 "not approved" means the user said no or is away: don't retry, ask them. Fall back to
 the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
 
-## 0. Find the pratica and its playbook
+## 0. Find the pratica, its playbook and its library entry
 
 1. `ls ~/.claude/skills/pratica/playbooks/` and read the one for this ente and
    procedure, if any. It is a
    hint, not a script: check its `Last verified` date and re-check its sources if
    it's older than about six months or anything you see doesn't match.
-2. Look for an open pratica: `pvault list pratiche` (or `vault_list`), fields
+2. Find the library entry. Files are `procedures/<napoli|italia>/<ente>/<slug>.yaml`;
+   the playbook's `Library:` line names it when a past run found one. Read them from
+   a local clone if `$PRATICHE_NAPOLI_DIR` is set (`ls -R "$PRATICHE_NAPOLI_DIR/procedures"`),
+   otherwise from GitHub `main`, which only changes by reviewed PR:
+   ```sh
+   curl -s "https://api.github.com/repos/liammaher/pratiche-napoli/git/trees/main?recursive=1" \
+     | python3 -c 'import json,sys; [print(p["path"]) for p in json.load(sys.stdin)["tree"] if p["path"].startswith("procedures/")]'
+   curl -s https://raw.githubusercontent.com/liammaher/pratiche-napoli/main/procedures/<path>.yaml
+   ```
+   Pick by ente and slug, then confirm with `title`, `summary` and `applies_to`
+   (several entries can share an ente: TARI alone has iscrizione, variazione,
+   cessazione and autotutela). No match is normal: the library covers mostly
+   micro-business procedures so far, so go on to step 1 without it.
+3. Look for an open pratica: `pvault list pratiche` (or `vault_list`), fields
    `pratiche.<slug>_*`. If one
    exists, resume from its `stato` and `prossimo_passo`; never redo a step that's
    done (don't regenerate a form that is already filled and signed).
-3. Look in the user's own folder for the topic for files already prepared.
+4. Look in the user's own folder for the topic for files already prepared.
 
-## 1. Research (only what a fresh playbook doesn't cover)
+## 1. Research (only what the library and a fresh playbook don't cover)
+
+**With a library entry**, start from it rather than from a web search:
+
+- `deadline`, `channels`, `payment`, `documents`, `steps` (`human_only: true` steps go
+  to step 5), `after` and `pitfalls` give most of the brief below.
+- Every claim has a `status`. Only `verified` ones may be stated as fact; say
+  "unverified" or "sources disagree" (`disputed`) for the others, and check them
+  against the official source when they decide something (a deadline, a fee).
+- `verification.level` says how far the entry is trusted: L1 desk-checked, L2
+  confirmed by the office, L3 a real filing went through. Tell the user the level.
+- Freshness: re-open a source whose `retrieved` date is older than about six months,
+  or that the deadline or fee depends on. Download each form from its `url` and
+  compare `shasum -a 256` with its `sha256`: a mismatch means the form changed, so
+  redo the field mapping from the new PDF instead of trusting `fields`.
+- When the entry and the playbook disagree, the official source decides; note the
+  disagreement for step 7.
+
+Then research only the gaps (a missing channel, an `ask` the entry can't answer),
+the same way as without one:
 
 Official sources first: the ente's site (comune.<x>.it, agenziaentrate.gov.it,
 inps.it), its regolamento or delibera, and the instructions printed on the form
@@ -52,6 +90,16 @@ give. Give the user a short brief:
 ## 2. Check what's missing
 
 Map every form field to a vault field ID (`curl -s http://127.0.0.1:7200/vault/schema`).
+A library entry's `forms[].fields` already does this; each `map` is one of:
+
+- `direct: <id>`: that field. `concat: [a, b]`: the fields joined in order.
+- `fallback: [a, b]`: the first one with a value (keep its sibling fields from the
+  same category, as the field's `notes` say).
+- `repeat: <cat>.membro<N>_*`: one row per N (`pvault list <cat>` to see how many).
+- `ask: <question>`: not in the vault; ask the user. `blank_with_reason`: leave empty.
+
+An ID the vault schema doesn't list yet (the library's `contract/extensions.json`)
+is an `ask` too.
 
 **With Touch ID**: read the mapped fields with as few `pvault get` calls as you can
 (one per 10 IDs; `null` means the field isn't set). Write with `pvault set <id> <value>`,
@@ -167,11 +215,20 @@ or update it. Rules:
   are committed to the repo and can be shared.
 - Put the date you checked each source in `Last verified`.
 - Add one line to `Run log` saying what happened and what changed since last time.
+- With a library entry, put its `id` in `Library:` and don't copy its contents: keep
+  only what it lacks (local gotchas, the user's channel, the run log).
+
+The library is a separate project that moves by PR and never holds personal data, so
+don't edit it from here. When the run found something it should know (a claim that
+proved wrong or right, a changed form, a recurring `ask`, a filing that went through,
+which is evidence for L3), list it for the user at the end: entry `id`, the claim,
+what you saw, and the official source.
 
 ```markdown
 # <Ente> — <procedure>
 
 Last verified: YYYY-MM-DD
+Library: <napoli|italia>/<ente>/<slug> (or "none")
 Applies to: <who has to do this, and when>
 
 ## Sources

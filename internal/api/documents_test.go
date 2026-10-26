@@ -201,3 +201,16 @@ func TestDocuments_TokenCannotLowerTier(t *testing.T) {
 		t.Fatalf("session upload at public: %d %s", w.Code, w.Body.String())
 	}
 }
+
+// A credential-named category (cie_pin) defaults its documents to personal,
+// so a token can't create one there any more than it can write a field.
+func TestDocuments_TokenCannotUploadToCredentialCategory(t *testing.T) {
+	env := setup(t)
+	tok := createTokenWithAccess(t, env, "*", "append")
+	for _, category := range []string{"cie_pin", "cie_puk", "spid"} {
+		w := env.upload(t, tok, "category="+category+"&name=letter.pdf", "application/pdf", []byte("PIN"))
+		if w.Code != 403 || !strings.Contains(w.Body.String(), "personal_only") {
+			t.Errorf("upload to %s: %d %s, want 403 personal_only", category, w.Code, w.Body.String())
+		}
+	}
+}

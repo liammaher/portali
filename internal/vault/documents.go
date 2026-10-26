@@ -94,10 +94,12 @@ func (v *Vault) AddDocument(category, name, contentType string, data []byte, sen
 	if err != nil {
 		return nil, err
 	}
+	defer clear(vaultKey)
 	subkey, err := crypto.DeriveSubkey(vaultKey, v.salt, documentKeyInfo(category))
 	if err != nil {
 		return nil, err
 	}
+	defer clear(subkey)
 
 	idBytes := make([]byte, 16)
 	if _, err := crand.Read(idBytes); err != nil {
@@ -142,7 +144,7 @@ func (v *Vault) DocumentMeta(id string) (*DocumentInfo, error) {
 	if !reDocumentID.MatchString(id) {
 		return nil, nil
 	}
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return nil, err
 	}
 	doc, err := v.db.GetDocument(id)
@@ -166,6 +168,7 @@ func (v *Vault) ListDocuments(allow FieldFilter) ([]DocumentInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer clear(vaultKey)
 	docs, err := v.db.ListDocuments()
 	if err != nil {
 		return nil, err
@@ -193,6 +196,7 @@ func (v *Vault) GetDocument(id string) (*DocumentInfo, []byte, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	defer clear(vaultKey)
 	doc, err := v.db.GetDocument(id)
 	if err != nil || doc == nil {
 		return nil, nil, err
@@ -210,6 +214,7 @@ func (v *Vault) GetDocument(id string) (*DocumentInfo, []byte, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	defer clear(subkey)
 	data, err := crypto.DecryptWithAAD(subkey, ciphertext, documentAAD(id))
 	if err != nil {
 		return nil, nil, fmt.Errorf("decrypt document %s: %w", id, err)
@@ -225,7 +230,7 @@ func (v *Vault) DeleteDocument(id string) (bool, error) {
 	if !reDocumentID.MatchString(id) {
 		return false, nil
 	}
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return false, err
 	}
 	doc, err := v.db.GetDocument(id)
@@ -250,6 +255,7 @@ func (v *Vault) decryptDocumentInfo(vaultKey []byte, doc store.Document) (*Docum
 	if err != nil {
 		return nil, err
 	}
+	defer clear(subkey)
 	encName, err := base64.StdEncoding.DecodeString(doc.Name)
 	if err != nil {
 		return nil, fmt.Errorf("decode document name %s: %w", doc.ID, err)

@@ -4,7 +4,8 @@ import {
   decodeText, envelopeSender, isCalendarDate, listFolders, listMessages, parseDaticert, parsePec, pecAttachment,
   pecConfig, pecKind, transportHeaders, MAX_TEXT_CHARS,
 } from "./pec.js";
-import { safeFilename, writeNewFile } from "./files.js";
+import { quarantine, safeFilename, writeNewFile } from "./files.js";
+import { execFileSync } from "node:child_process";
 import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -265,6 +266,27 @@ test("writeNewFile never replaces a file and is owner-only", async () => {
     assert.equal(second, join(dir, "avviso (2).pdf"));
     assert.equal(await readFile(first, "utf8"), "one");
     assert.equal((await stat(second)).mode & 0o777, 0o600);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+// The vault refuses names over 255 UTF-8 bytes or with any control
+// character, so a saved attachment must stay addable with vault_document_add.
+test("safeFilename stays within the vault's name rules", () => {
+  const long = safeFilename("è".repeat(150) + ".pdf", "x");
+  assert.ok(Buffer.byteLength(long) <= 200, `${Buffer.byteLength(long)} bytes`);
+  assert.ok(long.endsWith(".pdf"));
+  assert.equal(safeFilename("notifica\u0085.pdf", "x"), "notifica.pdf");
+});
+
+test("quarantine marks a saved attachment as downloaded", { skip: process.platform !== "darwin" }, async () => {
+  const dir = await mkdtemp(join(tmpdir(), "pec-qtn-"));
+  try {
+    const path = await writeNewFile(dir, "avviso.terminal", Buffer.from("x"));
+    await quarantine(path);
+    const value = execFileSync("/usr/bin/xattr", ["-p", "com.apple.quarantine", path], { encoding: "utf8" });
+    assert.match(value, /^0081;[0-9a-f]+;pvault-mcp;/);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

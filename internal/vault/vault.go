@@ -92,9 +92,13 @@ type Vault struct {
 	backup  backupState
 }
 
-// Open opens an existing vault database.
+// Open opens an existing vault database. It never creates one: an empty
+// vault.db would make a later Init refuse the directory.
 func Open(dir string) (*Vault, error) {
 	dbPath := filepath.Join(dir, "vault.db")
+	if _, err := os.Stat(dbPath); errors.Is(err, os.ErrNotExist) {
+		return nil, ErrNotInitialized
+	}
 	db, err := store.Open(dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("open database: %w", err)
@@ -167,7 +171,11 @@ func Init(dir, password string) (secretKey string, err error) {
 
 	db, err := store.Open(dbPath)
 	if err != nil {
-		os.Remove(skPath)
+		// store.Open may have created the file before failing; CanInit
+		// checked it wasn't there, so it is ours to remove.
+		for _, f := range []string{dbPath, dbPath + "-wal", dbPath + "-shm", skPath} {
+			os.Remove(f)
+		}
 		return "", fmt.Errorf("create database: %w", err)
 	}
 	// A half-made vault would count as initialized without a usable key, so
@@ -480,6 +488,7 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 	if err != nil {
 		return err
 	}
+	defer clear(vaultKey)
 
 	parts := strings.SplitN(id, ".", 2)
 	category, fieldName := parts[0], parts[1]
@@ -489,6 +498,7 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 	if err != nil {
 		return fmt.Errorf("derive subkey: %w", err)
 	}
+	defer clear(subkey)
 
 	// Encrypt
 	encrypted, err := crypto.EncryptToBase64(subkey, []byte(value))
@@ -547,16 +557,24 @@ func (v *Vault) set(id, value, sensitivity string, seen *store.Seen) error {
 
 // Get decrypts and returns a field value.
 func (v *Vault) Get(id string) (*FieldInfo, error) {
+	return v.GetIf(id, nil)
+}
+
+// GetIf is Get for a field that allow accepts. allow sees the same row that is
+// decrypted, so a tier raised or a field created after the caller's own check
+// can't slip through; a rejected field reads as missing (nil).
+func (v *Vault) GetIf(id string, allow FieldFilter) (*FieldInfo, error) {
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
 	}
+	defer clear(vaultKey)
 
 	f, err := v.db.GetField(id)
 	if err != nil {
 		return nil, err
 	}
-	if f == nil {
+	if f == nil || !allow.allows(*f) {
 		return nil, nil
 	}
 
@@ -564,6 +582,7 @@ func (v *Vault) Get(id string) (*FieldInfo, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer clear(subkey)
 
 	plaintext, err := crypto.DecryptFromBase64(subkey, f.Value)
 	if err != nil {
@@ -586,7 +605,7 @@ func (v *Vault) Get(id string) (*FieldInfo, error) {
 // FieldMeta returns a field's metadata without decrypting its value.
 // Returns nil if the field does not exist.
 func (v *Vault) FieldMeta(id string) (*FieldInfo, error) {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return nil, err
 	}
 	f, err := v.db.GetField(id)
@@ -605,7 +624,7 @@ func (v *Vault) FieldMeta(id string) (*FieldInfo, error) {
 
 // List returns all field metadata (no values).
 func (v *Vault) List() ([]FieldInfo, error) {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return nil, err
 	}
 
@@ -630,7 +649,7 @@ func (v *Vault) List() ([]FieldInfo, error) {
 
 // ListByCategory returns field metadata for a category (no values).
 func (v *Vault) ListByCategory(category string) ([]FieldInfo, error) {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return nil, err
 	}
 
@@ -667,6 +686,7 @@ func (v *Vault) GetByCategory(category string, allow FieldFilter) ([]FieldInfo, 
 	if err != nil {
 		return nil, err
 	}
+	defer clear(vaultKey)
 
 	fields, err := v.db.GetFieldsByCategory(category)
 	if err != nil {
@@ -677,6 +697,7 @@ func (v *Vault) GetByCategory(category string, allow FieldFilter) ([]FieldInfo, 
 	if err != nil {
 		return nil, err
 	}
+	defer clear(subkey)
 
 	result := make([]FieldInfo, 0, len(fields))
 	for _, f := range fields {
@@ -719,6 +740,7 @@ func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer clear(vaultKey)
 
 	fields, err := v.db.GetAllFields()
 	if err != nil {
@@ -727,6 +749,11 @@ func (v *Vault) decryptFields(allow FieldFilter) (*ContextBundle, error) {
 
 	bundle := &ContextBundle{Categories: make(map[string][]FieldInfo)}
 	subkeys := make(map[string][]byte)
+	defer func() {
+		for _, sk := range subkeys {
+			clear(sk)
+		}
+	}()
 
 	for _, f := range fields {
 		if !allow.allows(f) {
@@ -772,7 +799,7 @@ func (v *Vault) DeleteChecked(id string, existing *FieldInfo) error {
 }
 
 func (v *Vault) delete(id string, seen *store.Seen) error {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return err
 	}
 
@@ -787,7 +814,7 @@ func (v *Vault) delete(id string, seen *store.Seen) error {
 
 // SetSensitivity updates a field's sensitivity tier.
 func (v *Vault) SetSensitivity(id, tier string) error {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return err
 	}
 	if !validTiers[tier] {
@@ -840,7 +867,7 @@ func hashToken(token string) string {
 // can only read fields up to maxSensitivity (default "sensitive").
 // The raw token is returned to the caller; only the SHA-256 hash is stored.
 func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, maxSensitivity, access string) (string, error) {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return "", err
 	}
 	if err := ValidateScope(scope); err != nil {
@@ -910,7 +937,7 @@ func (v *Vault) ValidateServiceToken(token string) (*store.Token, bool) {
 
 // ListServiceTokens returns the service tokens that haven't expired.
 func (v *Vault) ListServiceTokens() ([]store.Token, error) {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return nil, err
 	}
 	tokens, err := v.db.ListTokensByUsage("service")
@@ -931,7 +958,7 @@ func (v *Vault) ListServiceTokens() ([]store.Token, error) {
 // a prefix (at least 8 hex characters) of its stored hash, as shown by
 // ListServiceTokens. A prefix must match exactly one token.
 func (v *Vault) RevokeServiceToken(ref string) (int64, error) {
-	if _, err := v.requireUnlocked(); err != nil {
+	if err := v.checkUnlocked(); err != nil {
 		return 0, err
 	}
 	hash, err := v.resolveServiceToken(ref)
@@ -1004,6 +1031,19 @@ func (v *Vault) LogAccess(entry store.AuditEntry) {
 	v.db.LogAccess(entry)
 }
 
+// checkUnlocked is requireUnlocked for callers that don't need the key, so
+// no copy of it is made.
+func (v *Vault) checkUnlocked() error {
+	v.mu.RLock()
+	defer v.mu.RUnlock()
+	if v.session == nil || !v.session.HasKey() {
+		return ErrLocked
+	}
+	return nil
+}
+
+// requireUnlocked returns a copy of the vault key. Callers clear it when done
+// (defer clear(vaultKey)), so no copy outlives the request.
 func (v *Vault) requireUnlocked() ([]byte, error) {
 	v.mu.RLock()
 	defer v.mu.RUnlock()

@@ -1,6 +1,7 @@
 # Comune di Napoli — TARI nuova iscrizione (uso abitativo)
 
 Last verified: 2026-10-25
+Library: napoli/comune/tari-iscrizione-uso-abitativo
 Applies to: whoever starts occupying or holding a home in Napoli (owner, tenant or
 other), once, when the occupation starts. The declaration stays valid for later
 years until something changes (then Mod. variazione / cessazione).

@@ -84,7 +84,15 @@ func (s *Session) Token() string {
 	return s.token
 }
 
+// HasKey reports whether the session still holds the vault key.
+func (s *Session) HasKey() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.vaultKey != nil
+}
+
 // VaultKey returns a copy of the vault key. Returns nil if session is destroyed.
+// The caller clears the copy when done.
 func (s *Session) VaultKey() []byte {
 	s.mu.Lock()
 	defer s.mu.Unlock()

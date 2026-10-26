@@ -14,6 +14,7 @@ import (
 )
 
 func cmdUnlock() {
+	positionalArgs(os.Args[2:], "usage: pvault unlock", 0, 0)
 	// Probe the port first — catches stale servers even if the PID file is gone.
 	if portHasVault() {
 		if isVaultUnlocked() {

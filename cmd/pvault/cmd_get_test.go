@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -43,7 +44,7 @@ func fakeVaultServer(t *testing.T, fields map[string]string) *httptest.Server {
 	t.Helper()
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /vault/status", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{"locked":false}`))
+		fmt.Fprintf(w, `{"locked":false,"addr":%q}`, serverHost())
 	})
 	mux.HandleFunc("GET /vault/fields/{id...}", func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Authorization") != "Bearer fake-token" {
