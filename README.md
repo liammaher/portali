@@ -46,7 +46,8 @@ For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a va
 | `tari` | `codice_contribuente`, declaration date and protocollo, taxed area and occupants |
 | contacts & bank | `identity.phone` (+39…), `identity.pec`, `financial.iban` (validated) |
 | `nucleo_familiare` | members as `membro<N>_nome`, `membro<N>_codice_fiscale`, … |
-| `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA |
+| `business` | `partita_iva` (validated), PEC, ATECO, regime fiscale, REA, `qualita_dichiarante` (titolare / legale_rappresentante), sede legale address (`sede_legale_cap`, `sede_legale_provincia` validated) |
+| `locale` | the business premises: address, `titolo`, `data_inizio`, catasto data and `catasto_categoria` (C/1, validated), `superficie_mq`, `destinazione_uso` |
 | `spid` (personal) | provider, livello, username, password, renewal date — plus `cie.pin` / `cie.puk` |
 | `permesso_soggiorno` | numero, tipo, questura, issue/expiry date |
 | `passaporto`, `patente`, `tessera_sanitaria` | numero, issuing authority/country, expiry date |

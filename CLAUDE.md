@@ -201,6 +201,12 @@ Profile Password + Secret Key (128-bit)
   scoped to those categories. Euro amounts need 3-digit thousands groups and at most 2
   decimals (`1.234.56` and the ambiguous `1,250` are refused). Every onboarding `data-field` category must be in the
   page's `categories` list (`TestOnboardingFieldsAreLoaded`)
+- `business` (incl. `sede_legale_*`) and `locale` (the business premises, one unit, with its
+  own address) have their rules in `internal/vault/business.go`; address parts share the
+  residenza checks through `addressPart`, catasto fields share abitazione's (`normalizeCatasto`).
+  `identity.birth_country` is for births abroad only (Italia is refused). These came from the
+  pratiche-napoli library's `contract/extensions.json`: when the library needs a field the
+  vault lacks, add it here, then remove it from `extensions.json` there and regenerate `fields.json`
 - Pratiche (`pratiche.go`): procedures in progress are fields `pratiche.<slug>_<campo>`,
   slug lower-case words joined by hyphens, campo/stato/canale from fixed lists (validated).
   Well-formed pratiche fields are never credentials, even when the slug says cie-pin.

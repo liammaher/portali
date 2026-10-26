@@ -69,6 +69,11 @@ func normalizeHousing(id, category, name, value string) (out string, handled boo
 		return "", true, &ValidationError{Field: id, Msg: msg}
 	}
 	key := category + "." + name
+	if category == "abitazione" {
+		if v, handled, err := normalizeCatasto(name, value, fail); handled {
+			return v, handled, err
+		}
+	}
 
 	switch {
 	case key == "abitazione.titolo":
@@ -76,23 +81,6 @@ func normalizeHousing(id, category, name, value string) (out string, handled boo
 			return t, true, nil
 		}
 		return fail("must be proprietario, locatario, comodatario, usufruttuario, ospite or altro")
-	case key == "abitazione.catasto_categoria":
-		v := normalizeCode(value)
-		m := reCatastoCategoria.FindStringSubmatch(v)
-		if m == nil {
-			return fail("categoria catastale must look like A/2 (a letter A-F and a number)")
-		}
-		n, _ := strconv.Atoi(m[2])
-		if n < 1 || n > catastoGroupMax[m[1][0]] {
-			return fail(fmt.Sprintf("group %s has categories %s/1 to %s/%d", m[1], m[1], m[1], catastoGroupMax[m[1][0]]))
-		}
-		return fmt.Sprintf("%s/%d", m[1], n), true, nil
-	case key == "abitazione.catasto_foglio":
-		return matchCode(value, reFoglio, fail, "foglio is a number of up to 4 digits")
-	case key == "abitazione.catasto_particella":
-		return matchCode(value, reParticella, fail, "particella is up to 7 letters or digits")
-	case key == "abitazione.catasto_subalterno":
-		return matchCode(value, reSubalterno, fail, "subalterno is a number of up to 4 digits")
 	case key == "abitazione.classe_energetica":
 		v := strings.TrimPrefix(normalizeCode(value), "CLASSE")
 		if !energyClasses[v] {
@@ -129,6 +117,32 @@ func normalizeHousing(id, category, name, value string) (out string, handled boo
 		return matchCode(value, rePOD, fail, "POD must look like IT001E12345678 (IT, 3 digits, E, then 8-9 characters)")
 	case key == "utenze.gas_pdr":
 		return matchCode(value, rePDR, fail, "PDR must be 14 digits")
+	}
+	return value, false, nil
+}
+
+// normalizeCatasto applies the catasto rules to a unit's catasto_* fields
+// (abitazione for the home, locale for business premises). handled is false
+// for any other name.
+func normalizeCatasto(name, value string, fail func(string) (string, bool, error)) (string, bool, error) {
+	switch name {
+	case "catasto_categoria":
+		v := normalizeCode(value)
+		m := reCatastoCategoria.FindStringSubmatch(v)
+		if m == nil {
+			return fail("categoria catastale must look like A/2 (a letter A-F and a number)")
+		}
+		n, _ := strconv.Atoi(m[2])
+		if n < 1 || n > catastoGroupMax[m[1][0]] {
+			return fail(fmt.Sprintf("group %s has categories %s/1 to %s/%d", m[1], m[1], m[1], catastoGroupMax[m[1][0]]))
+		}
+		return fmt.Sprintf("%s/%d", m[1], n), true, nil
+	case "catasto_foglio":
+		return matchCode(value, reFoglio, fail, "foglio is a number of up to 4 digits")
+	case "catasto_particella":
+		return matchCode(value, reParticella, fail, "particella is up to 7 letters or digits")
+	case "catasto_subalterno":
+		return matchCode(value, reSubalterno, fail, "subalterno is a number of up to 4 digits")
 	}
 	return value, false, nil
 }
