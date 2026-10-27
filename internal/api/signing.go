@@ -22,21 +22,11 @@ func viaSocket(r *http.Request) bool {
 	return ok
 }
 
-// requireSigningScope checks the caller may touch signing requests at all: a
-// token's scope has to allow them, as for a document category.
-func requireSigningScope(w http.ResponseWriter, r *http.Request) bool {
-	if !vault.ScopeAllows(scopeFromRequest(r), vault.SigningScopeID) {
-		scopeDenied(w)
-		return false
-	}
-	return true
-}
-
 // signingOwner is the requester filter for a caller: the user (a session, or
 // a grant they approved) sees every request, an agent only those of its own
 // token (two tokens of one consumer name are two agents).
 func signingOwner(r *http.Request) string {
-	if reachesPersonal(r) {
+	if isUser(r) {
 		return ""
 	}
 	if id := tokenIDFromRequest(r); id != "" {
@@ -56,7 +46,7 @@ func requireUser(w http.ResponseWriter, r *http.Request, id string) bool {
 
 // POST /vault/signing
 func (s *Server) handleSigningRequest(w http.ResponseWriter, r *http.Request) {
-	if !requireJSON(w, r) || !requireSigningScope(w, r) || !requireAccess(w, r, false) {
+	if !requireJSON(w, r) || !requireScope(w, r, vault.SigningScopeID) || !requireAccess(w, r, false) {
 		return
 	}
 	var req struct {
@@ -88,7 +78,7 @@ func (s *Server) handleSigningRequest(w http.ResponseWriter, r *http.Request) {
 
 // GET /vault/signing
 func (s *Server) handleSigningList(w http.ResponseWriter, r *http.Request) {
-	if !requireSigningScope(w, r) {
+	if !requireScope(w, r, vault.SigningScopeID) {
 		return
 	}
 	list, err := s.vault.ListSignings(signingOwner(r))
@@ -101,7 +91,7 @@ func (s *Server) handleSigningList(w http.ResponseWriter, r *http.Request) {
 
 // GET /vault/signing/{id}
 func (s *Server) handleSigningStatus(w http.ResponseWriter, r *http.Request) {
-	if !requireSigningScope(w, r) {
+	if !requireScope(w, r, vault.SigningScopeID) {
 		return
 	}
 	info, err := s.vault.SigningStatus(r.PathValue("id"), signingOwner(r))
@@ -173,7 +163,7 @@ func (s *Server) handleSigningApprove(w http.ResponseWriter, r *http.Request) {
 // DELETE /vault/signing/{id}: the user refuses it, or the agent that asked
 // withdraws it.
 func (s *Server) handleSigningReject(w http.ResponseWriter, r *http.Request) {
-	if !requireSigningScope(w, r) || !requireAccess(w, r, false) {
+	if !requireScope(w, r, vault.SigningScopeID) || !requireAccess(w, r, false) {
 		return
 	}
 	info, err := s.vault.RejectSigning(r.PathValue("id"), signingOwner(r), consumerFromRequest(r))

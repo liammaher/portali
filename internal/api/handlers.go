@@ -17,6 +17,18 @@ func scopeDenied(w http.ResponseWriter) {
 	writeError(w, http.StatusForbidden, "scope_exceeded", "token scope does not allow access to this field")
 }
 
+// requireScope checks the caller's scope allows every one of ids.
+func requireScope(w http.ResponseWriter, r *http.Request, ids ...string) bool {
+	scope := scopeFromRequest(r)
+	for _, id := range ids {
+		if !vault.ScopeAllows(scope, id) {
+			scopeDenied(w)
+			return false
+		}
+	}
+	return true
+}
+
 // requireAccess checks the caller may make a change. Adding something new
 // needs append or write; overwriting or deleting needs write.
 func requireAccess(w http.ResponseWriter, r *http.Request, overwrite bool) bool {
@@ -89,7 +101,7 @@ func callerFilter(r *http.Request) vault.FieldFilter {
 // caller's own filter for a service token, so its answers never depend on
 // people it can't see.
 func peopleFilter(r *http.Request) vault.FieldFilter {
-	if reachesPersonal(r) {
+	if isUser(r) {
 		return nil
 	}
 	return callerFilter(r)
@@ -321,8 +333,7 @@ func (s *Server) handleGetField(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
 		return
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), id) {
-		scopeDenied(w)
+	if !requireScope(w, r, id) {
 		return
 	}
 	if _, ok := s.requireFieldTier(w, r, id, false); !ok {
@@ -349,8 +360,7 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
 		return
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), id) {
-		scopeDenied(w)
+	if !requireScope(w, r, id) {
 		return
 	}
 	// A read-only token is refused before the field is looked up, so it
@@ -449,8 +459,7 @@ func (s *Server) handleDeleteField(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
 		return
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), id) {
-		scopeDenied(w)
+	if !requireScope(w, r, id) {
 		return
 	}
 	del := s.vault.Delete
@@ -539,12 +548,8 @@ func (s *Server) handleLocated(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", vault.ErrNotLocatable.Error())
 		return
 	}
-	scope := scopeFromRequest(r)
-	for _, id := range ids {
-		if !vault.ScopeAllows(scope, id) {
-			scopeDenied(w)
-			return
-		}
+	if !requireScope(w, r, ids[:]...) {
+		return
 	}
 	loc, err := s.vault.Locate(category, callerFilter(r))
 	if err != nil {
@@ -648,8 +653,7 @@ func (s *Server) handleSetSensitivity(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
 		return
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), id) {
-		scopeDenied(w)
+	if !requireScope(w, r, id) {
 		return
 	}
 	var req struct {

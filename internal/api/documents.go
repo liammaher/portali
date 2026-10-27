@@ -19,8 +19,7 @@ func (s *Server) handleAddDocument(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid_request", "category is required (letters, digits, underscore, hyphen)")
 		return
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), vault.DocumentScopeID(category)) {
-		scopeDenied(w)
+	if !requireScope(w, r, vault.DocumentScopeID(category)) {
 		return
 	}
 	// Uploads always create a new document, so append access is enough.
@@ -152,8 +151,7 @@ func (s *Server) requireDocumentAccess(w http.ResponseWriter, r *http.Request, i
 		writeError(w, http.StatusNotFound, "not_found", "document not found")
 		return nil, false
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), vault.DocumentScopeID(meta.Category)) {
-		scopeDenied(w)
+	if !requireScope(w, r, vault.DocumentScopeID(meta.Category)) {
 		return nil, false
 	}
 	if !vault.TierAllows(maxTierFromRequest(r), meta.Sensitivity) {

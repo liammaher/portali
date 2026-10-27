@@ -180,7 +180,7 @@ cd mcp && npm ci && npm run build
 
 With that config, `pvault create-service-token claude --scope "residenza.*" --ttl 2h --keychain pvault-mcp` grants access mid-session, with no restart and no token on screen. Outside macOS, set `"VAULT_TOKEN": "<token>"` instead.
 
-Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_household`, `vault_expiring`, `vault_documents`, `vault_document_get`, `vault_document_add`, `vault_sign_request`, `vault_sign_status`, and, with `PEC_ADDRESS` set, the read-only `pec_folders`, `pec_list`, `pec_read`, `pec_attachment`, `pec_save_attachment`. The MCP server only ever uses the token you give it, and `vault_document_add` and `vault_sign_request` only read files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
+Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_household`, `vault_expiring`, `vault_locate`, `vault_documents`, `vault_document_get`, `vault_document_add`, `vault_sign_request`, `vault_sign_status`, `vault_files_search`, `vault_file_get`, `vault_file_suggest`, and, with `PEC_ADDRESS` set, the read-only `pec_folders`, `pec_list`, `pec_read`, `pec_attachment`, `pec_save_attachment`. The MCP server only ever uses the token you give it, and `vault_document_add` and `vault_sign_request` only read files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
 
 ### Claude Code setup
 

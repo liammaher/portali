@@ -241,7 +241,7 @@ func (v *Vault) RemovePerson(slug string) (*RemovedPerson, error) {
 	if !ValidPersonSlug(slug) {
 		return nil, &ValidationError{Field: "person", Msg: errPersonSlug(slug).Error()}
 	}
-	// Lock order: backup.mu, then writeMu, then v.mu. Holding backup.mu
+	// Lock order: backup.mu, writeMu, filesMu, v.mu. Holding backup.mu
 	// keeps a backup from snapshotting rows whose files are being removed.
 	v.backup.mu.Lock()
 	defer v.backup.mu.Unlock()

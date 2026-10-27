@@ -439,7 +439,7 @@ func (v *Vault) RejectSigning(id, requesterID, by string) (*SigningInfo, error) 
 }
 
 // CreateSignGrant checks the password like any grant, then issues one that
-// can only read and approve request id (2 minutes). It is how the user
+// can only read and approve request id (SignGrantTTL). It is how the user
 // authorises one review.
 func (v *Vault) CreateSignGrant(password, secretKeyHex, id string) (string, time.Time, error) {
 	session, err := v.checkGrantCredentials(password, secretKeyHex)

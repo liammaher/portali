@@ -7,9 +7,10 @@
       prepare (append, the form's categories and pratiche.*, and, when the
       layout has a signature box on a form that is signed, firma_autografa.signing
       for --sign) and track (write, pratiche.* and the categories the entry's
-      records go to); with --draft, one read token for the form's categories.
-      Each comes with the pvault command that saves it where run --vault-dir
-      looks, and the ask rows come with how their answers are written.
+      records go to; only the synthetic vault's --reply uses it); with --draft,
+      one read token for the form's categories. prepare or draft comes with the
+      pvault command that saves it where run --vault-dir looks, and the ask
+      rows come with how their answers are written.
 
   fill.py run (--library DIR --procedure ID | --entry E.json --layout L.json)
               --form ID [--for SLUG] [--party ROLE=SLUG[,SLUG]]... --out DIR [--pdf FORM.pdf]
@@ -97,9 +98,6 @@ import sys
 import urllib.parse
 import urllib.request
 
-# The vault's word for a library channel type (it takes the library's as is,
-# saving these three as the Italian word).
-CANALE = {"portal": "portale", "desk": "sportello", "post": "posta"}
 CLOSED = {"completata", "respinta", "annullata"}
 MAP_KINDS = {"direct", "concat", "fallback", "repeat", "ask", "blank_with_reason"}
 MAP_KEYS = MAP_KINDS | {"fields", "template", "columns", "party"}
@@ -295,8 +293,17 @@ def asks(form, layout, parties=None):
     each box."""
     tables = {b["label"]: b["into_table"] for b in (layout or {}).get("boxes", []) if "into_table" in b}
     columns = {r["label"]: [c["label"] for c in r["map"]["columns"]] for r in form["fields"] if r["map"].get("columns")}
+    # Party rows that only apply after another answer (when) are one question,
+    # asked with that answer: who has the role, if it applies.
+    gated = {}
+    for row in form["fields"]:
+        if "party" in row["map"] and row.get("when") and not party_slug(row, parties or {}):
+            role = role_list(row["map"]["party"]["ruolo"])[0]
+            gated.setdefault(row["when"]["field"], {})[role] = row["when"]["ticks"]
     out = []
     for row in form["fields"]:
+        if "party" in row["map"] and row.get("when") and not party_slug(row, parties or {}):
+            continue
         if "party" in row["map"] and not party_slug(row, parties or {}):
             roles = " o ".join(human_role(r) for r in role_list(row["map"]["party"]["ruolo"]))
             out.append({"label": row["label"], "question": f"{row['label']}: dati del {roles}. Se è nel vault, "
@@ -305,6 +312,10 @@ def asks(form, layout, parties=None):
         if "ask" not in row["map"]:
             continue
         q = {"label": row["label"], "question": row["map"]["ask"]}
+        for role, boxes in gated.get(row["label"], {}).items():
+            q["question"] += f" (se {' o '.join(boxes)}: chi è il {human_role(role)}? --party {role}=<slug>)"
+        if row.get("when"):
+            q["when"] = row["when"]
         if row.get("choices"):
             q["ticks"] = {c["box"]: c["values"] for c in row["choices"]}
         if row["label"] in tables:
@@ -314,10 +325,8 @@ def asks(form, layout, parties=None):
 
 
 def check_supported(entry, form, signer="io"):
-    # The owner, or the person --for names, is the dichiarante, and the family
-    # are the conviventi: what a personal vault's procedures need. Business
-    # vaults (a ruolo signs, party, repeat by ruolo) come later. Anything this
-    # tool doesn't know is refused, never read as blank.
+    # Anything this tool doesn't know is refused, never read as blank: the
+    # library adds keys without raising schema_version.
     if entry.get("schema_version") != 0:
         sys.exit(f"schema_version {entry.get('schema_version')}: this tool reads version 0")
     if signer != "io" and any(r["map"].get("repeat") == "famiglia" for r in form["fields"]):
@@ -335,6 +344,10 @@ def check_supported(entry, form, signer="io"):
             sys.exit(f"row {row['label']!r}: when names {when['field']!r}, which isn't an ask with boxes to tick")
         if m.get("repeat") == "famiglia" and not m.get("columns"):
             sys.exit(f"row {row['label']!r}: a table needs the procedure's columns")
+        for t in [m.get("template", "")] + [c["template"] for c in m.get("columns", [])]:
+            bad = [f for f in template_filters(t) if f not in ("", "date", "digits") and not f.startswith("or:")]
+            if bad:
+                sys.exit(f"row {row['label']!r}: unknown template filter {bad[0]!r}")
 
 
 # The vault's scope for filing signing requests (vault.SigningScopeID).
@@ -355,6 +368,12 @@ def category(ref):
     return local.split(".", 1)[0]
 
 
+def schema_category(ref):
+    """The schema category a ref's category is, or is a numbered copy of
+    (cie2, abitazione-2), as the vault reads it."""
+    return re.sub(r"-?\d+$", "", category(ref))
+
+
 def person_categories(schema):
     """The categories a signer other than the owner brings their own of."""
     return {c["name"] for c in schema["categories"] if c.get("scope") == "person"} - VAULT_OWN
@@ -365,7 +384,7 @@ def signer_id(ref, signer, people):
     unprefixed person category, the vault's for the rest."""
     if signer == "io" or ref.startswith("*:") or ":" in ref.split(".", 1)[0]:
         return ref
-    if category(ref) not in people and ref not in SIGNERS_OWN:
+    if schema_category(ref) not in people and ref not in SIGNERS_OWN:
         return ref
     return f"{signer}:{ref}"
 
@@ -378,7 +397,7 @@ def as_signer(values, signer, people):
     out = {k: v for k, v in values.items() if signer_id(k, signer, people) == k}
     prefix = signer + ":"
     for k, v in values.items():
-        if k.startswith(prefix) and (category(k) in people or k[len(prefix):] in SIGNERS_OWN):
+        if k.startswith(prefix) and (schema_category(k) in people or k[len(prefix):] in SIGNERS_OWN):
             out[k[len(prefix):]] = v
     return out
 
@@ -400,15 +419,23 @@ def needs_schema(a):
     return schema
 
 
-def template_names(template):
-    """Every {name} in a template, in or out of [...]."""
+def template_vars(template):
+    """Every {name|filter} in a template, in or out of [...], as (name, filter)."""
     def walk(nodes):
         for n in nodes:
             if n[0] == "var":
-                yield n[1]
+                yield n[1], n[2]
             elif n[0] == "group":
                 yield from walk(n[1])
     return list(walk(parse_template(template)))
+
+
+def template_names(template):
+    return [name for name, _ in template_vars(template)]
+
+
+def template_filters(template):
+    return [f for _, f in template_vars(template)]
 
 
 def form_fields(form):
@@ -1513,8 +1540,6 @@ def run(a):
         if value:
             status, got = prepare.set(f"pratiche.{slug}_{campo}", value)
             check(f"opens pratiche.{slug}_{campo}", status == 200, "" if status == 200 else f"{status} {got}")
-    want = CANALE.get(channel["type"], channel["type"])
-    check(f"canale {channel['type']!r} is saved as {want!r}", prepare.get(f"pratiche.{slug}_canale") == want)
     deadline_id = f"pratiche.{slug}_data_scadenza"
 
     def expiring(vault):
@@ -1646,12 +1671,17 @@ def main():
         parties = parse_parties(a.party)
         out = needs(entry, form, a.draft, signer, person_categories(needs_schema(a)) if signer != "io" else (),
                     parties, layout)
-        out["commands"] = {name: token_command(a.vault_dir, t) for name, t in out["tokens"].items()}
+        # run --vault-dir reads one token from one Keychain service, and saving
+        # another there revokes it: so only the token it uses. track is the
+        # synthetic vault's, for --reply.
+        out["commands"] = {name: token_command(a.vault_dir, t) for name, t in out["tokens"].items() if name != "track"}
         out["ask"] = asks(form, layout, parties)
         print(json.dumps(out, ensure_ascii=False, indent=2))
         return 0
     if a.draft and a.reply:
         p.error("--draft writes nothing, so it takes no --reply")
+    if a.reply and not a.server:
+        p.error("--reply plays the ente's answer on the synthetic vault (--server) only")
     if a.cmd == "run" and a.sign and a.draft:
         p.error("--sign files a request in the vault, which a --draft never writes")
     return run(a)
