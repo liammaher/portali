@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -21,25 +24,60 @@ type Provider interface {
 	Who(ctx context.Context) string
 }
 
-// add records one observation, leaving it out if the vault would refuse it. A
-// web address the vault won't keep (a sharing link) is dropped, not the file.
+// cleanName makes a provider's name something the index holds: no slash (Drive
+// allows one in a name), control or direction-override characters, at most 255
+// bytes.
+func cleanName(name string) string {
+	name = strings.Map(func(r rune) rune {
+		switch {
+		case r == '/':
+			return '∕'
+		case r == '\\':
+			return '＼'
+		case unicode.IsControl(r), r >= 0x202A && r <= 0x202E, r >= 0x2066 && r <= 0x2069, r == 0x200E, r == 0x200F:
+			return -1
+		}
+		return r
+	}, name)
+	name = strings.TrimSpace(name)
+	for len(name) > 255 {
+		_, n := utf8.DecodeLastRuneInString(name)
+		name = name[:len(name)-n]
+	}
+	return name
+}
+
+// cleanPath cleans each segment of a path.
+func cleanPath(path string) string {
+	parts := strings.Split(path, "/")
+	for i, p := range parts {
+		parts[i] = cleanName(p)
+	}
+	return strings.Join(parts, "/")
+}
+
+// add records one observation. A web address the vault won't keep (a sharing
+// link) is dropped, not the file. A file the index still can't hold is
+// reported as kept: it exists, so a sync must not mark it gone.
 func (s *Scan) add(o vault.FileObservation) {
 	if len(s.Files) >= MaxFiles {
 		s.Truncated = true
 		return
 	}
-	if err := o.Check(); err != nil {
-		if o.WebURL == "" {
-			s.Skipped++
-			return
-		}
+	o.Name, o.Path = cleanName(o.Name), cleanPath(o.Path)
+	if err := o.Check(); err != nil && o.WebURL != "" {
 		o.WebURL = ""
-		if err := o.Check(); err != nil {
-			s.Skipped++
+		err = o.Check()
+		if err == nil {
+			s.Files = append(s.Files, o)
 			return
 		}
+	} else if err == nil {
+		s.Files = append(s.Files, o)
+		return
 	}
-	s.Files = append(s.Files, o)
+	s.Skipped++
+	s.Files = append(s.Files, vault.FileObservation{Key: o.Key, Keep: true})
 }
 
 // fail records an error that makes the scan incomplete.

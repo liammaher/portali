@@ -473,3 +473,28 @@ func TestFilesReview_APathKeepsTheSpacesOfItsKey(t *testing.T) {
 		t.Fatalf("path %q vs key %q (%v): `files open` would look for the wrong file", o.Path, o.Key, err)
 	}
 }
+
+// A file the client can't describe is still there: reported as kept, it isn't
+// marked gone by the sync's finish, and a kept key for a file the vault has
+// never seen adds nothing.
+func TestFilesReview_AKeptFileIsNotMarkedGone(t *testing.T) {
+	v, _ := tmpVault(t)
+	src := fileSource(t, v)
+	v.UpsertFiles(src, []FileObservation{obs("a", "/a.pdf", "a.pdf"), obs("b", "/b.pdf", "b.pdf")}, true)
+	if _, err := v.UpsertFileBatch(src, "sync-kkkk-1", true, []FileObservation{
+		obs("a", "/a.pdf", "a.pdf"), {Key: "b", Keep: true}, {Key: "never-seen", Keep: true},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	res, err := v.FinishFileSync(nil, src, "sync-kkkk-1", false)
+	if err != nil || res.Gone != 0 {
+		t.Fatalf("finish = %+v, %v", res, err)
+	}
+	if _, total, _ := v.SearchFiles(nil, FileQuery{}); total != 2 {
+		t.Fatalf("%d files listed, want 2", total)
+	}
+	// A keep with no key is still refused.
+	if _, err := v.UpsertFiles(src, []FileObservation{{Keep: true}}, false); err == nil {
+		t.Fatal("a keep without a key")
+	}
+}

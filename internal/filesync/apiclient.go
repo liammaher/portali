@@ -120,7 +120,7 @@ func (c *apiClient) do(ctx context.Context, method, rawURL string, body []byte) 
 			c.tokens.Invalidate()
 		case resp.StatusCode == http.StatusUnauthorized:
 			return nil, &AuthError{Msg: "the provider no longer accepts the saved sign-in: connect the source again"}
-		case resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusServiceUnavailable:
+		case resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusServiceUnavailable || isRateLimit(resp.StatusCode, data):
 			if attempt >= 8 {
 				return nil, errors.New("the provider keeps asking to slow down: try again later")
 			}
@@ -139,6 +139,13 @@ func (c *apiClient) do(ctx context.Context, method, rawURL string, body []byte) 
 			return nil, apiError(resp.StatusCode, data)
 		}
 	}
+}
+
+// isRateLimit reports Google's way of saying "slow down": a 403 whose reason
+// is a rate limit, not a refusal.
+func isRateLimit(status int, body []byte) bool {
+	return status == http.StatusForbidden &&
+		(bytes.Contains(body, []byte("rateLimitExceeded")) || bytes.Contains(body, []byte("userRateLimitExceeded")))
 }
 
 // retryAfter is the wait a provider asked for, else an exponential one.

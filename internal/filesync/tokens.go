@@ -12,6 +12,7 @@ import (
 	"os/user"
 	"regexp"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -64,11 +65,41 @@ func (KeychainStore) check(service string) (string, error) {
 	return keychainAccount()
 }
 
-func (k KeychainStore) Load(service string) (string, error) {
-	account, err := k.check(service)
-	if err != nil {
-		return "", err
+// A value is kept as several Keychain items, each short: `security -i` reads a
+// line of limited length, and a Microsoft refresh token alone is over a
+// kilobyte. The item under the service name says how many parts follow; part i
+// is under service.c<i>.
+const (
+	chunkSize   = 800
+	chunkPrefix = "pvault-chunks:"
+	maxChunks   = 64
+)
+
+func splitChunks(s string) []string {
+	if s == "" {
+		return []string{""}
 	}
+	var out []string
+	for len(s) > chunkSize {
+		out = append(out, s[:chunkSize])
+		s = s[chunkSize:]
+	}
+	return append(out, s)
+}
+
+func chunkIndex(n int) string { return chunkPrefix + strconv.Itoa(n) }
+
+func parseChunkIndex(s string) (int, error) {
+	n, err := strconv.Atoi(strings.TrimPrefix(s, chunkPrefix))
+	if err != nil || !strings.HasPrefix(s, chunkPrefix) || n < 1 || n > maxChunks {
+		return 0, errors.New("not a value pvault wrote")
+	}
+	return n, nil
+}
+
+func chunkService(service string, i int) string { return service + ".c" + strconv.Itoa(i) }
+
+func (k KeychainStore) loadItem(account, service string) (string, error) {
 	out, err := exec.Command(securityPath, "find-generic-password", "-a", account, "-s", service, "-w").Output()
 	var exit *exec.ExitError
 	if errors.As(err, &exit) && exit.ExitCode() == securityItemNotFound {
@@ -77,23 +108,80 @@ func (k KeychainStore) Load(service string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	raw, err := base64.RawURLEncoding.DecodeString(strings.TrimSpace(string(out)))
+	return strings.TrimSpace(string(out)), nil
+}
+
+func (k KeychainStore) saveItem(account, service, value string) error {
+	add := exec.Command(securityPath, "-i")
+	add.Stdin = strings.NewReader(fmt.Sprintf("add-generic-password -U -a %s -s %s -w %s\n", account, service, value))
+	if out, err := add.CombinedOutput(); err != nil {
+		return fmt.Errorf("security: %v: %s", err, bytes.TrimSpace(out))
+	}
+	return nil
+}
+
+func (k KeychainStore) deleteItem(account, service string) error {
+	err := exec.Command(securityPath, "delete-generic-password", "-a", account, "-s", service).Run()
+	var exit *exec.ExitError
+	if errors.As(err, &exit) && exit.ExitCode() == securityItemNotFound {
+		return nil
+	}
+	return err
+}
+
+func (k KeychainStore) Load(service string) (string, error) {
+	account, err := k.check(service)
+	if err != nil {
+		return "", err
+	}
+	idx, err := k.loadItem(account, service)
+	if err != nil || idx == "" {
+		return "", err
+	}
+	n, err := parseChunkIndex(idx)
+	if err != nil {
+		return "", fmt.Errorf("the Keychain item %s: %w", service, err)
+	}
+	var enc strings.Builder
+	for i := 0; i < n; i++ {
+		part, err := k.loadItem(account, chunkService(service, i))
+		if err != nil {
+			return "", err
+		}
+		enc.WriteString(part)
+	}
+	raw, err := base64.RawURLEncoding.DecodeString(enc.String())
 	if err != nil {
 		return "", fmt.Errorf("the Keychain item %s isn't one pvault wrote", service)
 	}
 	return string(raw), nil
 }
 
+// Save writes the parts first and the index last, so a failure halfway leaves
+// the old value (or nothing), never a mix.
 func (k KeychainStore) Save(service, secret string) error {
 	account, err := k.check(service)
 	if err != nil {
 		return err
 	}
-	enc := base64.RawURLEncoding.EncodeToString([]byte(secret))
-	add := exec.Command(securityPath, "-i")
-	add.Stdin = strings.NewReader(fmt.Sprintf("add-generic-password -U -a %s -s %s -w %s\n", account, service, enc))
-	if out, err := add.CombinedOutput(); err != nil {
-		return fmt.Errorf("security: %v: %s", err, bytes.TrimSpace(out))
+	parts := splitChunks(base64.RawURLEncoding.EncodeToString([]byte(secret)))
+	if len(parts) > maxChunks {
+		return errors.New("the sign-in is too large to keep")
+	}
+	oldN := 0
+	if idx, err := k.loadItem(account, service); err == nil && idx != "" {
+		oldN, _ = parseChunkIndex(idx)
+	}
+	for i, part := range parts {
+		if err := k.saveItem(account, chunkService(service, i), part); err != nil {
+			return err
+		}
+	}
+	if err := k.saveItem(account, service, chunkIndex(len(parts))); err != nil {
+		return err
+	}
+	for i := len(parts); i < oldN; i++ {
+		k.deleteItem(account, chunkService(service, i))
 	}
 	got, err := k.Load(service)
 	if err != nil {
@@ -110,12 +198,18 @@ func (k KeychainStore) Delete(service string) error {
 	if err != nil {
 		return err
 	}
-	err = exec.Command(securityPath, "delete-generic-password", "-a", account, "-s", service).Run()
-	var exit *exec.ExitError
-	if errors.As(err, &exit) && exit.ExitCode() == securityItemNotFound {
-		return nil
+	idx, err := k.loadItem(account, service)
+	if err != nil {
+		return err
 	}
-	return err
+	if n, perr := parseChunkIndex(idx); perr == nil {
+		for i := 0; i < n; i++ {
+			if err := k.deleteItem(account, chunkService(service, i)); err != nil {
+				return err
+			}
+		}
+	}
+	return k.deleteItem(account, service)
 }
 
 // MemoryStore is a SecretStore in memory, for tests.
@@ -183,9 +277,11 @@ func NewTokenSourceFor(flow *Flow, store SecretStore, service string, tok *Token
 	return &TokenSource{Flow: flow, Store: store, Service: service, tok: &t, now: time.Now}
 }
 
-// SaveToken stores a fresh sign-in under service.
+// SaveToken stores a sign-in under service: its refresh token and client
+// secret only. The access token is short-lived and large (a Microsoft one is
+// kilobytes), so every run gets a new one with the refresh token.
 func SaveToken(store SecretStore, service string, tok *Token) error {
-	raw, err := json.Marshal(tok)
+	raw, err := json.Marshal(Token{RefreshToken: tok.RefreshToken, ClientSecret: tok.ClientSecret})
 	if err != nil {
 		return err
 	}
@@ -215,11 +311,12 @@ func (t *TokenSource) refreshLocked(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	t.tok = fresh
 	// A rotated refresh token is the only one that works from now on: if it
-	// can't be saved the next run would be locked out, so say so.
+	// can't be saved the next run would be locked out, so say so, and keep
+	// asking until it is saved.
 	if err := SaveToken(t.Store, t.Service, fresh); err != nil {
 		return "", fmt.Errorf("signed in again, but the new sign-in couldn't be saved: %w", err)
 	}
+	t.tok = fresh
 	return fresh.AccessToken, nil
 }

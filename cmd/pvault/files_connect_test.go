@@ -15,6 +15,7 @@ import (
 	"testing"
 
 	"github.com/lovincyrus/personal-vault/internal/filesync"
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 func freePort(t *testing.T) string {
@@ -36,7 +37,8 @@ type fakeDropbox struct {
 	challenge string
 	files     []map[string]any
 	refreshes int
-	badToken  bool // answers every API call with 401
+	badToken  bool   // answers every API call with 401
+	email     string // whose account it is
 }
 
 func newFakeDropbox(t *testing.T) *fakeDropbox {
@@ -63,7 +65,11 @@ func newFakeDropbox(t *testing.T) *fakeDropbox {
 				json.NewEncoder(w).Encode(map[string]any{"access_token": "dbx-access-2", "expires_in": 14400})
 			}
 		case "/2/users/get_current_account":
-			json.NewEncoder(w).Encode(map[string]string{"email": "liam@example.it"})
+			email := d.email
+			if email == "" {
+				email = "liam@example.it"
+			}
+			json.NewEncoder(w).Encode(map[string]string{"email": email})
 		case "/2/files/list_folder":
 			if d.badToken || r.Header.Get("Authorization") == "" {
 				w.WriteHeader(401)
@@ -218,5 +224,70 @@ func TestFiles_ConnectChecksItsArguments(t *testing.T) {
 		if !strings.Contains(got, tc.want) {
 			t.Errorf("%v: %q, want %q", tc.args, got, tc.want)
 		}
+	}
+}
+
+// A sign-in that is gone is renewed without losing the source's links, and
+// only as the same account.
+func TestFiles_ReconnectKeepsTheSourceAndItsLinks(t *testing.T) {
+	touchIDVault(t, nil)
+	dbx := newFakeDropbox(t)
+	dbx.files = []map[string]any{
+		{".tag": "file", "id": "id:1", "name": "contratto.pdf", "path_display": "/Casa/contratto.pdf", "size": 10, "server_modified": "2026-10-01T10:00:00Z"},
+	}
+	store := &filesync.MemoryStore{}
+	oldStore, oldEP, oldBrowser := secretStore, connectEndpoints, browserOpener
+	secretStore = store
+	connectEndpoints = &filesync.Endpoints{AuthURL: dbx.URL + "/oauth2/authorize", TokenURL: dbx.URL + "/oauth2/token", API: dbx.URL + "/2"}
+	browserOpener = dbx.signInAs(t)
+	t.Cleanup(func() { secretStore, connectEndpoints, browserOpener = oldStore, oldEP, oldBrowser })
+
+	runCmd(t, cmdFiles, "files", "source", "connect", "dropbox", "--client-id", "test-client", "--port", freePort(t))
+	runCmd(t, cmdFiles, "files", "sync")
+	id := fileID(t, runCmd(t, cmdFiles, "files", "search", "contratto"), "contratto.pdf")
+	runCmd(t, cmdFiles, "files", "link", id, "--for", "io", "--role", "contratto")
+
+	// The saved sign-in is lost (a new Mac, a locked-out Keychain item).
+	for k := range store.M {
+		delete(store.M, k)
+	}
+	out := runCmd(t, cmdFiles, "files", "sync")
+	if !strings.Contains(out, "can't sign in") || !strings.Contains(out, "files source reconnect") || strings.Contains(out, "source remove") {
+		t.Fatalf("sync without a sign-in:\n%s", out)
+	}
+
+	runReconnect := func() string {
+		return runCmd(t, cmdFiles, "files", "source", "reconnect", "Dropbox liam@example.it", "--port", freePort(t))
+	}
+	out = runReconnect()
+	if !strings.Contains(out, "Signed in again") || len(store.M) != 1 {
+		t.Fatalf("reconnect:\n%s\nstore: %v", out, store.M)
+	}
+	// The index and the link survived, and a sync works again.
+	if out := runCmd(t, cmdFiles, "files", "sync"); !strings.Contains(out, "1 unchanged") {
+		t.Fatalf("sync after reconnecting:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "show", id); !strings.Contains(out, "linked to io (contratto)") {
+		t.Fatalf("the link was lost:\n%s", out)
+	}
+}
+
+func TestFiles_ReconnectOnlyAsTheSameAccount(t *testing.T) {
+	src := vault.FileSourceInfo{Provider: "dropbox", FileSourceConfig: vault.FileSourceConfig{Account: "liam@example.it"}}
+	if err := sameAccount(src, "LIAM@example.it", ""); err != nil {
+		t.Errorf("the same account in another case: %v", err)
+	}
+	if err := sameAccount(src, "someone.else@example.it", ""); err == nil || !strings.Contains(err.Error(), "nothing was changed") {
+		t.Errorf("another account: %v", err)
+	}
+	if err := sameAccount(src, "", ""); err != nil {
+		t.Errorf("a provider that doesn't say who: %v", err)
+	}
+	od := vault.FileSourceInfo{Provider: "onedrive", FileSourceConfig: vault.FileSourceConfig{Account: "a@b.it", DriveID: "b!mine"}}
+	if err := sameAccount(od, "a@b.it", "b!other"); err == nil {
+		t.Error("another OneDrive")
+	}
+	if err := sameAccount(od, "a@b.it", "b!mine"); err != nil {
+		t.Errorf("the same OneDrive: %v", err)
 	}
 }

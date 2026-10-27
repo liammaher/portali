@@ -175,3 +175,90 @@ func TestRetention_LinkedClientFilesAfterTheirPraticheClose(t *testing.T) {
 		t.Fatalf("personal vault: %+v", got)
 	}
 }
+
+func TestRetention_AFileWithAnotherLinkIsKept(t *testing.T) {
+	now := time.Now().UTC()
+	before := now.Add(-time.Hour)
+	v := tmpVaultKind(t, KindImpresa)
+	for _, slug := range []string{"rossi", "bianchi", "verdi"} {
+		mustSet(t, v, slug+":ruolo.tipo", "cliente")
+	}
+	mustSet(t, v, "pratiche.cila-rossi_persona", "rossi")
+	mustSet(t, v, "pratiche.cila-rossi_stato", "completata")
+	mustSet(t, v, "pratiche.scia-bianchi_persona", "bianchi")
+	mustSet(t, v, "pratiche.scia-bianchi_stato", "in_attesa") // open
+	mustSet(t, v, "pratiche.albo-verdi_persona", "verdi")
+	mustSet(t, v, "pratiche.albo-verdi_stato", "completata")
+	mustSet(t, v, "pratiche.tari-2026_stato", "in_preparazione")
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
+	src := fileSource(t, v)
+
+	link := func(id, holder, role string) {
+		in := FileLinkInput{Holder: holder, Kind: FileKindClient, Role: role}
+		if _, err := v.LinkFile(id, in, FileOriginManual); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pair := linkedFile(t, v, src, "1", "coniugi.pdf", before, "rossi", "cie") // rossi done, bianchi open
+	link(pair, "bianchi", "cie")
+	pratica := linkedFile(t, v, src, "2", "cie rossi per tari.pdf", before, "rossi", "cie")
+	if _, err := v.LinkFile(pratica, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual); err != nil {
+		t.Fatal(err)
+	}
+	noRole := linkedFile(t, v, src, "3", "cie rossi e verdi.pdf", before, "rossi", "cie") // two done clients
+	link(noRole, "verdi", "contratto")
+	linkedFile(t, v, src, "4", "cie solo rossi.pdf", before, "rossi", "cie")
+
+	got := dueFiles(t, v, nil, now)
+	if names(got) != "cie rossi e verdi.pdf,cie solo rossi.pdf" {
+		t.Fatalf("due = %q (a file also linked to an open client or pratica must stay)", names(got))
+	}
+	// Reported once, whichever client's link carries the ID role.
+	count := 0
+	for _, it := range got {
+		if it.File == "cie rossi e verdi.pdf" {
+			count++
+			if it.Person != "rossi" || it.Document != "cie" {
+				t.Fatalf("entry = %+v", it)
+			}
+		}
+	}
+	if count != 1 {
+		t.Fatalf("a file shared by two done clients was reported %d times", count)
+	}
+	// What the caller can't see of a file's links keeps it.
+	noVerdi := func(id, tier string) bool { return !strings.HasPrefix(id, "verdi:") }
+	if got := dueFiles(t, v, noVerdi, now); strings.Contains(names(got), "rossi e verdi") {
+		t.Fatalf("a caller that can't see one of a file's links was told it may go: %q", names(got))
+	}
+}
+
+func TestRetention_AnUndatedProcuraKeepsTheOthers(t *testing.T) {
+	now := time.Now().UTC()
+	before := now.Add(-time.Hour)
+	v := tmpVaultKind(t, KindImpresa)
+	mustSet(t, v, "rossi:ruolo.tipo", "cliente")
+	mustSet(t, v, "pratiche.cila-rossi_persona", "rossi")
+	mustSet(t, v, "pratiche.cila-rossi_stato", "completata")
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
+	src := fileSource(t, v)
+	linkedFile(t, v, src, "1", "procura rossi.pdf", before, "rossi", "procura")
+
+	mustSet(t, v, "rossi:procura.data_scadenza", now.AddDate(0, 0, -5).Format(dateLayout))
+	if got := dueFiles(t, v, nil, now); len(got) != 1 {
+		t.Fatalf("one procura, ended: %+v", got)
+	}
+	// A second copy with no end date is still in force.
+	mustSet(t, v, "rossi:procura2.ente", "SUE Comune di Napoli")
+	if got := dueFiles(t, v, nil, now); len(got) != 0 {
+		t.Fatalf("an undated second procura: %+v", got)
+	}
+	mustSet(t, v, "rossi:procura2.data_scadenza", now.AddDate(0, 0, -2).Format(dateLayout))
+	if got := dueFiles(t, v, nil, now); len(got) != 1 {
+		t.Fatalf("both ended: %+v", got)
+	}
+}

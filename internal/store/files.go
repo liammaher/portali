@@ -422,6 +422,7 @@ func (d *DB) DeleteFileSuggestion(id string) (bool, error) {
 // FileHolderCounts returns how many links, rules and suggestions name a
 // holder, for the report a person's removal gives.
 func (d *DB) FileHolderCounts(holder string) (links, rules, suggestions int, err error) {
+	var proposals int
 	for _, q := range []struct {
 		sql string
 		out *int
@@ -429,10 +430,61 @@ func (d *DB) FileHolderCounts(holder string) (links, rules, suggestions int, err
 		{`SELECT COUNT(*) FROM vault_file_links WHERE holder = ?`, &links},
 		{`SELECT COUNT(*) FROM vault_file_rules WHERE holder = ?`, &rules},
 		{`SELECT COUNT(*) FROM vault_file_suggestions WHERE holder = ?`, &suggestions},
+		{`SELECT COUNT(*) FROM vault_file_proposals WHERE holder = ?`, &proposals},
 	} {
 		if err = d.conn.QueryRow(q.sql, holder).Scan(q.out); err != nil {
 			return 0, 0, 0, err
 		}
 	}
-	return links, rules, suggestions, nil
+	return links, rules, suggestions + proposals, nil
+}
+
+// FileProposal is a file an agent proposed for the index. Holder is whom it
+// asked to link the file to ("" for the owner, or for no one), so scope
+// checks need no decryption.
+type FileProposal struct {
+	ID         string
+	Provider   string
+	Holder     string
+	ProposedBy string
+	Blob       string
+	CreatedAt  time.Time
+}
+
+// CreateFileProposal inserts a proposal.
+func (d *DB) CreateFileProposal(p FileProposal) error {
+	_, err := d.conn.Exec(
+		`INSERT INTO vault_file_proposals (id, provider, holder, proposed_by, blob, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+		p.ID, p.Provider, p.Holder, p.ProposedBy, p.Blob, ts(p.CreatedAt))
+	return err
+}
+
+// ListFileProposals returns every pending proposal, oldest first.
+func (d *DB) ListFileProposals() ([]FileProposal, error) {
+	rows, err := d.conn.Query(`SELECT id, provider, holder, proposed_by, blob, created_at FROM vault_file_proposals ORDER BY created_at, id`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []FileProposal
+	for rows.Next() {
+		var p FileProposal
+		var created string
+		if err := rows.Scan(&p.ID, &p.Provider, &p.Holder, &p.ProposedBy, &p.Blob, &created); err != nil {
+			return nil, err
+		}
+		p.CreatedAt = parseTS(created)
+		out = append(out, p)
+	}
+	return out, rows.Err()
+}
+
+// DeleteFileProposal removes a proposal (accepted or rejected).
+func (d *DB) DeleteFileProposal(id string) (bool, error) {
+	res, err := d.conn.Exec(`DELETE FROM vault_file_proposals WHERE id = ?`, id)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }

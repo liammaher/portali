@@ -137,6 +137,7 @@ func (d *DB) ApplyChange(c Change) error {
 			`DELETE FROM vault_file_links WHERE holder = ?`,
 			`DELETE FROM vault_file_rules WHERE holder = ?`,
 			`DELETE FROM vault_file_suggestions WHERE holder = ?`,
+			`DELETE FROM vault_file_proposals WHERE holder = ?`,
 		} {
 			if _, err := tx.Exec(q, c.DeleteFileHolder); err != nil {
 				return err

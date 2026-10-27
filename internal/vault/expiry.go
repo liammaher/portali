@@ -321,78 +321,127 @@ func linkRoleCategory(role string) string {
 	return ""
 }
 
-// procuraMayGo reports that a client's procura is over: it has a
-// data_scadenza and none that is still ahead. A procura with no date is in
-// force, as for the vault's own scans.
-func (c *clientClosure) procuraMayGo(person string) bool {
-	dated := false
-	for cat := range c.procuraDated {
-		if p, _ := SplitPerson(cat); p != person {
-			continue
-		}
-		dated = true
-		if c.procuraInForce[cat] {
-			return false
+// procuraMayGo reports that every procura of a client is over: there is at
+// least one, each has a data_scadenza, and none is still ahead. A procura with
+// no date is in force, as for the vault's own scans, so one undated copy
+// among several keeps them all.
+func (v *Vault) procuraMayGo(c *clientClosure, person string) (bool, error) {
+	cats := map[string]bool{}
+	fieldIDs, _, err := v.db.PersonRows(person)
+	if err != nil {
+		return false, err
+	}
+	for _, id := range fieldIDs {
+		_, local := SplitPerson(id)
+		cat, _, _ := strings.Cut(local, ".")
+		if cs := schemaCategoryOf(cat); cs != nil && cs.Name == "procura" {
+			cats[person+":"+cat] = true
 		}
 	}
-	return dated
+	docs, err := v.db.ListDocuments()
+	if err != nil {
+		return false, err
+	}
+	for _, d := range docs {
+		p, base := SplitPerson(d.Category)
+		if cs := schemaCategoryOf(base); p == person && cs != nil && cs.Name == "procura" {
+			cats[d.Category] = true
+		}
+	}
+	if len(cats) == 0 {
+		return false, nil
+	}
+	for cat := range cats {
+		if !c.procuraDated[cat] || c.procuraInForce[cat] {
+			return false, nil
+		}
+	}
+	return true, nil
 }
 
 // filesDue returns the files in the index that the pratiche's closing lets
-// go: linked to a client who is done, with a role that names an ID or procura
-// category, seen at the source before the last of their pratiche closed (its
-// modified time; one with none, or later, is kept), not gone already, and
-// visible to the caller. They are references: the vault can't delete them.
+// go. A file qualifies only if every link it has is to a client who is done
+// (so a file also linked to an open pratica, to the owner, or to a client
+// still being served stays), the caller sees all of its links, at least one
+// link's role names an ID or procura category, no procura of that client is
+// still running, and it was last modified before the latest of those
+// closings (one with no time, or a later one, is kept). A file gone from its
+// source isn't listed. They are references: the vault can't delete them.
 func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error) {
 	links, err := v.db.ListFileLinks("")
 	if err != nil {
 		return nil, err
 	}
-	var candidates []store.FileLink
+	byFile := map[string][]store.FileLink{}
 	for _, l := range links {
-		if l.Holder != "" && c.done[l.Holder] {
-			candidates = append(candidates, l)
-		}
-	}
-	if len(candidates) == 0 {
-		return nil, nil
+		byFile[l.FileID] = append(byFile[l.FileID], l)
 	}
 	files, err := v.db.ListFiles("")
 	if err != nil {
 		return nil, err
 	}
-	byID := make(map[string]store.File, len(files))
-	for _, f := range files {
-		byID[f.ID] = f
-	}
 	var out []fileDue
-	seen := map[string]bool{}
 	err = v.withFileKey(func(key []byte) error {
-		for _, l := range candidates {
-			f, ok := byID[l.FileID]
-			if !ok || !f.GoneAt.IsZero() || seen[l.FileID+"/"+l.Holder] {
+		procura := map[string]bool{} // holder → every procura of theirs is over
+		for _, f := range files {
+			ls := byFile[f.ID]
+			if len(ls) == 0 || !f.GoneAt.IsZero() {
 				continue
 			}
-			if _, ok := visibleFileLinks(allow, f, []store.FileLink{l}); !ok {
-				continue
+			var latest time.Time
+			var idHolders []string
+			roleOf := map[string]string{}
+			ok := true
+			for _, l := range ls {
+				if l.Holder == "" || !c.done[l.Holder] {
+					ok = false
+					break
+				}
+				if _, vis := visibleFileLinks(allow, f, []store.FileLink{l}); !vis {
+					ok = false
+					break
+				}
+				if c.lastClosed[l.Holder].After(latest) {
+					latest = c.lastClosed[l.Holder]
+				}
+				info, err := openFileLink(key, l)
+				if err != nil {
+					return err
+				}
+				role := linkRoleCategory(info.Role)
+				if role == "" {
+					continue
+				}
+				if cs := schemaCategoryOf(role); cs != nil && cs.Name == "procura" {
+					over, seen := procura[l.Holder]
+					if !seen {
+						if over, err = v.procuraMayGo(c, l.Holder); err != nil {
+							return err
+						}
+						procura[l.Holder] = over
+					}
+					if !over {
+						ok = false
+						break
+					}
+				}
+				if _, dup := roleOf[l.Holder]; !dup {
+					idHolders = append(idHolders, l.Holder)
+					roleOf[l.Holder] = role
+				}
 			}
-			info, err := openFileLink(key, l)
-			if err != nil {
-				return err
-			}
-			role := linkRoleCategory(info.Role)
-			if role == "" || (schemaCategoryOf(role).Name == "procura" && !c.procuraMayGo(l.Holder)) {
+			if !ok || len(idHolders) == 0 {
 				continue
 			}
 			var meta FileMeta
 			if err := openFileBlob(key, "file", f.ID, f.Blob, &meta); err != nil {
 				return err
 			}
-			if at, err := time.Parse(time.RFC3339, meta.Mtime); err != nil || !at.Before(c.lastClosed[l.Holder]) {
+			if at, err := time.Parse(time.RFC3339, meta.Mtime); err != nil || !at.Before(latest) {
 				continue
 			}
-			seen[l.FileID+"/"+l.Holder] = true
-			out = append(out, fileDue{l.Holder, role, f.ID, meta.Name, c.lastClosed[l.Holder]})
+			sort.Strings(idHolders)
+			out = append(out, fileDue{idHolders[0], roleOf[idHolders[0]], f.ID, meta.Name, latest})
 		}
 		return nil
 	})

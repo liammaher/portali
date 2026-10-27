@@ -94,15 +94,31 @@ func (g *Graph) Scan(ctx context.Context) *Scan {
 			}
 			items[it.ID] = it
 		}
+		if page.NextLink == "" && page.DeltaLink == "" {
+			// A finished listing says so; anything else may be cut short.
+			s.fail(errors.New("Microsoft's list of files ended without saying it was complete"))
+			return s
+		}
 		next = page.NextLink
 	}
 
-	// Paths: a folder's is its parent's plus its name. The root has none.
+	// Paths: a folder's is its parent's plus its name. The root has none. A
+	// parent the feed never named (once the root is known) is not guessed at:
+	// its files go under a folder that says so.
+	rootID := ""
+	for id, it := range items {
+		if it.Root != nil {
+			rootID = id
+		}
+	}
 	var pathOf func(id string, depth int) (string, bool)
 	pathOf = func(id string, depth int) (string, bool) {
 		it, ok := items[id]
 		if !ok {
-			return "", true // the root, which delta names only as a parent
+			if rootID == "" || id == rootID {
+				return "", true // the root, which delta names only as a parent
+			}
+			return "/(unknown folder)", true
 		}
 		if it.Root != nil {
 			return "", true
@@ -114,7 +130,7 @@ func (g *Graph) Scan(ctx context.Context) *Scan {
 		if !ok {
 			return "", false
 		}
-		return parent + "/" + it.Name, true
+		return parent + "/" + cleanName(it.Name), true
 	}
 	for _, id := range order {
 		it := items[id]

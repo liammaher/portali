@@ -227,7 +227,8 @@ func TestTokenSource_RefreshesAndKeepsWhatItIsGiven(t *testing.T) {
 	var saved Token
 	raw, _ := store.Load(svc)
 	json.Unmarshal([]byte(raw), &saved)
-	if saved.RefreshToken != "refresh-0" || saved.AccessToken != at {
+	// The refresh token is kept; the access token (kilobytes, from Microsoft) is not.
+	if saved.RefreshToken != "refresh-0" || saved.AccessToken != "" || !saved.Expiry.IsZero() {
 		t.Fatalf("saved = %+v", saved)
 	}
 	// Still valid: no second request.

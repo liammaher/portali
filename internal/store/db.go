@@ -136,6 +136,17 @@ CREATE TABLE IF NOT EXISTS vault_file_suggestions (
 	created_at   TEXT NOT NULL
 );
 
+-- A file an agent found through its own connector (Claude's Google Drive, say)
+-- and proposed to the index, waiting for the user (files.go).
+CREATE TABLE IF NOT EXISTS vault_file_proposals (
+	id          TEXT PRIMARY KEY,
+	provider    TEXT NOT NULL,
+	holder      TEXT NOT NULL DEFAULT '',
+	proposed_by TEXT NOT NULL,
+	blob        TEXT NOT NULL,
+	created_at  TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_files_source ON vault_files(source_id);
 CREATE INDEX IF NOT EXISTS idx_file_links_file ON vault_file_links(file_id);
 CREATE INDEX IF NOT EXISTS idx_file_links_holder ON vault_file_links(holder);

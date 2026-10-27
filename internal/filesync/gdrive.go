@@ -20,6 +20,9 @@ type Drive struct {
 	base string
 }
 
+// segment makes a Drive name one path segment: Drive allows "/" in a name.
+func segment(name string) string { return cleanName(name) }
+
 const (
 	driveFolder   = "application/vnd.google-apps.folder"
 	driveShortcut = "application/vnd.google-apps.shortcut"
@@ -107,13 +110,13 @@ func (d *Drive) Scan(ctx context.Context) *Scan {
 			return "", false
 		}
 		if len(f.Parents) == 0 {
-			return sharedWithMe + "/" + f.Name, true
+			return sharedWithMe + "/" + segment(f.Name), true
 		}
 		parent, ok := pathOf(f.Parents[0], depth+1)
 		if !ok {
 			return "", false
 		}
-		return parent + "/" + f.Name, true
+		return parent + "/" + segment(f.Name), true
 	}
 	for _, id := range order {
 		f := files[id]
@@ -129,7 +132,7 @@ func (d *Drive) Scan(ctx context.Context) *Scan {
 			}
 		}
 		o := vault.FileObservation{
-			Key: f.ID, Path: parent + "/" + f.Name, WebURL: f.WebViewLink, Name: f.Name,
+			Key: f.ID, Path: parent + "/" + segment(f.Name), WebURL: f.WebViewLink, Name: segment(f.Name),
 			MIME: f.MimeType, Mtime: f.ModifiedTime,
 		}
 		if n, err := strconv.ParseInt(f.Size, 10, 64); err == nil {

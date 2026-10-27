@@ -20,16 +20,8 @@ import (
 // provider tests see only the provider's API.
 func signedIn(t *testing.T) *TokenSource {
 	t.Helper()
-	store := &MemoryStore{}
-	if err := SaveToken(store, "svc", &Token{AccessToken: "tok-1", RefreshToken: "r", Expiry: time.Now().Add(time.Hour)}); err != nil {
-		t.Fatal(err)
-	}
-	ts := newFakeTokenServer(t)
-	src, err := NewTokenSource(testFlow(ts), store, "svc")
-	if err != nil {
-		t.Fatal(err)
-	}
-	return src
+	return NewTokenSourceFor(testFlow(newFakeTokenServer(t)), &MemoryStore{}, "svc",
+		&Token{AccessToken: "tok-1", RefreshToken: "r", Expiry: time.Now().Add(time.Hour)})
 }
 
 func testClient(t *testing.T, base string) *apiClient {
@@ -337,7 +329,7 @@ func TestDrive_AnErrorMidwayMakesTheScanIncomplete(t *testing.T) {
 			writeJSON(w, map[string]any{"files": []map[string]any{{"id": "a", "name": "a.pdf", "parents": []string{"ROOT"}}}, "nextPageToken": "P2"})
 		default:
 			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte(`{"error":{"code":403,"message":"rate"}}`))
+			w.Write([]byte(`{"error":{"code":403,"message":"insufficient permissions"}}`))
 		}
 	}))
 	defer api.Close()
@@ -415,9 +407,67 @@ func TestDropbox_AFailedPageMakesTheScanIncomplete(t *testing.T) {
 func TestScanAddKeepsAFileWhoseLinkTheVaultRefuses(t *testing.T) {
 	s := &Scan{}
 	s.add(fileObs("k1", "/a.pdf", "a.pdf", "https://1drv.ms/b/s!share"))
-	s.add(fileObs("k2", "/b.pdf", "bad\x07name.pdf", ""))
-	if len(s.Files) != 1 || s.Files[0].WebURL != "" || s.Files[0].Key != "k1" || s.Skipped != 1 {
-		t.Fatalf("files=%+v skipped=%d", s.Files, s.Skipped)
+	s.add(fileObs("k2", "/b.pdf", "\x07", ""))                     // nothing left of the name
+	s.add(fileObs("k3", "/a\u202eb/c.pdf", "Q3/Q4\u202e.pdf", "")) // odd characters are cleaned, not fatal
+	if len(s.Files) != 3 || s.Files[0].WebURL != "" || s.Files[0].Key != "k1" {
+		t.Fatalf("files=%+v", s.Files)
+	}
+	// A file the index can't describe is reported as kept, so a sync's finish
+	// doesn't mark it gone.
+	if !s.Files[1].Keep || s.Files[1].Key != "k2" || s.Skipped != 1 {
+		t.Fatalf("k2 = %+v, skipped %d", s.Files[1], s.Skipped)
+	}
+	if s.Files[2].Keep || s.Files[2].Name != "Q3∕Q4.pdf" || s.Files[2].Path != "/ab/c.pdf" {
+		t.Fatalf("k3 = %+v", s.Files[2])
+	}
+	long := strings.Repeat("字", 100) // 300 bytes
+	s = &Scan{}
+	s.add(fileObs("k4", "/"+long+".pdf", long+".pdf", ""))
+	if len(s.Files) != 1 || s.Files[0].Keep || len(s.Files[0].Name) > 255 {
+		t.Fatalf("a long name: %+v", s.Files)
+	}
+}
+
+func TestGraph_AFeedThatNeverSaysItIsCompleteIsIncomplete(t *testing.T) {
+	api := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, map[string]any{"value": []map[string]any{
+			{"id": "ROOT", "name": "root", "root": map[string]any{}},
+			{"id": "A", "name": "a.pdf", "file": map[string]any{}, "parentReference": map[string]string{"id": "ROOT"}},
+		}}) // neither nextLink nor deltaLink: a proxy's JSON, a cut feed
+	}))
+	defer api.Close()
+	if s := (&Graph{api: testClient(t, api.URL), base: api.URL}).Scan(context.Background()); s.Complete() {
+		t.Fatal("a feed with no deltaLink counted as complete")
+	}
+}
+
+func TestDrive_ARateLimitIsWaitedOutNotFatal(t *testing.T) {
+	var calls int32
+	api := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/files/root" {
+			writeJSON(w, map[string]string{"id": "ROOT"})
+			return
+		}
+		if atomic.AddInt32(&calls, 1) == 1 {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte(`{"error":{"code":403,"errors":[{"reason":"userRateLimitExceeded"}]}}`))
+			return
+		}
+		writeJSON(w, map[string]any{"files": []map[string]any{{"id": "a", "name": "a.pdf", "parents": []string{"ROOT"}}}})
+	}))
+	defer api.Close()
+	s := (&Drive{api: testClient(t, api.URL), base: api.URL}).Scan(context.Background())
+	if !s.Complete() || len(s.Files) != 1 {
+		t.Fatalf("complete=%v files=%v errors=%v", s.Complete(), s.Files, s.Errors)
+	}
+	// A real refusal is still a refusal.
+	nope := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte(`{"error":{"errors":[{"reason":"forbidden"}]}}`))
+	}))
+	defer nope.Close()
+	if _, err := testClient(t, nope.URL).get(context.Background(), nope.URL+"/x"); err == nil {
+		t.Fatal("a 403 that isn't a rate limit was retried into success")
 	}
 }
 

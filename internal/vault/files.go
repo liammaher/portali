@@ -166,6 +166,7 @@ type FileSourceConfig struct {
 	Tenant   string `json:"tenant,omitempty"`   // Microsoft: common, organizations, or a tenant ID
 	DriveID  string `json:"drive_id,omitempty"` // Microsoft: the OneDrive or SharePoint library
 	Site     string `json:"site,omitempty"`     // SharePoint: the site's address, for display
+	Via      string `json:"via,omitempty"`      // ViaConnector for a source an agent feeds
 }
 
 // reClientID is what an OAuth client ID may look like: the three providers' are
@@ -406,56 +407,69 @@ func cleanFileText(field, s string, max int) (string, error) {
 
 // --- sources ---------------------------------------------------------------
 
-// AddFileSource registers a place to read files from. The session adds sources.
-func (v *Vault) AddFileSource(provider string, cfg FileSourceConfig) (*FileSourceInfo, error) {
+// CheckFileSourceConfig cleans a source's settings in place and refuses what a
+// source can't have. A client can run it before sending the user off to sign in.
+func CheckFileSourceConfig(provider string, cfg *FileSourceConfig) error {
 	if !validFileProvider(provider) {
-		return nil, &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(FileProviders, ", ")}
+		return &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(FileProviders, ", ")}
 	}
 	var err error
 	if cfg.Label, err = cleanFileText("label", cfg.Label, 80); err != nil || cfg.Label == "" {
 		if err == nil {
 			err = &ValidationError{Field: "label", Msg: "a source needs a label"}
 		}
-		return nil, err
+		return err
 	}
-	if cfg.Root, err = cleanFileText("root", cfg.Root, maxFilePath); err != nil {
-		return nil, err
-	}
-	if cfg.Account, err = cleanFileText("account", cfg.Account, 200); err != nil {
-		return nil, err
-	}
-	if cfg.ClientID, err = cleanFileText("client_id", cfg.ClientID, 200); err != nil {
-		return nil, err
-	}
-	if cfg.DriveID, err = cleanFileText("drive_id", cfg.DriveID, 200); err != nil {
-		return nil, err
-	}
-	if cfg.Tenant, err = cleanFileText("tenant", cfg.Tenant, 100); err != nil {
-		return nil, err
-	}
-	if cfg.Site, err = cleanFileText("site", cfg.Site, 400); err != nil {
-		return nil, err
+	for _, f := range []struct {
+		name string
+		p    *string
+		max  int
+	}{{"root", &cfg.Root, maxFilePath}, {"account", &cfg.Account, 200}, {"client_id", &cfg.ClientID, 200},
+		{"drive_id", &cfg.DriveID, 200}, {"tenant", &cfg.Tenant, 100}, {"site", &cfg.Site, 400}, {"via", &cfg.Via, 20}} {
+		if *f.p, err = cleanFileText(f.name, *f.p, f.max); err != nil {
+			return err
+		}
 	}
 	switch {
+	case cfg.Via != "" && cfg.Via != ViaConnector:
+		return &ValidationError{Field: "via", Msg: "not a way of reading a source"}
+	case cfg.Via != "" && (cfg.Root != "" || cfg.ClientID != "" || provider == "local"):
+		return &ValidationError{Field: "via", Msg: "a source fed by an agent has no folder and no OAuth client"}
 	case provider == "local" && cfg.Root == "":
-		return nil, &ValidationError{Field: "root", Msg: "a local source needs the folder to read"}
-	case cfg.Root == "" && cfg.ClientID == "":
-		return nil, &ValidationError{Field: "client_id", Msg: "a source needs a folder to read, or an OAuth client to read the account through"}
+		return &ValidationError{Field: "root", Msg: "a local source needs the folder to read"}
+	case cfg.Root == "" && cfg.ClientID == "" && cfg.Via == "":
+		return &ValidationError{Field: "client_id", Msg: "a source needs a folder to read, or an OAuth client to read the account through"}
 	case cfg.Root != "" && cfg.ClientID != "":
-		return nil, &ValidationError{Field: "client_id", Msg: "a source is read from a folder or through the provider's API, not both"}
+		return &ValidationError{Field: "client_id", Msg: "a source is read from a folder or through the provider's API, not both"}
 	case cfg.ClientID != "" && provider == "local":
-		return nil, &ValidationError{Field: "provider", Msg: "a folder on this computer isn't read through an API"}
+		return &ValidationError{Field: "provider", Msg: "a folder on this computer isn't read through an API"}
 	case cfg.ClientID != "" && !reClientID.MatchString(cfg.ClientID):
-		return nil, &ValidationError{Field: "client_id", Msg: "not an OAuth client ID"}
+		return &ValidationError{Field: "client_id", Msg: "not an OAuth client ID"}
 	case cfg.Tenant != "" && !reTenant.MatchString(cfg.Tenant):
-		return nil, &ValidationError{Field: "tenant", Msg: "common, organizations, consumers, a tenant ID or its domain"}
+		return &ValidationError{Field: "tenant", Msg: "common, organizations, consumers, a tenant ID or its domain"}
 	case cfg.DriveID != "" && !reDriveID.MatchString(cfg.DriveID):
-		return nil, &ValidationError{Field: "drive_id", Msg: "not a drive ID"}
+		return &ValidationError{Field: "drive_id", Msg: "not a drive ID"}
 	}
 	cfg.Cursor, cfg.LastSync = "", ""
+	return nil
+}
 
+// ViaConnector marks a source with no folder and no sign-in of its own: its
+// files are ones an agent found through its own connector and the user
+// accepted. Nothing syncs it, so nothing in it is ever marked gone.
+const ViaConnector = "connector"
+
+// AddFileSource registers a place to read files from. The session adds sources.
+func (v *Vault) AddFileSource(provider string, cfg FileSourceConfig) (*FileSourceInfo, error) {
+	if err := CheckFileSourceConfig(provider, &cfg); err != nil {
+		return nil, err
+	}
 	v.writeMu.RLock()
 	defer v.writeMu.RUnlock()
+	return v.addFileSource(provider, cfg)
+}
+
+func (v *Vault) addFileSource(provider string, cfg FileSourceConfig) (*FileSourceInfo, error) {
 	id, err := newFileID()
 	if err != nil {
 		return nil, err
@@ -614,6 +628,10 @@ type FileObservation struct {
 	ProviderHash string `json:"provider_hash,omitempty"`
 	SHA256       string `json:"sha256,omitempty"`
 	Deleted      bool   `json:"deleted,omitempty"` // a change feed's "gone"
+	// Keep says the file exists but the client can't describe it in a way the
+	// index accepts: it only counts as seen, so the sync's finish doesn't mark
+	// a file gone that is still there.
+	Keep bool `json:"keep,omitempty"`
 }
 
 // FileSyncResult counts what a sync changed.
@@ -639,7 +657,7 @@ func (o *FileObservation) Check() error {
 	if o.Key, err = cleanFileKey(o.Key); err != nil {
 		return err
 	}
-	if o.Deleted {
+	if o.Deleted || o.Keep {
 		return nil
 	}
 	if strings.ContainsAny(o.Name, `/\`) || hasUnsafe(o.Name) {
@@ -921,6 +939,15 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 				// Not the caller's to see: left as it is, and uncounted.
 				if track != nil {
 					track.keys[o.Key] = true
+				}
+				continue
+			}
+			if o.Keep {
+				if track != nil {
+					track.keys[o.Key] = true
+				}
+				if of != nil {
+					seen[of] = true
 				}
 				continue
 			}

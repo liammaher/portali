@@ -23,6 +23,9 @@ const filesUsage = `usage:
                       [--site <https address> --library <name>] [--tenant common] [--port 53682]
                                        Read an account through the provider's API, read-only (docs/usage.md:
                                        register an OAuth client first); sign in in your browser
+  pvault files source reconnect <source> [--port 53682]
+                                       Sign in again for a source whose sign-in expired or was revoked:
+                                       keeps its index and links (same account only)
   pvault files source list
   pvault files source remove <source>  Forget a source's index entries and links (the files are untouched)
   pvault files sync [source] [--confirm-removals]
@@ -135,6 +138,8 @@ func cmdFilesSource() {
 		cmdFilesSourceAdd()
 	case "connect":
 		cmdFilesSourceConnect()
+	case "reconnect":
+		cmdFilesSourceReconnect()
 	case "list":
 		positionalArgs(os.Args[4:], filesUsage, 0, 0)
 		needGrant("files.*", "read")
