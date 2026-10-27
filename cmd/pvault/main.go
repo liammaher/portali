@@ -55,6 +55,8 @@ func main() {
 		cmdRevokeServiceToken()
 	case "doc":
 		cmdDoc()
+	case "files":
+		cmdFiles()
 	case "person", "member": // member is the older name, kept as an alias
 		cmdPerson()
 	case "expiring":
@@ -118,6 +120,11 @@ Commands:
   doc list [category]              List stored documents
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
+  files source add <folder>        Index the files of a folder, a OneDrive/Google Drive/Dropbox sync folder
+                                   included (names and places only; nothing is opened or copied)
+  files sync | search | show | link ...
+                                   Update the index, find files, link them to a person, client or pratica
+                                   ('pvault files' lists every subcommand)
   person list                      List the other people in your vault: family members
                                    (relazione, age, stato di famiglia), or a business's people (ruolo)
   person show <slug>               Show a person's fields

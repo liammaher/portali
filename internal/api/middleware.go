@@ -17,6 +17,7 @@ const (
 	sessionAuthKey contextKey = "session_auth"
 	maxTierKey     contextKey = "max_tier"
 	accessKey      contextKey = "access"
+	consumerKey    contextKey = "consumer"
 )
 
 // scopeFromRequest returns the token scope. Session tokens get "*" (full access).
@@ -49,6 +50,15 @@ func accessFromRequest(r *http.Request) string {
 		return a
 	}
 	return vault.AccessRead
+}
+
+// consumerFromRequest names the caller for records others read later (who
+// proposed a file link): the service token's consumer, else "you".
+func consumerFromRequest(r *http.Request) string {
+	if c, ok := r.Context().Value(consumerKey).(string); ok {
+		return c
+	}
+	return "you"
 }
 
 // isSessionAuth returns true if the request was authenticated with a session token.
@@ -144,6 +154,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 				Scope:    svcToken.Scope,
 				Action:   "api_access",
 			})
+			r = r.WithContext(context.WithValue(r.Context(), consumerKey, svcToken.Consumer))
 			serveAuthed(next, w, r, svcToken.Scope, false, svcToken.MaxSensitivity, svcToken.Access)
 			return
 		}

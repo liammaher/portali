@@ -229,6 +229,7 @@ type RemovedPerson struct {
 	Documents     int      `json:"documents"`
 	RevokedTokens []string `json:"revoked_tokens"` // consumers of service tokens that named the person
 	DroppedGrants int      `json:"dropped_grants"`
+	FileLinks     int      `json:"file_links,omitempty"` // file links, folder rules and suggestions for them (the files stay where they are)
 	FilesLeft     []string `json:"files_left,omitempty"` // encrypted document files that could not be deleted
 }
 
@@ -294,7 +295,15 @@ func (v *Vault) RemovePerson(slug string) (*RemovedPerson, error) {
 			forget = append(forget, k)
 		}
 	}
-	if err := v.db.ApplyChange(store.Change{DeleteFields: fieldIDs, DeleteDocs: docIDs, DeleteTokens: revoke, DeletePerson: slug, DeleteMeta: forget}); err != nil {
+	// Under filesMu so a link can't be made to the person while they go.
+	v.filesMu.Lock()
+	defer v.filesMu.Unlock()
+	fl, fr, fs, err := v.db.FileHolderCounts(slug)
+	if err != nil {
+		return nil, err
+	}
+	out.FileLinks = fl + fr + fs
+	if err := v.db.ApplyChange(store.Change{DeleteFields: fieldIDs, DeleteDocs: docIDs, DeleteTokens: revoke, DeletePerson: slug, DeleteMeta: forget, DeleteFileHolder: slug}); err != nil {
 		return nil, err
 	}
 	v.mu.RLock()

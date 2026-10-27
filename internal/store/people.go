@@ -89,6 +89,7 @@ type Change struct {
 	DeleteTokens             []string // a token already gone (expired, revoked) is no error
 	Insert                   []Field  // each must not exist yet
 	DeletePerson             string   // the person removed with their rows, if any
+	DeleteFileHolder         string   // a removed person's file links, rules and suggestions
 	SetMeta                  map[string]string
 	DeleteMeta               []string // a key already gone is no error
 }
@@ -129,6 +130,17 @@ func (d *DB) ApplyChange(c Change) error {
 		)
 		if err := oneRow(res, err); err != nil {
 			return err
+		}
+	}
+	if c.DeleteFileHolder != "" {
+		for _, q := range []string{
+			`DELETE FROM vault_file_links WHERE holder = ?`,
+			`DELETE FROM vault_file_rules WHERE holder = ?`,
+			`DELETE FROM vault_file_suggestions WHERE holder = ?`,
+		} {
+			if _, err := tx.Exec(q, c.DeleteFileHolder); err != nil {
+				return err
+			}
 		}
 	}
 	if c.DeletePerson != "" {

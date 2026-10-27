@@ -94,12 +94,17 @@ type Vault struct {
 	// MigrateNucleo), so those see no write land halfway. Lock order:
 	// backup.mu, writeMu, mu.
 	writeMu sync.RWMutex
-	db      *store.DB
-	session *Session
-	dir     string // ~/.pvault
-	kind    string // KindPersona or KindImpresa, loaded by Open
-	salt    []byte // loaded on unlock, used for HKDF subkey derivation
-	backup  backupState
+	// filesMu serializes changes to the file index (files.go), so two syncs of
+	// one source can't both add the same file. Taken after writeMu, never
+	// held while taking it.
+	filesMu   sync.Mutex
+	fileSyncs map[string]*fileSync // running syncs by source, guarded by filesMu
+	db        *store.DB
+	session   *Session
+	dir       string // ~/.pvault
+	kind      string // KindPersona or KindImpresa, loaded by Open
+	salt      []byte // loaded on unlock, used for HKDF subkey derivation
+	backup    backupState
 }
 
 // Open opens an existing vault database. It never creates one: an empty
@@ -355,6 +360,7 @@ func (v *Vault) unlock(password string, secretKeyHex string) (token string, err 
 			v.session = nil
 		}
 		v.mu.Unlock()
+		v.dropFileSyncsIfIdle()
 	})
 	if err != nil {
 		return "", err
@@ -529,6 +535,7 @@ func (v *Vault) Lock() {
 		v.session.Destroy()
 		v.session = nil
 	}
+	v.dropFileSyncsIfIdle()
 }
 
 // Status returns the current vault status.

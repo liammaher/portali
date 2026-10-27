@@ -348,6 +348,9 @@ func cmdPersonRemove(slug string) {
 		fatal("%v", err)
 	}
 	fmt.Printf("Removed %s: %d fields, %d documents.\n", slug, out.Fields, out.Documents)
+	if out.FileLinks > 0 {
+		fmt.Printf("Removed %d file link(s), folder rule(s) and suggestion(s) for %s; the files themselves are untouched.\n", out.FileLinks, slug)
+	}
 	if len(out.RevokedTokens) > 0 {
 		fmt.Printf("Revoked service tokens that named %s: %s\n", slug, strings.Join(out.RevokedTokens, ", "))
 	}

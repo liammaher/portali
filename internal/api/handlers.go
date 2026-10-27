@@ -752,6 +752,8 @@ func handleVaultError(w http.ResponseWriter, err error) {
 	switch err {
 	case vault.ErrFieldNotFound:
 		writeError(w, http.StatusNotFound, "not_found", "field not found")
+	case vault.ErrFileNotFound:
+		writeError(w, http.StatusNotFound, "not_found", "not found")
 	case vault.ErrPersonNotFound:
 		writeError(w, http.StatusNotFound, "not_found", "person not found")
 	case vault.ErrFieldChanged:

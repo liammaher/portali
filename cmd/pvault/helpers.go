@@ -227,6 +227,16 @@ func authed(send func(token string) (*http.Response, error)) (*http.Response, er
 		return nil, err
 	}
 	resp, err := send(token)
+	// A grant lasts minutes: a long command (a scan of a big folder before
+	// its first request) can outlive it. Ask again once.
+	if err == nil && resp.StatusCode == http.StatusUnauthorized && cliGrant.scope != "" {
+		resp.Body.Close()
+		cliToken = ""
+		if token, err = sessionToken(); err != nil {
+			return nil, err
+		}
+		resp, err = send(token)
+	}
 	if err != nil || resp.StatusCode != http.StatusForbidden || cliGrant.scope == "" {
 		return resp, err
 	}
