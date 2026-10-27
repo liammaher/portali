@@ -270,6 +270,11 @@ CASES = {
     "route-desk": ("route --channel desk: the URP of the Municipalità the vault places the home in",
                    {"route": "desk"}, 0,
                    ["Your office: Sede della Municipalità 2", "Piazza Dante 93"]),
+    "route-entry-only": ("route --entry without --library: the law's signing rule is the library's, so it says to pass it",
+                         {"route": "post", "entry_only": True}, 0,
+                         ["by post (other routes:", "contract/signing.json: pass --library"]),
+    "route-portal": ("route --channel portal: the form's own signing for the portal (its login)",
+                     {"route": "portal"}, 0, ["online (other routes:", "login, unclear whether an ID copy is needed"]),
     "route-unknown": ("route --channel fax: a route the entry doesn't have",
                       {"route": "fax"}, 1, ["has no fax channel; it has desk, email, pec, portal, post"]),
     "sign-channel-post": ("--channel post --sign: the raccomandata takes a handwritten signature too",
@@ -537,6 +542,40 @@ def unit_checks(ricorso_entry):
     return bad
 
 
+def office_checks(library):
+    """office_for's answer when the vault can't give the office field: no
+    scope, a street across a boundary, nothing stored; and the office when it
+    can."""
+    class Stub:
+        def __init__(self, status, body):
+            self.answer = (status, body)
+
+        def field_path(self, field_id):
+            return field_id
+
+        def call(self, method, path):
+            return self.answer
+    a = types.SimpleNamespace(library=library, server="server.json", vault_dir=None, keychain=None)
+    cases = [
+        (403, {"error": "scope", "constraint": "scope_exceeded"}, "the token can't read residenza.municipalita"),
+        (404, {"error": "street crosses a boundary: Chiaia, San Ferdinando", "constraint": "not_resolved"},
+         "Chiaia, San Ferdinando; store the quartiere (pvault set residenza.quartiere"),
+        (404, {"error": "field not found", "constraint": "not_found"}, "isn't in the vault"),
+        (200, {"value": "2"}, "Sede della Municipalità 2"),
+    ]
+    bad = []
+    connect = fill.connect
+    try:
+        for status, body, line in cases:
+            fill.connect = lambda a, answer=(status, body): {"prepare": Stub(*answer)}
+            got = json.dumps(fill.office_for(a, "residenza.municipalita"), ensure_ascii=False)
+            if line not in got:
+                bad.append(f"{status} {body.get('constraint', '')}: {got}")
+    finally:
+        fill.connect = connect
+    return bad
+
+
 def ask_checks(scheda_entry):
     """needs' questions for the scheda: the procuratore's rows apply only
     after "Procura conferita?" ticks si, so they are one question, with it."""
@@ -598,6 +637,11 @@ def main():
             print(f"{'ok  ' if not bad else 'FAIL'} asks: rows that apply only after an answer are asked with it, once"
                   + "".join("\n  " + b for b in bad))
             failed += ["asks"] if bad else []
+            if os.path.isdir(os.path.join(library, "offices")):
+                bad = office_checks(library)
+                print(f"{'ok  ' if not bad else 'FAIL'} offices: the office picked by area, or why not"
+                      + "".join("\n  " + b for b in bad))
+                failed += ["offices"] if bad else []
         if not os.path.isdir(os.path.join(library, "offices")):
             # A library from before routes (steps[].channel, offices/) has no route cards to check.
             skipped = [n for n in names if "route" in CASES[n][1]]
@@ -611,7 +655,7 @@ def main():
                 shutil.copytree(os.path.join(base, name, "out"), os.path.join(keep, name), dirs_exist_ok=True)
             if not ok:
                 failed.append(name)
-        total = len(names) + (0 if args else 3)
+        total = len(names) + (0 if args else 3 + os.path.isdir(os.path.join(library, "offices")))
         print(f"{total - len(failed)}/{total} cases passed")
         return 1 if failed else 0
     finally:
@@ -688,9 +732,10 @@ def case(base, name, p, changes, want_exit, want_lines):
             common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
                       "--procedure", pid, "--form", form, "--out", out, "--answers", os.path.join(work, "answers.json")] + signer
         if "route" in changes:
-            run = subprocess.run([sys.executable, "-I", FILL, "route", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
-                                  "--procedure", pid, "--channel", changes["route"], "--server", os.path.join(work, "server.json")],
-                                 capture_output=True, text=True)
+            source = (["--entry", os.path.join(work, "entry.json")] if changes.get("entry_only")
+                      else ["--library", os.environ["PRATICHE_NAPOLI_DIR"], "--procedure", pid])
+            run = subprocess.run([sys.executable, "-I", FILL, "route", *source, "--channel", changes["route"],
+                                  "--server", os.path.join(work, "server.json")], capture_output=True, text=True)
         elif changes.get("socket"):
             # As on a real vault: its folder, the token from the environment, a draft.
             if "chmod_run" in changes:
