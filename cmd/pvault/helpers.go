@@ -139,8 +139,9 @@ func promptGrant(ttl string) (string, error) {
 		return "", err
 	}
 	interactive := term.IsTerminal(int(syscall.Stdin))
-	if touchIDEnrolled() {
-		token, err := touchIDGrant()
+	a := currentApprover()
+	if a.enrolled() {
+		token, err := a.grant()
 		if err == nil {
 			return token, nil
 		}
@@ -150,7 +151,7 @@ func promptGrant(ttl string) (string, error) {
 		fmt.Fprintf(os.Stderr, "%v — enter your password instead.\n", err)
 	}
 	if !interactive {
-		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal (or turn on Touch ID with '%s')", pvCmd("touchid enable"))
+		return "", fmt.Errorf("this command needs your profile password, which can only be entered in an interactive terminal (or turn on %s with '%s')", a.name(), pvCmd(a.enableCmd()))
 	}
 	pw, err := promptPassword("Profile password: ")
 	if err != nil {

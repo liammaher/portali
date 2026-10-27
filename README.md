@@ -216,6 +216,16 @@ From then on `pvault unlock` and every data command ask for your fingerprint ins
 
 How it works: the password sits in your login Keychain in an item only this exact helper build may read; any other program would make macOS ask for your login password. Apple's fingerprint-locked Keychain items need a paid developer signature, so the helper checks Touch ID itself before reading the item. It never prints the password: it sends it only to the `pvault` build you enabled Touch ID with, over the vault's private socket (`~/.pvault/run/pvault.sock`), and hands back only a short, scoped token. So after rebuilding or moving `pvault` or the helper, run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`; until then a server left running from the old build is refused. `pvault touchid disable` removes the saved password.
 
+### Windows Hello (Windows)
+
+On Windows 11, Windows Hello (face, fingerprint or PIN) does the same job:
+
+```sh
+pvault hello enable      # asks for your password once
+```
+
+From then on data commands ask Windows Hello instead of your password, with a prompt worded from the exact request, e.g. *pvault wants to read spid.password from your vault for 2 minutes.* Here the vault server shows the prompt itself and issues only that grant, so no password is saved anywhere; `pvault unlock` still takes your password. `pvault hello status` shows whether it's on; `pvault hello disable` turns it off.
+
 ## Security model
 
 ```

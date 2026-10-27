@@ -31,7 +31,8 @@ cliente), and the pratica record lives in that vault. Never ask for or store a c
 credentials: a professional files with their own identity and the client's signed procura
 (stored as the client's document, e.g. `rossi:procura`).
 
-**Touch ID first.** Check `pvault touchid status` once at the start. When it's on,
+**Touch ID first.** Check `pvault touchid status` once at the start (on Windows,
+`pvault hello status`: Windows Hello works the same way). When it's on,
 read with `pvault get` from Bash (vault skill §2d): each command shows one fingerprint
 prompt scoped to exactly the fields it names, so nobody has to create a token. Gather
 what a step needs and read it in one `get`: up to 10 field IDs or whole categories

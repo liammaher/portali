@@ -331,13 +331,10 @@ func fetchCandidate(id, token string) ([]byte, string, error) {
 // grant that can only read and approve that request.
 func signGrant(s signSummary) (string, error) {
 	interactive := term.IsTerminal(int(syscall.Stdin))
-	if touchIDEnrolled() {
-		token, err := runTouchID("", "sign", "--id", s.ID)
-		if err == nil && token != "" {
-			return token, nil
-		}
+	if a := currentApprover(); a.enrolled() {
+		token, err := a.sign(s.ID)
 		if err == nil {
-			err = errors.New("Touch ID helper returned no token")
+			return token, nil
 		}
 		if !interactive {
 			return "", err

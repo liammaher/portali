@@ -25,6 +25,8 @@ While the vault is unlocked, every CLI command that reads or changes data asks f
 
 With Touch ID on (`pvault touchid enable`, macOS), a fingerprint replaces the password for `pvault unlock` and for data commands, including ones run by an agent without a terminal. Each approval covers only what that command needs (e.g. `pvault get identity.codice_fiscale` asks to read just that field) for 2 minutes, and the prompt says so. `pvault get` takes up to 10 field IDs or whole categories (`'residenza.*'`, quoted for the shell), so one approval can cover every field a task needs. In a terminal, a denied or failed prompt falls back to the password. The few things only your own session may do (deleting a field or document stored above its default tier, or storing a document below it) need full access: the command then shows a second prompt asking for that. Touch ID only sends your password to the `pvault` build it was enabled with, over the vault's socket (see Security Model), so after rebuilding or moving `pvault` or `pvault-touchid` run `pvault touchid enable` again, then `pvault lock` and `pvault unlock`. `pvault touchid status` shows whether it's on; `pvault touchid disable` removes the saved password.
 
+With Windows Hello on (`pvault hello enable`, Windows 11), data commands ask Windows Hello (face, fingerprint or PIN) instead, with the same per-command scope, wording and fallback. The vault server shows the prompt itself and grants only what it names, so no password is saved; `pvault unlock` still takes the password. `pvault hello status` shows whether it's on; `pvault hello disable` turns it off. Turning it on or off needs your own session (the password, or full access you approve).
+
 ## Other people and business vaults
 
 A vault holds your own data and, if you add them, other people's: a family (`pvault person add giulia --relazione moglie`) or, in a business vault, the business's people with a ruolo (`--ruolo cliente`).
@@ -251,6 +253,8 @@ POST /vault/unlock                       # { password, secret_key } → { token 
 POST /vault/stop                         # Lock and stop the server, as SIGTERM does. Socket or pipe only, no auth
 POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
                                          # + { scope, access? } → grant limited to that scope (max 10m), used by Touch ID;
+                                         # { approve: "hello", window?, scope?/access?/ttl? or sign? } instead of a password:
+                                         #   the server asks Windows Hello with a prompt worded from the request (socket or pipe only);
                                          #   unlike a service token it can reach personal fields in its scope
 ```
 
@@ -377,6 +381,7 @@ DELETE /vault/tokens/service/{ref}       # Revoke by listed hash prefix (≥8 ch
 
 ```
 POST /vault/lock                         # Lock vault, zero keys
+POST /vault/hello                        # { enabled } turn Windows Hello approvals on or off (session only)
 ```
 
 ### Audit

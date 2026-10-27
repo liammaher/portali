@@ -72,10 +72,24 @@ var socketClient = &http.Client{
 	},
 }
 
+// approvalClient is socketClient for a request the user approves in person
+// (Windows Hello), which waits while they answer.
+var approvalClient = &http.Client{Timeout: 4 * time.Minute, Transport: socketClient.Transport}
+
 // credentialRequest sends a request carrying the profile password to the
 // verified vault server. Its Host is loopback, as the server requires.
 func credentialRequest(method, path string, body any) (*http.Response, error) {
-	resp, err := doRequestWith(socketClient, "http://localhost", method, path, body, "")
+	return privateRequest(socketClient, method, path, body)
+}
+
+// approvalRequest is credentialRequest for a request the user approves in
+// person.
+func approvalRequest(method, path string, body any) (*http.Response, error) {
+	return privateRequest(approvalClient, method, path, body)
+}
+
+func privateRequest(client *http.Client, method, path string, body any) (*http.Response, error) {
+	resp, err := doRequestWith(client, "http://localhost", method, path, body, "")
 	// Drop net/http's `Post "http://localhost/...":` prefix.
 	var ue *url.Error
 	if errors.As(err, &ue) {
@@ -100,8 +114,9 @@ func checkVaultServer() error {
 	// the server just verified, not something else on another port or on
 	// localhost's other address.
 	var status struct {
-		Addr string `json:"addr"`
-		Kind string `json:"kind"`
+		Addr     string `json:"addr"`
+		Kind     string `json:"kind"`
+		Approver string `json:"approver"`
 	}
 	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&status); err != nil {
 		return fmt.Errorf("vault server status: %w", err)
@@ -113,6 +128,7 @@ func checkVaultServer() error {
 		return fmt.Errorf("VAULT_ADDR %s isn't this vault's server, which listens on %s — set VAULT_ADDR=http://%s or unset it", serverAddr(), status.Addr, status.Addr)
 	}
 	verifiedKind = status.Kind
+	verifiedApprover = status.Approver
 	if verifiedKind == "" {
 		verifiedKind = vault.KindPersona // a server from before vault kinds
 	}

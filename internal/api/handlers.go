@@ -209,7 +209,8 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusTooManyRequests, "rate_limited", "too many failed attempts, try again later")
 		return
 	}
-	// The attempt is counted up front; only a wrong password keeps it.
+	// The attempt is counted up front; only a wrong password, or a request
+	// the user refused in person, keeps it.
 	wrongPassword := false
 	defer func() {
 		if !wrongPassword {
@@ -217,19 +218,12 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	var req struct {
-		Password  string `json:"password"`
-		SecretKey string `json:"secret_key"`
-		TTL       string `json:"ttl"`
-		// Scope and Access, when set, limit the grant like a service token
-		// (see CreateScopedGrant).
-		Scope  string `json:"scope"`
-		Access string `json:"access"`
-		// Sign asks for a grant that can only review and approve this
-		// signing request (see CreateSignGrant); socket only.
-		Sign string `json:"sign"`
-	}
+	var req sessionGrantRequest
 	if !readJSONBody(w, r, &req) {
+		return
+	}
+	if req.Approve != "" {
+		wrongPassword = s.approvedGrant(w, r, req)
 		return
 	}
 	if req.Password == "" {
@@ -276,6 +270,30 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		handleVaultError(w, err)
 		return
 	}
+	writeGrant(w, token, expires, req)
+}
+
+type sessionGrantRequest struct {
+	Password  string `json:"password"`
+	SecretKey string `json:"secret_key"`
+	TTL       string `json:"ttl"`
+	// Scope and Access, when set, limit the grant like a service token
+	// (see CreateScopedGrant).
+	Scope  string `json:"scope"`
+	Access string `json:"access"`
+	// Sign asks for a grant that can only review and approve this
+	// signing request (see CreateSignGrant); socket only.
+	Sign string `json:"sign"`
+	// Approve "hello" asks the user in person instead of taking a password
+	// (see approvedGrant); Window is the window to show the prompt over.
+	Approve string `json:"approve"`
+	Window  uint64 `json:"window"`
+}
+
+// writeGrant answers a grant request with its token, echoing sign, scope
+// and access so a client can tell what it got (older servers ignore them
+// and grant full access).
+func writeGrant(w http.ResponseWriter, token string, expires time.Time, req sessionGrantRequest) {
 	resp := map[string]string{
 		"token":      token,
 		"expires_at": expires.UTC().Format(time.RFC3339),
@@ -284,8 +302,6 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		resp["sign"] = req.Sign
 	}
 	if req.Scope != "" {
-		// Echoed so a client can tell a scoped grant from a full one
-		// (older servers ignore scope and grant full access).
 		resp["scope"] = req.Scope
 		resp["access"] = req.Access
 		if resp["access"] == "" {
@@ -293,6 +309,166 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	writeJSON(w, http.StatusOK, resp)
+}
+
+// approvedGrant answers POST /vault/session with approve "hello": the server
+// asks the user itself, with Windows Hello, in a prompt worded from this very
+// request (vault.GrantPrompt, or vault.SignPrompt from the vault's own
+// summary), and issues exactly it. Only over the private channel, only when
+// the user turned it on, never with a password, one prompt at a time. It
+// reports whether the user refused, which counts toward the rate limit.
+func (s *Server) approvedGrant(w http.ResponseWriter, r *http.Request, req sessionGrantRequest) (refused bool) {
+	switch {
+	case req.Approve != "hello":
+		writeError(w, http.StatusBadRequest, "invalid_request", `approve must be "hello"`)
+		return false
+	case req.Password != "" || req.SecretKey != "":
+		writeError(w, http.StatusBadRequest, "invalid_request", "approve takes no password")
+		return false
+	case !viaSocket(r):
+		writeError(w, http.StatusForbidden, "socket_required", "an approval is requested only over the vault's socket")
+		return false
+	}
+	if status, err := s.vault.Status(); err != nil || status.Locked {
+		handleVaultError(w, vault.ErrLocked)
+		return false
+	}
+	if on, err := s.vault.HelloEnabled(); err != nil || !on {
+		writeError(w, http.StatusPreconditionFailed, "approver_off", "Windows Hello isn't turned on for this vault")
+		return false
+	}
+	if s.approver == nil {
+		writeError(w, http.StatusServiceUnavailable, "approver_unavailable", "Windows Hello isn't available")
+		return false
+	}
+	if err := s.approver.Available(); err != nil {
+		writeError(w, http.StatusServiceUnavailable, "approver_unavailable", err.Error())
+		return false
+	}
+
+	label := s.vault.PromptLabel()
+	var reason, scope string
+	ttl := 2 * time.Minute
+	if req.Sign != "" {
+		if req.Scope != "" || req.Access != "" || req.TTL != "" {
+			writeError(w, http.StatusBadRequest, "invalid_request", "sign can't be combined with scope, access or ttl")
+			return false
+		}
+		info, err := s.vault.SigningStatus(req.Sign, "")
+		if err == nil && info.Status != vault.SigningPending {
+			err = vault.ErrSigningNotPending
+		}
+		if err != nil {
+			handleVaultError(w, err)
+			return false
+		}
+		reason = vault.SignPrompt(label, info.Name, info.Pages, info.SHA256[:8], info.Requester, vault.SignGrantTTL)
+		scope = vault.SigningScopeID
+	} else {
+		if req.TTL != "" {
+			parsed, err := time.ParseDuration(req.TTL)
+			if err != nil {
+				writeError(w, http.StatusBadRequest, "invalid_request", "invalid ttl duration")
+				return false
+			}
+			ttl = parsed
+		}
+		if _, err := vault.CheckGrantRequest(ttl, req.Scope, req.Access); err != nil {
+			handleVaultError(w, err)
+			return false
+		}
+		var err error
+		if reason, err = vault.GrantPrompt(label, req.Scope, req.Access, ttl); err != nil {
+			writeError(w, http.StatusBadRequest, "invalid_request", err.Error())
+			return false
+		}
+		scope = req.Scope
+		if scope == "" {
+			scope = "*"
+		}
+	}
+
+	if !s.approveMu.TryLock() {
+		writeError(w, http.StatusConflict, "busy", "another approval is waiting for you")
+		return false
+	}
+	defer s.approveMu.Unlock()
+	approved, err := s.approver.Approve(r.Context(), req.Window, "pvault wants to "+reason+".")
+	// Whoever asked has gone, or the server is stopping: no grant.
+	if r.Context().Err() != nil {
+		writeError(w, http.StatusServiceUnavailable, "approver_unavailable", "the request was cancelled")
+		return false
+	}
+	if err != nil {
+		writeError(w, http.StatusServiceUnavailable, "approver_unavailable", err.Error())
+		return false
+	}
+	if !approved {
+		s.vault.AuditApprovalRefused("hello", scope, reason)
+		writeError(w, http.StatusForbidden, "not_approved", "the request was not approved")
+		return true
+	}
+	// Turned off while the prompt was open: the user meant it to stop.
+	if on, err := s.vault.HelloEnabled(); err != nil || !on {
+		writeError(w, http.StatusPreconditionFailed, "approver_off", "Windows Hello was turned off for this vault")
+		return false
+	}
+	var token string
+	var expires time.Time
+	if req.Sign != "" {
+		token, expires, err = s.vault.CreateApprovedSignGrant(req.Sign, "hello")
+	} else {
+		token, expires, err = s.vault.CreateApprovedGrant(ttl, req.Scope, req.Access, "hello")
+	}
+	if err != nil {
+		handleVaultError(w, err)
+		return false
+	}
+	writeGrant(w, token, expires, req)
+	return false
+}
+
+// POST /vault/hello turns Windows Hello approvals on or off. Only the session
+// (the typed password, or full access the user approved) may, over the private
+// channel as pvault hello sends it (not the onboarding page), and it is turned
+// on only where Windows Hello can answer.
+func (s *Server) handleHello(w http.ResponseWriter, r *http.Request) {
+	if !viaSocket(r) {
+		writeError(w, http.StatusForbidden, "socket_required", "Windows Hello is turned on or off only with pvault hello")
+		return
+	}
+	if !isSessionAuth(r) {
+		sessionRequired(w)
+		return
+	}
+	if !requireJSON(w, r) {
+		return
+	}
+	var req struct {
+		Enabled *bool `json:"enabled"`
+	}
+	if !readJSONBody(w, r, &req) {
+		return
+	}
+	if req.Enabled == nil {
+		writeError(w, http.StatusBadRequest, "invalid_request", "enabled required")
+		return
+	}
+	if *req.Enabled {
+		err := errors.New("Windows Hello isn't available")
+		if s.approver != nil {
+			err = s.approver.Available()
+		}
+		if err != nil {
+			writeError(w, http.StatusServiceUnavailable, "approver_unavailable", err.Error())
+			return
+		}
+	}
+	if err := s.vault.SetHelloEnabled(*req.Enabled); err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]bool{"enabled": *req.Enabled})
 }
 
 // POST /vault/lock
@@ -325,10 +501,17 @@ func (s *Server) handleStatus(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, "internal", "internal error")
 		return
 	}
+	// Over the private channel only: whether Windows Hello approves grants,
+	// so the CLI knows to ask for it.
+	approver := ""
+	if on, _ := s.vault.HelloEnabled(); on && viaSocket(r) {
+		approver = "hello"
+	}
 	writeJSON(w, http.StatusOK, struct {
 		*vault.VaultStatus
-		Addr string `json:"addr,omitempty"`
-	}{status, s.tcpAddr})
+		Addr     string `json:"addr,omitempty"`
+		Approver string `json:"approver,omitempty"`
+	}{status, s.tcpAddr, approver})
 }
 
 // GET /vault/fields

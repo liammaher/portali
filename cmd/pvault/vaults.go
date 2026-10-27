@@ -208,6 +208,10 @@ func ensurePort(dir string) (int, error) {
 // the last time checkVaultServer verified it, "" before.
 var verifiedKind string
 
+// verifiedApprover is what approves grants in person on the server
+// checkVaultServer verified ("hello"), if anything.
+var verifiedApprover string
+
 // serverKind returns the vault server's kind: as checkVaultServer verified
 // it, or on platforms without the socket check, as its status says.
 func serverKind() (string, error) {
