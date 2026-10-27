@@ -26,11 +26,15 @@ import subprocess
 import sys
 import tempfile
 import time
+import types
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
 FILL = os.path.join(HERE, "..", "fill.py")
+sys.path.insert(0, os.path.dirname(FILL))
+sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
+import fill  # noqa: E402
 # name: the procedure, its form, the answers to its asks, the ente's reply if one is played, the made-up vault
 PILOTS = {
     "mod-1": ("napoli/comune/tari-iscrizione-uso-abitativo", "mod-1", "answers.json", "reply.json", "fixture.json"),
@@ -161,9 +165,6 @@ def review_signing(server, out, layout):
     the date landed in the layout's boxes and nowhere else, the approval.
     Returns lines like fill.py's checks."""
     import fitz
-    sys.path.insert(0, os.path.dirname(FILL))
-    sys.dont_write_bytecode = True
-    import fill
     lines = []
 
     def ok(name, good, detail=""):
@@ -261,7 +262,7 @@ CASES = {
                    ["is already open: only the signing request was filed", "is waiting for the user"]),
     "sign-channel-post": ("--channel post --sign: the raccomandata takes a handwritten signature too",
                           {"sign": True, "no_reply": True, "channel": "post"}, 0,
-                          ["is waiting for the user", "ok   canale 'post' is saved as"]),
+                          ["is waiting for the user", f"ok   opens pratiche.{SLUG}_canale"]),
     "sign-channel-portal": ("--channel portal --sign: the login is the signature, so there is nothing to stamp",
                             {"sign": True, "no_reply": True, "channel": "portal"}, 1,
                             ["FAIL the library lists a handwritten signature for portal"]),
@@ -483,9 +484,6 @@ def written_pratiche(server):
 def token_commands():
     """The command for each kind of vault folder, and the Keychain service run
     then reads: one per vault, quoted for the shell."""
-    sys.path.insert(0, os.path.dirname(FILL))
-    sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
-    import fill
     home = os.path.expanduser("~")
     token = {"scope": "*:identity.*,abitazione.*", "access": "read"}
     tail = "create-service-token pratica-fill --scope '*:identity.*,abitazione.*' --access read --ttl 1h --keychain "
@@ -508,9 +506,6 @@ def token_commands():
 def unit_checks(ricorso_entry):
     """What a case can't reach: an address box after text fill.py itself
     wrote, and needs finding the vault schema through a symlinked skill."""
-    sys.path.insert(0, os.path.dirname(FILL))
-    sys.dont_write_bytecode = True
-    import fill
     import fitz
     bad = []
     doc = fitz.open()
@@ -530,6 +525,22 @@ def unit_checks(ricorso_entry):
     return bad
 
 
+def ask_checks(scheda_entry):
+    """needs' questions for the scheda: the procuratore's rows apply only
+    after "Procura conferita?" ticks si, so they are one question, with it."""
+    form = next(f for f in scheda_entry["forms"] if f["id"] == "scheda-anagrafica")
+    gated = {r["label"] for r in form["fields"] if r.get("when") and "party" in r["map"]}
+    asked = fill.asks(form, None)
+    bad = [f"asked on its own: {q['label']}" for q in asked if q["label"] in gated]
+    gate = next((q for q in asked if q["label"].startswith("3 – Procura conferita")), None)
+    if not gated or not gate or "--party procuratore=<slug>" not in gate["question"]:
+        bad.append(f"the procura question doesn't ask who the procuratore is: {gate}")
+    named = {q["label"]: q for q in fill.asks(form, None, {"procuratore": ["bianchi"]})}
+    if gate and "--party" in named[gate["label"]]["question"]:
+        bad.append("with --party procuratore named, the procura question still asks who it is")
+    return bad
+
+
 def main():
     library =os.environ.get("PRATICHE_NAPOLI_DIR") or sys.exit("set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout")
     args = sys.argv[1:]
@@ -544,12 +555,7 @@ def main():
         """The pilot's entry, form, layout and pdf, fetched once."""
         if name not in pilots:
             pid, form = PILOTS[name][:2]
-            entry_json = subprocess.run(
-                ["node", "--input-type=module", "-e",
-                 'import {parse} from "yaml"; import {readFileSync} from "node:fs";'
-                 'process.stdout.write(JSON.stringify(parse(readFileSync(process.argv[1],"utf8"),{version:"1.2"})))',
-                 f"procedures/{pid}.yaml"], cwd=library, check=True, capture_output=True, text=True).stdout
-            entry = json.loads(entry_json)
+            entry = fill.entry_of(types.SimpleNamespace(entry=None, library=library, procedure=pid, form=form))
             url = next(f["url"] for f in entry["forms"] if f["id"] == form)
             if name == "mod-1" and os.environ.get("PILOT_FORM_PDF"):
                 # A copy already on disk, e.g. offline; fill.py still checks its sha256.
@@ -560,7 +566,7 @@ def main():
                     pdf = resp.read()
             path = os.path.join(base, f"{name}-entry.json")
             with open(path, "w", encoding="utf-8") as f:
-                f.write(entry_json)
+                json.dump(entry, f, ensure_ascii=False)
             pilots[name] = {"entry": entry, "entry_path": path, "pdf": pdf,
                             "layout": load(os.path.join(library, "layouts", pid, form + ".json"))}
         return pilots[name]
@@ -576,6 +582,10 @@ def main():
             print(f"{'ok  ' if not bad else 'FAIL'} units: an address after our own text; needs through a symlinked skill"
                   + "".join("\n  " + b for b in bad))
             failed += ["units"] if bad else []
+            bad = ask_checks(pilot("scheda")["entry"])
+            print(f"{'ok  ' if not bad else 'FAIL'} asks: rows that apply only after an answer are asked with it, once"
+                  + "".join("\n  " + b for b in bad))
+            failed += ["asks"] if bad else []
         for name in names:
             description, changes, want_exit, want_lines = CASES[name]
             ok, detail = case(base, name, pilot(changes.get("pilot", "mod-1")), changes, want_exit, want_lines)

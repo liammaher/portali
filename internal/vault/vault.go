@@ -92,11 +92,11 @@ type Vault struct {
 	// writeMu is held for reading by every single write (field, tier,
 	// document) and for writing by changes to a whole person (RemovePerson,
 	// MigrateNucleo), so those see no write land halfway. Lock order:
-	// backup.mu, writeMu, mu.
+	// backup.mu, writeMu, filesMu, mu.
 	writeMu sync.RWMutex
 	// filesMu serializes changes to the file index (files.go), so two syncs of
-	// one source can't both add the same file. Taken after writeMu, never
-	// held while taking it.
+	// one source can't both add the same file. Taken after writeMu and before
+	// mu; lock and auto-lock, which hold mu, only TryLock it.
 	filesMu   sync.Mutex
 	fileSyncs map[string]*fileSync // running syncs by source, guarded by filesMu
 	db        *store.DB

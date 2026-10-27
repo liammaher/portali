@@ -51,6 +51,10 @@ before(async () => {
       });
       return;
     }
+    if (req.url?.startsWith("/vault/located/")) {
+      res.end(JSON.stringify({ category: req.url.slice("/vault/located/".length), fields: {}, choices: ["Chiaia", "San Ferdinando"] }));
+      return;
+    }
     if (req.url === "/vault/signing") {
       res.end(JSON.stringify([{ id: "a".repeat(32), name: "mod-1.pdf", requester: "agent", signer: "io", status: "pending", pages: 1, date: "2026-10-27", expires_at: "2026-10-27T11:00:00Z", sha256: "x" }]));
       return;
@@ -151,6 +155,16 @@ test("vault_sign_request refuses files outside the import folders and non-PDFs",
   });
   assert.equal((bad as { isError?: boolean }).isError, true);
   assert.match(text(bad), /not a PDF/);
+});
+
+test("vault_locate asks for one address, a person's under their prefix", async () => {
+  const own = JSON.parse(text(await client.callTool({ name: "vault_locate", arguments: { address: "residenza" } })));
+  assert.equal(own.category, "residenza");
+  assert.deepEqual(own.choices, ["Chiaia", "San Ferdinando"]);
+  const leo = JSON.parse(text(await client.callTool({ name: "vault_locate", arguments: { address: "domicilio", for: "leo" } })));
+  assert.equal(leo.category, "leo:domicilio");
+  const bad = await client.callTool({ name: "vault_locate", arguments: { address: "residenza", for: "../x" } });
+  assert.ok((bad as { isError?: boolean }).isError);
 });
 
 test("vault_sign_status lists the requests without the file or its hash", async () => {

@@ -17,7 +17,7 @@ import (
 // session and grants the user approved see everyone, people with no fields
 // or documents yet too.
 func (s *Server) handleListMembers(w http.ResponseWriter, r *http.Request) {
-	h, err := s.vault.Household(callerFilter(r), reachesPersonal(r), time.Now())
+	h, err := s.vault.Household(callerFilter(r), isUser(r), time.Now())
 	if err != nil {
 		handleVaultError(w, err)
 		return
@@ -33,7 +33,7 @@ func (s *Server) handleListMembers(w http.ResponseWriter, r *http.Request) {
 // person, whose prompt names exactly that. Service tokens never may.
 func (s *Server) handleRemovePerson(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug")
-	approved := reachesPersonal(r) && accessFromRequest(r) == vault.AccessWrite &&
+	approved := isUser(r) && accessFromRequest(r) == vault.AccessWrite &&
 		vault.ValidPersonSlug(slug) && vault.ScopeAllowsWholePerson(scopeFromRequest(r), slug)
 	if !isSessionAuth(r) && !approved {
 		sessionRequired(w)

@@ -1,0 +1,57 @@
+name: Fill pilots
+
+# fill.py fills the pratiche-napoli library's forms at its layouts: run the
+# pilots (pilot/regress.py) against the library's main whenever the filler or
+# the vault it reads changes. The library runs the same pilots on its side
+# when an entry or layout changes. No scheduled run.
+on:
+  pull_request:
+    paths:
+      - claude/skills/pratica/fill/**
+      - internal/**
+      - schema.json
+      - .github/workflows/fill.yml
+  push:
+    branches: [main]
+    paths:
+      - claude/skills/pratica/fill/**
+      - internal/**
+      - schema.json
+      - .github/workflows/fill.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pilots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: liammaher/pratiche-napoli
+          path: pratiche-napoli
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          npm --prefix pratiche-napoli ci --omit=dev --ignore-scripts
+          pip install pymupdf==1.27.2.3
+
+      - name: Run the pilots
+        env:
+          PRATICHE_NAPOLI_DIR: ${{ github.workspace }}/pratiche-napoli
+        run: python3 -I claude/skills/pratica/fill/pilot/regress.py

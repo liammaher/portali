@@ -215,10 +215,11 @@ func TestFiles_ExpiringListsLinkedClientFiles(t *testing.T) {
 	if err := os.Chtimes(cie, old, old); err != nil {
 		t.Fatal(err)
 	}
-	for id, val := range map[string]string{
-		"rossi:ruolo.tipo": "cliente", "pratiche.cila-rossi_persona": "rossi", "pratiche.cila-rossi_stato": "completata",
+	// In this order: a pratica can only name a person who is already there.
+	for _, kv := range [][2]string{
+		{"rossi:ruolo.tipo", "cliente"}, {"pratiche.cila-rossi_persona", "rossi"}, {"pratiche.cila-rossi_stato", "completata"},
 	} {
-		if err := v.Set(id, val, ""); err != nil {
+		if err := v.Set(kv[0], kv[1], ""); err != nil {
 			t.Fatal(err)
 		}
 	}

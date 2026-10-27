@@ -104,6 +104,16 @@ Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `
 
 `pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`). In a business vault with retention periods set, entries with `kind: retention`, `kind: pratiche_closed` and `kind: files_closed` appear too (see Other people and business vaults).
 
+## Naples addresses (municipalità, quartiere, ASL)
+
+```sh
+pvault locate                                   # residenza; also domicilio, locale, sede_legale, leo:residenza
+pvault locate --street "Via Toledo" --civico 156   # an address typed here; reads nothing from the vault
+pvault set residenza.quartiere "San Ferdinando"    # settles a street that crosses a boundary
+```
+
+An address in Napoli (`residenza`, `domicilio`, `locale`, the `business.sede_legale_*` fields) has three computed fields, `quartiere`, `municipalita` and `distretto_asl` (ASL Napoli 1 Centro), read like any other (`pvault get residenza.municipalita`) and under their own scope, never the street's. They come from the Comune's stradario, offline: the address goes nowhere. A street that crosses a municipalità boundary stays unknown until a civico in a known range or a stored quartiere decides it; `locate` then lists the quartieri to choose from and exits 3. A stored value wins only while it isn't older than the address. Agents use the MCP tool `vault_locate`.
+
 ## Document scans
 
 ```sh
@@ -267,6 +277,13 @@ GET    /vault/fields/{id}                # Get field with decrypted value
 PUT    /vault/fields/{id}                # { value, sensitivity? } — upsert
 DELETE /vault/fields/{id}                # Delete field
 GET    /vault/fields/category/{name}     # All fields in category with values
+```
+
+### Located addresses
+
+```
+GET    /vault/located/{target}           # residenza, domicilio, locale, sede_legale, or leo:residenza;
+                                         # needs the scope of its three computed fields; never the street
 ```
 
 ### Documents
