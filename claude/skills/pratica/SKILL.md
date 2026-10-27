@@ -130,6 +130,21 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
   only the acconciatori): ask the user when the vault can't tell.
 - `ask: <question>`: not in the vault; ask the user. `blank_with_reason`: leave empty.
 
+A row can also say exactly what goes in its box:
+
+- `template`: how its fields make the text, e.g. `{identity.birth_comune}[ ({identity.birth_country})]`.
+  A `[...]` part is left out when a field in it is empty, `{x|date}` writes DD/MM/YYYY, and
+  in a fallback `{.civico}` is the civico of the place it picked.
+- `columns` (on a repeat): one template per column of the table; `{relazione}` is the
+  `relazione_label`.
+- `optional`: fields that may stay empty; `required_if` says when one is needed after all
+  (the stato estero of someone born abroad). Any other empty field is asked for.
+- `choices`: boxes to tick, each with the values that tick it; `write_value` also writes
+  the value beside the box ("altro ____").
+
+`claude/skills/pratica/fill/fill.py` does all this for a form that has a layout in the
+library's `layouts/`.
+
 A numbered category (`locale2.indirizzo`) is the vault's copy of that category, here a second
 premises; the vault may spell it `locale2`, `locale-2` or `locale_2`, so look for each. Its rows
 are filled only when the vault has it. A row's `notes` can say what an empty field means
@@ -185,6 +200,8 @@ Slug: lower-case words joined by hyphens, `<topic>-<procedure>-<year>`, e.g.
 `tari-iscrizione-2026`. Fields are `pratiche.<slug>_<campo>`; the vault validates them
 (`/vault/schema` lists the campi, stati and canali). Set at least `titolo`, `ente`,
 `stato`, `canale`, `destinatario`, `data_scadenza`, `playbook` and `prossimo_passo`.
+A library deadline rule with `compute` dates it: `data_scadenza` is its `from` field's date plus
+`days`.
 `canale` takes the library channel's `type` as it is (the vault saves `portal` as
 `portale`, `desk` as `sportello`, `post` as `posta`). A `phone` channel is for questions,
 not a way to file, so it is never a `canale`.
