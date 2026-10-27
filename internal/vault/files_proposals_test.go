@@ -388,13 +388,13 @@ func TestFiles_ARelinkWithARoleKeepsTheRole(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:famiglia.relazione", "figlio")
 	src := fileSource(t, v)
-	v.AddFileRule(src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
+	v.AddFileRule(nil, src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
 	v.UpsertFiles(src, []FileObservation{obs("1", "/Leo/cie.pdf", "cie.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{})
 	if f[0].Links[0].Role != "" || f[0].Links[0].Origin != FileOriginRule {
 		t.Fatalf("rule link = %+v", f[0].Links)
 	}
-	l, err := v.LinkFile(f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "cie"}, FileOriginManual)
+	l, err := v.LinkFile(nil, f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "cie"}, FileOriginManual)
 	if err != nil || l.Role != "cie" {
 		t.Fatalf("relink = %+v, %v", l, err)
 	}
@@ -403,7 +403,7 @@ func TestFiles_ARelinkWithARoleKeepsTheRole(t *testing.T) {
 		t.Fatalf("after relinking: %+v", f[0].Links)
 	}
 	// A relink without a role doesn't blank it.
-	v.LinkFile(f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
+	v.LinkFile(nil, f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
 	f, _, _ = v.SearchFiles(nil, FileQuery{})
 	if f[0].Links[0].Role != "cie" {
 		t.Fatalf("a bare relink lost the role: %+v", f[0].Links)

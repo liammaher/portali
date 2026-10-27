@@ -611,13 +611,14 @@ func revealInFinder(p string) {
 	}
 }
 
-// holderScope is the scope ID a grant needs to link for the holder named by
-// a --for value (io is the owner).
-func holderScope(ref string) string {
+// linkScope is what linking to ref takes: the holder's files and the owner's,
+// since a file nobody is linked to yet is the owner's, and linking it to a
+// person moves it out of the owner's scope (the prompt must say so).
+func linkScope(ref string) string {
 	if ref == "" || ref == vault.OwnerRef {
 		return vault.FilesScopeID("")
 	}
-	return vault.FilesScopeID(ref)
+	return vault.FilesScopeID(ref) + "," + vault.FilesScopeID("")
 }
 
 func cmdFilesLink() {
@@ -632,7 +633,7 @@ func cmdFilesLink() {
 	if forRef == "" && pratica == "" {
 		fatal("say whom the file is for: --for <slug|io> and/or --pratica <slug>\n%s", filesUsage)
 	}
-	needGrant(holderScope(forRef), "write")
+	needGrant(linkScope(forRef), "write")
 	resp, err := apiRequest("POST", "/vault/files/"+url.PathEscape(id)+"/links", map[string]string{
 		"for": forRef, "kind": kind, "pratica": pratica, "role": role, "note": note,
 	})
@@ -676,13 +677,7 @@ func cmdFilesRule() {
 		if p == "" || (forRef == "" && pratica == "") {
 			fatal("a rule needs --path and --for and/or --pratica\n%s", filesUsage)
 		}
-		// Finding the source needs the owner's files too; the rule itself
-		// only the holder's.
-		scope := holderScope(forRef)
-		if scope != vault.FilesScopeID("") {
-			scope += "," + vault.FilesScopeID("")
-		}
-		needGrant(scope, "write")
+		needGrant(linkScope(forRef), "write")
 		src := findSource(listFileSources(), srcRef)
 		resp, err := apiRequest("POST", "/vault/files/rules", map[string]string{
 			"source_id": src.ID, "path": p, "for": forRef, "kind": kind, "pratica": pratica,
@@ -817,7 +812,7 @@ func cmdFilesProposals() {
 		for _, p := range list {
 			// Everything after the id is the agent's: names and words from outside,
 			// shown quoted so nothing in them acts as part of this output.
-			fmt.Printf("%s  %s proposes adding %q from %s\n", p.ID, p.ProposedBy, p.Name, providerName(p.Provider))
+			fmt.Printf("%s  %s proposes adding %q from %s\n", p.ID, p.ProposedBy, p.Name, vault.ProviderTitle(p.Provider))
 			fmt.Printf("    path %q, id %q, modified %q, %s\n", p.Path, p.Key, p.Mtime, humanSize(p.Size))
 			if p.WebURL != "" {
 				fmt.Printf("    address %q\n", p.WebURL)
@@ -877,8 +872,4 @@ func cmdFilesProposals() {
 		return
 	}
 	fmt.Printf("Added to the index: %s (%s).\n", out.File.Name, out.File.ID)
-}
-
-func providerName(p string) string {
-	return map[string]string{"gdrive": "Google Drive", "onedrive": "OneDrive", "sharepoint": "SharePoint", "dropbox": "Dropbox"}[p]
 }

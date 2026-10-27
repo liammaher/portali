@@ -180,7 +180,7 @@ cd mcp && npm ci && npm run build
 
 With that config, `pvault create-service-token claude --scope "residenza.*" --ttl 2h --keychain pvault-mcp` grants access mid-session, with no restart and no token on screen. Outside macOS, set `"VAULT_TOKEN": "<token>"` instead.
 
-Tools: `vault_get`, `vault_list`, `vault_context`, `vault_set`, `vault_schema`, `vault_status`, `vault_household`, `vault_expiring`, `vault_locate`, `vault_documents`, `vault_document_get`, `vault_document_add`, `vault_sign_request`, `vault_sign_status`, `vault_files_search`, `vault_file_get`, `vault_file_suggest`, and, with `PEC_ADDRESS` set, the read-only `pec_folders`, `pec_list`, `pec_read`, `pec_attachment`, `pec_save_attachment`. The MCP server only ever uses the token you give it, and `vault_document_add` and `vault_sign_request` only read files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`). See [mcp/README.md](mcp/README.md).
+The tools are listed in [mcp/README.md](mcp/README.md#tools), with the read-only PEC tools that appear when `PEC_ADDRESS` is set. The MCP server only ever uses the token you give it, and `vault_document_add` and `vault_sign_request` only read files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`).
 
 ### Claude Code setup
 
@@ -236,7 +236,11 @@ Profile password + 128-bit secret key
 
 ## More
 
-- [docs/usage.md](docs/usage.md) — full CLI and HTTP API reference
+- [docs/usage.md](docs/usage.md) — full CLI and HTTP API reference, including:
+  - [signing a filled form](docs/usage.md#signing-forms-the-sign-gate) with your handwritten signature, after you review the exact file (`pvault sign`)
+  - [Naples addresses](docs/usage.md#naples-addresses-municipalità-quartiere-asl): municipalità, quartiere and distretto ASL, worked out offline (`pvault locate`)
+  - [the file index](docs/usage.md#finding-files-elsewhere-file-index): where your files are on disk and in OneDrive, SharePoint, Google Drive or Dropbox, linked to people and pratiche (`pvault files`)
+  - [retention](docs/usage.md#retention): in a business vault, what may be due for deletion, once you set the periods (`pvault retention`)
 - [mcp/README.md](mcp/README.md) — MCP server setup and errors
 - `make test` — run the test suite (race detector on)
 

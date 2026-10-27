@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"unicode"
 	"unicode/utf8"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -34,8 +33,7 @@ func cleanName(name string) string {
 			return '∕'
 		case r == '\\':
 			return '＼'
-		case unicode.IsControl(r), r >= 0x202A && r <= 0x202E, r >= 0x2066 && r <= 0x2069, r == 0x200E, r == 0x200F,
-			r == 0x061C, r == 0x2028, r == 0x2029:
+		case vault.UnsafeRune(r):
 			return -1
 		}
 		return r
@@ -109,7 +107,7 @@ type Endpoints struct {
 const DefaultPort = 53682
 
 // ProviderNames are the providers read through their APIs.
-var ProviderNames = []string{"onedrive", "sharepoint", "gdrive", "dropbox"}
+var ProviderNames = vault.CloudProviders
 
 // NewFlow is the sign-in flow of a provider for this client.
 func NewFlow(spec Spec, ep *Endpoints) (*Flow, error) {

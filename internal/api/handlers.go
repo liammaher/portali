@@ -18,6 +18,22 @@ func scopeDenied(w http.ResponseWriter) {
 }
 
 // requireScope checks the caller's scope allows every one of ids.
+// readJSONBody decodes the request body into v, or answers 413 for a body over
+// the server's limit (bodySizeMiddleware) and 400 for anything else.
+func readJSONBody(w http.ResponseWriter, r *http.Request, v any) bool {
+	err := json.NewDecoder(r.Body).Decode(v)
+	var tooLarge *http.MaxBytesError
+	switch {
+	case err == nil:
+		return true
+	case errors.As(err, &tooLarge):
+		writeError(w, http.StatusRequestEntityTooLarge, "too_large", "the request body is too large")
+	default:
+		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON body")
+	}
+	return false
+}
+
 func requireScope(w http.ResponseWriter, r *http.Request, ids ...string) bool {
 	scope := scopeFromRequest(r)
 	for _, id := range ids {
@@ -151,8 +167,7 @@ func (s *Server) handleUnlock(w http.ResponseWriter, r *http.Request) {
 		Password  string `json:"password"`
 		SecretKey string `json:"secret_key"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+	if !readJSONBody(w, r, &req) {
 		return
 	}
 	if req.Password == "" || req.SecretKey == "" {
@@ -214,8 +229,7 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		// signing request (see CreateSignGrant); socket only.
 		Sign string `json:"sign"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+	if !readJSONBody(w, r, &req) {
 		return
 	}
 	if req.Password == "" {
@@ -390,8 +404,7 @@ func (s *Server) handleSetField(w http.ResponseWriter, r *http.Request) {
 		Value       string `json:"value"`
 		Sensitivity string `json:"sensitivity"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+	if !readJSONBody(w, r, &req) {
 		return
 	}
 	if req.Value == "" {
@@ -659,8 +672,7 @@ func (s *Server) handleSetSensitivity(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Tier string `json:"tier"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+	if !readJSONBody(w, r, &req) {
 		return
 	}
 	if req.Tier == "" {
@@ -688,8 +700,7 @@ func (s *Server) handleCreateServiceToken(w http.ResponseWriter, r *http.Request
 		MaxSensitivity string `json:"max_sensitivity"`
 		Access         string `json:"access"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
+	if !readJSONBody(w, r, &req) {
 		return
 	}
 	if req.Consumer == "" {

@@ -1,5 +1,10 @@
 package napoli
 
+import (
+	"slices"
+	"strconv"
+)
+
 // ASL is the one health authority of the whole Comune di Napoli. Its ten
 // distretti sanitari follow the ten municipalità, so a municipalità names a
 // distretto. Other comuni belong to other ASL (Napoli 2 Nord, Napoli 3 Sud),
@@ -20,6 +25,25 @@ var distretti = map[int]string{
 func Distretto(municipalita int) (string, bool) {
 	d, ok := distretti[municipalita]
 	return d, ok
+}
+
+// Municipalita lists the municipalità, 1 to 10, as the vault stores them.
+func Municipalita() []string {
+	out := make([]string, 0, len(distretti))
+	for m := 1; m <= len(distretti); m++ {
+		out = append(out, strconv.Itoa(m))
+	}
+	return out
+}
+
+// Distretti lists the distretti sanitari as the vault stores them, sorted.
+func Distretti() []string {
+	out := make([]string, 0, len(distretti))
+	for _, d := range distretti {
+		out = append(out, d)
+	}
+	slices.Sort(out)
+	return out
 }
 
 // Quartiere is one of the 30 quartieri of the stradario, each in exactly one

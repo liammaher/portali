@@ -11,6 +11,7 @@ import (
 	"path"
 	"reflect"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -45,8 +46,19 @@ const (
 	FileOriginSuggestion = "suggestion"
 )
 
-// FileProviders are the places files can be read from.
-var FileProviders = []string{"local", "onedrive", "sharepoint", "gdrive", "dropbox"}
+// CloudProviders are the online places files can be read from: through their
+// APIs (internal/filesync), or proposed from an agent's connector.
+var CloudProviders = []string{"onedrive", "sharepoint", "gdrive", "dropbox"}
+
+// FileProviders are the places files can be read from: this disk, and the
+// online ones.
+var FileProviders = append([]string{"local"}, CloudProviders...)
+
+// ProviderTitle is a provider as people call it (Google Drive).
+func ProviderTitle(provider string) string {
+	return map[string]string{"local": "this computer", "gdrive": "Google Drive", "onedrive": "OneDrive",
+		"sharepoint": "SharePoint", "dropbox": "Dropbox"}[provider]
+}
 
 // ErrFileNotFound is returned for a file, link, rule, source or suggestion
 // that doesn't exist or that the caller can't see.
@@ -265,16 +277,18 @@ func (v *Vault) auditFile(scope, action, purpose string) {
 
 // --- validation -------------------------------------------------------------
 
-// hasUnsafe reports control characters and the bidi overrides that make a name
-// read differently from what it is (a file "gpj.exe" shown as "exe.jpg").
+// UnsafeRune reports a control character, or a bidi control or line
+// separator that makes a name read differently from what it is (a file
+// "gpj.exe" shown as "exe.jpg"). The one rule for file and document names;
+// filesync drops what it refuses. Text the user approves on (a signing
+// purpose) also refuses the rest of Cf (checkPlainText).
+func UnsafeRune(r rune) bool {
+	return unicode.IsControl(r) || (r >= 0x202A && r <= 0x202E) || (r >= 0x2066 && r <= 0x2069) ||
+		r == 0x200E || r == 0x200F || r == 0x061C || r == 0x2028 || r == 0x2029
+}
+
 func hasUnsafe(s string) bool {
-	for _, r := range s {
-		if unicode.IsControl(r) || (r >= 0x202A && r <= 0x202E) || (r >= 0x2066 && r <= 0x2069) ||
-			r == 0x200E || r == 0x200F || r == 0x061C || r == 0x2028 || r == 0x2029 {
-			return true
-		}
-	}
-	return false
+	return strings.ContainsFunc(s, UnsafeRune)
 }
 
 // CleanFilePath normalizes a path below a source's root to "/a/b/c".
@@ -333,15 +347,6 @@ func cleanFileKey(k string) (string, error) {
 		return "", &ValidationError{Field: "key", Msg: "every file needs a key (the provider's item ID or its path), up to 1024 characters"}
 	}
 	return k, nil
-}
-
-func validFileProvider(p string) bool {
-	for _, q := range FileProviders {
-		if p == q {
-			return true
-		}
-	}
-	return false
 }
 
 // checkFileTarget validates whom a link, rule or suggestion is for and
@@ -413,7 +418,7 @@ func cleanFileText(field, s string, max int) (string, error) {
 // CheckFileSourceConfig cleans a source's settings in place and refuses what a
 // source can't have. A client can run it before sending the user off to sign in.
 func CheckFileSourceConfig(provider string, cfg *FileSourceConfig) error {
-	if !validFileProvider(provider) {
+	if !slices.Contains(FileProviders, provider) {
 		return &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(FileProviders, ", ")}
 	}
 	var err error
@@ -1172,8 +1177,9 @@ func (in *FileLinkInput) clean() error {
 
 // LinkFile links a file to a person, the business, a client or a pratica.
 // Linking again returns the existing link. The session (or a grant the user
-// approved) links; a service token can only suggest.
-func (v *Vault) LinkFile(fileID string, in FileLinkInput, origin string) (*FileLinkInfo, error) {
+// approved) links; a service token can only suggest. A grant links only a
+// file it can see: one for a person can't take the owner's files.
+func (v *Vault) LinkFile(allow FieldFilter, fileID string, in FileLinkInput, origin string) (*FileLinkInfo, error) {
 	if err := in.clean(); err != nil {
 		return nil, err
 	}
@@ -1190,6 +1196,15 @@ func (v *Vault) LinkFile(fileID string, in FileLinkInput, origin string) (*FileL
 		if f == nil {
 			return ErrFileNotFound
 		}
+		links, err := v.db.ListFileLinks(fileID)
+		if err != nil {
+			return err
+		}
+		if _, ok := visibleFileLinks(allow, *f, links); !ok {
+			return ErrFileNotFound
+		}
+		// The target as the session sees it: a grant the user approved may name
+		// a pratica outside its scope (only a token's suggestion can't).
 		if err := v.checkFileTarget(nil, in.Holder, in.Kind, in.Pratica); err != nil {
 			return err
 		}
@@ -1387,8 +1402,9 @@ func (v *Vault) applyFileRules(key []byte, rules []openedRule, of *openedFile, n
 }
 
 // AddFileRule links every file of a source below a folder, now and as they
-// are indexed. It returns the rule and how many existing files it linked.
-func (v *Vault) AddFileRule(sourceID string, in FileRuleInput) (*FileRuleInfo, int, error) {
+// are indexed. It returns the rule and how many existing files it linked:
+// only files allow can see (new files are the owner's until linked).
+func (v *Vault) AddFileRule(allow FieldFilter, sourceID string, in FileRuleInput) (*FileRuleInfo, int, error) {
 	p, err := CleanFilePath(strings.TrimSpace(in.Path))
 	if err != nil {
 		return nil, 0, err
@@ -1436,6 +1452,15 @@ func (v *Vault) AddFileRule(sourceID string, in FileRuleInput) (*FileRuleInfo, i
 			return err
 		}
 		for _, row := range rows {
+			if allow != nil {
+				links, err := v.db.ListFileLinks(row.ID)
+				if err != nil {
+					return err
+				}
+				if _, ok := visibleFileLinks(allow, row, links); !ok {
+					continue
+				}
+			}
 			of := &openedFile{row: row}
 			if err := openFileBlob(key, "file", row.ID, row.Blob, &of.meta); err != nil {
 				return err

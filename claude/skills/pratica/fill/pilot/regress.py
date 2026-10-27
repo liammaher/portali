@@ -13,7 +13,10 @@ library entry, the library's layout, the form, who signs), runs fill.py
 against its own synthetic vault, and checks the exit code and that each
 expected line is in the output, which ends with a "wrote: <text>" line for
 each value written. Each form is downloaded once from its entry's URL. --keep
-copies each case's filled.pdf, page PNGs and report.json to DIR/<case>/.
+copies each case's filled.pdf, page PNGs and report.json to DIR/<case>/:
+`regress.py --keep DIR baseline` is the Mod. 1 pilot end to end, to look at.
+PILOT_FORM_PDF gives the Mod. 1 from disk instead (fill.py still checks its
+sha256).
 """
 
 import copy
@@ -32,6 +35,7 @@ import urllib.request
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
 FILL = os.path.join(HERE, "..", "fill.py")
+LIBRARY = os.environ.get("PRATICHE_NAPOLI_DIR", "")
 sys.path.insert(0, os.path.dirname(FILL))
 sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
 import fill  # noqa: E402
@@ -593,7 +597,7 @@ def ask_checks(scheda_entry):
 
 
 def main():
-    library =os.environ.get("PRATICHE_NAPOLI_DIR") or sys.exit("set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout")
+    library = LIBRARY or sys.exit("set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout")
     args = sys.argv[1:]
     keep = None
     if args[:1] == ["--keep"]:
@@ -637,16 +641,10 @@ def main():
             print(f"{'ok  ' if not bad else 'FAIL'} asks: rows that apply only after an answer are asked with it, once"
                   + "".join("\n  " + b for b in bad))
             failed += ["asks"] if bad else []
-            if os.path.isdir(os.path.join(library, "offices")):
-                bad = office_checks(library)
-                print(f"{'ok  ' if not bad else 'FAIL'} offices: the office picked by area, or why not"
-                      + "".join("\n  " + b for b in bad))
-                failed += ["offices"] if bad else []
-        if not os.path.isdir(os.path.join(library, "offices")):
-            # A library from before routes (steps[].channel, offices/) has no route cards to check.
-            skipped = [n for n in names if "route" in CASES[n][1]]
-            print(f"skip {', '.join(skipped)}: the library predates routes")
-            names = [n for n in names if n not in skipped]
+            bad = office_checks(library)
+            print(f"{'ok  ' if not bad else 'FAIL'} offices: the office picked by area, or why not"
+                  + "".join("\n  " + b for b in bad))
+            failed += ["offices"] if bad else []
         for name in names:
             description, changes, want_exit, want_lines = CASES[name]
             ok, detail = case(base, name, pilot(changes.get("pilot", "mod-1")), changes, want_exit, want_lines)
@@ -655,7 +653,7 @@ def main():
                 shutil.copytree(os.path.join(base, name, "out"), os.path.join(keep, name), dirs_exist_ok=True)
             if not ok:
                 failed.append(name)
-        total = len(names) + (0 if args else 3 + os.path.isdir(os.path.join(library, "offices")))
+        total = len(names) + (0 if args else 4)
         print(f"{total - len(failed)}/{total} cases passed")
         return 1 if failed else 0
     finally:
@@ -722,18 +720,18 @@ def case(base, name, p, changes, want_exit, want_lines):
                     return False, "harness: " + f.read()[-800:]
             time.sleep(0.1)
         server = load(os.path.join(work, "server.json"))
-        common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
+        common = [sys.executable, "-I", FILL, "run", "--library", LIBRARY,
                   "--entry", os.path.join(work, "entry.json"), "--form", form,
                   "--layout", os.path.join(work, "layout.json"), "--pdf", os.path.join(work, "form.pdf"), "--out", out,
                   "--answers", os.path.join(work, "answers.json")] + signer
         if changes.get("library"):
             # The form a past run left in the output folder is used, not fetched again.
             shutil.copy(os.path.join(work, "form.pdf"), os.path.join(out, "form.pdf"))
-            common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
+            common = [sys.executable, "-I", FILL, "run", "--library", LIBRARY,
                       "--procedure", pid, "--form", form, "--out", out, "--answers", os.path.join(work, "answers.json")] + signer
         if "route" in changes:
             source = (["--entry", os.path.join(work, "entry.json")] if changes.get("entry_only")
-                      else ["--library", os.environ["PRATICHE_NAPOLI_DIR"], "--procedure", pid])
+                      else ["--library", LIBRARY, "--procedure", pid])
             run = subprocess.run([sys.executable, "-I", FILL, "route", *source, "--channel", changes["route"],
                                   "--server", os.path.join(work, "server.json")], capture_output=True, text=True)
         elif changes.get("socket"):

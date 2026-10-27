@@ -24,8 +24,8 @@ import (
 // docs/design/sign-gate.md.
 
 const (
-	// SignatureCategory holds the signature image as a document: one PNG or
-	// JPEG, always personal.
+	// SignatureCategory holds the signature image as a document: one PNG with a
+	// transparent background, always personal.
 	SignatureCategory = "firma_autografa"
 	// SigningScopeID is what a token scope must allow to file a request.
 	SigningScopeID = SignatureCategory + ".signing"
@@ -37,8 +37,9 @@ const (
 	// SignGrantTTL is how long the password or fingerprint of one review
 	// stays good: long enough to read a form, short enough to be one review.
 	SignGrantTTL = 10 * time.Minute
-	// MaxPlacements is the signature and date boxes one request may ask for;
-	// each is drawn separately, so the file grows with their number.
+	// MaxPlacements is the signature boxes one request may ask for, each with
+	// its date box; each is drawn separately, so the file grows with their
+	// number. The library's layout.schema.json caps signatures at the same.
 	MaxPlacements = 8
 	// MaxPendingPerRequester and MaxRequestsPerHour keep one agent from using
 	// up the vault's pending slots, or its CPU and audit log.
@@ -217,7 +218,7 @@ func (v *Vault) RequestSigning(in SigningInput) (*SigningInfo, error) {
 	if len(in.PDF) == 0 || len(in.PDF) > MaxSigningPDF || !bytes.HasPrefix(in.PDF, []byte("%PDF-")) {
 		return nil, &ValidationError{Field: "pdf", Msg: fmt.Sprintf("must be a PDF of at most %d MB", MaxSigningPDF>>20)}
 	}
-	if n := len(in.Placements); n == 0 || n > 2*MaxPlacements {
+	if n := len(in.Placements); n == 0 || n > MaxPlacements {
 		return nil, &ValidationError{Field: "placements", Msg: fmt.Sprintf("must hold 1 to %d signature boxes", MaxPlacements)}
 	}
 	st, err := v.signing()

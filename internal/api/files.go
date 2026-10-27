@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -51,15 +50,9 @@ func holderOf(w http.ResponseWriter, ref string) (string, bool) {
 	return ref, true
 }
 
+// decodeJSON is readJSONBody for a body that must say it is JSON.
 func decodeJSON(w http.ResponseWriter, r *http.Request, v any) bool {
-	if !requireJSON(w, r) {
-		return false
-	}
-	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON body")
-		return false
-	}
-	return true
+	return requireJSON(w, r) && readJSONBody(w, r, v)
 }
 
 // canIndex reports a caller that may read or write the index as a whole:
@@ -269,7 +262,7 @@ func (s *Server) handleLinkFile(w http.ResponseWriter, r *http.Request) {
 	if in.Holder, ok = holderOf(w, in.Holder); !ok || !userWrite(w, r, in.Holder) {
 		return
 	}
-	link, err := s.vault.LinkFile(r.PathValue("id"), in, vault.FileOriginManual)
+	link, err := s.vault.LinkFile(callerFilter(r), r.PathValue("id"), in, vault.FileOriginManual)
 	if err != nil {
 		handleVaultError(w, err)
 		return
@@ -316,11 +309,12 @@ func (s *Server) handleAddFileRule(w http.ResponseWriter, r *http.Request) {
 	if !userWrite(w, r) || !decodeJSON(w, r, &req) {
 		return
 	}
+	// A rule covers a folder of the owner's files: the owner's scope and the holder's.
 	var ok bool
-	if req.Holder, ok = holderOf(w, req.Holder); !ok || !userWrite(w, r, req.Holder) {
+	if req.Holder, ok = holderOf(w, req.Holder); !ok || !userWrite(w, r, "", req.Holder) {
 		return
 	}
-	rule, linked, err := s.vault.AddFileRule(req.SourceID, req.FileRuleInput)
+	rule, linked, err := s.vault.AddFileRule(callerFilter(r), req.SourceID, req.FileRuleInput)
 	if err != nil {
 		handleVaultError(w, err)
 		return
@@ -416,8 +410,7 @@ func (s *Server) handleProposeFile(w http.ResponseWriter, r *http.Request) {
 	if asked && in.Kind == "" && in.Pratica == "" {
 		in.Kind = vault.FileKindPerson
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), vault.FilesScopeID(in.Holder)) {
-		scopeDenied(w)
+	if !requireScope(w, r, vault.FilesScopeID(in.Holder)) {
 		return
 	}
 	p, err := s.vault.ProposeFile(callerFilter(r), in, consumerFromRequest(r))

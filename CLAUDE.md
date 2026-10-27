@@ -45,7 +45,7 @@ pvault sign list|review|reject           # Signing requests an agent filed: you 
 pvault files source|sync|search|link ... # File index: where files are, linked to people, clients, pratiche
 pvault person list|show|add|remove|export|migrate  # Other people (leo:cie.numero); alias: member
 pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
-pvault retention scans <days>|unset      # How long clients' ID scans are kept after their pratiche close (no default)
+pvault retention scans <days>|unset      # How long clients' ID and procura scans are kept after their pratiche close (no default)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
@@ -60,18 +60,16 @@ cmd/pvault/          CLI (thin HTTP clients to the vault server)
 cmd/pvault-touchid/  Swift helper: Touch ID approval, then a grant over the vault socket
 internal/
   crypto/            KDF (Argon2id), cipher (AES-256-GCM), HKDF subkeys, backup stream
-  store/             SQLite CRUD (fields, documents, people, tokens, audit, meta)
+  store/             SQLite CRUD (fields, documents, people, tokens, audit, meta, file index)
   vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
   napoli/            Street → municipalità → ASL distretto, offline (vault: located.go)
-  filesync/          File index sources: scans a folder for `pvault files sync`
+  filesync/          File index sources for `pvault files sync`: a folder, or OneDrive/SharePoint,
+                     Google Drive and Dropbox over OAuth
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
-  pratica/fill/      fills a library form from the vault at the library's layout, for the
-                     owner or --for a person, other people by --party (fill.py; --sign
-                     files a signing request; `route` prints what to do on one channel,
-                     the desk picked by municipalità/distretto; pilot/ has the pilot
-                     forms, one in a business vault); a real vault only over its socket
+  pratica/fill/      fill.py: fills a library form from the vault, or prints one channel's
+                     route; pilot/ has the pilot forms. A real vault only over its socket
 ```
 
 ## Security Model
@@ -172,8 +170,10 @@ the page never copies a rule.
   the schema exports them as `kinds: [persona]` (set from `IsHousingCategory`).
   New fields the pratiche-napoli library needs are added here, then dropped from its
   `contract/extensions.json`. `schema.json` is `pvault schema --json`, credential words
-  included (`Credentials`, the expressions `IsCredentialField` compiles); the library's CI
-  compares its copy with the one on main.
+  included (`Credentials`, the expressions `IsCredentialField` compiles), and `values` for
+  the fields with a fixed list (`ruolo.tipo`, an address's municipalità and distretto:
+  `schemaValues`), which the library reads instead of keeping a copy. It is written without
+  HTML escaping, so the library's copy is the same bytes; its CI compares it with main's.
 - **Pratiche** (`pratiche.go`): `pratiche.<slug>_<campo>`, campo/stato/canale from fixed
   lists (canale also takes the library's channel types, `praticaCanaleAliases`), never
   credentials. A deadline shows in `Expiring` until the stato closes. The
@@ -185,24 +185,30 @@ the page never copies a rule.
 
 ### Sign gate (`signing.go`, `pdfstamp.go`, `api/signing.go`, `cmd/pvault/cmd_sign.go`)
 - An agent files a request (PDF + where the signature goes); the vault stamps the owner's
-  handwritten signature (category `firma_autografa`: one PNG with a transparent background, always `personal`) and
-  today's date first, so **the file the user reviews is the file approved** (compared by
-  sha256). Requests live in the `Session` only (never disk, backup or the database), at
-  most 5 (3 per token, 20 an hour), 30 min, same calendar day, at most 8 boxes and 20 MB signed; a lock drops them. A request belongs to its token (its hash, not its consumer name; `session`, `grant` and `vault` are reserved names). Only the owner (`io`) of a personal
-  vault signs so far.
+  handwritten signature (category `firma_autografa`: one PNG with a transparent background,
+  always `personal`) and today's date first, so **the file the user reviews is the file
+  approved** (compared by sha256). Requests live in the `Session` only (never disk, backup
+  or the database), for the same calendar day at most; a lock drops them. Their limits are in `docs/usage.md`.
+  A request belongs to its token (its hash, not its consumer name; `session`, `grant` and
+  `vault` are reserved names). Only the owner (`io`) of a personal vault signs so far.
 - A token (scope `firma_autografa.signing`, append) can request, list and withdraw *its own*
   requests; it can't read the signed file or approve. Approval needs the user's session or a
   **sign grant**: `POST /vault/session` with `sign: <id>` and the password, socket only
-  (`viaSocket`), 10 min, one request, ended by its approval. `ValidateToken`/`ScopedGrant`
+  (`viaSocket`), one request, ended by its approval. `ValidateToken`/`ScopedGrant`
   ignore it and the middleware lets it reach only that request's `candidate` and `approve`.
-  Every request, grant, view, approval and refusal (`sign_refused`) is audited with the file's sha256. PDFs are screened (zlib streams past 64 MB, encryption, rotation, 1000 pages) and stamped under a timeout. Both clients
+  Every request, grant, view, approval and refusal (`sign_refused`) is audited with the
+  file's sha256. PDFs are screened before stamping and stamped under a timeout. Both clients
   check the grant echoes `sign` (an older server would issue full access).
-- With Touch ID the fingerprint is the approval, and it is asked before the PDF is shown: an agent that runs `pvault sign review` or the helper itself can read the typed code, so the prompt (name, pages, hash, who filed it) is what the user must read, as for any helper grant. The password route can't be driven that way.
 - `pvault sign review` is the human act: grant, fetch, open, type the first 8 hash characters,
-  approve, save (never over a file). The Touch ID prompt is worded from the vault's own
-  summary, never from arguments (`describe-sign` held to `touchid_prompt_test.go`).
-- Not a firma digitale. Procedures needing one stay `human_only`; the library's per-channel
-  `signing` says what each channel takes, and the skill falls back to hand-signing.
+  approve, save (never over a file). With Touch ID the fingerprint is the approval, asked
+  before the PDF is shown (an agent driving review or the helper can read the typed code; the
+  password route can't be driven that way), so the prompt is what the user must read: worded
+  from the vault's own summary (name, pages, hash, who filed it), never from arguments
+  (`describe-sign` held to `touchid_prompt_test.go`).
+- Not a firma digitale. Procedures needing one stay `human_only`. What a channel takes is
+  the form's own `signing` for it, else the library's `contract/signing.json` (the law's
+  rule per channel type; fill.py `signing_rule`); where neither has one, the step is the
+  user's, as the channel asks.
 
 ### People (`scope.go`, `people.go`, `household.go`)
 - A person is a row in `vault_people`: added by their first field or document (a SQLite
@@ -270,61 +276,46 @@ the page never copies a rule.
 
 ### Clients and retention (`procura.go`, `retention.go`, `export.go`, `expiry.go`)
 - Retention periods have no default (D8): meta `retention_years`, and for business vaults
-  `scan_days`, set only by the session. `Expiring` then reports `kind: retention` (a
-  person's `ruolo.data_fine` + years) and `kind: pratiche_closed` (a client's ID and
-  procura scans, once every pratica naming them closed, dated last closing + days).
-- A file in the index linked to a client with a role naming an ID or procura category
-  (`linkRoleCategory`) is reported the same way as `kind: files_closed`, as a reference only
-  (`file_id`, `file`): the vault can't delete it. It counts only if its mtime predates the last
-  closing (none: kept), it isn't gone, the caller sees its link, and a procura file waits for
-  the procura's `data_scadenza` like a procura scan.
-- A scan is reported only if it predates the last closing (a same-second one counts as
-  after), and a procura's scans only once its `data_scadenza` has passed (a procura with
-  none is still in force); a caller that can't see everything relevant gets no entry. Nothing is ever deleted automatically.
+  `scan_days`, set only by the session. What `Expiring` then reports (`retention`,
+  `pratiche_closed`, `files_closed`) is in `docs/usage.md` (Retention).
+- Nothing is ever deleted automatically; an indexed file is reported only as a reference
+  (the vault can't delete it).
+- A scan or indexed file is reported only if older than the closing it waits for (a
+  same-second one counts as after; a file linked to several clients, the earliest of their
+  last closings), a procura's only once its `data_scadenza` has passed (none: still in
+  force). A caller that can't see everything relevant gets no entry.
 - `GET /vault/members/{slug}/export` is session-only and audited; personal-tier items only
   with `include_personal=1`. `pvault person export` writes a new 0700 folder, files 0600.
 
 ### File index (`files.go` in store and vault, `docs/design/file-index.md`)
 - Where a person's, business's or client's files are (disk, OneDrive, SharePoint, Google
   Drive, Dropbox) and what each is linked to. Metadata and links only: bytes and text never
-  enter the vault, and the vault never goes online (a sync client writes the index).
+  enter the vault, and the vault never goes online (a sync client writes the index; an API
+  source's sign-in stays in the Keychain, and `source connect` is the user's to run).
 - Own tables (`vault_file_*`), not documents or fields. Names, paths, URLs, sizes and
   hashes sit in blobs under info `files/index`, AAD `<kind>:<row id>`; plain columns are only
   holder, kind, pratica slug and tiers. No plaintext hash or search index.
-- Scope IDs `files.index` / `<slug>:files.index`. A file with no link is the owner's. A
-  login-secret word in the name or path makes it `personal`. Linking, rules and accepting
-  suggestions are the user's; a service token only suggests.
-- The API is `/vault/files/...`; syncing is a client (`internal/filesync`, `pvault files sync`):
-  batches under one sync ID (the first says `begin`; a batch of a sync the vault lost is refused),
-  then `sync/finish` marks unseen files gone. It never finishes
-  after an incomplete scan, and never opens a file (online-only placeholders would download).
-  Sources, links, rules and pruning need the session or an approved grant with write access
-  and the holder's scope (`userWrite`); forgetting a source needs every holder's. A service
-  token with write access may sync, but only files it can see (`UpsertFilesIf`); it may
-  only suggest links. A file once linked to a person (`scoped`) stays out of the owner's
-  scope. A sync that would mark everything, or most of a large source, gone needs `confirm`.
-- An API source (`ClientID`, no `Root`; `internal/filesync` oauth/tokens/graph/gdrive/dropbox)
-  keeps its sign-in only in the Keychain (`pvault-files-<id>`), read-only scopes, PKCE with a
-  state-checked loopback redirect. The token goes only to the provider's own host; any failure
-  leaves the scan incomplete (nothing marked gone). `source connect` is the user's to run.
-- A file an agent found through another connector is only a proposal (`ProposeFile`, bounded)
-  until the user accepts it; it then lives in a `via: connector` source that nothing syncs
-  (`upsertFiles` refuses a sync of it) or marks gone. Accepting is all or nothing (link checked
-  first, a file it added is discarded if linking fails). A proposal's address must be on the
-  provider's own site (a Google one carries the file's id), a sharing link is dropped, a duplicate
-  never shows another token's proposal, and one token holds at most 50 of the 200 slots.
-  A file linked again with a role takes the role. `files_closed` needs every link of a file to
-  be an ID or procura role of a client whose pratiche are closed, and the file untouched since
-  the earliest of those closings.
+- Scope IDs `files.index` / `<slug>:files.index`. A file with no link is the owner's; a file
+  once linked to a person (`scoped`) stays out of the owner's scope. A login-secret word in
+  the name or path makes it `personal`.
+- Sources, links, rules, pruning and accepting suggestions or proposals need the session or
+  an approved grant with write access and the holder's scope (`userWrite`); forgetting a
+  source needs every holder's. A service token with write access may sync, but only files
+  it can see (`UpsertFilesIf`); otherwise a token only suggests links or proposes files.
+- A sync never finishes after an incomplete scan and never opens a file (online-only
+  placeholders would download); one that would mark most of a source gone needs `confirm`.
+- A file found through a connector is only a proposal until the user accepts it; it then
+  lives in a `via: connector` source that nothing syncs or marks gone.
 - Never store a sharing link (`CheckFileURL`). A file that left its source is tombstoned,
   never deleted; `PruneFiles` drops only unlinked tombstones. `RemovePerson` drops the
   person's links, rules and suggestions, not the index rows.
 
-### MCP (`mcp/src`)
+### MCP (`mcp/src`; the tools are listed in `mcp/README.md`)
 - Signing (`vault_sign_request`, `vault_sign_status`) can ask and watch, never approve or read
   the signed file. `vault_locate` reads `/vault/located` under the token's scope.
-- File index tools (`vault_files_search`, `vault_file_get`, `vault_file_suggest`; `vaultfiles.ts`):
-  metadata only, no tool reads or changes a file. Every result carries the untrusted-names
+- File index tools (`vault_files_search`, `vault_file_get`, `vault_file_suggest`,
+  `vault_file_register`; `vaultfiles.ts`): metadata only, no tool reads or changes a file,
+  and suggesting or registering only proposes. Every result carries the untrusted-names
   note; ids and person/pratica slugs are checked before any request; `local_path` is the
   source's root plus the file's path and never leaves the root.
 - Uses only a service token (`VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`, else
@@ -348,10 +339,8 @@ the page never copies a rule.
 
 ## Environment Variables
 
-- `VAULT_DIR` — vault directory (default: `~/.pvault`)
-- `PVAULT_VAULT` — like `--vault <name>`: the vault in `~/.pvault-<name>`
-- `VAULT_ADDR` — server address for the CLI (default: from the vault's `port` file, else `http://127.0.0.1:7200`)
-- `VAULT_PORT` — server port for `pvault serve` (default: the vault's `port` file, else `7200`)
+`VAULT_DIR`, `PVAULT_VAULT`, `VAULT_ADDR` and `VAULT_PORT` are in `docs/usage.md`; the MCP
+server's are in `mcp/README.md`.
 
 ## Testing
 
@@ -360,10 +349,11 @@ Tests use temp directories and run with `-race`. `internal/vault` and `internal/
 API requests go through `newTestRequest` (loopback Host); socket tests use
 `serveOnSocket`/`shortVaultDir` (temp paths exceed the 104-byte socket limit). The Touch ID
 tests compile the helper with `-D DEBUG`, which adds `describe-grant` and test enrollment
-(`PVAULT_TOUCHID_TEST_*`). Keychain tests run only with `PVAULT_KEYCHAIN_TEST=1`. The fill pilot's synthetic vault
-(`TestPraticaPilotVault`) runs only with `PVAULT_PILOT_DIR`; run it through
-`claude/skills/pratica/fill/pilot/run.sh` or `regress.py` (both need `PRATICHE_NAPOLI_DIR` and PyMuPDF;
-`PILOT_FORM_PDF` gives the form from disk; the `sign` case needs a library whose layout has `signatures`).
+(`PVAULT_TOUCHID_TEST_*`). Keychain tests run only with `PVAULT_KEYCHAIN_TEST=1`. The fill
+pilot's synthetic vault (`TestPraticaPilotVault`) runs only with `PVAULT_PILOT_DIR`; run the
+pilots through `claude/skills/pratica/fill/pilot/regress.py` (`--keep DIR` keeps a case's
+output; it needs `PRATICHE_NAPOLI_DIR` and PyMuPDF; `PILOT_FORM_PDF` gives the TARI Mod. 1
+pilot's form from disk; the `sign` case needs a library whose layout has `signatures`).
 CI runs `regress.py` against the library's main (`fill.yml`); the library runs it on its own changes.
 
 ```go

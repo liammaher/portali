@@ -14,7 +14,7 @@ import (
 )
 
 // TestPraticaPilotVault serves a synthetic vault for the pratica fill pilot
-// (claude/skills/pratica/fill/pilot/run.sh), which drives it like an agent:
+// (claude/skills/pratica/fill/pilot/regress.py), which drives it like an agent:
 // over HTTP, with service tokens scoped as the pratica skill asks for them.
 // It runs only with PVAULT_PILOT_DIR set. From that directory it reads
 // fixture.json (the vault's kind and fields, set as the user would) and
@@ -103,7 +103,7 @@ func TestPraticaPilotVault(t *testing.T) {
 	}
 	s.Serve(ln)
 	out, _ := json.Marshal(map[string]any{"url": "http://" + s.tcpAddr, "vault_dir": sockDir, "tokens": tokens})
-	// Whole or not at all: run.sh starts as soon as the file is there.
+	// Whole or not at all: the pilot starts as soon as the file is there.
 	tmp := filepath.Join(dir, "server.json.tmp")
 	if err := os.WriteFile(tmp, out, 0o600); err != nil {
 		t.Fatal(err)

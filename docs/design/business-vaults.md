@@ -248,16 +248,20 @@ Each vault stays exactly today's product: its own dir, server, socket and port. 
 - **Touch ID.** The Keychain item is already keyed per vault dir. The helper hard-codes
   `http://127.0.0.1:7200` (`cmd/pvault-touchid/main.swift:43`), and pvault skips Touch ID
   when `VAULT_ADDR` differs; store the vault's address in the enrollment JSON next to
-  `server` instead.
+  `server` instead. **As built:** no address at all: the helper finds the vault from
+  `VAULT_DIR` (else `$HOME/.pvault`, `homeDir`) and talks only to its socket.
 - **MCP: one instance per vault** (`vault`, `studio`), each with its own `VAULT_ADDR`, token
   and `VAULT_NAME` (so its errors name the right `--vault`); the tools are namespaced by server name automatically.
-  The vault and pratica skills learn which instance holds what.
+  The vault and pratica skills learn which instance holds what. **As built:** `VAULT_NAME`
+  (or `VAULT_DIR`) picks the vault and every request goes over its socket; `VAULT_ADDR`, if
+  set, is only checked against the address that server reports.
 - **Not one server hosting many vaults.** It would multiply lock state, grants and
   auto-lock inside one process; the process boundary between vaults is a feature.
 - **Accepted duplication.** A solo professional's identity sits in both vaults (as
   principal in one, titolare party in the other). A one-shot copy
   (`pvault person import --from personale io bianchi --categories identity,cie,residenza`)
   is simpler than links across vaults, and keeps the studio vault able to stand alone.
+  **Not built:** there is no `pvault person import`.
 - **Moving a sole trader's business out** of the personal vault when they open a studio
   vault: a one-off `business.*`/`locale.*` move command.
 
@@ -307,7 +311,9 @@ owner fields. It can stay; migrating it to a party is optional.
 - **D5. Where named vaults live.** Decided in phase 1: sibling dirs (`~/.pvault-<name>`),
   each with its own port, kept in a plain `<dir>/port` file and picked automatically.
 - **D6. More than one premises unit** (`locale2.*`, `locale.immobile<N>_*`, or units as
-  something new). Not decided; pratiche-napoli's TARI non domestica procedures need it.
+  something new). **Built** as numbered copies: `locale2.*` follows every rule of `locale`
+  (any schema category but `famiglia`, `ruolo` and `pratiche` can have them; see CLAUDE.md,
+  Data Rules).
 - **D7. Several users** (staff sharing a studio vault). Recommendation: out of scope for
   businesses under 5 people, where the titolare runs the agents; it would be a different
   product (sync, per-user keys).
@@ -319,4 +325,4 @@ owner fields. It can stay; migrating it to a party is optional.
   either (`pvault retention scans <days>`; 0 means right away), so nothing about ID copies
   is reported until the user has checked and set a period. Only
   clients: the business's own pratiche (persona `io`) use its titolare's and soci's ID copies
-  without naming them.
+  without naming them. What `pvault expiring` reports is in `docs/usage.md` (Retention).

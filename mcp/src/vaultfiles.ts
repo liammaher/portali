@@ -1,5 +1,5 @@
 import { posix } from "node:path";
-import type { FileSource, IndexedFile } from "./client.js";
+import { SLUG, type FileSource, type IndexedFile } from "./client.js";
 
 /**
  * What an agent is told about a file of the index. File names and paths are
@@ -83,6 +83,6 @@ export function describeFile(f: IndexedFile, sources: FileSource[]): FileView {
 }
 
 /** A person's slug as the vault has it, or io for the owner. */
-export const PERSON_REF = /^(io|[a-z][a-z0-9-]{0,31})$/;
+export const PERSON_REF = new RegExp(`^(io|${SLUG})$`);
 /** A pratica's slug. */
 export const PRATICA_SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
