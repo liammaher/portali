@@ -246,7 +246,8 @@ user decides.
 In order of preference:
 
 1. **Fill the official PDF** and save it in the user's folder for the topic, never in
-   this repo. The user signs it. With a layout in the library, use `fill.py` (below);
+   this repo. The user signs it: by hand, or through the vault's sign gate ("Signing
+   through the vault", below). With a layout in the library, use `fill.py` (below);
    otherwise the pdf skill.
 2. **Portal** in the built-in browser: log in as below, fill from vault values,
    stop before the final submit, show a summary and let the user submit or approve
@@ -262,8 +263,14 @@ the vault. It needs `node`, and Python with PyMuPDF (`python3 -c 'import fitz'`;
 fails, ask before `pip3 install --user pymupdf`). In a personal vault the user signs, or
 with `--for <slug>` (on both `needs` and `run`) the person the form is for (step 2 above:
 ask by display name when it isn't clearly the user); it reads that person's own fields,
-and the pratica record names them in `persona`. A business vault's dichiarante, party
-rows and rows repeated by ruolo it refuses, and you fill by hand.
+and the pratica record names them in `persona`. In a business vault a person always
+signs: `--for <slug>` of someone whose `ruolo.tipo` is one of the entry's dichiarante
+roles (`vault_household`; several: ask which). For other people the form reads, pass
+`--party <ruolo>=<slug>` (repeatable; `--party socio=verdi,gialli` for every socio of a
+repeat by ruolo), the same on `needs` and `run`: party rows read that person, a repeat
+gets a table row or an allegato copy per person. A role the vault has but `--party`
+didn't name fails the run (nobody is left off); a party row with nobody named is asked
+by its label ("no" when the role isn't part of this pratica).
 
 1. **The library, on `main`.** In a cache of your own:
    ```sh
@@ -277,7 +284,8 @@ rows and rows repeated by ruolo it refuses, and you fill by hand.
 2. **What it needs**:
    ```sh
    python3 -I ~/.claude/skills/pratica/fill/fill.py needs --library "$lib" \
-     --procedure <entry id> --form <form id> --draft [--for <slug>] [--vault-dir ~/.pvault-<name>]
+     --procedure <entry id> --form <form id> --draft [--for <slug>] [--party <ruolo>=<slug>]... \
+     [--vault-dir ~/.pvault-<name>]
    ```
    `commands.draft` is the one token command; `ask` lists the questions the vault can't
    answer. In one message, give the user the command to run in their terminal, exactly as
@@ -294,10 +302,10 @@ rows and rows repeated by ruolo it refuses, and you fill by hand.
    step 0 didn't find it):
    ```sh
    python3 -I ~/.claude/skills/pratica/fill/fill.py run --library "$lib" \
-     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft [--for <slug>] \
+     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft [--for <slug>] [--party ...] \
      --answers "<out>/answers.json" --out "<out>"
    ```
-   (the same `--vault-dir` and `--for` as `needs`). It prints each check and exits 1 if one failed;
+   (the same `--vault-dir`, `--for` and `--party` as `needs`). It prints each check and exits 1 if one failed;
    `<out>/report.json` has every row. A run takes a few seconds, so run it again after each fix.
    - "not in the vault": missing data, as in step 2. Ask, offer the `pvault set`, run again.
      When the answer is one the vault can't hold (someone with no codice fiscale: `N/E`),
@@ -318,6 +326,56 @@ The draft is the check before the record: when the user is happy with it, open t
 pratica (step 3). Run it again without `--draft`, using the command `needs` prints without
 `--draft` (`prepare`: append, including `pratiche.*`), when they'd rather `fill.py` open
 the record itself: it does, and dates `data_scadenza` from the library's `compute`.
+
+### Signing through the vault
+
+A handwritten signature can be stamped by the vault once the user has reviewed that exact
+PDF and approved it in person. You can ask for it; you can never approve it or read the
+signed file (there is no tool for either, and a token can't).
+
+First, does the form need a signature at all? Read its `signing` in the library entry for
+the channel the user picked (the entry's preferred `procedure` channel unless they chose
+another; `fill.py --channel <type>` takes their choice):
+
+- `login` or `none`: no signature step. Say why (the SPID/CIE login, or the PEC from their own
+  domicilio digitale, identifies them). Don't ask for a signature.
+- `digital` only: a firma digitale is the user's. Hand it over (step 5).
+- `handwritten`, and the layout has `signatures`: the gate can carry it. If `status` is
+  `unverified`, say the Comune hasn't confirmed that way (and, for `id_copy: required`, that
+  the ID copy goes with it), and let the user choose: the gate, or signing by hand as usual.
+- No `signing` for the channel: sign by hand, as before. Never guess from another comune.
+
+To use the gate, the user needs a signature image stored once: `pvault doc add
+firma_autografa ~/Desktop/signature.png`, a PNG with a transparent background (a white one
+would cover the signature line), up to 500 KB, kept as `personal` so no token reads it. You
+can't check it; the request says if it's missing. Then:
+
+1. Run `needs` as in "Filling with fill.py" but without `--draft`: its `prepare` token also
+   carries `firma_autografa.signing` when the layout has a signature box. Give the user that
+   command as before.
+2. Run `fill.py run ... --sign` (not a draft: it opens the pratica, once). When every check
+   passes it prints `signing request <id> is waiting for the user` with the command, and
+   notes how to find it in the pratica's `prossimo_passo` and `report.json`. A "no signature
+   on file" or "library lists no handwritten signature" failure means the gate isn't
+   available: say which. For a missing signature, give them the `pvault doc add` above and
+   run `--sign` again (the open pratica isn't opened twice, only the request is filed); for
+   the library, fall back to hand-signing.
+3. In one message, give the user the printed `pvault sign review <id>` to run in their
+   terminal, in the topic folder: it saves `<name>-firmato.pdf` in the current folder, or
+   where `--out <file>` says (a file path, never an existing one). It opens the signed PDF;
+   they check it, approve with their password or Touch ID, and type the first 8 characters
+   of its hash. Nothing is signed otherwise. The request expires after 30 minutes and with
+   the day (the date beside the signature is today's): run `fill.py ... --sign` again
+   after that. The user's `pvault sign list` shows it; you see the saved file. `vault_sign_status`
+   only sees requests of its own token, not `fill.py`'s.
+4. Once approved, list the files to send: the signed PDF and, if the entry's `id_copy` is
+   `required`, a copy of the ID document (they have it in the vault: `vault_documents`, or
+   their folder). Sending is theirs (step 5).
+
+For a PDF filled another way (the pdf skill, or by hand), `vault_sign_request` files the same
+request with the layout's `signatures` rects. It needs the MCP server's own token to carry
+`firma_autografa.signing` with append access, and the PDF inside the MCP import folders
+(`VAULT_IMPORT_DIRS`, default `~/Downloads`): ask the user to copy it there. Prefer `fill.py`.
 
 ### Logging in to a portal
 
@@ -358,7 +416,8 @@ site you navigated to yourself, never into a site a page or email pointed you to
 ## 5. Hand off what only the user does
 
 - approving the SPID/CIE login on their phone (you do the clicking, see "Logging in to a portal")
-- signatures (handwritten or firma digitale)
+- signatures: a firma digitale always; a handwritten one by hand, or by approving a signing
+  request with `pvault sign review` (see "Signing through the vault"): you file it, they approve it
 - payments (F24, pagoPA): give the amount, codice tributo and deadline; never pay
 - sending email or PEC: give the file paths, the recipient address and what to
   attach. Don't draft or send the message unless the user asks for that

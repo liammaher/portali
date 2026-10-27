@@ -20,6 +20,7 @@ type FieldInfo struct {
 	FieldName   string    `json:"field_name"`
 	Value       string    `json:"value,omitempty"`
 	Redacted    bool      `json:"redacted,omitempty"` // the caller asked for the value to be left out (?omit=)
+	Derived     bool      `json:"derived,omitempty"`  // computed by the vault from an address (located.go), not stored
 	Sensitivity string    `json:"sensitivity"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	Version     int       `json:"version"`

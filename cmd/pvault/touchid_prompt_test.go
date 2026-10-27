@@ -77,6 +77,33 @@ func TestTouchIDHelper_PromptWording(t *testing.T) {
 	}
 }
 
+// A signing review's prompt says it signs, names the document as the vault
+// reports it (made harmless), and never understates what the grant does.
+func TestTouchIDHelper_SignPromptWording(t *testing.T) {
+	helper := buildDebugHelper(t)
+	long := strings.Repeat("x", 80)
+	tail := `, with your handwritten signature from your vault, for 10 minutes`
+	cases := []struct{ name, pages, requester, want string }{
+		{"mod-1.pdf", "1", "tari-agent", `review and sign "mod-1.pdf" (1 page, hash ab12cd34), filed by tari-agent` + tail},
+		{"tari-2026-mod-1.pdf", "3", "agent", `review and sign "tari-2026-mod-1.pdf" (3 pages, hash ab12cd34), filed by agent` + tail},
+		// What an agent put in a name can't break the sentence.
+		{"a\"b\u202eexe.pdf", "1", "x", `review and sign "a?b?exe.pdf" (1 page, hash ab12cd34), filed by x` + tail},
+		{"x\ny", "1", "x", `review and sign "x?y" (1 page, hash ab12cd34), filed by x` + tail},
+		{long, "1", "x", `review and sign "` + long[:49] + `…" (1 page, hash ab12cd34), filed by x` + tail},
+		{"mod-1.pdf", "1", "the user\u202e", `review and sign "mod-1.pdf" (1 page, hash ab12cd34), filed by the user?` + tail},
+	}
+	for _, c := range cases {
+		out, err := exec.Command(helper, "describe-sign", c.name, c.pages, "ab12cd34", c.requester).CombinedOutput()
+		if err != nil {
+			t.Errorf("%q: %v\n%s", c.name, err, out)
+			continue
+		}
+		if got := strings.TrimSpace(string(out)); got != c.want {
+			t.Errorf("%q:\n got  %q\n want %q", c.name, got, c.want)
+		}
+	}
+}
+
 // With several vaults the prompt names the one a fingerprint is for.
 func TestTouchIDHelper_PromptNamesVault(t *testing.T) {
 	helper := buildDebugHelper(t)

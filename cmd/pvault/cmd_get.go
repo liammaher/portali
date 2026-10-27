@@ -109,11 +109,22 @@ func getFields(args []string, many bool) ([]string, map[string]*string, error) {
 			add(arg)
 			continue
 		}
+		start := len(ids)
 		for _, f := range listed {
 			if f.Sensitivity != vault.TierPersonal && vault.ScopeAllows(arg, f.ID) {
 				add(f.ID)
 			}
 		}
+		// The fields the vault computes for an address (its municipalità) are
+		// read like stored ones, and left out when it can't work them out.
+		if category, _ := strings.CutSuffix(arg, ".*"); !strings.HasPrefix(category, "*:") {
+			if _, computed, ok := vault.LocatedTarget(category); ok {
+				for _, id := range computed {
+					add(id)
+				}
+			}
+		}
+		slices.Sort(ids[start:])
 	}
 
 	values := make(map[string]*string, len(ids))

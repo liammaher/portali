@@ -198,6 +198,9 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 		// (see CreateScopedGrant).
 		Scope  string `json:"scope"`
 		Access string `json:"access"`
+		// Sign asks for a grant that can only review and approve this
+		// signing request (see CreateSignGrant); socket only.
+		Sign string `json:"sign"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid_request", "invalid JSON")
@@ -220,7 +223,17 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	var token string
 	var expires time.Time
 	var err error
-	if req.Scope != "" {
+	if req.Sign != "" {
+		switch {
+		case req.Scope != "" || req.Access != "" || req.TTL != "":
+			writeError(w, http.StatusBadRequest, "invalid_request", "sign can't be combined with scope, access or ttl")
+			return
+		case !viaSocket(r):
+			writeError(w, http.StatusForbidden, "socket_required", "a signing approval is requested only over the vault's Unix socket")
+			return
+		}
+		token, expires, err = s.vault.CreateSignGrant(req.Password, req.SecretKey, req.Sign)
+	} else if req.Scope != "" {
 		token, expires, err = s.vault.CreateScopedGrant(req.Password, req.SecretKey, ttl, req.Scope, req.Access)
 	} else if req.Access != "" {
 		writeError(w, http.StatusBadRequest, "invalid_request", "access requires a scope")
@@ -240,6 +253,9 @@ func (s *Server) handleSessionGrant(w http.ResponseWriter, r *http.Request) {
 	resp := map[string]string{
 		"token":      token,
 		"expires_at": expires.UTC().Format(time.RFC3339),
+	}
+	if req.Sign != "" {
+		resp["sign"] = req.Sign
 	}
 	if req.Scope != "" {
 		// Echoed so a client can tell a scoped grant from a full one
@@ -499,12 +515,43 @@ func (s *Server) handleGetByCategory(w http.ResponseWriter, r *http.Request) {
 
 // GET /vault/context
 func (s *Server) handleGetContext(w http.ResponseWriter, r *http.Request) {
-	ctx, err := s.vault.GetContext(callerFilter(r))
+	get := s.vault.GetContext
+	if r.URL.Query().Get("stored") == "1" {
+		get = s.vault.GetStoredContext // an export: what is stored, not what the vault computes
+	}
+	ctx, err := get(callerFilter(r))
 	if err != nil {
 		handleVaultError(w, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, ctx)
+}
+
+// GET /vault/located/{target...}
+// Says where an address of the vault is in Napoli: its quartiere, municipalità
+// and ASL distretto, what settled them and, when they can't be known, why and
+// which quartieri to ask about. target is residenza, domicilio, locale or
+// sede_legale, with an optional person (leo:residenza). It answers under the
+// scope of the three computed fields, never needing the street's.
+func (s *Server) handleLocated(w http.ResponseWriter, r *http.Request) {
+	category, ids, ok := vault.LocatedTarget(r.PathValue("target"))
+	if !ok {
+		writeError(w, http.StatusBadRequest, "invalid_request", vault.ErrNotLocatable.Error())
+		return
+	}
+	scope := scopeFromRequest(r)
+	for _, id := range ids {
+		if !vault.ScopeAllows(scope, id) {
+			scopeDenied(w)
+			return
+		}
+	}
+	loc, err := s.vault.Locate(category, callerFilter(r))
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, loc)
 }
 
 // GET /vault/expiring?days=90
@@ -749,6 +796,11 @@ func handleVaultError(w http.ResponseWriter, err error) {
 		writeError(w, http.StatusBadRequest, "invalid_value", verr.Error())
 		return
 	}
+	var nr *vault.NotResolvedError
+	if errors.As(err, &nr) {
+		writeError(w, http.StatusNotFound, "not_resolved", nr.Error())
+		return
+	}
 	switch err {
 	case vault.ErrFieldNotFound:
 		writeError(w, http.StatusNotFound, "not_found", "field not found")
@@ -760,6 +812,16 @@ func handleVaultError(w http.ResponseWriter, err error) {
 		writeError(w, http.StatusConflict, "changed", err.Error())
 	case vault.ErrAmbiguousToken:
 		writeError(w, http.StatusConflict, "ambiguous_token", err.Error())
+	case vault.ErrSigningNotFound:
+		writeError(w, http.StatusNotFound, "not_found", err.Error())
+	case vault.ErrSigningNotPending, vault.ErrSigningStale:
+		writeError(w, http.StatusConflict, "not_pending", err.Error())
+	case vault.ErrSigningHash:
+		writeError(w, http.StatusBadRequest, "hash_mismatch", err.Error())
+	case vault.ErrSigningLimit, vault.ErrSigningRequesterLimit, vault.ErrSigningRate:
+		writeError(w, http.StatusTooManyRequests, "too_many_pending", err.Error())
+	case vault.ErrNoSignature:
+		writeError(w, http.StatusConflict, "no_signature", err.Error())
 	case vault.ErrLocked:
 		writeError(w, http.StatusForbidden, "vault_locked", "vault is locked")
 	case vault.ErrAlreadyUnlocked:

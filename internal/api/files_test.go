@@ -15,7 +15,7 @@ type fileList struct {
 	Total int              `json:"total"`
 }
 
-func decode[T any](t *testing.T, w *httptest.ResponseRecorder) T {
+func decodeBody[T any](t *testing.T, w *httptest.ResponseRecorder) T {
 	t.Helper()
 	var out T
 	if err := json.NewDecoder(w.Body).Decode(&out); err != nil {
@@ -39,7 +39,7 @@ func filesEnv(t *testing.T) (*testEnv, string) {
 	if w.Code != 200 {
 		t.Fatalf("add source: %d %s", w.Code, w.Body.String())
 	}
-	src := decode[vault.FileSourceInfo](t, w)
+	src := decodeBody[vault.FileSourceInfo](t, w)
 	w = env.doRequest(t, "POST", "/vault/files/sync", map[string]any{
 		"source_id": src.ID, "sync_id": "sync-0001", "begin": true,
 		"files": []map[string]any{
@@ -57,7 +57,7 @@ func filesEnv(t *testing.T) (*testEnv, string) {
 func findFile(t *testing.T, env *testEnv, name string) vault.FileInfo {
 	t.Helper()
 	w := env.doRequest(t, "GET", "/vault/files?q="+strings.ReplaceAll(name, " ", "+"), nil, true)
-	l := decode[fileList](t, w)
+	l := decodeBody[fileList](t, w)
 	if len(l.Files) != 1 {
 		t.Fatalf("%q matched %d files", name, len(l.Files))
 	}
@@ -76,13 +76,13 @@ func TestFiles_SessionFlow(t *testing.T) {
 		},
 	}, true)
 	w := env.doRequest(t, "POST", "/vault/files/sync/finish", map[string]string{"source_id": src, "sync_id": "sync-0002"}, true)
-	if res := decode[vault.FileSyncResult](t, w); w.Code != 200 || res.Gone != 1 {
+	if res := decodeBody[vault.FileSyncResult](t, w); w.Code != 200 || res.Gone != 1 {
 		t.Fatalf("finish = %d %+v", w.Code, res)
 	}
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files", nil, true)); l.Total != 2 {
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files", nil, true)); l.Total != 2 {
 		t.Fatalf("listed %d, want 2 (one is gone)", l.Total)
 	}
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files?gone=1", nil, true)); l.Total != 3 {
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?gone=1", nil, true)); l.Total != 3 {
 		t.Fatalf("with gone: %d, want 3", l.Total)
 	}
 
@@ -92,11 +92,11 @@ func TestFiles_SessionFlow(t *testing.T) {
 	if w.Code != 200 {
 		t.Fatalf("link: %d %s", w.Code, w.Body.String())
 	}
-	link := decode[vault.FileLinkInfo](t, w)
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true)); l.Total != 1 {
+	link := decodeBody[vault.FileLinkInfo](t, w)
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true)); l.Total != 1 {
 		t.Fatalf("leo's files = %d", l.Total)
 	}
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files?unlinked=1", nil, true)); l.Total != 1 {
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?unlinked=1", nil, true)); l.Total != 1 {
 		t.Fatalf("unlinked = %d", l.Total)
 	}
 	if w := env.doRequest(t, "DELETE", "/vault/files/links/"+link.ID, nil, true); w.Code != 200 {
@@ -124,7 +124,7 @@ func TestFiles_FinishNeedsARememberedSync(t *testing.T) {
 	if w.Code != 400 {
 		t.Fatalf("finish of an unknown sync: %d", w.Code)
 	}
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files?gone=1", nil, true)); l.Total != 3 {
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?gone=1", nil, true)); l.Total != 3 {
 		t.Fatal("a failed finish must not tombstone anything")
 	}
 	// A new sync replaces the running one: the old id can no longer finish.
@@ -167,7 +167,7 @@ func TestFiles_ServiceTokenBoundaries(t *testing.T) {
 			t.Fatalf("search: %d %s", w.Code, w.Body.String())
 		}
 		var out []string
-		for _, f := range decode[fileList](t, w).Files {
+		for _, f := range decodeBody[fileList](t, w).Files {
 			out = append(out, f.Name)
 		}
 		return strings.Join(out, ",")
@@ -225,24 +225,24 @@ func TestFiles_AgentSuggestsUserDecides(t *testing.T) {
 	if w.Code != 200 {
 		t.Fatalf("suggest: %d %s", w.Code, w.Body.String())
 	}
-	sug := decode[vault.FileSuggestionInfo](t, w)
+	sug := decodeBody[vault.FileSuggestionInfo](t, w)
 	if sug.ProposedBy == "" || sug.ProposedBy == "you" {
 		t.Fatalf("proposed_by = %q, want the token's consumer", sug.ProposedBy)
 	}
 	if w := env.doRequestWithToken(t, "POST", "/vault/files/suggestions/"+sug.ID+"/accept", nil, agent); w.Code != 403 {
 		t.Fatalf("a token accepting its own suggestion: %d", w.Code)
 	}
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true)); l.Total != 0 {
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true)); l.Total != 0 {
 		t.Fatal("a suggestion must not link")
 	}
-	list := decode[[]vault.FileSuggestionInfo](t, env.doRequest(t, "GET", "/vault/files/suggestions", nil, true))
+	list := decodeBody[[]vault.FileSuggestionInfo](t, env.doRequest(t, "GET", "/vault/files/suggestions", nil, true))
 	if len(list) != 1 {
 		t.Fatalf("suggestions = %d", len(list))
 	}
 	if w := env.doRequest(t, "POST", "/vault/files/suggestions/"+sug.ID+"/accept", nil, true); w.Code != 200 {
 		t.Fatalf("accept: %d %s", w.Code, w.Body.String())
 	}
-	if l := decode[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true)); l.Total != 1 {
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true)); l.Total != 1 {
 		t.Fatal("accepted suggestion didn't link")
 	}
 	if w := env.doRequest(t, "POST", "/vault/files/suggestions/"+sug.ID+"/bogus", nil, true); w.Code != 404 {
@@ -273,7 +273,7 @@ func TestFiles_RulesOverTheAPI(t *testing.T) {
 	if out.Linked != 2 {
 		t.Fatalf("rule linked %d files, want 2", out.Linked)
 	}
-	rules := decode[[]vault.FileRuleInfo](t, env.doRequest(t, "GET", "/vault/files/rules", nil, true))
+	rules := decodeBody[[]vault.FileRuleInfo](t, env.doRequest(t, "GET", "/vault/files/rules", nil, true))
 	if len(rules) != 1 || rules[0].Path != "/Leo" {
 		t.Fatalf("rules = %+v", rules)
 	}
@@ -286,13 +286,13 @@ func TestFiles_ForgetAndPrune(t *testing.T) {
 	env, src := filesEnv(t)
 	env.doRequest(t, "POST", "/vault/files/sync", map[string]any{"source_id": src, "full": true, "files": []map[string]any{}}, true)
 	w := env.doRequest(t, "POST", "/vault/files/prune", nil, true)
-	if got := decode[map[string]int](t, w); got["pruned"] != 3 {
+	if got := decodeBody[map[string]int](t, w); got["pruned"] != 3 {
 		t.Fatalf("prune = %v", got)
 	}
 	if w := env.doRequest(t, "DELETE", "/vault/files/sources/"+src, nil, true); w.Code != 200 {
 		t.Fatalf("forget: %d", w.Code)
 	}
-	if srcs := decode[[]vault.FileSourceInfo](t, env.doRequest(t, "GET", "/vault/files/sources", nil, true)); len(srcs) != 0 {
+	if srcs := decodeBody[[]vault.FileSourceInfo](t, env.doRequest(t, "GET", "/vault/files/sources", nil, true)); len(srcs) != 0 {
 		t.Fatalf("sources left: %+v", srcs)
 	}
 }
@@ -303,7 +303,7 @@ func filesEnvSK(t *testing.T) (*testEnv, string, string) {
 	env, sk := setupWithSecretKey(t)
 	env.vault.Set("leo:famiglia.relazione", "figlio", "")
 	w := env.doRequest(t, "POST", "/vault/files/sources", map[string]string{"provider": "local", "label": "Acme", "root": "/tmp/acme"}, true)
-	src := decode[vault.FileSourceInfo](t, w)
+	src := decodeBody[vault.FileSourceInfo](t, w)
 	env.doRequest(t, "POST", "/vault/files/sync", map[string]any{
 		"source_id": src.ID, "full": true,
 		"files": []map[string]any{fileObs("/a.pdf", "/a.pdf", "a.pdf"), fileObs("/Leo/b.pdf", "/Leo/b.pdf", "b.pdf")},
@@ -320,10 +320,10 @@ func TestFiles_ApprovedGrantsAreHeldToWhatWasApproved(t *testing.T) {
 	env.doRequest(t, "POST", "/vault/files/"+b.ID+"/links", map[string]string{"for": "leo"}, true)
 	b = findFile(t, env, "b.pdf")
 	leoLink := b.Links[0].ID
-	rule := decode[struct {
+	rule := decodeBody[struct {
 		Rule vault.FileRuleInfo `json:"rule"`
 	}](t, env.doRequest(t, "POST", "/vault/files/rules", map[string]string{"source_id": src, "path": "/Leo", "for": "leo"}, true)).Rule
-	sug := decode[vault.FileSuggestionInfo](t, env.doRequestWithToken(t, "POST", "/vault/files/"+a.ID+"/suggest",
+	sug := decodeBody[vault.FileSuggestionInfo](t, env.doRequestWithToken(t, "POST", "/vault/files/"+a.ID+"/suggest",
 		map[string]string{"for": "leo"}, createTokenWithAccess(t, env, "*:files.*", "append")))
 
 	// Read-only grant: nothing that changes the index.
@@ -355,10 +355,10 @@ func TestFiles_ApprovedGrantsAreHeldToWhatWasApproved(t *testing.T) {
 	if w := env.doRequestWithToken(t, "DELETE", "/vault/files/sources/"+src, nil, owner); w.Code != 403 {
 		t.Errorf("forgetting a source with an owner-only grant = %d, want 403", w.Code)
 	}
-	if got := decode[[]vault.FileRuleInfo](t, env.doRequestWithToken(t, "GET", "/vault/files/rules", nil, owner)); len(got) != 0 {
+	if got := decodeBody[[]vault.FileRuleInfo](t, env.doRequestWithToken(t, "GET", "/vault/files/rules", nil, owner)); len(got) != 0 {
 		t.Errorf("an owner-only grant lists leo's rules: %+v", got)
 	}
-	if got := decode[[]vault.FileSuggestionInfo](t, env.doRequestWithToken(t, "GET", "/vault/files/suggestions", nil, owner)); len(got) != 0 {
+	if got := decodeBody[[]vault.FileSuggestionInfo](t, env.doRequestWithToken(t, "GET", "/vault/files/suggestions", nil, owner)); len(got) != 0 {
 		t.Errorf("an owner-only grant lists leo's suggestions: %+v", got)
 	}
 
@@ -382,7 +382,7 @@ func TestFiles_ApprovedGrantsAreHeldToWhatWasApproved(t *testing.T) {
 func TestFiles_UnlinkedPersonFileStaysHiddenFromOwnerToken(t *testing.T) {
 	env, _, _ := filesEnvSK(t)
 	b := findFile(t, env, "b.pdf")
-	l := decode[vault.FileLinkInfo](t, env.doRequest(t, "POST", "/vault/files/"+b.ID+"/links", map[string]string{"for": "leo"}, true))
+	l := decodeBody[vault.FileLinkInfo](t, env.doRequest(t, "POST", "/vault/files/"+b.ID+"/links", map[string]string{"for": "leo"}, true))
 	env.doRequest(t, "DELETE", "/vault/files/links/"+l.ID, nil, true)
 	owner := createTokenWithAccess(t, env, "files.*", "read")
 	if w := env.doRequestWithToken(t, "GET", "/vault/files/"+b.ID, nil, owner); w.Code != 404 {
@@ -396,7 +396,7 @@ func TestFiles_UnlinkedPersonFileStaysHiddenFromOwnerToken(t *testing.T) {
 
 func TestFiles_FinishRefusesToMarkMostOfASourceGone(t *testing.T) {
 	env := setup(t)
-	src := decode[vault.FileSourceInfo](t, env.doRequest(t, "POST", "/vault/files/sources", map[string]string{"provider": "local", "label": "A", "root": "/tmp/a"}, true))
+	src := decodeBody[vault.FileSourceInfo](t, env.doRequest(t, "POST", "/vault/files/sources", map[string]string{"provider": "local", "label": "A", "root": "/tmp/a"}, true))
 	var files []map[string]any
 	for i := 0; i < 30; i++ {
 		files = append(files, fileObs(fmt.Sprint("k", i), "/f.pdf", "f.pdf"))
@@ -409,7 +409,7 @@ func TestFiles_FinishRefusesToMarkMostOfASourceGone(t *testing.T) {
 		t.Fatalf("finish marking 27 of 30 gone: %d", w.Code)
 	}
 	w = env.doRequest(t, "POST", "/vault/files/sync/finish", map[string]any{"source_id": src.ID, "sync_id": "sync-hhhh-1", "confirm": true}, true)
-	if res := decode[vault.FileSyncResult](t, w); w.Code != 200 || res.Gone != 27 {
+	if res := decodeBody[vault.FileSyncResult](t, w); w.Code != 200 || res.Gone != 27 {
 		t.Fatalf("confirmed finish: %d %+v", w.Code, res)
 	}
 }

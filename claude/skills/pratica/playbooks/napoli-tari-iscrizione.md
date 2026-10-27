@@ -52,7 +52,8 @@ check `pvault list pratiche`, and don't regenerate a signed one.
 
 ## Needs the user
 
-Signature, sending the PEC/email (or the raccomandata), paying the F24.
+Signature (by hand, or approving a signing request: the library's `signing` for the channel
+says if a handwritten one is taken), sending the PEC/email (or the raccomandata), paying the F24.
 
 ## After submission
 

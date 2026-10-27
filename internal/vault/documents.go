@@ -53,7 +53,7 @@ const DefaultDocumentSensitivity = "sensitive"
 // DefaultDocumentSensitivity.
 func DefaultDocumentTier(category string) string {
 	_, category = SplitPerson(category)
-	if IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category)) {
+	if category == SignatureCategory || IsPersonalCategory(category) || IsCredentialField(DocumentScopeID(category)) {
 		return TierPersonal
 	}
 	return DefaultDocumentSensitivity
@@ -114,6 +114,12 @@ func (v *Vault) AddDocumentIf(allow FieldFilter, category, name, contentType str
 		return nil, errCredentialTier(DocumentScopeID(category))
 	}
 
+	if _, base := SplitPerson(category); base == SignatureCategory {
+		if err := checkSignatureImage(contentType, data); err != nil {
+			return nil, err
+		}
+	}
+
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
@@ -158,6 +164,9 @@ func (v *Vault) AddDocumentIf(allow FieldFilter, category, name, contentType str
 	}
 
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: DocumentScopeID(category), Action: "document_add", Purpose: contentType})
+	if _, base := SplitPerson(category); base == SignatureCategory {
+		v.dropOtherSignatures(category, id)
+	}
 	v.markChanged()
 	return &DocumentInfo{ID: id, Category: category, Name: name, ContentType: contentType, Size: doc.Size, Sensitivity: sensitivity, CreatedAt: doc.CreatedAt}, nil
 }
@@ -378,4 +387,19 @@ func cleanContentType(ct string) (string, error) {
 		return "", &ValidationError{Field: "content_type", Msg: "invalid content type"}
 	}
 	return strings.ToLower(mediaType), nil
+}
+
+// dropOtherSignatures keeps one signature per person: it removes the older
+// documents of a signature category once the new one is stored.
+func (v *Vault) dropOtherSignatures(category, keep string) {
+	docs, err := v.db.ListDocuments()
+	if err != nil {
+		return
+	}
+	for _, d := range docs {
+		if d.Category == category && d.ID != keep {
+			v.db.DeleteDocument(d.ID)
+			os.Remove(v.documentPath(d.ID))
+		}
+	}
 }

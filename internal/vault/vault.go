@@ -707,6 +707,16 @@ func (v *Vault) Get(id string) (*FieldInfo, error) {
 // decrypted, so a tier raised or a field created after the caller's own check
 // can't slip through; a rejected field reads as missing (nil).
 func (v *Vault) GetIf(id string, allow FieldFilter) (*FieldInfo, error) {
+	// A quartiere, municipalità or distretto of an address in Napoli: a stored
+	// row that still stands, else the computed value (located.go).
+	if k, category, which, ok := locatedOutput(id); ok {
+		return v.getLocated(id, k, category, which, allow)
+	}
+	return v.getStored(id, allow)
+}
+
+// getStored is GetIf for a field read from its stored row.
+func (v *Vault) getStored(id string, allow FieldFilter) (*FieldInfo, error) {
 	vaultKey, err := v.requireUnlocked()
 	if err != nil {
 		return nil, err
@@ -841,12 +851,32 @@ func (v *Vault) GetByCategory(category string, allow FieldFilter) ([]FieldInfo, 
 		result = append(result, fieldInfo(f, string(plaintext)))
 	}
 
+	// The computed fields of an address are part of its category.
+	result, err = v.overlayLocated(vaultKey, category, result, allow)
+	if err != nil {
+		return nil, err
+	}
+
 	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: category + ".*", Action: "read"})
 	return result, nil
 }
 
 // GetContext returns the decrypted fields allow accepts, grouped by category.
 func (v *Vault) GetContext(allow FieldFilter) (*ContextBundle, error) {
+	bundle, err := v.decryptFields(allow)
+	if err != nil {
+		return nil, err
+	}
+	if err := v.overlayContext(bundle, allow); err != nil {
+		return nil, err
+	}
+	v.db.LogAccess(store.AuditEntry{Consumer: "vault", Scope: "*", Action: "context"})
+	return bundle, nil
+}
+
+// GetStoredContext is GetContext without the computed fields: the stored
+// rows only, as an export holds them.
+func (v *Vault) GetStoredContext(allow FieldFilter) (*ContextBundle, error) {
 	bundle, err := v.decryptFields(allow)
 	if err != nil {
 		return nil, err
@@ -1003,6 +1033,12 @@ func hashToken(token string) string {
 func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, maxSensitivity, access string) (string, error) {
 	if err := v.checkUnlocked(); err != nil {
 		return "", err
+	}
+	// These name the user's own actions in the audit log and on signing
+	// requests: an agent's token must not read as them.
+	switch strings.ToLower(strings.TrimSpace(consumer)) {
+	case "session", "grant", "vault":
+		return "", &ValidationError{Field: "consumer", Msg: "\"" + consumer + "\" is reserved for your own actions: choose another name"}
 	}
 	if err := ValidateScope(scope); err != nil {
 		return "", &ValidationError{Field: "scope", Msg: err.Error()}

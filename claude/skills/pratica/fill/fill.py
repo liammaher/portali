@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """Fill a pratiche-napoli form from the vault, and check the result.
 
-  fill.py needs (--library DIR --procedure ID | --entry E.json) --form ID
-                [--for SLUG] [--draft] [--vault-dir DIR]
+  fill.py needs (--library DIR --procedure ID | --entry E.json [--layout L.json])
+                --form ID [--for SLUG] [--party ROLE=SLUG[,SLUG]]... [--draft] [--vault-dir DIR]
       The service tokens a run needs, as the pratica skill asks for them:
-      prepare (append, the form's categories and pratiche.*) and track
-      (write, pratiche.* and the categories the entry's records go to); with
-      --draft, one read token for the form's categories. Each comes with the
-      pvault command that saves it where run --vault-dir looks, and the ask
-      rows come with how their answers are written.
+      prepare (append, the form's categories and pratiche.*, and, when the
+      layout has a signature box on a form that is signed, firma_autografa.signing
+      for --sign) and track (write, pratiche.* and the categories the entry's
+      records go to); with --draft, one read token for the form's categories.
+      Each comes with the pvault command that saves it where run --vault-dir
+      looks, and the ask rows come with how their answers are written.
 
   fill.py run (--library DIR --procedure ID | --entry E.json --layout L.json)
-              --form ID [--for SLUG] --out DIR [--pdf FORM.pdf]
+              --form ID [--for SLUG] [--party ROLE=SLUG[,SLUG]]... --out DIR [--pdf FORM.pdf]
               (--server S.json | --vault-dir DIR [--keychain SERVICE])
               [--draft] [--answers A.json] [--reply R.json] [--playbook NAME]
+              [--sign]
       Reads the vault over its HTTP API with the prepare token, resolves each
       of the entry's form rows, fills the PDF at the layout's positions, reads
       the PDF back to check every value landed in its box, and, only if every
@@ -23,13 +25,32 @@
       DIR/filled.pdf, DIR/page-<n>.png for page 1 and each page written on,
       and DIR/report.json; exits 1 if a check failed. A --draft writes
       nothing to the vault.
+      --channel picks the entry's channel by type (default: its preferred one).
+      With --sign, once every check passed, it files a signing request for
+      DIR/filled.pdf at the layout's signature boxes (the form's `signing`
+      must list a handwritten signature for the channel it opens the pratica
+      on) and prints the id: the user runs `pvault sign review <id>`, sees the
+      signed PDF, and approves it in person. The vault holds the signed file
+      until then; this tool can neither approve nor read it. Run again with
+      --sign when the request expired (30 minutes, or midnight) or failed: an
+      open pratica is not opened twice, only the request is filed again. Only
+      the vault's owner signs this way so far (--sign refuses --for).
 
 Who signs: the vault's owner, unless --for names another person (a slug of
 the household; ask the user by display name). Their own data (identity,
 residenza, documents: the schema's person categories) is then read from
 that person's fields; the home, the pratiche, business.* and locale.* stay
-the vault's own, and the pratica record names the person. A business
-vault's dichiarante (a ruolo) isn't supported yet.
+the vault's own, and the pratica record names the person. In a business
+vault a person always signs: --for names one whose ruolo is one of the
+entry's dichiarante roles, and "in qualità di" is the role they sign as.
+
+Other people (a procuratore, the soci): --party ROLE=SLUG names who has a
+ruolo the form reads, so the token reaches only them. A party row reads
+that person's fields; without one it is asked by its label ("no" when the
+role isn't part of this pratica). A repeat by ruolo is a row of a table per
+person (columns), or else an allegato: its pages copied at the end of the
+form once per person after the first. Everyone's ruolo.tipo is read, so a
+role --party didn't name, or a person without it, fails the run.
 
 The vault: --server S.json, {"url": ..., "tokens": {"prepare": ..., "track":
 ...}}, is the synthetic vault over TCP. --vault-dir is a real one (~/.pvault,
@@ -60,6 +81,7 @@ PyMuPDF (fitz).
 """
 
 import argparse
+import base64
 import datetime as dt
 import getpass
 import hashlib
@@ -80,12 +102,13 @@ import urllib.request
 CANALE = {"portal": "portale", "desk": "sportello", "post": "posta"}
 CLOSED = {"completata", "respinta", "annullata"}
 MAP_KINDS = {"direct", "concat", "fallback", "repeat", "ask", "blank_with_reason"}
-MAP_KEYS = MAP_KINDS | {"fields", "template", "columns"}
+MAP_KEYS = MAP_KINDS | {"fields", "template", "columns", "party"}
 ROW_KEYS = {"label", "map", "notes", "optional", "choices", "when"}
 INK = (0, 0, 0.55)
 # Person categories that stay the vault's own when someone else signs, as
-# the library's dichiarante says.
+# the library's dichiarante says; but the role one signs as is the signer's.
 VAULT_OWN = {"business", "locale"}
+SIGNERS_OWN = {"business.qualita_dichiarante"}
 SLUG = re.compile(r"[a-z][a-z0-9-]{0,31}")
 ISO_DATE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
 # Words a form prints before an address box that an address also starts with.
@@ -114,8 +137,53 @@ def italian_date(value):
 
 
 def said(answer):
-    """An answer as compared with a layout's list: "No." is no, "Sì" is sì."""
-    return str(answer).translate(PLAIN).strip().rstrip(".!").strip().lower()
+    """An answer as compared with a layout's list: "No." is no, "Sì" is sì,
+    legale_rappresentante is legale rappresentante."""
+    return str(answer).translate(PLAIN).replace("_", " ").strip().rstrip(".!").strip().lower()
+
+
+def role_list(ruolo):
+    """A library ruolo: one, or a list."""
+    return ruolo if isinstance(ruolo, list) else [ruolo]
+
+
+def human_role(code):
+    """A ruolo as a form writes it: legale rappresentante."""
+    return code.replace("_", " ")
+
+
+def parse_parties(given):
+    """--party ROLE=SLUG[,SLUG...], repeatable: who each role is, by slug."""
+    out = {}
+    for item in given or []:
+        role, _, slugs = item.partition("=")
+        people = slugs.split(",") if slugs else []
+        if not re.fullmatch(r"[a-z_]+", role) or not people or not all(SLUG.fullmatch(p) for p in people):
+            sys.exit(f"--party {item!r}: want ROLE=SLUG[,SLUG...], e.g. --party procuratore=bianchi")
+        out.setdefault(role, [])
+        out[role] += [p for p in people if p not in out[role]]
+    return out
+
+
+def party_slug(row, parties):
+    """The person a party row reads, as --party named them, or None."""
+    return next((parties[r][0] for r in role_list(row["map"]["party"]["ruolo"]) if parties.get(r)), None)
+
+
+def repeat_people(spec, parties, signer):
+    """The people a repeat by ruolo has a row (or an allegato) for, as --party
+    named them, in order; except: dichiarante leaves out whoever signs."""
+    out = []
+    for r in role_list(spec["ruolo"]):
+        out += [p for p in parties.get(r, []) if p not in out]
+    return [p for p in out if not (spec.get("except") == "dichiarante" and p == signer)]
+
+
+def is_allegato(row):
+    """A repeat by ruolo without columns: one allegato (copy of its pages)
+    per person, rather than a row of a table."""
+    m = row["map"]
+    return isinstance(m.get("repeat"), dict) and not m.get("columns")
 
 
 def ticks(row, value):
@@ -201,29 +269,39 @@ def default_keychain(vault_dir):
     return f"pvault-{name}-pratica-fill"
 
 
+def pvault_command(vault_dir):
+    """How the user types pvault for this vault folder, as words."""
+    full = os.path.normpath(os.path.expanduser(vault_dir or "~/.pvault"))
+    base = os.path.basename(full)
+    if base == ".pvault" and os.path.dirname(full) == os.path.expanduser("~"):
+        return ["pvault"]
+    if base.startswith(".pvault-") and os.path.dirname(full) == os.path.expanduser("~"):
+        return ["pvault", "--vault", base.removeprefix(".pvault-")]
+    return [f"VAULT_DIR={shlex.quote(full)}", "pvault"]
+
+
 def token_command(vault_dir, token):
     """The pvault command that saves this token where run --vault-dir reads it."""
     full = os.path.normpath(os.path.expanduser(vault_dir))
-    base = os.path.basename(full)
-    if base == ".pvault" and os.path.dirname(full) == os.path.expanduser("~"):
-        pvault = ["pvault"]
-    elif base.startswith(".pvault-") and os.path.dirname(full) == os.path.expanduser("~"):
-        pvault = ["pvault", "--vault", base.removeprefix(".pvault-")]
-    else:
-        pvault = [f"VAULT_DIR={shlex.quote(full)}", "pvault"]
+    pvault = pvault_command(full)
     args = ["create-service-token", "pratica-fill", "--scope", token["scope"], "--access", token["access"],
             "--ttl", "1h", "--keychain", default_keychain(full)]
     return " ".join(pvault + [shlex.quote(x) for x in args])
 
 
-def asks(form, layout):
+def asks(form, layout, parties=None):
     """The ask rows, as the user is asked them: a row whose answers go into a
     table takes rows by column; one with boxes to tick, the values that tick
     each box."""
     tables = {b["label"]: b["into_table"] for b in (layout or {}).get("boxes", []) if "into_table" in b}
-    columns = {r["label"]: [c["label"] for c in r["map"]["columns"]] for r in form["fields"] if "repeat" in r["map"]}
+    columns = {r["label"]: [c["label"] for c in r["map"]["columns"]] for r in form["fields"] if r["map"].get("columns")}
     out = []
     for row in form["fields"]:
+        if "party" in row["map"] and not party_slug(row, parties or {}):
+            roles = " o ".join(human_role(r) for r in role_list(row["map"]["party"]["ruolo"]))
+            out.append({"label": row["label"], "question": f"{row['label']}: dati del {roles}. Se è nel vault, "
+                        f"--party {role_list(row['map']['party']['ruolo'])[0]}=<slug>; se non c'è per questa pratica, \"no\""})
+            continue
         if "ask" not in row["map"]:
             continue
         q = {"label": row["label"], "question": row["map"]["ask"]}
@@ -248,15 +326,24 @@ def check_supported(entry, form, signer="io"):
     for row in form["fields"]:
         m = row["map"]
         kinds = set(m) & MAP_KINDS
-        if "party" in m or isinstance(m.get("repeat"), dict):
-            sys.exit(f"row {row['label']!r}: party and repeat by ruolo aren't supported yet")
         if len(kinds) != 1 or set(m) - MAP_KEYS or set(row) - ROW_KEYS:
             sys.exit(f"row {row['label']!r}: unknown map or row keys {sorted(set(m) | set(row))}")
+        if row.get("choices") and not ((("direct" in m or "fallback" in m) and "template" not in m) or "ask" in m):
+            sys.exit(f"row {row['label']!r}: choices need a row of one field (direct or fallback, no template) or an ask")
         when = row.get("when")
         if when and not any(r["label"] == when["field"] and "ask" in r["map"] and r.get("choices") for r in form["fields"]):
             sys.exit(f"row {row['label']!r}: when names {when['field']!r}, which isn't an ask with boxes to tick")
-        if "repeat" in m and not m.get("columns"):
+        if m.get("repeat") == "famiglia" and not m.get("columns"):
             sys.exit(f"row {row['label']!r}: a table needs the procedure's columns")
+
+
+# The vault's scope for filing signing requests (vault.SigningScopeID).
+SIGNING_SCOPE = "firma_autografa.signing"
+
+
+def signable(form, layout):
+    """A signed form whose layout says where the signature goes."""
+    return bool(form.get("signature_required") and (layout or {}).get("signatures"))
 
 
 def refs(m):
@@ -276,7 +363,9 @@ def person_categories(schema):
 def signer_id(ref, signer, people):
     """The field a row's ref reads when signer signs: their own for an
     unprefixed person category, the vault's for the rest."""
-    if signer == "io" or ref.startswith("*:") or ":" in ref.split(".", 1)[0] or category(ref) not in people:
+    if signer == "io" or ref.startswith("*:") or ":" in ref.split(".", 1)[0]:
+        return ref
+    if category(ref) not in people and ref not in SIGNERS_OWN:
         return ref
     return f"{signer}:{ref}"
 
@@ -289,7 +378,7 @@ def as_signer(values, signer, people):
     out = {k: v for k, v in values.items() if signer_id(k, signer, people) == k}
     prefix = signer + ":"
     for k, v in values.items():
-        if k.startswith(prefix) and category(k) in people:
+        if k.startswith(prefix) and (category(k) in people or k[len(prefix):] in SIGNERS_OWN):
             out[k[len(prefix):]] = v
     return out
 
@@ -334,13 +423,26 @@ def form_fields(form):
     return out
 
 
-def needs(entry, form, draft=False, signer="io", people=()):
+def needs(entry, form, draft=False, signer="io", people=(), parties=None, layout=None):
     check_supported(entry, form, signer)
+    parties = parties or {}
     patterns = set()
     for row in form["fields"]:
         m = row["map"]
         read = refs(m) + [n for n in template_names(m.get("template", "")) if "." in n and not n.startswith(".")]
         read += [c["field"] for o in row.get("optional", []) for c in o.get("required_if", [])]
+        if "party" in m or isinstance(m.get("repeat"), dict):
+            # Only the people --party names, and who holds which ruolo, so
+            # the run can tell a role nobody was named for.
+            patterns.add("*:ruolo.tipo")
+            if "party" in m:
+                who = [party_slug(row, parties)] if party_slug(row, parties) else []
+            else:
+                who = repeat_people(m["repeat"], parties, None)
+                read = [n for n in m["fields"] + [n for c in m.get("columns", []) for n in template_names(c["template"])]
+                        if "." in n]
+            patterns |= {f"{p}:{category(ref)}.*" for p in who for ref in read}
+            continue
         if m.get("repeat") == "famiglia":
             # Who is in the stato di famiglia, and their names for relazione_label.
             read += ["*:famiglia.*", "*:identity.*"] + m["fields"]
@@ -349,17 +451,26 @@ def needs(entry, form, draft=False, signer="io", people=()):
                 patterns.add(f"*:{category(ref)}.*")
             else:
                 patterns.add(signer_id(f"{category(ref)}.*", signer, people))
+                if ref in SIGNERS_OWN and signer != "io":
+                    patterns.add(f"{signer}:{ref}")
     patterns |= {signer_id(f"{category(r['compute']['from'])}.*", signer, people)
                  for r in entry.get("deadline", {}).get("rules", []) if "compute" in r}
+    if "dichiarante" in entry:
+        # In a business vault, whether the signer holds a signing ruolo.
+        patterns.add("*:ruolo.tipo")
     # *:x.* reaches the owner too, so x.* beside it adds nothing.
     patterns = {p for p in patterns if f"*:{p}" not in patterns}
     if draft:
-        return {"for": signer, "tokens": {"draft": {"scope": ",".join(sorted(patterns)), "access": "read"}}}
+        return {"for": signer, "parties": parties, "tokens": {"draft": {"scope": ",".join(sorted(patterns)), "access": "read"}}}
     records = {signer_id(f"{category(r['field'])}.*", signer, people) for r in entry.get("records", [])}
+    prepare = sorted(patterns) + ["pratiche.*"]
+    if signer == "io" and signable(form, layout):
+        prepare.append(SIGNING_SCOPE)
     return {
         "for": signer,
+        "parties": parties,
         "tokens": {
-            "prepare": {"scope": ",".join(sorted(patterns) + ["pratiche.*"]), "access": "append"},
+            "prepare": {"scope": ",".join(prepare), "access": "append"},
             "track": {"scope": ",".join(["pratiche.*"] + sorted(records)), "access": "write"},
         }
     }
@@ -536,7 +647,12 @@ def render(template, lookup):
                 out.append(node[1])
             elif node[0] == "var":
                 # A vault date is YYYY-MM-DD; forms want DD/MM/YYYY, |date or not.
+                # |or:TEXT is what an empty field means (Italia).
                 v = italian_date(lookup(node[1]) or "")
+                if node[2] == "digits":  # NA-123456 → 123456
+                    v = re.sub(r"\D", "", v)
+                if not v and node[2].startswith("or:"):
+                    v = node[2][3:]
                 if not v:
                     missing.append(node[1])
                 out.append(v)
@@ -579,16 +695,18 @@ def placed_names(template):
     def walk(nodes, outside):
         for n in nodes:
             if n[0] == "var":
-                yield n[1], outside
+                yield n[1], outside and not n[2].startswith("or:")
             elif n[0] == "group":
                 yield from walk(n[1], False)
     return list(dict.fromkeys(walk(parse_template(template), True)))
 
 
-def resolve(form, values, household, answers):
+def resolve(form, values, household, answers, who):
     """Each row as value, missing (the vault lacks something it needs: ask
     the user), answered, ask (not answered yet) or blank, the ways the skill
-    reads a row. A table's value lists its people, each a cell per column."""
+    reads a row. A table's value lists its people, each a cell per column;
+    an allegato's, each person's text. who: the raw values, the signer, the
+    person categories, --party and each person's ruolo (Who)."""
     rows = []
     by_label = {r["label"]: r for r in form["fields"]}
     for row in form["fields"]:
@@ -604,8 +722,12 @@ def resolve(form, values, household, answers):
             if not {c["box"] for c in ticks(by_label[when["field"]], answer)} & set(when["ticks"]):
                 rows.append({**out, "status": "blank", "reason": f"only when {when['field']!r} is {' or '.join(when['ticks'])}"})
                 continue
-        if "repeat" in m:
+        if isinstance(m.get("repeat"), dict):
+            out.update(ruolo_row(row, who))
+        elif "repeat" in m:
             out.update(table_row(row, values, household, answers))
+        elif "party" in m:
+            out.update(party_row(row, who, answers))
         elif "ask" in m:
             # A list is rows for a table; "no" or "nessuno" leaves a text box
             # empty, but is an answer to boxes to tick.
@@ -622,6 +744,81 @@ def resolve(form, values, household, answers):
             out.update(scalar_row(row, values))
         rows.append(out)
     return rows
+
+
+class Who:
+    """Whose data the rows read: the raw values (people prefixed), who
+    signs, the person categories, the people --party named by role, and
+    each person's ruolo (from *:ruolo.tipo)."""
+
+    def __init__(self, raw, signer="io", people=(), parties=None):
+        self.raw, self.signer, self.people, self.parties = raw, signer, people, parties or {}
+        self.roles = {k.split(":", 1)[0]: set(v.split(",")) for k, v in raw.items()
+                      if k.endswith(":ruolo.tipo") and ":" in k.split(".", 1)[0]}
+
+    def holding(self, ruoli):
+        """Everyone whose ruolo includes one of ruoli."""
+        return sorted(p for p, r in self.roles.items() if r & set(ruoli))
+
+
+def party_row(row, who, answers):
+    """A row read from the person --party named for its ruolo; without one,
+    an ask by its label ("no" when the role isn't part of this pratica)."""
+    ruoli = role_list(row["map"]["party"]["ruolo"])
+    named = [p for r in ruoli for p in who.parties.get(r, [])]
+    if len(set(named)) > 1:
+        # One person fills the section: the user picks which.
+        return {"status": "ask", "question": f"which one? --party {ruoli[0]}=" + " or ".join(dict.fromkeys(named))}
+    slug = party_slug(row, who.parties)
+    if slug:
+        out = scalar_row(row, as_signer(who.raw, slug, who.people))
+        for m in out.get("missing", []):
+            m["field"] = signer_id(m["field"], slug, who.people)
+        return {**out, "party": slug}
+    answer = answers.get(row["label"])
+    if answer not in (None, ""):
+        if said(answer) in NOTHING:
+            return {"status": "blank", "reason": f"answered {answer!r}"}
+        return {"status": "answered", "value": answer}
+    held = who.holding(ruoli)
+    hint = f"--party {ruoli[0]}=" + (" or ".join(held) if held else "<slug>")
+    return {"status": "ask", "question": f"whose data? {hint}" + ("" if held else f", or the answer (\"no\" if no {human_role(ruoli[0])})")}
+
+
+def ruolo_row(row, who):
+    """A repeat by ruolo: the people --party named with those ruoli (but the
+    signer, with except: dichiarante), each a row of the table (columns) or
+    an allegato; refused when the vault has someone with the ruolo who
+    wasn't named, so nobody is left off."""
+    m = row["map"]
+    spec = m["repeat"]
+    ruoli = role_list(spec["ruolo"])
+    people = repeat_people(spec, who.parties, who.signer)
+    left = [p for p in who.holding(ruoli) if p not in people and not (spec.get("except") == "dichiarante" and p == who.signer)]
+    if left:
+        return {"status": "ask", "question": "also " + ", ".join(left) + f" (with --party {ruoli[0]}=" + ",".join(people + left) + ")"}
+    wrong = [p for p in people if not who.roles.get(p, set()) & set(ruoli)]
+    if wrong:
+        return {"status": "ask", "question": f"{', '.join(wrong)} isn't {' or '.join(human_role(r) for r in ruoli)} in the vault"}
+    if not people:
+        return {"status": "blank", "reason": f"nobody is {' or '.join(human_role(r) for r in ruoli)}"}
+    optional = {o["field"]: o for o in row.get("optional", [])}
+    columns = m.get("columns") or [{"label": "", "template": m.get("template") or " ".join("{" + f + "}" for f in m["fields"])}]
+    lines, missing = [], []
+    for slug in people:
+        def lookup(name, slug=slug):
+            return who.raw.get(f"{slug}:{name[2:]}") if name.startswith("*:") else who.raw.get(name)
+        cells = {}
+        for col in columns:
+            text, _ = render(col["template"], lookup)
+            cells[col["label"]] = " ".join(text.split())
+            missing += gaps(placed_names(col["template"]), lookup, optional, lookup,
+                            lambda n, slug=slug: f"{slug}:{n[2:]}" if n.startswith("*:") else n)
+        lines.append({"slug": slug, "cells": cells} if m.get("columns") else {"slug": slug, "text": cells[""]})
+    out = {"status": "value", "value": lines}
+    if missing:
+        out["missing"] = list({x["field"]: x for x in missing}.values())
+    return out
 
 
 def scalar_row(row, values):
@@ -651,7 +848,8 @@ def scalar_row(row, values):
     if not text:
         return {"status": "blank", "reason": "optional, and empty"}
     if row.get("choices"):
-        text = values.get(m["direct"], "")
+        # The field's own value picks the box (a fallback's, the first set).
+        text = values.get(m["direct"], "") if "direct" in m else values.get(first, "")
     return {"status": "value", "value": text, "source": source}
 
 
@@ -824,8 +1022,11 @@ class Pen:
 
 
 def find_widget(page, name):
+    """name, or name#i: the i-th field of that name on the page; on an
+    allegato's copy, the field as the copy renamed it ("name [n]")."""
     name, _, i = name.partition("#")
-    found = [w for w in page.widgets() if w.field_name == name]
+    copy = re.compile(re.escape(name) + r" \[\d+\]")
+    found = [w for w in page.widgets() if w.field_name == name or copy.fullmatch(w.field_name)]
     i = int(i or 0)
     return found[i] if i < len(found) else None
 
@@ -835,7 +1036,7 @@ def is_address(row):
     {.indirizzo}), whose value may repeat the street word a form prints."""
     m = row["map"]
     names = refs(m) + template_names(m.get("template", ""))
-    return any(n.rsplit(".", 1)[-1].startswith("indirizzo") for n in names)
+    return any("indirizzo" in n.rsplit(".", 1)[-1] for n in names)
 
 
 def put_write(pen, place, value, page):
@@ -853,11 +1054,46 @@ def continuation(box):
     return [(c["page"], c["rect"]) if isinstance(c, dict) else (page, c) for c in box.get("continuation", [])]
 
 
+def allegati(fitz, pdf_in, layout, library, by_label, doc):
+    """The pages of each allegato (a repeat by ruolo without columns), copied
+    at the end of the form once per person after the first: {page: [its
+    page for each person]}. An allegato nobody is in keeps its one page, so
+    the other rows on it are still filled. Problems too."""
+    groups, problems = {}, []
+    for box in layout["boxes"]:
+        lib = library.get(box["label"])
+        if not lib or not is_allegato(lib):
+            continue
+        g = groups.setdefault(json.dumps(lib["map"]["repeat"], sort_keys=True), {"pages": set(), "n": 0})
+        g["pages"] |= {box.get("page", 1)} | {p for p, _ in continuation(box)}
+        row = by_label.get(box["label"])
+        if row and row["status"] == "value":
+            g["n"] = len(row["value"])
+    copies = {}
+    for g in groups.values():
+        pages = sorted(p for p in g["pages"] if 1 <= p <= len(doc))
+        if any(p in copies for p in pages):
+            problems.append(f"pages {pages} belong to two allegati")
+            continue
+        for p in pages:
+            copies[p] = [p]
+        # From a second open of the form: its fillable fields come renamed
+        # ("name [n]"), so each copy's are its own, radio groups too.
+        source = fitz.open(pdf_in)
+        for _ in range(1, g["n"]):
+            for p in pages:
+                doc.insert_pdf(source, from_page=p - 1, to_page=p - 1)
+                copies[p].append(len(doc))
+    return copies, problems
+
+
 def fill_pdf(fitz, pdf_in, pdf_out, layout, form, rows):
     by_label = {r["label"]: r for r in rows}
     library = {r["label"]: r for r in form["fields"]}
     doc = fitz.open(pdf_in)
+    copies, problems = allegati(fitz, pdf_in, layout, library, by_label, doc)
     pen = Pen(fitz, doc, layout.get("font_size", 9))
+    pen.problems += problems
     ticked = set()
 
     for box in layout["boxes"]:
@@ -865,48 +1101,18 @@ def fill_pdf(fitz, pdf_in, pdf_out, layout, form, rows):
         row = by_label.get(label)
         if row is None or "skip" in box or "into_table" in box:
             continue
-        if "table" in box:
-            fill_table(pen, box, row, [by_label[b["label"]] for b in layout["boxes"]
-                                       if b.get("into_table") == label and b["label"] in by_label])
-            continue
-        if row["status"] not in ("value", "answered"):
-            continue
-        value = row["value"]
-        if isinstance(value, str) and "parts" not in box:
-            value = italian_date(value.strip())
-        if "choices" in box or "choice_widgets" in box:
-            hit = ticks(library[label], value)
-            # A field's value must tick a box; an answer may also say no.
-            if not hit and ("ask" not in library[label]["map"] or said(value) not in NOTHING):
-                boxes = "; ".join(f"{c['box']}: {', '.join(c['values'])}" for c in library[label]["choices"])
-                pen.problems.append(f"{label}: {value!r} ticks none of its boxes ({boxes})")
-            for c in hit:
-                if "choice_widgets" in box:
-                    pen.widget(page, box["choice_widgets"][c["box"]])
-                else:
-                    pen.put(box["choices"][c["box"]], "X", center=True, page=page)
-                ticked.add((label, c["box"]))
-                if c.get("write_value") and said(value) != said(c["box"]):
-                    put_write(pen, box["write"][c["box"]], value, page)
-        elif "widget" in box:
-            pen.widget(page, box["widget"], value)
-        elif "cells" in box:
-            for (cx0, cx1), ch in zip(box["cells"], value):
-                pen.put([cx0, box["baseline"] - 9, cx1, box["baseline"] + 2.6], ch, center=True, page=page)
-            if len(value) != len(box["cells"]):
-                pen.problems.append(f"{label}: {len(value)} characters for {len(box['cells'])} cells")
-        elif "parts" in box:
-            m = ISO_DATE.fullmatch(value)
-            parts = [m[3], m[2], m[1]] if m else value.split("/")  # DD, MM, YYYY
-            for rect, part in zip(box["parts"], parts):
-                pen.put(rect, part, center=True, page=page)
-        else:
-            if is_address(library[label]):
-                value = pen.address(page, box["rect"], value)
-            if "continuation" in box:
-                pen.lines([(page, box["rect"])] + continuation(box), value)
-            else:
-                pen.put(box["rect"], value, page=page)
+        # An allegato's page is filled once per person, on its copy for them.
+        for k, _ in enumerate(copies.get(page, [page])):
+            def place(p, k=k):
+                return copies[p][k] if copies.get(p) else p
+            if "table" in box:
+                fill_table(pen, box, row, [by_label[b["label"]] for b in layout["boxes"]
+                                           if b.get("into_table") == label and b["label"] in by_label], place(page))
+                continue
+            if row["status"] not in ("value", "answered"):
+                continue
+            value = row["value"][k]["text"] if is_allegato(library[label]) else row["value"]
+            fill_box(pen, box, library[label], value, place, ticked)
     for u in layout.get("unmapped", []):
         w = u.get("needed_when")
         if w and (w["field"], w["box"]) in ticked:
@@ -917,7 +1123,51 @@ def fill_pdf(fitz, pdf_in, pdf_out, layout, form, rows):
     return pen.written, pen.problems, pen.name()
 
 
-def fill_table(pen, box, row, extra_rows):
+def fill_box(pen, box, row, value, place, ticked):
+    """One box's value, on the page place gives (an allegato's copy)."""
+    label, page = box["label"], place(box.get("page", 1))
+    if isinstance(value, str) and "parts" not in box:
+        value = italian_date(value.strip())
+    if "choices" in box or "choice_widgets" in box:
+        hit = ticks(row, value)
+        # A field's value must tick a box; an answer may also say no.
+        if not hit and ("ask" not in row["map"] or said(value) not in NOTHING):
+            boxes = "; ".join(f"{c['box']}: {', '.join(c['values'])}" for c in row["choices"])
+            pen.problems.append(f"{label}: {value!r} ticks none of its boxes ({boxes})")
+        for c in hit:
+            if "choice_widgets" in box:
+                pen.widget(page, box["choice_widgets"][c["box"]])
+            else:
+                pen.put(box["choices"][c["box"]], "X", center=True, page=page)
+            ticked.add((label, c["box"]))
+            if c.get("write_value") and said(value) != said(c["box"]):
+                put_write(pen, box["write"][c["box"]], value, page)
+    elif "widget" in box:
+        pen.widget(page, box["widget"], value)
+    elif "cells" in box:
+        # A date in cells is its digits: the form prints the slashes.
+        if re.fullmatch(r"\d{2}/\d{2}/\d{4}", value):
+            value = value.replace("/", "")
+        for (cx0, cx1), ch in zip(box["cells"], value):
+            pen.put([cx0, box["baseline"] - 9, cx1, box["baseline"] + 2.6], ch, center=True, page=page)
+        # partial: a shorter value (a REA number) leaves the last cells empty.
+        if len(value) > len(box["cells"]) or (len(value) < len(box["cells"]) and not box.get("partial")):
+            pen.problems.append(f"{label}: {len(value)} characters for {len(box['cells'])} cells")
+    elif "parts" in box:
+        m = ISO_DATE.fullmatch(value)
+        parts = [m[3], m[2], m[1]] if m else value.split("/")  # DD, MM, YYYY
+        for rect, part in zip(box["parts"], parts):
+            pen.put(rect, part, center=True, page=page)
+    else:
+        if is_address(row):
+            value = pen.address(page, box["rect"], value)
+        if "continuation" in box:
+            pen.lines([(page, box["rect"])] + [(place(p), r) for p, r in continuation(box)], value)
+        else:
+            pen.put(box["rect"], value, page=page)
+
+
+def fill_table(pen, box, row, extra_rows, page=None):
     """A table: the row's people, then the answers of the asks that go into
     it, each a row by column label."""
     table, label = box["table"], box["label"]
@@ -934,7 +1184,7 @@ def fill_table(pen, box, row, extra_rows):
     for (top, bottom), cells in zip(table["rows"], lines):
         for column, (x0, x1) in table["columns"].items():
             if cells.get(column):
-                pen.put([x0, top, x1, bottom], italian_date(cells[column]), page=box.get("page", 1))
+                pen.put([x0, top, x1, bottom], italian_date(cells[column]), page=page or box.get("page", 1))
 
 
 def read_back(fitz, pdf_path, written, font):
@@ -1056,7 +1306,11 @@ def layout_problems(fitz, pdf_path, layout):
             out.append(f"{name}: is on page {n}, which the form doesn't have")
             continue
         for x0, x1 in box.get("cells", []):
-            if not any(abs(r.x0 - x0) <= 1 and abs(r.x1 - x1) <= 1 and 0 <= r.y0 - box["baseline"] <= 3 for r in m["shapes"]):
+            # Drawn, or typed as |__|__| (underscores between the cell's bars).
+            drawn = any(abs(r.x0 - x0) <= 1 and abs(r.x1 - x1) <= 1 and 0 <= r.y0 - box["baseline"] <= 3 for r in m["shapes"])
+            typed = any(x0 - 0.5 <= (u[0] + u[2]) / 2 <= x1 + 0.5 and u[1] - 1 <= box["baseline"] <= u[3] + 1
+                        for u in m["underscores"])
+            if not drawn and not typed:
                 out.append(f"{name}: cell {x0}-{x1} has no underline")
         for square in box.get("choices", {}).values():
             if not any(near(r, square) for r in m["shapes"]) and not box_char(m, square):
@@ -1092,6 +1346,7 @@ def run(a):
     layout = load(a.layout or library_file(a, "layouts", ".json"))
     form = form_of(entry, a.form)
     signer = getattr(a, "for")
+    parties = parse_parties(a.party)
     check_supported(entry, form, signer)
     vaults = connect(a)
     answered = load(a.answers) if a.answers else {}
@@ -1121,8 +1376,7 @@ def run(a):
 
     prepare = vaults["draft"] if a.draft and "draft" in vaults else vaults["prepare"]
     _, info = prepare.call("GET", "/vault/status")
-    if "dichiarante" in entry and isinstance(info, dict) and info.get("kind") == "impresa":
-        sys.exit("a business vault's dichiarante is a person with a ruolo, which this tool doesn't read yet")
+    business = isinstance(info, dict) and info.get("kind") == "impresa"
     status, schema = prepare.call("GET", "/vault/schema")
     if status != 200:
         sys.exit(f"reading the vault's schema: {status} {schema}")
@@ -1137,6 +1391,9 @@ def run(a):
         local = field.split(":", 1)[1] if ":" in field.split(".", 1)[0] else field
         if not re.fullmatch(r"([a-z][a-z0-9-]{0,31}:)?[a-z0-9_-]+\.[a-z0-9_]+", field) or local not in read:
             check(f"answers.json value {field} is a field this form reads", False)
+        elif category(field) == "ruolo":
+            # Who may sign, and who --party may name, is the vault's to say.
+            check(f"answers.json value {field} is no ruolo", False, "who holds a ruolo is set in the vault, not here")
         elif field in values:
             check(f"answers.json value {field} is not in the vault", False, "the vault has it: change it there")
         elif not isinstance(value, str) or not value.strip():
@@ -1149,8 +1406,28 @@ def run(a):
     if signer != "io":
         known = [m["slug"] for m in household.get("members", [])] if status == 200 else []
         check(f"{signer} is a person in the vault", signer in known, "" if signer in known else "not in the household this token sees")
+    who = Who(values, signer, people, parties)
+    signing = role_list(entry["dichiarante"]["ruolo"]) if "dichiarante" in entry else []
+    if business and signing:
+        # The business signs through a person whose ruolo is one of these.
+        can = who.holding(signing)
+        if signer == "io":
+            sys.exit(f"a business vault's form is signed by a person who is {' or '.join(human_role(r) for r in signing)}: "
+                     f"pass --for to needs and run, " + (f"one of {', '.join(can)}" if can else "and add them to the vault first"))
+        check(f"{signer} signs as {' or '.join(human_role(r) for r in signing)}", signer in can,
+              "" if signer in can else f"their ruolo is {', '.join(sorted(who.roles.get(signer, ()))) or 'not in the vault'}")
+    for role, slugs in parties.items():
+        for p in slugs:
+            check(f"{p} is {human_role(role)}", role in who.roles.get(p, ()),
+                  "" if role in who.roles.get(p, ()) else f"their ruolo is {', '.join(sorted(who.roles.get(p, ()))) or 'not in the vault'}")
     view = as_signer(values, signer, people)
-    rows = resolve(form, view, household if status == 200 else {}, answers)
+    # "In qualità di" is the one role the signer signs as, as a form writes it.
+    if "ruolo.tipo" in view and signer != "io":
+        held = [r for r in signing if r in view["ruolo.tipo"].split(",")]
+        view["ruolo.tipo"] = human_role(held[0] if held else view["ruolo.tipo"].replace(",", ", "))
+    if "business.qualita_dichiarante" in view:
+        view["business.qualita_dichiarante"] = human_role(view["business.qualita_dichiarante"])
+    rows = resolve(form, view, household if status == 200 else {}, answers, who)
     for r in rows:
         for m in r.get("missing", []):
             m["field"] = signer_id(m["field"], signer, people)
@@ -1190,17 +1467,33 @@ def run(a):
     # redone) leaves the slug to it, and this one takes -2, -3...
     pratiche = pratiche_by_slug(values)
     base, n = slug, 1
+    resume = False
     while slug in pratiche:
         stato = pratiche[slug].get("stato")
         if stato not in CLOSED:
+            if a.sign and stato == "pronta":
+                # The record is open (an earlier run, or one whose signing request
+                # expired or failed): only the signing request is filed again.
+                resume = True
+                break
             check(f"no pratica {slug} is open yet", False, f"stato {stato}: resume it instead")
             return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
         n += 1
         slug = f"{base}-{n}"
 
     channels = [c for c in entry["channels"] if c["purpose"] == "procedure"]
-    channel = next((c for c in channels if c.get("preferred")), channels[0])
+    if a.channel:
+        channel = next((c for c in channels if c["type"] == a.channel), None)
+        if not check(f"the entry has a {a.channel} channel for this procedure", channel is not None,
+                     ", ".join(sorted({c["type"] for c in channels}))):
+            return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    else:
+        channel = next((c for c in channels if c.get("preferred")), channels[0])
     destinatario = channel.get("address") or channel.get("url") or channel.get("name", "")
+    signing = request_signature(a, prepare, entry, form, layout, channel, slug, check) if a.sign else None
+    if resume:
+        print(f"  pratica {slug} is already open: only the signing request was filed")
+        return finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing)
     record = {
         "titolo": entry["title"],
         "ente": " – ".join(x for x in (entry["ente"]["name"], entry["ente"].get("office")) if x),
@@ -1208,7 +1501,10 @@ def run(a):
         "canale": channel["type"],
         "destinatario": destinatario,
         "playbook": a.playbook or "",
-        "prossimo_passo": f"Firmare il modulo e inviarlo ({channel['type']}: {destinatario})",
+        # No request id: it expires in 30 minutes, the record doesn't.
+        "prossimo_passo": (f"Firmare con {' '.join(pvault_command(a.vault_dir) + ['sign', 'review'])} (la richiesta è in "
+                           f"{' '.join(pvault_command(a.vault_dir) + ['sign', 'list'])}), poi inviarlo ({channel['type']}: {destinatario})"
+                           if signing else f"Firmare il modulo e inviarlo ({channel['type']}: {destinatario})"),
         "persona": signer if signer != "io" else "",
     }
     if start:
@@ -1248,12 +1544,53 @@ def run(a):
                 check(f"the ente's {field} matches what was declared", str(reply[field]) == want, f"{reply[field]} vs {want}")
         if "data_scadenza" in record:
             check("a closed pratica leaves expiring", expiring(track) == [])
-    return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    return finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing)
 
 
-def finish(a, entry, form, pdf_hash, slug, rows, results, checks):
+def request_signature(a, prepare, entry, form, layout, channel, slug, check):
+    """--sign: ask the vault to stamp the user's signature on filled.pdf and
+    hold it for their approval. Returns the request (id, the command the user
+    runs, when it expires) or None, having recorded why as a failed check.
+    This tool can neither approve the request nor read the signed file."""
+    if getattr(a, "for") != "io":
+        check("the signer is the vault's owner", False, "only the owner can sign through the vault so far")
+        return None
+    if not signable(form, layout):
+        check("the layout has a signature box on a signed form", False, "nothing says where to sign")
+        return None
+    if any(b.get("for", "dichiarante") != "dichiarante" for b in layout["signatures"]):
+        check("every signature box is the dichiarante's", False, "only the owner can sign through the vault so far")
+        return None
+    way = next((x for x in form.get("signing", []) if x["channel"] == channel["type"]), None)
+    if not way or "handwritten" not in way["ways"] or way["status"] == "disputed":
+        check(f"the library lists a handwritten signature for {channel['type']}", False,
+              "sign it by hand, or have the library say how this channel takes a signature")
+        return None
+    if way["status"] != "verified":
+        print(f"  note: the library has not verified that {channel['type']} takes a handwritten signature; "
+              "the ente has not confirmed it")
+    with open(f"{a.out}/filled.pdf", "rb") as f:
+        pdf = f.read()
+    placements = [{"page": b.get("page", 1), "rect": b["rect"], **({"date_rect": b["date_rect"]} if "date_rect" in b else {})}
+                  for b in layout["signatures"]]
+    purpose = " ".join(f"{entry['title']}: {form['name']}".split())[:200]
+    status, got = prepare.call("POST", "/vault/signing", {
+        "name": f"{slug}-{form['id']}.pdf", "purpose": purpose,
+        "pdf": base64.b64encode(pdf).decode(), "placements": placements})
+    if status != 200:
+        check("the vault takes the signing request", False,
+              f"{status} {got.get('error') if isinstance(got, dict) else got}")
+        return None
+    review = " ".join(pvault_command(a.vault_dir) + ["sign", "review", got["id"]])
+    check(f"signing request {got['id'][:8]} is waiting for the user", True, review)
+    return {"id": got["id"], "review": review, "expires_at": got["expires_at"], "date": got["date"]}
+
+
+def finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing=None):
     report = {"entry": entry["id"], "form": form["id"], "pdf_sha256": pdf_hash, "slug": slug,
               "rows": rows, "read_back": results, "checks": checks}
+    if signing:
+        report["signing"] = signing
     with open(f"{a.out}/report.json", "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     failed = [c for c in checks if not c["ok"]]
@@ -1274,10 +1611,16 @@ def main():
         s.add_argument("--draft", action="store_true", help="read only: no pratica record, no reply")
         s.add_argument("--for", default="io", metavar="SLUG",
                        help="who signs: io, the vault's owner (default), or a person's slug")
+        s.add_argument("--party", action="append", metavar="ROLE=SLUG[,SLUG]",
+                       help="who has a ruolo the form reads (a procuratore, the soci); repeatable")
     sub.choices["needs"].add_argument("--vault-dir", default="~/.pvault",
                                       help="the vault the token commands are for (default ~/.pvault)")
+    for name in ("needs", "run"):
+        sub.choices[name].add_argument("--layout", help="the library's layouts/<procedure>/<form>.json (--entry only)")
     r = sub.choices["run"]
-    r.add_argument("--layout", help="the library's layouts/<procedure>/<form>.json (--entry only)")
+    r.add_argument("--channel", help="the channel type the user chose (pec, email, post, portal...); default: the entry's preferred one")
+    r.add_argument("--sign", action="store_true",
+                   help="file a signing request for the filled PDF, to be approved with pvault sign review")
     where = r.add_mutually_exclusive_group(required=True)
     where.add_argument("--server", help="the synthetic vault's server.json")
     where.add_argument("--vault-dir", help="a real vault's folder, e.g. ~/.pvault")
@@ -1298,14 +1641,19 @@ def main():
     if a.cmd == "needs":
         entry = entry_of(a)
         form = form_of(entry, a.form)
+        layout = load(library_file(a, "layouts", ".json")) if a.library else (load(a.layout) if a.layout else None)
         signer = getattr(a, "for")
-        out = needs(entry, form, a.draft, signer, person_categories(needs_schema(a)) if signer != "io" else ())
+        parties = parse_parties(a.party)
+        out = needs(entry, form, a.draft, signer, person_categories(needs_schema(a)) if signer != "io" else (),
+                    parties, layout)
         out["commands"] = {name: token_command(a.vault_dir, t) for name, t in out["tokens"].items()}
-        out["ask"] = asks(form, load(library_file(a, "layouts", ".json")) if a.library else None)
+        out["ask"] = asks(form, layout, parties)
         print(json.dumps(out, ensure_ascii=False, indent=2))
         return 0
     if a.draft and a.reply:
         p.error("--draft writes nothing, so it takes no --reply")
+    if a.cmd == "run" and a.sign and a.draft:
+        p.error("--sign files a request in the vault, which a --draft never writes")
     return run(a)
 
 

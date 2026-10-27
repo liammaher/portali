@@ -179,6 +179,9 @@ func printFields(fields []vault.FieldInfo) {
 		if f.Sensitivity != "" && f.Sensitivity != "standard" {
 			sens = fmt.Sprintf(" [%s]", f.Sensitivity)
 		}
+		if f.Derived {
+			sens += " [computed]" // from the address, not stored (pvault locate)
+		}
 		if f.Value != "" {
 			fmt.Printf("%-*s  %s%s\n", width, f.ID, f.Value, sens)
 		} else {

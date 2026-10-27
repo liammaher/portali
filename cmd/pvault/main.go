@@ -57,10 +57,14 @@ func main() {
 		cmdDoc()
 	case "files":
 		cmdFiles()
+	case "sign":
+		cmdSign()
 	case "person", "member": // member is the older name, kept as an alias
 		cmdPerson()
 	case "expiring":
 		cmdExpiring()
+	case "locate":
+		cmdLocate()
 	case "retention":
 		cmdRetention()
 	case "onboard":
@@ -113,6 +117,12 @@ Commands:
                                    --check only verifies it, --ask-key types the key to test your copy
   expiring [days]                  Show documents and pratiche deadlines expired or due within days (default 90);
                                    in a business vault also people past retention and clients' ID scans past their period
+  locate [residenza|domicilio|locale|sede_legale]
+                                   Municipalità, quartiere and ASL distretto of an address in Napoli
+                                   (computed from the street; store a quartiere to settle a street that
+                                   crosses a boundary). Read-only; exits 3 when it can't tell
+  locate --street <via> [--civico <n>] [--quartiere <name>]
+                                   The same for an address typed here (reads nothing from the vault)
   retention [set <years> | unset]  How long people's data is kept after their ruolo.data_fine (no default)
   retention scans <days> | unset   How long clients' ID scans are kept after their pratiche close (no default)
   doc add <category> <file> [--sensitivity tier]
@@ -125,6 +135,9 @@ Commands:
   files sync | search | show | link ...
                                    Update the index, find files, link them to a person, client or pratica
                                    ('pvault files' lists every subcommand)
+  sign list                        Signing requests an agent filed, waiting for you
+  sign review <id> [--out file]    Open the signed PDF; if you confirm, approve it and save it
+  sign reject <id>                 Refuse a request
   person list                      List the other people in your vault: family members
                                    (relazione, age, stato di famiglia), or a business's people (ruolo)
   person show <slug>               Show a person's fields

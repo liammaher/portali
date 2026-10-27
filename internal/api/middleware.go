@@ -18,6 +18,8 @@ const (
 	maxTierKey     contextKey = "max_tier"
 	accessKey      contextKey = "access"
 	consumerKey    contextKey = "consumer"
+	tokenIDKey     contextKey = "token_id"
+	signGrantKey   contextKey = "sign_grant"
 )
 
 // scopeFromRequest returns the token scope. Session tokens get "*" (full access).
@@ -52,13 +54,25 @@ func accessFromRequest(r *http.Request) string {
 	return vault.AccessRead
 }
 
-// consumerFromRequest names the caller for records others read later (who
-// proposed a file link): the service token's consumer, else "you".
+// consumerFromRequest names the caller in the audit log and in who asked for
+// a signature: "session", "grant", or a service token's consumer name.
 func consumerFromRequest(r *http.Request) string {
-	if c, ok := r.Context().Value(consumerKey).(string); ok {
-		return c
-	}
-	return "you"
+	c, _ := r.Context().Value(consumerKey).(string)
+	return c
+}
+
+// tokenIDFromRequest tells one service token from another of the same consumer
+// name ("" for the user's own credentials).
+func tokenIDFromRequest(r *http.Request) string {
+	id, _ := r.Context().Value(tokenIDKey).(string)
+	return id
+}
+
+// signGrantFromRequest returns the signing request a sign grant is for, or
+// "" when the caller holds another kind of credential.
+func signGrantFromRequest(r *http.Request) string {
+	id, _ := r.Context().Value(signGrantKey).(string)
+	return id
 }
 
 // isSessionAuth returns true if the request was authenticated with a session token.
@@ -112,6 +126,9 @@ func bodySizeMiddleware(next http.Handler) http.Handler {
 			if r.Method == http.MethodPost && r.URL.Path == "/vault/documents" {
 				limit = vault.MaxDocumentSize
 			}
+			if r.Method == http.MethodPost && r.URL.Path == "/vault/signing" {
+				limit = vault.MaxSigningPDF*4/3 + maxBodySize // base64 and the placements
+			}
 			r.Body = http.MaxBytesReader(w, r.Body, limit)
 		}
 		next.ServeHTTP(w, r)
@@ -133,7 +150,7 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 		// the auto-lock timer.
 		if s.vault.ValidateToken(token) {
 			s.vault.TouchSession()
-			serveAuthed(next, w, r, "*", true, vault.TierPersonal, vault.AccessWrite)
+			serveAuthed(next, w, r, "session", "*", true, vault.TierPersonal, vault.AccessWrite)
 			return
 		}
 
@@ -142,7 +159,21 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 		// Only the approval itself resets the auto-lock timer, so an agent
 		// can't keep the vault open by polling with it.
 		if scope, access, ok := s.vault.ScopedGrant(token); ok {
-			serveAuthed(next, w, r, scope, false, vault.TierPersonal, access)
+			serveAuthed(next, w, r, "grant", scope, false, vault.TierPersonal, access)
+			return
+		}
+
+		// A sign grant is the user's approval of one signing request. It
+		// reads and approves that request and nothing else, so any other
+		// path is refused here, before a handler could mistake it for a
+		// credential of another kind.
+		if id, ok := s.vault.SigningGrant(token); ok {
+			if !signGrantMayReach(r, id) {
+				writeError(w, http.StatusForbidden, "scope_exceeded", "a sign grant only reads and approves its own signing request")
+				return
+			}
+			r = r.WithContext(context.WithValue(r.Context(), signGrantKey, id))
+			serveAuthed(next, w, r, "grant", "", false, "public", vault.AccessRead)
 			return
 		}
 
@@ -154,8 +185,9 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 				Scope:    svcToken.Scope,
 				Action:   "api_access",
 			})
-			r = r.WithContext(context.WithValue(r.Context(), consumerKey, svcToken.Consumer))
-			serveAuthed(next, w, r, svcToken.Scope, false, svcToken.MaxSensitivity, svcToken.Access)
+			// The stored hash names this token; its first 16 characters are enough.
+			r = r.WithContext(context.WithValue(r.Context(), tokenIDKey, svcToken.TokenStr[:16]))
+			serveAuthed(next, w, r, svcToken.Consumer, svcToken.Scope, false, svcToken.MaxSensitivity, svcToken.Access)
 			return
 		}
 
@@ -165,10 +197,19 @@ func (s *Server) authMiddleware(next http.Handler) http.Handler {
 
 // serveAuthed runs next with what the caller may reach: its scope, whether
 // it is the user's own session, its tier cap and its access level.
-func serveAuthed(next http.Handler, w http.ResponseWriter, r *http.Request, scope string, session bool, maxTier, access string) {
-	ctx := context.WithValue(r.Context(), scopeKey, scope)
+func serveAuthed(next http.Handler, w http.ResponseWriter, r *http.Request, consumer, scope string, session bool, maxTier, access string) {
+	ctx := context.WithValue(r.Context(), consumerKey, consumer)
+	ctx = context.WithValue(ctx, scopeKey, scope)
 	ctx = context.WithValue(ctx, sessionAuthKey, session)
 	ctx = context.WithValue(ctx, maxTierKey, maxTier)
 	ctx = context.WithValue(ctx, accessKey, access)
 	next.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// signGrantMayReach reports whether r is one of the two requests a sign grant
+// for request id may make.
+func signGrantMayReach(r *http.Request, id string) bool {
+	base := "/vault/signing/" + id
+	return (r.Method == http.MethodGet && r.URL.Path == base+"/candidate") ||
+		(r.Method == http.MethodPost && r.URL.Path == base+"/approve")
 }

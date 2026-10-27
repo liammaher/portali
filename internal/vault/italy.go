@@ -205,6 +205,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 		return v, err
 	}
 
+	if v, handled, err := normalizeLocated(id, category, name, value); handled {
+		return v, err
+	}
 	if v, handled, err := normalizeHousing(id, category, name, value); handled {
 		return v, err
 	}

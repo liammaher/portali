@@ -73,6 +73,8 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 | `vault_expiring` | Documents expired or expiring within N days (default 90), plus open pratiche deadlines |
 | `vault_documents` | List encrypted document scans the token may access |
 | `vault_document_add` | Encrypt and archive a local file (e.g. a downloaded receipt) |
+| `vault_sign_request` | Ask for the user's handwritten signature on a filled PDF (token scope `firma_autografa.signing`, append); the user approves it with `pvault sign review`, never the agent |
+| `vault_sign_status` | Check this token's signing requests; never returns the signed file |
 | `vault_document_get` | Read a stored document (images inline, others as an embedded resource, max 10 MB) |
 | `vault_files_search` | Find files in the user's folders and cloud drives (the file index, `pvault files`) by name or path words, or by whom/what they are linked to: names and places only, never content |
 | `vault_file_get` | One indexed file by id: places (with `local_path` when it is on this computer), size, date, links |
