@@ -105,7 +105,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "15",
+	Version: "16",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
