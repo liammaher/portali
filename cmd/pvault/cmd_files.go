@@ -41,6 +41,9 @@ const filesUsage = `usage:
   pvault files rule add <source> --path /Clienti/Rossi --for slug|io [--pratica slug] [--kind k]
   pvault files rule list [source]
   pvault files rule remove <rule-id>
+  pvault files proposals [accept|reject <id>]
+                                       Files an agent found through its own connector (Claude's Google Drive...)
+                                       and proposed for the index: nothing is indexed until you accept
   pvault files suggestions [accept|reject <id>]
                                        Links proposed by agents, for you to decide
   pvault files prune                   Drop index entries of files that are gone and linked to nothing`
@@ -71,6 +74,8 @@ func cmdFiles() {
 		cmdFilesRule()
 	case "suggestions":
 		cmdFilesSuggestions()
+	case "proposals":
+		cmdFilesProposals()
 	case "prune":
 		cmdFilesPrune()
 	default:
@@ -156,7 +161,9 @@ func cmdFilesSource() {
 				last = "synced " + last
 			}
 			where := s.Root
-			if where == "" {
+			if s.Via == vault.ViaConnector {
+				where = "files an agent found through its own connector and you accepted (never synced)"
+			} else if where == "" {
 				where = "through its API"
 				if s.Account != "" {
 					where += ": " + s.Account
@@ -273,6 +280,12 @@ func cmdFilesSync() {
 	}
 	synced := 0
 	for _, src := range srcs {
+		if src.Via == vault.ViaConnector {
+			if len(args) == 1 {
+				fatal("%s holds files an agent found through its own connector: there is nothing to read", src.Label)
+			}
+			continue
+		}
 		synced++
 		syncSource(src, bools["--confirm-removals"])
 	}
@@ -780,4 +793,62 @@ func cmdFilesPrune() {
 		fatal("%v", err)
 	}
 	fmt.Printf("Dropped %d index entries of files that are gone and linked to nothing.\n", out["pruned"])
+}
+
+func cmdFilesProposals() {
+	args := os.Args[3:]
+	if len(args) == 0 {
+		needGrant(filesReadScope, "read")
+		resp, err := apiRequest("GET", "/vault/files/proposals", nil)
+		if err != nil {
+			fatal("request failed: %v", err)
+		}
+		var list []vault.FileProposalInfo
+		if err := apiResult(resp, &list); err != nil {
+			fatal("%v", err)
+		}
+		if len(list) == 0 {
+			fmt.Println("No proposals waiting.")
+			return
+		}
+		for _, p := range list {
+			// Everything after the id is the agent's: names and words from outside.
+			fmt.Printf("%s  %s proposes adding %q from %s\n", p.ID, p.ProposedBy, p.Name, providerName(p.Provider))
+			fmt.Printf("    %s\n", p.Path)
+			if p.WebURL != "" {
+				fmt.Printf("    %s\n", p.WebURL)
+			}
+			if p.Holder != "" || p.Pratica != "" || p.Kind != "" {
+				fmt.Printf("    and linking it to %s\n", linkSummary([]vault.FileLinkInfo{{Holder: p.Holder, Kind: p.Kind, PraticaSlug: p.Pratica, Role: p.Role}}))
+			}
+			if p.Reason != "" {
+				fmt.Printf("    reason: %s\n", p.Reason)
+			}
+		}
+		fmt.Println("\nIt is only a pointer, and only as fresh as today. pvault files proposals accept <id> | reject <id>")
+		return
+	}
+	if len(args) != 2 || (args[0] != "accept" && args[0] != "reject") {
+		fatal(filesUsage)
+	}
+	needGrant(filesReadScope, "write")
+	resp, err := apiRequest("POST", "/vault/files/proposals/"+url.PathEscape(args[1])+"/"+args[0], nil)
+	if err != nil {
+		fatal("request failed: %v", err)
+	}
+	var out struct {
+		File *vault.FileInfo `json:"file"`
+	}
+	if err := apiResult(resp, &out); err != nil {
+		fatal("%v", err)
+	}
+	if args[0] == "reject" {
+		fmt.Println("Proposal rejected.")
+		return
+	}
+	fmt.Printf("Added to the index: %s (%s).\n", out.File.Name, out.File.ID)
+}
+
+func providerName(p string) string {
+	return map[string]string{"gdrive": "Google Drive", "onedrive": "OneDrive", "sharepoint": "SharePoint", "dropbox": "Dropbox"}[p]
 }

@@ -8,7 +8,7 @@ import { basename, extname, join, relative, isAbsolute, resolve, sep } from "nod
 import {
   getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
   getExpiring, listDocuments, addDocument, getDocument, listMembers, requestSigning, getSignings, pvCmd,
-  searchFiles, getIndexedFile, listFileSources, suggestFileLink, checkFileId,
+  searchFiles, getIndexedFile, listFileSources, suggestFileLink, checkFileId, proposeFile,
 } from "./client.js";
 import { UNTRUSTED_FILES, describeFile, PERSON_REF, PRATICA_SLUG } from "./vaultfiles.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
@@ -476,6 +476,44 @@ server.registerTool(
       if (!holder && !pratica) return err("say whom the file is for (for) or which pratica (pratica)");
       const s = await suggestFileLink(id, { for: holder ?? "", kind, pratica, reason });
       return ok(`Proposed (suggestion ${s.id}). It is not linked yet: the user decides with 'pvault files suggestions'.`);
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_file_register",
+  {
+    description:
+      "Propose that a file you found through ANOTHER connector (Claude's own Google Drive, OneDrive, SharePoint or Dropbox connector) is added to the user's file index, " +
+      "optionally linked to a person, client, the business or a pratica. Pass exactly what that connector returned for the file (its id as key, name, path, page address, type, size, modified time); don't guess or fill in anything. " +
+      "This adds nothing: the proposal waits until the user accepts it ('pvault files proposals'), so say so when you make one, and make one only when the user asked for the file to be recorded or it is clearly what they want. " +
+      "An accepted file is only a pointer as fresh as that day (nothing keeps it up to date) and the vault never reads its content. Needs a token with append or write access. " + UNTRUSTED_FILES,
+    inputSchema: {
+      provider: z.enum(["gdrive", "onedrive", "sharepoint", "dropbox"]).describe("Which service the connector reads"),
+      key: z.string().min(1).max(500).describe("The file's own id at that service, as the connector gave it"),
+      name: z.string().min(1).max(255).describe("The file's name"),
+      path: z.string().max(2000).optional().describe("Where it sits, e.g. /Documenti/Clienti/Rossi/CIE.pdf"),
+      web_url: z.string().url().max(2000).optional().describe("The service's own page for the file (a sharing link is dropped)"),
+      mime: z.string().max(127).optional(),
+      size: z.number().int().min(0).optional(),
+      modified: z.string().max(40).optional().describe("Last modified time, as the connector gave it"),
+      hash: z.string().max(200).optional().describe("The service's checksum, if the connector gave one"),
+      for: PERSON.optional().describe("Link it to this person on acceptance (io = the user or the business)"),
+      pratica: z.string().regex(PRATICA_SLUG).optional().describe("Link it to this pratica on acceptance"),
+      kind: z.enum(["person", "client", "business", "pratica"]).optional(),
+      role: z.string().max(64).optional().describe("What it is for the link: cie, passaporto, procura, visura..."),
+      reason: z.string().max(400).optional().describe("One line for the user: why you propose it"),
+    },
+  },
+  async (a): Promise<CallToolResult> => {
+    try {
+      const p = await proposeFile({
+        provider: a.provider, key: a.key, name: a.name, path: a.path, web_url: a.web_url, mime: a.mime, size: a.size,
+        mtime: a.modified, provider_hash: a.hash, for: a.for, kind: a.kind, pratica: a.pratica, role: a.role, reason: a.reason,
+      });
+      return ok(`Proposed (proposal ${p.id}). It is not in the index yet: the user decides with 'pvault files proposals'.`);
     } catch (e) {
       return err((e as Error).message);
     }

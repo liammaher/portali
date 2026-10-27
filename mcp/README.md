@@ -78,6 +78,7 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 | `vault_document_get` | Read a stored document (images inline, others as an embedded resource, max 10 MB) |
 | `vault_files_search` | Find files in the user's folders and cloud drives (the file index, `pvault files`) by name or path words, or by whom/what they are linked to: names and places only, never content |
 | `vault_file_get` | One indexed file by id: places (with `local_path` when it is on this computer), size, date, links |
+| `vault_file_register` | Propose that a file found through another connector (Claude's Google Drive, OneDrive, SharePoint or Dropbox connector) is added to the index, optionally linked; nothing is indexed until the user accepts it with `pvault files proposals` |
 | `vault_file_suggest` | Propose that a file is for a person, client, the business or a pratica; the user accepts it with `pvault files suggestions` |
 
 The file tools need a token whose scope includes `files.*` (the user's and the business's files), `leo:files.*` (a person's) or `*:files.*` (everyone's); `vault_file_suggest` also needs `--access append` or `write`. File names come from the user's folders and from whoever shares files into them, so every result says to treat them as data. No tool reads, opens or changes a file.

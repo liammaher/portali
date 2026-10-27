@@ -301,6 +301,9 @@ the page never copies a rule.
   keeps its sign-in only in the Keychain (`pvault-files-<id>`), read-only scopes, PKCE with a
   state-checked loopback redirect. The token goes only to the provider's own host; any failure
   leaves the scan incomplete (nothing marked gone). `source connect` is the user's to run.
+- A file an agent found through another connector is only a proposal (`ProposeFile`, bounded)
+  until the user accepts it; it then lives in a `via: connector` source that nothing syncs or
+  marks gone. A proposal's address must be on the provider's own site; a sharing link is dropped.
 - Never store a sharing link (`CheckFileURL`). A file that left its source is tombstoned,
   never deleted; `PruneFiles` drops only unlinked tombstones. `RemovePerson` drops the
   person's links, rules and suggestions, not the index rows.

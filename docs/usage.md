@@ -154,6 +154,7 @@ pvault files suggestions                                          # links an age
 ```
 
 - Instead of a sync folder, an account can be read through the provider's API (`pvault files source connect`, below): that sees files that are only online, shared drives and SharePoint libraries you don't sync. Don't add both a folder and the API for the same account: each file would be in the index twice.
+- A file you already reach through Claude's own Drive (or OneDrive, SharePoint, Dropbox) connector can be recorded without signing in to pvault: ask Claude to register it (`vault_file_register`), then review with `pvault files proposals` and accept. Nothing is indexed until you do. It goes into a source "found through Claude", which nothing syncs: the entry is a pointer as fresh as the day you accepted it, never marked gone, and the vault never reads the file. Everything in a proposal came through a model and from whoever named the file, so `pvault files proposals` shows it for you to judge; an address must be a page of the provider's own site.
 - Online-only files (the cloud app's placeholders) are listed by name, size and date and never opened, so syncing downloads nothing.
 - A file that disappears is marked gone, with its links; nothing is deleted. `pvault files prune` drops gone files that are linked to nothing. A scan that couldn't read everything (a folder without permission, a disconnected drive, an empty folder) marks nothing gone.
 - Names and paths are encrypted in the vault. A file whose name or path holds a login-secret word (PIN, password, SPID ...) is `personal`, so agents never see it. Sharing links are refused.
@@ -287,6 +288,8 @@ GET    /vault/files/sources            # POST adds one, DELETE /vault/files/sour
 POST   /vault/files/{id}/links         # {for, kind?, pratica?, role?, note?}; DELETE /vault/files/links/{id}
 GET|POST /vault/files/rules            # DELETE /vault/files/rules/{id}
 POST   /vault/files/{id}/suggest       # an agent proposes a link; GET /vault/files/suggestions, POST .../suggestions/{id}/accept|reject
+POST   /vault/files/proposals          # an agent proposes a file its own connector found: {provider, key, name, path?, web_url?, ..., for?, role?}
+GET    /vault/files/proposals          # yours; POST .../proposals/{id}/accept|reject
 POST   /vault/files/prune
 ```
 

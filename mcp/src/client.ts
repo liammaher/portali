@@ -634,6 +634,28 @@ export async function suggestFileLink(id: string, s: FileSuggestion): Promise<{ 
   return apiRequest("POST", `/vault/files/${checkFileId(id)}/suggest`, s) as Promise<{ id: string }>;
 }
 
+export interface FileProposal {
+  provider: "gdrive" | "onedrive" | "sharepoint" | "dropbox";
+  key: string; // the provider's own id for the file
+  name: string;
+  path?: string;
+  web_url?: string;
+  mime?: string;
+  size?: number;
+  mtime?: string;
+  provider_hash?: string;
+  for?: string;
+  kind?: string;
+  pratica?: string;
+  role?: string;
+  reason?: string;
+}
+
+/** Propose a file the agent's own connector found. It joins the index only when the user accepts. */
+export async function proposeFile(p: FileProposal): Promise<{ id: string }> {
+  return apiRequest("POST", "/vault/files/proposals", p) as Promise<{ id: string }>;
+}
+
 export type { VaultStatus, FieldInfo, ContextBundle, ExpiryInfo, DocumentInfo };
 
 export interface SigningPlacement {

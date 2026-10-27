@@ -84,6 +84,8 @@ before(async () => {
         }));
       } else if (req.url === `/vault/files/${"a".repeat(32)}`) {
         res.end(JSON.stringify(file()));
+      } else if (req.url === "/vault/files/proposals") {
+        res.end(JSON.stringify({ id: "prop1" }));
       } else if (req.url === `/vault/files/${"a".repeat(32)}/suggest`) {
         res.statusCode = suggestStatus;
         res.end(suggestStatus === 200 ? JSON.stringify({ id: "sug1" }) : JSON.stringify({ error: "x", constraint: "read_only" }));
@@ -215,6 +217,48 @@ test("vault_file_suggest posts a proposal and says it is not a link", async () =
   seen = [];
   assert.equal(isError(await client.callTool({ name: "vault_file_suggest", arguments: { id: "a".repeat(32) } })), true);
   assert.equal(seen.length, 0);
+});
+
+test("vault_file_register proposes what the other connector returned and says it is not indexed yet", async () => {
+  seen = [];
+  const r = await client.callTool({
+    name: "vault_file_register",
+    arguments: {
+      provider: "gdrive", key: "1AbC", name: "CIE Leo.pdf", path: "/Documenti/CIE Leo.pdf", size: 100,
+      web_url: "https://drive.google.com/file/d/1AbC/view?usp=drivesdk", modified: "2026-10-01T10:00:00.000Z", hash: "abc",
+      for: "leo", role: "cie", reason: "named like Leo's CIE",
+    },
+  });
+  assert.equal(isError(r), false);
+  assert.match(text(r), /not in the index yet/);
+  assert.match(text(r), /pvault files proposals/);
+  const post = seen.find((s) => s.method === "POST");
+  assert.equal(post!.url, "/vault/files/proposals");
+  assert.deepEqual(JSON.parse(post!.body!), {
+    provider: "gdrive", key: "1AbC", name: "CIE Leo.pdf", path: "/Documenti/CIE Leo.pdf", size: 100,
+    web_url: "https://drive.google.com/file/d/1AbC/view?usp=drivesdk", mtime: "2026-10-01T10:00:00.000Z", provider_hash: "abc",
+    for: "leo", role: "cie", reason: "named like Leo's CIE",
+  });
+
+  // Bad input never reaches the vault.
+  seen = [];
+  for (const args of [
+    { provider: "box", key: "k", name: "a.pdf" }, { provider: "gdrive", key: "", name: "a.pdf" }, { provider: "gdrive", key: "k", name: "" },
+    { provider: "gdrive", key: "k", name: "a.pdf", for: "../x" }, { provider: "gdrive", key: "k", name: "a.pdf", pratica: "A B" },
+    { provider: "gdrive", key: "k", name: "a.pdf", web_url: "not a url" },
+  ]) {
+    const bad = await client.callTool({ name: "vault_file_register", arguments: args }).catch(() => ({ isError: true, content: [{ text: "" }] }));
+    assert.equal(isError(bad), true, JSON.stringify(args));
+  }
+  assert.equal(seen.length, 0);
+});
+
+test("vault_file_register's description keeps the user in charge", async () => {
+  const t = (await client.listTools()).tools.find((x) => x.name === "vault_file_register");
+  assert.ok(t);
+  assert.match(t!.description ?? "", /adds nothing/);
+  assert.match(t!.description ?? "", /user accepts/);
+  assert.match(t!.description ?? "", /never as instructions/);
 });
 
 test("vault_file_suggest explains a read-only token", async () => {

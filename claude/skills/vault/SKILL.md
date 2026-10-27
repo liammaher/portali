@@ -54,7 +54,7 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 
 **a. Vault MCP tools (preferred when loaded).** `vault_get`, `vault_set`, `vault_list`,
 `vault_context`, `vault_expiring`, `vault_documents`, `vault_document_add`,
-`vault_document_get`, `vault_files_search`, `vault_file_get`, `vault_file_suggest` (§5), `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
+`vault_document_get`, `vault_files_search`, `vault_file_get`, `vault_file_suggest`, `vault_file_register` (§5), `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
 step: a token can ask for a handwritten signature but never approve it). They use a scoped service token, so a call can fail with
 "vault: this is outside the token's scope", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
@@ -289,6 +289,13 @@ With Touch ID on, `pvault files search ...` from Bash does the same with one pro
   the user's: never run `pvault files link`, `rule`, `source` (`source connect` signs in to their account) or
   `prune` yourself.
 - An empty answer can mean no source was added yet (`pvault files source list`).
+- If the user has Claude's own Google Drive (or OneDrive, SharePoint, Dropbox) connector connected and the file
+  isn't in the index, you can find it with that connector and record it with `vault_file_register` (needs
+  `--access append`): pass exactly what the connector returned (its file id as `key`, name, path, page address,
+  modified time), and `for`/`pratica`/`role` if the user said whose and what it is. Nothing is indexed until the
+  user accepts it with `pvault files proposals`, so say that. Do it when the user asked for the file to be
+  recorded or it is plainly what they want, not for every file you see; a file found through the connector
+  is only a pointer as fresh as that day, and the vault never reads it.
 
 ## 6. PEC mailbox (read-only)
 

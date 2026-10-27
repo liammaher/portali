@@ -95,6 +95,17 @@ incomplete, so nothing is marked gone. Scopes are the read-only ones (Graph `Fil
 Drive's are built from `parents`, with files whose parent the user can't see under
 `/Shared with me`; Dropbox gives full paths.
 
+## Files found through another connector
+
+An agent with Claude's own Drive connector can `vault_file_register` a file: provider, the
+provider's file id, name, path, page address, and optionally whom to link it to. The vault
+queues it (`vault_file_proposals`, encrypted, bounded, one per provider+key); only the user's
+`pvault files proposals accept` indexes it, then in a source with `via: connector`: no folder,
+no sign-in, never synced, so nothing marks it gone and nothing refreshes it. The proposal
+is untrusted (names and words through a model), so the web address must be on the provider's own
+site (it is what `pvault files open` would open), a sharing link is dropped, and a token can
+propose only for the holders and pratiche its scope reaches.
+
 ## Still to do
 
 1. Change feeds (Graph delta tokens, Drive changes, Dropbox cursors) so a sync doesn't list

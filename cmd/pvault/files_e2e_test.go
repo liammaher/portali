@@ -239,3 +239,57 @@ func TestFiles_ExpiringListsLinkedClientFiles(t *testing.T) {
 		}
 	}
 }
+
+// A file an agent found through its own connector is proposed, listed for the
+// user, accepted, searchable and linked, and never touched by a sync.
+func TestFiles_ProposalsEndToEnd(t *testing.T) {
+	v, _ := touchIDVault(t, map[string]string{"leo:famiglia.relazione": "figlio"})
+	in := vault.FileProposalInput{
+		Provider: "gdrive", Key: "1AbC", Name: "CIE-Leo.pdf", Path: "/Documenti/CIE-Leo.pdf",
+		WebURL: "https://drive.google.com/file/d/1AbC/view?usp=drivesdk", Holder: "leo", Role: "cie", Reason: "its name says it is Leo's CIE",
+	}
+	if _, err := v.ProposeFile(nil, in, "claude"); err != nil {
+		t.Fatal(err)
+	}
+
+	out := runCmd(t, cmdFiles, "files", "proposals")
+	for _, want := range []string{"claude proposes adding \"CIE-Leo.pdf\" from Google Drive", "/Documenti/CIE-Leo.pdf", "linking it to leo (cie)", "reason: its name says"} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("proposals lacks %q:\n%s", want, out)
+		}
+	}
+	if out := runCmd(t, cmdFiles, "files", "search", "CIE"); !strings.Contains(out, "No files found") {
+		t.Fatalf("a proposal is searchable:\n%s", out)
+	}
+	pid := strings.Fields(runCmd(t, cmdFiles, "files", "proposals"))[0]
+	out = runCmd(t, cmdFiles, "files", "proposals", "accept", pid)
+	if !strings.Contains(out, "Added to the index: CIE-Leo.pdf") {
+		t.Fatalf("accept:\n%s", out)
+	}
+	out = runCmd(t, cmdFiles, "files", "search", "--for", "leo")
+	if !strings.Contains(out, "CIE-Leo.pdf") || !strings.Contains(out, "linked to leo (cie)") || !strings.Contains(out, "found through Claude") {
+		t.Fatalf("after accepting:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "proposals"); !strings.Contains(out, "No proposals waiting") {
+		t.Fatalf("still pending:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "source", "list"); !strings.Contains(out, "never synced") || !strings.Contains(out, "found through its own connector") {
+		t.Fatalf("source list:\n%s", out)
+	}
+	// A sync has nothing to read there, and leaves its file alone.
+	if out := runCmd(t, cmdFiles, "files", "sync"); !strings.Contains(out, "Nothing to sync") {
+		t.Fatalf("sync:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "search", "CIE"); !strings.Contains(out, "CIE-Leo.pdf") || strings.Contains(out, "[gone]") {
+		t.Fatalf("after a sync:\n%s", out)
+	}
+
+	// Rejecting forgets it.
+	in.Key, in.Name, in.Path = "2DeF", "Altro.pdf", "/Altro.pdf"
+	in.Holder, in.Role = "", ""
+	v.ProposeFile(nil, in, "claude")
+	runCmd(t, cmdFiles, "files", "proposals", "reject", strings.Fields(runCmd(t, cmdFiles, "files", "proposals"))[0])
+	if out := runCmd(t, cmdFiles, "files", "search", "altro"); !strings.Contains(out, "No files found") {
+		t.Fatalf("a rejected proposal:\n%s", out)
+	}
+}
