@@ -153,12 +153,33 @@ pvault files open <file-id>                                       # shows it in 
 pvault files suggestions                                          # links an agent proposed
 ```
 
+- Instead of a sync folder, an account can be read through the provider's API (`pvault files source connect`, below): that sees files that are only online, shared drives and SharePoint libraries you don't sync. Don't add both a folder and the API for the same account: each file would be in the index twice.
 - Online-only files (the cloud app's placeholders) are listed by name, size and date and never opened, so syncing downloads nothing.
 - A file that disappears is marked gone, with its links; nothing is deleted. `pvault files prune` drops gone files that are linked to nothing. A scan that couldn't read everything (a folder without permission, a disconnected drive, an empty folder) marks nothing gone.
 - Names and paths are encrypted in the vault. A file whose name or path holds a login-secret word (PIN, password, SPID ...) is `personal`, so agents never see it. Sharing links are refused.
 - Service tokens reach the index with scopes `files.*` (yours and the business's), `leo:files.*` (a person's) or `*:files.*`. A token with `write` access can sync, but only the files its scope reaches: a `files.*` token leaves a person's files, and a file that was once linked to a person, alone. Linking, rules, sources and accepting suggestions are yours (a grant you approve must allow writing and reach that person's files), and an agent can only suggest.
 - A sync that would mark every file of a source gone (five or more), or more than half of a large one, is refused: the drive is probably unmounted or signed out. `pvault files sync --confirm-removals` says they really are gone.
 - Hidden files, links and Office lock files are left out. Only folders you add are read.
+
+### Reading an account through its API (OneDrive, SharePoint, Google Drive, Dropbox)
+
+```sh
+pvault files source connect onedrive   --client-id <id> [--tenant common]
+pvault files source connect sharepoint --client-id <id> --site https://acme.sharepoint.com/sites/Studio [--library Documenti]
+pvault files source connect gdrive     --client-id <id>        # asks for the client secret, typed hidden (or PVAULT_GDRIVE_CLIENT_SECRET)
+pvault files source connect dropbox    --client-id <id>
+pvault files sync
+```
+
+It opens the provider's sign-in page in your browser; you approve **read-only** access to file names, places, dates and sizes (never content: Microsoft `Files.Read` / `Files.Read.All` + `Sites.Read.All` for SharePoint, Google `drive.metadata.readonly`, Dropbox `files.metadata.read`). pvault listens on `http://localhost:53682/` (or `--port`) for the answer. The tokens stay in the macOS Keychain (item `pvault-files-<source id>`), never in the vault, a backup, or the MCP server; the vault holds only the OAuth client ID, the drive and the account's address. After restoring a backup on another Mac, connect the source again. `pvault files source remove` deletes the Keychain item; to cut pvault's access at the provider too, remove it in your account's connected apps.
+
+There is no shared OAuth client: register your own (one time, free), with the redirect address `http://localhost:53682/`:
+
+- **Microsoft** (Entra admin center → App registrations → New): "Accounts in any organizational directory and personal Microsoft accounts"; Authentication → add a platform "Mobile and desktop applications" with that redirect address; API permissions → Microsoft Graph → Delegated → `Files.Read` and `offline_access` (add `Files.Read.All` and `Sites.Read.All` for SharePoint). No secret. A work tenant may require an administrator to consent to the `.All` permissions. Use `--tenant <tenant id or domain>` to allow only one organization.
+- **Google** (Cloud Console → a project → enable the Drive API → OAuth consent screen → Credentials → OAuth client ID, type Desktop app): add the scope `drive.metadata.readonly`. It is a restricted scope: while the consent screen is in "Testing" Google expires the refresh token after 7 days, so publish it ("In production") for yourself; it will say the app is unverified, which for your own use is expected.
+- **Dropbox** (App console → Create app → Scoped access, Full Dropbox): permission `files.metadata.read`; add the redirect address. No secret (PKCE).
+
+A sync reads the whole account each time (names only), paged: a few thousand files take under a minute. A Google Drive listing leaves out shortcuts and folders you can't see the parent of go under `/Shared with me`. These connectors were tested against fake servers written from each provider's documentation, not against live accounts: if a provider answers differently, the sync stops with its message and marks nothing gone.
 
 ## Backups
 

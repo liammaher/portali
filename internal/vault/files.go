@@ -155,11 +155,29 @@ type FileLinkInfo struct {
 // FileSourceConfig is what a source's encrypted blob holds.
 type FileSourceConfig struct {
 	Label    string `json:"label"`
-	Root     string `json:"root,omitempty"`    // a local source's folder
+	Root     string `json:"root,omitempty"`    // a folder on this computer; none for an account read through the provider's API
 	Account  string `json:"account,omitempty"` // the account or site, for display
 	Cursor   string `json:"cursor,omitempty"`  // the provider's change feed position
 	LastSync string `json:"last_sync,omitempty"`
+	// An account read through the provider's API (no Root): the OAuth client
+	// the user registered, which library or drive, and where to find it. The
+	// tokens are never here: they are in the macOS Keychain.
+	ClientID string `json:"client_id,omitempty"`
+	Tenant   string `json:"tenant,omitempty"`   // Microsoft: common, organizations, or a tenant ID
+	DriveID  string `json:"drive_id,omitempty"` // Microsoft: the OneDrive or SharePoint library
+	Site     string `json:"site,omitempty"`     // SharePoint: the site's address, for display
 }
+
+// reClientID is what an OAuth client ID may look like: the three providers' are
+// letters, digits and a few separators (a Microsoft one is a GUID, Google's ends
+// in .apps.googleusercontent.com).
+var reClientID = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._~@-]{0,199}$`)
+
+// reTenant is a Microsoft tenant: common, organizations, consumers, a GUID or a domain.
+var reTenant = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9.-]{0,99}$`)
+
+// reDriveID is a Microsoft Graph drive ID (b!... base64url).
+var reDriveID = regexp.MustCompile(`^[A-Za-z0-9!_.=-]{1,200}$`)
 
 // FileSourceInfo is a source as listed.
 type FileSourceInfo struct {
@@ -291,9 +309,15 @@ func CheckFileURL(raw string) error {
 	case strings.HasSuffix(host, "dropbox.com") && (strings.HasPrefix(p, "/s/") || strings.HasPrefix(p, "/scl/") || strings.HasPrefix(p, "/sh/")):
 		return bad("sharing links are never stored: they give anyone who has them the file")
 	}
-	for k := range u.Query() {
+	for k, vals := range u.Query() {
 		switch strings.ToLower(k) {
-		case "e", "key", "rlkey", "token", "access_token", "sig", "sv", "usp", "share", "download", "authkey", "resourcekey":
+		case "usp":
+			// Drive's own page for a file carries usp=drivesdk; usp=sharing (or
+			// drive_link) is a link to hand to others.
+			if len(vals) != 1 || vals[0] != "drivesdk" {
+				return bad("a sharing link is never stored")
+			}
+		case "e", "key", "rlkey", "token", "access_token", "sig", "sv", "share", "download", "authkey", "resourcekey":
 			return bad("a URL with a key or token in it is never stored")
 		}
 	}
@@ -400,8 +424,33 @@ func (v *Vault) AddFileSource(provider string, cfg FileSourceConfig) (*FileSourc
 	if cfg.Account, err = cleanFileText("account", cfg.Account, 200); err != nil {
 		return nil, err
 	}
-	if provider == "local" && cfg.Root == "" {
+	if cfg.ClientID, err = cleanFileText("client_id", cfg.ClientID, 200); err != nil {
+		return nil, err
+	}
+	if cfg.DriveID, err = cleanFileText("drive_id", cfg.DriveID, 200); err != nil {
+		return nil, err
+	}
+	if cfg.Tenant, err = cleanFileText("tenant", cfg.Tenant, 100); err != nil {
+		return nil, err
+	}
+	if cfg.Site, err = cleanFileText("site", cfg.Site, 400); err != nil {
+		return nil, err
+	}
+	switch {
+	case provider == "local" && cfg.Root == "":
 		return nil, &ValidationError{Field: "root", Msg: "a local source needs the folder to read"}
+	case cfg.Root == "" && cfg.ClientID == "":
+		return nil, &ValidationError{Field: "client_id", Msg: "a source needs a folder to read, or an OAuth client to read the account through"}
+	case cfg.Root != "" && cfg.ClientID != "":
+		return nil, &ValidationError{Field: "client_id", Msg: "a source is read from a folder or through the provider's API, not both"}
+	case cfg.ClientID != "" && provider == "local":
+		return nil, &ValidationError{Field: "provider", Msg: "a folder on this computer isn't read through an API"}
+	case cfg.ClientID != "" && !reClientID.MatchString(cfg.ClientID):
+		return nil, &ValidationError{Field: "client_id", Msg: "not an OAuth client ID"}
+	case cfg.Tenant != "" && !reTenant.MatchString(cfg.Tenant):
+		return nil, &ValidationError{Field: "tenant", Msg: "common, organizations, consumers, a tenant ID or its domain"}
+	case cfg.DriveID != "" && !reDriveID.MatchString(cfg.DriveID):
+		return nil, &ValidationError{Field: "drive_id", Msg: "not a drive ID"}
 	}
 	cfg.Cursor, cfg.LastSync = "", ""
 

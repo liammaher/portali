@@ -286,7 +286,8 @@ With Touch ID on, `pvault files search ...` from Bash does the same with one pro
   not be there. Say so rather than concluding it doesn't exist.
 - `vault_file_suggest` proposes a link (needs `--access append`); it does nothing until the user accepts it with
   `pvault files suggestions`. Suggest only when the folder or name makes it clear. Linking, rules and sources are
-  the user's: never run `pvault files link`, `rule`, `source` or `prune` yourself.
+  the user's: never run `pvault files link`, `rule`, `source` (`source connect` signs in to their account) or
+  `prune` yourself.
 - An empty answer can mean no source was added yet (`pvault files source list`).
 
 ## 6. PEC mailbox (read-only)

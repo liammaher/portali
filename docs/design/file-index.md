@@ -3,8 +3,10 @@
 Status: built, for folders on disk (including the sync folders of OneDrive, SharePoint, Google
 Drive and Dropbox): the store and vault layers, the API, `pvault files`, the local sync
 (`internal/filesync`) and the MCP tools (`vault_files_search`, `vault_file_get`,
-`vault_file_suggest`) with the pratica skill's step 0.4 using them. Not built:
-retention/`Expiring` entries and the cloud API connectors (see the end).
+`vault_file_suggest`) with the pratica skill's step 0.4 using them. Also built: `files_closed` entries for linked client ID files, and read-only connectors for
+OneDrive, SharePoint, Google Drive and Dropbox through their APIs (`internal/filesync`: OAuth
+with PKCE on a loopback port, tokens in the Keychain, full listing per sync). The connectors
+have been tested against fake servers only (see the end).
 
 ## What it is for
 
@@ -76,10 +78,27 @@ the new one. On macOS an online-only file (the `SF_DATALESS` flag; verify agains
 OneDrive/Drive/Dropbox folder) is counted and indexed from `stat` alone. File hashes are not
 computed yet.
 
+## Reading an account through its API
+
+An API source has no `root`; the vault holds its OAuth client ID, tenant, drive and account
+name (`FileSourceConfig`), never a token. `pvault files source connect` signs in (authorization
+code + PKCE, loopback redirect, state checked), creates the source, then saves the tokens in
+the Keychain item `pvault-files-<id>`; if that fails, the source is taken back. A sync opens
+the provider with that item, refreshes the access token when it is within a minute of its end
+and writes a rotated refresh token back before using it, then lists the whole account and
+sends it through the same begin/batches/finish as a folder. The token goes only to the
+provider's own host (a "next page" link naming another host is not followed). 401 refreshes
+once, 429/503 wait the provider's `Retry-After`, any other failure leaves the scan
+incomplete, so nothing is marked gone. Scopes are the read-only ones (Graph `Files.Read`,
+`Files.Read.All`+`Sites.Read.All` for SharePoint; Google `drive.metadata.readonly`; Dropbox
+`files.metadata.read`). Graph delta never says a path, so paths are built from parent IDs;
+Drive's are built from `parents`, with files whose parent the user can't see under
+`/Shared with me`; Dropbox gives full paths.
+
 ## Still to do
 
-1. Microsoft Graph (OneDrive, SharePoint), then Google Drive and Dropbox, as read-only
-   clients with refresh tokens in the Keychain: sources without a folder, change feeds, and
-   matching an API item to the folder entry of the same file (account + path). Open: who owns
-   the OAuth client IDs (Google's restricted scopes, Microsoft tenant-admin consent).
-2. An unattended sync (a launchd job with a `files.*` write token in the Keychain).
+1. Change feeds (Graph delta tokens, Drive changes, Dropbox cursors) so a sync doesn't list
+   the whole account, and matching an API item to the folder entry of the same file
+   (account + path): an account read both ways is indexed twice.
+2. Testing the connectors against live accounts.
+3. An unattended sync (a launchd job with a `files.*` write token in the Keychain).

@@ -19,6 +19,10 @@ import (
 const filesUsage = `usage:
   pvault files source add <folder> [--label name] [--provider local|onedrive|sharepoint|gdrive|dropbox]
                                        Index a folder (a OneDrive/Google Drive/Dropbox sync folder is recognised)
+  pvault files source connect onedrive|sharepoint|gdrive|dropbox --client-id <id> [--label name]
+                      [--site <https address> --library <name>] [--tenant common] [--port 53682]
+                                       Read an account through the provider's API, read-only (docs/usage.md:
+                                       register an OAuth client first); sign in in your browser
   pvault files source list
   pvault files source remove <source>  Forget a source's index entries and links (the files are untouched)
   pvault files sync [source] [--confirm-removals]
@@ -129,6 +133,8 @@ func cmdFilesSource() {
 	switch os.Args[3] {
 	case "add":
 		cmdFilesSourceAdd()
+	case "connect":
+		cmdFilesSourceConnect()
 	case "list":
 		positionalArgs(os.Args[4:], filesUsage, 0, 0)
 		needGrant("files.*", "read")
@@ -144,7 +150,14 @@ func cmdFilesSource() {
 			} else {
 				last = "synced " + last
 			}
-			fmt.Printf("%s  %-10s %-24s %6d files  %s\n    %s\n", s.ID, s.Provider, s.Label, s.Files, last, s.Root)
+			where := s.Root
+			if where == "" {
+				where = "through its API"
+				if s.Account != "" {
+					where += ": " + s.Account
+				}
+			}
+			fmt.Printf("%s  %-10s %-24s %6d files  %s\n    %s\n", s.ID, s.Provider, s.Label, s.Files, last, where)
 		}
 	case "remove":
 		args := positionalArgs(os.Args[4:], filesUsage, 1, 1)
@@ -160,6 +173,14 @@ func cmdFilesSource() {
 			fatal("%v", err)
 		}
 		fmt.Printf("Forgot %s: %d index entries, their links and the source's rules removed. The files themselves were not touched.\n", src.Label, out["forgotten"])
+		if src.ClientID != "" {
+			// The sign-in is only on this computer; it stays valid at the provider
+			// until the user revokes pvault there.
+			if err := secretStore.Delete(filesync.ServiceName(src.ID)); err != nil {
+				fmt.Fprintf(os.Stderr, "Could not delete its saved sign-in from the Keychain (%v): remove the item %s there.\n", err, filesync.ServiceName(src.ID))
+			}
+			fmt.Printf("Its sign-in was removed from the Keychain. To take pvault's access away at %s too, remove it in your account's connected apps.\n", src.Provider)
+		}
 	default:
 		fatal(filesUsage)
 	}
@@ -247,12 +268,6 @@ func cmdFilesSync() {
 	}
 	synced := 0
 	for _, src := range srcs {
-		if src.Root == "" {
-			if len(args) == 1 {
-				fatal("%s has no folder to read: only folder sources sync so far", src.Label)
-			}
-			continue
-		}
 		synced++
 		syncSource(src, bools["--confirm-removals"])
 	}
@@ -263,14 +278,16 @@ func cmdFilesSync() {
 
 func syncSource(src vault.FileSourceInfo, confirmRemovals bool) {
 	fmt.Printf("%s: ", src.Label)
-	root, err := filesync.ResolveRoot(src.Root)
-	if err != nil {
-		fmt.Printf("can't read %s (%v). Is the drive connected? Nothing was marked gone.\n", src.Root, err)
+	scan, where, ok := scanSource(src)
+	if !ok {
 		return
 	}
-	scan := filesync.Walk(root)
+	if len(scan.Files) == 0 && !scan.Complete() {
+		fmt.Printf("couldn't read it, so nothing was marked gone.\n%s\n", incompleteNote(scan))
+		return
+	}
 	if len(scan.Files) == 0 && src.Files > 0 {
-		fmt.Printf("found no files under %s although %d are indexed: not touching the index. If the folder really is empty, 'pvault files source remove' and add it again.\n", root, src.Files)
+		fmt.Printf("found no files in %s although %d are indexed: not touching the index. If it really is empty, 'pvault files source remove' and add it again.\n", where, src.Files)
 		return
 	}
 	if len(scan.Files) == 0 {

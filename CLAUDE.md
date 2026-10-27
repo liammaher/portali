@@ -297,6 +297,10 @@ the page never copies a rule.
   token with write access may sync, but only files it can see (`UpsertFilesIf`); it may
   only suggest links. A file once linked to a person (`scoped`) stays out of the owner's
   scope. A sync that would mark everything, or most of a large source, gone needs `confirm`.
+- An API source (`ClientID`, no `Root`; `internal/filesync` oauth/tokens/graph/gdrive/dropbox)
+  keeps its sign-in only in the Keychain (`pvault-files-<id>`), read-only scopes, PKCE with a
+  state-checked loopback redirect. The token goes only to the provider's own host; any failure
+  leaves the scan incomplete (nothing marked gone). `source connect` is the user's to run.
 - Never store a sharing link (`CheckFileURL`). A file that left its source is tombstoned,
   never deleted; `PruneFiles` drops only unlinked tombstones. `RemovePerson` drops the
   person's links, rules and suggestions, not the index rows.
