@@ -120,7 +120,6 @@ import sys
 import urllib.parse
 import urllib.request
 
-CLOSED = {"completata", "respinta", "annullata"}
 MAP_KINDS = {"direct", "concat", "fallback", "repeat", "ask", "blank_with_reason"}
 MAP_KEYS = MAP_KINDS | {"fields", "template", "columns", "party"}
 ROW_KEYS = {"label", "map", "notes", "optional", "choices", "when"}
@@ -520,6 +519,13 @@ def needs(entry, form, draft=False, signer="io", people=(), parties=None, layout
                     patterns.add(f"{signer}:{ref}")
     patterns |= {signer_id(f"{category(r['compute']['from'])}.*", signer, people)
                  for r in entry.get("deadline", {}).get("rules", []) if "compute" in r}
+    # The desk picked by area, which route reads with the same token: that
+    # field alone, never the street beside it, unless the form reads both.
+    for c in entry.get("channels", []):
+        if c.get("purpose") == "procedure" and "office" in c:
+            field = signer_id(c["office"]["from"], signer, people)
+            if f"{field.rsplit('.', 1)[0]}.*" not in patterns:
+                patterns.add(field)
     if "dichiarante" in entry:
         # In a business vault, whether the signer holds a signing ruolo.
         patterns.add("*:ruolo.tipo")
@@ -1436,6 +1442,8 @@ def run(a):
     status, schema = prepare.call("GET", "/vault/schema")
     if status != 200:
         sys.exit(f"reading the vault's schema: {status} {schema}")
+    if "pratiche" not in schema:
+        sys.exit("the running vault is older than this fill.py (schema 18): pvault lock, then pvault unlock")
     people = person_categories(schema)
     values = prepare.values()
     read = form_fields(form)
@@ -1525,7 +1533,7 @@ def run(a):
     resume = False
     while slug in pratiche:
         stato = pratiche[slug].get("stato")
-        if stato not in CLOSED:
+        if stato not in schema["pratiche"]["chiusi"]:
             if a.sign and stato == "pronta":
                 # The record is open (an earlier run, or one whose signing request
                 # expired or failed): only the signing request is filed again.
@@ -1614,7 +1622,7 @@ def request_signature(a, prepare, entry, form, layout, channel, slug, check):
     way = signing_rule(a, form, channel["type"])
     if not way or "handwritten" not in way["ways"] or way["status"] == "disputed":
         check(f"the library lists a handwritten signature for {channel['type']}", False,
-              no_rule(a, channel["type"]) if not way else "sign it by hand, or have the library say how this channel takes a signature")
+              no_rule(a, channel) if not way else "sign it by hand, or have the library say how this channel takes a signature")
         return None
     if way["status"] != "verified":
         print(f"  note: the library has not verified that {channel['type']} takes a handwritten signature; "
@@ -1649,13 +1657,17 @@ def signing_rule(a, form, channel_type):
     return {"channel": channel_type, "status": "verified", **rule} if rule else None
 
 
-def no_rule(a, channel_type):
+def no_rule(a, channel):
     """Why a channel has no signing rule, as the user should hear it: the
-    law sets none for a channel signing.json leaves out (a portal or app,
-    where the SPID/CIE login identifies the person)."""
+    law sets none for a channel signing.json leaves out (a portal or app).
+    Only its auth says whether a login identifies the person; without one
+    (ComUnica wants a firma digitale) the library hasn't said."""
     if not getattr(a, "library", None):
         return "the law's rule for this channel is in the library's contract/signing.json: pass --library"
-    return f"as the {channel_type} asks: its SPID/CIE login identifies you, and it may not use this form at all"
+    logins = [x.upper() for x in channel.get("auth", []) if x in ("spid", "cie", "cns")]
+    if not logins:
+        return f"as the {channel['type']} asks: the library doesn't say how it takes a signature, so check before filing"
+    return f"as the {channel['type']} asks: its {'/'.join(logins)} login identifies you, and it may not use this form at all"
 
 
 def procedure_channels(entry, channel_type=None):
@@ -1700,7 +1712,7 @@ def route(a):
     for f in signed:
         rule = signing_rule(a, f, kind)
         signing.append({"form": f["name"], **({k: rule[k] for k in ("ways", "id_copy", "status", "text", "notes") if k in rule}
-                                             if rule else {"text": no_rule(a, kind)})})
+                                             if rule else {"text": no_rule(a, on[0])})})
     # The entry's required documents (the forms among them), else its forms.
     attach = [d["name"] for d in entry.get("documents", []) if d.get("required")] or [f["name"] for f in entry.get("forms", [])]
     card = {"procedure": entry["id"], "title": entry.get("headline", entry["title"]), "route": kind,
@@ -1750,6 +1762,8 @@ def office_for(a, office, vault=None, value=None):
         return {"list": name, "field": field, "why": f"no offices/{name}.json in the library"}
     out = {"list": name, "name": offices["name"], "serves": offices["serves"], "field": field}
     pick = f"pick from offices/{name}.json"
+    if value is not None and value not in offices["offices"]:
+        return {**out, "why": f"no office for {value!r}: the list has {', '.join(offices['offices'])}"}
     if value is None:
         if vault is None and not (a.server or a.vault_dir):
             return {**out, "why": f"pass the vault to pick yours ({field})"}
