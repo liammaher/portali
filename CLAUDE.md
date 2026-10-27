@@ -117,7 +117,8 @@ Profile Password + Secret Key (128-bit)
   enrolled pvault (audit token → valid hardened code with the enrolled cdhash), and returns
   only a token. Rebuilding the helper or moving pvault means `pvault touchid enable` again.
 - The prompt is worded from the exact scope it requests and never understates it.
-  Patterns are anchored with `\A`/`\z`. Its parser is held to `internal/vault/testdata/scopes.json`.
+  Patterns are anchored with `\A`/`\z`. Its parser is held to `internal/vault/testdata/scopes.json`,
+  its wording to `prompts.json`, as is the vault's own (`approval_prompt.go`, for Windows Hello).
 - `touchid enable`/`disable` refuse without a terminal, so a script can't switch them; an
   agent with a pty could, which only falls back to the password.
 - CLI commands call `needGrant(scope, access)`: with Touch ID the grant is scoped to that
@@ -209,7 +210,7 @@ the page never copies a rule.
   before the PDF is shown (an agent driving review or the helper can read the typed code; the
   password route can't be driven that way), so the prompt is what the user must read: worded
   from the vault's own summary (name, pages, hash, who filed it), never from arguments
-  (`describe-sign` held to `touchid_prompt_test.go`).
+  (`describe-sign` and `vault.SignPrompt` held to `testdata/prompts.json`).
 - Not a firma digitale. Procedures needing one stay `human_only`. What a channel takes is
   the form's own `signing` for it, else the library's `contract/signing.json` (the law's
   rule per channel type; fill.py `signing_rule`); where neither has one, the step is the

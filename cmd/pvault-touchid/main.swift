@@ -370,6 +370,9 @@ func serverError(_ json: [String: Any], _ status: Int) -> String {
 
 // MARK: - Prompt wording
 
+// Worded as vault's approval_prompt.go words Windows Hello prompts; both are
+// held to internal/vault/testdata/prompts.json.
+
 // \A and \z, not ^ and $: ICU's $ also matches before a trailing line break,
 // which would then show up in the prompt. A pattern may start with another
 // person's slug (vault.ValidPersonSlug) or "*" for everyone: leo:cie.*,
@@ -420,7 +423,7 @@ func describe(_ pattern: String) -> String {
 }
 
 func duration(_ seconds: Int) -> String {
-    if seconds < 60 { return "\(seconds) seconds" }
+    if seconds < 60 { return seconds == 1 ? "1 second" : "\(seconds) seconds" }
     let m = (seconds + 59) / 60  // round up: never understate how long a grant lasts
     return m == 1 ? "1 minute" : "\(m) minutes"
 }
@@ -452,13 +455,16 @@ let maxSignNameLength = 50
 
 // shownName keeps what an agent chose as a file name harmless in a prompt:
 // letters, digits, spaces and . _ - ( ); anything else (quotes, bidi controls,
-// line breaks) shows as ?, and a long name is cut.
+// line breaks) shows as ?, and a long name is cut. Length counts Unicode
+// scalars, not characters: a character can stack any number of accents, which
+// would push the rest of the prompt out of sight.
 func shownName(_ name: String) -> String {
     let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: " ._-()"))
-    var out = String(String.UnicodeScalarView(name.unicodeScalars.map { allowed.contains($0) ? $0 : "?" }))
-    out = out.trimmingCharacters(in: .whitespaces)
-    if out.count > maxSignNameLength { out = String(out.prefix(maxSignNameLength - 1)) + "…" }
-    return out.isEmpty ? "?" : out
+    var out = name.unicodeScalars.map { allowed.contains($0) ? $0 : "?" }
+    while out.first == " " { out.removeFirst() }
+    while out.last == " " { out.removeLast() }
+    if out.count > maxSignNameLength { out = Array(out.prefix(maxSignNameLength - 1)) + ["…"] }
+    return out.isEmpty ? "?" : String(String.UnicodeScalarView(out))
 }
 
 // signReason completes macOS's '"pvault-touchid" is trying to …' sentence for
