@@ -478,3 +478,31 @@ func TestFiles_AgentProposesAFileTheUserAccepts(t *testing.T) {
 		t.Fatalf("a decided proposal: %d", w.Code)
 	}
 }
+
+// for:"io" in a proposal means a link for the owner, not no link.
+func TestFiles_ProposalForTheOwnerKeepsItsLink(t *testing.T) {
+	env, _, _ := filesEnvSK(t)
+	agent := createTokenWithAccess(t, env, "files.*", "append")
+	w := env.doRequestWithToken(t, "POST", "/vault/files/proposals", map[string]any{
+		"provider": "dropbox", "key": "id:9", "name": "passaporto.pdf", "for": "io", "role": "passaporto",
+	}, agent)
+	if w.Code != 200 {
+		t.Fatalf("propose: %d %s", w.Code, w.Body.String())
+	}
+	prop := decodeBody[vault.FileProposalInfo](t, w)
+	if env.doRequest(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, true).Code != 200 {
+		t.Fatal("accept")
+	}
+	l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?q=passaporto", nil, true))
+	if l.Total != 1 || len(l.Files[0].Links) != 1 || l.Files[0].Links[0].Role != "passaporto" || l.Files[0].Links[0].Holder != "" {
+		t.Fatalf("file = %+v", l)
+	}
+	// for:"io" with no role is still a request to link it to the owner.
+	w = env.doRequestWithToken(t, "POST", "/vault/files/proposals", map[string]any{"provider": "dropbox", "key": "id:10", "name": "x.pdf", "for": "io"}, agent)
+	prop = decodeBody[vault.FileProposalInfo](t, w)
+	env.doRequest(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, true)
+	l = decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?q=x.pdf", nil, true))
+	if l.Total != 1 || len(l.Files[0].Links) != 1 {
+		t.Fatalf("for:io without a role lost its link: %+v", l)
+	}
+}

@@ -92,8 +92,8 @@ func TestFilesBug_SuggestionsAreBounded(t *testing.T) {
 	}
 	// Different files fill the queue up to the cap, then are refused.
 	var refused int
-	for _, f := range files {
-		if _, err := v.SuggestFileLink(agent, f.ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, "agent", ""); err != nil {
+	for i, f := range files {
+		if _, err := v.SuggestFileLink(agent, f.ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, fmt.Sprint("agent-", i%6), ""); err != nil {
 			refused++
 		}
 	}
@@ -103,7 +103,7 @@ func TestFilesBug_SuggestionsAreBounded(t *testing.T) {
 	}
 	// Deciding on one makes room.
 	v.ResolveFileSuggestion(nil, sugs[0].ID, false)
-	if _, err := v.SuggestFileLink(agent, files[len(files)-1].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, "agent", ""); err != nil {
+	if _, err := v.SuggestFileLink(agent, files[len(files)-1].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, "agent-fresh", ""); err != nil {
 		t.Fatalf("after room was made: %v", err)
 	}
 }

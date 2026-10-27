@@ -101,7 +101,7 @@ An agent with Claude's own Drive connector can `vault_file_register` a file: pro
 provider's file id, name, path, page address, and optionally whom to link it to. The vault
 queues it (`vault_file_proposals`, encrypted, bounded, one per provider+key); only the user's
 `pvault files proposals accept` indexes it, then in a source with `via: connector`: no folder,
-no sign-in, never synced, so nothing marks it gone and nothing refreshes it. The proposal
+no sign-in, never synced (a sync is refused for such a source), so nothing marks it gone and nothing refreshes it. Accepting is all or nothing: the link is checked first and a file this accept added is discarded if linking then fails. The proposal
 is untrusted (names and words through a model), so the web address must be on the provider's own
 site (it is what `pvault files open` would open), a sharing link is dropped, and a token can
 propose only for the holders and pratiche its scope reaches.

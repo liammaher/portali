@@ -286,8 +286,9 @@ With Touch ID on, `pvault files search ...` from Bash does the same with one pro
   not be there. Say so rather than concluding it doesn't exist.
 - `vault_file_suggest` proposes a link (needs `--access append`); it does nothing until the user accepts it with
   `pvault files suggestions`. Suggest only when the folder or name makes it clear. Linking, rules and sources are
-  the user's: never run `pvault files link`, `rule`, `source` (`source connect` signs in to their account) or
-  `prune` yourself.
+  the user's: never run `pvault files link`, `unlink`, `rule`, `source` (`source connect` signs in to their account),
+  `suggestions accept|reject`, `proposals accept|reject` or `prune` yourself; accepting what an agent proposed
+  is the one decision that must stay with them.
 - An empty answer can mean no source was added yet (`pvault files source list`).
 - If the user has Claude's own Google Drive (or OneDrive, SharePoint, Dropbox) connector connected and the file
   isn't in the index, you can find it with that connector and record it with `vault_file_register` (needs

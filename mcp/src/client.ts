@@ -575,6 +575,7 @@ export interface FileSource {
   provider: string;
   label: string;
   root?: string;
+  via?: string; // "connector": files an agent found through its own connector
 }
 
 export interface FileSearch {

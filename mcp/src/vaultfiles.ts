@@ -19,6 +19,8 @@ export interface FilePlace {
   local_path?: string;
   /** The provider's page for the file, if it has one. */
   web_url?: string;
+  /** Set for a file an agent found through its own connector and the user accepted: only a pointer as fresh as the day it was accepted. */
+  not_kept_up_to_date?: boolean;
 }
 
 export interface FileView {
@@ -63,6 +65,7 @@ export function describeFile(f: IndexedFile, sources: FileSource[]): FileView {
       path: l.path,
       local_path: localPath(src?.root, l.path),
       web_url: l.web_url,
+      not_kept_up_to_date: src?.via === "connector" ? true : undefined,
     };
   });
   return {

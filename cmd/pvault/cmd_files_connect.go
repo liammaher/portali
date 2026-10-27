@@ -254,6 +254,10 @@ func cmdFilesSourceReconnect() {
 	if len(os.Args) > 4 {
 		rest = os.Args[4:]
 	}
+	rest, bools, err := splitBoolFlags(rest, "--same-account")
+	if err != nil {
+		fatal("%v\n%s", err, filesUsage)
+	}
 	args := positionalArgsUntilFlag(rest)
 	if len(args) != 1 {
 		fatal(filesUsage)
@@ -266,7 +270,7 @@ func cmdFilesSourceReconnect() {
 	needGrant("files.*", "read")
 	src := findSource(listFileSources(), args[0])
 	if src.ClientID == "" {
-		fatal("%s is read from a folder: there is no sign-in to renew", src.Label)
+		fatal("%s has no sign-in to renew: it is read from a folder, or holds files an agent found through its own connector", src.Label)
 	}
 	spec := filesync.Spec{Provider: src.Provider, ClientID: src.ClientID, Tenant: src.Tenant, DriveID: src.DriveID,
 		ClientSecret: readClientSecret(src.Provider), Port: portOf(port)}
@@ -277,7 +281,7 @@ func cmdFilesSourceReconnect() {
 	label := ""
 	prov, driveID := openAfterSignIn(ctx, flow, spec, tok, src.Site, "", &label)
 
-	if err := sameAccount(src, prov.Who(ctx), driveID); err != nil {
+	if err := sameAccount(src, prov.Who(ctx), driveID, bools["--same-account"]); err != nil {
 		fatal("%v", err)
 	}
 	if err := filesync.SaveToken(secretStore, filesync.ServiceName(src.ID), tok); err != nil {
@@ -297,7 +301,13 @@ func positionalArgsUntilFlag(args []string) []string {
 
 // sameAccount refuses a sign-in that isn't the source's own: signing in as
 // someone else would make the next sync mark the first account's files gone.
-func sameAccount(src vault.FileSourceInfo, who, driveID string) error {
+//
+// When either side can't say whose account it is, that can't be checked: it
+// goes ahead only if the user says (--same-account) they are sure.
+func sameAccount(src vault.FileSourceInfo, who, driveID string, sure bool) error {
+	if (src.Account == "" || who == "") && !sure {
+		return fmt.Errorf("can't tell whether that sign-in is the same account as this source's: nothing was changed (add --same-account if it is)")
+	}
 	if src.Account != "" && who != "" && !strings.EqualFold(who, src.Account) {
 		return fmt.Errorf("that sign-in is %s, but this source is %s: nothing was changed (sign in as %s)", who, src.Account, src.Account)
 	}

@@ -94,7 +94,7 @@ func (d *fakeDropbox) signInAs(t *testing.T) func(string) {
 			return
 		}
 		q := u.Query()
-		if q.Get("code_challenge_method") != "S256" || q.Get("scope") != "files.metadata.read" || q.Get("token_access_type") != "offline" || q.Get("client_id") != "test-client" {
+		if q.Get("code_challenge_method") != "S256" || q.Get("scope") != "files.metadata.read account_info.read" || q.Get("token_access_type") != "offline" || q.Get("client_id") != "test-client" {
 			t.Errorf("sign-in request = %v", q)
 		}
 		d.mu.Lock()
@@ -274,20 +274,31 @@ func TestFiles_ReconnectKeepsTheSourceAndItsLinks(t *testing.T) {
 
 func TestFiles_ReconnectOnlyAsTheSameAccount(t *testing.T) {
 	src := vault.FileSourceInfo{Provider: "dropbox", FileSourceConfig: vault.FileSourceConfig{Account: "liam@example.it"}}
-	if err := sameAccount(src, "LIAM@example.it", ""); err != nil {
+	if err := sameAccount(src, "LIAM@example.it", "", false); err != nil {
 		t.Errorf("the same account in another case: %v", err)
 	}
-	if err := sameAccount(src, "someone.else@example.it", ""); err == nil || !strings.Contains(err.Error(), "nothing was changed") {
+	if err := sameAccount(src, "someone.else@example.it", "", false); err == nil || !strings.Contains(err.Error(), "nothing was changed") {
 		t.Errorf("another account: %v", err)
 	}
-	if err := sameAccount(src, "", ""); err != nil {
-		t.Errorf("a provider that doesn't say who: %v", err)
+	// A provider that doesn't say who, or a source that never knew: not checkable, so
+	// only with the user's word.
+	if err := sameAccount(src, "", "", false); err == nil || !strings.Contains(err.Error(), "--same-account") {
+		t.Errorf("an unknown account was trusted: %v", err)
+	}
+	if err := sameAccount(vault.FileSourceInfo{Provider: "dropbox"}, "x@y.it", "", false); err == nil {
+		t.Error("a source with no account on record was trusted")
+	}
+	if err := sameAccount(src, "", "", true); err != nil {
+		t.Errorf("with the user's word: %v", err)
+	}
+	if err := sameAccount(src, "someone.else@example.it", "", true); err == nil {
+		t.Error("--same-account overrode a visible mismatch")
 	}
 	od := vault.FileSourceInfo{Provider: "onedrive", FileSourceConfig: vault.FileSourceConfig{Account: "a@b.it", DriveID: "b!mine"}}
-	if err := sameAccount(od, "a@b.it", "b!other"); err == nil {
+	if err := sameAccount(od, "a@b.it", "b!other", false); err == nil {
 		t.Error("another OneDrive")
 	}
-	if err := sameAccount(od, "a@b.it", "b!mine"); err != nil {
+	if err := sameAccount(od, "a@b.it", "b!mine", false); err != nil {
 		t.Errorf("the same OneDrive: %v", err)
 	}
 }

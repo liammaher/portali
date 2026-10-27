@@ -26,16 +26,18 @@ func TestChunks(t *testing.T) {
 		}
 	}
 	for n := 1; n <= maxChunks; n += 9 {
-		if got, err := parseChunkIndex(chunkIndex(n)); err != nil || got != n {
-			t.Errorf("index %d = %d, %v", n, got, err)
+		if got, gen, err := parseChunkIndex(chunkIndex(n, "0a1b2c3d")); err != nil || got != n || gen != "0a1b2c3d" {
+			t.Errorf("index %d = %d %q, %v", n, got, gen, err)
 		}
 	}
-	for _, bad := range []string{"", "x", "pvault-chunks:", "pvault-chunks:0", "pvault-chunks:-1", "pvault-chunks:999", "pvault-chunks:2 -s evil"} {
-		if _, err := parseChunkIndex(bad); err == nil {
+	for _, bad := range []string{"", "x", "pvault-chunks:", "pvault-chunks:0:0a1b2c3d", "pvault-chunks:-1:0a1b2c3d", "pvault-chunks:999:0a1b2c3d",
+		"pvault-chunks:2", "pvault-chunks:2:", "pvault-chunks:2:xyz", "pvault-chunks:2:0a1b2c3d -s evil", "pvault-chunks:2:0A1B2C3D"} {
+		if _, _, err := parseChunkIndex(bad); err == nil {
 			t.Errorf("%q accepted", bad)
 		}
 	}
-	if chunkService("pvault-files-abc", 3) != "pvault-files-abc.c3" || !reService.MatchString(chunkService(ServiceName(strings.Repeat("a", 32)), 63)) {
+	if chunkService("pvault-files-abc", "0a1b2c3d", 3) != "pvault-files-abc.g0a1b2c3d.c3" ||
+		!reService.MatchString(chunkService(ServiceName(strings.Repeat("a", 32)), "0a1b2c3d", 63)) {
 		t.Error("chunk service names")
 	}
 }
@@ -70,9 +72,11 @@ func TestKeychainStoreRoundTrip(t *testing.T) {
 	if got, _ := k.Load(service); got != "short" {
 		t.Fatalf("replaced value = %q", got)
 	}
-	// The leftover parts of the long value are gone.
-	if part, _ := k.loadItem(mustAccount(t), chunkService(service, 3)); part != "" {
-		t.Fatal("a part of the old value was left in the Keychain")
+	// The old generation's parts are gone: a part of it can't be found by index.
+	if idx, _ := k.loadItem(mustAccount(t), service); idx == "" {
+		t.Fatal("no index after a save")
+	} else if _, gen, _ := parseChunkIndex(idx); gen == "" {
+		t.Fatal("index without a generation")
 	}
 	if err := k.Delete(service); err != nil {
 		t.Fatal(err)

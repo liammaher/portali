@@ -42,9 +42,20 @@ test("describeFile names the source, the local path and whom a file is linked to
   assert.deepEqual(v.places, [{
     source: "OneDrive-Acme", provider: "onedrive", path: "/Clienti/Rossi/visura.pdf",
     local_path: "/Users/x/Library/CloudStorage/OneDrive-Acme/Clienti/Rossi/visura.pdf", web_url: undefined,
+    not_kept_up_to_date: undefined,
   }]);
   assert.deepEqual(v.linked_to, ["client rossi", "pratica tari-2026 (visura)", "io"]);
   assert.equal(v.links[2].holder, "io");
+});
+
+test("describeFile says when a place is only as fresh as the day it was accepted", () => {
+  const v = describeFile(
+    file({ locations: [{ source: "s3", key: "k", path: "/Documenti/a.pdf" }] }),
+    [...sources, { id: "s3", provider: "gdrive", label: "Google Drive (found through Claude)", via: "connector" }],
+  );
+  assert.equal(v.places[0].not_kept_up_to_date, true);
+  assert.equal(v.places[0].local_path, undefined);
+  assert.equal(describeFile(file(), sources).places[0].not_kept_up_to_date, undefined);
 });
 
 test("describeFile copes with a source the token can't see", () => {

@@ -3,7 +3,9 @@ package filesync
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -67,8 +69,10 @@ func (KeychainStore) check(service string) (string, error) {
 
 // A value is kept as several Keychain items, each short: `security -i` reads a
 // line of limited length, and a Microsoft refresh token alone is over a
-// kilobyte. The item under the service name says how many parts follow; part i
-// is under service.c<i>.
+// kilobyte. The item under the service name is the index: "pvault-chunks:N:G",
+// N parts of generation G, part i under service.g<G>.c<i>. A new value is
+// written as a new generation and the index switched last, so a failure
+// halfway leaves the old value whole.
 const (
 	chunkSize   = 800
 	chunkPrefix = "pvault-chunks:"
@@ -87,17 +91,22 @@ func splitChunks(s string) []string {
 	return append(out, s)
 }
 
-func chunkIndex(n int) string { return chunkPrefix + strconv.Itoa(n) }
+var reGeneration = regexp.MustCompile(`^[0-9a-f]{8}$`)
 
-func parseChunkIndex(s string) (int, error) {
-	n, err := strconv.Atoi(strings.TrimPrefix(s, chunkPrefix))
-	if err != nil || !strings.HasPrefix(s, chunkPrefix) || n < 1 || n > maxChunks {
-		return 0, errors.New("not a value pvault wrote")
+func chunkIndex(n int, gen string) string { return chunkPrefix + strconv.Itoa(n) + ":" + gen }
+
+func parseChunkIndex(s string) (n int, gen string, err error) {
+	rest, ok := strings.CutPrefix(s, chunkPrefix)
+	num, gen, found := strings.Cut(rest, ":")
+	if n, err = strconv.Atoi(num); !ok || !found || err != nil || n < 1 || n > maxChunks || !reGeneration.MatchString(gen) {
+		return 0, "", errors.New("not a value pvault wrote")
 	}
-	return n, nil
+	return n, gen, nil
 }
 
-func chunkService(service string, i int) string { return service + ".c" + strconv.Itoa(i) }
+func chunkService(service, gen string, i int) string {
+	return service + ".g" + gen + ".c" + strconv.Itoa(i)
+}
 
 func (k KeychainStore) loadItem(account, service string) (string, error) {
 	out, err := exec.Command(securityPath, "find-generic-password", "-a", account, "-s", service, "-w").Output()
@@ -138,13 +147,13 @@ func (k KeychainStore) Load(service string) (string, error) {
 	if err != nil || idx == "" {
 		return "", err
 	}
-	n, err := parseChunkIndex(idx)
+	n, gen, err := parseChunkIndex(idx)
 	if err != nil {
 		return "", fmt.Errorf("the Keychain item %s: %w", service, err)
 	}
 	var enc strings.Builder
 	for i := 0; i < n; i++ {
-		part, err := k.loadItem(account, chunkService(service, i))
+		part, err := k.loadItem(account, chunkService(service, gen, i))
 		if err != nil {
 			return "", err
 		}
@@ -157,8 +166,8 @@ func (k KeychainStore) Load(service string) (string, error) {
 	return string(raw), nil
 }
 
-// Save writes the parts first and the index last, so a failure halfway leaves
-// the old value (or nothing), never a mix.
+// Save writes the value as a new generation, switches the index to it, and
+// only then deletes the old generation.
 func (k KeychainStore) Save(service, secret string) error {
 	account, err := k.check(service)
 	if err != nil {
@@ -168,20 +177,27 @@ func (k KeychainStore) Save(service, secret string) error {
 	if len(parts) > maxChunks {
 		return errors.New("the sign-in is too large to keep")
 	}
-	oldN := 0
+	oldN, oldGen := 0, ""
 	if idx, err := k.loadItem(account, service); err == nil && idx != "" {
-		oldN, _ = parseChunkIndex(idx)
+		oldN, oldGen, _ = parseChunkIndex(idx)
 	}
+	g := make([]byte, 4)
+	if _, err := rand.Read(g); err != nil {
+		return err
+	}
+	gen := hex.EncodeToString(g)
 	for i, part := range parts {
-		if err := k.saveItem(account, chunkService(service, i), part); err != nil {
+		if err := k.saveItem(account, chunkService(service, gen, i), part); err != nil {
+			k.deleteGeneration(account, service, gen, i+1)
 			return err
 		}
 	}
-	if err := k.saveItem(account, service, chunkIndex(len(parts))); err != nil {
+	if err := k.saveItem(account, service, chunkIndex(len(parts), gen)); err != nil {
+		k.deleteGeneration(account, service, gen, len(parts))
 		return err
 	}
-	for i := len(parts); i < oldN; i++ {
-		k.deleteItem(account, chunkService(service, i))
+	if oldGen != "" {
+		k.deleteGeneration(account, service, oldGen, oldN)
 	}
 	got, err := k.Load(service)
 	if err != nil {
@@ -193,6 +209,12 @@ func (k KeychainStore) Save(service, secret string) error {
 	return nil
 }
 
+func (k KeychainStore) deleteGeneration(account, service, gen string, n int) {
+	for i := 0; i < n; i++ {
+		k.deleteItem(account, chunkService(service, gen, i))
+	}
+}
+
 func (k KeychainStore) Delete(service string) error {
 	account, err := k.check(service)
 	if err != nil {
@@ -202,12 +224,8 @@ func (k KeychainStore) Delete(service string) error {
 	if err != nil {
 		return err
 	}
-	if n, perr := parseChunkIndex(idx); perr == nil {
-		for i := 0; i < n; i++ {
-			if err := k.deleteItem(account, chunkService(service, i)); err != nil {
-				return err
-			}
-		}
+	if n, gen, perr := parseChunkIndex(idx); perr == nil {
+		k.deleteGeneration(account, service, gen, n)
 	}
 	return k.deleteItem(account, service)
 }

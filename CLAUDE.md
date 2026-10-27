@@ -302,8 +302,14 @@ the page never copies a rule.
   state-checked loopback redirect. The token goes only to the provider's own host; any failure
   leaves the scan incomplete (nothing marked gone). `source connect` is the user's to run.
 - A file an agent found through another connector is only a proposal (`ProposeFile`, bounded)
-  until the user accepts it; it then lives in a `via: connector` source that nothing syncs or
-  marks gone. A proposal's address must be on the provider's own site; a sharing link is dropped.
+  until the user accepts it; it then lives in a `via: connector` source that nothing syncs
+  (`upsertFiles` refuses a sync of it) or marks gone. Accepting is all or nothing (link checked
+  first, a file it added is discarded if linking fails). A proposal's address must be on the
+  provider's own site (a Google one carries the file's id), a sharing link is dropped, a duplicate
+  never shows another token's proposal, and one token holds at most 50 of the 200 slots.
+  A file linked again with a role takes the role. `files_closed` needs every link of a file to
+  be an ID or procura role of a client whose pratiche are closed, and the file untouched since
+  the earliest of those closings.
 - Never store a sharing link (`CheckFileURL`). A file that left its source is tombstoned,
   never deleted; `PruneFiles` drops only unlinked tombstones. `RemovePerson` drops the
   person's links, rules and suggestions, not the index rows.

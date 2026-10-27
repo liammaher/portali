@@ -207,13 +207,15 @@ func TestRetention_AFileWithAnotherLinkIsKept(t *testing.T) {
 	if _, err := v.LinkFile(pratica, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual); err != nil {
 		t.Fatal(err)
 	}
-	noRole := linkedFile(t, v, src, "3", "cie rossi e verdi.pdf", before, "rossi", "cie") // two done clients
-	link(noRole, "verdi", "contratto")
+	both := linkedFile(t, v, src, "3", "cie rossi e verdi.pdf", before, "rossi", "cie") // two done clients, both as an ID
+	link(both, "verdi", "cie")
+	contract := linkedFile(t, v, src, "5", "rossi e verdi insieme.pdf", before, "rossi", "cie") // verdi needs it as a contract
+	link(contract, "verdi", "contratto")
 	linkedFile(t, v, src, "4", "cie solo rossi.pdf", before, "rossi", "cie")
 
 	got := dueFiles(t, v, nil, now)
 	if names(got) != "cie rossi e verdi.pdf,cie solo rossi.pdf" {
-		t.Fatalf("due = %q (a file also linked to an open client or pratica must stay)", names(got))
+		t.Fatalf("due = %q (a file also linked to an open client or pratica, or needed as something else, must stay)", names(got))
 	}
 	// Reported once, whichever client's link carries the ID role.
 	count := 0
@@ -260,5 +262,38 @@ func TestRetention_AnUndatedProcuraKeepsTheOthers(t *testing.T) {
 	mustSet(t, v, "rossi:procura2.data_scadenza", now.AddDate(0, 0, -2).Format(dateLayout))
 	if got := dueFiles(t, v, nil, now); len(got) != 1 {
 		t.Fatalf("both ended: %+v", got)
+	}
+}
+
+// A file linked to two clients is only reported once it was untouched since the
+// EARLIER of their closings: one modified after the first client's pratiche
+// closed may have been handed over for a new job.
+func TestRetention_ASharedFileUsesTheEarlierClosing(t *testing.T) {
+	now := time.Now().UTC()
+	v := tmpVaultKind(t, KindImpresa)
+	for _, slug := range []string{"rossi", "verdi"} {
+		mustSet(t, v, slug+":ruolo.tipo", "cliente")
+		mustSet(t, v, "pratiche.p-"+slug+"_persona", slug)
+		mustSet(t, v, "pratiche.p-"+slug+"_stato", "completata")
+	}
+	setClosedAt(t, v, "pratiche.p-rossi_stato", now.AddDate(0, 0, -90))
+	setClosedAt(t, v, "pratiche.p-verdi_stato", now.AddDate(0, 0, -1))
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
+	src := fileSource(t, v)
+	for key, age := range map[string]int{"1": 30, "2": 100} {
+		id := linkedFile(t, v, src, key, "cie-"+key+".pdf", now.AddDate(0, 0, -age), "rossi", "cie")
+		if _, err := v.LinkFile(id, FileLinkInput{Holder: "verdi", Kind: FileKindClient, Role: "cie"}, FileOriginManual); err != nil {
+			t.Fatal(err)
+		}
+	}
+	got := dueFiles(t, v, nil, now)
+	if names(got) != "cie-2.pdf" {
+		t.Fatalf("due = %q: a file modified 30 days ago, after rossi's pratiche closed 90 days ago, must stay", names(got))
+	}
+	// Due on the later client's closing, not the earlier one's.
+	if len(got) == 1 && got[0].ExpiresOn != now.AddDate(0, 0, -1).Format(dateLayout) {
+		t.Fatalf("expires on %s, want the later closing", got[0].ExpiresOn)
 	}
 }

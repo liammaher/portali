@@ -60,8 +60,10 @@ const (
 	defaultFileLimit = 200
 	maxFileLimit     = 1000
 
-	// maxPendingSuggestions bounds what an agent can queue for the user.
+	// maxPendingSuggestions bounds what agents can queue for the user, and
+	// maxPendingPerProposer what one token can, so one can't use up the room.
 	maxPendingSuggestions = 200
+	maxPendingPerProposer = 50
 )
 
 // FilesScopeID is the ID token scopes are checked against for files held by
@@ -267,7 +269,8 @@ func (v *Vault) auditFile(scope, action, purpose string) {
 // read differently from what it is (a file "gpj.exe" shown as "exe.jpg").
 func hasUnsafe(s string) bool {
 	for _, r := range s {
-		if unicode.IsControl(r) || (r >= 0x202A && r <= 0x202E) || (r >= 0x2066 && r <= 0x2069) || r == 0x200E || r == 0x200F {
+		if unicode.IsControl(r) || (r >= 0x202A && r <= 0x202E) || (r >= 0x2066 && r <= 0x2069) ||
+			r == 0x200E || r == 0x200F || r == 0x061C || r == 0x2028 || r == 0x2029 {
 			return true
 		}
 	}
@@ -694,7 +697,7 @@ func (o *FileObservation) Check() error {
 // A file is matched by its key at the source. Tombstoned files return when
 // seen again.
 func (v *Vault) UpsertFiles(sourceID string, obs []FileObservation, full bool) (*FileSyncResult, error) {
-	return v.upsertFiles(nil, sourceID, obs, full, "", false)
+	return v.upsertFiles(nil, sourceID, obs, full, "", false, false)
 }
 
 // UpsertFilesIf is UpsertFiles for a caller with a filter (a service token's):
@@ -702,7 +705,7 @@ func (v *Vault) UpsertFiles(sourceID string, obs []FileObservation, full bool) (
 // rewrite or tombstone a person's files, or learn from the counts that its
 // guess at one was right.
 func (v *Vault) UpsertFilesIf(allow FieldFilter, sourceID string, obs []FileObservation, full bool) (*FileSyncResult, error) {
-	return v.upsertFiles(allow, sourceID, obs, full, "", false)
+	return v.upsertFiles(allow, sourceID, obs, full, "", false, false)
 }
 
 // UpsertFileBatch is UpsertFiles for one batch of a longer sync: it remembers
@@ -723,7 +726,7 @@ func (v *Vault) UpsertFileBatchIf(allow FieldFilter, sourceID, syncID string, be
 	if !reSyncID.MatchString(syncID) {
 		return nil, &ValidationError{Field: "sync_id", Msg: "a sync needs an id of 8 to 64 letters, digits or hyphens"}
 	}
-	return v.upsertFiles(allow, sourceID, obs, false, syncID, begin)
+	return v.upsertFiles(allow, sourceID, obs, false, syncID, begin, false)
 }
 
 var reSyncID = regexp.MustCompile(`^[A-Za-z0-9-]{8,64}$`)
@@ -881,7 +884,14 @@ func (v *Vault) tombstone(of *openedFile, now time.Time) error {
 	return nil
 }
 
-func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObservation, full bool, syncID string, begin bool) (*FileSyncResult, error) {
+// upsertFiles is the one place observations enter the index. viaOK lets it
+// write to a source fed by an agent (the user's accepting a proposal); a sync
+// may not: such a source has nothing to read, and a listing of it would only
+// ever mark what the user accepted as gone.
+func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObservation, full bool, syncID string, begin bool, viaOK bool) (*FileSyncResult, error) {
+	// Checking cleans in place: on a copy, so a caller's slice (or one shared
+	// by two syncs) is never written to.
+	obs = append([]FileObservation(nil), obs...)
 	for i := range obs {
 		if err := obs[i].Check(); err != nil {
 			return nil, err
@@ -901,6 +911,11 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 		}
 		if src == nil {
 			return ErrFileNotFound
+		}
+		if info, err := openFileSource(key, *src); err != nil {
+			return err
+		} else if info.Via == ViaConnector && !viaOK {
+			return &ValidationError{Field: "source", Msg: "this source holds files an agent found through its own connector: nothing syncs it"}
 		}
 		v.reapFileSyncs(time.Now())
 		var track *fileSync
@@ -935,17 +950,17 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 		now := time.Now()
 		for _, o := range obs {
 			of := idx.byKey[o.Key]
+			if track != nil && !o.Deleted {
+				if len(track.keys) >= maxSyncKeys {
+					return &ValidationError{Field: "files", Msg: "this sync is larger than a million files"}
+				}
+				track.keys[o.Key] = true
+			}
 			if of != nil && !visible(of) {
 				// Not the caller's to see: left as it is, and uncounted.
-				if track != nil {
-					track.keys[o.Key] = true
-				}
 				continue
 			}
 			if o.Keep {
-				if track != nil {
-					track.keys[o.Key] = true
-				}
 				if of != nil {
 					seen[of] = true
 				}
@@ -959,12 +974,6 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 					res.Gone++
 				}
 				continue
-			}
-			if track != nil {
-				if len(track.keys) >= maxSyncKeys {
-					return &ValidationError{Field: "files", Msg: "this sync is larger than a million files"}
-				}
-				track.keys[o.Key] = true
 			}
 			loc := FileLocation{Source: sourceID, Key: o.Key, Path: o.Path, WebURL: o.WebURL}
 			if of == nil {
@@ -1204,7 +1213,29 @@ func (v *Vault) createFileLink(key []byte, f store.File, in FileLinkInput, origi
 	for _, l := range links {
 		if l.Holder == in.Holder && l.Kind == in.Kind && l.PraticaSlug == in.Pratica {
 			info, err := openFileLink(key, l)
-			return info, err
+			if err != nil {
+				return nil, err
+			}
+			// Linking again with a role (or note) says more than the first time did,
+			// whether the first link came from a folder rule or from the user: keep it.
+			role, note := info.Role, info.Note
+			if in.Role != "" {
+				role = in.Role
+			}
+			if in.Note != "" {
+				note = in.Note
+			}
+			if role != info.Role || note != info.Note {
+				blob, err := sealFileBlob(key, "filelink", l.ID, fileLinkBlob{Role: role, Note: note})
+				if err != nil {
+					return nil, err
+				}
+				if err := v.db.UpdateFileLinkBlob(l.ID, blob); err != nil {
+					return nil, err
+				}
+				info.Role, info.Note = role, note
+			}
+			return info, nil
 		}
 	}
 	id, err := newFileID()
@@ -1538,7 +1569,13 @@ func (v *Vault) SuggestFileLink(allow FieldFilter, fileID string, in FileLinkInp
 				return nil // already waiting for the user
 			}
 		}
-		if len(pending) >= maxPendingSuggestions {
+		mine := 0
+		for _, p := range pending {
+			if p.ProposedBy == proposedBy {
+				mine++
+			}
+		}
+		if len(pending) >= maxPendingSuggestions || mine >= maxPendingPerProposer {
 			return &ValidationError{Field: "suggestions", Msg: "too many suggestions are waiting for the user: wait until they have decided on some"}
 		}
 		id, err := newFileID()

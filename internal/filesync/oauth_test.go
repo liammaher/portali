@@ -285,10 +285,10 @@ func TestTokenSource_ClientSecretStaysWithTheTokens(t *testing.T) {
 
 func TestNewFlow_ReadOnlyScopesPerProvider(t *testing.T) {
 	for provider, want := range map[string][]string{
-		"onedrive":   {"Files.Read", "offline_access"},
-		"sharepoint": {"Files.Read.All", "Sites.Read.All", "offline_access"},
+		"onedrive":   {"Files.Read", "User.Read", "offline_access"},
+		"sharepoint": {"Files.Read.All", "Sites.Read.All", "User.Read", "offline_access"},
 		"gdrive":     {"https://www.googleapis.com/auth/drive.metadata.readonly"},
-		"dropbox":    {"files.metadata.read"},
+		"dropbox":    {"files.metadata.read", "account_info.read"},
 	} {
 		f, err := NewFlow(Spec{Provider: provider, ClientID: "c"}, nil)
 		if err != nil {

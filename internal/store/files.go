@@ -326,6 +326,11 @@ func (d *DB) GetFileLink(id string) (*FileLink, error) {
 	return &l, nil
 }
 
+// UpdateFileLinkBlob replaces a link's encrypted role and note.
+func (d *DB) UpdateFileLinkBlob(id, blob string) error {
+	return oneRow(d.conn.Exec(`UPDATE vault_file_links SET blob = ? WHERE id = ?`, blob, id))
+}
+
 // DeleteFileLink removes a link. It reports whether there was one.
 func (d *DB) DeleteFileLink(id string) (bool, error) {
 	res, err := d.conn.Exec(`DELETE FROM vault_file_links WHERE id = ?`, id)

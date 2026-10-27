@@ -44,6 +44,9 @@ type FileProposalInfo struct {
 	ID         string    `json:"id"`
 	ProposedBy string    `json:"proposed_by"`
 	CreatedAt  time.Time `json:"created_at"`
+	// Replaces is the name of the entry the same file already has in the index
+	// (a file accepted before): accepting would overwrite it.
+	Replaces string `json:"replaces,omitempty"`
 	FileProposalInput
 }
 
@@ -88,6 +91,12 @@ func (in *FileProposalInput) observation() (FileObservation, error) {
 		if err != nil || u.Scheme != "https" || !proposalHostOK(in.Provider, u.Hostname()) {
 			return o, &ValidationError{Field: "web_url", Msg: "must be a page of " + providerTitle(in.Provider) + " itself"}
 		}
+		// Google: the file's own page (its id is in the address), not a form, a
+		// download or another file's page dressed up as this one's.
+		if in.Provider == "gdrive" && (!strings.Contains(u.Path, "/"+in.Key) || strings.HasPrefix(u.Path, "/uc") ||
+			strings.Contains(u.Path, "/forms/") || strings.Contains(u.Path, "/d/e/")) {
+			return o, &ValidationError{Field: "web_url", Msg: "must be the file's own page, with its id in the address"}
+		}
 		if CheckFileURL(o.WebURL) != nil {
 			o.WebURL = "" // a sharing link: the file is kept, the link is not
 		}
@@ -101,8 +110,10 @@ func (in *FileProposalInput) observation() (FileObservation, error) {
 	return o, nil
 }
 
+// hasLink reports a proposal that asks for a link. A role alone does: "this is
+// a CIE" for the owner leaves Holder empty, which is how the owner is named.
 func (in *FileProposalInput) hasLink() bool {
-	return in.Holder != "" || in.Pratica != "" || in.Kind != ""
+	return in.Holder != "" || in.Pratica != "" || in.Kind != "" || in.Role != ""
 }
 
 func (in *FileProposalInput) link() FileLinkInput {
@@ -130,6 +141,10 @@ func (v *Vault) ProposeFile(allow FieldFilter, in FileProposalInput, proposedBy 
 			return nil, err
 		}
 		in.Kind, in.Role = li.Kind, li.Role
+		// "for: io" is the business in a business vault.
+		if v.kind == KindImpresa && in.Holder == "" && in.Kind == FileKindPerson {
+			in.Kind = FileKindBusiness
+		}
 	}
 
 	v.writeMu.RLock()
@@ -156,11 +171,21 @@ func (v *Vault) ProposeFile(allow FieldFilter, in FileProposalInput, proposedBy 
 				return err
 			}
 			if existing.Provider == in.Provider && existing.Key == in.Key {
+				if !holderAllowed(allow, p.Holder, "") {
+					// Someone else's proposal: the caller learns it exists, not what it says.
+					return &ValidationError{Field: "key", Msg: "that file is already proposed and waiting for the user"}
+				}
 				out = &FileProposalInfo{ID: p.ID, ProposedBy: p.ProposedBy, CreatedAt: p.CreatedAt, FileProposalInput: existing}
 				return nil // already waiting for the user
 			}
 		}
-		if len(pending) >= maxPendingSuggestions {
+		mine := 0
+		for _, p := range pending {
+			if p.ProposedBy == proposedBy {
+				mine++
+			}
+		}
+		if len(pending) >= maxPendingSuggestions || mine >= maxPendingPerProposer {
 			return &ValidationError{Field: "proposals", Msg: "too many proposals are waiting for the user: wait until they have decided on some"}
 		}
 		id, err := newFileID()
@@ -205,9 +230,42 @@ func (v *Vault) FileProposals(allow FieldFilter) ([]FileProposalInfo, error) {
 			}
 			out = append(out, FileProposalInfo{ID: p.ID, ProposedBy: p.ProposedBy, CreatedAt: p.CreatedAt, FileProposalInput: in})
 		}
-		return nil
+		return v.markReplaced(key, out)
 	})
 	return out, err
+}
+
+// markReplaced sets Replaces on proposals for a file the index already has
+// from an earlier acceptance.
+func (v *Vault) markReplaced(key []byte, list []FileProposalInfo) error {
+	if len(list) == 0 {
+		return nil
+	}
+	srcs, err := v.db.ListFileSources()
+	if err != nil {
+		return err
+	}
+	byProvider := map[string]*fileIndex{}
+	for _, s := range srcs {
+		info, err := openFileSource(key, s)
+		if err != nil {
+			return err
+		}
+		if info.Via != ViaConnector {
+			continue
+		}
+		if byProvider[s.Provider], err = v.loadFileIndex(key, s.ID); err != nil {
+			return err
+		}
+	}
+	for i := range list {
+		if idx := byProvider[list[i].Provider]; idx != nil {
+			if of := idx.byKey[list[i].Key]; of != nil && of.row.GoneAt.IsZero() {
+				list[i].Replaces = of.meta.Name
+			}
+		}
+	}
+	return nil
 }
 
 // connectorSource returns the source holding a provider's accepted proposals,
@@ -305,11 +363,19 @@ func (v *Vault) ResolveFileProposal(allow FieldFilter, id string, accept bool) (
 		if err != nil {
 			return nil, err
 		}
+		// The link is checked before anything is added, so a person or pratica
+		// that has gone since leaves the index as it was.
+		if prop.hasLink() {
+			if err := v.checkLinkable(prop.link()); err != nil {
+				return nil, fmt.Errorf("it can't be accepted as proposed (%w): reject it", err)
+			}
+		}
 		srcID, err := v.connectorSource(prop.Provider)
 		if err != nil {
 			return nil, err
 		}
-		if _, err := v.UpsertFiles(srcID, []FileObservation{o}, false); err != nil {
+		res, err := v.upsertFiles(nil, srcID, []FileObservation{o}, false, "", false, true)
+		if err != nil {
 			return nil, err
 		}
 		fileID, err := v.fileIDByKey(srcID, o.Key)
@@ -321,7 +387,12 @@ func (v *Vault) ResolveFileProposal(allow FieldFilter, id string, accept bool) (
 		}
 		if prop.hasLink() {
 			if _, err := v.LinkFile(fileID, prop.link(), FileOriginSuggestion); err != nil {
-				return nil, fmt.Errorf("the file is in the index, but linking it failed: %w", err)
+				// Linked to no one it would be the owner's: a file this accept just
+				// added goes again.
+				if res.Added == 1 {
+					v.discardFile(fileID)
+				}
+				return nil, fmt.Errorf("it can't be accepted as proposed (%w): reject it", err)
 			}
 		}
 		if info, err = v.GetFileInfo(nil, fileID); err != nil {
@@ -343,4 +414,25 @@ func (v *Vault) ResolveFileProposal(allow FieldFilter, id string, accept bool) (
 	v.auditFile(FilesScopeID(holder), action, prop.Provider)
 	v.markChanged()
 	return info, nil
+}
+
+// checkLinkable says whether a link could be made now, without making it.
+func (v *Vault) checkLinkable(in FileLinkInput) error {
+	if err := in.clean(); err != nil {
+		return err
+	}
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
+	return v.checkFileTarget(nil, in.Holder, in.Kind, in.Pratica)
+}
+
+// discardFile removes a file row (and anything pointing at it) that an
+// accept added and could not finish.
+func (v *Vault) discardFile(id string) {
+	v.writeMu.RLock()
+	defer v.writeMu.RUnlock()
+	v.filesMu.Lock()
+	defer v.filesMu.Unlock()
+	v.db.DeleteFiles([]string{id})
+	v.dropFileSyncs()
 }

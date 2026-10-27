@@ -253,7 +253,7 @@ func TestFiles_ProposalsEndToEnd(t *testing.T) {
 	}
 
 	out := runCmd(t, cmdFiles, "files", "proposals")
-	for _, want := range []string{"claude proposes adding \"CIE-Leo.pdf\" from Google Drive", "/Documenti/CIE-Leo.pdf", "linking it to leo (cie)", "reason: its name says"} {
+	for _, want := range []string{"claude proposes adding \"CIE-Leo.pdf\" from Google Drive", "/Documenti/CIE-Leo.pdf", "linking it to leo (cie)", `reason: "its name says`} {
 		if !strings.Contains(out, want) {
 			t.Fatalf("proposals lacks %q:\n%s", want, out)
 		}
@@ -284,12 +284,39 @@ func TestFiles_ProposalsEndToEnd(t *testing.T) {
 		t.Fatalf("after a sync:\n%s", out)
 	}
 
+	// The address of a file an agent proposed is shown, never opened by pvault.
+	fid := fileID(t, runCmd(t, cmdFiles, "files", "search", "CIE"), "CIE-Leo.pdf")
+	if out := runCmd(t, cmdFiles, "files", "open", fid); !strings.Contains(out, "https://drive.google.com/file/d/1AbC/view") || !strings.Contains(out, "check it before you open it") {
+		t.Fatalf("open:\n%s", out)
+	}
+
 	// Rejecting forgets it.
 	in.Key, in.Name, in.Path = "2DeF", "Altro.pdf", "/Altro.pdf"
-	in.Holder, in.Role = "", ""
-	v.ProposeFile(nil, in, "claude")
+	in.Holder, in.Role, in.WebURL = "", "", "" // (an address must carry the file's own id)
+	if _, err := v.ProposeFile(nil, in, "claude"); err != nil {
+		t.Fatal(err)
+	}
 	runCmd(t, cmdFiles, "files", "proposals", "reject", strings.Fields(runCmd(t, cmdFiles, "files", "proposals"))[0])
 	if out := runCmd(t, cmdFiles, "files", "search", "altro"); !strings.Contains(out, "No files found") {
 		t.Fatalf("a rejected proposal:\n%s", out)
+	}
+
+	// A queue an agent filled is emptied in one command; a file accepted before is flagged as replaced.
+	for i := 0; i < 3; i++ {
+		in.Key, in.Name, in.Path = fmt.Sprint("junk", i), fmt.Sprintf("junk%d.pdf", i), fmt.Sprintf("/junk%d.pdf", i)
+		in.WebURL = ""
+		v.ProposeFile(nil, in, "claude")
+	}
+	in.Key, in.Name, in.Path = "1AbC", "CIE-Leo-renamed.pdf", "/Documenti/CIE-Leo-renamed.pdf"
+	in.WebURL = "https://drive.google.com/file/d/1AbC/view?usp=drivesdk"
+	v.ProposeFile(nil, in, "claude")
+	if out := runCmd(t, cmdFiles, "files", "proposals"); !strings.Contains(out, "REPLACES the entry already in the index") || !strings.Contains(out, `id "1AbC"`) {
+		t.Fatalf("proposals:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "proposals", "reject", "--all"); !strings.Contains(out, "Rejected 4 proposal(s)") {
+		t.Fatalf("reject --all:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "proposals"); !strings.Contains(out, "No proposals waiting") {
+		t.Fatalf("after reject --all:\n%s", out)
 	}
 }

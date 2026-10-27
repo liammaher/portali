@@ -361,12 +361,14 @@ func (v *Vault) procuraMayGo(c *clientClosure, person string) (bool, error) {
 
 // filesDue returns the files in the index that the pratiche's closing lets
 // go. A file qualifies only if every link it has is to a client who is done
-// (so a file also linked to an open pratica, to the owner, or to a client
-// still being served stays), the caller sees all of its links, at least one
-// link's role names an ID or procura category, no procura of that client is
-// still running, and it was last modified before the latest of those
-// closings (one with no time, or a later one, is kept). A file gone from its
-// source isn't listed. They are references: the vault can't delete them.
+// and names an ID or procura category as its role (so a file also linked to
+// an open pratica, to the owner, to a client still being served, or as a
+// contract, stays), the caller sees all of its links, no procura of those
+// clients is still running, and it was last modified before the EARLIEST of
+// those clients' closings (a file touched after one of them closed may be
+// there for a new job; one with no time is kept). It is due when the latest
+// of those closings plus the period has come. A file gone from its source
+// isn't listed. They are references: the vault can't delete them.
 func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error) {
 	links, err := v.db.ListFileLinks("")
 	if err != nil {
@@ -388,7 +390,7 @@ func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error)
 			if len(ls) == 0 || !f.GoneAt.IsZero() {
 				continue
 			}
-			var latest time.Time
+			var latest, earliest time.Time
 			var idHolders []string
 			roleOf := map[string]string{}
 			ok := true
@@ -401,8 +403,11 @@ func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error)
 					ok = false
 					break
 				}
-				if c.lastClosed[l.Holder].After(latest) {
-					latest = c.lastClosed[l.Holder]
+				if closed := c.lastClosed[l.Holder]; closed.After(latest) {
+					latest = closed
+				}
+				if closed := c.lastClosed[l.Holder]; earliest.IsZero() || closed.Before(earliest) {
+					earliest = closed
 				}
 				info, err := openFileLink(key, l)
 				if err != nil {
@@ -410,7 +415,8 @@ func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error)
 				}
 				role := linkRoleCategory(info.Role)
 				if role == "" {
-					continue
+					ok = false // linked for another purpose: still needed
+					break
 				}
 				if cs := schemaCategoryOf(role); cs != nil && cs.Name == "procura" {
 					over, seen := procura[l.Holder]
@@ -437,7 +443,7 @@ func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error)
 			if err := openFileBlob(key, "file", f.ID, f.Blob, &meta); err != nil {
 				return err
 			}
-			if at, err := time.Parse(time.RFC3339, meta.Mtime); err != nil || !at.Before(latest) {
+			if at, err := time.Parse(time.RFC3339, meta.Mtime); err != nil || !at.Before(earliest) {
 				continue
 			}
 			sort.Strings(idHolders)

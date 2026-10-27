@@ -34,7 +34,8 @@ func cleanName(name string) string {
 			return '∕'
 		case r == '\\':
 			return '＼'
-		case unicode.IsControl(r), r >= 0x202A && r <= 0x202E, r >= 0x2066 && r <= 0x2069, r == 0x200E, r == 0x200F:
+		case unicode.IsControl(r), r >= 0x202A && r <= 0x202E, r >= 0x2066 && r <= 0x2069, r == 0x200E, r == 0x200F,
+			r == 0x061C, r == 0x2028, r == 0x2029:
 			return -1
 		}
 		return r
@@ -77,7 +78,11 @@ func (s *Scan) add(o vault.FileObservation) {
 		return
 	}
 	s.Skipped++
-	s.Files = append(s.Files, vault.FileObservation{Key: o.Key, Keep: true})
+	// Only a key the vault accepts can be reported; one it doesn't would make
+	// it refuse the whole batch.
+	if keep := (vault.FileObservation{Key: o.Key, Keep: true}); keep.Check() == nil {
+		s.Files = append(s.Files, keep)
+	}
 }
 
 // fail records an error that makes the scan incomplete.
@@ -128,9 +133,10 @@ func NewFlow(spec Spec, ep *Endpoints) (*Flow, error) {
 		// Read-only. A user's own OneDrive needs Files.Read; SharePoint libraries
 		// (and files shared with the user) need the .All scopes. offline_access
 		// is what gives a refresh token.
-		f.Scopes = []string{"Files.Read", "offline_access"}
+		// User.Read says whose account it is, which reconnecting checks.
+		f.Scopes = []string{"Files.Read", "User.Read", "offline_access"}
 		if spec.Provider == "sharepoint" {
-			f.Scopes = []string{"Files.Read.All", "Sites.Read.All", "offline_access"}
+			f.Scopes = []string{"Files.Read.All", "Sites.Read.All", "User.Read", "offline_access"}
 		}
 		f.AuthParams = url.Values{"response_mode": {"query"}}
 	case "gdrive":
@@ -144,7 +150,7 @@ func NewFlow(spec Spec, ep *Endpoints) (*Flow, error) {
 		f.Name = "Dropbox"
 		f.AuthURL = "https://www.dropbox.com/oauth2/authorize"
 		f.TokenURL = "https://api.dropboxapi.com/oauth2/token"
-		f.Scopes = []string{"files.metadata.read"}
+		f.Scopes = []string{"files.metadata.read", "account_info.read"}
 		f.AuthParams = url.Values{"token_access_type": {"offline"}}
 	default:
 		return nil, fmt.Errorf("%q is not read through an API: use one of %v", spec.Provider, ProviderNames)

@@ -414,9 +414,15 @@ func (s *Server) handleProposeFile(w http.ResponseWriter, r *http.Request) {
 	if !requireAccess(w, r, false) || !decodeJSON(w, r, &in) {
 		return
 	}
+	// "for": "io" says the owner; that is a request for a link even though the
+	// holder it becomes is empty.
+	asked := in.Holder != ""
 	var ok bool
 	if in.Holder, ok = holderOf(w, in.Holder); !ok {
 		return
+	}
+	if asked && in.Kind == "" && in.Pratica == "" {
+		in.Kind = vault.FileKindPerson
 	}
 	if !vault.ScopeAllows(scopeFromRequest(r), vault.FilesScopeID(in.Holder)) {
 		scopeDenied(w)

@@ -23,7 +23,7 @@ const filesUsage = `usage:
                       [--site <https address> --library <name>] [--tenant common] [--port 53682]
                                        Read an account through the provider's API, read-only (docs/usage.md:
                                        register an OAuth client first); sign in in your browser
-  pvault files source reconnect <source> [--port 53682]
+  pvault files source reconnect <source> [--port 53682] [--same-account]
                                        Sign in again for a source whose sign-in expired or was revoked:
                                        keeps its index and links (same account only)
   pvault files source list
@@ -41,7 +41,7 @@ const filesUsage = `usage:
   pvault files rule add <source> --path /Clienti/Rossi --for slug|io [--pratica slug] [--kind k]
   pvault files rule list [source]
   pvault files rule remove <rule-id>
-  pvault files proposals [accept|reject <id>]
+  pvault files proposals [accept|reject <id> | reject --all]
                                        Files an agent found through its own connector (Claude's Google Drive...)
                                        and proposed for the index: nothing is indexed until you accept
   pvault files suggestions [accept|reject <id>]
@@ -569,7 +569,10 @@ func cmdFilesOpen() {
 		}
 		if l.WebURL != "" {
 			fmt.Println(l.WebURL)
-			if !bools["--print"] && runtime.GOOS == "darwin" {
+			if src != nil && src.Via == vault.ViaConnector {
+				// The address came from an agent's proposal: look at it before opening it.
+				fmt.Println("(this address came from a proposal an agent made: check it before you open it)")
+			} else if !bools["--print"] && runtime.GOOS == "darwin" {
 				exec.Command("/usr/bin/open", l.WebURL).Run()
 			}
 			return
@@ -812,20 +815,47 @@ func cmdFilesProposals() {
 			return
 		}
 		for _, p := range list {
-			// Everything after the id is the agent's: names and words from outside.
+			// Everything after the id is the agent's: names and words from outside,
+			// shown quoted so nothing in them acts as part of this output.
 			fmt.Printf("%s  %s proposes adding %q from %s\n", p.ID, p.ProposedBy, p.Name, providerName(p.Provider))
-			fmt.Printf("    %s\n", p.Path)
+			fmt.Printf("    path %q, id %q, modified %q, %s\n", p.Path, p.Key, p.Mtime, humanSize(p.Size))
 			if p.WebURL != "" {
-				fmt.Printf("    %s\n", p.WebURL)
+				fmt.Printf("    address %q\n", p.WebURL)
 			}
-			if p.Holder != "" || p.Pratica != "" || p.Kind != "" {
+			if p.Replaces != "" {
+				fmt.Printf("    REPLACES the entry already in the index for this file (%q)\n", p.Replaces)
+			}
+			if p.Holder != "" || p.Pratica != "" || p.Kind != "" || p.Role != "" {
 				fmt.Printf("    and linking it to %s\n", linkSummary([]vault.FileLinkInfo{{Holder: p.Holder, Kind: p.Kind, PraticaSlug: p.Pratica, Role: p.Role}}))
 			}
 			if p.Reason != "" {
-				fmt.Printf("    reason: %s\n", p.Reason)
+				fmt.Printf("    reason: %q\n", p.Reason)
 			}
 		}
 		fmt.Println("\nIt is only a pointer, and only as fresh as today. pvault files proposals accept <id> | reject <id>")
+		return
+	}
+	if len(args) == 2 && args[0] == "reject" && args[1] == "--all" {
+		// A queue an agent filled with junk: one command to empty it.
+		needGrant(filesReadScope, "write")
+		resp, err := apiRequest("GET", "/vault/files/proposals", nil)
+		if err != nil {
+			fatal("request failed: %v", err)
+		}
+		var list []vault.FileProposalInfo
+		if err := apiResult(resp, &list); err != nil {
+			fatal("%v", err)
+		}
+		for _, p := range list {
+			r, err := apiRequest("POST", "/vault/files/proposals/"+url.PathEscape(p.ID)+"/reject", nil)
+			if err != nil {
+				fatal("request failed: %v", err)
+			}
+			if err := apiResult(r, nil); err != nil {
+				fatal("%v", err)
+			}
+		}
+		fmt.Printf("Rejected %d proposal(s).\n", len(list))
 		return
 	}
 	if len(args) != 2 || (args[0] != "accept" && args[0] != "reject") {
