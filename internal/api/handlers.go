@@ -499,12 +499,43 @@ func (s *Server) handleGetByCategory(w http.ResponseWriter, r *http.Request) {
 
 // GET /vault/context
 func (s *Server) handleGetContext(w http.ResponseWriter, r *http.Request) {
-	ctx, err := s.vault.GetContext(callerFilter(r))
+	get := s.vault.GetContext
+	if r.URL.Query().Get("stored") == "1" {
+		get = s.vault.GetStoredContext // an export: what is stored, not what the vault computes
+	}
+	ctx, err := get(callerFilter(r))
 	if err != nil {
 		handleVaultError(w, err)
 		return
 	}
 	writeJSON(w, http.StatusOK, ctx)
+}
+
+// GET /vault/located/{target...}
+// Says where an address of the vault is in Napoli: its quartiere, municipalità
+// and ASL distretto, what settled them and, when they can't be known, why and
+// which quartieri to ask about. target is residenza, domicilio, locale or
+// sede_legale, with an optional person (leo:residenza). It answers under the
+// scope of the three computed fields, never needing the street's.
+func (s *Server) handleLocated(w http.ResponseWriter, r *http.Request) {
+	category, ids, ok := vault.LocatedTarget(r.PathValue("target"))
+	if !ok {
+		writeError(w, http.StatusBadRequest, "invalid_request", vault.ErrNotLocatable.Error())
+		return
+	}
+	scope := scopeFromRequest(r)
+	for _, id := range ids {
+		if !vault.ScopeAllows(scope, id) {
+			scopeDenied(w)
+			return
+		}
+	}
+	loc, err := s.vault.Locate(category, callerFilter(r))
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, loc)
 }
 
 // GET /vault/expiring?days=90
@@ -747,6 +778,11 @@ func handleVaultError(w http.ResponseWriter, err error) {
 	var verr *vault.ValidationError
 	if errors.As(err, &verr) {
 		writeError(w, http.StatusBadRequest, "invalid_value", verr.Error())
+		return
+	}
+	var nr *vault.NotResolvedError
+	if errors.As(err, &nr) {
+		writeError(w, http.StatusNotFound, "not_resolved", nr.Error())
 		return
 	}
 	switch err {

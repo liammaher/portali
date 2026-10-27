@@ -20,6 +20,10 @@ type SchemaField struct {
 	PersonRef bool `json:"person_ref,omitempty"`
 	// Kinds lists the vault kinds that can have the field; empty is all.
 	Kinds []string `json:"kinds,omitempty"`
+	// Derived marks a field the vault computes when none is stored (the
+	// municipalità of an address in Napoli). Storing one overrides the
+	// computed value until the address changes (located.go).
+	Derived bool `json:"derived,omitempty"`
 }
 
 // Who can have a field (SchemaField.For).
@@ -101,7 +105,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "14",
+	Version: "15",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -160,6 +164,9 @@ var RecommendedSchema = Schema{
 				{ID: "residenza.provincia", Description: "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
 				{ID: "residenza.stato", Description: "Country of residence, only if outside Italy (e.g. Regno Unito); empty means Italia, which forms asking for the 'stato' take", Sensitivity: "standard"},
 				{ID: "residenza.data_inizio", Description: "Date residence began (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "residenza.quartiere", Description: "Quartiere of Napoli (e.g. Vomero), computed from the address when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the address", Sensitivity: "standard", Derived: true},
+				{ID: "residenza.municipalita", Description: "Municipalità of Napoli (1-10), computed from the address; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the address", Sensitivity: "standard", Derived: true},
+				{ID: "residenza.distretto_asl", Description: "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)", Sensitivity: "standard", Derived: true},
 			},
 		},
 		{
@@ -173,6 +180,9 @@ var RecommendedSchema = Schema{
 				{ID: "domicilio.cap", Description: "CAP (5 digits, validated)", Sensitivity: "standard"},
 				{ID: "domicilio.comune", Description: "Comune of domicile", Sensitivity: "standard"},
 				{ID: "domicilio.provincia", Description: "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
+				{ID: "domicilio.quartiere", Description: "Quartiere of Napoli (e.g. Vomero), computed from the address when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the address", Sensitivity: "standard", Derived: true},
+				{ID: "domicilio.municipalita", Description: "Municipalità of Napoli (1-10), computed from the address; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the address", Sensitivity: "standard", Derived: true},
+				{ID: "domicilio.distretto_asl", Description: "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)", Sensitivity: "standard", Derived: true},
 			},
 		},
 		{
@@ -331,6 +341,9 @@ var RecommendedSchema = Schema{
 				{ID: "business.sede_legale_comune", Description: "Registered office: comune", Sensitivity: "standard"},
 				{ID: "business.sede_legale_provincia", Description: "Registered office: provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
 				{ID: "business.sede_legale_stato", Description: "Registered office: country, only if outside Italy; empty means Italia", Sensitivity: "standard"},
+				{ID: "business.sede_legale_quartiere", Description: "Quartiere of Napoli (e.g. Vomero), computed from the registered office when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the registered office", Sensitivity: "standard", Derived: true},
+				{ID: "business.sede_legale_municipalita", Description: "Municipalità of Napoli (1-10), computed from the registered office; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the registered office", Sensitivity: "standard", Derived: true},
+				{ID: "business.sede_legale_distretto_asl", Description: "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)", Sensitivity: "standard", Derived: true},
 				{ID: "business.tari_codice_contribuente", Description: "Codice contribuente the Comune assigned the business for TARI on its premises (utenza non domestica; not tari.codice_contribuente, the home's)", Sensitivity: "standard"},
 			},
 		},
@@ -349,6 +362,9 @@ var RecommendedSchema = Schema{
 				{ID: "locale.provincia", Description: "Provincia of the premises as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
 				{ID: "locale.titolo", Description: "How the business holds the premises: proprietario, locatario, comodatario, usufruttuario or altro (validated)", Sensitivity: "standard"},
 				{ID: "locale.data_inizio", Description: "Date occupation of the premises started (YYYY-MM-DD)", Sensitivity: "standard"},
+				{ID: "locale.quartiere", Description: "Quartiere of Napoli (e.g. Vomero), computed from the premises when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the premises", Sensitivity: "standard", Derived: true},
+				{ID: "locale.municipalita", Description: "Municipalità of Napoli (1-10), computed from the premises; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the premises", Sensitivity: "standard", Derived: true},
+				{ID: "locale.distretto_asl", Description: "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)", Sensitivity: "standard", Derived: true},
 				{ID: "locale.catasto_sezione", Description: "Sezione urbana from the visura, if any", Sensitivity: "standard"},
 				{ID: "locale.catasto_foglio", Description: "Foglio from the visura (digits, validated)", Sensitivity: "standard"},
 				{ID: "locale.catasto_particella", Description: "Particella (mappale) from the visura (validated)", Sensitivity: "standard"},

@@ -59,6 +59,7 @@ internal/
   store/             SQLite CRUD (fields, documents, people, tokens, audit, meta)
   vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
+  napoli/            Street → municipalità → ASL distretto, offline (vault: located.go)
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
   pratica/fill/      pilot: fills a library form from the vault at the library's layout
@@ -200,6 +201,28 @@ the page never copies a rule.
   or deleting it, checks `persona` again (`checkPraticaPersona`, whatever the caller reads).
 - Old JSON and audit names stay for compatibility: `/vault/members`, `member`, `members`,
   `"for": "member"`, `member_remove`, MCP `vault_household`.
+
+### Naples address lookup (`internal/napoli`, `vault/located.go`)
+- `internal/napoli` works from the embedded `data/stradario.json`, built by `gen/gen.py` from
+  the Comune's stradario PDFs (2025 for municipalità, 2003 COSAP for civico ranges). Never a
+  geocoder: the home address goes nowhere. A street crossing a municipalità boundary (about
+  4%) is `Ambiguous` until a civico in a known range or a named quartiere decides it; a
+  lookup never guesses. One ASL (Napoli 1 Centro) serves the whole comune; its distretto
+  follows the municipalità.
+- Each address (`residenza`, `domicilio`, `locale`, the sede legale) has computed
+  `quartiere`, `municipalita`, `distretto_asl` (`derived` in schema.json, standard tier).
+  `GetIf`, `GetByCategory` and `GetContext` answer them; `List`, export, backups and person
+  export hold stored rows only (`FieldInfo.Derived`; `pvault export` drops them).
+- A stored row overrides the computed value only while it is not older than the address's
+  street, civico and comune (the distretto: nor than the stored municipalità); an older one
+  is ignored, never used with a warning. Nothing is computed unless the comune is Napoli.
+- A computed field is read under its own scope and tier, never the street's: a token scoped
+  to `residenza.municipalita` never sees the street, and the audit log names the computed
+  field. A personal address row never feeds a caller that can't see personal items, and a
+  stored row the caller can't see is not replaced by a computed value.
+- `pvault locate` and `GET /vault/located/{target}` only read, with a grant for the three
+  computed fields; they never echo the street. The answer to a street across a boundary is
+  the quartieri to store (`pvault set residenza.quartiere ...`).
 
 ### Vault kinds and named vaults (`kind.go`, `cmd/pvault/vaults.go`)
 - Meta `kind`: `persona` (default) or `impresa`, fixed at init. Schema categories carry
