@@ -1,0 +1,120 @@
+# The SCIA unica (somministrazione + notifica sanitaria, zona C) as steps a program runs:
+# claude/skills/pratica/portal/run.py. portal-map.yaml says what each screen is and why;
+# this file says exactly what to click and type, as the first walk (2026-10-27) found it.
+#
+# Fields are found by the stable end of the portal's ids (`rXcYpZreg:...`; the prefix
+# before dynaForm changes between sections) and checked against the label the walk saw
+# next to them, so a changed form stops the run instead of filling the wrong box.
+# Values: {{business.x}}, {{locale.x}}, {{t:cat.x}} (the titolare, the person whose
+# ruolo.tipo is titolare) and {{ask.x}} (answers.json), with |filters (run.py, FILTERS).
+# The declarations, the payment and sending are not here: they are the person's.
+
+procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
+
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - screen: Controlla l'accesso alla pratica
+    confirm: CONFERMA
+  - screen: Scelta settore attività
+    tree: Esercizio di somministrazione di alimenti e bevande in zone NON tutelate
+    confirm: CONFERMA
+  - screen: Scelta operazioni
+    tree:
+      - Aprire l'attività
+      - Notifica ai fini della registrazione - avvio attività/trasferimento
+    confirm: CONFERMA
+  - screen: Scelta interventi eventuali
+    confirm: CONFERMA
+  - screen: Scelta del destinatario della pratica
+    confirm: CONFERMA
+  - screen: Scelte eventuali
+    confirm: CONFERMA
+
+sections:
+  - section: Scheda anagrafica
+    open: false
+    fields:
+      - {id: "r1c1p1reg:radio:0_clone", kind: radio, label: "DITTA/SOCIETA'/IMPRESA"}
+      - {id: "r6c2p16reg:radio:3_clone", kind: radio, label: NON ANCORA ISCRITTA, when: "{{business.rea|empty}}"}
+      - {id: "r10c1p23reg:txt", kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {id: "r10c2p25reg:txt", kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {id: "r10c3p27reg:txt", kind: text, label: Cod.Fiscale, value: "{{t:identity.codice_fiscale}}"}
+      - {id: "r12c1p29reg", kind: select, label: Sesso, value: "{{t:identity.sex}}"}
+      - {id: "r12c2p31reg:calendar_input", kind: text, label: Data nascita, value: "{{t:identity.date_of_birth|date_it}}"}
+      - {id: "r15c2p41reg", kind: select, label: Provincia, value: "{{t:identity.birth_province}}"}
+      - {id: "r17c1p45reg", kind: select, label: Comune, value: "{{t:identity.birth_comune|upper}}"}
+      - {id: "r24c2p63reg", kind: select, label: Provincia, value: "{{t:residenza.provincia}}"}
+      - {id: "r26c1p67reg", kind: select, label: Comune, value: "{{t:residenza.comune|upper}}"}
+      - {id: "r29c1p73reg", kind: select, label: Toponimo (DUG), value: "{{t:residenza.indirizzo|dug}}"}
+      - {id: "r31c1p79reg:txt", kind: text, label: Denominazione stradale, value: "{{t:residenza.indirizzo|street|upper}}"}
+      - {id: "r33c1p83reg:txt", kind: text, label: Numero civico, value: "{{t:residenza.civico}}"}
+      - {id: "r33c2p85reg:txt", kind: text, label: CAP, value: "{{t:residenza.cap}}"}
+      - {id: "r33c3p87reg:txt", kind: text, label: eMail/PEC, value: "{{t:identity.email}}"}
+      - {id: "r33c4p89reg:number", kind: text, label: Telefono fisso/cellulare, value: "{{t:identity.phone|phone_it}}"}
+      - {id: "r36c1p93reg", kind: select, label: Carica, value: "{{t:ruolo.tipo|carica}}"}
+      - {id: "r39c1p99reg:txt", kind: text, label: Denominazione, value: "{{business.denominazione}}"}
+      - {id: "r41c1p103reg", kind: select, label: Forma giuridica, value: "{{business.forma_giuridica|forma}}"}
+      - {id: "r41c2p105reg:txt", kind: text, label: Codice Fiscale, value: "{{business.codice_fiscale}}"}
+      - {id: "r41c3p107reg:txt", kind: text, label: P.IVA, value: "{{business.partita_iva}}"}
+      - {id: "r44c2p113reg", kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
+      - {id: "r46c1p117reg", kind: select, label: Comune, value: "{{business.sede_legale_comune|upper}}"}
+      - {id: "r49c1p123reg", kind: select, label: Toponimo (DUG), value: "{{business.sede_legale_indirizzo|dug}}"}
+      - {id: "r51c1p129reg:txt", kind: text, label: Denominazione stradale, value: "{{business.sede_legale_indirizzo|street|upper}}"}
+      - {id: "r51c2p131reg:txt", kind: text, label: Numero civico, value: "{{business.sede_legale_civico}}"}
+      - {id: "r51c3p133reg:txt", kind: text, label: CAP, value: "{{business.sede_legale_cap}}"}
+      - {id: "r53c1p135reg:txt", kind: text, label: Telefono fisso/Cellulare, value: "{{business.telefono|phone_it}}"}
+      - {id: "r53c3p139reg:txt", kind: text, label: PEC, value: "{{business.pec}}"}
+
+  - section: DOMICILIO DIGITALE
+    fields:
+      - {id: "r5c1p5reg:chk", kind: checkbox, label: INI-PEC}
+      - {id: "r7c1p7reg:txt", kind: text, value: "{{business.pec}}"}
+
+  - section: DOMICILIO ELETTRONICO
+    fields:
+      - {id: "r3c1p3reg:txt", kind: text, value: "{{business.pec}}"}
+
+  - section: ubicazione dell'attività
+    fields:
+      - {id: "r2c4p8reg:txtws_input", kind: text, label: CAP, value: "{{locale.cap}}"}
+      - {id: "r5c1p13reg:txtws_input", kind: lookup, label: "Via, Viale, Piazza", value: "{{locale.indirizzo}}"}
+      - {id: "r5c2p15reg:txtws_input", kind: text, label: n° civico, value: "{{locale.civico}}"}
+      - {id: "r7c3p23reg:txtws_input", kind: text, label: interno, value: "{{locale.interno}}", optional: true}
+
+  - section: Dati catastali
+    fields:
+      - {id: "r1c1p1reg:radio:0_clone", kind: radio, label: NCEU}
+      - {id: "r3c1p5reg:number", kind: text, label: foglio, value: "{{locale.catasto_foglio}}"}
+      - {id: "r3c2p7reg:txt", kind: text, label: particella/mappale, value: "{{locale.catasto_particella}}"}
+      - {id: "r3c3p9reg:number", kind: text, label: subalterno, value: "{{locale.catasto_subalterno}}"}
+      - {id: "r5c2p15reg:txt", kind: text, label: sezione Urbana (Fabbricati), value: "{{locale.catasto_sezione}}", optional: true}
+      - {id: "r8c1p23reg", kind: select, label: categoria, value: "{{locale.catasto_categoria|categoria}}"}
+
+  - section: Dati dell'esercizio di somministrazione
+    fields:
+      - {id: "r3c1p3reg:txt", kind: text, label: Denominazione insegna, value: "{{ask.insegna}}"}
+      - {id: "r5c1p7reg:radio:0_clone", kind: radio, label: Permanente, when: "{{ask.permanente}}"}
+      - {id: "r6c1p9reg:radio:1_clone", kind: radio, label: Stagionale, when: "{{ask.permanente|not}}"}
+      - {id: "r8c1p12reg:txta", kind: text, label: Tipologia di esercizio, value: "{{business.descrizione_attivita}}"}
+      - {id: "r10c1p17reg:radio:2_clone", kind: radio, label: "Si", when: "{{ask.centro_commerciale}}"}
+      - {id: "r10c2p18reg:radio:3_clone", kind: radio, label: "No", when: "{{ask.centro_commerciale|not}}"}
+      - {id: "r14c2p26reg:real", kind: number, label: Superficie di somministrazione, value: "{{ask.superficie_somministrazione_mq}}"}
+
+  - section: notifica avvio e inizio attività
+    fields:
+      - {id: "r2c1p2reg:radio:0_clone", kind: radio, label: Avvio contestuale alla data di notifica}
+
+  - section: tipologia di attività ai sensi
+    fields:
+      - {id: "r7c1p10reg:chk", kind: checkbox, label: "RISTORAZIONE:"}
+      - {id: "r11c2p19reg:chk", kind: checkbox, label: Ristorazione pubblica con somministrazione diretta}
+
+  - section: Dichiarazione relativa ai diritti
+    fields:
+      - {id: "r5c1p8reg:radio:3_clone", kind: radio, label: sono dovuti oneri quali diritti o spese}
+      - {id: "r7c1p10reg:real", kind: number, label: per un totale di Euro, value: "{{ask.diritti_euro}}"}
+      - {id: "r8c1p13reg:radio:4_clone", kind: radio, label: pagamento on line}

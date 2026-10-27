@@ -75,6 +75,13 @@ insegna and the dehors.
 | Date | Walked by | Reached | Broke on | Fixed |
 |---|---|---|---|---|
 | 2026-10-27 | Claude, Liam logged in | Allega documenti: 21 screens, every factual section saved | The attachments gate: two required files must be CAdES-signed (.p7m); the seven declarations are the person's | Map rewritten from what the portal showed |
+| 2026-10-27 | Claude from `portal-steps.yaml`, in the Claude browser (already logged in) | Every factual section saved and read back; stopped before the declarations and payment | Nothing in the map; two mechanics: a dropdown filter matches substrings, and a click on a fresh panel misses | The filter-and-arrow recipe, in the map and in `run.py` |
+
+Time: about an hour for the first walk, **14 min 51 s** for the second (7 wizard screens in
+about 4 minutes, the 9 sections in about 11), with the steps known and every value computed
+before starting. The read-back caught the one wrong value (CASALNUOVO DI NAPOLI) before
+saving. `claude/skills/pratica/portal/run.py` runs the same steps without a model in a
+separate Chrome; its live run is still to do, in a window the person logs into.
 
 What the first walk taught, beyond the map:
 
@@ -95,5 +102,5 @@ What the first walk taught, beyond the map:
 - **The portal bundles more than the library says**: the insegna can join this pratica, and
   the relazione tecnica asseverata has no slot of its own (allegati liberi).
 
-The draft ("PROVA NON INVIARE - Pizzeria Fittizia SCIA") was kept in Liam's Pratiche in bozza
-at his request, unpaid and unsent.
+The drafts ("PROVA NON INVIARE - Pizzeria Fittizia SCIA" and "... (passo 2)") are kept in
+Liam's Pratiche in bozza, unpaid and unsent.

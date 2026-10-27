@@ -13,9 +13,13 @@
 # A rehearsal never pays or sends, and Claude never ticks a declaration.
 #
 # Mechanics: the front office is PrimeFaces. Each section saves with its own Salva and the
-# page reloads; dropdowns need a click on the item after the list has scrolled to it
-# (typing and arrow keys don't select); street fields are lookups that need a real key
-# press to show suggestions. URLs are /fnsuap/cmd/create?execution=e1sN, N growing.
+# page reloads. Dropdowns: open, type the label into the panel's filter with real key
+# presses, arrow to the exact label (the filter matches substrings: "napoli" lists
+# CASALNUOVO DI NAPOLI first), Enter; clicking an item misses while the panel settles, and
+# arrows on a closed dropdown fire a reload per step. Street fields are lookups that show
+# suggestions only on real key presses. Radios are clicked on their visible box, not the
+# input. The steps file (portal-steps.yaml) holds the exact fields; URLs are
+# /fnsuap/cmd/create?execution=eNsM.
 
 procedure: napoli/comune/scia-somministrazione-alimenti-bevande
 channel: impresainungiorno – SUAP del Comune di Napoli

@@ -75,6 +75,8 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
   pratica/fill/      fill.py: fills a library form from the vault, prints one channel's
                      route, or the person's desk in each of the library's office lists
                      (one per service); pilot/ has the pilot forms. A real vault only over its socket
+  pratica/portal/    run.py: fills a portal pratica from a steps file (rehearsals/*/portal-steps.yaml)
+                     in Chrome, reads every field back, never declares, pays or sends
 ```
 
 ## Security Model
