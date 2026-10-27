@@ -1,0 +1,164 @@
+# Portal map: SCIA unica for a pizzeria in zona C (somministrazione + notifica sanitaria)
+# on impresainungiorno-Napoli (SUAP, codice catastale F839).
+#
+# Level L0: drafted from public guides before anyone walked the front office. Each screen
+# says where it comes from; `unseen` means nobody has seen that screen yet. A walk replaces
+# guesses with what the screen really says and moves the map to L1 (walked, up to before
+# sending). Library entry: napoli/comune/scia-somministrazione-alimenti-bevande.
+#
+# fill: values are vault field IDs in the business vault (the titolare is the person whose
+# ruolo.tipo is titolare; here `gennaro`). ask: something no vault field holds.
+# tap: a step only the person does (login, sign, pay, send). In a rehearsal, pay and send
+# are never done: the run stops before them.
+
+procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+channel: impresainungiorno – SUAP del Comune di Napoli
+level: L0
+last_walked: null
+
+screens:
+  - screen: Sportello SUAP di Napoli
+    url: https://www.impresainungiorno.gov.it/route/suap?codComune=F839&locale=IT
+    choose: COMPILA UNA PRATICA
+    seen: 2026-10-27
+    notes: >-
+      The link goes to suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839, which asks
+      for a login first.
+
+  - screen: Login (iasu.infocamere.it)
+    tap: login
+    seen: 2026-10-27
+    notes: >-
+      Tabs SPID, CIE, EIDAS, TELEMACO, CNS. SPID offers "SPID natural person" and "SPID
+      professional". The person logs in; Claude never types credentials.
+
+  - screen: New pratica or import
+    source: Comune di Verona guide (2021)
+    unseen: true
+    choose: compila nuova pratica
+    notes: The other option imports a previous pratica, sent or draft.
+
+  - screen: Scelta settore attività
+    source: SUAP Napoli vademecum (23/07/2026)
+    unseen: true
+    choose: strutture ricettive (alloggio) e ristorazione (Ateco da 55 a 56)
+    check:
+      - business.codice_ateco starts with 56
+    notes: >-
+      In zona A or B the procedure is "Esercizio di somministrazione di alimenti e bevande in
+      zone tutelate"; in zona C it is the ordinary somministrazione one. Its exact name here is
+      unknown: write it down on the walk.
+
+  - screen: Scelta intervento
+    unseen: true
+    choose: Aprire l'attività (apertura)
+    notes: Zona C means SCIA; open from the day of the receipt.
+
+  - screen: Altre esigenze connesse con l'esercizio dell'attività
+    source: SUAP Napoli vademecum (Scheda 2 shows this screen for laboratori)
+    unseen: true
+    choose: the notifica sanitaria for registration (Reg. CE 852/2004)
+    notes: >-
+      This makes it the SCIA unica with the notifica (diritti S72, 120 euro). Don't add the
+      insegna here: it is a SCIA of its own. No nulla osta acustico: no music, zona C.
+
+  - screen: Riepilogo dei procedimenti
+    source: Comune di Verona guide (2021)
+    unseen: true
+    check:
+      - exactly the somministrazione SCIA and the notifica sanitaria are listed
+    notes: If a procedimento is wrong, go back with the menu on the left; don't fix it later.
+
+  - screen: Scheda anagrafica
+    source: Comune di Verona guide (2021)
+    unseen: true
+    choose: DITTA/SOCIETA'/IMPRESA
+    fill:
+      denominazione: business.denominazione
+      forma giuridica: business.forma_giuridica
+      codice fiscale: business.codice_fiscale
+      partita IVA: business.partita_iva
+      sede: business.sede_legale_*
+      titolare: gennaro:identity.*
+      residenza del titolare: gennaro:residenza.*
+      qualità: gennaro:ruolo.tipo
+    notes: >-
+      A ditta individuale is DITTA/SOCIETA'/IMPRESA, never PERSONA. Never put a procuratore's
+      data here. Unknown: whether the portal checks that the titolare is the person logged in,
+      and what it does with a ditta not yet in the Registro Imprese (no REA): record both.
+
+  - screen: Qualifica e dati del procuratore
+    source: impresainungiorno news (procura speciale, 7 April 2025)
+    unseen: true
+    choose: none
+    notes: >-
+      The titolare files himself, so no procura. If the portal insists, that is a finding:
+      record it and stop.
+
+  - screen: Domicilio elettronico
+    source: impresainungiorno news (procura speciale, 7 April 2025)
+    unseen: true
+    fill:
+      PEC: business.pec
+
+  - screen: SCIA somministrazione (the module)
+    unseen: true
+    fill:
+      indirizzo del locale: locale.indirizzo, locale.civico, locale.cap
+      dati catastali: locale.catasto_foglio, locale.catasto_particella, locale.catasto_subalterno, locale.catasto_categoria
+      superficie: locale.superficie_mq
+      titolo di disponibilità: locale.titolo
+      descrizione: business.descrizione_attivita
+    ask:
+      - superficie di somministrazione (the part with tables and chairs) in m²
+      - requisito professionale of the titolare, and its proof (course, experience, diploma)
+      - orari, if the module asks
+    notes: >-
+      The requisiti morali and professionali are self-declarations (artt. 46–47 DPR 445/2000).
+      In a rehearsal they are invented: say so in the run log.
+
+  - screen: Notifica sanitaria (the module)
+    unseen: true
+    fill:
+      stabilimento: locale.*
+      distretto ASL: locale.distretto_asl
+    ask:
+      - linee di attività (ristorazione pubblica)
+    notes: The ASL's own diritti (20 euro per linea) are separate from the SUAP's.
+
+  - screen: Dichiarazione relativa ai diritti di segreteria/istruttori
+    source: SUAP Napoli pagoPA guide
+    unseen: true
+    choose: sono dovuti oneri quali diritti o spese
+    fill:
+      importo: "120 (tabella 2026, S72: somministrazione in zona non tutelata con notifica sanitaria)"
+    then: flag "pagamento on line", Salva, Prosegui
+
+  - screen: Pagamento degli oneri connessi alla pratica
+    source: SUAP Napoli pagoPA guide
+    unseen: true
+    tap: pay
+    notes: >-
+      STOP here in a rehearsal. "Procedi con il pagamento tramite pagoPA" creates an IUV, a
+      payment position tied to the draft. In a real pratica the owner pays. To see the screens
+      after it, use the menu on the left, which reaches later steps even when this one isn't
+      done (Verona guide).
+
+  - screen: Allega documenti
+    source: Comune di Verona guide (2021)
+    unseen: true
+    upload:
+      - relazione tecnica asseverata, with planimetrie (a professional's; in a rehearsal a
+        placeholder PDF marked FAC-SIMILE)
+      - ricevuta pagoPA (none in a rehearsal)
+    notes: >-
+      The portal also offers fac-simile documents here (the procura, regional forms). Write
+      down which attachments it marks as mandatory.
+
+  - screen: Firma e invio
+    unseen: true
+    tap: sign, then send
+    notes: >-
+      STOP before sending. Record how signing works: does the portal want each file signed
+      (CAdES .p7m or PAdES), or a summary (distinta) signed? Leave the pratica as a draft
+      ("Pratiche in bozza") and delete it after the walk.
