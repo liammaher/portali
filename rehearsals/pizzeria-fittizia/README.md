@@ -77,6 +77,7 @@ insegna and the dehors.
 | 2026-10-27 | Claude, Liam logged in | Allega documenti: 21 screens, every factual section saved | The attachments gate: two required files must be CAdES-signed (.p7m); the seven declarations are the person's | Map rewritten from what the portal showed |
 | 2026-10-27 | Claude from `portal-steps.yaml`, in the Claude browser (already logged in) | Every factual section saved and read back; stopped before the declarations and payment | Nothing in the map; two mechanics: a dropdown filter matches substrings, and a click on a fresh panel misses | The filter-and-arrow recipe, in the map and in `run.py` |
 | 2026-10-27 | Benchmark: 3 timed runs from the steps file, bigger batches | Every factual section saved and read back, each run | Run 1: a re-render after Forma giuridica wiped CF and P.IVA; run 3: it wiped Denominazione | Forma giuridica now comes before Denominazione in `portal-steps.yaml` |
+| 2026-10-27 | `inpage.js` in the Claude browser, one call to start it | Every factual section saved and read back, in 53 s | Four things the first tries found: the pane slows page timers, dropdowns build their list on first open, the last wizard screen loads twice, labels sit above or left of their box | All four in `inpage.js` and the shared label check |
 
 Time: about an hour for the first walk, **14 min 51 s** for the second (7 wizard screens in
 about 4 minutes, the 9 sections in about 11), with the steps known and every value computed
@@ -84,20 +85,24 @@ before starting. The read-back caught the one wrong value (CASALNUOVO DI NAPOLI)
 saving. `claude/skills/pratica/portal/run.py` runs the same steps without a model in a
 separate Chrome; its live run is still to do, in a window the person logs into.
 
-**Benchmark** (2026-10-27): the same draft three times, from the dashboard to the saved diritti
-section, each run started on a fresh draft with Liam already logged in. Bigger batches (up to 25
-browser actions each, about 13 per run) instead of one call per field.
+**Benchmark** (2026-10-27): the same draft four times, from the dashboard to the saved diritti
+section, each run started on a fresh draft with Liam already logged in. Runs 1-3 in bigger
+batches (up to 25 browser actions each, about 13 per run) instead of one call per field.
 
 | Run | Time | Notes |
 |---|---|---|
 | 1 | 6 min 59 s | One recovery: CF and P.IVA retyped after the Forma giuridica re-render |
 | 2 | 6 min 30 s | No retries |
 | 3 | 7 min 23 s | Denominazione retyped after the same re-render; a context reset mid-run included |
+| 4 | **1 min 7 s** | `inpage.js`: 53 s in the page (wizard 11 s, anagrafica 20 s, each other section 2-4 s), the rest reading the vault and starting it |
 
-So a documented portal pratica takes about **7 minutes** in the browser pane, against about an
-hour the first time and 15 minutes from the steps file with small batches. What's left is waiting
-on the portal: each section saves with a full page reload (about 3 s), and most dropdowns need
-their panel to settle (1 s). Each run reads every value back before it saves.
+Runs 1-3 spent half their time on the model between batches and most of the rest on fixed
+pauses. Run 4 takes the model out of the loop: `run.py page` writes the values as one small
+script, and `inpage.js` (installed once) drives the portal in a same-origin frame over the page,
+so a save's reload doesn't end it. It sets dropdowns through their PrimeFaces widgets, waits on
+the portal's ajax queue instead of a clock, and reads every field back after each save. So a
+documented portal pratica takes about **a minute**, against about an hour the first time; what
+is left is the portal's own page loads.
 
 What the first walk taught, beyond the map:
 
