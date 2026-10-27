@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -126,6 +127,9 @@ func touchIDVault(t *testing.T, fields map[string]string) (*vault.Vault, string)
 
 // touchIDVaultKind is touchIDVault for a vault of the given kind.
 func touchIDVaultKind(t *testing.T, kind string, fields map[string]string) (*vault.Vault, string) {
+	if runtime.GOOS == "windows" {
+		t.Skip("the fake Touch ID helper is a shell script")
+	}
 	t.Helper()
 	dir := filepath.Join(t.TempDir(), ".vault")
 	sk, err := vault.InitWithOptions(dir, "test-password", vault.InitOptions{Kind: kind})

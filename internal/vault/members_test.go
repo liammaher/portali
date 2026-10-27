@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -345,6 +346,9 @@ func TestPersonOutlivesTheirRows(t *testing.T) {
 // (tokens revoked, grants dropped) and the file is reported, not left for a
 // retry that would find no person.
 func TestRemovePerson_FileErrorStillRevokes(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod can't protect a folder's files on Windows")
+	}
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:identity.first_name", "Leo")
 	if _, err := v.AddDocument("leo:cie", "cie.pdf", "application/pdf", []byte("%PDF"), ""); err != nil {

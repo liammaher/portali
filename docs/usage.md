@@ -248,12 +248,13 @@ The vault runs at `http://127.0.0.1:7200` (another vault at the port in its `por
 GET  /vault/status                       # { initialized, locked, kind, field_count, documents, categories, backup? } (personal items not counted)
 GET  /vault/schema                       # Recommended field names and sensitivity tiers; categories' subject and kinds, and vault_kind
 POST /vault/unlock                       # { password, secret_key } → { token }
+POST /vault/stop                         # Lock and stop the server, as SIGTERM does. Socket or pipe only, no auth
 POST /vault/session                      # { password, secret_key?, ttl? } → { token, expires_at } (unlocked vault only, max 1h)
                                          # + { scope, access? } → grant limited to that scope (max 10m), used by Touch ID;
                                          #   unlike a service token it can reach personal fields in its scope
 ```
 
-`/vault/unlock` and `/vault/session` require `Content-Type: application/json`. The CLI sends them over the vault socket (`<VAULT_DIR>/run/pvault.sock`) on macOS and Linux; the same routes are served there and on TCP.
+`/vault/unlock` and `/vault/session` require `Content-Type: application/json`. The CLI sends them over the vault socket (`<VAULT_DIR>/run/pvault.sock`; on Windows a named pipe only you can open, whose random name the server keeps in `<VAULT_DIR>\run\pipe` while it runs); the same routes are served there and on TCP. `POST /vault/stop` (socket or pipe only, no auth) locks the vault and stops the server, as SIGTERM does; `pvault lock` uses it on Windows.
 
 ### Expiry
 
@@ -397,7 +398,7 @@ How the keys are derived is in the [README](../README.md#security-model).
 
 - Profile password is never stored, unless you turn on Touch ID (`pvault touchid enable`): then it is kept in your login Keychain, readable only by the signed `pvault-touchid` helper
 - Secret key lives at `~/.pvault/secret.key` (mode 0600), never in the database or a backup
-- Password and secret key go from the CLI to the server only over the vault socket, after checking the server is this same `pvault` (macOS and Linux)
+- Password and secret key go from the CLI to the server only over the vault socket, after checking the server is this same `pvault` (on Windows over a named pipe; other systems refuse to send them)
 - Vault key exists only in memory while unlocked, zeroed on lock
 - Auto-lock after 30 minutes of inactivity
 - Every access logged to `vault_access_log`

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -29,7 +30,7 @@ func TestDocument_RoundTripAndEncryptedAtRest(t *testing.T) {
 	if bytes.Contains(onDisk, []byte("MARIO")) {
 		t.Fatal("document stored in plaintext")
 	}
-	if st, _ := os.Stat(v.documentPath(doc.ID)); st.Mode().Perm() != 0600 {
+	if st, _ := os.Stat(v.documentPath(doc.ID)); runtime.GOOS != "windows" && st.Mode().Perm() != 0600 {
 		t.Fatalf("document file mode = %v, want 0600", st.Mode().Perm())
 	}
 	raw, _ := v.db.GetDocument(doc.ID)

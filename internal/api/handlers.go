@@ -305,6 +305,19 @@ func (s *Server) handleLock(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "locked"})
 }
 
+// POST /vault/stop asks the server to lock and exit, as SIGTERM does: on
+// Windows, which has none, pvault lock asks this way. Only the private channel
+// reaches it, so only this user, who can signal the server anyway, and like
+// SIGTERM it needs no password.
+func (s *Server) handleStop(w http.ResponseWriter, r *http.Request) {
+	if !viaSocket(r) {
+		http.NotFound(w, r)
+		return
+	}
+	s.stopOnce.Do(func() { close(s.stopped) })
+	w.WriteHeader(http.StatusAccepted)
+}
+
 // GET /vault/status
 func (s *Server) handleStatus(w http.ResponseWriter, r *http.Request) {
 	status, err := s.vault.Status()

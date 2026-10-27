@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -187,7 +186,7 @@ func pickPort(dir string) (int, error) {
 // another vault's: pickPort sees only the vaults in the home folder and what
 // is running, so a stopped vault kept elsewhere (VAULT_DIR) can have the same.
 func listenError(err error, dir string) error {
-	if errors.Is(err, syscall.EADDRINUSE) {
+	if addrInUse(err) {
 		return fmt.Errorf("%w: another vault or program has this port; put a free one in %s (and leave VAULT_PORT unset)", err, portPath(dir))
 	}
 	return err

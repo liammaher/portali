@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
@@ -51,11 +52,11 @@ func TestWritePersonExport(t *testing.T) {
 		if err != nil || string(data) != want {
 			t.Errorf("%s = %q, %v", path, data, err)
 		}
-		if info, _ := os.Stat(filepath.Join(dir, path)); info.Mode().Perm() != 0600 {
+		if info, _ := os.Stat(filepath.Join(dir, path)); runtime.GOOS != "windows" && info.Mode().Perm() != 0600 {
 			t.Errorf("%s mode %v", path, info.Mode())
 		}
 	}
-	if info, _ := os.Stat(dir); info.Mode().Perm() != 0700 {
+	if info, _ := os.Stat(dir); runtime.GOOS != "windows" && info.Mode().Perm() != 0700 {
 		t.Errorf("dir mode %v", info.Mode())
 	}
 	var index struct {

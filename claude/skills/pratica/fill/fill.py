@@ -109,6 +109,7 @@ import datetime as dt
 import getpass
 import hashlib
 import http.client
+import io
 import json
 import os
 import re
@@ -117,6 +118,7 @@ import socket
 import stat
 import subprocess
 import sys
+import time
 import urllib.parse
 import urllib.request
 
@@ -555,16 +557,81 @@ class UnixHTTPConnection(http.client.HTTPConnection):
         self.socket_path = socket_path
 
     def connect(self):
+        if self.socket_path.startswith(PIPE_PREFIX):
+            self.sock = PipeSocket(self.socket_path)
+            return
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.sock.settimeout(self.timeout)
         self.sock.connect(self.socket_path)
+
+
+class PipeSocket:
+    """A Windows named pipe opened as a file, with what http.client asks of a
+    socket: Python has no AF_UNIX there."""
+
+    def __init__(self, path):
+        # Between two connections the server may have no instance waiting
+        # (ERROR_PIPE_BUSY, 231) for a moment.
+        for _ in range(50):
+            try:
+                self.file = open(path, "r+b", buffering=0)
+                return
+            except OSError as e:
+                if getattr(e, "winerror", None) != 231:
+                    raise
+                time.sleep(0.05)
+        self.file = open(path, "r+b", buffering=0)
+
+    def sendall(self, data):
+        view = memoryview(data)
+        while view:
+            view = view[self.file.write(view):]
+
+    def makefile(self, mode):
+        return io.BufferedReader(self.file)
+
+    def close(self):
+        self.file.close()
+
+
+PIPE_PREFIX = "\\\\.\\pipe\\"
+
+
+def vault_pipe(vault_dir):
+    """The named pipe of this vault's Windows server, from the file it writes
+    in <vault dir>\\run, a folder only this user can enter. Pipe names are
+    machine-wide and any account can create one, so a name counts only while
+    the server still holds that file open: Windows won't delete a file another
+    process holds open (ERROR_SHARING_VIOLATION, 32), so if the delete works
+    the server is gone and the name may be someone else's by now."""
+    path = os.path.join(vault_dir, "run", "pipe")
+    not_running = f"no vault server for {vault_dir}: run pvault unlock"
+    try:
+        with open(path, encoding="ascii", errors="replace") as f:
+            name = f.read().strip()
+    except FileNotFoundError:
+        sys.exit(not_running)
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        sys.exit(not_running)
+    except PermissionError as e:
+        if getattr(e, "winerror", None) != 32:
+            sys.exit(f"refusing to send the token: can't tell whether {path} is the server's ({e})")
+        if not re.fullmatch(r"\\\\\.\\pipe\\pvault-[0-9a-f]{32}", name):
+            sys.exit(f"refusing to send the token: {path} doesn't name a vault server's pipe")
+        return name
+    sys.exit(not_running)
 
 
 def vault_socket(vault_dir):
     """<vault dir>/run/pvault.sock, once it is this user's vault server's:
     the run folder ours and private (0700), the socket ours. Anything can
     listen on 127.0.0.1:7200 while the vault is locked; only this user can
-    put a socket there. The MCP server makes the same check."""
+    put a socket there. The MCP server makes the same check. On Windows the
+    server listens on a named pipe only this user can open instead."""
+    if os.name == "nt":
+        return vault_pipe(vault_dir)
     run = os.path.join(vault_dir, "run")
     sock = os.path.join(run, "pvault.sock")
     try:
@@ -580,6 +647,8 @@ def vault_socket(vault_dir):
 
 def keychain_token(service):
     """What `pvault create-service-token --keychain SERVICE` stored for this user."""
+    if os.name == "nt":
+        sys.exit("the Keychain is macOS only: set VAULT_TOKEN to the token")
     if not re.fullmatch(r"[A-Za-z0-9._][A-Za-z0-9._-]{0,63}", service):
         sys.exit(f"{service!r} isn't a Keychain service name")
     # By absolute path, so nothing earlier in PATH can stand in for it.

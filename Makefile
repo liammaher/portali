@@ -3,8 +3,11 @@
 # On macOS pvault is signed with the hardened runtime too: pvault-touchid sends
 # the password only to a vault server running a hardened build, so no library
 # can be injected into it through DYLD_* variables.
+# pvault.exe on Windows (make from Git Bash or similar).
+EXE := $(if $(filter Windows_NT,$(OS)),.exe,)
+
 build:
-	go build -o bin/pvault ./cmd/pvault
+	go build -o bin/pvault$(EXE) ./cmd/pvault
 ifeq ($(shell uname),Darwin)
 	codesign -s - -f -o runtime bin/pvault
 	@$(MAKE) --no-print-directory touchid

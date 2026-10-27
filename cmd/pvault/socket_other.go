@@ -1,42 +1,29 @@
-//go:build !linux && !darwin
+//go:build !linux && !darwin && !windows
 
 package main
 
 import (
+	"context"
+	"errors"
 	"net"
-	"net/http"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
-// Without a way to identify the peer of a Unix socket here, credentials go
-// over TCP as before; see socket.go for the protected platforms.
+// Without a way to tell who listens on a private channel here, there is no
+// channel: commands that need the password refuse rather than send it over
+// TCP. See socket.go for the protected platforms.
+
+var errNoPrivateChannel = errors.New("pvault can't keep your password safe on this system (macOS, Linux and Windows only)")
 
 func socketPath() string { return "" }
 
-func listenSocket(string) (net.Listener, error) { return nil, nil }
+// listenSocket refuses, so pvault serve (and unlock) doesn't start a server
+// here that lock couldn't stop without a password.
+func listenSocket(string) (net.Listener, error) { return nil, errNoPrivateChannel }
 
-func credentialRequest(method, path string, body any) (*http.Response, error) {
-	return publicRequest(method, path, body)
-}
-
-func checkVaultServer() error { return nil }
+func dialVaultServer(context.Context) (net.Conn, error) { return nil, errNoPrivateChannel }
 
 func untrustedSocketServer() (int, bool) { return 0, false }
 
-// isVaultServerProcess reports whether pid is a running pvault process.
-func isVaultServerProcess(pid int) bool {
-	out, err := exec.Command("ps", "-p", strconv.Itoa(pid), "-o", "comm=").Output()
-	if err != nil {
-		return false
-	}
-	name := filepath.Base(strings.TrimSpace(string(out)))
-	if strings.Contains(name, "pvault") {
-		return true
-	}
-	self, err := os.Executable()
-	return err == nil && name == filepath.Base(self)
-}
+func processExe(int) (string, error) { return "", errNoPrivateChannel }
+
+func checkSameBuild(int) error { return nil }

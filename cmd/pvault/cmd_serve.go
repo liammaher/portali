@@ -86,10 +86,14 @@ func cmdServe() {
 
 	fmt.Fprintf(os.Stderr, "Vault server listening on %s\n", ln.Addr())
 
-	// Wait for signal
+	// Wait for a signal, or for pvault lock asking over the private channel
+	// (POST /vault/stop), which is how it stops a server on Windows.
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-	<-sig
+	select {
+	case <-sig:
+	case <-srv.Stopped():
+	}
 
 	fmt.Fprintln(os.Stderr, "\nShutting down...")
 	v.Lock()

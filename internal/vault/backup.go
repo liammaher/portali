@@ -567,12 +567,18 @@ func RestoreBackup(path, dir, password, secretKeyHex string) (*BackupInfo, error
 		return nil, err
 	}
 	defer os.RemoveAll(work)
+	if err := RestrictDir(work); err != nil {
+		return nil, err
+	}
 	staged := filepath.Join(work, "vault")
 	info, err := restoreInto(path, staged, password, secretKeyHex, true)
 	if err != nil {
 		return nil, err
 	}
 	if err := os.Remove(dir); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return nil, err
+	}
+	if err := RestrictDir(staged); err != nil {
 		return nil, err
 	}
 	if err := os.Rename(staged, dir); err != nil {

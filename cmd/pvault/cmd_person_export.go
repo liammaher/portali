@@ -88,6 +88,10 @@ func writePersonExport(dir string, out *vault.PersonExport) (err error) {
 		}
 		return err
 	}
+	if err := vault.RestrictDir(dir); err != nil {
+		os.RemoveAll(dir)
+		return err
+	}
 	defer func() {
 		if err != nil {
 			os.RemoveAll(dir)

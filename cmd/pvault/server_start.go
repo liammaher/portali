@@ -4,10 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
+
+	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
 // startBackgroundServer spawns 'pvault serve' detached from the terminal,
@@ -32,10 +37,10 @@ func startBackgroundServer(pw, sk string) (verified bool, err error) {
 	if !locked {
 		cmd.Stdin = strings.NewReader(pw + "\n" + sk + "\n")
 	}
-	// The server's stderr goes to an unlinked temp file, so an early exit
-	// can report the server's own reason (socket or port) without tying the
-	// long-lived server to a pipe this command closes.
-	logFile, err := os.CreateTemp("", "pvault-serve-*.log")
+	// The server's stderr goes to a file, so an early exit can report the
+	// server's own reason (socket or port) without tying the long-lived
+	// server to a pipe this command closes.
+	logFile, err := newServerLog()
 	if err != nil {
 		return false, fmt.Errorf("creating server log: %w", err)
 	}
@@ -43,10 +48,10 @@ func startBackgroundServer(pw, sk string) (verified bool, err error) {
 	cmd.Stderr = logFile
 
 	if err := cmd.Start(); err != nil {
-		os.Remove(logFile.Name())
+		unlinkServerLog(logFile)
 		return false, fmt.Errorf("starting server: %w", err)
 	}
-	os.Remove(logFile.Name())
+	unlinkServerLog(logFile)
 
 	exited := make(chan struct{})
 	go func() {
@@ -90,4 +95,27 @@ func lastLine(f *os.File) string {
 	data, _ := io.ReadAll(f)
 	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
 	return strings.TrimSpace(lines[len(lines)-1])
+}
+
+// newServerLog is an unlinked temp file, except on Windows, which can't
+// delete a file that is open: there it is <vault dir>\run\serve.log, which
+// each start overwrites.
+func newServerLog() (*os.File, error) {
+	if runtime.GOOS != "windows" {
+		return os.CreateTemp("", "pvault-serve-*.log")
+	}
+	dir := filepath.Join(vaultDir(), "run")
+	if err := os.Mkdir(dir, 0o700); err != nil && !errors.Is(err, fs.ErrExist) {
+		return nil, err
+	}
+	if err := vault.RestrictDir(dir); err != nil {
+		return nil, err
+	}
+	return os.OpenFile(filepath.Join(dir, "serve.log"), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o600)
+}
+
+func unlinkServerLog(f *os.File) {
+	if runtime.GOOS != "windows" {
+		os.Remove(f.Name())
+	}
 }

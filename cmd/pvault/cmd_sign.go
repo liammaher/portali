@@ -176,6 +176,9 @@ func (r signReview) run() error {
 		return err
 	}
 	c.setDir(dir)
+	if err := vault.RestrictDir(dir); err != nil {
+		return err
+	}
 	review := filepath.Join(dir, "review.pdf")
 	if err := os.WriteFile(review, file, 0o600); err != nil {
 		return err
@@ -242,7 +245,10 @@ func (c *signCleanup) run() {
 		os.Remove(c.out)
 	}
 	if c.dir != "" && !c.dirKept {
-		os.RemoveAll(c.dir)
+		// On Windows a viewer that still has the PDF open keeps it there.
+		if err := os.RemoveAll(c.dir); err != nil {
+			fmt.Fprintf(os.Stderr, "Couldn't remove %s, which holds the signed PDF (%v): delete it once the PDF is closed.\n", c.dir, err)
+		}
 	}
 }
 
@@ -380,6 +386,9 @@ func openFile(path string) {
 		cmd = exec.Command("open", path)
 	case "linux":
 		cmd = exec.Command("xdg-open", path)
+	case "windows":
+		shellOpen(path)
+		return
 	default:
 		return
 	}

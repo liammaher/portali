@@ -225,7 +225,7 @@ Profile password + 128-bit secret key
 ```
 
 - The server listens on 127.0.0.1 only and rejects non-loopback `Host` headers (DNS rebinding).
-- On macOS and Linux the CLI sends your password only over a private Unix socket (`~/.pvault/run/pvault.sock`) and only after checking that the server on it is this same `pvault`, so a program squatting on port 7200 while the vault is down never sees it. (The onboarding page still uses the port; browsers can't use sockets.)
+- The CLI sends your password only over a private Unix socket (`~/.pvault/run/pvault.sock`; on Windows a named pipe only you can open) and only after checking that the server on it is this same `pvault`, so a program squatting on port 7200 while the vault is down never sees it. (The onboarding page still uses the port; browsers can't use sockets.)
 - No session token is ever written to disk; the CLI and onboarding page get short-lived grants by re-entering the password (or approving with Touch ID). Wrong passwords are rate-limited.
 - Service tokens are stored hashed; scope, sensitivity cap and access level are enforced server-side.
 - Sensitivity tiers: `public` < `standard` < `sensitive` < `critical` < `personal`. Agent tokens can be capped up to `critical`; `personal` is reachable only by your own session, or by a Touch ID prompt you approve. Login secrets (any field whose name has a word like pin, puk, password or otp: `spid.password`, `fisconline.pin`) can only be stored as `personal`, and SPID/CieID categories default to it. Field IDs are lower-case.

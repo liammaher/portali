@@ -7,7 +7,7 @@ import { randomBytes } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir, userInfo } from "node:os";
 import { join } from "node:path";
-import { assertTokenConfigured, getField } from "./client.js";
+import { assertTokenConfigured, getField, serverPipe } from "./client.js";
 import { fakeVaultSocket } from "./vault-socket.testutil.js";
 
 // Fake vault: each valid token may read fields under one category prefix.
@@ -291,3 +291,23 @@ async function fakeVaultSocketAt(folder: string): Promise<{ server: Server }> {
   await new Promise<void>((r) => other.listen(join(folder, "run", "pvault.sock"), r));
   return { server: other };
 }
+
+
+// On Windows a pipe name counts only while the server holds its file open,
+// which Windows shows by refusing to delete the file (EBUSY).
+test("serverPipe trusts a name only while the server holds its file", async () => {
+  const good = "\\\\.\\pipe\\pvault-" + "ab".repeat(16);
+  const err = (code: string) => Object.assign(new Error(code), { code });
+  const fs = (name: string, unlinkErr?: string) => ({
+    readFile: async () => name + "\n",
+    unlink: async () => { if (unlinkErr) throw err(unlinkErr); },
+  });
+  assert.equal(await serverPipe("run/pipe", fs(good, "EBUSY")), good);
+  // The delete worked: the server is gone, and the name may be anyone's.
+  await assert.rejects(serverPipe("run/pipe", fs(good)), /server not running/);
+  await assert.rejects(serverPipe("run/pipe", fs(good, "ENOENT")), /server not running/);
+  await assert.rejects(serverPipe("run/pipe", fs(good, "EPERM")), /refusing/);
+  await assert.rejects(serverPipe("run/pipe", fs("\\\\.\\pipe\\other", "EBUSY")), /refusing/);
+  await assert.rejects(serverPipe("run/pipe", fs(good + "\\x", "EBUSY")), /refusing/);
+  await assert.rejects(serverPipe("run/pipe", { readFile: async () => { throw err("ENOENT"); }, unlink: async () => {} }), /server not running/);
+});

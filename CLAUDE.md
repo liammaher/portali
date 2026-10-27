@@ -105,11 +105,21 @@ Profile Password + Secret Key (128-bit)
   browser can't use a socket). The page is self-contained under a hash-pinned CSP
   (`pageCSP`), and never shows a secret again: the page asks for category reads with `?omit=` the
   password inputs, which come back `redacted` and read "saved".
+- On Windows the channel is a named pipe (`transport_windows.go`). Pipe names are machine-wide
+  and any account can make one, so the server picks a random name, writes it to
+  `<vault dir>\run\pipe` (a `RestrictDir` folder) and holds that file open while it serves;
+  a file Windows lets you delete means the server is gone. The MCP server and fill.py use a
+  name only while that delete fails (`EBUSY`, error 32). The pipe's DACL lets only this user
+  in, remote clients are refused, and the CLI checks the server's token SID and exe path
+  (`GetNamedPipeServerProcessId`; no cdhash, as on Linux). Any other OS has no channel and no
+  server: `serve` and the commands needing the password refuse (`socket_other.go`).
 - Limits: this catches stale or impostor servers, not a process that can already write to
-  the vault dir or replace the pvault binary.
+  the vault dir or replace the pvault binary (on Windows: any process of this user).
 - `pvault lock` needs no trust: a server on the vault's socket that this build won't send a
   password to (another build, e.g. after a reinstall) is still stopped, by SIGTERM, which the
   server takes as lock (`untrustedSocketServer`); stopping a server never needs a password.
+  Windows has no SIGTERM, so there lock sends `POST /vault/stop` over the pipe, which only
+  the private channel reaches and which also takes no password.
 
 ### Touch ID (`cmd/pvault-touchid/main.swift`)
 - The profile password sits in a login-Keychain item whose ACL trusts only that helper
@@ -342,6 +352,10 @@ the page never copies a rule.
 - CLI arguments: unknown options and repeated flags are errors, never ignored
   (`positionalArgs`, `parseFlags`); `pvault set` takes one value.
 - A comment says why; CLAUDE.md says what must stay true. Keep both short.
+- Windows ignores 0700/0600, so a folder that must be private (the vault, its `run`, a
+  restore, a person export, sign review's temp folder) also gets an owner-only DACL
+  (`vault.RestrictDir`). It rewrites the access of what the folder holds, so `Init` on Windows
+  takes only a new or empty folder.
 
 ## Environment Variables
 

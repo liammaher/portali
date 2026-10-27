@@ -15,8 +15,9 @@ import (
 
 type socketKey struct{}
 
-// viaSocket reports whether the request arrived on the vault's Unix socket,
-// which only this user's processes can reach.
+// viaSocket reports whether the request arrived on the vault's private
+// channel (its Unix socket, or on Windows its named pipe), which only this
+// user's processes can reach.
 func viaSocket(r *http.Request) bool {
 	ok, _ := r.Context().Value(socketKey{}).(bool)
 	return ok

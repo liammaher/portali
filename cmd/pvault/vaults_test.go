@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -39,9 +40,11 @@ func TestSelectVault(t *testing.T) {
 		t.Errorf("name %q, flag %q, cmd %q", vaultName(), vaultFlag(), pvCmd("unlock"))
 	}
 	// Child processes (serve, the Touch ID helper) see the same vault.
-	out, err := exec.Command("sh", "-c", `printf %s "$VAULT_DIR"`).Output()
-	if err != nil || string(out) != want {
-		t.Errorf("child VAULT_DIR = %q, %v", out, err)
+	if runtime.GOOS != "windows" { // no sh to ask there
+		out, err := exec.Command("sh", "-c", `printf %s "$VAULT_DIR"`).Output()
+		if err != nil || string(out) != want {
+			t.Errorf("child VAULT_DIR = %q, %v", out, err)
+		}
 	}
 
 	// --vault=name, and PVAULT_VAULT, which is consumed.
@@ -127,7 +130,7 @@ func TestPorts(t *testing.T) {
 	if serverAddr() != "http://127.0.0.1:9999" {
 		t.Error("VAULT_ADDR should win over the port file")
 	}
-	if info, err := os.Stat(portPath(studio)); err != nil || info.Mode().Perm() != 0600 {
+	if info, err := os.Stat(portPath(studio)); err != nil || runtime.GOOS != "windows" && info.Mode().Perm() != 0600 {
 		t.Errorf("port file mode = %v, %v", info.Mode().Perm(), err)
 	}
 
