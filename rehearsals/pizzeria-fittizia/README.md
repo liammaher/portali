@@ -76,12 +76,28 @@ insegna and the dehors.
 |---|---|---|---|---|
 | 2026-10-27 | Claude, Liam logged in | Allega documenti: 21 screens, every factual section saved | The attachments gate: two required files must be CAdES-signed (.p7m); the seven declarations are the person's | Map rewritten from what the portal showed |
 | 2026-10-27 | Claude from `portal-steps.yaml`, in the Claude browser (already logged in) | Every factual section saved and read back; stopped before the declarations and payment | Nothing in the map; two mechanics: a dropdown filter matches substrings, and a click on a fresh panel misses | The filter-and-arrow recipe, in the map and in `run.py` |
+| 2026-10-27 | Benchmark: 3 timed runs from the steps file, bigger batches | Every factual section saved and read back, each run | Run 1: a re-render after Forma giuridica wiped CF and P.IVA; run 3: it wiped Denominazione | Forma giuridica now comes before Denominazione in `portal-steps.yaml` |
 
 Time: about an hour for the first walk, **14 min 51 s** for the second (7 wizard screens in
 about 4 minutes, the 9 sections in about 11), with the steps known and every value computed
 before starting. The read-back caught the one wrong value (CASALNUOVO DI NAPOLI) before
 saving. `claude/skills/pratica/portal/run.py` runs the same steps without a model in a
 separate Chrome; its live run is still to do, in a window the person logs into.
+
+**Benchmark** (2026-10-27): the same draft three times, from the dashboard to the saved diritti
+section, each run started on a fresh draft with Liam already logged in. Bigger batches (up to 25
+browser actions each, about 13 per run) instead of one call per field.
+
+| Run | Time | Notes |
+|---|---|---|
+| 1 | 6 min 59 s | One recovery: CF and P.IVA retyped after the Forma giuridica re-render |
+| 2 | 6 min 30 s | No retries |
+| 3 | 7 min 23 s | Denominazione retyped after the same re-render; a context reset mid-run included |
+
+So a documented portal pratica takes about **7 minutes** in the browser pane, against about an
+hour the first time and 15 minutes from the steps file with small batches. What's left is waiting
+on the portal: each section saves with a full page reload (about 3 s), and most dropdowns need
+their panel to settle (1 s). Each run reads every value back before it saves.
 
 What the first walk taught, beyond the map:
 
