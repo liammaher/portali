@@ -54,7 +54,8 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 
 **a. Vault MCP tools (preferred when loaded).** `vault_get`, `vault_set`, `vault_list`,
 `vault_context`, `vault_expiring`, `vault_documents`, `vault_document_add`,
-`vault_document_get`. They use a scoped service token, so a call can fail with
+`vault_document_get`, `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
+step: a token can ask for a handwritten signature but never approve it). They use a scoped service token, so a call can fail with
 "vault: this is outside the token's scope", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
 If a tool says there's no token, or it's expired or revoked, and `pvault touchid status`

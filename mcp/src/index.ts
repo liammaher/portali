@@ -7,7 +7,7 @@ import { homedir } from "node:os";
 import { basename, extname, join, relative, isAbsolute, resolve, sep } from "node:path";
 import {
   getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
-  getExpiring, listDocuments, addDocument, getDocument, listMembers,
+  getExpiring, listDocuments, addDocument, getDocument, listMembers, requestSigning, getSignings, pvCmd,
 } from "./client.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import {
@@ -226,6 +226,8 @@ const MIME_BY_EXT: Record<string, string> = {
   ".txt": "text/plain",
 };
 
+const MAX_SIGNING_BYTES = 10 * 1024 * 1024;
+
 // Folders vault_document_add may read from. Without this limit an agent that
 // only has this MCP server could archive any local file (SSH keys, the vault's
 // own secret.key) and read it back with vault_document_get.
@@ -311,6 +313,76 @@ server.registerTool(
         return err("document is larger than 10 MB and can't be returned inline");
       }
       return fileContent(`vault://documents/${id}`, doc.contentType, doc.data);
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+// --- Signing ---
+// An agent can ask for a signature and watch the request; only the user
+// approves it, in a terminal. There is no approve tool on purpose (a test
+// checks the tool list).
+
+const PLACEMENT = z.object({
+  page: z.number().int().min(1).describe("1-based page"),
+  rect: z.tuple([z.number(), z.number(), z.number(), z.number()]).describe("The signature line's box [x0, top, x1, bottom] in PDF points from the page's top-left, as the library layout's signatures[].rect"),
+  date_rect: z.tuple([z.number(), z.number(), z.number(), z.number()]).optional().describe("The date line's box, same units; the vault writes today's date there"),
+});
+
+server.registerTool(
+  "vault_sign_request",
+  {
+    description:
+      "Ask for the user's handwritten signature on a filled PDF form. The vault stamps it on the PDF and holds the result; nothing is released until the user reviews that exact file and approves it with a password or fingerprint (you cannot approve, and cannot read the signed file). Needs a token scoped to firma_autografa.signing with append access (the MCP server's own token, so the user must have created it with that scope), and a signature stored by the user as a PNG with a transparent background with 'pvault doc add firma_autografa <image.png>'. Only files inside the import folders (default ~/Downloads, VAULT_IMPORT_DIRS) can be sent, so a filled form saved elsewhere must be copied there first. When fill.py --sign is available, prefer it. Afterwards tell the user to run the command in the result; the request expires after 30 minutes. Only for a form whose procedure takes a handwritten signature (check the library entry's signing ways): never for one that needs a firma digitale.",
+    inputSchema: {
+      path: z.string().describe("Absolute path of the filled PDF"),
+      purpose: z.string().refine((p) => Buffer.byteLength(p) <= 200, "at most 200 bytes").describe("One line: which pratica and why, e.g. 'TARI nuova iscrizione, Mod. 1' (up to 200 bytes)"),
+      placements: z.array(PLACEMENT).min(1).max(8).describe("Where the signature (and date) go"),
+    },
+  },
+  async ({ path, purpose, placements }): Promise<CallToolResult> => {
+    try {
+      const real = await resolveImportPath(path);
+      const info = await stat(real);
+      if (!info.isFile()) return err(`${path} is not a file`);
+      if (info.size > MAX_SIGNING_BYTES) return err(`${path} is larger than 10 MB`);
+      const data = await readFile(real);
+      if (!data.subarray(0, 5).equals(Buffer.from("%PDF-"))) return err(`${path} is not a PDF`);
+      const req = await requestSigning(basename(path), purpose, data, placements);
+      return ok(
+        `Signing request ${req.id} filed for ${req.name} (${req.pages} page${req.pages === 1 ? "" : "s"}, dated ${req.date}). ` +
+        `Nothing is signed yet. Tell the user to run, in a terminal: ${pvCmd(`sign review ${req.id}`)}. ` +
+        `They will see the signed PDF, approve it with their password or fingerprint, and the signed file is saved for them. ` +
+        `It expires at ${req.expires_at}. You can check it with vault_sign_status.`
+      );
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_sign_status",
+  {
+    description:
+      "Check this token's own signing requests: pending (waiting for the user), approved, rejected or expired. With an id, just that request. It never returns the signed file, and doesn't see requests another token filed (such as fill.py's).",
+    inputSchema: {
+      id: z.string().optional().describe("A request id from vault_sign_request"),
+    },
+  },
+  async ({ id }): Promise<CallToolResult> => {
+    try {
+      let list;
+      try {
+        list = await getSignings(id);
+      } catch (e) {
+        if (/not found/.test((e as Error).message)) {
+          return err("vault: no such signing request for this token: it may have expired (requests last 30 minutes and are forgotten after a lock), or it was filed by another token (fill.py files its own: look for the saved -firmato.pdf, or ask the user to run pvault sign list)");
+        }
+        throw e;
+      }
+      return ok(JSON.stringify(list.map(({ id, name, status, pages, date, expires_at }) => ({ id, name, status, pages, date, expires_at })), null, 2));
     } catch (e) {
       return err((e as Error).message);
     }

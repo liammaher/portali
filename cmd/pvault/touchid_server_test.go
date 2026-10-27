@@ -3,7 +3,13 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
+	"image"
+	"image/color"
+	"image/png"
+	"io"
 	"net"
 	"net/http"
 	"os"
@@ -51,6 +57,103 @@ func TestTouchIDHelper_UnlocksGenuineServer(t *testing.T) {
 		if token := lines[len(lines)-1]; len(token) < 32 || strings.Contains(token, " ") {
 			t.Fatalf("grant %s printed %q, want a token", scope, out)
 		}
+	}
+}
+
+// The helper's sign command against a genuine server: the prompt is worded
+// from what the vault says about the request, and the grant it prints reads
+// and approves that request and opens nothing else.
+func TestTouchIDHelper_SignGrant(t *testing.T) {
+	helper := buildDebugHelper(t)
+	shortVaultDir(t)
+	pvault := buildPvault(t, true)
+	startServe(t, pvault)
+	if out, err := runDebugHelper(t, helper, pvault, "unlock"); err != nil {
+		t.Fatalf("unlock: %v\n%s", err, out)
+	}
+	// The server's TCP address, as it reports it over its socket.
+	sock := &http.Client{Transport: &http.Transport{DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
+		return (&net.Dialer{}).DialContext(ctx, "unix", socketPath())
+	}}}
+	resp, err := sock.Get("http://localhost/vault/status")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var status struct{ Addr string }
+	json.NewDecoder(resp.Body).Decode(&status)
+	resp.Body.Close()
+	addr := "http://" + status.Addr
+	call := func(method, path, token, contentType string, body []byte) (int, http.Header, []byte) {
+		t.Helper()
+		req, _ := http.NewRequest(method, addr+path, bytes.NewReader(body))
+		req.Header.Set("Content-Type", contentType)
+		if token != "" {
+			req.Header.Set("Authorization", "Bearer "+token)
+		}
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer resp.Body.Close()
+		data, _ := io.ReadAll(resp.Body)
+		return resp.StatusCode, resp.Header, data
+	}
+	asJSON := func(v any) []byte { b, _ := json.Marshal(v); return b }
+
+	_, _, data := call("POST", "/vault/session", "", "application/json", asJSON(map[string]string{"password": "test-password"}))
+	var session struct{ Token string }
+	json.Unmarshal(bytes.ReplaceAll(data, []byte(`"token"`), []byte(`"Token"`)), &session)
+	if session.Token == "" {
+		t.Fatalf("no session grant: %s", data)
+	}
+	img := image.NewNRGBA(image.Rect(0, 0, 200, 80))
+	for x := 10; x < 190; x++ {
+		img.Set(x, 40+(x%20)-10, color.NRGBA{0, 0, 150, 255})
+	}
+	var pngBytes bytes.Buffer
+	png.Encode(&pngBytes, img)
+	if st, _, body := call("POST", "/vault/documents?category=firma_autografa&name=firma.png", session.Token, "image/png", pngBytes.Bytes()); st != 200 {
+		t.Fatalf("store signature: %d %s", st, body)
+	}
+	st, _, data := call("POST", "/vault/signing", session.Token, "application/json", asJSON(map[string]any{
+		"name": "mod-1.pdf", "purpose": "test", "pdf": signTestPDF(),
+		"placements": []map[string]any{{"page": 1, "rect": []float64{100, 40, 190, 90}}},
+	}))
+	var info vault.SigningInfo
+	if st != 200 || json.Unmarshal(data, &info) != nil {
+		t.Fatalf("request: %d %s", st, data)
+	}
+
+	out, err := runDebugHelper(t, helper, pvault, "sign", "--id", info.ID)
+	if err != nil {
+		t.Fatalf("sign: %v\n%s", err, out)
+	}
+	if want := `would ask to review and sign "mod-1.pdf" (1 page, hash ` + info.SHA256[:8] + `), filed by session`; !strings.Contains(out, want) {
+		t.Fatalf("the prompt wasn't worded from the request, want %q in:\n%s", want, out)
+	}
+	lines := strings.Split(strings.TrimSpace(out), "\n")
+	grant := lines[len(lines)-1]
+
+	if st, _, _ := call("GET", "/vault/fields", grant, "application/json", nil); st != 403 {
+		t.Errorf("the sign grant listed fields: %d", st)
+	}
+	st, hdr, file := call("GET", "/vault/signing/"+info.ID+"/candidate", grant, "application/json", nil)
+	if st != 200 || hdr.Get("X-Signing-Sha256") != info.SHA256 || len(file) == 0 {
+		t.Fatalf("candidate: %d", st)
+	}
+	if st, _, body := call("POST", "/vault/signing/"+info.ID+"/approve", grant, "application/json", asJSON(map[string]string{"sha256": info.SHA256})); st != 200 {
+		t.Fatalf("approve: %d %s", st, body)
+	}
+
+	// Approved, the request can't be reviewed again; a made-up one can't either.
+	if out, err := runDebugHelper(t, helper, pvault, "sign", "--id", info.ID); err == nil || !strings.Contains(out, "no longer waiting") {
+		t.Errorf("a decided request: err=%v\n%s", err, out)
+	}
+	if out, err := runDebugHelper(t, helper, pvault, "sign", "--id", strings.Repeat("a", 32)); err == nil {
+		t.Errorf("an unknown request: %s", out)
+	}
+	if out, err := runDebugHelper(t, helper, pvault, "sign", "--id", "../etc"); err == nil || !strings.Contains(out, "usage") {
+		t.Errorf("a malformed id: err=%v\n%s", err, out)
 	}
 }
 

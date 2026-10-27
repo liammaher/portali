@@ -55,6 +55,8 @@ func main() {
 		cmdRevokeServiceToken()
 	case "doc":
 		cmdDoc()
+	case "sign":
+		cmdSign()
 	case "person", "member": // member is the older name, kept as an alias
 		cmdPerson()
 	case "expiring":
@@ -118,6 +120,9 @@ Commands:
   doc list [category]              List stored documents
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
+  sign list                        Signing requests an agent filed, waiting for you
+  sign review <id> [--out file]    Open the signed PDF; if you confirm, approve it and save it
+  sign reject <id>                 Refuse a request
   person list                      List the other people in your vault: family members
                                    (relazione, age, stato di famiglia), or a business's people (ruolo)
   person show <slug>               Show a person's fields

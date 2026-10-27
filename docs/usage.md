@@ -116,7 +116,25 @@ pvault doc delete <id>
 
 Each file is encrypted with AES-256-GCM using the category's documents subkey and bound to its document ID (so encrypted files can't be swapped between records); the original filename is encrypted too. Files live in `~/.pvault/documents/<id>.enc`. Service tokens reach documents through the scope pattern `<category>.documents` (or `<category>.*`) and their sensitivity cap; documents default to `sensitive`. At most two uploads run at once. `pvault doc get` strips leading dots from stored names so a document can never be written out as a dotfile. After storing a scan, delete or securely archive the unencrypted original.
 
-The MCP tool `vault_document_add` only reads files inside the folders in `VAULT_IMPORT_DIRS` (default `~/Downloads`), resolving symlinks and refusing hidden files, so an agent can't use it to read arbitrary local files.
+The MCP tool `vault_document_add` only reads files inside the folders in `VAULT_IMPORT_DIRS` (default `~/Downloads`), resolving symlinks and refusing hidden files, so an agent can't use it to read arbitrary local files. `vault_sign_request` reads from the same folders.
+
+## Signing forms (the sign gate)
+
+An agent can ask for your handwritten signature on a filled form; only you, in person, can approve it. Store your signature once:
+
+```sh
+pvault doc add firma_autografa ~/Desktop/signature.png   # one PNG with a transparent background (a white one would cover the signature line), up to 500 KB; always personal; a new one replaces the old
+```
+
+The agent files a request (a PDF and where the signature goes); the vault stamps your signature and today's date on it and holds the result in memory, releasing nothing. Then:
+
+```sh
+pvault sign list                       # requests waiting for you
+pvault sign review <id> [--out file]   # opens the signed PDF; approve with your password or Touch ID, then type the first 8 characters of its hash
+pvault sign reject <id>
+```
+
+`review` saves `<name>-firmato.pdf` (never over an existing file) only after you approve the exact file you saw; the approval works for that request once, for 10 minutes. Without `--out` it saves in the current folder. Requests expire after 30 minutes and with the day, at most 5 wait at a time (3 per token, 20 an hour), and none survives a lock. The audit log records each request, view, approval and refusal with the file's sha256. With Touch ID the fingerprint prompt names the document, its pages, its hash and who filed it: read it, and don't touch the sensor for a request you didn't expect. A service token needs scope `firma_autografa.signing` with `append` access to file requests; it can see only its own, and can never approve one or read the signed file. This is a handwritten-signature image with your approval, not a firma digitale: forms that need one are still yours to sign.
 
 New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
 
@@ -213,6 +231,19 @@ POST   /vault/documents?category=<c>&name=<file>[&sensitivity=<tier>]   # body: 
 GET    /vault/documents?category=<c>     # List documents (metadata only)
 GET    /vault/documents/{id}             # Download the decrypted file (attachment, CSP sandbox)
 DELETE /vault/documents/{id}             # Delete
+```
+
+### Signing
+
+```
+POST   /vault/signing                    # { name, purpose?, pdf (base64, max 10 MB), placements: [{ page, rect: [x0, top, x1, bottom], date_rect? }] } → the request (token with firma_autografa.signing, append, or session)
+GET    /vault/signing                    # Requests: yours (a token) or all (you)
+GET    /vault/signing/{id}               # One request's status: pending, approved, rejected, expired
+GET    /vault/signing/{id}/summary       # Name, pages, first 8 hash characters. Unix socket only, no auth, no file
+GET    /vault/signing/{id}/candidate     # The signed PDF (you, or a sign grant)
+POST   /vault/signing/{id}/approve       # { sha256 } of the file you reviewed (you, or a sign grant)
+DELETE /vault/signing/{id}               # Refuse (you), or withdraw (the token that asked)
+POST   /vault/session                    # { password, sign: <id> } (socket only) → a grant for reading and approving that request only
 ```
 
 ### Context

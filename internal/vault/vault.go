@@ -997,6 +997,12 @@ func (v *Vault) CreateServiceToken(consumer, scope string, ttl time.Duration, ma
 	if err := v.checkUnlocked(); err != nil {
 		return "", err
 	}
+	// These name the user's own actions in the audit log and on signing
+	// requests: an agent's token must not read as them.
+	switch strings.ToLower(strings.TrimSpace(consumer)) {
+	case "session", "grant", "vault":
+		return "", &ValidationError{Field: "consumer", Msg: "\"" + consumer + "\" is reserved for your own actions: choose another name"}
+	}
 	if err := ValidateScope(scope); err != nil {
 		return "", &ValidationError{Field: "scope", Msg: err.Error()}
 	}

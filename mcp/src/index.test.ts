@@ -2,7 +2,7 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir, homedir } from "node:os";
 import { join } from "node:path";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
@@ -15,6 +15,7 @@ let vault: Server;
 let vaultDir: string;
 let importDir: string;
 let client: Client;
+let lastSigning: { name: string; purpose: string; pdf: string; placements: unknown[] } | undefined;
 
 before(async () => {
   ({ dir: vaultDir, server: vault } = await fakeVaultSocket((req, res) => {
@@ -35,6 +36,22 @@ before(async () => {
           { slug: "giulia", famiglia: { relazione: "coniuge" }, first_name: "Giulia", fields: 2 },
         ],
       }));
+      return;
+    }
+    if (req.method === "POST" && req.url === "/vault/signing") {
+      const chunks: Buffer[] = [];
+      req.on("data", (c) => chunks.push(c));
+      req.on("end", () => {
+        lastSigning = JSON.parse(Buffer.concat(chunks).toString());
+        res.end(JSON.stringify({
+          id: "a".repeat(32), name: lastSigning!.name, requester: "agent", signer: "io", status: "pending",
+          pages: 1, date: "2026-10-27", expires_at: "2026-10-27T11:00:00Z",
+        }));
+      });
+      return;
+    }
+    if (req.url === "/vault/signing") {
+      res.end(JSON.stringify([{ id: "a".repeat(32), name: "mod-1.pdf", requester: "agent", signer: "io", status: "pending", pages: 1, date: "2026-10-27", expires_at: "2026-10-27T11:00:00Z", sha256: "x" }]));
       return;
     }
     res.end("{}");
@@ -90,4 +107,52 @@ test("vault_document_add doesn't tell which paths exist outside the import folde
     name: "vault_document_add", arguments: { path: join(importDir, "missing.pdf"), category: "residenza" },
   }));
   assert.match(missing, /ENOENT|no such file/);
+});
+
+const PLACEMENT = { page: 1, rect: [401.1, 729, 533.4, 759], date_rect: [68, 748.5, 172.2, 759] };
+
+test("signing: there is a way to ask and to watch, and none to approve", async () => {
+  const names = (await client.listTools()).tools.map((t) => t.name);
+  assert.ok(names.includes("vault_sign_request"));
+  assert.ok(names.includes("vault_sign_status"));
+  const approvers = names.filter((n) => /approve|review|confirm|sign_grant|signed_file|candidate/i.test(n));
+  assert.deepEqual(approvers, [], "a tool could approve or read a signature: the approval is the user's alone");
+});
+
+test("vault_sign_request sends the PDF and placements, and says what the user does", async () => {
+  const pdf = join(importDir, "mod-1.pdf");
+  await writeFile(pdf, "%PDF-1.4\nbody");
+  const out = text(await client.callTool({
+    name: "vault_sign_request",
+    arguments: { path: pdf, purpose: "TARI Mod. 1", placements: [PLACEMENT] },
+  }));
+  assert.equal(lastSigning?.name, "mod-1.pdf");
+  assert.equal(lastSigning?.purpose, "TARI Mod. 1");
+  assert.equal(Buffer.from(lastSigning!.pdf, "base64").toString(), "%PDF-1.4\nbody");
+  assert.deepEqual(lastSigning?.placements, [PLACEMENT]);
+  assert.match(out, /pvault sign review a{32}/);
+  assert.match(out, /Nothing is signed yet/);
+});
+
+test("vault_sign_request refuses files outside the import folders and non-PDFs", async () => {
+  const outside = await client.callTool({
+    name: "vault_sign_request",
+    arguments: { path: "/etc/hosts", purpose: "x", placements: [PLACEMENT] },
+  });
+  assert.equal((outside as { isError?: boolean }).isError, true);
+  const notPdf = join(importDir, "note.pdf");
+  await writeFile(notPdf, "hello");
+  const bad = await client.callTool({
+    name: "vault_sign_request",
+    arguments: { path: notPdf, purpose: "x", placements: [PLACEMENT] },
+  });
+  assert.equal((bad as { isError?: boolean }).isError, true);
+  assert.match(text(bad), /not a PDF/);
+});
+
+test("vault_sign_status lists the requests without the file or its hash", async () => {
+  const out = text(await client.callTool({ name: "vault_sign_status", arguments: {} }));
+  const list = JSON.parse(out);
+  assert.equal(list[0].status, "pending");
+  assert.ok(!("sha256" in list[0]));
 });
