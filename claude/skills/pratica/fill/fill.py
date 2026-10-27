@@ -1520,14 +1520,11 @@ def run(a):
         n += 1
         slug = f"{base}-{n}"
 
-    channels = [c for c in entry["channels"] if c["purpose"] == "procedure"]
-    if a.channel:
-        channel = next((c for c in channels if c["type"] == a.channel), None)
-        if not check(f"the entry has a {a.channel} channel for this procedure", channel is not None,
-                     ", ".join(sorted({c["type"] for c in channels}))):
-            return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
-    else:
-        channel = next((c for c in channels if c.get("preferred")), channels[0])
+    channels, on = procedure_channels(entry, a.channel)
+    if a.channel and not check(f"the entry has a {a.channel} channel for this procedure", bool(on),
+                               ", ".join(sorted({c["type"] for c in channels}))):
+        return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    channel = on[0]
     destinatario = channel.get("address") or channel.get("url") or channel.get("name", "")
     signing = request_signature(a, prepare, entry, form, layout, channel, slug, check) if a.sign else None
     if resume:
@@ -1601,7 +1598,7 @@ def request_signature(a, prepare, entry, form, layout, channel, slug, check):
     way = signing_rule(a, form, channel["type"])
     if not way or "handwritten" not in way["ways"] or way["status"] == "disputed":
         check(f"the library lists a handwritten signature for {channel['type']}", False,
-              "sign it by hand, or have the library say how this channel takes a signature")
+              no_rule(a, channel["type"]) if not way else "sign it by hand, or have the library say how this channel takes a signature")
         return None
     if way["status"] != "verified":
         print(f"  note: the library has not verified that {channel['type']} takes a handwritten signature; "
@@ -1635,6 +1632,24 @@ def signing_rule(a, form, channel_type):
     return {"channel": channel_type, "status": "verified", **rule} if rule else None
 
 
+def no_rule(a, channel_type):
+    """Why a channel has no signing rule, as the user should hear it."""
+    if channel_type in ("portal", "app"):
+        return "as the portal or app asks: its SPID/CIE login identifies you, and it may not use this form at all"
+    if not getattr(a, "library", None):
+        return "the law's rule for this channel is in the library's contract/signing.json: pass --library"
+    return "not said for this channel: ask the ente, or sign by hand"
+
+
+def procedure_channels(entry, channel_type=None):
+    """The entry's channels that carry out the procedure, and the ones of
+    channel_type (default: the preferred one, else the first)."""
+    channels = [c for c in entry["channels"] if c["purpose"] == "procedure"]
+    if channel_type:
+        return channels, [c for c in channels if c["type"] == channel_type]
+    return channels, [next((c for c in channels if c.get("preferred")), channels[0])] if channels else []
+
+
 # --- The route card ----------------------------------------------------------
 
 ROUTE = {"portal": "online", "pec": "via PEC", "email": "by email", "post": "by post", "desk": "at the desk",
@@ -1649,15 +1664,11 @@ def route(a):
     when the desk depends on where they live); how to sign there; what to
     attach; what proof it gives back; the deadline."""
     entry = entry_of(a)
-    channels = [c for c in entry["channels"] if c["purpose"] == "procedure"]
+    channels, on = procedure_channels(entry, a.channel)
     if not channels:
         sys.exit(f"{entry['id']} lists no channel to carry it out")
-    if a.channel:
-        on = [c for c in channels if c["type"] == a.channel]
-        if not on:
-            sys.exit(f"{entry['id']} has no {a.channel} channel; it has {', '.join(sorted({c['type'] for c in channels}))}")
-    else:
-        on = [next((c for c in channels if c.get("preferred")), channels[0])]
+    if not on:
+        sys.exit(f"{entry['id']} has no {a.channel} channel; it has {', '.join(sorted({c['type'] for c in channels}))}")
     kind = on[0]["type"]
     steps = [{k: s[k] for k in ("do", "who", "human_only") if k in s}
              for s in entry["steps"] if kind in s.get("channel", [kind])]
@@ -1672,7 +1683,7 @@ def route(a):
     for f in signed:
         rule = signing_rule(a, f, kind)
         signing.append({"form": f["name"], **({k: rule[k] for k in ("ways", "id_copy", "status", "text", "notes") if k in rule}
-                                             if rule else {"text": "not said for this route: ask the ente or sign by hand"})})
+                                             if rule else {"text": no_rule(a, kind)})})
     # The entry's required documents (the forms among them), else its forms.
     attach = [d["name"] for d in entry.get("documents", []) if d.get("required")] or [f["name"] for f in entry.get("forms", [])]
     card = {"procedure": entry["id"], "title": entry.get("headline", entry["title"]), "route": kind,
@@ -1716,13 +1727,21 @@ def office_for(a, field):
     if not (a.server or a.vault_dir):
         return {"field": field, "why": f"{offices['name']}: pass the vault to pick yours ({field})"}
     try:
-        value = next(iter(connect(a).values())).get(field)
+        vault = next(iter(connect(a).values()))
     except SystemExit as e:  # no token, or a locked vault: the card still names the offices
         return {"field": field, "why": f"{offices['name']}: {e} (or pick from offices/{kind}.json)"}
+    status, got = vault.call("GET", vault.field_path(field))
+    got = got if isinstance(got, dict) else {}
+    pick = f"pick from offices/{kind}.json"
+    if status == 403:
+        return {"field": field, "why": f"the token can't read {field}: give it that scope, or {pick}"}
+    if got.get("constraint") == "not_resolved":
+        # A street across a boundary: the quartieri to choose from.
+        return {"field": field, "why": f"{got.get('error')}; store the quartiere (pvault set {field.rsplit('.', 1)[0]}.quartiere ...), or {pick}"}
+    value = got.get("value") if status == 200 else None
     office = offices["offices"].get(value or "")
     if not office:
-        return {"field": field, "why": f"{field} isn't known (an address outside Napoli, or one the vault can't place): "
-                                     f"run pvault locate, or pick from offices/{kind}.json"}
+        return {"field": field, "why": f"{field} isn't in the vault (no address, or one outside Napoli): {pick}"}
     return {"field": field, "value": value, "office": {k: office[k] for k in ("name", "address", "hours", "phone", "notes")
                                                        if k in office}}
 
