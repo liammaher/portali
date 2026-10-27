@@ -282,6 +282,10 @@ fill by hand.
    (the same `--vault-dir` as `needs`). It prints each check and exits 1 if one failed;
    `<out>/report.json` has every row. A run takes a few seconds, so run it again after each fix.
    - "not in the vault": missing data, as in step 2. Ask, offer the `pvault set`, run again.
+     When the answer is one the vault can't hold (someone with no codice fiscale: `N/E`),
+     put it in `answers.json` under `"values": {"<field id>": "<text>"}`: used for this
+     run only, refused if the vault has the field. Note it in the playbook so the next
+     run asks again rather than guessing.
    - "is answered": an `ask` row with no answer. Ask it, add it to `answers.json`.
    - "refused the token" or "Keychain": give the token command again. "locked" or "no
      vault server": the user runs `pvault unlock`.

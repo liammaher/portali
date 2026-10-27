@@ -40,7 +40,10 @@ from the entry's url into DIR. --entry is a procedure already as JSON.
 The entry says what goes in each box (map, template, columns, optional,
 choices) and the deadline (compute); the layout only where each box is.
 Answers are the ask rows' answers by label; one whose answers go into a
-table (into_table) takes a list of rows, each by column label. Needs
+table (into_table) takes a list of rows, each by column label. Its
+"values" give, by field ID, what the user says for a field the vault lacks
+and can't hold (N/E for someone with no codice fiscale): used for this run
+only, refused for a field the vault has or the form doesn't read. Needs
 PyMuPDF (fitz).
 """
 
@@ -239,6 +242,18 @@ def template_names(template):
             elif n[0] == "group":
                 yield from walk(n[1])
     return list(walk(parse_template(template)))
+
+
+def form_fields(form):
+    """Every field ID the form's rows read, a person's written without the
+    prefix (identity.codice_fiscale)."""
+    out = set()
+    for row in form["fields"]:
+        m = row["map"]
+        names = refs(m) + m.get("fields", []) + template_names(m.get("template", ""))
+        names += [n for c in m.get("columns", []) for n in template_names(c["template"])]
+        out |= {n.removeprefix("*:") for n in names if "." in n and not n.startswith(".")}
+    return out
 
 
 def needs(entry, form, draft=False):
@@ -817,7 +832,8 @@ def run(a):
     form = form_of(entry, a.form)
     check_supported(entry, form)
     vaults = connect(a)
-    answers = load(a.answers)["answers"] if a.answers else {}
+    answered = load(a.answers) if a.answers else {}
+    answers, given = answered.get("answers", {}), answered.get("values", {})
     checks = []
 
     def check(name, ok, detail=""):
@@ -843,6 +859,20 @@ def run(a):
 
     prepare = vaults["draft"] if a.draft and "draft" in vaults else vaults["prepare"]
     values = prepare.values()
+    read = form_fields(form)
+    for field, value in given.items():
+        # What the vault can't hold, such as N/E for someone with no codice
+        # fiscale: the user's word for this run, never in place of the vault's.
+        local = field.split(":", 1)[1] if ":" in field.split(".", 1)[0] else field
+        if not re.fullmatch(r"([a-z][a-z0-9-]{0,31}:)?[a-z0-9_-]+\.[a-z0-9_]+", field) or local not in read:
+            check(f"answers.json value {field} is a field this form reads", False)
+        elif field in values:
+            check(f"answers.json value {field} is not in the vault", False, "the vault has it: change it there")
+        elif not isinstance(value, str) or not value.strip():
+            check(f"answers.json value {field} is text", False, repr(value))
+        else:
+            values[field] = value.strip()
+            check(f"{field} from answers.json, not the vault", True, values[field])
     status, household = prepare.call("GET", "/vault/members")
     check("prepare token reads the household", status == 200, str(status))
     rows = resolve(form, values, household if status == 200 else {}, answers)
