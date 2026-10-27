@@ -168,8 +168,8 @@ func buildPvault(t *testing.T, hardened bool, flags ...string) string {
 }
 
 // startServe runs 'pvault serve --locked' for a new vault in VAULT_DIR on a
-// free port and waits for its socket.
-func startServe(t *testing.T, pvault string) {
+// free port and waits for its socket; it returns the server and its port.
+func startServe(t *testing.T, pvault string) (*exec.Cmd, int) {
 	t.Helper()
 	dir := os.Getenv("VAULT_DIR")
 	if _, err := vault.Init(dir, "test-password"); err != nil {
@@ -191,11 +191,54 @@ func startServe(t *testing.T, pvault string) {
 	for time.Now().Before(deadline) {
 		if c, err := net.Dial("unix", socketPath()); err == nil {
 			c.Close()
-			return
+			return cmd, port
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
 	t.Fatal("pvault serve did not open its socket")
+	return nil, 0
+}
+
+// A server of another build (the one still running after a reinstall) gets
+// no password, but lock still stops it: it is this vault's, on its socket,
+// and stopping it sends it nothing. Before, lock asked for the password and
+// refused to send it, so nothing could stop that server but kill.
+func TestLock_StopsServerOfAnotherBuild(t *testing.T) {
+	shortVaultDir(t)
+	old := buildPvault(t, true)
+	server, port := startServe(t, old)
+	t.Setenv("VAULT_ADDR", "http://127.0.0.1:"+strconv.Itoa(port))
+	// As a reinstall does: the old file goes while its server keeps running,
+	// so not even the server's executable can be named.
+	if err := os.Remove(old); err != nil {
+		t.Fatal(err)
+	}
+	if pid, ok := untrustedSocketServer(); !ok || pid != server.Process.Pid {
+		t.Fatalf("untrustedSocketServer() = %d, %v; want the other build's server, pid %d", pid, ok, server.Process.Pid)
+	}
+	if out := runCmd(t, cmdLock, "lock"); !strings.Contains(out, "stopped the server of another pvault build") {
+		t.Fatalf("lock said %q", out)
+	}
+	exited := make(chan struct{})
+	go func() { server.Wait(); close(exited) }()
+	select {
+	case <-exited:
+	case <-time.After(10 * time.Second):
+		t.Fatal("the other build's server is still running")
+	}
+}
+
+// This pvault's own server is trusted, so lock reaches it the usual ways and
+// never signals it as a stranger.
+func TestUntrustedSocketServer_NotThisBuild(t *testing.T) {
+	serveOnSocket(t, serveHandler(t, echoMux(new(atomic.Int32))))
+	if pid, ok := untrustedSocketServer(); ok {
+		t.Fatalf("this binary's own server counted as untrusted (pid %d)", pid)
+	}
+	shortVaultDir(t) // no socket at all
+	if _, ok := untrustedSocketServer(); ok {
+		t.Fatal("no server, yet one to stop")
+	}
 }
 
 // A genuine pvault build, but not the one this command runs, doesn't get

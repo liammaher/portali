@@ -125,6 +125,40 @@ func dialVaultServer(ctx context.Context) (net.Conn, error) {
 
 var errNoVaultSocket = errors.New("this vault's server isn't running")
 
+// peerProcess returns the uid, pid and executable of the process that
+// listens on a Unix socket connection: peerCred, and the kernel's path of
+// its running file.
+func peerProcess(conn *net.UnixConn) (uid, pid int, exe string, err error) {
+	if uid, pid, err = peerCred(conn); err != nil {
+		return 0, 0, "", err
+	}
+	exe, err = processExe(pid)
+	return uid, pid, exe, err
+}
+
+// untrustedSocketServer returns the pid of the process listening on this
+// vault's socket when it is this user's but not a server this pvault trusts
+// (verifyPeer): another build, such as the one still running after a
+// reinstall, whose file may be gone. Only this user can listen in the private
+// run dir, so it is this vault's server whatever it runs; lock stops it with
+// a signal, which sends it nothing.
+func untrustedSocketServer() (int, bool) {
+	path := socketPath()
+	if checkSocketDir(filepath.Dir(path)) != nil {
+		return 0, false
+	}
+	c, err := net.DialTimeout("unix", path, time.Second)
+	if err != nil {
+		return 0, false
+	}
+	defer c.Close()
+	uid, pid, err := peerCred(c.(*net.UnixConn))
+	if err != nil || uid != os.Getuid() || pid <= 1 || pid == os.Getpid() {
+		return 0, false
+	}
+	return pid, verifyPeer(c) != nil
+}
+
 // verifyPeer checks that the process listening on conn is this user's and
 // runs the same pvault binary, and build, as this one.
 func verifyPeer(conn net.Conn) error {

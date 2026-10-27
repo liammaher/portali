@@ -17,6 +17,13 @@ func cmdLock() {
 		fmt.Println("Vault locked (server stopped).")
 		return
 	}
+	// A server this pvault won't send a password to (another build, such as
+	// the one still running after a reinstall) is this vault's all the same
+	// if it listens on its socket, and stopping it needs none.
+	if pid, ok := untrustedSocketServer(); ok && stopServer(pid) {
+		fmt.Printf("Vault locked (stopped the server of another pvault build; '%s' starts this one).\n", pvCmd("unlock"))
+		return
+	}
 	removeStalePID()
 
 	if !portHasVault() {
@@ -51,6 +58,12 @@ func stopOwnServer() bool {
 	if err != nil || !isVaultServerProcess(pid) {
 		return false
 	}
+	return stopServer(pid)
+}
+
+// stopServer sends pid SIGTERM, which a vault server takes as lock (the key
+// zeroed, a pending backup written first), and waits until it is gone.
+func stopServer(pid int) bool {
 	p, err := os.FindProcess(pid)
 	if err != nil || p.Signal(syscall.SIGTERM) != nil {
 		return false

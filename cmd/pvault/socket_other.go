@@ -25,6 +25,8 @@ func credentialRequest(method, path string, body any) (*http.Response, error) {
 
 func checkVaultServer() error { return nil }
 
+func untrustedSocketServer() (int, bool) { return 0, false }
+
 // isVaultServerProcess reports whether pid is a running pvault process.
 func isVaultServerProcess(pid int) bool {
 	out, err := exec.Command("ps", "-p", strconv.Itoa(pid), "-o", "comm=").Output()

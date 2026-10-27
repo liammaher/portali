@@ -107,6 +107,9 @@ Profile Password + Secret Key (128-bit)
   password inputs, which come back `redacted` and read "saved".
 - Limits: this catches stale or impostor servers, not a process that can already write to
   the vault dir or replace the pvault binary.
+- `pvault lock` needs no trust: a server on the vault's socket that this build won't send a
+  password to (another build, e.g. after a reinstall) is still stopped, by SIGTERM, which the
+  server takes as lock (`untrustedSocketServer`); stopping a server never needs a password.
 
 ### Touch ID (`cmd/pvault-touchid/main.swift`)
 - The profile password sits in a login-Keychain item whose ACL trusts only that helper
