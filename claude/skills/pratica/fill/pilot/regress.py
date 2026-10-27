@@ -17,6 +17,8 @@ copies each case's filled.pdf, page PNGs and report.json to DIR/<case>/.
 """
 
 import copy
+import datetime as dt
+import hashlib
 import json
 import os
 import shutil
@@ -150,11 +152,126 @@ SARA = {"Nominativo": "Bruni Sara", "Luogo e data di nascita": "Salerno, 02/02/1
 LONG_NOTE = ("Contratto di locazione registrato presso l'Agenzia delle Entrate; conviventi come da stato di "
              "famiglia; il box auto non è pertinenza dell'abitazione e sarà dichiarato a parte se necessario.")
 
+PILOT_PASSWORD = "test-password-123"  # the synthetic vault's, internal/api testPassword
+
+
+def review_signing(server, out, layout):
+    """What the user does with pvault sign review, over the vault's socket: a
+    sign grant for the request, the signed PDF, a check that the signature and
+    the date landed in the layout's boxes and nowhere else, the approval.
+    Returns lines like fill.py's checks."""
+    import fitz
+    sys.path.insert(0, os.path.dirname(FILL))
+    sys.dont_write_bytecode = True
+    import fill
+    lines = []
+
+    def ok(name, good, detail=""):
+        lines.append(f"{'ok  ' if good else 'FAIL'} {name}{': ' + detail if detail and not good else ''}")
+        return good
+
+    sock = os.path.join(server["vault_dir"], "run", "pvault.sock")
+
+    def call(method, path, body=None, token=None):
+        conn = fill.UnixHTTPConnection(sock, 15)
+        headers = {"Host": "localhost", "Content-Type": "application/json"}
+        if token:
+            headers["Authorization"] = "Bearer " + token
+        conn.request(method, path, body=json.dumps(body).encode() if body is not None else None, headers=headers)
+        resp = conn.getresponse()
+        data = resp.read()
+        conn.close()
+        return resp.status, {k.lower(): v for k, v in resp.getheaders()}, data
+
+    signing = load(os.path.join(out, "report.json")).get("signing")
+    if not ok("the report names the signing request", bool(signing)):
+        return "\n" + "\n".join(lines)
+    sid = signing["id"]
+    status, _, _ = call("POST", f"/vault/signing/{sid}/approve", {"sha256": "0" * 64}, server["tokens"]["prepare"])
+    ok("the agent's token can't approve", status == 403, str(status))
+    status, _, _ = call("GET", f"/vault/signing/{sid}/candidate", token=server["tokens"]["prepare"])
+    ok("the agent's token can't read the signed file", status == 403, str(status))
+
+    status, _, data = call("POST", "/vault/session", {"password": PILOT_PASSWORD, "sign": sid})
+    if not ok("the user's password gives a sign grant", status == 200, f"{status} {data[:80]!r}"):
+        return "\n" + "\n".join(lines)
+    grant = json.loads(data)["token"]
+    status, headers, signed = call("GET", f"/vault/signing/{sid}/candidate", token=grant)
+    if not ok("the sign grant reads the signed file", status == 200, str(status)):
+        return "\n" + "\n".join(lines)
+    digest = hashlib.sha256(signed).hexdigest()
+    ok("its hash is the one the vault announced", digest == headers.get("x-signing-sha256"))
+    signed_pdf = os.path.join(out, "signed.pdf")
+    with open(signed_pdf, "wb") as f:
+        f.write(signed)
+
+    before, after = fitz.open(os.path.join(out, "filled.pdf")), fitz.open(signed_pdf)
+    ok("the signed file has the form's pages", len(after) == len(before), f"{len(after)} vs {len(before)}")
+    boxes = [(s["page"] if "page" in s else 1, k, s[k]) for s in layout["signatures"] for k in ("rect", "date_rect") if k in s]
+    scale = 2  # 144 dpi
+    stray, touched = 0, {k: 0 for _, k, _ in boxes}
+    for pno in range(len(before)):
+        a = before[pno].get_pixmap(dpi=72 * scale)
+        b = after[pno].get_pixmap(dpi=72 * scale)
+        mine = [(k, r) for p, k, r in boxes if p == pno + 1]
+        for y in range(a.height):
+            for x in range(a.width):
+                if a.pixel(x, y) == b.pixel(x, y):
+                    continue
+                inside = [k for k, (x0, top, x1, bottom) in mine
+                          if x0 * scale - 3 <= x <= x1 * scale + 3 and top * scale - 3 <= y <= bottom * scale + 3]
+                if inside:
+                    touched[inside[0]] += 1
+                else:
+                    stray += 1
+    ok("the signature and the date changed no pixel outside their boxes", stray == 0, f"{stray} pixels")
+    for k, n in touched.items():
+        ok(f"something was drawn in the {k}", n > 20, f"{n} pixels")
+    page, _, rect = next((p, k, r) for p, k, r in boxes if k == "date_rect") if any(k == "date_rect" for _, k, _ in boxes) else (0, "", None)
+    if rect:
+        want = dt.date.today().strftime("%d/%m/%Y")
+        words = [w[4] for w in after[page - 1].get_text("words", clip=fitz.Rect(*rect) + (-2, -2, 2, 2))]
+        ok("the date is today's, written by the vault", want in words, f"{words!r} vs {want!r}")
+
+    status, _, data = call("POST", f"/vault/signing/{sid}/approve", {"sha256": "0" * 64}, grant)
+    ok("a wrong hash approves nothing", status == 400, f"{status}")
+    status, _, data = call("POST", f"/vault/signing/{sid}/approve", {"sha256": digest}, grant)
+    ok("the user approves the file they reviewed", status == 200, f"{status} {data[:80]!r}")
+    status, _, _ = call("GET", f"/vault/signing/{sid}", token=server["tokens"]["prepare"])
+    ok("the agent can see it was approved", status == 200)
+    return "\n" + "\n".join(lines)
+
+
 # name: (description, changes, expected exit, lines the output must contain)
 CASES = {
     "baseline": ("the pilot as it is", {}, 0, ["ok   the form is ready", "opens pratiche.",
                                                 "the deadline shows in expiring: 2026-11-30", "a closed pratica leaves expiring",
                                                 "wrote: 01/01/1980", "wrote: Toledo", "wrote: Toledo, 100, int. 5, piano 3"]),
+    "sign": ("--sign files a request; the user's review stamps the signature and date in their boxes only",
+             {"sign": True}, 0,
+             ["ok   the form is ready", "is waiting for the user", "ok   the report names the signing request",
+              "ok   the agent's token can't approve", "ok   the agent's token can't read the signed file",
+              "ok   the user's password gives a sign grant", "ok   the sign grant reads the signed file",
+              "ok   the signature and the date changed no pixel outside their boxes",
+              "ok   something was drawn in the rect", "ok   something was drawn in the date_rect",
+              "ok   the date is today's, written by the vault", "ok   a wrong hash approves nothing",
+              "ok   the user approves the file they reviewed"]),
+    "sign-again": ("--sign twice: the second run finds the pratica open and files only the signing request",
+                   {"sign": True, "no_reply": True, "again": True}, 0,
+                   ["is already open: only the signing request was filed", "is waiting for the user"]),
+    "sign-channel-post": ("--channel post --sign: the raccomandata takes a handwritten signature too",
+                          {"sign": True, "no_reply": True, "channel": "post"}, 0,
+                          ["is waiting for the user", "ok   canale 'post' is saved as"]),
+    "sign-channel-portal": ("--channel portal --sign: the login is the signature, so there is nothing to stamp",
+                            {"sign": True, "no_reply": True, "channel": "portal"}, 1,
+                            ["FAIL the library lists a handwritten signature for portal"]),
+    "channel-unknown": ("--channel with a type the entry doesn't have",
+                        {"sign": True, "no_reply": True, "channel": "fax"}, 1,
+                        ["FAIL the entry has a fax channel for this procedure"]),
+    "sign-no-handwritten": ("the library lists no handwritten signature for the channel: no request",
+                            {"sign": True, "entry": lambda e: next(f for f in e["forms"] if f["id"] == FORM)
+                             .update(signing=[{"channel": "pec", "ways": ["digital"], "id_copy": "required", "status": "unverified"}])},
+                            1, ["FAIL the library lists a handwritten signature for pec"]),
     "coabitante": ("someone outside the stato di famiglia lives there: a row of the table, and a 4th occupant",
                    {"answers": {COABITANTI: [SARA]}}, 1,
                    ["ok   the form is ready", "values read back in their boxes",
@@ -434,8 +551,13 @@ def main():
                  f"procedures/{pid}.yaml"], cwd=library, check=True, capture_output=True, text=True).stdout
             entry = json.loads(entry_json)
             url = next(f["url"] for f in entry["forms"] if f["id"] == form)
-            with urllib.request.urlopen(url, timeout=60) as resp:
-                pdf = resp.read()
+            if name == "mod-1" and os.environ.get("PILOT_FORM_PDF"):
+                # A copy already on disk, e.g. offline; fill.py still checks its sha256.
+                with open(os.environ["PILOT_FORM_PDF"], "rb") as f:
+                    pdf = f.read()
+            else:
+                with urllib.request.urlopen(url, timeout=60) as resp:
+                    pdf = resp.read()
             path = os.path.join(base, f"{name}-entry.json")
             with open(path, "w", encoding="utf-8") as f:
                 f.write(entry_json)
@@ -508,6 +630,12 @@ def case(base, name, p, changes, want_exit, want_lines):
     for file, data in files.items():
         with open(os.path.join(work, file), "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False)
+    if changes.get("sign"):
+        # The prepare token also files signing requests, as it is asked for
+        # when the layout has a signature box.
+        needs = subprocess.run([sys.executable, "-I", FILL, "needs", "--entry", os.path.join(work, "entry.json"),
+                                "--layout", os.path.join(work, "layout.json"), "--form", form] + signer,
+                               check=True, capture_output=True, text=True).stdout
     with open(os.path.join(work, "form.pdf"), "wb") as f:
         f.write(pdf + changes.get("pdf", b""))
     with open(os.path.join(work, "needs.json"), "w") as f:
@@ -543,8 +671,18 @@ def case(base, name, p, changes, want_exit, want_lines):
                 reply = os.path.join(work, "reply.json")
                 with open(reply, "w", encoding="utf-8") as f:
                     json.dump(changes["reply"], f)
-            played = ["--reply", os.path.join(HERE, reply)] if reply else []
-            run = subprocess.run(common + ["--server", os.path.join(work, "server.json")] + played, capture_output=True, text=True)
+            played = ["--reply", os.path.join(HERE, reply)] if reply and not changes.get("no_reply") else []
+            args = ["--server", os.path.join(work, "server.json")] + played
+            args += ["--sign"] if changes.get("sign") else []
+            args += ["--channel", changes["channel"]] if changes.get("channel") else []
+            run = subprocess.run(common + args, capture_output=True, text=True)
+            if changes.get("again"):
+                second = subprocess.run(common + args, capture_output=True, text=True)
+                run.stdout += "\n--- second run ---\n" + second.stdout
+                run.stderr += second.stderr
+                run.returncode = run.returncode or second.returncode
+            if changes.get("sign") and not changes.get("no_reply") and run.returncode == 0:
+                run.stdout += review_signing(server, out, layout)
     finally:
         open(os.path.join(work, "done"), "w").close()
         harness.wait()

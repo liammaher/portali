@@ -194,6 +194,24 @@
           "id": "residenza.data_inizio",
           "description": "Date residence began (YYYY-MM-DD)",
           "sensitivity": "standard"
+        },
+        {
+          "id": "residenza.quartiere",
+          "description": "Quartiere of Napoli (e.g. Vomero), computed from the address when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the address",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "residenza.municipalita",
+          "description": "Municipalità of Napoli (1-10), computed from the address; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the address",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "residenza.distretto_asl",
+          "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
+          "sensitivity": "standard",
+          "derived": true
         }
       ]
     },
@@ -232,6 +250,24 @@
           "id": "domicilio.provincia",
           "description": "Provincia as 2-letter sigla (e.g. NA; the format is checked, not the list)",
           "sensitivity": "standard"
+        },
+        {
+          "id": "domicilio.quartiere",
+          "description": "Quartiere of Napoli (e.g. Vomero), computed from the address when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the address",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "domicilio.municipalita",
+          "description": "Municipalità of Napoli (1-10), computed from the address; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the address",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "domicilio.distretto_asl",
+          "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
+          "sensitivity": "standard",
+          "derived": true
         }
       ]
     },
@@ -838,6 +874,24 @@
           "sensitivity": "standard"
         },
         {
+          "id": "business.sede_legale_quartiere",
+          "description": "Quartiere of Napoli (e.g. Vomero), computed from the registered office when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the registered office",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "business.sede_legale_municipalita",
+          "description": "Municipalità of Napoli (1-10), computed from the registered office; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the registered office",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "business.sede_legale_distretto_asl",
+          "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
           "id": "business.tari_codice_contribuente",
           "description": "Codice contribuente the Comune assigned the business for TARI on its premises (utenza non domestica; not tari.codice_contribuente, the home's)",
           "sensitivity": "standard"
@@ -889,6 +943,24 @@
           "id": "locale.data_inizio",
           "description": "Date occupation of the premises started (YYYY-MM-DD)",
           "sensitivity": "standard"
+        },
+        {
+          "id": "locale.quartiere",
+          "description": "Quartiere of Napoli (e.g. Vomero), computed from the premises when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the premises",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "locale.municipalita",
+          "description": "Municipalità of Napoli (1-10), computed from the premises; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the premises",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "locale.distretto_asl",
+          "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
+          "sensitivity": "standard",
+          "derived": true
         },
         {
           "id": "locale.catasto_sezione",

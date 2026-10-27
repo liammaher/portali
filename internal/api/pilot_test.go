@@ -61,6 +61,17 @@ func TestPraticaPilotVault(t *testing.T) {
 		}
 	}
 
+	// A token that may file signing requests means the run signs: the made-up
+	// vault then has a signature on file, as the user stores one.
+	for _, tok := range needs.Tokens {
+		if strings.Contains(tok.Scope, vault.SigningScopeID) {
+			if _, err := v.AddDocument(vault.SignatureCategory, "firma.png", "image/png", signaturePNG(t), ""); err != nil {
+				t.Fatalf("pilot signature: %v", err)
+			}
+			break
+		}
+	}
+
 	tokens := map[string]string{}
 	for name, tok := range needs.Tokens {
 		token, err := v.CreateServiceToken("pratica-pilot-"+name, tok.Scope, time.Hour, "", tok.Access)

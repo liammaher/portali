@@ -39,6 +39,7 @@ pvault backup [--to <folder>]            # Encrypted backup now; --to sets the a
 pvault restore <file> [--check] [--ask-key]  # Recreate vault from a backup / only verify it
 pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
 pvault doc add|list|get|delete           # Encrypted document scans
+pvault sign list|review|reject           # Signing requests an agent filed: you review the signed PDF and approve it
 pvault person list|show|add|remove|export|migrate  # Other people (leo:cie.numero); alias: member
 pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
 pvault retention scans <days>|unset      # How long clients' ID scans are kept after their pratiche close (no default)
@@ -59,12 +60,13 @@ internal/
   store/             SQLite CRUD (fields, documents, people, tokens, audit, meta)
   vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
+  napoli/            Street → municipalità → ASL distretto, offline (vault: located.go)
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
   pratica/fill/      fills a library form from the vault at the library's layout, for the
-                     owner or --for a person, other people by --party (fill.py; pilot/
-                     has four pilot forms, one in a business vault); a real vault only
-                     over its socket, as the MCP server
+                     owner or --for a person, other people by --party (fill.py; --sign
+                     files a signing request; pilot/ has the pilot forms, one in a
+                     business vault); a real vault only over its socket, as the MCP server
 ```
 
 ## Security Model
@@ -137,7 +139,7 @@ Profile Password + Secret Key (128-bit)
   tokens (a restore must not revive a revoked one). Session-only.
 - Every write calls `markChanged` (backup 1m after the last change); lock and auto-lock
   flush first. Pruning touches only this vault's files.
-- Lock order: `backup.mu` → `writeMu` → `v.mu` → session `mu`. `backup.stateMu` is a leaf.
+- Lock order: `backup.mu` → `writeMu` → `v.mu` → session `mu` → `signingStore.mu`. `backup.stateMu` is a leaf.
   Every single write holds `writeMu` for reading; removing or migrating people holds it
   exclusively.
 
@@ -175,6 +177,27 @@ the page never copies a rule.
   `documents/<id>.enc` (0600); token scope ID `<category>.documents`. Downloads are
   attachments with `Content-Security-Policy: sandbox`.
 
+### Sign gate (`signing.go`, `pdfstamp.go`, `api/signing.go`, `cmd/pvault/cmd_sign.go`)
+- An agent files a request (PDF + where the signature goes); the vault stamps the owner's
+  handwritten signature (category `firma_autografa`: one PNG with a transparent background, always `personal`) and
+  today's date first, so **the file the user reviews is the file approved** (compared by
+  sha256). Requests live in the `Session` only (never disk, backup or the database), at
+  most 5 (3 per token, 20 an hour), 30 min, same calendar day, at most 8 boxes and 20 MB signed; a lock drops them. A request belongs to its token (its hash, not its consumer name; `session`, `grant` and `vault` are reserved names). Only the owner (`io`) of a personal
+  vault signs so far.
+- A token (scope `firma_autografa.signing`, append) can request, list and withdraw *its own*
+  requests; it can't read the signed file or approve. Approval needs the user's session or a
+  **sign grant**: `POST /vault/session` with `sign: <id>` and the password, socket only
+  (`viaSocket`), 10 min, one request, ended by its approval. `ValidateToken`/`ScopedGrant`
+  ignore it and the middleware lets it reach only that request's `candidate` and `approve`.
+  Every request, grant, view, approval and refusal (`sign_refused`) is audited with the file's sha256. PDFs are screened (zlib streams past 64 MB, encryption, rotation, 1000 pages) and stamped under a timeout. Both clients
+  check the grant echoes `sign` (an older server would issue full access).
+- With Touch ID the fingerprint is the approval, and it is asked before the PDF is shown: an agent that runs `pvault sign review` or the helper itself can read the typed code, so the prompt (name, pages, hash, who filed it) is what the user must read, as for any helper grant. The password route can't be driven that way.
+- `pvault sign review` is the human act: grant, fetch, open, type the first 8 hash characters,
+  approve, save (never over a file). The Touch ID prompt is worded from the vault's own
+  summary, never from arguments (`describe-sign` held to `touchid_prompt_test.go`).
+- Not a firma digitale. Procedures needing one stay `human_only`; the library's per-channel
+  `signing` says what each channel takes, and the skill falls back to hand-signing.
+
 ### People (`scope.go`, `people.go`, `household.go`)
 - A person is a row in `vault_people`: added by their first field or document (a SQLite
   trigger), removed only by `RemovePerson`. Deleting their last row leaves them, and
@@ -205,6 +228,28 @@ the page never copies a rule.
   or deleting it, checks `persona` again (`checkPraticaPersona`, whatever the caller reads).
 - Old JSON and audit names stay for compatibility: `/vault/members`, `member`, `members`,
   `"for": "member"`, `member_remove`, MCP `vault_household`.
+
+### Naples address lookup (`internal/napoli`, `vault/located.go`)
+- `internal/napoli` works from the embedded `data/stradario.json`, built by `gen/gen.py` from
+  the Comune's stradario PDFs (2025 for municipalità, 2003 COSAP for civico ranges). Never a
+  geocoder: the home address goes nowhere. A street crossing a municipalità boundary (about
+  4%) is `Ambiguous` until a civico in a known range or a named quartiere decides it; a
+  lookup never guesses. One ASL (Napoli 1 Centro) serves the whole comune; its distretto
+  follows the municipalità.
+- Each address (`residenza`, `domicilio`, `locale`, the sede legale) has computed
+  `quartiere`, `municipalita`, `distretto_asl` (`derived` in schema.json, standard tier).
+  `GetIf`, `GetByCategory` and `GetContext` answer them; `List`, export, backups and person
+  export hold stored rows only (`FieldInfo.Derived`; `pvault export` drops them).
+- A stored row overrides the computed value only while it is not older than the address's
+  street, civico and comune (the distretto: nor than the stored municipalità); an older one
+  is ignored, never used with a warning. Nothing is computed unless the comune is Napoli.
+- A computed field is read under its own scope and tier, never the street's: a token scoped
+  to `residenza.municipalita` never sees the street, and the audit log names the computed
+  field. A personal address row never feeds a caller that can't see personal items, and a
+  stored row the caller can't see is not replaced by a computed value.
+- `pvault locate` and `GET /vault/located/{target}` only read, with a grant for the three
+  computed fields; they never echo the street. The answer to a street across a boundary is
+  the quartieri to store (`pvault set residenza.quartiere ...`).
 
 ### Vault kinds and named vaults (`kind.go`, `cmd/pvault/vaults.go`)
 - Meta `kind`: `persona` (default) or `impresa`, fixed at init. Schema categories carry
@@ -264,7 +309,8 @@ API requests go through `newTestRequest` (loopback Host); socket tests use
 tests compile the helper with `-D DEBUG`, which adds `describe-grant` and test enrollment
 (`PVAULT_TOUCHID_TEST_*`). Keychain tests run only with `PVAULT_KEYCHAIN_TEST=1`. The fill pilot's synthetic vault
 (`TestPraticaPilotVault`) runs only with `PVAULT_PILOT_DIR`; run it through
-`claude/skills/pratica/fill/pilot/run.sh` or `regress.py` (both need `PRATICHE_NAPOLI_DIR` and PyMuPDF).
+`claude/skills/pratica/fill/pilot/run.sh` or `regress.py` (both need `PRATICHE_NAPOLI_DIR` and PyMuPDF;
+`PILOT_FORM_PDF` gives the form from disk; the `sign` case needs a library whose layout has `signatures`).
 
 ```go
 // Pattern: create temp vault, run test

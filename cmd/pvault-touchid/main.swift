@@ -318,10 +318,19 @@ func connectServer(server: String) -> Int32 {
 // post sends one HTTP/1.1 request over a checked socket (URLSession can't
 // use Unix sockets) and returns the status and JSON body.
 func post(_ fd: Int32, _ path: String, _ body: [String: String]) -> (Int, [String: Any]) {
+    request(fd, "POST", path, body)
+}
+
+func request(_ fd: Int32, _ method: String, _ path: String, _ body: [String: String]?) -> (Int, [String: Any]) {
     defer { close(fd) }
-    let payload = try! JSONSerialization.data(withJSONObject: body)
-    var req = Data("POST \(path) HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: \(payload.count)\r\nConnection: close\r\n\r\n".utf8)
-    req.append(payload)
+    var req: Data
+    if let body {
+        let payload = try! JSONSerialization.data(withJSONObject: body)
+        req = Data("\(method) \(path) HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: \(payload.count)\r\nConnection: close\r\n\r\n".utf8)
+        req.append(payload)
+    } else {
+        req = Data("\(method) \(path) HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n".utf8)
+    }
     let sent = req.withUnsafeBytes { buf -> Bool in
         var off = 0
         while off < buf.count {
@@ -434,6 +443,32 @@ func grantReason(scope: [String]?, access: String, seconds: Int) -> String {
     return "\(verb) \(what)\(place)for \(duration(seconds))"
 }
 
+// MARK: - Signing
+
+let signIDPattern = try! NSRegularExpression(pattern: "\\A[0-9a-f]{32}\\z")
+let signHashPattern = try! NSRegularExpression(pattern: "\\A[0-9a-f]{8}\\z")
+let signGrantSeconds = 600  // vault.SignGrantTTL
+let maxSignNameLength = 50
+
+// shownName keeps what an agent chose as a file name harmless in a prompt:
+// letters, digits, spaces and . _ - ( ); anything else (quotes, bidi controls,
+// line breaks) shows as ?, and a long name is cut.
+func shownName(_ name: String) -> String {
+    let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: " ._-()"))
+    var out = String(String.UnicodeScalarView(name.unicodeScalars.map { allowed.contains($0) ? $0 : "?" }))
+    out = out.trimmingCharacters(in: .whitespaces)
+    if out.count > maxSignNameLength { out = String(out.prefix(maxSignNameLength - 1)) + "…" }
+    return out.isEmpty ? "?" : out
+}
+
+// signReason completes macOS's '"pvault-touchid" is trying to …' sentence for
+// a signing review. The grant it unlocks reads the signed file and approves
+// it, so the wording says sign, not read.
+func signReason(name: String, pages: Int, hash8: String, requester: String, seconds: Int) -> String {
+    let count = pages == 1 ? "1 page" : "\(pages) pages"
+    return "review and sign \"\(shownName(name))\" (\(count), hash \(hash8)), filed by \(shownName(requester)), with your handwritten signature from \(vaultLabel()), for \(duration(seconds))"
+}
+
 // MARK: - Commands
 
 struct GrantRequest {
@@ -497,6 +532,40 @@ func cmdGrant(_ args: [String]) {
     print(token)
 }
 
+// cmdSign asks for a fingerprint to review and approve one signing request,
+// worded from what the vault itself says about it (never from arguments), and
+// prints a grant that can do only that.
+func cmdSign(_ args: [String]) {
+    guard args.count == 2, args[0] == "--id", matches(signIDPattern, args[1]) else {
+        fail("usage: pvault-touchid sign --id <signing request id>")
+    }
+    let id = args[1]
+    guard isEnrolled() else { fail(notSetUp, code: 3) }
+    let enrolled = readEnrollment()
+    let (status, json) = request(connectServer(server: enrolled.server), "GET", "/vault/signing/\(id)/summary", nil)
+    guard status == 200 else { fail("vault: \(serverError(json, status))") }
+    guard json["id"] as? String == id, json["status"] as? String == "pending" else {
+        fail("that signing request is no longer waiting for you")
+    }
+    guard let name = json["name"] as? String, let pages = json["pages"] as? Int, (1...1000).contains(pages),
+          let requester = json["requester"] as? String,
+          let hash8 = json["hash8"] as? String, matches(signHashPattern, hash8) else {
+        fail("unexpected answer from the vault server")
+    }
+    approve(signReason(name: name, pages: pages, hash8: hash8, requester: requester, seconds: signGrantSeconds))
+    let (st, reply) = post(connectServer(server: enrolled.server), "/vault/session",
+                           ["sign": id, "password": enrolled.password, "secret_key": readSecretKey()])
+    guard st == 200, let token = reply["token"] as? String else {
+        fail("vault refused the grant: \(serverError(reply, st))")
+    }
+    // An older server ignores sign and grants full access, which is more than
+    // the user approved: drop it unused.
+    guard reply["sign"] as? String == id else {
+        fail("the running vault server doesn't support signing — restart it with this version (\(pvCmd("lock")), then \(pvCmd("unlock")))")
+    }
+    print(token)
+}
+
 func cmdUnlock() {
     let (status, json) = sendCredentials(reason: "unlock \(vaultLabel())", path: "/vault/unlock")
     switch status {
@@ -552,12 +621,18 @@ case "unlock":
     cmdUnlock()
 case "grant":
     cmdGrant(Array(args.dropFirst()))
+case "sign":
+    cmdSign(Array(args.dropFirst()))
 #if DEBUG
+case "describe-sign":
+    // Prints the prompt a signing review would show, for tests.
+    guard args.count == 5, let pages = Int(args[2]) else { fail("usage: describe-sign <name> <pages> <hash8> <requester>") }
+    print(signReason(name: args[1], pages: pages, hash8: args[3], requester: args[4], seconds: signGrantSeconds))
 case "describe-grant":
     // Prints the prompt a grant would show, for tests; no Keychain or server.
     let req = parseGrant(Array(args.dropFirst()))
     print(grantReason(scope: req.scope, access: req.access, seconds: req.seconds))
 #endif
 default:
-    fail("usage: pvault-touchid status|enroll|remove|unlock|grant [--scope s] [--access a] [--ttl seconds]")
+    fail("usage: pvault-touchid status|enroll|remove|unlock|grant [--scope s] [--access a] [--ttl seconds]|sign --id <id>")
 }

@@ -54,7 +54,8 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 
 **a. Vault MCP tools (preferred when loaded).** `vault_get`, `vault_set`, `vault_list`,
 `vault_context`, `vault_expiring`, `vault_documents`, `vault_document_add`,
-`vault_document_get`. They use a scoped service token, so a call can fail with
+`vault_document_get`, `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
+step: a token can ask for a handwritten signature but never approve it). They use a scoped service token, so a call can fail with
 "vault: this is outside the token's scope", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
 If a tool says there's no token, or it's expired or revoked, and `pvault touchid status`
@@ -121,6 +122,12 @@ Common ones: `residenza.{indirizzo,civico,interno,cap,comune,provincia,data_iniz
 `domicilio.*` (only if different from residenza), `identity.codice_fiscale`,
 `cie.{numero,data_scadenza}`, `passaporto.{numero,paese_rilascio,data_rilascio,data_scadenza,autorita_rilascio}`,
 `tessera_sanitaria.{numero,data_scadenza,medico_base}`.
+An address in Napoli (`residenza`, `domicilio`, `locale`, `business.sede_legale_*`) also has
+`quartiere`, `municipalita` and `distretto_asl` (ASL Napoli 1 Centro), which the vault computes
+from the street: read them with `pvault get residenza.municipalita`, no need to ask. They need
+only their own scope, not the street's. If a street crosses a boundary the read says which
+quartieri to ask the user about; `pvault locate` shows why and the `pvault set
+residenza.quartiere "<name>"` that settles it. Never store one yourself to fill a form.
 `permesso_soggiorno.*` is only for non-Italian citizens: if `identity.citizenship` is
 italiana, don't ask for it or list it as missing. The same holds per person:
 `leo:permesso_soggiorno.*` only if `leo:identity.citizenship` isn't italiana.
