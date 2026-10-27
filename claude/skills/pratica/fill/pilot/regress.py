@@ -19,9 +19,11 @@ PILOT_FORM_PDF gives the Mod. 1 from disk instead (fill.py still checks its
 sha256).
 """
 
+import contextlib
 import copy
 import datetime as dt
 import hashlib
+import io
 import json
 import os
 import shutil
@@ -273,7 +275,7 @@ CASES = {
                    ["con raccomandata A/R a Comune di Napoli", "Modulo firmato a mano in originale, con la fotocopia"]),
     "route-desk": ("route --channel desk: the URP of the Municipalità the vault places the home in",
                    {"route": "desk"}, 0,
-                   ["Your office: Sede della Municipalità 2", "Piazza Dante 93"]),
+                   ["Your office (Sportello URP della Municipalità): Sede della Municipalità 2", "Piazza Dante 93"]),
     "route-entry-only": ("route --entry without --library: the law's signing rule is the library's, so it says to pass it",
                          {"route": "post", "entry_only": True}, 0,
                          ["by post (other routes:", "contract/signing.json: pass --library"]),
@@ -572,11 +574,27 @@ def office_checks(library):
     try:
         for status, body, line in cases:
             fill.connect = lambda a, answer=(status, body): {"prepare": Stub(*answer)}
-            got = json.dumps(fill.office_for(a, "residenza.municipalita"), ensure_ascii=False)
+            got = json.dumps(fill.office_for(a, {"list": "comune-municipalita", "from": "residenza.municipalita"}),
+                             ensure_ascii=False)
             if line not in got:
                 bad.append(f"{status} {body.get('constraint', '')}: {got}")
     finally:
         fill.connect = connect
+    # Each list is one service: a district's Anagrafe Sanitaria is not its
+    # Prevenzione Collettiva, and fill.py offices names which is which.
+    a = types.SimpleNamespace(library=library, server=None, vault_dir=None, keychain=None, address="leo:residenza",
+                              municipalita="2", distretto_asl="31", json=True)
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        fill.offices(a)
+    by_list = {x["list"]: x for x in json.loads(out.getvalue())}
+    for name, field, address in (("comune-municipalita", "leo:residenza.municipalita", "Piazza Dante 93"),
+                                 ("comune-anagrafe", "leo:residenza.municipalita", "Piazza Dante 93"),
+                                 ("asl-anagrafe-sanitaria", "leo:residenza.distretto_asl", "Via Amerigo Vespucci 9"),
+                                 ("asl-prevenzione-collettiva", "leo:residenza.distretto_asl", "Piazza Municipio 84")):
+        x = by_list.get(name, {})
+        if x.get("field") != field or address not in x.get("office", {}).get("address", "") or not x.get("serves"):
+            bad.append(f"offices: {name}: {x}")
     return bad
 
 
