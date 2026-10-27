@@ -57,6 +57,7 @@ pvault hello enable   # optional: Windows Hello instead of your password for dat
 - Passwords are typed in a console (Windows Terminal, PowerShell, cmd). Git Bash's terminal isn't one: run `winpty pvault ...` there.
 - `--keychain` saves tokens in Windows Credential Manager, and `pvault credential write` stores other secrets there (the PEC app password).
 - The release binaries aren't code-signed, so SmartScreen may warn the first time: choose More info, then Run anyway.
+- Windows support hasn't been run on Windows yet: [docs/design/windows.md](docs/design/windows.md) is the checklist for that first run, and what's left.
 
 ## What it stores
 
