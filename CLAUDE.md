@@ -273,6 +273,11 @@ the page never copies a rule.
   `scan_days`, set only by the session. `Expiring` then reports `kind: retention` (a
   person's `ruolo.data_fine` + years) and `kind: pratiche_closed` (a client's ID and
   procura scans, once every pratica naming them closed, dated last closing + days).
+- A file in the index linked to a client with a role naming an ID or procura category
+  (`linkRoleCategory`) is reported the same way as `kind: files_closed`, as a reference only
+  (`file_id`, `file`): the vault can't delete it. It counts only if its mtime predates the last
+  closing (none: kept), it isn't gone, the caller sees its link, and a procura file waits for
+  the procura's `data_scadenza` like a procura scan.
 - A scan is reported only if it predates the last closing (a same-second one counts as
   after), and a procura's scans only once its `data_scadenza` has passed (a procura with
   none is still in force); a caller that can't see everything relevant gets no entry. Nothing is ever deleted automatically.
@@ -298,6 +303,19 @@ the page never copies a rule.
   token with write access may sync, but only files it can see (`UpsertFilesIf`); it may
   only suggest links. A file once linked to a person (`scoped`) stays out of the owner's
   scope. A sync that would mark everything, or most of a large source, gone needs `confirm`.
+- An API source (`ClientID`, no `Root`; `internal/filesync` oauth/tokens/graph/gdrive/dropbox)
+  keeps its sign-in only in the Keychain (`pvault-files-<id>`), read-only scopes, PKCE with a
+  state-checked loopback redirect. The token goes only to the provider's own host; any failure
+  leaves the scan incomplete (nothing marked gone). `source connect` is the user's to run.
+- A file an agent found through another connector is only a proposal (`ProposeFile`, bounded)
+  until the user accepts it; it then lives in a `via: connector` source that nothing syncs
+  (`upsertFiles` refuses a sync of it) or marks gone. Accepting is all or nothing (link checked
+  first, a file it added is discarded if linking fails). A proposal's address must be on the
+  provider's own site (a Google one carries the file's id), a sharing link is dropped, a duplicate
+  never shows another token's proposal, and one token holds at most 50 of the 200 slots.
+  A file linked again with a role takes the role. `files_closed` needs every link of a file to
+  be an ID or procura role of a client whose pratiche are closed, and the file untouched since
+  the earliest of those closings.
 - Never store a sharing link (`CheckFileURL`). A file that left its source is tombstoned,
   never deleted; `PruneFiles` drops only unlinked tombstones. `RemovePerson` drops the
   person's links, rules and suggestions, not the index rows.

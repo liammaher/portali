@@ -397,3 +397,67 @@ func (s *Server) handleResolveFileSuggestion(w http.ResponseWriter, r *http.Requ
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"status": action + "ed", "link": link})
 }
+
+// POST /vault/files/proposals: an agent proposes a file its own connector
+// found (Claude's Google Drive, say). It enters the index only when the user
+// accepts.
+func (s *Server) handleProposeFile(w http.ResponseWriter, r *http.Request) {
+	var in vault.FileProposalInput
+	if !requireAccess(w, r, false) || !decodeJSON(w, r, &in) {
+		return
+	}
+	// "for": "io" says the owner; that is a request for a link even though the
+	// holder it becomes is empty.
+	asked := in.Holder != ""
+	var ok bool
+	if in.Holder, ok = holderOf(w, in.Holder); !ok {
+		return
+	}
+	if asked && in.Kind == "" && in.Pratica == "" {
+		in.Kind = vault.FileKindPerson
+	}
+	if !vault.ScopeAllows(scopeFromRequest(r), vault.FilesScopeID(in.Holder)) {
+		scopeDenied(w)
+		return
+	}
+	p, err := s.vault.ProposeFile(callerFilter(r), in, consumerFromRequest(r))
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, p)
+}
+
+// GET /vault/files/proposals
+func (s *Server) handleListFileProposals(w http.ResponseWriter, r *http.Request) {
+	if !userRead(w, r) {
+		return
+	}
+	list, err := s.vault.FileProposals(callerFilter(r))
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	if list == nil {
+		list = []vault.FileProposalInfo{}
+	}
+	writeJSON(w, http.StatusOK, list)
+}
+
+// POST /vault/files/proposals/{id}/accept|reject
+func (s *Server) handleResolveFileProposal(w http.ResponseWriter, r *http.Request) {
+	action := r.PathValue("action")
+	if action != "accept" && action != "reject" {
+		writeError(w, http.StatusNotFound, "not_found", "not found")
+		return
+	}
+	if !userWrite(w, r) {
+		return
+	}
+	f, err := s.vault.ResolveFileProposal(callerFilter(r), r.PathValue("id"), action == "accept")
+	if err != nil {
+		handleVaultError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"status": action + "ed", "file": f})
+}

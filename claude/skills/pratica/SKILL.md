@@ -77,7 +77,9 @@ Filling a form with `fill.py` (step 4) always takes one read token.
    `pvault files sync`, and may have no source at all: when it finds nothing, ask where the
    user keeps files for this topic (and suggest `pvault files source add <folder>`) rather
    than concluding there are none. A file that is clearly for this pratica but unlinked:
-   `vault_file_suggest`, and tell the user.
+   `vault_file_suggest`, and tell the user. A file you find through another connector (the user's
+   Google Drive connector, say) that the index lacks: `vault_file_register` proposes it for the
+   index (vault skill §5); say it waits for the user to accept.
 
 ## 1. Research (only what the library and a fresh playbook don't cover)
 

@@ -60,8 +60,10 @@ const (
 	defaultFileLimit = 200
 	maxFileLimit     = 1000
 
-	// maxPendingSuggestions bounds what an agent can queue for the user.
+	// maxPendingSuggestions bounds what agents can queue for the user, and
+	// maxPendingPerProposer what one token can, so one can't use up the room.
 	maxPendingSuggestions = 200
+	maxPendingPerProposer = 50
 )
 
 // FilesScopeID is the ID token scopes are checked against for files held by
@@ -155,11 +157,30 @@ type FileLinkInfo struct {
 // FileSourceConfig is what a source's encrypted blob holds.
 type FileSourceConfig struct {
 	Label    string `json:"label"`
-	Root     string `json:"root,omitempty"`    // a local source's folder
+	Root     string `json:"root,omitempty"`    // a folder on this computer; none for an account read through the provider's API
 	Account  string `json:"account,omitempty"` // the account or site, for display
 	Cursor   string `json:"cursor,omitempty"`  // the provider's change feed position
 	LastSync string `json:"last_sync,omitempty"`
+	// An account read through the provider's API (no Root): the OAuth client
+	// the user registered, which library or drive, and where to find it. The
+	// tokens are never here: they are in the macOS Keychain.
+	ClientID string `json:"client_id,omitempty"`
+	Tenant   string `json:"tenant,omitempty"`   // Microsoft: common, organizations, or a tenant ID
+	DriveID  string `json:"drive_id,omitempty"` // Microsoft: the OneDrive or SharePoint library
+	Site     string `json:"site,omitempty"`     // SharePoint: the site's address, for display
+	Via      string `json:"via,omitempty"`      // ViaConnector for a source an agent feeds
 }
+
+// reClientID is what an OAuth client ID may look like: the three providers' are
+// letters, digits and a few separators (a Microsoft one is a GUID, Google's ends
+// in .apps.googleusercontent.com).
+var reClientID = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._~@-]{0,199}$`)
+
+// reTenant is a Microsoft tenant: common, organizations, consumers, a GUID or a domain.
+var reTenant = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9.-]{0,99}$`)
+
+// reDriveID is a Microsoft Graph drive ID (b!... base64url).
+var reDriveID = regexp.MustCompile(`^[A-Za-z0-9!_.=-]{1,200}$`)
 
 // FileSourceInfo is a source as listed.
 type FileSourceInfo struct {
@@ -248,7 +269,8 @@ func (v *Vault) auditFile(scope, action, purpose string) {
 // read differently from what it is (a file "gpj.exe" shown as "exe.jpg").
 func hasUnsafe(s string) bool {
 	for _, r := range s {
-		if unicode.IsControl(r) || (r >= 0x202A && r <= 0x202E) || (r >= 0x2066 && r <= 0x2069) || r == 0x200E || r == 0x200F {
+		if unicode.IsControl(r) || (r >= 0x202A && r <= 0x202E) || (r >= 0x2066 && r <= 0x2069) ||
+			r == 0x200E || r == 0x200F || r == 0x061C || r == 0x2028 || r == 0x2029 {
 			return true
 		}
 	}
@@ -291,9 +313,15 @@ func CheckFileURL(raw string) error {
 	case strings.HasSuffix(host, "dropbox.com") && (strings.HasPrefix(p, "/s/") || strings.HasPrefix(p, "/scl/") || strings.HasPrefix(p, "/sh/")):
 		return bad("sharing links are never stored: they give anyone who has them the file")
 	}
-	for k := range u.Query() {
+	for k, vals := range u.Query() {
 		switch strings.ToLower(k) {
-		case "e", "key", "rlkey", "token", "access_token", "sig", "sv", "usp", "share", "download", "authkey", "resourcekey":
+		case "usp":
+			// Drive's own page for a file carries usp=drivesdk; usp=sharing (or
+			// drive_link) is a link to hand to others.
+			if len(vals) != 1 || vals[0] != "drivesdk" {
+				return bad("a sharing link is never stored")
+			}
+		case "e", "key", "rlkey", "token", "access_token", "sig", "sv", "share", "download", "authkey", "resourcekey":
 			return bad("a URL with a key or token in it is never stored")
 		}
 	}
@@ -382,31 +410,69 @@ func cleanFileText(field, s string, max int) (string, error) {
 
 // --- sources ---------------------------------------------------------------
 
-// AddFileSource registers a place to read files from. The session adds sources.
-func (v *Vault) AddFileSource(provider string, cfg FileSourceConfig) (*FileSourceInfo, error) {
+// CheckFileSourceConfig cleans a source's settings in place and refuses what a
+// source can't have. A client can run it before sending the user off to sign in.
+func CheckFileSourceConfig(provider string, cfg *FileSourceConfig) error {
 	if !validFileProvider(provider) {
-		return nil, &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(FileProviders, ", ")}
+		return &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(FileProviders, ", ")}
 	}
 	var err error
 	if cfg.Label, err = cleanFileText("label", cfg.Label, 80); err != nil || cfg.Label == "" {
 		if err == nil {
 			err = &ValidationError{Field: "label", Msg: "a source needs a label"}
 		}
-		return nil, err
+		return err
 	}
-	if cfg.Root, err = cleanFileText("root", cfg.Root, maxFilePath); err != nil {
-		return nil, err
+	for _, f := range []struct {
+		name string
+		p    *string
+		max  int
+	}{{"root", &cfg.Root, maxFilePath}, {"account", &cfg.Account, 200}, {"client_id", &cfg.ClientID, 200},
+		{"drive_id", &cfg.DriveID, 200}, {"tenant", &cfg.Tenant, 100}, {"site", &cfg.Site, 400}, {"via", &cfg.Via, 20}} {
+		if *f.p, err = cleanFileText(f.name, *f.p, f.max); err != nil {
+			return err
+		}
 	}
-	if cfg.Account, err = cleanFileText("account", cfg.Account, 200); err != nil {
-		return nil, err
-	}
-	if provider == "local" && cfg.Root == "" {
-		return nil, &ValidationError{Field: "root", Msg: "a local source needs the folder to read"}
+	switch {
+	case cfg.Via != "" && cfg.Via != ViaConnector:
+		return &ValidationError{Field: "via", Msg: "not a way of reading a source"}
+	case cfg.Via != "" && (cfg.Root != "" || cfg.ClientID != "" || provider == "local"):
+		return &ValidationError{Field: "via", Msg: "a source fed by an agent has no folder and no OAuth client"}
+	case provider == "local" && cfg.Root == "":
+		return &ValidationError{Field: "root", Msg: "a local source needs the folder to read"}
+	case cfg.Root == "" && cfg.ClientID == "" && cfg.Via == "":
+		return &ValidationError{Field: "client_id", Msg: "a source needs a folder to read, or an OAuth client to read the account through"}
+	case cfg.Root != "" && cfg.ClientID != "":
+		return &ValidationError{Field: "client_id", Msg: "a source is read from a folder or through the provider's API, not both"}
+	case cfg.ClientID != "" && provider == "local":
+		return &ValidationError{Field: "provider", Msg: "a folder on this computer isn't read through an API"}
+	case cfg.ClientID != "" && !reClientID.MatchString(cfg.ClientID):
+		return &ValidationError{Field: "client_id", Msg: "not an OAuth client ID"}
+	case cfg.Tenant != "" && !reTenant.MatchString(cfg.Tenant):
+		return &ValidationError{Field: "tenant", Msg: "common, organizations, consumers, a tenant ID or its domain"}
+	case cfg.DriveID != "" && !reDriveID.MatchString(cfg.DriveID):
+		return &ValidationError{Field: "drive_id", Msg: "not a drive ID"}
 	}
 	cfg.Cursor, cfg.LastSync = "", ""
+	return nil
+}
 
+// ViaConnector marks a source with no folder and no sign-in of its own: its
+// files are ones an agent found through its own connector and the user
+// accepted. Nothing syncs it, so nothing in it is ever marked gone.
+const ViaConnector = "connector"
+
+// AddFileSource registers a place to read files from. The session adds sources.
+func (v *Vault) AddFileSource(provider string, cfg FileSourceConfig) (*FileSourceInfo, error) {
+	if err := CheckFileSourceConfig(provider, &cfg); err != nil {
+		return nil, err
+	}
 	v.writeMu.RLock()
 	defer v.writeMu.RUnlock()
+	return v.addFileSource(provider, cfg)
+}
+
+func (v *Vault) addFileSource(provider string, cfg FileSourceConfig) (*FileSourceInfo, error) {
 	id, err := newFileID()
 	if err != nil {
 		return nil, err
@@ -565,6 +631,10 @@ type FileObservation struct {
 	ProviderHash string `json:"provider_hash,omitempty"`
 	SHA256       string `json:"sha256,omitempty"`
 	Deleted      bool   `json:"deleted,omitempty"` // a change feed's "gone"
+	// Keep says the file exists but the client can't describe it in a way the
+	// index accepts: it only counts as seen, so the sync's finish doesn't mark
+	// a file gone that is still there.
+	Keep bool `json:"keep,omitempty"`
 }
 
 // FileSyncResult counts what a sync changed.
@@ -590,7 +660,7 @@ func (o *FileObservation) Check() error {
 	if o.Key, err = cleanFileKey(o.Key); err != nil {
 		return err
 	}
-	if o.Deleted {
+	if o.Deleted || o.Keep {
 		return nil
 	}
 	if strings.ContainsAny(o.Name, `/\`) || hasUnsafe(o.Name) {
@@ -627,7 +697,7 @@ func (o *FileObservation) Check() error {
 // A file is matched by its key at the source. Tombstoned files return when
 // seen again.
 func (v *Vault) UpsertFiles(sourceID string, obs []FileObservation, full bool) (*FileSyncResult, error) {
-	return v.upsertFiles(nil, sourceID, obs, full, "", false)
+	return v.upsertFiles(nil, sourceID, obs, full, "", false, false)
 }
 
 // UpsertFilesIf is UpsertFiles for a caller with a filter (a service token's):
@@ -635,7 +705,7 @@ func (v *Vault) UpsertFiles(sourceID string, obs []FileObservation, full bool) (
 // rewrite or tombstone a person's files, or learn from the counts that its
 // guess at one was right.
 func (v *Vault) UpsertFilesIf(allow FieldFilter, sourceID string, obs []FileObservation, full bool) (*FileSyncResult, error) {
-	return v.upsertFiles(allow, sourceID, obs, full, "", false)
+	return v.upsertFiles(allow, sourceID, obs, full, "", false, false)
 }
 
 // UpsertFileBatch is UpsertFiles for one batch of a longer sync: it remembers
@@ -656,7 +726,7 @@ func (v *Vault) UpsertFileBatchIf(allow FieldFilter, sourceID, syncID string, be
 	if !reSyncID.MatchString(syncID) {
 		return nil, &ValidationError{Field: "sync_id", Msg: "a sync needs an id of 8 to 64 letters, digits or hyphens"}
 	}
-	return v.upsertFiles(allow, sourceID, obs, false, syncID, begin)
+	return v.upsertFiles(allow, sourceID, obs, false, syncID, begin, false)
 }
 
 var reSyncID = regexp.MustCompile(`^[A-Za-z0-9-]{8,64}$`)
@@ -814,7 +884,14 @@ func (v *Vault) tombstone(of *openedFile, now time.Time) error {
 	return nil
 }
 
-func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObservation, full bool, syncID string, begin bool) (*FileSyncResult, error) {
+// upsertFiles is the one place observations enter the index. viaOK lets it
+// write to a source fed by an agent (the user's accepting a proposal); a sync
+// may not: such a source has nothing to read, and a listing of it would only
+// ever mark what the user accepted as gone.
+func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObservation, full bool, syncID string, begin bool, viaOK bool) (*FileSyncResult, error) {
+	// Checking cleans in place: on a copy, so a caller's slice (or one shared
+	// by two syncs) is never written to.
+	obs = append([]FileObservation(nil), obs...)
 	for i := range obs {
 		if err := obs[i].Check(); err != nil {
 			return nil, err
@@ -834,6 +911,11 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 		}
 		if src == nil {
 			return ErrFileNotFound
+		}
+		if info, err := openFileSource(key, *src); err != nil {
+			return err
+		} else if info.Via == ViaConnector && !viaOK {
+			return &ValidationError{Field: "source", Msg: "this source holds files an agent found through its own connector: nothing syncs it"}
 		}
 		v.reapFileSyncs(time.Now())
 		var track *fileSync
@@ -868,10 +950,19 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 		now := time.Now()
 		for _, o := range obs {
 			of := idx.byKey[o.Key]
+			if track != nil && !o.Deleted {
+				if len(track.keys) >= maxSyncKeys {
+					return &ValidationError{Field: "files", Msg: "this sync is larger than a million files"}
+				}
+				track.keys[o.Key] = true
+			}
 			if of != nil && !visible(of) {
 				// Not the caller's to see: left as it is, and uncounted.
-				if track != nil {
-					track.keys[o.Key] = true
+				continue
+			}
+			if o.Keep {
+				if of != nil {
+					seen[of] = true
 				}
 				continue
 			}
@@ -883,12 +974,6 @@ func (v *Vault) upsertFiles(allow FieldFilter, sourceID string, obs []FileObserv
 					res.Gone++
 				}
 				continue
-			}
-			if track != nil {
-				if len(track.keys) >= maxSyncKeys {
-					return &ValidationError{Field: "files", Msg: "this sync is larger than a million files"}
-				}
-				track.keys[o.Key] = true
 			}
 			loc := FileLocation{Source: sourceID, Key: o.Key, Path: o.Path, WebURL: o.WebURL}
 			if of == nil {
@@ -1128,7 +1213,29 @@ func (v *Vault) createFileLink(key []byte, f store.File, in FileLinkInput, origi
 	for _, l := range links {
 		if l.Holder == in.Holder && l.Kind == in.Kind && l.PraticaSlug == in.Pratica {
 			info, err := openFileLink(key, l)
-			return info, err
+			if err != nil {
+				return nil, err
+			}
+			// Linking again with a role (or note) says more than the first time did,
+			// whether the first link came from a folder rule or from the user: keep it.
+			role, note := info.Role, info.Note
+			if in.Role != "" {
+				role = in.Role
+			}
+			if in.Note != "" {
+				note = in.Note
+			}
+			if role != info.Role || note != info.Note {
+				blob, err := sealFileBlob(key, "filelink", l.ID, fileLinkBlob{Role: role, Note: note})
+				if err != nil {
+					return nil, err
+				}
+				if err := v.db.UpdateFileLinkBlob(l.ID, blob); err != nil {
+					return nil, err
+				}
+				info.Role, info.Note = role, note
+			}
+			return info, nil
 		}
 	}
 	id, err := newFileID()
@@ -1462,7 +1569,13 @@ func (v *Vault) SuggestFileLink(allow FieldFilter, fileID string, in FileLinkInp
 				return nil // already waiting for the user
 			}
 		}
-		if len(pending) >= maxPendingSuggestions {
+		mine := 0
+		for _, p := range pending {
+			if p.ProposedBy == proposedBy {
+				mine++
+			}
+		}
+		if len(pending) >= maxPendingSuggestions || mine >= maxPendingPerProposer {
 			return &ValidationError{Field: "suggestions", Msg: "too many suggestions are waiting for the user: wait until they have decided on some"}
 		}
 		id, err := newFileID()

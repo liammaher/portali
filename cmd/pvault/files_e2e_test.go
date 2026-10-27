@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -198,5 +199,125 @@ func TestFiles_BatchesStayUnderTheServerLimits(t *testing.T) {
 	}
 	if n := len(batches(nil)); n != 0 {
 		t.Fatalf("no files made %d batches", n)
+	}
+}
+
+// A client's ID copy that sits in a folder is reported once their pratiche
+// close: the vault can only point at it.
+func TestFiles_ExpiringListsLinkedClientFiles(t *testing.T) {
+	v, _ := touchIDVaultKind(t, vault.KindImpresa, map[string]string{"business.denominazione": "Studio Test"})
+	verifiedKind = ""
+	t.Cleanup(func() { verifiedKind = "" })
+	root := filepath.Join(t.TempDir(), "Clienti")
+	cie := filepath.Join(root, "Rossi", "cie-rossi.pdf")
+	writeFile(t, cie, "x")
+	old := time.Now().Add(-2 * time.Hour)
+	if err := os.Chtimes(cie, old, old); err != nil {
+		t.Fatal(err)
+	}
+	// In this order: a pratica can only name a person who is already there.
+	for _, kv := range [][2]string{
+		{"rossi:ruolo.tipo", "cliente"}, {"pratiche.cila-rossi_persona", "rossi"}, {"pratiche.cila-rossi_stato", "completata"},
+	} {
+		if err := v.Set(kv[0], kv[1], ""); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
+
+	runCmd(t, cmdFiles, "files", "source", "add", root, "--label", "Clienti")
+	runCmd(t, cmdFiles, "files", "sync")
+	out := runCmd(t, cmdFiles, "files", "search", "cie")
+	id := fileID(t, out, "cie-rossi.pdf")
+	runCmd(t, cmdFiles, "files", "link", id, "--for", "rossi", "--kind", "client", "--role", "cie")
+
+	out = runCmd(t, cmdExpiring, "expiring")
+	for _, want := range []string{"cie file (rossi)", "delete the file unless still needed", "cie-rossi.pdf (" + id + ")", "files show " + id} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("expiring lacks %q:\n%s", want, out)
+		}
+	}
+}
+
+// A file an agent found through its own connector is proposed, listed for the
+// user, accepted, searchable and linked, and never touched by a sync.
+func TestFiles_ProposalsEndToEnd(t *testing.T) {
+	v, _ := touchIDVault(t, map[string]string{"leo:famiglia.relazione": "figlio"})
+	in := vault.FileProposalInput{
+		Provider: "gdrive", Key: "1AbC", Name: "CIE-Leo.pdf", Path: "/Documenti/CIE-Leo.pdf",
+		WebURL: "https://drive.google.com/file/d/1AbC/view?usp=drivesdk", Holder: "leo", Role: "cie", Reason: "its name says it is Leo's CIE",
+	}
+	if _, err := v.ProposeFile(nil, in, "claude"); err != nil {
+		t.Fatal(err)
+	}
+
+	out := runCmd(t, cmdFiles, "files", "proposals")
+	for _, want := range []string{"claude proposes adding \"CIE-Leo.pdf\" from Google Drive", "/Documenti/CIE-Leo.pdf", "linking it to leo (cie)", `reason: "its name says`} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("proposals lacks %q:\n%s", want, out)
+		}
+	}
+	if out := runCmd(t, cmdFiles, "files", "search", "CIE"); !strings.Contains(out, "No files found") {
+		t.Fatalf("a proposal is searchable:\n%s", out)
+	}
+	pid := strings.Fields(runCmd(t, cmdFiles, "files", "proposals"))[0]
+	out = runCmd(t, cmdFiles, "files", "proposals", "accept", pid)
+	if !strings.Contains(out, "Added to the index: CIE-Leo.pdf") {
+		t.Fatalf("accept:\n%s", out)
+	}
+	out = runCmd(t, cmdFiles, "files", "search", "--for", "leo")
+	if !strings.Contains(out, "CIE-Leo.pdf") || !strings.Contains(out, "linked to leo (cie)") || !strings.Contains(out, "found through Claude") {
+		t.Fatalf("after accepting:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "proposals"); !strings.Contains(out, "No proposals waiting") {
+		t.Fatalf("still pending:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "source", "list"); !strings.Contains(out, "never synced") || !strings.Contains(out, "found through its own connector") {
+		t.Fatalf("source list:\n%s", out)
+	}
+	// A sync has nothing to read there, and leaves its file alone.
+	if out := runCmd(t, cmdFiles, "files", "sync"); !strings.Contains(out, "Nothing to sync") {
+		t.Fatalf("sync:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "search", "CIE"); !strings.Contains(out, "CIE-Leo.pdf") || strings.Contains(out, "[gone]") {
+		t.Fatalf("after a sync:\n%s", out)
+	}
+
+	// The address of a file an agent proposed is shown, never opened by pvault.
+	fid := fileID(t, runCmd(t, cmdFiles, "files", "search", "CIE"), "CIE-Leo.pdf")
+	if out := runCmd(t, cmdFiles, "files", "open", fid); !strings.Contains(out, "https://drive.google.com/file/d/1AbC/view") || !strings.Contains(out, "check it before you open it") {
+		t.Fatalf("open:\n%s", out)
+	}
+
+	// Rejecting forgets it.
+	in.Key, in.Name, in.Path = "2DeF", "Altro.pdf", "/Altro.pdf"
+	in.Holder, in.Role, in.WebURL = "", "", "" // (an address must carry the file's own id)
+	if _, err := v.ProposeFile(nil, in, "claude"); err != nil {
+		t.Fatal(err)
+	}
+	runCmd(t, cmdFiles, "files", "proposals", "reject", strings.Fields(runCmd(t, cmdFiles, "files", "proposals"))[0])
+	if out := runCmd(t, cmdFiles, "files", "search", "altro"); !strings.Contains(out, "No files found") {
+		t.Fatalf("a rejected proposal:\n%s", out)
+	}
+
+	// A queue an agent filled is emptied in one command; a file accepted before is flagged as replaced.
+	for i := 0; i < 3; i++ {
+		in.Key, in.Name, in.Path = fmt.Sprint("junk", i), fmt.Sprintf("junk%d.pdf", i), fmt.Sprintf("/junk%d.pdf", i)
+		in.WebURL = ""
+		v.ProposeFile(nil, in, "claude")
+	}
+	in.Key, in.Name, in.Path = "1AbC", "CIE-Leo-renamed.pdf", "/Documenti/CIE-Leo-renamed.pdf"
+	in.WebURL = "https://drive.google.com/file/d/1AbC/view?usp=drivesdk"
+	v.ProposeFile(nil, in, "claude")
+	if out := runCmd(t, cmdFiles, "files", "proposals"); !strings.Contains(out, "REPLACES the entry already in the index") || !strings.Contains(out, `id "1AbC"`) {
+		t.Fatalf("proposals:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "proposals", "reject", "--all"); !strings.Contains(out, "Rejected 4 proposal(s)") {
+		t.Fatalf("reject --all:\n%s", out)
+	}
+	if out := runCmd(t, cmdFiles, "files", "proposals"); !strings.Contains(out, "No proposals waiting") {
+		t.Fatalf("after reject --all:\n%s", out)
 	}
 }

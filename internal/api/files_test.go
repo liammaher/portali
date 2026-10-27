@@ -413,3 +413,96 @@ func TestFiles_FinishRefusesToMarkMostOfASourceGone(t *testing.T) {
 		t.Fatalf("confirmed finish: %d %+v", w.Code, res)
 	}
 }
+
+func TestFiles_AgentProposesAFileTheUserAccepts(t *testing.T) {
+	env, sk, _ := filesEnvSK(t)
+	agent := createTokenWithAccess(t, env, "*:files.*", "append")
+	body := map[string]any{
+		"provider": "gdrive", "key": "1AbC", "name": "CIE Leo.pdf", "path": "/Documenti/CIE Leo.pdf", "size": 100,
+		"web_url": "https://drive.google.com/file/d/1AbC/view?usp=drivesdk", "for": "leo", "role": "cie", "reason": "name says so",
+	}
+	w := env.doRequestWithToken(t, "POST", "/vault/files/proposals", body, agent)
+	if w.Code != 200 {
+		t.Fatalf("propose: %d %s", w.Code, w.Body.String())
+	}
+	prop := decodeBody[vault.FileProposalInfo](t, w)
+	if prop.ProposedBy == "" || prop.ProposedBy == "you" {
+		t.Fatalf("proposed_by = %q", prop.ProposedBy)
+	}
+
+	// Not in the index; read-only and narrow tokens can't propose; an agent can't decide.
+	if l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?q=CIE", nil, true)); l.Total != 0 {
+		t.Fatal("a proposal is in the index")
+	}
+	ro := createTokenWithAccess(t, env, "*:files.*", "read")
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/proposals", body, ro); w.Code != 403 {
+		t.Fatalf("read-only propose: %d", w.Code)
+	}
+	narrow := createTokenWithAccess(t, env, "files.*", "append")
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/proposals", body, narrow); w.Code != 403 {
+		t.Fatalf("a token that doesn't reach leo proposing for leo: %d", w.Code)
+	}
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, agent); w.Code != 403 {
+		t.Fatalf("an agent accepting its own proposal: %d", w.Code)
+	}
+	if w := env.doRequestWithToken(t, "GET", "/vault/files/proposals", nil, agent); w.Code != 403 {
+		t.Fatalf("an agent listing proposals: %d", w.Code)
+	}
+	bad := map[string]any{"provider": "gdrive", "key": "x", "name": "a.pdf", "web_url": "https://evil.example/login"}
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/proposals", bad, agent); w.Code != 400 {
+		t.Fatalf("an address off the provider's site: %d", w.Code)
+	}
+
+	// A read grant can't decide; a write grant for leo's files can.
+	rg := scopedGrant(t, env, sk, "files.*,*:files.*", "read")
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, rg); w.Code != 403 {
+		t.Fatalf("a read grant accepting: %d", w.Code)
+	}
+	list := decodeBody[[]vault.FileProposalInfo](t, env.doRequest(t, "GET", "/vault/files/proposals", nil, true))
+	if len(list) != 1 || list[0].Name != "CIE Leo.pdf" {
+		t.Fatalf("proposals = %+v", list)
+	}
+	if w := env.doRequest(t, "POST", "/vault/files/proposals/"+prop.ID+"/bogus", nil, true); w.Code != 404 {
+		t.Fatalf("unknown action: %d", w.Code)
+	}
+	wg := scopedGrant(t, env, sk, "leo:files.*", "write")
+	w = env.doRequestWithToken(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, wg)
+	if w.Code != 200 {
+		t.Fatalf("accept: %d %s", w.Code, w.Body.String())
+	}
+	l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?for=leo", nil, true))
+	if l.Total != 1 || l.Files[0].Name != "CIE Leo.pdf" || l.Files[0].Links[0].Role != "cie" {
+		t.Fatalf("after accepting: %+v", l)
+	}
+	if w := env.doRequest(t, "POST", "/vault/files/proposals/"+prop.ID+"/reject", nil, true); w.Code != 404 {
+		t.Fatalf("a decided proposal: %d", w.Code)
+	}
+}
+
+// for:"io" in a proposal means a link for the owner, not no link.
+func TestFiles_ProposalForTheOwnerKeepsItsLink(t *testing.T) {
+	env, _, _ := filesEnvSK(t)
+	agent := createTokenWithAccess(t, env, "files.*", "append")
+	w := env.doRequestWithToken(t, "POST", "/vault/files/proposals", map[string]any{
+		"provider": "dropbox", "key": "id:9", "name": "passaporto.pdf", "for": "io", "role": "passaporto",
+	}, agent)
+	if w.Code != 200 {
+		t.Fatalf("propose: %d %s", w.Code, w.Body.String())
+	}
+	prop := decodeBody[vault.FileProposalInfo](t, w)
+	if env.doRequest(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, true).Code != 200 {
+		t.Fatal("accept")
+	}
+	l := decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?q=passaporto", nil, true))
+	if l.Total != 1 || len(l.Files[0].Links) != 1 || l.Files[0].Links[0].Role != "passaporto" || l.Files[0].Links[0].Holder != "" {
+		t.Fatalf("file = %+v", l)
+	}
+	// for:"io" with no role is still a request to link it to the owner.
+	w = env.doRequestWithToken(t, "POST", "/vault/files/proposals", map[string]any{"provider": "dropbox", "key": "id:10", "name": "x.pdf", "for": "io"}, agent)
+	prop = decodeBody[vault.FileProposalInfo](t, w)
+	env.doRequest(t, "POST", "/vault/files/proposals/"+prop.ID+"/accept", nil, true)
+	l = decodeBody[fileList](t, env.doRequest(t, "GET", "/vault/files?q=x.pdf", nil, true))
+	if l.Total != 1 || len(l.Files[0].Links) != 1 {
+		t.Fatalf("for:io without a role lost its link: %+v", l)
+	}
+}

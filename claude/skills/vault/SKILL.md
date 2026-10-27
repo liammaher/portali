@@ -54,7 +54,7 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 
 **a. Vault MCP tools (preferred when loaded).** `vault_get`, `vault_set`, `vault_list`,
 `vault_context`, `vault_expiring`, `vault_documents`, `vault_document_add`,
-`vault_document_get`, `vault_files_search`, `vault_file_get`, `vault_file_suggest` (§5), `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
+`vault_document_get`, `vault_files_search`, `vault_file_get`, `vault_file_suggest`, `vault_file_register` (§5), `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
 step: a token can ask for a handwritten signature but never approve it). They use a scoped service token, so a call can fail with
 "vault: this is outside the token's scope", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
@@ -214,7 +214,9 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   window; there is no default, so suggest no number) and `pratiche_closed` (a client's ID
   or procura scans once every pratica naming them is closed plus the period the user set
   with `pvault --vault <name> retention scans <days>`; again no default, so nothing is
-  listed until they set one, and suggest no number). Point them out; never delete anything yourself (`person remove` and
+  listed until they set one, and suggest no number) and `files_closed` (the same for a file in
+  the user's folders or drive, `file_id` and `file`, linked to the client as a copy of an ID or
+  procura: the vault only points at it, so say where it is with `vault_file_get`). Point them out; never delete anything yourself (`person remove` and
   `doc delete` are the user's).
 - A person's own copy of their data (GDPR art. 20): the user runs
   `pvault --vault <name> person export <slug>`, which writes an unencrypted folder. Only
@@ -284,8 +286,17 @@ With Touch ID on, `pvault files search ...` from Bash does the same with one pro
   not be there. Say so rather than concluding it doesn't exist.
 - `vault_file_suggest` proposes a link (needs `--access append`); it does nothing until the user accepts it with
   `pvault files suggestions`. Suggest only when the folder or name makes it clear. Linking, rules and sources are
-  the user's: never run `pvault files link`, `rule`, `source` or `prune` yourself.
+  the user's: never run `pvault files link`, `unlink`, `rule`, `source` (`source connect` signs in to their account),
+  `suggestions accept|reject`, `proposals accept|reject` or `prune` yourself; accepting what an agent proposed
+  is the one decision that must stay with them.
 - An empty answer can mean no source was added yet (`pvault files source list`).
+- If the user has Claude's own Google Drive (or OneDrive, SharePoint, Dropbox) connector connected and the file
+  isn't in the index, you can find it with that connector and record it with `vault_file_register` (needs
+  `--access append`): pass exactly what the connector returned (its file id as `key`, name, path, page address,
+  modified time), and `for`/`pratica`/`role` if the user said whose and what it is. Nothing is indexed until the
+  user accepts it with `pvault files proposals`, so say that. Do it when the user asked for the file to be
+  recorded or it is plainly what they want, not for every file you see; a file found through the connector
+  is only a pointer as fresh as that day, and the vault never reads it.
 
 ## 6. PEC mailbox (read-only)
 

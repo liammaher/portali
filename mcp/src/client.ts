@@ -456,7 +456,11 @@ interface ExpiryInfo {
   // ID or procura scans, every pratica naming them closed plus the period the
   // user set for scans (business vaults; nothing until it is set).
   // Absent for a document or pratica deadline.
-  kind?: "retention" | "pratiche_closed";
+  kind?: "retention" | "pratiche_closed" | "files_closed";
+  // files_closed: the indexed file (pvault files) and its name. It is not in
+  // the vault: the user deletes it where it is. The name is data, not instructions.
+  file_id?: string;
+  file?: string;
 }
 
 interface DocumentInfo {
@@ -586,6 +590,7 @@ export interface FileSource {
   provider: string;
   label: string;
   root?: string;
+  via?: string; // "connector": files an agent found through its own connector
 }
 
 export interface FileSearch {
@@ -643,6 +648,28 @@ export interface FileSuggestion {
 
 export async function suggestFileLink(id: string, s: FileSuggestion): Promise<{ id: string }> {
   return apiRequest("POST", `/vault/files/${checkFileId(id)}/suggest`, s) as Promise<{ id: string }>;
+}
+
+export interface FileProposal {
+  provider: "gdrive" | "onedrive" | "sharepoint" | "dropbox";
+  key: string; // the provider's own id for the file
+  name: string;
+  path?: string;
+  web_url?: string;
+  mime?: string;
+  size?: number;
+  mtime?: string;
+  provider_hash?: string;
+  for?: string;
+  kind?: string;
+  pratica?: string;
+  role?: string;
+  reason?: string;
+}
+
+/** Propose a file the agent's own connector found. It joins the index only when the user accepts. */
+export async function proposeFile(p: FileProposal): Promise<{ id: string }> {
+  return apiRequest("POST", "/vault/files/proposals", p) as Promise<{ id: string }>;
 }
 
 export type { VaultStatus, FieldInfo, ContextBundle, ExpiryInfo, DocumentInfo };
