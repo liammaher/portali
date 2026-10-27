@@ -68,10 +68,10 @@ does (SPID login, CIE PIN and PUK, PEC and portal passwords, cards).
 
 | The assistant needs to… | Job | What we have | What's missing |
 |---|---|---|---|
-| **complete the pratica** | Execution skills, one per procedure | The pratica skill (Claude Code only); the library's steps with the human-only ones marked, forms mapped to facts, what you do on each portal; `fill.py` with four PDF layouts | Skills that work in the Claude app, one per procedure: which choices to make on each portal, what goes in each box, which documents to attach, where to hand over (SPID login, signature, payment); layouts for the flat PDF forms; **a real pratica completed end to end** (none yet) |
+| **complete the pratica** | Execution skills, one per procedure | The pratica skill (Claude Code only); the library's steps with the human-only ones marked, forms mapped to facts, what you do on each portal; `fill.py` with layouts for 4 of the library's 31 forms | Skills that work in the Claude app, one per procedure: which choices to make on each portal, what goes in each box, which documents to attach, where to hand over (SPID login, signature, payment); portal maps, screen by screen (open question 1); steps that name the owner's taps (open question 3); layouts where a filled PDF is sent (open question 4); **a real pratica completed end to end** (none yet) |
 | **know the rules** | Naples layer | [pratiche-napoli](https://github.com/liammaher/pratiche-napoli): 30 sourced procedures (L1), 7 situations, offices by area, forms mapped to facts, signing rules by channel | A connector serving it; "what applies" as rules a program can check; recurring dates; notice recognition with deadlines from delivery; L2/L3 confirmation; building-works and immigration procedures |
 | **know the business** | Profile | This repo's schema, Italian validation, the street → municipalità/quartiere/ASL lookup, people and roles, documents, dates, pratiche | Hosting it per business, encrypted; filling it from a visura and photos in one chat; the tier changes in [`reports/Vault sensitivity ranking.md`](../reports/Vault%20sensitivity%20ranking.md) |
-| **act where Claude can't** | PEC, signing | The read-only PEC tools, the sign gate | Both run only on a Mac today; sending PEC on the owner's tap; renewing Aruba's 90-day app password |
+| **act where Claude can't** | PEC, signing | The read-only PEC tools; the sign gate, which stamps a handwritten signature (enough for PEC, email, post and desk) | Both run only on a Mac today; sending PEC on the owner's tap; renewing Aruba's 90-day app password; a firma digitale for portal filings (open question 2); approval taps that work once hosted (open question 5) |
 | **know what really happens** | Outcomes | The library's reports backend, with its privacy rules | Deployment; a tool for the assistant to report an outcome; outcomes collected before launch; a stricter tier for immigration |
 
 Full list, item by item: [`reports/MVP checklist.md`](../reports/MVP%20checklist.md).
@@ -103,7 +103,8 @@ documents", never "your clients won't need you".
 Nothing has completed a real pratica yet. The closest is the TARI Mod. 1 draft filled from the vault,
 which matched a hand-filled form box for box (11 of 11). Before building wide, take one or two pratiche
 from the business-opening chain all the way through with the skills, on the real portal, up to the
-owner's taps, and record where it breaks. That's also the first L3 in the library.
+owner's taps, and record where it breaks. That's also the first L3 in the library. Which pratica, and
+why an intermediary's is the easier start: open question 6.
 
 ## How we'll know it works
 
@@ -112,6 +113,69 @@ owner's taps, and record where it breaks. That's also the first L3 in the librar
 - Instalments and PEC deadlines not missed.
 - Days from "I need to do this" to filed.
 - Intermediaries reporting outcomes each month.
+
+## Open questions
+
+Found on 2026-10-27 by checking this page against both repositories. None is decided; each says what
+we'd suggest.
+
+### 1. Portals need a browser, and the phone has none
+
+24 of the library's 30 procedures file on a portal first (18 only on a portal), mostly impresainungiorno
+behind SPID; the other 6 are the 5 TARI ones, by PEC, and one at a desk. A connector alone can't work a
+portal: Claude needs a browser agent, which today is Claude in Chrome on a desktop. So "the owner only
+taps" works from a phone for PEC pratiche once the connector is hosted, not yet for portal ones.
+
+**Suggested:** say so: portal pratiche from a desktop, or through an intermediary, until a browser agent
+reaches the phone or the cloud. Each execution skill carries a portal map, screen by screen: what to
+choose, what goes in each box, what to upload.
+
+### 2. Portal filings need a firma digitale, which the sign gate doesn't make
+
+The sign gate stamps a handwritten signature, which PEC, email, post and desk accept (the library's
+`contract/signing.json`). SUAP and SUE uploads need a firma digitale, and `signing.json` has no rule for
+portals.
+
+**Suggested:** a firma digitale handoff: the connector prepares the exact PDF, the owner signs it in their
+remote-signature app (Aruba, InfoCert, Namirial) with one tap, and the connector checks that the signed
+file is the one prepared. Or an intermediary signs under a procura speciale, as most SUAP filings are
+done today. Add the portal rule to `signing.json`.
+
+### 3. `human_only` is broader than the owner's taps
+
+178 of the library's 349 steps are `human_only`, whole portal steps included ("log in, fill in the
+istanza, upload, send"). Here Claude does those, and only the taps are the person's.
+
+**Suggested:** replace the flag in the library's contract with the tap a step needs (`login`, `sign`,
+`pay`, `send`, `in_person`), so an execution skill knows exactly where to stop.
+
+### 4. More PDF layouts, or not
+
+The five jobs list layouts for the flat PDF forms as missing; [`reports/Gennaro strategy
+conclusion.md`](../reports/Gennaro%20strategy%20conclusion.md) says to stop making more.
+
+**Suggested:** layouts only for the business-opening chain's forms that a portal or a PEC takes as a
+filled PDF. Fill them in the connector, so the Claude app gets the filled PDF from a tool call.
+
+### 5. Keys and taps once hosted
+
+Decision 1 moves the profile online. The vault's model doesn't carry over: the key only in memory after
+the owner's password, credentials never over TCP, Touch ID or Windows Hello for approvals. A hosted
+connector holds plaintext while it serves Claude.
+
+**Suggested:** design it before the second hosting step: per-business keys wrapped by a key service in
+the EU, and an approval service of our own (a passkey tap on our page, reached from the connector) for
+the sign gate, sending PEC and personal-tier reads. Check whether the Claude app supports MCP's URL
+elicitation for that hop.
+
+### 6. Which pratica first
+
+An intermediary already has SPID, a firma digitale, a desktop and the clients' procure, so questions 1
+and 2 are already answered for them.
+
+**Suggested:** a CILA filed by an architect partner on impresainungiorno: the library has it current for
+the July 2026 SUE switch, and `fill.py` has its Allegato A layout. Alongside it, if a business is ready,
+a TARI non domestica by PEC, to test that path.
 
 ## Parked
 
