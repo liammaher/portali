@@ -8,8 +8,13 @@ that implements the decision affecting it, not before.
 
 ## The north star
 
-**Any Naples business's own Claude can handle any dealing with a Naples public office correctly, and
-the owner only taps to approve.**
+**Any Naples business's own Claude can complete any dealing with a Naples public office, correctly,
+and the owner only taps to approve.**
+
+"Complete" is the point. Today people ask Claude about a pratica, get a general answer, and then do it
+themselves, pay a commercialista or an agency, or put it off. Claude doesn't fill Naples forms or work
+Naples portals on its own. The product exists to change that: Claude does the pratica, the owner
+approves.
 
 "Naples" means the Comune di Napoli and the local offices that serve it (Comune, Municipalità, ASL Napoli
 1, Questura, Prefettura, Soprintendenza, Genio Civile, Camera di Commercio, SUAP and SUE on
@@ -20,9 +25,11 @@ impresainungiorno), plus the national bodies a Naples business deals with.
 **One connector added to the owner's own Claude** (working name: *Napoli for Claude*). Add it once,
 answer about ten questions in one chat, approve each connection once, and the assistant:
 
+- completes the pratica: picks the right procedure, form and channel, fills in his facts, attaches the
+  documents, works the portal, and hands him only the steps the law keeps for him;
 - knows Naples: what applies, what's due and when, what a notice means, what to do;
 - knows the business: the facts every form needs, validated;
-- can act where Claude can't: PEC, signing, exact PDF forms;
+- can act where Claude can't: PEC and signing;
 - gets smarter from every other business's experience.
 
 The owner never opens a PEC, reads a letter or chases anyone. They answer questions and tap: sign, pay,
@@ -33,13 +40,14 @@ reaches Europe). It doesn't do accounting, payroll or payments: the specialists 
 JetHR, Stripe, the bank, the commercialista). It doesn't hold secrets the agent mustn't read: 1Password
 does (SPID login, CIE PIN and PUK, PEC and portal passwords, cards).
 
-## The four jobs
+## The five jobs
 
 | The assistant needs to… | Job | What we have | What's missing |
 |---|---|---|---|
+| **complete the pratica** | Execution skills, one per procedure | The pratica skill (Claude Code only); the library's steps with the human-only ones marked, forms mapped to facts, what you do on each portal; `fill.py` with four PDF layouts | Skills that work in the Claude app, one per procedure: which choices to make on each portal, what goes in each box, which documents to attach, where to hand over (SPID login, signature, payment); layouts for the flat PDF forms; **a real pratica completed end to end** (none yet) |
 | **know the rules** | Naples layer | [pratiche-napoli](https://github.com/liammaher/pratiche-napoli): 30 sourced procedures (L1), 7 situations, offices by area, forms mapped to facts, signing rules by channel | A connector serving it; "what applies" as rules a program can check; recurring dates; notice recognition with deadlines from delivery; L2/L3 confirmation; building-works and immigration procedures |
 | **know the business** | Profile | This repo's schema, Italian validation, the street → municipalità/quartiere/ASL lookup, people and roles, documents, dates, pratiche | Hosting it per business, encrypted; filling it from a visura and photos in one chat; the tier changes in [`reports/Vault sensitivity ranking.md`](../reports/Vault%20sensitivity%20ranking.md) |
-| **act where Claude can't** | PEC, signing, forms | The read-only PEC tools, the sign gate, `fill.py` with four layouts | All three run only on a Mac today; sending PEC on the owner's tap; renewing Aruba's 90-day app password |
+| **act where Claude can't** | PEC, signing | The read-only PEC tools, the sign gate | Both run only on a Mac today; sending PEC on the owner's tap; renewing Aruba's 90-day app password |
 | **know what really happens** | Outcomes | The library's reports backend, with its privacy rules | Deployment; a tool for the assistant to report an outcome; outcomes collected before launch; a stricter tier for immigration |
 
 Full list, item by item: [`reports/MVP checklist.md`](../reports/MVP%20checklist.md).
@@ -57,6 +65,30 @@ One engine, filled segment by segment:
 Start where the segments meet: opening and running a business (ComUnica, SUAP, CILA/SUE, dehors,
 insegna, TARI non domestica). See [`reports/Three avatars synthesis.md`](../reports/Three%20avatars%20synthesis.md).
 
+What it's worth to each, honestly: an owner meets these pratiche a few times a year, but each one goes
+from "pay someone or lose days" to "tap to approve". Intermediaries and migrant-services organisations
+meet them every week, so for them it's large. It doesn't make offices answer faster, and it doesn't
+lower what's owed.
+
+**The tension with intermediaries.** If owners can file simple pratiche through Claude, commercialisti
+and agencies lose that work. The pitch to them is "do more pratiche, faster, with fewer requests for more
+documents", never "your clients won't need you".
+
+## First milestone: one real pratica, end to end
+
+Nothing has completed a real pratica yet. The closest is the TARI Mod. 1 draft filled from the vault,
+which matched a hand-filled form box for box (11 of 11). Before building wide, take one or two pratiche
+from the business-opening chain all the way through with the skills, on the real portal, up to the
+owner's taps, and record where it breaks. That's also the first L3 in the library.
+
+## How we'll know it works
+
+- Pratiche completed end to end, with only the owner's taps.
+- Requests for more documents, and rejections, compared with doing it by hand.
+- Instalments and PEC deadlines not missed.
+- Days from "I need to do this" to filed.
+- Intermediaries reporting outcomes each month.
+
 ## Parked
 
 Good for a personal vault, not part of the product. Kept working, not developed further:
@@ -66,8 +98,8 @@ Good for a personal vault, not part of the product. Kept working, not developed 
 - the file index's cloud sources (OneDrive, Google Drive, Dropbox);
 - the CLI as the interface;
 - local backups;
-- per-user playbooks in the pratica skill;
-- more per-form PDF layouts beyond the existing ones.
+- per-user playbooks in the pratica skill (the per-procedure execution skills are the first job, not
+  parked).
 
 Client features (retention, many clients, per-person export) wait for the migrant-services segment.
 
@@ -110,7 +142,8 @@ library stays pure data, site and reports backend, and never depends on the vaul
 The plan says owners; the analysis says intermediaries contribute the outcomes.
 
 **Decided:** design the experience for owners, but recruit intermediaries first, as contributors
-and as the people who set owners up. Start with the business-opening chain.
+and as the people who set owners up. Start with the business-opening chain. The pitch to them is in
+"Who it serves": more pratiche, faster.
 
 ### 5. Immigration
 
