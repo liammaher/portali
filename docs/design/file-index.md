@@ -1,9 +1,10 @@
 # File index
 
 Status: built, for folders on disk (including the sync folders of OneDrive, SharePoint, Google
-Drive and Dropbox): the store and vault layers, the API, `pvault files`, and the local sync
-(`internal/filesync`). Not built: the MCP tools, retention/`Expiring` entries, and the cloud
-API connectors (see the end).
+Drive and Dropbox): the store and vault layers, the API, `pvault files`, the local sync
+(`internal/filesync`) and the MCP tools (`vault_files_search`, `vault_file_get`,
+`vault_file_suggest`) with the pratica skill's step 0.4 using them. Not built:
+retention/`Expiring` entries and the cloud API connectors (see the end).
 
 ## What it is for
 
@@ -77,12 +78,9 @@ computed yet.
 
 ## Still to do
 
-1. MCP tools `vault_files_search`, `vault_file_get`, `vault_file_suggest`, results under the
-   same UNTRUSTED note PEC uses (file names are attacker-controlled); pratica skill step 0.4
-   switched from "look in the folder" to a search.
-2. Retention and `Expiring` entries for linked client scans (`reference_only`).
-3. Microsoft Graph (OneDrive, SharePoint), then Google Drive and Dropbox, as read-only
+1. Retention and `Expiring` entries for linked client scans (`reference_only`).
+2. Microsoft Graph (OneDrive, SharePoint), then Google Drive and Dropbox, as read-only
    clients with refresh tokens in the Keychain: sources without a folder, change feeds, and
    matching an API item to the folder entry of the same file (account + path). Open: who owns
    the OAuth client IDs (Google's restricted scopes, Microsoft tenant-admin consent).
-4. An unattended sync (a launchd job with a `files.*` write token in the Keychain).
+3. An unattended sync (a launchd job with a `files.*` write token in the Keychain).

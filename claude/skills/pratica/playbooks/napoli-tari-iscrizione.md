@@ -46,8 +46,9 @@ Leave `locazione.*` out: the form doesn't need the rent or the landlord.
 
 ## Steps
 
-The library's. Before filling, check the user's TARI folder and `pvault list pratiche`
-for a Mod. 1 already filled or signed, and don't regenerate a signed one.
+The library's. Before filling, search the file index for a Mod. 1 already filled or signed
+(`vault_files_search`, step 0.4 of the skill: `pratica` tari-..., or `text: "mod 1 tari"`) and
+check `pvault list pratiche`, and don't regenerate a signed one.
 
 ## Needs the user
 

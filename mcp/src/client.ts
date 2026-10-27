@@ -532,4 +532,100 @@ export async function getDocument(
   };
 }
 
+// --- file index (pvault files) ---
+
+export interface FileLocation {
+  source: string;
+  key: string;
+  path?: string;
+  web_url?: string;
+}
+
+export interface FileLinkInfo {
+  id: string;
+  holder: string; // "" = the owner or the business
+  kind: "person" | "client" | "business" | "pratica";
+  pratica?: string;
+  origin: "manual" | "rule" | "suggestion";
+  role?: string;
+  note?: string;
+}
+
+export interface IndexedFile {
+  id: string;
+  source_id: string;
+  tier: string;
+  gone?: boolean;
+  name: string;
+  locations: FileLocation[];
+  mime?: string;
+  size?: number;
+  mtime?: string;
+  links: FileLinkInfo[];
+}
+
+export interface FileSource {
+  id: string;
+  provider: string;
+  label: string;
+  root?: string;
+}
+
+export interface FileSearch {
+  text?: string;
+  for?: string; // a person's slug, or io
+  pratica?: string;
+  unlinked?: boolean;
+  gone?: boolean;
+  provider?: string;
+  limit?: number;
+}
+
+export async function searchFiles(q: FileSearch): Promise<{ files: IndexedFile[]; total: number }> {
+  const p = new URLSearchParams();
+  if (q.text) p.set("q", q.text);
+  if (q.for) p.set("for", q.for);
+  if (q.pratica) p.set("pratica", q.pratica);
+  if (q.provider) p.set("provider", q.provider);
+  if (q.unlinked) p.set("unlinked", "1");
+  if (q.gone) p.set("gone", "1");
+  if (q.limit) p.set("limit", String(q.limit));
+  return apiRequest("GET", `/vault/files?${p}`) as Promise<{ files: IndexedFile[]; total: number }>;
+}
+
+// A file's ID is the vault's own 32 hex characters; nothing else goes into a URL path.
+const FILE_ID = /^[0-9a-f]{32}$/;
+
+export function checkFileId(id: string): string {
+  if (!FILE_ID.test(id)) {
+    throw new VaultError("vault: a file id is the 32 hex characters vault_files_search shows");
+  }
+  return id;
+}
+
+export async function getIndexedFile(id: string): Promise<IndexedFile> {
+  return apiRequest("GET", `/vault/files/${checkFileId(id)}`) as Promise<IndexedFile>;
+}
+
+/** The places files are read from. A token that can't see them gets none. */
+export async function listFileSources(): Promise<FileSource[]> {
+  try {
+    return (await apiRequest("GET", "/vault/files/sources")) as FileSource[];
+  } catch (e) {
+    if (e instanceof VaultError && /outside the token's scope|sensitivity tier|forbidden/.test(e.message)) return [];
+    throw e;
+  }
+}
+
+export interface FileSuggestion {
+  for: string;
+  kind?: string;
+  pratica?: string;
+  reason?: string;
+}
+
+export async function suggestFileLink(id: string, s: FileSuggestion): Promise<{ id: string }> {
+  return apiRequest("POST", `/vault/files/${checkFileId(id)}/suggest`, s) as Promise<{ id: string }>;
+}
+
 export type { VaultStatus, FieldInfo, ContextBundle, ExpiryInfo, DocumentInfo };

@@ -251,6 +251,10 @@ the page never copies a rule.
   person's links, rules and suggestions, not the index rows.
 
 ### MCP (`mcp/src`)
+- File index tools (`vault_files_search`, `vault_file_get`, `vault_file_suggest`; `vaultfiles.ts`):
+  metadata only, no tool reads or changes a file. Every result carries the untrusted-names
+  note; ids and person/pratica slugs are checked before any request; `local_path` is the
+  source's root plus the file's path and never leaves the root.
 - Uses only a service token (`VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`, else
   `VAULT_TOKEN_COMMAND`), looked up per request; the server enforces its scope. It refuses
   to start with the old `VAULT_SCOPE` set.

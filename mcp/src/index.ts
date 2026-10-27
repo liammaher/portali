@@ -8,7 +8,9 @@ import { basename, extname, join, relative, isAbsolute, resolve, sep } from "nod
 import {
   getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
   getExpiring, listDocuments, addDocument, getDocument, listMembers,
+  searchFiles, getIndexedFile, listFileSources, suggestFileLink, checkFileId,
 } from "./client.js";
+import { UNTRUSTED_FILES, describeFile, PERSON_REF, PRATICA_SLUG } from "./vaultfiles.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import {
   pecConfig, listFolders, listMessages, fetchSource, parsePec, pecAttachment, attachmentCharset, decodeText, isCalendarDate,
@@ -313,6 +315,95 @@ server.registerTool(
         return err("document is larger than 10 MB and can't be returned inline");
       }
       return fileContent(`vault://documents/${id}`, doc.contentType, doc.data);
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+// --- file index (pvault files) ---
+// Where the user's files are and whom they are linked to. Only metadata: no tool
+// here reads a file, and none changes one. The vault enforces the token's scope.
+
+const PERSON = z.string().regex(PERSON_REF, "a person's slug (see vault_household), or io for the user or the business");
+
+server.registerTool(
+  "vault_files_search",
+  {
+    description:
+      "Find files the user keeps in folders on this computer, OneDrive, SharePoint, Google Drive or Dropbox, by name or path words, " +
+      "and see whom or what each is linked to (a person, a client, the business, a pratica). Use it for 'is there already a filled form / contract / visura for X' " +
+      "before asking the user or starting from scratch. Returns names and places (local_path when the file is on this computer), never content; " +
+      "to use a file, tell the user where it is, or read the local_path if the task needs it and the user agrees. " +
+      "Files you can't see because of the token's scope or sensitivity are left out. " + UNTRUSTED_FILES,
+    inputSchema: {
+      text: z.string().max(200).optional().describe("Words that must all be in the name or path (case and accents ignored), e.g. 'visura rossi'"),
+      for: PERSON.optional().describe("Only files linked to this person (io = the user or the business)"),
+      pratica: z.string().regex(PRATICA_SLUG).optional().describe("Only files linked to this pratica (its slug in pratiche.<slug>_*)"),
+      unlinked: z.boolean().optional().describe("Only files not linked to anything yet"),
+      include_gone: z.boolean().optional().describe("Also files that have disappeared from their folder"),
+      provider: z.enum(["local", "onedrive", "sharepoint", "gdrive", "dropbox"]).optional(),
+      limit: z.number().int().min(1).max(100).optional().describe("At most this many (default 25)"),
+    },
+  },
+  async ({ text, for: holder, pratica, unlinked, include_gone, provider, limit }): Promise<CallToolResult> => {
+    try {
+      const [found, sources] = await Promise.all([
+        searchFiles({ text, for: holder, pratica, unlinked, gone: include_gone, provider, limit: limit ?? 25 }),
+        listFileSources(),
+      ]);
+      return ok(JSON.stringify({
+        note: UNTRUSTED_FILES,
+        total: found.total,
+        shown: found.files.length,
+        files: found.files.map((f) => describeFile(f, sources)),
+      }, null, 2));
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_file_get",
+  {
+    description:
+      "One file of the index by id (from vault_files_search): its places, size, date and links. Metadata only, never the file's content. " + UNTRUSTED_FILES,
+    inputSchema: {
+      id: z.string().describe("File id from vault_files_search"),
+    },
+  },
+  async ({ id }): Promise<CallToolResult> => {
+    try {
+      checkFileId(id); // before anything is asked of the vault
+      const [file, sources] = await Promise.all([getIndexedFile(id), listFileSources()]);
+      return ok(JSON.stringify({ note: UNTRUSTED_FILES, file: describeFile(file, sources) }, null, 2));
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_file_suggest",
+  {
+    description:
+      "Propose that a file is for a person, a client, the business or a pratica. This does not link it: the proposal waits until the user accepts it " +
+      "('pvault files suggestions'), so say so when you make one. Suggest when the folder or name makes it clear (a file in /Clienti/Rossi for client rossi); " +
+      "don't guess. Needs a token with append or write access.",
+    inputSchema: {
+      id: z.string().describe("File id from vault_files_search"),
+      for: PERSON.optional().describe("The person it is for (io = the user or the business); leave out for a pratica-only link"),
+      pratica: z.string().regex(PRATICA_SLUG).optional().describe("The pratica it belongs to"),
+      kind: z.enum(["person", "client", "business", "pratica"]).optional().describe("Default: pratica if a pratica is named, else person"),
+      reason: z.string().max(400).optional().describe("One line for the user: why you think so"),
+    },
+  },
+  async ({ id, for: holder, pratica, kind, reason }): Promise<CallToolResult> => {
+    try {
+      if (!holder && !pratica) return err("say whom the file is for (for) or which pratica (pratica)");
+      const s = await suggestFileLink(id, { for: holder ?? "", kind, pratica, reason });
+      return ok(`Proposed (suggestion ${s.id}). It is not linked yet: the user decides with 'pvault files suggestions'.`);
     } catch (e) {
       return err((e as Error).message);
     }
