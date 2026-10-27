@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """Fill a pratiche-napoli form from the vault, and check the result.
 
-  fill.py needs (--library DIR --procedure ID | --entry E.json) --form ID
-                [--for SLUG] [--draft] [--vault-dir DIR]
+  fill.py needs (--library DIR --procedure ID | --entry E.json [--layout L.json])
+                --form ID [--for SLUG] [--draft] [--vault-dir DIR]
       The service tokens a run needs, as the pratica skill asks for them:
-      prepare (append, the form's categories and pratiche.*) and track
-      (write, pratiche.* and the categories the entry's records go to); with
-      --draft, one read token for the form's categories. Each comes with the
-      pvault command that saves it where run --vault-dir looks, and the ask
-      rows come with how their answers are written.
+      prepare (append, the form's categories and pratiche.*, and, when the
+      layout has a signature box on a form that is signed, firma_autografa.signing
+      for --sign) and track (write, pratiche.* and the categories the entry's
+      records go to); with --draft, one read token for the form's categories.
+      Each comes with the pvault command that saves it where run --vault-dir
+      looks, and the ask rows come with how their answers are written.
 
   fill.py run (--library DIR --procedure ID | --entry E.json --layout L.json)
               --form ID [--for SLUG] --out DIR [--pdf FORM.pdf]
               (--server S.json | --vault-dir DIR [--keychain SERVICE])
               [--draft] [--answers A.json] [--reply R.json] [--playbook NAME]
+              [--sign]
       Reads the vault over its HTTP API with the prepare token, resolves each
       of the entry's form rows, fills the PDF at the layout's positions, reads
       the PDF back to check every value landed in its box, and, only if every
@@ -23,6 +25,16 @@
       DIR/filled.pdf, DIR/page-<n>.png for page 1 and each page written on,
       and DIR/report.json; exits 1 if a check failed. A --draft writes
       nothing to the vault.
+      --channel picks the entry's channel by type (default: its preferred one).
+      With --sign, once every check passed, it files a signing request for
+      DIR/filled.pdf at the layout's signature boxes (the form's `signing`
+      must list a handwritten signature for the channel it opens the pratica
+      on) and prints the id: the user runs `pvault sign review <id>`, sees the
+      signed PDF, and approves it in person. The vault holds the signed file
+      until then; this tool can neither approve nor read it. Run again with
+      --sign when the request expired (30 minutes, or midnight) or failed: an
+      open pratica is not opened twice, only the request is filed again. Only
+      the vault's owner signs this way so far (--sign refuses --for).
 
 Who signs: the vault's owner, unless --for names another person (a slug of
 the household; ask the user by display name). Their own data (identity,
@@ -60,6 +72,7 @@ PyMuPDF (fitz).
 """
 
 import argparse
+import base64
 import datetime as dt
 import getpass
 import hashlib
@@ -201,16 +214,21 @@ def default_keychain(vault_dir):
     return f"pvault-{name}-pratica-fill"
 
 
+def pvault_command(vault_dir):
+    """How the user types pvault for this vault folder, as words."""
+    full = os.path.normpath(os.path.expanduser(vault_dir or "~/.pvault"))
+    base = os.path.basename(full)
+    if base == ".pvault" and os.path.dirname(full) == os.path.expanduser("~"):
+        return ["pvault"]
+    if base.startswith(".pvault-") and os.path.dirname(full) == os.path.expanduser("~"):
+        return ["pvault", "--vault", base.removeprefix(".pvault-")]
+    return [f"VAULT_DIR={shlex.quote(full)}", "pvault"]
+
+
 def token_command(vault_dir, token):
     """The pvault command that saves this token where run --vault-dir reads it."""
     full = os.path.normpath(os.path.expanduser(vault_dir))
-    base = os.path.basename(full)
-    if base == ".pvault" and os.path.dirname(full) == os.path.expanduser("~"):
-        pvault = ["pvault"]
-    elif base.startswith(".pvault-") and os.path.dirname(full) == os.path.expanduser("~"):
-        pvault = ["pvault", "--vault", base.removeprefix(".pvault-")]
-    else:
-        pvault = [f"VAULT_DIR={shlex.quote(full)}", "pvault"]
+    pvault = pvault_command(full)
     args = ["create-service-token", "pratica-fill", "--scope", token["scope"], "--access", token["access"],
             "--ttl", "1h", "--keychain", default_keychain(full)]
     return " ".join(pvault + [shlex.quote(x) for x in args])
@@ -257,6 +275,15 @@ def check_supported(entry, form, signer="io"):
             sys.exit(f"row {row['label']!r}: when names {when['field']!r}, which isn't an ask with boxes to tick")
         if "repeat" in m and not m.get("columns"):
             sys.exit(f"row {row['label']!r}: a table needs the procedure's columns")
+
+
+# The vault's scope for filing signing requests (vault.SigningScopeID).
+SIGNING_SCOPE = "firma_autografa.signing"
+
+
+def signable(form, layout):
+    """A signed form whose layout says where the signature goes."""
+    return bool(form.get("signature_required") and (layout or {}).get("signatures"))
 
 
 def refs(m):
@@ -334,7 +361,7 @@ def form_fields(form):
     return out
 
 
-def needs(entry, form, draft=False, signer="io", people=()):
+def needs(entry, form, draft=False, signer="io", people=(), layout=None):
     check_supported(entry, form, signer)
     patterns = set()
     for row in form["fields"]:
@@ -356,10 +383,13 @@ def needs(entry, form, draft=False, signer="io", people=()):
     if draft:
         return {"for": signer, "tokens": {"draft": {"scope": ",".join(sorted(patterns)), "access": "read"}}}
     records = {signer_id(f"{category(r['field'])}.*", signer, people) for r in entry.get("records", [])}
+    prepare = sorted(patterns) + ["pratiche.*"]
+    if signer == "io" and signable(form, layout):
+        prepare.append(SIGNING_SCOPE)
     return {
         "for": signer,
         "tokens": {
-            "prepare": {"scope": ",".join(sorted(patterns) + ["pratiche.*"]), "access": "append"},
+            "prepare": {"scope": ",".join(prepare), "access": "append"},
             "track": {"scope": ",".join(["pratiche.*"] + sorted(records)), "access": "write"},
         }
     }
@@ -1190,17 +1220,33 @@ def run(a):
     # redone) leaves the slug to it, and this one takes -2, -3...
     pratiche = pratiche_by_slug(values)
     base, n = slug, 1
+    resume = False
     while slug in pratiche:
         stato = pratiche[slug].get("stato")
         if stato not in CLOSED:
+            if a.sign and stato == "pronta":
+                # The record is open (an earlier run, or one whose signing request
+                # expired or failed): only the signing request is filed again.
+                resume = True
+                break
             check(f"no pratica {slug} is open yet", False, f"stato {stato}: resume it instead")
             return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
         n += 1
         slug = f"{base}-{n}"
 
     channels = [c for c in entry["channels"] if c["purpose"] == "procedure"]
-    channel = next((c for c in channels if c.get("preferred")), channels[0])
+    if a.channel:
+        channel = next((c for c in channels if c["type"] == a.channel), None)
+        if not check(f"the entry has a {a.channel} channel for this procedure", channel is not None,
+                     ", ".join(sorted({c["type"] for c in channels}))):
+            return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    else:
+        channel = next((c for c in channels if c.get("preferred")), channels[0])
     destinatario = channel.get("address") or channel.get("url") or channel.get("name", "")
+    signing = request_signature(a, prepare, entry, form, layout, channel, slug, check) if a.sign else None
+    if resume:
+        print(f"  pratica {slug} is already open: only the signing request was filed")
+        return finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing)
     record = {
         "titolo": entry["title"],
         "ente": " – ".join(x for x in (entry["ente"]["name"], entry["ente"].get("office")) if x),
@@ -1208,7 +1254,10 @@ def run(a):
         "canale": channel["type"],
         "destinatario": destinatario,
         "playbook": a.playbook or "",
-        "prossimo_passo": f"Firmare il modulo e inviarlo ({channel['type']}: {destinatario})",
+        # No request id: it expires in 30 minutes, the record doesn't.
+        "prossimo_passo": (f"Firmare con {' '.join(pvault_command(a.vault_dir) + ['sign', 'review'])} (la richiesta è in "
+                           f"{' '.join(pvault_command(a.vault_dir) + ['sign', 'list'])}), poi inviarlo ({channel['type']}: {destinatario})"
+                           if signing else f"Firmare il modulo e inviarlo ({channel['type']}: {destinatario})"),
         "persona": signer if signer != "io" else "",
     }
     if start:
@@ -1248,12 +1297,53 @@ def run(a):
                 check(f"the ente's {field} matches what was declared", str(reply[field]) == want, f"{reply[field]} vs {want}")
         if "data_scadenza" in record:
             check("a closed pratica leaves expiring", expiring(track) == [])
-    return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    return finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing)
 
 
-def finish(a, entry, form, pdf_hash, slug, rows, results, checks):
+def request_signature(a, prepare, entry, form, layout, channel, slug, check):
+    """--sign: ask the vault to stamp the user's signature on filled.pdf and
+    hold it for their approval. Returns the request (id, the command the user
+    runs, when it expires) or None, having recorded why as a failed check.
+    This tool can neither approve the request nor read the signed file."""
+    if getattr(a, "for") != "io":
+        check("the signer is the vault's owner", False, "only the owner can sign through the vault so far")
+        return None
+    if not signable(form, layout):
+        check("the layout has a signature box on a signed form", False, "nothing says where to sign")
+        return None
+    if any(b.get("for", "dichiarante") != "dichiarante" for b in layout["signatures"]):
+        check("every signature box is the dichiarante's", False, "only the owner can sign through the vault so far")
+        return None
+    way = next((x for x in form.get("signing", []) if x["channel"] == channel["type"]), None)
+    if not way or "handwritten" not in way["ways"] or way["status"] == "disputed":
+        check(f"the library lists a handwritten signature for {channel['type']}", False,
+              "sign it by hand, or have the library say how this channel takes a signature")
+        return None
+    if way["status"] != "verified":
+        print(f"  note: the library has not verified that {channel['type']} takes a handwritten signature; "
+              "the ente has not confirmed it")
+    with open(f"{a.out}/filled.pdf", "rb") as f:
+        pdf = f.read()
+    placements = [{"page": b.get("page", 1), "rect": b["rect"], **({"date_rect": b["date_rect"]} if "date_rect" in b else {})}
+                  for b in layout["signatures"]]
+    purpose = " ".join(f"{entry['title']}: {form['name']}".split())[:200]
+    status, got = prepare.call("POST", "/vault/signing", {
+        "name": f"{slug}-{form['id']}.pdf", "purpose": purpose,
+        "pdf": base64.b64encode(pdf).decode(), "placements": placements})
+    if status != 200:
+        check("the vault takes the signing request", False,
+              f"{status} {got.get('error') if isinstance(got, dict) else got}")
+        return None
+    review = " ".join(pvault_command(a.vault_dir) + ["sign", "review", got["id"]])
+    check(f"signing request {got['id'][:8]} is waiting for the user", True, review)
+    return {"id": got["id"], "review": review, "expires_at": got["expires_at"], "date": got["date"]}
+
+
+def finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing=None):
     report = {"entry": entry["id"], "form": form["id"], "pdf_sha256": pdf_hash, "slug": slug,
               "rows": rows, "read_back": results, "checks": checks}
+    if signing:
+        report["signing"] = signing
     with open(f"{a.out}/report.json", "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     failed = [c for c in checks if not c["ok"]]
@@ -1276,8 +1366,12 @@ def main():
                        help="who signs: io, the vault's owner (default), or a person's slug")
     sub.choices["needs"].add_argument("--vault-dir", default="~/.pvault",
                                       help="the vault the token commands are for (default ~/.pvault)")
+    for name in ("needs", "run"):
+        sub.choices[name].add_argument("--layout", help="the library's layouts/<procedure>/<form>.json (--entry only)")
     r = sub.choices["run"]
-    r.add_argument("--layout", help="the library's layouts/<procedure>/<form>.json (--entry only)")
+    r.add_argument("--channel", help="the channel type the user chose (pec, email, post, portal...); default: the entry's preferred one")
+    r.add_argument("--sign", action="store_true",
+                   help="file a signing request for the filled PDF, to be approved with pvault sign review")
     where = r.add_mutually_exclusive_group(required=True)
     where.add_argument("--server", help="the synthetic vault's server.json")
     where.add_argument("--vault-dir", help="a real vault's folder, e.g. ~/.pvault")
@@ -1298,14 +1392,17 @@ def main():
     if a.cmd == "needs":
         entry = entry_of(a)
         form = form_of(entry, a.form)
+        layout = load(library_file(a, "layouts", ".json")) if a.library else (load(a.layout) if a.layout else None)
         signer = getattr(a, "for")
-        out = needs(entry, form, a.draft, signer, person_categories(needs_schema(a)) if signer != "io" else ())
+        out = needs(entry, form, a.draft, signer, person_categories(needs_schema(a)) if signer != "io" else (), layout)
         out["commands"] = {name: token_command(a.vault_dir, t) for name, t in out["tokens"].items()}
-        out["ask"] = asks(form, load(library_file(a, "layouts", ".json")) if a.library else None)
+        out["ask"] = asks(form, layout)
         print(json.dumps(out, ensure_ascii=False, indent=2))
         return 0
     if a.draft and a.reply:
         p.error("--draft writes nothing, so it takes no --reply")
+    if a.cmd == "run" and a.sign and a.draft:
+        p.error("--sign files a request in the vault, which a --draft never writes")
     return run(a)
 
 

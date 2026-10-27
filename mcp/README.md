@@ -73,6 +73,8 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 | `vault_expiring` | Documents expired or expiring within N days (default 90), plus open pratiche deadlines |
 | `vault_documents` | List encrypted document scans the token may access |
 | `vault_document_add` | Encrypt and archive a local file (e.g. a downloaded receipt) |
+| `vault_sign_request` | Ask for the user's handwritten signature on a filled PDF (token scope `firma_autografa.signing`, append); the user approves it with `pvault sign review`, never the agent |
+| `vault_sign_status` | Check this token's signing requests; never returns the signed file |
 | `vault_document_get` | Read a stored document (images inline, others as an embedded resource, max 10 MB) |
 
 Tokens are read-only unless created with `--access append` (also add new fields and documents, never overwrite or delete) or `--access write` (full). `vault_set` and `vault_document_add` need append or write.

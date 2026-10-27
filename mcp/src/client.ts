@@ -533,3 +533,47 @@ export async function getDocument(
 }
 
 export type { VaultStatus, FieldInfo, ContextBundle, ExpiryInfo, DocumentInfo };
+
+export interface SigningPlacement {
+  page: number;
+  rect: [number, number, number, number];
+  date_rect?: [number, number, number, number];
+}
+
+export interface SigningInfo {
+  id: string;
+  name: string;
+  purpose?: string;
+  requester: string;
+  signer: string;
+  status: "pending" | "approved" | "rejected" | "expired";
+  pages: number;
+  date: string;
+  expires_at: string;
+}
+
+/**
+ * File a request to sign a PDF. The vault stamps the user's signature and
+ * holds the result: nothing is released until the user approves it in person
+ * (`pvault sign review`). There is deliberately no way to approve from here.
+ */
+export async function requestSigning(
+  name: string,
+  purpose: string,
+  pdf: Uint8Array,
+  placements: SigningPlacement[],
+): Promise<SigningInfo> {
+  const resp = await authedFetch("/vault/signing", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, purpose, pdf: Buffer.from(pdf).toString("base64"), placements }),
+  });
+  return (await resp.json()) as SigningInfo;
+}
+
+/** This token's signing requests, or one of them. */
+export async function getSignings(id?: string): Promise<SigningInfo[]> {
+  const resp = await authedFetch(id ? `/vault/signing/${encodeURIComponent(id)}` : "/vault/signing", { method: "GET" });
+  const body = await resp.json();
+  return Array.isArray(body) ? (body as SigningInfo[]) : [body as SigningInfo];
+}

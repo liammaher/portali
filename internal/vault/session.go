@@ -23,6 +23,9 @@ type Session struct {
 	// password, keyed by SHA-256 of the token. They live only in memory and
 	// are dropped on lock.
 	grants map[string]sessionGrant
+	// signing holds the pending signature requests; dropped on lock like
+	// the grants, so nothing about one outlives the session.
+	signing signingStore
 	// secretKey is kept while unlocked so a grant can be requested with the
 	// password alone (e.g. from the onboarding page). Zeroed on lock.
 	secretKey []byte
@@ -41,6 +44,10 @@ type sessionGrant struct {
 	expires time.Time
 	scope   string
 	access  string
+	// sign, when set, makes this a sign grant: it may only read and approve
+	// that one signing request and has no other access (ValidateToken and
+	// ScopedGrant ignore it).
+	sign string
 }
 
 // NewSession creates a session with the given vault key and auto-lock callback.
@@ -116,7 +123,7 @@ func (s *Session) ValidateToken(token string) bool {
 		return true
 	}
 	g, ok := s.grants[hashToken(token)]
-	return ok && g.scope == "" && time.Now().Before(g.expires)
+	return ok && g.scope == "" && g.sign == "" && time.Now().Before(g.expires)
 }
 
 // ScopedGrant returns the scope and access of an unexpired scoped grant.
@@ -127,10 +134,36 @@ func (s *Session) ScopedGrant(token string) (scope, access string, ok bool) {
 		return "", "", false
 	}
 	g, found := s.grants[hashToken(token)]
-	if !found || g.scope == "" || !time.Now().Before(g.expires) {
+	if !found || g.scope == "" || g.sign != "" || !time.Now().Before(g.expires) {
 		return "", "", false
 	}
 	return g.scope, g.access, true
+}
+
+// SigningGrant returns the signing request an unexpired sign grant is for.
+func (s *Session) SigningGrant(token string) (id string, ok bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.token == "" {
+		return "", false
+	}
+	g, found := s.grants[hashToken(token)]
+	if !found || g.sign == "" || !time.Now().Before(g.expires) {
+		return "", false
+	}
+	return g.sign, true
+}
+
+// DropSignGrants removes the sign grants for a request, so one approval (or
+// refusal) ends every grant that could still act on it.
+func (s *Session) DropSignGrants(id string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for k, g := range s.grants {
+		if g.sign == id {
+			delete(s.grants, k)
+		}
+	}
 }
 
 // setSecretKey stores a copy of the secret key for password-only grants.
@@ -158,6 +191,15 @@ func (s *Session) SecretKey() []byte {
 // full session-level one when scope is empty. Returns ErrLocked if the
 // session has been destroyed.
 func (s *Session) AddGrant(ttl time.Duration, scope, access string) (string, time.Time, error) {
+	return s.addGrant(ttl, sessionGrant{scope: scope, access: access})
+}
+
+// AddSignGrant issues a grant that can only read and approve signing request id.
+func (s *Session) AddSignGrant(ttl time.Duration, id string) (string, time.Time, error) {
+	return s.addGrant(ttl, sessionGrant{sign: id})
+}
+
+func (s *Session) addGrant(ttl time.Duration, g sessionGrant) (string, time.Time, error) {
 	tokenBytes := make([]byte, 32)
 	if _, err := rand.Read(tokenBytes); err != nil {
 		return "", time.Time{}, err
@@ -179,7 +221,8 @@ func (s *Session) AddGrant(ttl time.Duration, scope, access string) (string, tim
 	if s.grants == nil {
 		s.grants = make(map[string]sessionGrant)
 	}
-	s.grants[hashToken(token)] = sessionGrant{expires: expires, scope: scope, access: access}
+	g.expires = expires
+	s.grants[hashToken(token)] = g
 	return token, expires, nil
 }
 
@@ -215,6 +258,7 @@ func (s *Session) Destroy() {
 	s.zeroKey()
 	s.token = ""
 	s.grants = nil
+	s.signing.clear()
 	if s.timer != nil {
 		s.timer.Stop()
 		s.timer = nil
@@ -249,6 +293,7 @@ func (s *Session) autoLockGen(gen uint64) {
 	s.zeroKey()
 	s.token = ""
 	s.grants = nil
+	s.signing.clear()
 	s.timer = nil
 	lockFn := s.lockFn
 	s.mu.Unlock()

@@ -97,6 +97,11 @@ func New(v *vault.Vault, addr string) *Server {
 	s.server = &http.Server{
 		Addr:    addr,
 		Handler: s.handler,
+		// Marks requests that arrived on a Unix socket, which the sign gate's
+		// password route and summary are limited to (see viaSocket).
+		ConnContext: func(ctx context.Context, c net.Conn) context.Context {
+			return context.WithValue(ctx, socketKey{}, c.LocalAddr().Network() == "unix")
+		},
 		// A request that trickles in can't hold an upload slot or a rate
 		// limit attempt indefinitely. Uploads are at most 20 MB over loopback.
 		ReadHeaderTimeout: 10 * time.Second,
@@ -117,6 +122,7 @@ func (s *Server) registerRoutes() {
 	s.mux.HandleFunc("POST /vault/session", s.handleSessionGrant)
 	s.mux.HandleFunc("GET /vault/status", s.handleStatus)
 	s.mux.HandleFunc("GET /vault/schema", s.handleSchema)
+	s.mux.HandleFunc("GET /vault/signing/{id}/summary", s.handleSigningSummary)
 
 	// Protected endpoints
 	protected := http.NewServeMux()
@@ -138,6 +144,12 @@ func (s *Server) registerRoutes() {
 	protected.HandleFunc("GET /vault/documents", s.handleListDocuments)
 	protected.HandleFunc("GET /vault/documents/{id}", s.handleGetDocument)
 	protected.HandleFunc("DELETE /vault/documents/{id}", s.handleDeleteDocument)
+	protected.HandleFunc("POST /vault/signing", s.handleSigningRequest)
+	protected.HandleFunc("GET /vault/signing", s.handleSigningList)
+	protected.HandleFunc("GET /vault/signing/{id}", s.handleSigningStatus)
+	protected.HandleFunc("GET /vault/signing/{id}/candidate", s.handleSigningCandidate)
+	protected.HandleFunc("POST /vault/signing/{id}/approve", s.handleSigningApprove)
+	protected.HandleFunc("DELETE /vault/signing/{id}", s.handleSigningReject)
 	protected.HandleFunc("GET /vault/audit", s.handleAuditLog)
 	protected.HandleFunc("POST /vault/backup", s.handleBackup)
 	protected.HandleFunc("PUT /vault/sensitivity/{id...}", s.handleSetSensitivity)
