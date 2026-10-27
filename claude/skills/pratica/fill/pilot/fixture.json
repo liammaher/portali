@@ -4,6 +4,7 @@
   "fields": [
     ["identity.first_name", "Mario"],
     ["identity.last_name", "Rossi"],
+    ["identity.display_name", "Mario"],
     ["identity.sex", "M"],
     ["identity.date_of_birth", "1980-01-01"],
     ["identity.birth_comune", "Napoli"],
@@ -32,6 +33,7 @@
     ["giulia:famiglia.stato_famiglia", "si"],
     ["giulia:identity.first_name", "Giulia"],
     ["giulia:identity.last_name", "Bianchi"],
+    ["giulia:identity.display_name", "Giulia"],
     ["giulia:identity.sex", "F"],
     ["giulia:identity.date_of_birth", "1982-03-15"],
     ["giulia:identity.birth_comune", "Londra"],

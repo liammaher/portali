@@ -1,5 +1,5 @@
 {
-  "version": "14",
+  "version": "15",
   "categories": [
     {
       "name": "identity",
@@ -21,6 +21,11 @@
           "id": "identity.full_name",
           "description": "Full display name",
           "sensitivity": "standard"
+        },
+        {
+          "id": "identity.display_name",
+          "description": "The name agents see for this person, e.g. Giulia or Mamma; public, so a token scoped to *:identity.display_name can ask who a pratica is for without reading anything else",
+          "sensitivity": "public"
         },
         {
           "id": "identity.email",

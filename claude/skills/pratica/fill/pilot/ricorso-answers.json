@@ -1,0 +1,12 @@
+{
+  "description": "What the user would answer to the ricorso al Prefetto's ask rows, by label: a made-up parking fine.",
+  "answers": {
+    "Riferimento verbale n.": "VR/2026/123456",
+    "del": "2026-09-14",
+    "notificato il": "2026-10-02",
+    "in qualità di conducente / proprietario": "proprietario",
+    "del veicolo targato": "AB123CD",
+    "tipo": "autovettura",
+    "propone RICORSO per i seguenti motivi": "Il veicolo era regolarmente parcheggiato nell'area di sosta a pagamento di Via Toledo con ticket valido fino alle 18:30, esposto sul cruscotto e allegato in copia; il verbale indica le 17:45. Si chiede l'annullamento del verbale e l'audizione personale."
+  }
+}

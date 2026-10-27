@@ -121,7 +121,7 @@ Commands:
   person list                      List the other people in your vault: family members
                                    (relazione, age, stato di famiglia), or a business's people (ruolo)
   person show <slug>               Show a person's fields
-  person add <slug> --relazione <r> [--nome --cognome --codice-fiscale --data-nascita --sesso]
+  person add <slug> --relazione <r> [--nome --cognome --codice-fiscale --data-nascita --sesso --nome-pubblico]
                                    Add a family member (spouse, child, parent...)
   person add <slug> --ruolo <r> [--nome --cognome --denominazione ...]
                                    In a business vault: add its titolare, a socio, an employee, a client...

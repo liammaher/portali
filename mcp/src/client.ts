@@ -469,6 +469,7 @@ interface DocumentInfo {
 
 export interface MemberInfo {
   slug: string;
+  display_name?: string; // identity.display_name: what to call them
   famiglia?: Record<string, string>; // personal vaults
   ruolo?: Record<string, string>; // business vaults
   first_name?: string;
@@ -483,6 +484,7 @@ export interface MemberInfo {
 }
 
 export interface Household {
+  owner?: { display_name: string }; // the user ("io")
   intestatario_scheda?: string;
   members: MemberInfo[];
 }

@@ -111,6 +111,36 @@ func TestMembers_Household(t *testing.T) {
 	}
 }
 
+// A token scoped to display names alone can ask whom a form is for: it sees
+// each person's display name and the owner's, and nothing else of theirs.
+func TestMembers_DisplayNames(t *testing.T) {
+	env := setup(t)
+	seedHousehold(t, env)
+	for _, kv := range [][2]string{{"identity.display_name", "Liam"}, {"giulia:identity.display_name", "Giulia"}} {
+		if w := env.doRequest(t, "PUT", "/vault/fields/"+kv[0], map[string]string{"value": kv[1]}, true); w.Code != 200 {
+			t.Fatalf("set %s: %d %s", kv[0], w.Code, w.Body.String())
+		}
+	}
+	if w := env.doRequest(t, "GET", "/vault/fields/giulia:identity.display_name", nil, true); !strings.Contains(w.Body.String(), `"sensitivity":"public"`) {
+		t.Fatalf("display name tier: %s", w.Body.String())
+	}
+
+	names := createTokenWithAccess(t, env, "*:identity.display_name", "read")
+	w := env.doRequestWithToken(t, "GET", "/vault/members", nil, names)
+	var h vault.Household
+	json.NewDecoder(w.Body).Decode(&h)
+	if w.Code != 200 || h.Owner == nil || h.Owner.DisplayName != "Liam" || len(h.Members) != 1 {
+		t.Fatalf("display-name token household: %d %s", w.Code, w.Body.String())
+	}
+	giulia := h.Members[0]
+	if giulia.Slug != "giulia" || giulia.DisplayName != "Giulia" || giulia.FirstName != "" || giulia.Famiglia != nil || giulia.Fields != 1 {
+		t.Fatalf("display-name token saw %+v", giulia)
+	}
+	if w := env.doRequestWithToken(t, "GET", "/vault/fields/giulia:identity.first_name", nil, names); w.Code != 403 {
+		t.Fatalf("display-name token read a first name: %d", w.Code)
+	}
+}
+
 // The public status never reveals that members exist.
 func TestMembers_StatusHidesMembers(t *testing.T) {
 	env := setup(t)
