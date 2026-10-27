@@ -73,7 +73,7 @@ func TestKeychainStoreRoundTrip(t *testing.T) {
 		t.Fatalf("replaced value = %q", got)
 	}
 	// The old generation's parts are gone: a part of it can't be found by index.
-	if idx, _ := k.loadItem(mustAccount(t), service); idx == "" {
+	if idx, _ := (keychainItems{mustAccount(t)}).loadItem(service); idx == "" {
 		t.Fatal("no index after a save")
 	} else if _, gen, _ := parseChunkIndex(idx); gen == "" {
 		t.Fatal("index without a generation")

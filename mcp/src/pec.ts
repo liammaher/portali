@@ -12,7 +12,9 @@
  */
 import { ImapFlow, type FetchMessageObject, type SearchObject } from "imapflow";
 import { simpleParser, type AddressObject, type Attachment, type ParsedMail } from "mailparser";
-import { findGenericPassword, KEYCHAIN_SERVICE_PATTERN, SECURITY_ITEM_NOT_FOUND } from "./keychain.js";
+import {
+  findGenericPassword, KEYCHAIN_SERVICE_PATTERN, SECRET_KIND, SECRET_STORE, SECURITY_ITEM_NOT_FOUND, storeToolMissing,
+} from "./keychain.js";
 import { lookupFailure } from "./client.js";
 
 export interface PecConfig {
@@ -54,7 +56,9 @@ function storePasswordHelp(cfg: PecConfig, service = cfg.service ?? "pvault-pec"
   return (
     `ask the user to generate a "password per programmi di posta" in their provider's account panel ` +
     `(Aruba: account.aruba.it/pec, Verifica in 2 passaggi) and store it by running ` +
-    `\`security add-generic-password -U -a ${cfg.address} -s ${service} -w\` in their terminal ` +
+    (process.platform === "win32"
+      ? `\`pvault credential write ${service} --account ${cfg.address}\` in their terminal `
+      : `\`security add-generic-password -U -a ${cfg.address} -s ${service} -w\` in their terminal `) +
     `(it prompts for the password; never ask for it in chat). The next call uses it, no restart needed`
   );
 }
@@ -64,7 +68,7 @@ async function pecPassword(cfg: PecConfig): Promise<string> {
     throw new PecError(`pec: PEC_KEYCHAIN_SERVICE is not set in this MCP server's env — ${storePasswordHelp(cfg)}`);
   }
   if (!KEYCHAIN_SERVICE_PATTERN.test(cfg.service)) {
-    throw new PecError(`pec: PEC_KEYCHAIN_SERVICE "${cfg.service}" is not a valid Keychain service name`);
+    throw new PecError(`pec: PEC_KEYCHAIN_SERVICE "${cfg.service}" is not a valid ${SECRET_KIND} name`);
   }
   let password: string;
   try {
@@ -72,15 +76,15 @@ async function pecPassword(cfg: PecConfig): Promise<string> {
   } catch (e) {
     const code = (e as { code?: number | string }).code;
     if (code === SECURITY_ITEM_NOT_FOUND) {
-      throw new PecError(`pec: no password in Keychain service "${cfg.service}" for ${cfg.address} — ${storePasswordHelp(cfg)}`);
+      throw new PecError(`pec: no password in ${SECRET_KIND} "${cfg.service}" for ${cfg.address} — ${storePasswordHelp(cfg)}`);
     }
     if (code === "ENOENT") {
-      throw new PecError("pec: /usr/bin/security not found; PEC_KEYCHAIN_SERVICE needs macOS");
+      throw new PecError(`pec: ${storeToolMissing("PEC_KEYCHAIN_SERVICE")}`);
     }
-    throw new PecError(`pec: ${lookupFailure("Keychain lookup", e)}`);
+    throw new PecError(`pec: ${lookupFailure(`${SECRET_STORE} lookup`, e)}`);
   }
   if (!password) {
-    throw new PecError(`pec: the Keychain item "${cfg.service}" is empty — ${storePasswordHelp(cfg)}`);
+    throw new PecError(`pec: the ${SECRET_STORE} item "${cfg.service}" is empty — ${storePasswordHelp(cfg)}`);
   }
   return password;
 }

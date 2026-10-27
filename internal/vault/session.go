@@ -303,11 +303,14 @@ func (s *Session) autoLockGen(gen uint64) {
 	}
 }
 
+// zeroKey clears the keys before unlocking their pages: on Windows unlocking
+// a page that isn't locked (a lock that failed, or one shared with a key
+// unlocked first) moves it out of memory, possibly to the page file.
 func (s *Session) zeroKey() {
-	unlockMemory(s.vaultKey)
 	clear(s.vaultKey)
+	unlockMemory(s.vaultKey)
 	s.vaultKey = nil
-	unlockMemory(s.secretKey)
 	clear(s.secretKey)
+	unlockMemory(s.secretKey)
 	s.secretKey = nil
 }

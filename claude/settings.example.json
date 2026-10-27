@@ -9,6 +9,7 @@
       "Bash(*pvault-mcp*)",
       "Bash(*find-generic-password*)",
       "Bash(*dump-keychain*)",
+      "Bash(*credential read*)",
       "Bash(security -i*)",
       "Bash(/usr/bin/security -i*)"
     ]

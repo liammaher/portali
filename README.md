@@ -33,6 +33,29 @@ You need both the profile password and the secret key to unlock.
 
 For secrets (SPID password, CIE PIN/PUK), run `pvault set <id>` **without** a value: you'll type it hidden, so it never lands in your shell history. `pvault export` leaves personal fields out unless you add `--include-personal`. While unlocked, every CLI command that reads or changes data asks for your password again (interactive terminal only), so an agent running shell commands can't use your session.
 
+### On Windows
+
+pvault runs on Windows 10 and 11; Windows Hello needs Windows 11. Download `pvault_<version>_windows_amd64.zip` (or `_arm64`) from the releases, or build it with Go 1.26+:
+
+```powershell
+git clone https://github.com/liammaher/personal-vault-italia.git
+cd personal-vault-italia
+go build -o bin\pvault.exe .\cmd\pvault
+```
+
+Put `pvault.exe` in a folder on your PATH (e.g. `%LOCALAPPDATA%\Programs\pvault`), then in Windows Terminal or PowerShell:
+
+```powershell
+pvault init           # choose a profile password; save the secret key it prints
+pvault unlock         # starts the local server
+pvault hello enable   # optional: Windows Hello instead of your password for data commands
+```
+
+- The vault lives in `%USERPROFILE%\.pvault`, a folder only your Windows account can open. The CLI talks to the server over a named pipe only you can open.
+- Passwords are typed in a console (Windows Terminal, PowerShell, cmd). Git Bash's terminal isn't one: run `winpty pvault ...` there.
+- `--keychain` saves tokens in Windows Credential Manager, and `pvault credential write` stores other secrets there (the PEC app password).
+- The release binaries aren't code-signed, so SmartScreen may warn the first time: choose More info, then Run anyway.
+
 ## What it stores
 
 | Category | Fields (examples) |
@@ -154,7 +177,7 @@ pvault revoke-service-token <token_prefix>
 | `--access` | `read` | `append` = may add new fields/documents but never overwrite or delete; `write` = full |
 | `--max-sensitivity` | `sensitive` | `critical` fields (e.g. payment cards) stay hidden unless you opt in; `personal` is never available |
 | `--ttl` | `24h` | maximum 90 days |
-| `--keychain` | — | macOS: save the token in your Keychain under this service name instead of printing it, revoking the token it replaces |
+| `--keychain` | — | save the token in your Keychain (macOS) or Credential Manager (Windows) under this name instead of printing it, revoking the token it replaces |
 
 Agent activity never keeps the vault unlocked: it auto-locks after 30 minutes without *your* activity.
 
@@ -178,7 +201,7 @@ cd mcp && npm ci && npm run build
 }
 ```
 
-With that config, `pvault create-service-token claude --scope "residenza.*" --ttl 2h --keychain pvault-mcp` grants access mid-session, with no restart and no token on screen. Outside macOS, set `"VAULT_TOKEN": "<token>"` instead.
+With that config, `pvault create-service-token claude --scope "residenza.*" --ttl 2h --keychain pvault-mcp` grants access mid-session, with no restart and no token on screen. On Windows the same works through Credential Manager; add `"PVAULT_BIN": "C:\\path\\to\\pvault.exe"` to `env` if `pvault.exe` isn't on PATH. Elsewhere, set `"VAULT_TOKEN": "<token>"` instead.
 
 The tools are listed in [mcp/README.md](mcp/README.md#tools), with the read-only PEC tools that appear when `PEC_ADDRESS` is set. The MCP server only ever uses the token you give it, and `vault_document_add` and `vault_sign_request` only read files from `~/Downloads` (configurable with `VAULT_IMPORT_DIRS`).
 

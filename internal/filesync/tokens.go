@@ -20,7 +20,8 @@ import (
 	"time"
 )
 
-// SecretStore keeps a sign-in's tokens: the macOS Keychain in use, memory in tests.
+// SecretStore keeps a sign-in's tokens: the macOS Keychain or Windows
+// Credential Manager in use (SystemStore), memory in tests.
 type SecretStore interface {
 	// Load returns "" with no error when there is nothing under service.
 	Load(service string) (string, error)
@@ -28,7 +29,7 @@ type SecretStore interface {
 	Delete(service string) error
 }
 
-// ServiceName is the Keychain service a file source's tokens are kept under.
+// ServiceName is the name a file source's tokens are kept under.
 func ServiceName(sourceID string) string { return "pvault-files-" + sourceID }
 
 var reService = regexp.MustCompile(`^[A-Za-z0-9._][A-Za-z0-9._-]{0,99}$`)
@@ -67,9 +68,9 @@ func (KeychainStore) check(service string) (string, error) {
 	return keychainAccount()
 }
 
-// A value is kept as several Keychain items, each short: `security -i` reads a
-// line of limited length, and a Microsoft refresh token alone is over a
-// kilobyte. The item under the service name is the index: "pvault-chunks:N:G",
+// A value is kept as several items, each short: `security -i` reads a line of
+// limited length, Credential Manager holds 2.5 KB a credential, and a
+// Microsoft refresh token alone is over a kilobyte. The item under the service name is the index: "pvault-chunks:N:G",
 // N parts of generation G, part i under service.g<G>.c<i>. A new value is
 // written as a new generation and the index switched last, so a failure
 // halfway leaves the old value whole.
@@ -108,8 +109,21 @@ func chunkService(service, gen string, i int) string {
 	return service + ".g" + gen + ".c" + strconv.Itoa(i)
 }
 
-func (k KeychainStore) loadItem(account, service string) (string, error) {
-	out, err := exec.Command(securityPath, "find-generic-password", "-a", account, "-s", service, "-w").Output()
+// items are one store's single entries, each a short string under a name:
+// the Keychain's generic passwords, Credential Manager's generic credentials.
+type items interface {
+	where() string                           // the store, for messages
+	loadItem(service string) (string, error) // "" when there is none
+	saveItem(service, value string) error
+	deleteItem(service string) error
+}
+
+type keychainItems struct{ account string }
+
+func (keychainItems) where() string { return "Keychain" }
+
+func (k keychainItems) loadItem(service string) (string, error) {
+	out, err := exec.Command(securityPath, "find-generic-password", "-a", k.account, "-s", service, "-w").Output()
 	var exit *exec.ExitError
 	if errors.As(err, &exit) && exit.ExitCode() == securityItemNotFound {
 		return "", nil
@@ -120,17 +134,17 @@ func (k KeychainStore) loadItem(account, service string) (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
-func (k KeychainStore) saveItem(account, service, value string) error {
+func (k keychainItems) saveItem(service, value string) error {
 	add := exec.Command(securityPath, "-i")
-	add.Stdin = strings.NewReader(fmt.Sprintf("add-generic-password -U -a %s -s %s -w %s\n", account, service, value))
+	add.Stdin = strings.NewReader(fmt.Sprintf("add-generic-password -U -a %s -s %s -w %s\n", k.account, service, value))
 	if out, err := add.CombinedOutput(); err != nil {
 		return fmt.Errorf("security: %v: %s", err, bytes.TrimSpace(out))
 	}
 	return nil
 }
 
-func (k KeychainStore) deleteItem(account, service string) error {
-	err := exec.Command(securityPath, "delete-generic-password", "-a", account, "-s", service).Run()
+func (k keychainItems) deleteItem(service string) error {
+	err := exec.Command(securityPath, "delete-generic-password", "-a", k.account, "-s", service).Run()
 	var exit *exec.ExitError
 	if errors.As(err, &exit) && exit.ExitCode() == securityItemNotFound {
 		return nil
@@ -143,17 +157,37 @@ func (k KeychainStore) Load(service string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	idx, err := k.loadItem(account, service)
+	return loadChunked(keychainItems{account}, service)
+}
+
+func (k KeychainStore) Save(service, secret string) error {
+	account, err := k.check(service)
+	if err != nil {
+		return err
+	}
+	return saveChunked(keychainItems{account}, service, secret)
+}
+
+func (k KeychainStore) Delete(service string) error {
+	account, err := k.check(service)
+	if err != nil {
+		return err
+	}
+	return deleteChunked(keychainItems{account}, service)
+}
+
+func loadChunked(it items, service string) (string, error) {
+	idx, err := it.loadItem(service)
 	if err != nil || idx == "" {
 		return "", err
 	}
 	n, gen, err := parseChunkIndex(idx)
 	if err != nil {
-		return "", fmt.Errorf("the Keychain item %s: %w", service, err)
+		return "", fmt.Errorf("the %s item %s: %w", it.where(), service, err)
 	}
 	var enc strings.Builder
 	for i := 0; i < n; i++ {
-		part, err := k.loadItem(account, chunkService(service, gen, i))
+		part, err := it.loadItem(chunkService(service, gen, i))
 		if err != nil {
 			return "", err
 		}
@@ -161,24 +195,20 @@ func (k KeychainStore) Load(service string) (string, error) {
 	}
 	raw, err := base64.RawURLEncoding.DecodeString(enc.String())
 	if err != nil {
-		return "", fmt.Errorf("the Keychain item %s isn't one pvault wrote", service)
+		return "", fmt.Errorf("the %s item %s isn't one pvault wrote", it.where(), service)
 	}
 	return string(raw), nil
 }
 
-// Save writes the value as a new generation, switches the index to it, and
-// only then deletes the old generation.
-func (k KeychainStore) Save(service, secret string) error {
-	account, err := k.check(service)
-	if err != nil {
-		return err
-	}
+// saveChunked writes the value as a new generation, switches the index to it,
+// and only then deletes the old generation.
+func saveChunked(it items, service, secret string) error {
 	parts := splitChunks(base64.RawURLEncoding.EncodeToString([]byte(secret)))
 	if len(parts) > maxChunks {
 		return errors.New("the sign-in is too large to keep")
 	}
 	oldN, oldGen := 0, ""
-	if idx, err := k.loadItem(account, service); err == nil && idx != "" {
+	if idx, err := it.loadItem(service); err == nil && idx != "" {
 		oldN, oldGen, _ = parseChunkIndex(idx)
 	}
 	g := make([]byte, 4)
@@ -187,47 +217,43 @@ func (k KeychainStore) Save(service, secret string) error {
 	}
 	gen := hex.EncodeToString(g)
 	for i, part := range parts {
-		if err := k.saveItem(account, chunkService(service, gen, i), part); err != nil {
-			k.deleteGeneration(account, service, gen, i+1)
+		if err := it.saveItem(chunkService(service, gen, i), part); err != nil {
+			deleteGeneration(it, service, gen, i+1)
 			return err
 		}
 	}
-	if err := k.saveItem(account, service, chunkIndex(len(parts), gen)); err != nil {
-		k.deleteGeneration(account, service, gen, len(parts))
+	if err := it.saveItem(service, chunkIndex(len(parts), gen)); err != nil {
+		deleteGeneration(it, service, gen, len(parts))
 		return err
 	}
 	if oldGen != "" {
-		k.deleteGeneration(account, service, oldGen, oldN)
+		deleteGeneration(it, service, oldGen, oldN)
 	}
-	got, err := k.Load(service)
+	got, err := loadChunked(it, service)
 	if err != nil {
-		return fmt.Errorf("could not read the sign-in back from the Keychain: %w", err)
+		return fmt.Errorf("could not read the sign-in back from the %s: %w", it.where(), err)
 	}
 	if got != secret {
-		return errors.New("the Keychain returned a different value than was stored")
+		return fmt.Errorf("the %s returned a different value than was stored", it.where())
 	}
 	return nil
 }
 
-func (k KeychainStore) deleteGeneration(account, service, gen string, n int) {
+func deleteGeneration(it items, service, gen string, n int) {
 	for i := 0; i < n; i++ {
-		k.deleteItem(account, chunkService(service, gen, i))
+		it.deleteItem(chunkService(service, gen, i))
 	}
 }
 
-func (k KeychainStore) Delete(service string) error {
-	account, err := k.check(service)
-	if err != nil {
-		return err
-	}
-	idx, err := k.loadItem(account, service)
+func deleteChunked(it items, service string) error {
+	idx, err := it.loadItem(service)
 	if err != nil {
 		return err
 	}
 	if n, gen, perr := parseChunkIndex(idx); perr == nil {
-		k.deleteGeneration(account, service, gen, n)
+		deleteGeneration(it, service, gen, n)
 	}
-	return k.deleteItem(account, service)
+	return it.deleteItem(service)
 }
 
 // MemoryStore is a SecretStore in memory, for tests.
@@ -279,7 +305,7 @@ func NewTokenSource(flow *Flow, store SecretStore, service string) (*TokenSource
 		return nil, err
 	}
 	if raw == "" {
-		return nil, &AuthError{Msg: "no sign-in saved for this source (it is not in the Keychain on this computer): connect it again"}
+		return nil, &AuthError{Msg: "no sign-in saved for this source on this computer: connect it again"}
 	}
 	var tok Token
 	if err := json.Unmarshal([]byte(raw), &tok); err != nil {

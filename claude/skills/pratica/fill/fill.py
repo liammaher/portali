@@ -558,7 +558,7 @@ class UnixHTTPConnection(http.client.HTTPConnection):
 
     def connect(self):
         if self.socket_path.startswith(PIPE_PREFIX):
-            self.sock = PipeSocket(self.socket_path)
+            self.sock = PipeSocket(self.socket_path, self.timeout)
             return
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.sock.settimeout(self.timeout)
@@ -569,7 +569,8 @@ class PipeSocket:
     """A Windows named pipe opened as a file, with what http.client asks of a
     socket: Python has no AF_UNIX there."""
 
-    def __init__(self, path):
+    def __init__(self, path, timeout):
+        self.timeout = timeout
         # Between two connections the server may have no instance waiting
         # (ERROR_PIPE_BUSY, 231) for a moment.
         for _ in range(50):
@@ -588,10 +589,66 @@ class PipeSocket:
             view = view[self.file.write(view):]
 
     def makefile(self, mode):
-        return io.BufferedReader(self.file)
+        # As socket.makefile: the pipe stays open while a reader still reads
+        # it, since http.client closes the connection before the body is
+        # read when the server says it will close.
+        self.readers = getattr(self, "readers", 0) + 1
+        return io.BufferedReader(PipeReader(self.file, self.timeout, owner=self))
 
     def close(self):
-        self.file.close()
+        self.closed = True
+        if not getattr(self, "readers", 0):
+            self.file.close()
+
+    def reader_closed(self):
+        self.readers -= 1
+        if getattr(self, "closed", False) and not self.readers:
+            self.file.close()
+
+
+class PipeReader(io.RawIOBase):
+    """Reads a pipe opened as a file, which has no timeout of its own: it
+    reads only what PeekNamedPipe says has arrived, and gives up when nothing
+    has for timeout seconds."""
+
+    def __init__(self, file, timeout, peek=None, owner=None):
+        self.file, self.timeout, self.owner = file, timeout, owner
+        self.peek = peek or peek_named_pipe
+
+    def readable(self):
+        return True
+
+    def close(self):
+        if not self.closed and self.owner:
+            self.owner.reader_closed()
+        super().close()
+
+    def readinto(self, b):
+        deadline = time.monotonic() + (self.timeout or 15)
+        while True:
+            available = self.peek(self.file)
+            if available is None:  # the server closed its end
+                return 0
+            if available:
+                return self.file.readinto(memoryview(b)[:min(len(b), available)])
+            if time.monotonic() > deadline:
+                raise TimeoutError("the vault didn't answer in time")
+            time.sleep(0.01)
+
+
+def peek_named_pipe(file):
+    """How many bytes wait in the pipe, or None once the server closed it."""
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    available = wintypes.DWORD()
+    handle = wintypes.HANDLE(msvcrt.get_osfhandle(file.fileno()))
+    if not kernel32.PeekNamedPipe(handle, None, 0, None, ctypes.byref(available), None):
+        if ctypes.get_last_error() == 109:  # ERROR_BROKEN_PIPE
+            return None
+        raise ctypes.WinError(ctypes.get_last_error())
+    return available.value
 
 
 PIPE_PREFIX = "\\\\.\\pipe\\"
@@ -647,10 +704,10 @@ def vault_socket(vault_dir):
 
 def keychain_token(service):
     """What `pvault create-service-token --keychain SERVICE` stored for this user."""
-    if os.name == "nt":
-        sys.exit("the Keychain is macOS only: set VAULT_TOKEN to the token")
     if not re.fullmatch(r"[A-Za-z0-9._][A-Za-z0-9._-]{0,63}", service):
         sys.exit(f"{service!r} isn't a Keychain service name")
+    if os.name == "nt":
+        return credential_token(service)
     # By absolute path, so nothing earlier in PATH can stand in for it.
     got = subprocess.run(["/usr/bin/security", "find-generic-password", "-a", getpass.getuser(), "-s", service, "-w"],
                          capture_output=True, text=True, timeout=10)
@@ -659,6 +716,46 @@ def keychain_token(service):
     if got.returncode != 0:
         sys.exit(f"reading Keychain service {service!r} failed: {got.stderr.strip()}")
     return got.stdout.strip()
+
+
+def credential_token(service):
+    """On Windows, what --keychain SERVICE stored in Credential Manager: a
+    generic credential of this user, the token as UTF-16 (wincred)."""
+    import ctypes
+    from ctypes import wintypes
+
+    class CREDENTIAL(ctypes.Structure):
+        _fields_ = [("Flags", wintypes.DWORD), ("Type", wintypes.DWORD), ("TargetName", wintypes.LPWSTR),
+                    ("Comment", wintypes.LPWSTR), ("LastWritten", wintypes.FILETIME),
+                    ("CredentialBlobSize", wintypes.DWORD), ("CredentialBlob", ctypes.POINTER(ctypes.c_ubyte)),
+                    ("Persist", wintypes.DWORD), ("AttributeCount", wintypes.DWORD), ("Attributes", ctypes.c_void_p),
+                    ("TargetAlias", wintypes.LPWSTR), ("UserName", wintypes.LPWSTR)]
+
+    advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    advapi32.CredReadW.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD,
+                                   ctypes.POINTER(ctypes.POINTER(CREDENTIAL))]
+    advapi32.CredReadW.restype = wintypes.BOOL
+    advapi32.CredFree.argtypes = [ctypes.c_void_p]
+    cred = ctypes.POINTER(CREDENTIAL)()
+    missing = f"nothing in Credential Manager under {service!r}: create the token with pvault create-service-token ... --keychain {service}"
+    if not advapi32.CredReadW(service, 1, 0, ctypes.byref(cred)):  # CRED_TYPE_GENERIC
+        if ctypes.get_last_error() == 1168:  # ERROR_NOT_FOUND
+            sys.exit(missing)
+        sys.exit(f"reading Credential Manager {service!r} failed: {ctypes.WinError(ctypes.get_last_error())}")
+    try:
+        raw = ctypes.string_at(cred.contents.CredentialBlob, cred.contents.CredentialBlobSize)
+        user = cred.contents.UserName or ""
+    finally:
+        advapi32.CredFree(cred)
+    # Saved for another user counts as none, as a Keychain item of another
+    # account would. USERNAME is the Windows account name Go and Node use;
+    # getpass reads LOGNAME and USER first, which Git Bash or ssh may set.
+    if user.lower() != (os.environ.get("USERNAME") or getpass.getuser()).lower():
+        sys.exit(missing)
+    try:
+        return raw.decode("utf-16-le").strip()
+    except UnicodeDecodeError:
+        sys.exit(f"{service!r} in Credential Manager isn't a token pvault saved")
 
 
 def connect(a):

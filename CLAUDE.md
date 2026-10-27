@@ -48,6 +48,7 @@ pvault retention [set <years>|unset]     # How long people's data is kept after 
 pvault retention scans <days>|unset      # How long clients' ID and procura scans are kept after their pratiche close (no default)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
 pvault hello enable|disable|status       # Windows Hello approvals (Windows)
+pvault credential read|write <name>      # A secret in Windows Credential Manager (for the MCP server)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
 ```
@@ -64,6 +65,7 @@ internal/
   store/             SQLite CRUD (fields, documents, people, tokens, audit, meta, file index)
   vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
   winhello/          Windows Hello prompts from pure Go (WinRT UserConsentVerifier)
+  wincred/           Windows Credential Manager from pure Go (the Keychain's place there)
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
   napoli/            Street → municipalità → ASL distretto, offline (vault: located.go)
   filesync/          File index sources for `pvault files sync`: a folder, or OneDrive/SharePoint,
@@ -329,7 +331,8 @@ the page never copies a rule.
 - Where a person's, business's or client's files are (disk, OneDrive, SharePoint, Google
   Drive, Dropbox) and what each is linked to. Metadata and links only: bytes and text never
   enter the vault, and the vault never goes online (a sync client writes the index; an API
-  source's sign-in stays in the Keychain, and `source connect` is the user's to run).
+  source's sign-in stays in the Keychain or Windows Credential Manager, `filesync.SystemStore`,
+  and `source connect` is the user's to run).
 - Own tables (`vault_file_*`), not documents or fields. Names, paths, URLs, sizes and
   hashes sit in blobs under info `files/index`, AAD `<kind>:<row id>`; plain columns are only
   holder, kind, pratica slug and tiers. No plaintext hash or search index.
@@ -357,13 +360,15 @@ the page never copies a rule.
   note; ids and person/pratica slugs are checked before any request; `local_path` is the
   source's root plus the file's path and never leaves the root.
 - Uses only a service token (`VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`, else
-  `VAULT_TOKEN_COMMAND`), looked up per request; the server enforces its scope. It refuses
+  `VAULT_TOKEN_COMMAND`), looked up per request; the server enforces its scope. On Windows
+  `VAULT_KEYCHAIN_SERVICE` (and the PEC password) come from Credential Manager through
+  `pvault credential read`, found only by absolute path (`PVAULT_BIN`, else PATH). It refuses
   to start with the old `VAULT_SCOPE` set.
 - Sends every request, the token included, only over `<vault dir>/run/pvault.sock` (a dir
   of this user's, 0700), never TCP; the vault is `VAULT_DIR`, else `~/.pvault-<VAULT_NAME>`.
   A set `VAULT_ADDR` must be the address that server reports.
 - PEC (`pec.ts`): read-only IMAP (EXAMINE + BODY.PEEK), registered only with
-  `PEC_ADDRESS`, app password from Keychain per request, no SMTP code by design. Saved
+  `PEC_ADDRESS`, app password from the Keychain (Credential Manager) per request, no SMTP code by design. Saved
   attachments go to the first import dir (0600, quarantined). Mailparser needs
   `ignoreEmbedded: true` or it splices `postacert.eml` into the envelope.
 
@@ -374,6 +379,12 @@ the page never copies a rule.
 - CLI arguments: unknown options and repeated flags are errors, never ignored
   (`positionalArgs`, `parseFlags`); `pvault set` takes one value.
 - A comment says why; CLAUDE.md says what must stay true. Keep both short.
+- Windows Credential Manager (`internal/wincred`) stands in for the Keychain: `--keychain`,
+  file-sync sign-ins (chunked as in the Keychain), the MCP and fill.py token lookups. Unlike
+  the Keychain it has no per-program access list: any program of the user can read it. It
+  keys on the name alone, so `--keychain` refuses a name saved for another account, and a
+  credential of another account reads as none; `pvault credential` never touches a file
+  source's sign-in (`pvault-files-*`).
 - Windows ignores 0700/0600, so a folder that must be private (the vault, its `run`, a
   restore, a person export, sign review's temp folder) also gets an owner-only DACL
   (`vault.RestrictDir`). It rewrites the access of what the folder holds, so `Init` on Windows

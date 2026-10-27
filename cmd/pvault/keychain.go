@@ -12,6 +12,8 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+
+	"github.com/lovincyrus/personal-vault/internal/wincred"
 )
 
 // securityPath is macOS's Keychain tool, run by absolute path so a binary
@@ -30,13 +32,24 @@ var keychainNamePattern = regexp.MustCompile(`^[A-Za-z0-9._][A-Za-z0-9._-]{0,63}
 // hexTokenPattern matches a service token as the server makes them.
 var hexTokenPattern = regexp.MustCompile(`^[0-9a-f]{1,128}$`)
 
-// keychainAccount is the Keychain account the token is stored under: the
-// current macOS user. The MCP server's VAULT_KEYCHAIN_SERVICE lookup uses
-// the same account.
+// keychainName is where --keychain keeps a token on this system.
+func keychainName() string {
+	if runtime.GOOS == "windows" {
+		return "Credential Manager"
+	}
+	return "Keychain"
+}
+
+// keychainAccount is the account the token is stored under: the current
+// user, as the MCP server's VAULT_KEYCHAIN_SERVICE lookup names it (on
+// Windows without the DOMAIN\ part, as Node and Python report it).
 func keychainAccount() (string, error) {
 	u, err := user.Current()
 	if err != nil {
 		return "", err
+	}
+	if runtime.GOOS == "windows" {
+		return u.Username[strings.LastIndex(u.Username, `\`)+1:], nil
 	}
 	if !keychainNamePattern.MatchString(u.Username) {
 		return "", fmt.Errorf("--keychain: unsupported user name %q", u.Username)
@@ -47,11 +60,24 @@ func keychainAccount() (string, error) {
 // checkKeychain validates everything --keychain needs before a token is
 // created, so an unusable flag never leaves an orphaned token behind.
 func checkKeychain(service string) error {
-	if runtime.GOOS != "darwin" {
-		return fmt.Errorf("--keychain needs the macOS Keychain")
+	if runtime.GOOS != "darwin" && runtime.GOOS != "windows" {
+		return fmt.Errorf("--keychain needs the macOS Keychain or Windows Credential Manager")
 	}
 	if !keychainNamePattern.MatchString(service) {
 		return fmt.Errorf("--keychain needs a service name of 1-64 letters, digits, '.', '_' or '-' (not starting with '-'), e.g. --keychain pvault-mcp")
+	}
+	if runtime.GOOS == "windows" {
+		account, err := keychainAccount()
+		if err != nil {
+			return err
+		}
+		// Credential Manager keys on the name alone (the Keychain on name and
+		// account): never overwrite what was saved for someone else, such as
+		// a PEC password under a mistyped name.
+		if _, user, err := wincred.Read(service); err == nil && !strings.EqualFold(user, account) {
+			return fmt.Errorf("--keychain: %q in Credential Manager was saved for %q, not for you: choose another name", service, user)
+		}
+		return nil
 	}
 	if _, err := os.Stat(securityPath); err != nil {
 		return fmt.Errorf("--keychain: %s not found", securityPath)
@@ -63,6 +89,19 @@ func checkKeychain(service string) error {
 // readKeychain returns the token stored under service for the current user,
 // or "" if there is none.
 func readKeychain(service string) (string, error) {
+	if runtime.GOOS == "windows" {
+		account, err := keychainAccount()
+		if err != nil {
+			return "", err
+		}
+		secret, user, err := wincred.Read(service)
+		// Saved for someone else counts as none, as a Keychain item of
+		// another account would.
+		if err == wincred.ErrNotFound || (err == nil && !strings.EqualFold(user, account)) {
+			return "", nil
+		}
+		return secret, err
+	}
 	account, err := keychainAccount()
 	if err != nil {
 		return "", err
@@ -93,19 +132,32 @@ func storeInKeychain(service, token string) error {
 		return err
 	}
 
-	add := exec.Command(securityPath, "-i")
-	add.Stdin = strings.NewReader(fmt.Sprintf(
-		"add-generic-password -U -a %s -s %s -w %s\n", account, service, token))
-	if out, err := add.CombinedOutput(); err != nil {
-		return fmt.Errorf("security: %v: %s", err, bytes.TrimSpace(out))
+	if runtime.GOOS == "windows" {
+		if err := wincred.Write(service, account, token); err != nil {
+			return err
+		}
+	} else if err := addGenericPassword(account, service, token); err != nil {
+		return err
 	}
 
 	got, err := readKeychain(service)
 	if err != nil {
-		return fmt.Errorf("could not read the token back from the Keychain: %v", err)
+		return fmt.Errorf("could not read the token back from the %s: %v", keychainName(), err)
 	}
 	if got != token {
-		return fmt.Errorf("the Keychain returned a different value than was stored")
+		return fmt.Errorf("the %s returned a different value than was stored", keychainName())
+	}
+	return nil
+}
+
+// addGenericPassword saves value as the Keychain password of account under
+// service, through `security -i` on stdin.
+func addGenericPassword(account, service, value string) error {
+	add := exec.Command(securityPath, "-i")
+	add.Stdin = strings.NewReader(fmt.Sprintf(
+		"add-generic-password -U -a %s -s %s -w %s\n", account, service, value))
+	if out, err := add.CombinedOutput(); err != nil {
+		return fmt.Errorf("security: %v: %s", err, bytes.TrimSpace(out))
 	}
 	return nil
 }

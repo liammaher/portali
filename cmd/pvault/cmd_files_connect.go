@@ -25,7 +25,7 @@ const scanTimeout = 45 * time.Minute
 // Where sign-ins are kept, the providers' addresses and how the browser is
 // opened: the real ones, replaced only by tests.
 var (
-	secretStore      filesync.SecretStore = filesync.KeychainStore{}
+	secretStore      filesync.SecretStore = filesync.SystemStore()
 	connectEndpoints *filesync.Endpoints
 	browserOpener    = openInBrowser
 )
@@ -148,7 +148,7 @@ func portOf(s string) int {
 
 func needKeychain() {
 	if _, keychain := secretStore.(filesync.KeychainStore); keychain && runtime.GOOS != "darwin" {
-		fatal("reading an account through its API keeps its sign-in in the macOS Keychain: this needs a Mac")
+		fatal("reading an account through its API keeps its sign-in in the macOS Keychain or Windows Credential Manager: this needs a Mac or Windows")
 	}
 }
 

@@ -18,7 +18,7 @@ func cmdCreateServiceToken() {
 		"  --access defaults to read: the agent can only read. append also lets it add new fields and\n" +
 		"    documents (e.g. archive a receipt) but never overwrite or delete; write allows everything.\n" +
 		"  --max-sensitivity defaults to sensitive; use critical only for agents that must read critical fields.\n" +
-		"  --keychain <service> (macOS) saves the token in your Keychain under that service name instead of\n" +
+		"  --keychain <service> saves the token in your Keychain (macOS) or Credential Manager (Windows) under that name instead of\n" +
 		"    printing it, e.g. --keychain pvault-mcp for the MCP server's VAULT_TOKEN_COMMAND."
 	if len(os.Args) < 3 {
 		fatal(usage)
@@ -81,7 +81,7 @@ func cmdCreateServiceToken() {
 
 	fmt.Printf("Service token created for %q\n", consumer)
 	if stored {
-		fmt.Printf("Keychain:        saved as service %q\n", keychain)
+		fmt.Printf("%-17s saved as %q\n", keychainName()+":", keychain)
 		if previous != "" && previous != result.Token {
 			fmt.Printf("Previous token:  %s\n", revokeReplacedToken(previous))
 		}
@@ -98,7 +98,7 @@ func cmdCreateServiceToken() {
 	if keychainErr != nil {
 		// The token exists and is printed above, but whatever reads the
 		// Keychain won't see it: fail so callers don't assume it worked.
-		fatal("Keychain save failed: %v", keychainErr)
+		fatal("%s save failed: %v", keychainName(), keychainErr)
 	}
 }
 
