@@ -16,6 +16,16 @@ themselves, pay a commercialista or an agency, or put it off. Claude doesn't fil
 Naples portals on its own. The product exists to change that: Claude does the pratica, the owner
 approves.
 
+Take "do my TARI":
+
+| | Plain Claude | With the vault and the skills |
+|---|---|---|
+| **Who and where** | Doesn't know; asks for name, codice fiscale, address | Reads them from the vault, already validated, with the municipalità worked out |
+| **What applies** | Searches the web, meets stale and contradictory pages, asks more questions | The library says which TARI procedure, form version, deadline and channel |
+| **How to do it** | Doesn't know the portal or the form; works it out slowly, or gives up and explains | The skill knows the steps, the boxes, the documents, the PEC address |
+| **Doing it** | Hands it back to the owner | Fills it, prepares the PEC, and stops only for the owner's taps (SPID login, signature, send) |
+| **Time** | Long, and often unfinished | Minutes |
+
 "Naples" means the Comune di Napoli and the local offices that serve it (Comune, Municipalità, ASL Napoli
 1, Questura, Prefettura, Soprintendenza, Genio Civile, Camera di Commercio, SUAP and SUE on
 impresainungiorno), plus the national bodies a Naples business deals with.
