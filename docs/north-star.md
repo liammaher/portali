@@ -26,6 +26,20 @@ Take "do my TARI":
 | **Doing it** | Hands it back to the owner | Fills it, prepares the PEC, and stops only for the owner's taps (SPID login, signature, send) |
 | **Time** | Long, and often unfinished | Minutes |
 
+The same holds for every administrative task, for every segment: "renew my dehors" (the vault knows
+the locale, its m² and street; the skill knows the SUAP route and the canone), "file the CILA for via
+Toledo 12" (the client, the procura and the catasto data; the SUE route on impresainungiorno), "renew
+this client's permesso" (the client's documents and expiry; the Naples checklist, the postal kit, the
+Questura's real timing).
+
+It stops short in three places:
+- **What specialists already do** (taxes, payroll, invoices): Claude coordinates them through their
+  connectors; we don't redo their work.
+- **What the law keeps for the person:** SPID logins, signatures, payments. Claude prepares everything
+  up to those taps.
+- **What only happens in person:** Questura appointments and fingerprints, desk-only offices, the
+  building archive. Claude books, prepares and says exactly what to bring, but someone still has to go.
+
 "Naples" means the Comune di Napoli and the local offices that serve it (Comune, Municipalità, ASL Napoli
 1, Questura, Prefettura, Soprintendenza, Genio Civile, Camera di Commercio, SUAP and SUE on
 impresainungiorno), plus the national bodies a Naples business deals with.
