@@ -10,14 +10,12 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// peerProcess returns the uid, pid and executable of the process that
-// listens on a Unix socket connection. The path comes from the kernel's
-// record of the running file (proc_pidpath), not from the process's own
-// memory the way argv or KERN_PROCARGS2 would.
-func peerProcess(conn *net.UnixConn) (uid, pid int, exe string, err error) {
+// peerCred returns the uid and pid of the process that listens on a Unix
+// socket connection, as the kernel records them.
+func peerCred(conn *net.UnixConn) (uid, pid int, err error) {
 	raw, err := conn.SyscallConn()
 	if err != nil {
-		return 0, 0, "", err
+		return 0, 0, err
 	}
 	var cred *unix.Xucred
 	var sockErr error
@@ -27,16 +25,16 @@ func peerProcess(conn *net.UnixConn) (uid, pid int, exe string, err error) {
 			pid, sockErr = unix.GetsockoptInt(int(fd), unix.SOL_LOCAL, unix.LOCAL_PEERPID)
 		}
 	}); err != nil {
-		return 0, 0, "", err
+		return 0, 0, err
 	}
 	if sockErr != nil {
-		return 0, 0, "", sockErr
+		return 0, 0, sockErr
 	}
-	exe, err = processExe(pid)
-	return int(cred.Uid), pid, exe, err
+	return int(cred.Uid), pid, nil
 }
 
-// processExe is the kernel's path of pid's running executable: libproc's
+// processExe is the kernel's record of pid's running file (not the
+// process's own memory, as argv or KERN_PROCARGS2 would be): libproc's
 // proc_pidpath, which x/sys/unix doesn't wrap:
 // proc_info(PROC_INFO_CALL_PIDINFO, pid, PROC_PIDPATHINFO, 0, buf, size).
 // It still names the old file after pvault is reinstalled with rm + cp.
