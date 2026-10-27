@@ -43,9 +43,18 @@
       finish: the shared steps and the route's own (steps[].channel) in order,
       where to send or take it, how it is signed there, what to attach or
       bring, the proof it gives back and the deadline. A desk that depends on
-      where the person lives (office: residenza.municipalita) is picked from
-      the library's offices/ with that field, read from the vault when one is
-      given (the prepare or draft token); without one, it says so.
+      where the person lives (office: { list, from: residenza.municipalita })
+      is picked from the library's offices/<list>.json with that field, read
+      from the vault when one is given (the prepare or draft token); without
+      one, it says so.
+
+  fill.py offices --library DIR [--address ADDR] [--municipalita N] [--distretto-asl D]
+                  [--server S.json | --vault-dir DIR [--keychain SERVICE]] [--json]
+      Every office list in the library (offices/: the Municipalità's sede, its
+      Anagrafe, the ASL's Anagrafe Sanitaria, its Prevenzione Collettiva) with the
+      person's office in each and what it serves: the area from the flags,
+      else read from the vault for ADDR (residenza by default; leo:residenza,
+      domicilio, locale, sede_legale).
 
 Who signs: the vault's owner, unless --for names another person (a slug of
 the household; ask the user by display name). Their own data (the library's
@@ -76,7 +85,7 @@ service `needs` names: pvault-pratica-fill (pvault-<name>-pratica-fill for
 --library is a pratiche-napoli checkout (npm ci done): the entry is
 procedures/<ID>.yaml, read with the library's own YAML parser (node), and
 the layout layouts/<ID>/<form>.json; its contract/ gives the vault schema
-and the signing rules, offices/ the desks by area. Without --pdf the form is
+and the signing rules, offices/ the desks of each service by area. Without --pdf the form is
 downloaded from the entry's url into DIR. --entry is a procedure already as
 JSON, in place of the library's file (the library still gives the rest).
 
@@ -1712,8 +1721,8 @@ def route(a):
         office = place.pop("office", None)
         print("Where: " + "; ".join(place.values()))
         if office:
-            print("  Your office: " + ("; ".join(v for v in office.get("office", {}).values()) if office.get("office")
-                                       else office["why"]))
+            print(f"  Your office ({office.get('name', office['list'])}): "
+                  + ("; ".join(office["office"].values()) if "office" in office else office["why"]))
     for x in signing:
         how = x.get("text") or f"{' or '.join(x['ways'])}, {ID_COPY.get(x['id_copy'], x['id_copy'])}"
         print(f"Signing ({x['form']}): {how}{' ' + x['notes'] if x.get('notes') else ''}")
@@ -1724,35 +1733,72 @@ def route(a):
     return 0
 
 
-def office_for(a, field):
-    """The person's desk for a channel picked by area (office:
-    residenza.municipalita): read the field from the vault when one is given,
-    and look it up in the library's offices/<municipalita|distretto_asl>.json."""
-    kind = field.rsplit(".", 1)[1]
-    path = os.path.join(a.library or "", "offices", f"{kind}.json")
-    if not a.library or not os.path.isfile(path):
-        return {"field": field, "why": f"no offices/{kind}.json in the library"}
-    offices = load(path)
-    if not (a.server or a.vault_dir):
-        return {"field": field, "why": f"{offices['name']}: pass the vault to pick yours ({field})"}
-    try:
+def office_lists(a):
+    """The library's office lists (offices/<list>.json), by list."""
+    folder = os.path.join(a.library or "", "offices")
+    if not a.library or not os.path.isdir(folder):
+        return {}
+    return {f.removesuffix(".json"): load(os.path.join(folder, f)) for f in sorted(os.listdir(folder)) if f.endswith(".json")}
+
+
+def office_for(a, office, vault=None, value=None):
+    """The person's desk in one list (office: { list, from }): the value of
+    the from field, given, else read from the vault when one is given."""
+    name, field = office["list"], office["from"]
+    offices = office_lists(a).get(name)
+    if not offices:
+        return {"list": name, "field": field, "why": f"no offices/{name}.json in the library"}
+    out = {"list": name, "name": offices["name"], "serves": offices["serves"], "field": field}
+    pick = f"pick from offices/{name}.json"
+    if value is None:
+        if vault is None and not (a.server or a.vault_dir):
+            return {**out, "why": f"pass the vault to pick yours ({field})"}
+        try:
+            vault = vault or next(iter(connect(a).values()))
+        except SystemExit as e:  # no token, or a locked vault: the card still names the offices
+            return {**out, "why": f"{e} (or {pick})"}
+        status, got = vault.call("GET", vault.field_path(field))
+        got = got if isinstance(got, dict) else {}
+        if status == 403:
+            return {**out, "why": f"the token can't read {field}: give it that scope, or {pick}"}
+        if got.get("constraint") == "not_resolved":
+            # A street across a boundary: the quartieri to choose from.
+            return {**out, "why": f"{got.get('error')}; store the quartiere (pvault set {field.rsplit('.', 1)[0]}.quartiere ...), or {pick}"}
+        value = got.get("value") if status == 200 else None
+    desk = offices["offices"].get(value or "")
+    if not desk:
+        return {**out, "why": f"{field} isn't in the vault (no address, or one outside Napoli): {pick}"}
+    return {**out, "value": value, "office": {k: desk[k] for k in ("name", "address", "hours", "phone", "email", "pec", "notes")
+                                              if k in desk}}
+
+
+def address_field(address, field):
+    """The vault field of an address's area: residenza.municipalita,
+    leo:residenza.distretto_asl, business.sede_legale_municipalita."""
+    person, _, place = address.rpartition(":")
+    local = f"business.sede_legale_{field}" if place == "sede_legale" else f"{place}.{field}"
+    return f"{person}:{local}" if person else local
+
+
+def offices(a):
+    """The person's office in every list of the library, and what each serves."""
+    lists = office_lists(a)
+    if not lists:
+        sys.exit(f"no offices/ in {a.library}: is it a pratiche-napoli checkout on main?")
+    given = {"municipalita": a.municipalita, "distretto_asl": a.distretto_asl}
+    vault = None
+    if None in (given[o["field"]] for o in lists.values()) and (a.server or a.vault_dir):
         vault = next(iter(connect(a).values()))
-    except SystemExit as e:  # no token, or a locked vault: the card still names the offices
-        return {"field": field, "why": f"{offices['name']}: {e} (or pick from offices/{kind}.json)"}
-    status, got = vault.call("GET", vault.field_path(field))
-    got = got if isinstance(got, dict) else {}
-    pick = f"pick from offices/{kind}.json"
-    if status == 403:
-        return {"field": field, "why": f"the token can't read {field}: give it that scope, or {pick}"}
-    if got.get("constraint") == "not_resolved":
-        # A street across a boundary: the quartieri to choose from.
-        return {"field": field, "why": f"{got.get('error')}; store the quartiere (pvault set {field.rsplit('.', 1)[0]}.quartiere ...), or {pick}"}
-    value = got.get("value") if status == 200 else None
-    office = offices["offices"].get(value or "")
-    if not office:
-        return {"field": field, "why": f"{field} isn't in the vault (no address, or one outside Napoli): {pick}"}
-    return {"field": field, "value": value, "office": {k: office[k] for k in ("name", "address", "hours", "phone", "notes")
-                                                       if k in office}}
+    found = [office_for(a, {"list": name, "from": address_field(a.address, o["field"])}, vault, given[o["field"]])
+             for name, o in lists.items()]
+    if a.json:
+        print(json.dumps(found, ensure_ascii=False, indent=2))
+        return 0
+    for x in found:
+        print(f"{x['name']} ({x['field']} {x.get('value', '?')})")
+        print(f"  {x['serves']}")
+        print("  " + ("; ".join(x["office"].values()) if "office" in x else x["why"]))
+    return 0
 
 
 def finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing=None):
@@ -1808,7 +1854,21 @@ def main():
     vault.add_argument("--vault-dir", help="a real vault's folder, to pick the person's office")
     c.add_argument("--keychain", help="Keychain service holding the token (default: the one needs names)")
     c.add_argument("--json", action="store_true", help="the card as JSON")
+    o = sub.add_parser("offices")
+    o.add_argument("--library", required=True, help="a pratiche-napoli checkout: its offices/")
+    o.add_argument("--address", default="residenza", help="whose address: residenza (default), leo:residenza, domicilio, locale, sede_legale")
+    o.add_argument("--municipalita", help="the municipalità (1-10), instead of reading it from the vault")
+    o.add_argument("--distretto-asl", help="the ASL distretto (24/73, 25-33), instead of reading it from the vault")
+    vault = o.add_mutually_exclusive_group()
+    vault.add_argument("--server", help="the synthetic vault's server.json")
+    vault.add_argument("--vault-dir", help="a real vault's folder")
+    o.add_argument("--keychain", help="Keychain service holding the token (default: the one needs names)")
+    o.add_argument("--json", action="store_true", help="the offices as JSON")
     a = p.parse_args()
+    if a.cmd == "offices":
+        if not re.fullmatch(r"([a-z][a-z0-9-]{0,31}:)?(residenza|domicilio|locale[0-9]*|sede_legale)", a.address):
+            p.error(f"--address {a.address!r}: residenza, domicilio, locale, sede_legale, or a person's (leo:residenza)")
+        return offices(a)
     if not a.entry and not (a.library and a.procedure):
         p.error("give --library and --procedure, or --entry")
     if a.procedure and not a.library:

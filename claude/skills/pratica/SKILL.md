@@ -349,8 +349,13 @@ python3 -I ~/.claude/skills/pratica/fill/fill.py route --library "$lib" \
 
 It lists the steps in order (`[you]` marks theirs), where to send or take it (with
 `--vault-dir` and the token saved for the draft, the desk of their own municipalità or ASL
-distretto), how it is signed there, what to attach or bring, the proof to keep, and the
-deadline. Pass it on in your own words, in one message, with the file paths. Then:
+distretto for that service), how it is signed there, what to attach or bring, the proof to
+keep, and the deadline. Pass it on in your own words, in one message, with the file paths.
+
+When the user asks where their offices are, run `fill.py offices --library "$lib"` with the
+areas `vault_locate` (or `pvault locate`) gave, as `--municipalita` and `--distretto-asl`: it
+names their desk in every list and what each serves. Never call one the ASL or Comune office
+without saying which service it is. Then:
 
 - approving the SPID/CIE login on their phone (you do the clicking: reference/portal-login.md)
 - signatures: a firma digitale always; a handwritten one by hand, or by approving a signing

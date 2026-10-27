@@ -68,8 +68,9 @@ internal/
                      Google Drive and Dropbox over OAuth
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
-  pratica/fill/      fill.py: fills a library form from the vault, or prints one channel's
-                     route; pilot/ has the pilot forms. A real vault only over its socket
+  pratica/fill/      fill.py: fills a library form from the vault, prints one channel's
+                     route, or the person's desk in each of the library's office lists
+                     (one per service); pilot/ has the pilot forms. A real vault only over its socket
 ```
 
 ## Security Model
