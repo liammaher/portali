@@ -273,7 +273,34 @@ the page never copies a rule.
 - `GET /vault/members/{slug}/export` is session-only and audited; personal-tier items only
   with `include_personal=1`. `pvault person export` writes a new 0700 folder, files 0600.
 
+### File index (`files.go` in store and vault, `docs/design/file-index.md`)
+- Where a person's, business's or client's files are (disk, OneDrive, SharePoint, Google
+  Drive, Dropbox) and what each is linked to. Metadata and links only: bytes and text never
+  enter the vault, and the vault never goes online (a sync client writes the index).
+- Own tables (`vault_file_*`), not documents or fields. Names, paths, URLs, sizes and
+  hashes sit in blobs under info `files/index`, AAD `<kind>:<row id>`; plain columns are only
+  holder, kind, pratica slug and tiers. No plaintext hash or search index.
+- Scope IDs `files.index` / `<slug>:files.index`. A file with no link is the owner's. A
+  login-secret word in the name or path makes it `personal`. Linking, rules and accepting
+  suggestions are the user's; a service token only suggests.
+- The API is `/vault/files/...`; syncing is a client (`internal/filesync`, `pvault files sync`):
+  batches under one sync ID (the first says `begin`; a batch of a sync the vault lost is refused),
+  then `sync/finish` marks unseen files gone. It never finishes
+  after an incomplete scan, and never opens a file (online-only placeholders would download).
+  Sources, links, rules and pruning need the session or an approved grant with write access
+  and the holder's scope (`userWrite`); forgetting a source needs every holder's. A service
+  token with write access may sync, but only files it can see (`UpsertFilesIf`); it may
+  only suggest links. A file once linked to a person (`scoped`) stays out of the owner's
+  scope. A sync that would mark everything, or most of a large source, gone needs `confirm`.
+- Never store a sharing link (`CheckFileURL`). A file that left its source is tombstoned,
+  never deleted; `PruneFiles` drops only unlinked tombstones. `RemovePerson` drops the
+  person's links, rules and suggestions, not the index rows.
+
 ### MCP (`mcp/src`)
+- File index tools (`vault_files_search`, `vault_file_get`, `vault_file_suggest`; `vaultfiles.ts`):
+  metadata only, no tool reads or changes a file. Every result carries the untrusted-names
+  note; ids and person/pratica slugs are checked before any request; `local_path` is the
+  source's root plus the file's path and never leaves the root.
 - Uses only a service token (`VAULT_TOKEN`, else `VAULT_KEYCHAIN_SERVICE`, else
   `VAULT_TOKEN_COMMAND`), looked up per request; the server enforces its scope. It refuses
   to start with the old `VAULT_SCOPE` set.

@@ -80,6 +80,67 @@ WHEN instr(NEW.category, ':') > 0 BEGIN
 	VALUES (substr(NEW.category, 1, instr(NEW.category, ':') - 1), strftime('%Y-%m-%dT%H:%M:%SZ', 'now'));
 END;
 
+-- The file index (files.go): where the user's files are (disk, OneDrive,
+-- SharePoint, Google Drive, Dropbox) and whom they are linked to. Names, paths,
+-- URLs, sizes and hashes are in the encrypted blobs; the plain columns are
+-- only what scope checks need. No file bytes are ever stored here.
+CREATE TABLE IF NOT EXISTS vault_file_sources (
+	id         TEXT PRIMARY KEY,
+	provider   TEXT NOT NULL,
+	blob       TEXT NOT NULL,
+	created_at TEXT NOT NULL,
+	updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vault_files (
+	id         TEXT PRIMARY KEY,
+	source_id  TEXT NOT NULL,
+	tier       TEXT NOT NULL DEFAULT 'sensitive',
+	blob       TEXT NOT NULL,
+	gone_at    TEXT,
+	scoped     INTEGER NOT NULL DEFAULT 0,
+	created_at TEXT NOT NULL,
+	updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vault_file_links (
+	id           TEXT PRIMARY KEY,
+	file_id      TEXT NOT NULL,
+	holder       TEXT NOT NULL DEFAULT '',
+	kind         TEXT NOT NULL,
+	pratica_slug TEXT NOT NULL DEFAULT '',
+	origin       TEXT NOT NULL,
+	tier         TEXT NOT NULL DEFAULT 'sensitive',
+	blob         TEXT NOT NULL,
+	created_at   TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vault_file_rules (
+	id           TEXT PRIMARY KEY,
+	source_id    TEXT NOT NULL,
+	holder       TEXT NOT NULL DEFAULT '',
+	kind         TEXT NOT NULL,
+	pratica_slug TEXT NOT NULL DEFAULT '',
+	blob         TEXT NOT NULL,
+	created_at   TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vault_file_suggestions (
+	id           TEXT PRIMARY KEY,
+	file_id      TEXT NOT NULL,
+	holder       TEXT NOT NULL DEFAULT '',
+	kind         TEXT NOT NULL,
+	pratica_slug TEXT NOT NULL DEFAULT '',
+	proposed_by  TEXT NOT NULL,
+	blob         TEXT NOT NULL,
+	created_at   TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_files_source ON vault_files(source_id);
+CREATE INDEX IF NOT EXISTS idx_file_links_file ON vault_file_links(file_id);
+CREATE INDEX IF NOT EXISTS idx_file_links_holder ON vault_file_links(holder);
+CREATE INDEX IF NOT EXISTS idx_file_rules_source ON vault_file_rules(source_id);
+CREATE INDEX IF NOT EXISTS idx_file_suggestions_file ON vault_file_suggestions(file_id);
 CREATE INDEX IF NOT EXISTS idx_fields_category ON vault_fields(category);
 CREATE INDEX IF NOT EXISTS idx_documents_category ON vault_documents(category);
 CREATE INDEX IF NOT EXISTS idx_fields_sensitivity ON vault_fields(sensitivity);
@@ -142,6 +203,9 @@ func migrate(conn *sql.DB) error {
 	if err := ensureColumn(conn, "vault_fields", "closed_at", addFieldClosedAt); err != nil {
 		return err
 	}
+	if err := ensureColumn(conn, "vault_files", "scoped", addFileScoped); err != nil {
+		return err
+	}
 	return addPeopleWithRows(conn)
 }
 
@@ -159,6 +223,13 @@ func addPeopleWithRows(conn *sql.DB) error {
 // dates older closed stati when it unlocks, since only it can read them.
 func addFieldClosedAt(conn *sql.DB) error {
 	_, err := conn.Exec(`ALTER TABLE vault_fields ADD COLUMN closed_at TEXT`)
+	return err
+}
+
+// addFileScoped adds the marker of a file that has been linked to a person
+// (files.go): it stays out of the owner's scope even when its links are gone.
+func addFileScoped(conn *sql.DB) error {
+	_, err := conn.Exec(`ALTER TABLE vault_files ADD COLUMN scoped INTEGER NOT NULL DEFAULT 0`)
 	return err
 }
 

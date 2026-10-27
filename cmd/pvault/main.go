@@ -55,6 +55,8 @@ func main() {
 		cmdRevokeServiceToken()
 	case "doc":
 		cmdDoc()
+	case "files":
+		cmdFiles()
 	case "sign":
 		cmdSign()
 	case "person", "member": // member is the older name, kept as an alias
@@ -128,6 +130,11 @@ Commands:
   doc list [category]              List stored documents
   doc get <id> [--out path]        Decrypt a document to a file (never overwrites)
   doc delete <id>                  Delete a stored document
+  files source add <folder>        Index the files of a folder, a OneDrive/Google Drive/Dropbox sync folder
+                                   included (names and places only; nothing is opened or copied)
+  files sync | search | show | link ...
+                                   Update the index, find files, link them to a person, client or pratica
+                                   ('pvault files' lists every subcommand)
   sign list                        Signing requests an agent filed, waiting for you
   sign review <id> [--out file]    Open the signed PDF; if you confirm, approve it and save it
   sign reject <id>                 Refuse a request

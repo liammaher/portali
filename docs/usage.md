@@ -138,6 +138,28 @@ pvault sign reject <id>
 
 New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
 
+## Finding files elsewhere (file index)
+
+The vault keeps encrypted copies of scans (above). `pvault files` is for the files you work with where they already are: a folder on disk, or one that OneDrive, SharePoint, Google Drive or Dropbox keeps in sync. It records each file's name, place, size and date, and what it is linked to (you, a family member, the business, a client, a pratica). It never copies, opens, moves or deletes a file.
+
+```sh
+pvault files source add ~/Library/CloudStorage/OneDrive-Acme      # recognised as OneDrive
+pvault files sync                                                 # read the folders, update the index
+pvault files search visura --for rossi                            # name or path words, by person
+pvault files search --pratica tari-2026
+pvault files rule add onedrive-acme --path /Clienti/Rossi --for rossi   # a whole folder
+pvault files link <file-id> --for rossi --pratica cila-rossi --role visura
+pvault files open <file-id>                                       # shows it in Finder; never opens it
+pvault files suggestions                                          # links an agent proposed
+```
+
+- Online-only files (the cloud app's placeholders) are listed by name, size and date and never opened, so syncing downloads nothing.
+- A file that disappears is marked gone, with its links; nothing is deleted. `pvault files prune` drops gone files that are linked to nothing. A scan that couldn't read everything (a folder without permission, a disconnected drive, an empty folder) marks nothing gone.
+- Names and paths are encrypted in the vault. A file whose name or path holds a login-secret word (PIN, password, SPID ...) is `personal`, so agents never see it. Sharing links are refused.
+- Service tokens reach the index with scopes `files.*` (yours and the business's), `leo:files.*` (a person's) or `*:files.*`. A token with `write` access can sync, but only the files its scope reaches: a `files.*` token leaves a person's files, and a file that was once linked to a person, alone. Linking, rules, sources and accepting suggestions are yours (a grant you approve must allow writing and reach that person's files), and an agent can only suggest.
+- A sync that would mark every file of a source gone (five or more), or more than half of a large one, is refused: the drive is probably unmounted or signed out. `pvault files sync --confirm-removals` says they really are gone.
+- Hidden files, links and Office lock files are left out. Only folders you add are read.
+
 ## Backups
 
 ```sh
@@ -232,6 +254,22 @@ GET    /vault/documents?category=<c>     # List documents (metadata only)
 GET    /vault/documents/{id}             # Download the decrypted file (attachment, CSP sandbox)
 DELETE /vault/documents/{id}             # Delete
 ```
+
+### Files
+
+```
+GET    /vault/files?q=&for=&pratica=&source=&provider=&unlinked=1&gone=1&limit=   # {files, total}; scope files.index / <slug>:files.index
+GET    /vault/files/{id}
+POST   /vault/files/sync               # {source_id, sync_id, begin:true on the first, files:[...]} batches of up to 500; or {source_id, full:true, files} in one
+POST   /vault/files/sync/finish        # {source_id, sync_id, confirm?}: marks unseen files gone (needs the same running sync; refuses a mass removal without confirm)
+GET    /vault/files/sources            # POST adds one, DELETE /vault/files/sources/{id} forgets its entries
+POST   /vault/files/{id}/links         # {for, kind?, pratica?, role?, note?}; DELETE /vault/files/links/{id}
+GET|POST /vault/files/rules            # DELETE /vault/files/rules/{id}
+POST   /vault/files/{id}/suggest       # an agent proposes a link; GET /vault/files/suggestions, POST .../suggestions/{id}/accept|reject
+POST   /vault/files/prune
+```
+
+Syncing needs a token with write access; linking, rules, sources, suggestions and pruning need the session or a grant you approved.
 
 ### Signing
 
