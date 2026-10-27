@@ -62,8 +62,9 @@ internal/
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
   pratica/fill/      fills a library form from the vault at the library's layout, for the
-                     owner or --for a person (fill.py; pilot/ has three pilot forms); a
-                     real vault only over its socket, as the MCP server
+                     owner or --for a person, other people by --party (fill.py; pilot/
+                     has four pilot forms, one in a business vault); a real vault only
+                     over its socket, as the MCP server
 ```
 
 ## Security Model

@@ -3,9 +3,11 @@
 
   PRATICHE_NAPOLI_DIR=<pratiche-napoli checkout> regress.py [--keep DIR] [case ...]
 
-The pilots are three library forms: the TARI Mod. 1 (drawn on, with the
+The pilots are four library forms: the TARI Mod. 1 (drawn on, with the
 stato di famiglia's table), the ricorso al Prefetto (drawn on, two pages, tick
-boxes that are font characters) and the CILA Allegato A (fillable fields).
+boxes that are font characters), the CILA Allegato A (fillable fields) and
+the Regione Campania scheda anagrafica, in a business vault (signed by its
+legale rappresentante, a procuratore read by --party, typed |__| cells).
 Each case changes a pilot's inputs (the made-up vault, the answers, the
 library entry, the library's layout, the form, who signs), runs fill.py
 against its own synthetic vault, and checks the exit code and that each
@@ -27,11 +29,13 @@ import urllib.request
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
 FILL = os.path.join(HERE, "..", "fill.py")
-# name: the procedure, its form, the answers to its asks, and the ente's reply, if one is played
+# name: the procedure, its form, the answers to its asks, the ente's reply if one is played, the made-up vault
 PILOTS = {
-    "mod-1": ("napoli/comune/tari-iscrizione-uso-abitativo", "mod-1", "answers.json", "reply.json"),
-    "ricorso": ("napoli/comune/verbale-pagamento-ricorso", "ricorso-prefetto", "ricorso-answers.json", None),
-    "cila": ("napoli/comune/cila-lavori-edilizi", "allegato-a-programma-100", "cila-answers.json", None),
+    "mod-1": ("napoli/comune/tari-iscrizione-uso-abitativo", "mod-1", "answers.json", "reply.json", "fixture.json"),
+    "ricorso": ("napoli/comune/verbale-pagamento-ricorso", "ricorso-prefetto", "ricorso-answers.json", None, "fixture.json"),
+    "cila": ("napoli/comune/cila-lavori-edilizi", "allegato-a-programma-100", "cila-answers.json", None, "fixture.json"),
+    "scheda": ("napoli/comune/cessazione-attivita-commerciale", "scheda-anagrafica", "scheda-answers.json", None,
+               "business-fixture.json"),
 }
 ID, FORM = PILOTS["mod-1"][:2]
 SLUG = "tari-iscrizione-uso-abitativo-2026"
@@ -109,6 +113,33 @@ def deadline_from(field, records):
     def edit(entry):
         entry.setdefault("deadline", {}).setdefault("rules", []).append({"compute": {"from": field, "days": 0}})
         entry["records"] = [{"field": f, "from": "la risposta"} for f in records]
+    return edit
+
+
+PROCURA = "3 – Procura conferita (dati del procuratore/delegato)?"
+AS_PROCURATORE = "in qualità di: Procuratore/delegato / Agenzia per le imprese"
+WITH_PROCURA = {PROCURA: "sì", AS_PROCURATORE: "procuratore"}
+SOCI_ALLEGATO = [row(f"{n} (procuratore)", map={"repeat": {"ruolo": "socio", "except": "dichiarante"}, "fields": [f]})
+                 for n, f in (("Cognome", "*:identity.last_name"), ("Nome", "*:identity.first_name"))]
+OWNER_BUSINESS = [["business.denominazione", "Ditta Mario Rossi"], ["business.forma_giuridica", "ditta_individuale"],
+                  ["business.codice_fiscale", "RSSMRA80A01F839W"], ["business.qualita_dichiarante", "titolare"],
+                  ["business.sede_legale_comune", "Napoli"], ["business.sede_legale_provincia", "NA"],
+                  ["business.sede_legale_indirizzo", "Via Toledo"], ["business.sede_legale_civico", "100"],
+                  ["business.sede_legale_cap", "80134"], ["business.telefono", "+39 333 000 0000"],
+                  ["business.pec", "mario.rossi@pec.example.it"], ["business.cciaa", "NA"], ["business.rea", "NA-7654321"],
+                  ["identity.citizenship", "italiana"]]
+
+
+def no_soci(fx):
+    """The business with no soci but its legale rappresentante."""
+    fx["fields"] = [f for f in fx["fields"] if not f[0].startswith(("verdi:", "gialli:"))]
+
+
+def both(*edits):
+    """Several changes of one kind, in order."""
+    def edit(x):
+        for e in edits:
+            e(x)
     return edit
 
 
@@ -208,9 +239,9 @@ CASES = {
                    ["FAIL form is the version the library maps"]),
     "renamed-row": ("a row renamed in the library", {"entry": row("Foglio", label="Foglio catastale")}, 1,
                     ["every library row has a place on the form", "every layout box is a library row"]),
-    "party-row": ("a row read from a party (business vaults): refused, not read as the owner's",
+    "party-row": ("a row read from a party nobody was named for: asked, never read as the owner's",
                   {"entry": row("C.F.", map={"party": {"ruolo": "titolare"}, "direct": "identity.codice_fiscale"})}, 1,
-                  ["party and repeat by ruolo aren't supported yet"]),
+                  ["'C.F.' is answered: whose data? --party titolare=<slug>"]),
     "unknown-map": ("a row with a map this tool doesn't know: refused, not left blank",
                     {"entry": row("Sub.", map={"dirct": "abitazione.catasto_subalterno"})}, 1, ["unknown map"]),
     "unanswered": ("no answers to the ask rows (an empty answers map replaces them)", {"answers": {}}, 1,
@@ -265,6 +296,57 @@ CASES = {
                           {"pilot": "cila", "entry": row(PENDENZE, choice="dichiara", write_value=True),
                            "layout": box(PENDENZE, write={"dichiara": "Text Box 1_10"})}, 0,
                           ["ok   the form is ready", "wrote: sì"]),
+    "scheda": ("a business vault's scheda anagrafica, signed by its legale rappresentante, no procura",
+               {"pilot": "scheda", "for": "rossi"}, 0,
+               ["ok   rossi signs as titolare or legale rappresentante", "ok   every layout box sits on the form's own blank",
+                "ok   the form is ready", "wrote: Rossi", "wrote: R", "wrote: 0", "wrote: Italia", "wrote: X", "wrote: 1",
+                "wrote: 6", "wrote: Pizzeria Esempio SRL", "wrote: Via dei Tribunali", "page 2: "]),
+    "scheda-no-signer": ("a business vault's form without --for: refused, naming who can sign", {"pilot": "scheda"}, 1,
+                         ["pass --for to needs and run, one of rossi"]),
+    "scheda-socio-signs": ("a socio who isn't legale rappresentante can't sign for the business",
+                           {"pilot": "scheda", "for": "verdi"}, 1, ["FAIL verdi signs as titolare or legale rappresentante: their ruolo is socio"]),
+    "scheda-procura": ("with a procura: the procuratore's section from Bianchi (--party procuratore=bianchi)",
+                       {"pilot": "scheda", "for": "rossi", "party": ["procuratore=bianchi"], "answers": WITH_PROCURA}, 0,
+                       ["ok   bianchi is procuratore", "ok   the form is ready", "wrote: Bianchi", "wrote: Regno Unito",
+                        "wrote: Londra", "wrote: Via Chiaia", "wrote: giulia.bianchi@pec.example.it"]),
+    "scheda-procura-unnamed": ("a procura, but nobody named for it: asked, naming the vault's procuratore",
+                               {"pilot": "scheda", "for": "rossi", "answers": WITH_PROCURA}, 1, ["whose data? --party procuratore=bianchi"]),
+    "scheda-wrong-party": ("a --party who doesn't have the ruolo", {"pilot": "scheda", "for": "rossi", "party": ["procuratore=verdi"],
+                                                                      "answers": WITH_PROCURA}, 1, ["FAIL verdi is procuratore: their ruolo is socio"]),
+    "scheda-allegato": ("rows repeated by ruolo without columns: their page copied once per socio, the signer left out",
+                        {"pilot": "scheda", "for": "rossi", "party": ["procuratore=bianchi", "socio=verdi,gialli,rossi"],
+                         "answers": WITH_PROCURA, "entry": both(*SOCI_ALLEGATO), "needs_from_entry": True}, 0,
+                        ["ok   the form is ready", "wrote: Verdi", "wrote: Gialli", "wrote: Sara", "page 3: "]),
+    "scheda-allegato-left-out": ("a socio the vault has but --party didn't name: refused, so nobody is left off",
+                                 {"pilot": "scheda", "for": "rossi", "party": ["procuratore=bianchi", "socio=verdi"],
+                                  "answers": WITH_PROCURA, "entry": both(*SOCI_ALLEGATO), "needs_from_entry": True}, 1,
+                                 ["also gialli (with --party socio=verdi,gialli)"]),
+    "scheda-allegato-nobody": ("an allegato nobody is in: its page keeps the other rows on it",
+                               {"pilot": "scheda", "for": "rossi", "party": ["procuratore=bianchi"], "answers": WITH_PROCURA,
+                                "entry": both(*SOCI_ALLEGATO), "needs_from_entry": True, "fixture": no_soci}, 0,
+                               ["ok   the form is ready", "wrote: Via dei Tribunali", "wrote: Londra", "page 2: "]),
+    "cila-allegato-fields": ("an allegato copy of a form with fillable fields: each copy's fields and radio buttons its own",
+                             {"pilot": "cila", "for": "rossi", "fixture_file": "business-fixture.json", "party": ["socio=verdi,gialli"],
+                              "entry": row("Pec", map={"repeat": {"ruolo": "socio", "except": "dichiarante"}, "fields": ["*:identity.last_name"]}),
+                              "needs_from_entry": True}, 0,
+                             ["ok   the form is ready", "wrote: Verdi", "wrote: Gialli", "page 2: "]),
+    "scheda-ruolo-from-answers": ("answers.json can't give someone a ruolo, so they can't sign through it",
+                                  {"pilot": "scheda", "for": "nuovo", "fixture": with_fields(["nuovo:identity.last_name", "Nuovo"]),
+                                   "values": {"nuovo:ruolo.tipo": "legale_rappresentante"}}, 1,
+                                  ["FAIL answers.json value nuovo:ruolo.tipo is no ruolo", "FAIL nuovo signs as"]),
+    "scheda-two-procuratori": ("two people named for the procuratore's one section: asked which",
+                               {"pilot": "scheda", "for": "rossi", "party": ["procuratore=bianchi,blu"], "answers": WITH_PROCURA,
+                                "fixture": with_fields(["blu:ruolo.tipo", "procuratore"], ["blu:identity.last_name", "Blu"])}, 1,
+                               ["which one? --party procuratore=bianchi or blu"]),
+    "scheda-personal-for-giulia": ("filed for Giulia in a personal vault: the role she signs as is hers, never the owner's",
+                                   {"pilot": "scheda", "for": "giulia", "fixture_file": "fixture.json", "fixture": with_fields(*OWNER_BUSINESS)}, 1,
+                                   ["giulia:business.qualita_dichiarante not in the vault"]),
+    "ricorso-choices-on-concat": ("boxes to tick on a row of several fields: refused, not a crash",
+                                  {"pilot": "ricorso", "entry": row("Il sottoscritto", choices=[{"box": "x", "values": ["y"]}])}, 1,
+                                  ["choices need a row of one field"]),
+    "scheda-personal": ("the scheda in a personal vault: the owner signs as their business.qualita_dichiarante",
+                        {"pilot": "scheda", "fixture_file": "fixture.json", "fixture": with_fields(*OWNER_BUSINESS)}, 0,
+                        ["ok   the form is ready", "wrote: Ditta Mario Rossi", "wrote: X", "wrote: 7"]),
     "cila-wrong-widget": ("a box names a fillable field the form doesn't have", {"pilot": "cila", "layout": box("C.F.", widget="Text Box 99")}, 1,
                           ["no fillable field 'Text Box 99' on page 1"]),
     "cila-drawn-over-field": ("a box drawn over one of the form's fillable fields instead of naming it",
@@ -388,9 +470,9 @@ def main():
 
 
 def case(base, name, p, changes, want_exit, want_lines):
-    pid, form, answers_file, reply = PILOTS[changes.get("pilot", "mod-1")]
+    pid, form, answers_file, reply, fixture_file = PILOTS[changes.get("pilot", "mod-1")]
     entry, layout, pdf = p["entry"], p["layout"], p["pdf"]
-    signer = ["--for", changes["for"]] if "for" in changes else []
+    signer = (["--for", changes["for"]] if "for" in changes else []) + [x for p in changes.get("party", []) for x in ("--party", p)]
     work = os.path.join(base, name)
     out = os.path.join(work, "out")
     os.makedirs(out)
@@ -409,7 +491,7 @@ def case(base, name, p, changes, want_exit, want_lines):
     if got.returncode != 0:
         return result(got.returncode, got.stdout + got.stderr, out, want_exit, want_lines)
     needs = got.stdout
-    fixture = load(os.path.join(HERE, "fixture.json"))
+    fixture = load(os.path.join(HERE, changes.get("fixture_file", fixture_file)))
     if "fixture" in changes:
         changes["fixture"](fixture)
     entry = copy.deepcopy(entry)
