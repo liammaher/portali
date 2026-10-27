@@ -22,7 +22,7 @@ Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md fo
 - Never create service tokens yourself; the user runs `pvault create-service-token`.
 - Never put tokens in URLs or command lines you show the user.
 - Fields with tier `personal` (login secrets: SPID/CIE credentials, any PIN or password) are invisible to tokens on purpose.
-  Reach them only through a Touch ID request the user approves (2d), and only when the
+  Reach them only through a Touch ID (Windows: Windows Hello) request the user approves (2d), and only when the
   task needs that exact field; otherwise send the user to the UI. Don't try to work
   around the 404/403.
 - Never run `pvault-touchid` directly or call `/vault/session` yourself; go through
@@ -47,7 +47,8 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 
 - Connection refused or `"locked":true`: the vault is locked. If `pvault touchid status`
   says on, tell the user a fingerprint prompt is coming and run `pvault unlock` from
-  Bash. Otherwise ask them to run `pvault unlock` in their own terminal.
+  Bash. Otherwise (and always on Windows, where unlock takes the password) ask them to run
+  `pvault unlock` in their own terminal.
 - `"locked":false`: ready. `categories` shows how many fields each category has.
 
 ## 2. Pick a path to read or change data
@@ -74,6 +75,10 @@ the password and need an interactive TTY, so they fail from Claude's Bash. Give 
 user the exact command instead, e.g. `pvault set residenza.data_inizio 2026-03-15`.
 Commands that always work from Bash: `pvault status`, `pvault schema`, `pvault ui`,
 `pvault touchid status`.
+
+On Windows, Windows Hello plays Touch ID's part in c and d: check `pvault hello status`
+instead, the prompt (face, fingerprint or PIN) reads "pvault wants to read ... for 2 minutes.",
+and there is no helper to enable again; the rest of d holds as written.
 
 **d. CLI with Touch ID approval.** When `pvault touchid status` says on, data commands
 run from Bash show a fingerprint prompt on the user's Mac, worded from the exact

@@ -74,6 +74,14 @@ type Server struct {
 	unlockLimit *rateLimiter
 	grantLimit  *rateLimiter
 	uploadSlots chan struct{} // bounds concurrent document uploads
+	// approver asks the user in person (Windows Hello); approveMu keeps it
+	// to one prompt at a time.
+	approver  Approver
+	approveMu sync.Mutex
+	// stopping ends every request's context when Stop begins, so a prompt
+	// still open doesn't keep a stopping server alive.
+	stopping   context.Context
+	stopAsking context.CancelFunc
 	// stopped is closed by POST /vault/stop (see Stopped).
 	stopped  chan struct{}
 	stopOnce sync.Once
@@ -95,6 +103,7 @@ func New(v *vault.Vault, addr string) *Server {
 		uploadSlots: make(chan struct{}, maxConcurrentUploads),
 		stopped:     make(chan struct{}),
 	}
+	s.stopping, s.stopAsking = context.WithCancel(context.Background())
 	s.mux = http.NewServeMux()
 	s.registerRoutes()
 	s.handler = localHostMiddleware(securityHeadersMiddleware(bodySizeMiddleware(s.mux)))
@@ -104,6 +113,7 @@ func New(v *vault.Vault, addr string) *Server {
 		// Marks requests that arrived on the private channel, a Unix socket
 		// or a Windows named pipe, which the sign gate's password route and
 		// summary are limited to (see viaSocket).
+		BaseContext: func(net.Listener) context.Context { return s.stopping },
 		ConnContext: func(ctx context.Context, c net.Conn) context.Context {
 			network := c.LocalAddr().Network()
 			return context.WithValue(ctx, socketKey{}, network == "unix" || network == "pipe")
@@ -134,6 +144,7 @@ func (s *Server) registerRoutes() {
 	// Protected endpoints
 	protected := http.NewServeMux()
 	protected.HandleFunc("POST /vault/lock", s.handleLock)
+	protected.HandleFunc("POST /vault/hello", s.handleHello)
 	protected.HandleFunc("GET /vault/fields", s.handleListFields)
 	protected.HandleFunc("GET /vault/fields/category/{category}", s.handleGetByCategory)
 	protected.HandleFunc("GET /vault/fields/{id...}", s.handleGetField)
@@ -205,10 +216,23 @@ func (s *Server) Serve(ln net.Listener) {
 	go s.server.Serve(ln)
 }
 
+// Approver asks the person at this computer to approve a request in person,
+// with a prompt showing message over window (0 for none): Windows Hello.
+type Approver interface {
+	// Available reports why it can't ask now, or nil.
+	Available() error
+	// Approve stops asking, and refuses, once ctx is done.
+	Approve(ctx context.Context, window uint64, message string) (bool, error)
+}
+
+// SetApprover lets a can ask the user to approve grants (approve "hello").
+func (s *Server) SetApprover(a Approver) { s.approver = a }
+
 // Stopped is closed when POST /vault/stop asks the server to lock and exit.
 func (s *Server) Stopped() <-chan struct{} { return s.stopped }
 
 // Stop gracefully shuts down the server.
 func (s *Server) Stop(ctx context.Context) error {
+	s.stopAsking()
 	return s.server.Shutdown(ctx)
 }

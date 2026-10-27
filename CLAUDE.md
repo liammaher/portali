@@ -47,6 +47,7 @@ pvault person list|show|add|remove|export|migrate  # Other people (leo:cie.numer
 pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
 pvault retention scans <days>|unset      # How long clients' ID and procura scans are kept after their pratiche close (no default)
 pvault touchid enable|disable|status     # Touch ID approvals (macOS)
+pvault hello enable|disable|status       # Windows Hello approvals (Windows)
 pvault create-service-token|list-service-tokens|revoke-service-token
 pvault ui                                # Onboarding page in the default browser
 ```
@@ -62,6 +63,7 @@ internal/
   crypto/            KDF (Argon2id), cipher (AES-256-GCM), HKDF subkeys, backup stream
   store/             SQLite CRUD (fields, documents, people, tokens, audit, meta, file index)
   vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
+  winhello/          Windows Hello prompts from pure Go (WinRT UserConsentVerifier)
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
   napoli/            Street → municipalità → ASL distretto, offline (vault: located.go)
   filesync/          File index sources for `pvault files sync`: a folder, or OneDrive/SharePoint,
@@ -135,10 +137,30 @@ Profile Password + Secret Key (128-bit)
   (full access if unset). A scoped grant refused with 403 `session_required` makes `authed`
   ask once more for full access.
 
+### Windows Hello (`internal/winhello`, `approvedGrant` in `api/handlers.go`)
+- The vault server asks itself: `POST /vault/session` with `approve: "hello"` (private channel
+  only, never with a password, only once the session turned it on with `POST /vault/hello`,
+  itself private-channel only; meta `hello`, which backups clear, so a restore starts with it
+  off) shows a prompt `pvault wants to <reason>.`, the reason from `GrantPrompt` for
+  the validated request or `SignPrompt` from the vault's own summary, and issues exactly that
+  grant (`CreateApprovedGrant`, `CreateApprovedSignGrant`; audited `via: hello`). Nothing
+  secret is stored for it, and `unlock` keeps the password.
+- Trusting the yes/no inside the server adds nothing: it already holds the vault key. Any
+  local caller can only make a truthful prompt appear. A request that can't be granted as
+  asked is refused before anyone is asked; refusals are audited (`approval_refused`) and
+  count toward the grant limit; one prompt at a time (409). A prompt is cancelled when its
+  caller leaves or the server stops, and an approval grants nothing if Hello was turned off
+  or the vault locked meanwhile.
+- `winhello` calls WinRT through vtables: out-pointers go through `object.call`
+  (`//go:uintptrescapes`), and results start as "not verified", so a lost answer refuses.
+- The CLI asks through one approver (`approve.go`): Touch ID on macOS, Windows Hello on
+  Windows. Status over the private channel says `approver: "hello"`; the client checks the
+  echoed scope, access and sign as the helper does.
+
 ### Who may do what
 - **Session** (the user, typed password): everything. Handlers test `isSessionAuth`.
 - **Scoped grant** (`POST /vault/session` with `scope`, max 10m): what the user approved
-  in person, `personal` tier included. Not session auth.
+  in person (Touch ID or Windows Hello), `personal` tier included. Not session auth.
 - **Service token** (agents, MCP): explicit scope, access `read`/`append`/`write`, TTL
   24h default / 90d max, `max_sensitivity` cap (default `sensitive`, never `personal`).
   Never resets the auto-lock timer. A token may name only people who exist.

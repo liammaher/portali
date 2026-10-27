@@ -73,6 +73,8 @@ func main() {
 		cmdUI()
 	case "touchid":
 		cmdTouchID()
+	case "hello":
+		cmdHello()
 	case "help", "-h", "--help":
 		printUsage()
 	default:
@@ -152,7 +154,8 @@ Commands:
   person migrate [--dry-run]       Turn old nucleo_familiare.membro<N> fields into people
                                    (pvault member ... is an alias for pvault person ...)
   ui                               Open vault onboarding form in browser
-  touchid enable|disable|status    Approve requests with Touch ID instead of typing the password
+  touchid enable|disable|status    Approve requests with Touch ID instead of typing the password (macOS)
+  hello enable|disable|status      Approve requests with Windows Hello instead of typing the password (Windows)
   create-service-token <consumer> --scope <patterns> [--access read|append|write]
                        [--ttl 24h] [--max-sensitivity public|standard|sensitive|critical] [--keychain <service>]
                                    Create a scoped agent token (read-only by default; 24h default, 90d max;

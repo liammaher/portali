@@ -459,11 +459,14 @@ func (v *Vault) verifyCredentials(password string, sk []byte) (vaultKey, salt []
 // authenticate this way, so no reusable token is stored on disk or passed on
 // a command line where an agent with shell access could read it.
 func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Duration) (string, time.Time, error) {
-	if ttl <= 0 || ttl > MaxSessionGrantTTL {
-		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxSessionGrantTTL)}
+	if _, err := CheckGrantRequest(ttl, "", ""); err != nil {
+		return "", time.Time{}, err
 	}
-	return v.issueGrant(password, secretKeyHex, ttl, "", "",
-		store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()})
+	session, err := v.checkGrantCredentials(password, secretKeyHex)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	return v.issueGrant(session, ttl, "", "", grantAudit(ttl, "", ""))
 }
 
 // CreateScopedGrant is CreateSessionGrant limited to scope and access, for
@@ -471,29 +474,59 @@ func (v *Vault) CreateSessionGrant(password, secretKeyHex string, ttl time.Durat
 // fields). Unlike a service token it can reach personal fields, because the
 // user approved it in person; it cannot do session-only operations.
 func (v *Vault) CreateScopedGrant(password, secretKeyHex string, ttl time.Duration, scope, access string) (string, time.Time, error) {
+	if scope == "" { // CheckGrantRequest would take it for full access
+		return "", time.Time{}, &ValidationError{Field: "scope", Msg: ValidateScope("").Error()}
+	}
+	access, err := CheckGrantRequest(ttl, scope, access)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	session, err := v.checkGrantCredentials(password, secretKeyHex)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	return v.issueGrant(session, ttl, scope, access, grantAudit(ttl, scope, access))
+}
+
+// CheckGrantRequest checks a grant's ttl, scope and access before anyone is
+// asked for it, and returns the access it will have (read if unset). An
+// empty scope is full access, a session grant, which takes no access.
+func CheckGrantRequest(ttl time.Duration, scope, access string) (string, error) {
+	if scope == "" {
+		if ttl <= 0 || ttl > MaxSessionGrantTTL {
+			return "", &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxSessionGrantTTL)}
+		}
+		if access != "" {
+			return "", &ValidationError{Field: "access", Msg: "requires a scope"}
+		}
+		return "", nil
+	}
 	if ttl <= 0 || ttl > MaxScopedGrantTTL {
-		return "", time.Time{}, &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxScopedGrantTTL)}
+		return "", &ValidationError{Field: "ttl", Msg: fmt.Sprintf("must be greater than 0 and at most %s", MaxScopedGrantTTL)}
 	}
 	if err := ValidateScope(scope); err != nil {
-		return "", time.Time{}, &ValidationError{Field: "scope", Msg: err.Error()}
+		return "", &ValidationError{Field: "scope", Msg: err.Error()}
 	}
 	if access == "" {
 		access = AccessRead
 	}
 	if !validAccess[access] {
-		return "", time.Time{}, ErrInvalidAccess
+		return "", ErrInvalidAccess
 	}
-	return v.issueGrant(password, secretKeyHex, ttl, scope, access,
-		store.AuditEntry{Consumer: "vault", Scope: scope, Action: "scoped_grant", Purpose: "access: " + access + ", ttl: " + ttl.String()})
+	return access, nil
 }
 
-// issueGrant checks the credentials, then issues a grant (full access when
-// scope is empty), resets the auto-lock timer and records entry.
-func (v *Vault) issueGrant(password, secretKeyHex string, ttl time.Duration, scope, access string, entry store.AuditEntry) (string, time.Time, error) {
-	session, err := v.checkGrantCredentials(password, secretKeyHex)
-	if err != nil {
-		return "", time.Time{}, err
+// grantAudit is the audit entry of a grant (full access when scope is empty).
+func grantAudit(ttl time.Duration, scope, access string) store.AuditEntry {
+	if scope == "" {
+		return store.AuditEntry{Consumer: "vault", Scope: "*", Action: "session_grant", Purpose: "ttl: " + ttl.String()}
 	}
+	return store.AuditEntry{Consumer: "vault", Scope: scope, Action: "scoped_grant", Purpose: "access: " + access + ", ttl: " + ttl.String()}
+}
+
+// issueGrant issues a grant on session (full access when scope is empty),
+// resets the auto-lock timer and records entry.
+func (v *Vault) issueGrant(session *Session, ttl time.Duration, scope, access string, entry store.AuditEntry) (string, time.Time, error) {
 	token, expires, err := session.AddGrant(ttl, scope, access)
 	if err != nil {
 		return "", time.Time{}, err

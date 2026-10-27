@@ -522,3 +522,31 @@ func TestBackupRemovesStaleWorkDir(t *testing.T) {
 		t.Errorf("stale work dir still there after a backup (stat: %v)", err)
 	}
 }
+
+// Windows Hello is turned on on each computer, like Touch ID: a restored
+// vault has it off, while the vault backed up keeps it on.
+func TestRestoreLeavesWindowsHelloOff(t *testing.T) {
+	v, sk, _ := backupVault(t)
+	if err := v.SetHelloEnabled(true); err != nil {
+		t.Fatal(err)
+	}
+	path, err := v.Backup()
+	if err != nil {
+		t.Fatal(err)
+	}
+	target := filepath.Join(t.TempDir(), "restored")
+	if _, err := RestoreBackup(path, target, testPassword, sk); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(target)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+	if on, err := r.HelloEnabled(); on || err != nil {
+		t.Errorf("restored vault: Windows Hello %v, %v", on, err)
+	}
+	if on, _ := v.HelloEnabled(); !on {
+		t.Error("the backed-up vault lost its setting")
+	}
+}

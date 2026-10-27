@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"syscall"
 
 	"golang.org/x/term"
@@ -17,6 +18,9 @@ const touchIDUsage = `usage: pvault touchid enable|disable|status
 func cmdTouchID() {
 	if len(os.Args) < 3 {
 		fatal(touchIDUsage)
+	}
+	if runtime.GOOS == "windows" {
+		fatal("Touch ID is for Macs; on Windows, approve requests with Windows Hello: '%s'", pvCmd("hello enable"))
 	}
 	switch os.Args[2] {
 	case "enable":

@@ -13,6 +13,7 @@ import (
 
 	"github.com/lovincyrus/personal-vault/internal/api"
 	"github.com/lovincyrus/personal-vault/internal/vault"
+	"github.com/lovincyrus/personal-vault/internal/winhello"
 )
 
 func cmdServe() {
@@ -73,6 +74,7 @@ func cmdServe() {
 	}
 
 	srv := api.New(v, addr)
+	srv.SetApprover(winhello.Hello{})
 	ln, err := srv.Start()
 	if err != nil {
 		if sock != nil {

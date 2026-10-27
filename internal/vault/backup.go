@@ -284,8 +284,9 @@ func (v *Vault) writeBackup(vaultKey []byte, dir string, now time.Time) (string,
 			return "", err
 		}
 	}
-	// The restored vault reports this backup as its last one.
-	if err := store.PrepareSnapshot(snapshot, missing, map[string]string{metaBackupLast: now.Format(time.RFC3339)}); err != nil {
+	// The restored vault reports this backup as its last one, and has Windows
+	// Hello off: like Touch ID, it is turned on on each computer.
+	if err := store.PrepareSnapshot(snapshot, missing, map[string]string{metaBackupLast: now.Format(time.RFC3339), metaHello: ""}); err != nil {
 		return "", fmt.Errorf("update snapshot: %w", err)
 	}
 	docIDs = present
