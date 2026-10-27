@@ -1,164 +1,222 @@
 # Portal map: SCIA unica for a pizzeria in zona C (somministrazione + notifica sanitaria)
 # on impresainungiorno-Napoli (SUAP, codice catastale F839).
 #
-# Level L0: drafted from public guides before anyone walked the front office. Each screen
-# says where it comes from; `unseen` means nobody has seen that screen yet. A walk replaces
-# guesses with what the screen really says and moves the map to L1 (walked, up to before
-# sending). Library entry: napoli/comune/scia-somministrazione-alimenti-bevande.
+# Walked once on 2026-10-27 (README, Runs) up to the attachments, where the portal stops
+# until the signed files and the declarations are in. Screens marked `seen` are as the
+# portal showed them; the last two (attachments onward, signing and sending) are known
+# only up to the gate. Level stays L0 until a walk reaches the send button with nothing to
+# fix. Library entry: napoli/comune/scia-somministrazione-alimenti-bevande.
 #
-# fill: values are vault field IDs in the business vault (the titolare is the person whose
-# ruolo.tipo is titolare; here `gennaro`). ask: something no vault field holds.
-# tap: a step only the person does (login, sign, pay, send). In a rehearsal, pay and send
-# are never done: the run stops before them.
+# fill: vault field IDs in the business vault (the titolare is the person whose ruolo.tipo
+# is titolare; here `gennaro`). ask: something no vault field holds. tap: what only the
+# person does: login, declare (tick a legal declaration in their name), sign, pay, send.
+# A rehearsal never pays or sends, and Claude never ticks a declaration.
+#
+# Mechanics: the front office is PrimeFaces. Each section saves with its own Salva and the
+# page reloads; dropdowns need a click on the item after the list has scrolled to it
+# (typing and arrow keys don't select); street fields are lookups that need a real key
+# press to show suggestions. URLs are /fnsuap/cmd/create?execution=e1sN, N growing.
 
 procedure: napoli/comune/scia-somministrazione-alimenti-bevande
 channel: impresainungiorno – SUAP del Comune di Napoli
 level: L0
-last_walked: null
+last_walked: 2026-10-27
 
 screens:
   - screen: Sportello SUAP di Napoli
     url: https://www.impresainungiorno.gov.it/route/suap?codComune=F839&locale=IT
     choose: COMPILA UNA PRATICA
     seen: 2026-10-27
-    notes: >-
-      The link goes to suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839, which asks
-      for a login first.
 
   - screen: Login (iasu.infocamere.it)
     tap: login
     seen: 2026-10-27
-    notes: >-
-      Tabs SPID, CIE, EIDAS, TELEMACO, CNS. SPID offers "SPID natural person" and "SPID
-      professional". The person logs in; Claude never types credentials.
+    notes: SPID, CIE, EIDAS, TELEMACO, CNS. The person logs in; Claude never types credentials.
 
-  - screen: New pratica or import
-    source: Comune di Verona guide (2021)
-    unseen: true
-    choose: compila nuova pratica
-    notes: The other option imports a previous pratica, sent or draft.
+  - screen: Assegna una descrizione alla pratica
+    seen: 2026-10-27
+    choose: COMPILA NUOVA PRATICA (or IMPORTA DATI DA PRATICA PRECEDENTE)
+    fill:
+      descrizione: "3–60 characters, only for the user's desk; e.g. SCIA somministrazione <denominazione>"
+
+  - screen: Controlla l'accesso alla pratica
+    seen: 2026-10-27
+    choose: CONFERMA without adding anyone
+    notes: >-
+      Optional. Gives other people a profile on the draft (1 read, 2 write, 3 send, 4 delete,
+      5 access control); the creator is the person logged in.
 
   - screen: Scelta settore attività
-    source: SUAP Napoli vademecum (23/07/2026)
-    unseen: true
-    choose: strutture ricettive (alloggio) e ristorazione (Ateco da 55 a 56)
+    seen: 2026-10-27
+    choose: >-
+      Strutture Ricettive (Alloggio) e Ristorazione (Ateco da 55 a 56) → Ristorazione e
+      Somministrazione di alimenti e bevande → Esercizio di somministrazione di alimenti e
+      bevande in zone NON tutelate
     check:
       - business.codice_ateco starts with 56
+      - the locale is in zona C (the Piano's street list); otherwise "... in zone tutelate"
+    notes: The tree is hard to click; the search box above it finds the node.
+
+  - screen: Scelta operazioni
+    seen: 2026-10-27
+    choose:
+      - Avvio, gestione, cessazione attività → Aprire l'attività
+      - >-
+        ALTRE ESIGENZE → Notifica ai fini della registrazione impresa alimentare (art. 6,
+        Reg. CE n. 852/2004) → Notifica ai fini della registrazione - avvio
+        attività/trasferimento
     notes: >-
-      In zona A or B the procedure is "Esercizio di somministrazione di alimenti e bevande in
-      zone tutelate"; in zona C it is the ordinary somministrazione one. Its exact name here is
-      unknown: write it down on the walk.
+      The same tree holds the dehors ("Domanda di occupazione suolo pubblico per area annessa
+      ad esercizio di somministrazione"), the insegna ("SCIA per installazione insegna di
+      esercizio"), the Dogane notice for alcohol, the VVF PIN forms and GISA. Not GISA for a
+      restaurant: the Reg. 852 notifica is the one.
 
-  - screen: Scelta intervento
-    unseen: true
-    choose: Aprire l'attività (apertura)
-    notes: Zona C means SCIA; open from the day of the receipt.
+  - screen: Scelta interventi eventuali
+    seen: 2026-10-27
+    choose: none, unless one applies
+    ask:
+      - music (comunicazione or nulla osta impatto acustico)
+      - alcohol ("in caso di vendita di alcolici")
+      - an outside sign ("in caso di attività che preveda insegna esterna"), which bundles the
+        insegna into this pratica
 
-  - screen: Altre esigenze connesse con l'esercizio dell'attività
-    source: SUAP Napoli vademecum (Scheda 2 shows this screen for laboratori)
-    unseen: true
-    choose: the notifica sanitaria for registration (Reg. CE 852/2004)
+  - screen: Scelta del destinatario della pratica
+    seen: 2026-10-27
+    choose: SUAP DEL COMUNE DI NAPOLI (the only option, preselected)
+
+  - screen: Scelte eventuali
+    seen: 2026-10-27
+    choose: none when the titolare files himself
     notes: >-
-      This makes it the SCIA unica with the notifica (diritti S72, 120 euro). Don't add the
-      insegna here: it is a SCIA of its own. No nulla osta acustico: no music, zona C.
+      Other options: other soci's requirements; "IL PRESENTATORE DELLA DOMANDA È UN
+      PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE" (the intermediary route);
+      Terzo settore.
 
-  - screen: Riepilogo dei procedimenti
-    source: Comune di Verona guide (2021)
-    unseen: true
-    check:
-      - exactly the somministrazione SCIA and the notifica sanitaria are listed
-    notes: If a procedimento is wrong, go back with the menu on the left; don't fix it later.
+  - screen: Compilazione della domanda telematica
+    seen: 2026-10-27
+    notes: >-
+      Generated from the choices: "SCIA per apertura di esercizio di somministrazione di
+      alimenti e bevande" (Uffici Comune di Napoli) and "Notifica ai fini della registrazione"
+      (ASL Napoli 1 Centro). Sixteen sections below, each saved on its own; a green check
+      means complete. VISUALIZZA ANTEPRIMA gives a PDF preview.
 
   - screen: Scheda anagrafica
-    source: Comune di Verona guide (2021)
-    unseen: true
-    choose: DITTA/SOCIETA'/IMPRESA
+    seen: 2026-10-27
+    choose: DITTA/SOCIETA'/IMPRESA (preselected), then NON ANCORA ISCRITTA when there is no REA
     fill:
+      nome, cognome, codice fiscale: gennaro:identity.first_name, last_name, codice_fiscale
+      sesso: gennaro:identity.sex (Maschile/Femminile)
+      data nascita: gennaro:identity.date_of_birth (gg/MM/aaaa)
+      luogo di nascita: gennaro:identity.birth_province, birth_comune (dropdowns)
+      residenza: gennaro:residenza.provincia, comune; DUG + denominazione from residenza.indirizzo; civico, cap
+      email/PEC, telefono: gennaro:identity.email, phone (digits, no +39)
+      carica: gennaro:ruolo.tipo (titolare → TITOLARE, from the Registro Imprese list)
       denominazione: business.denominazione
-      forma giuridica: business.forma_giuridica
-      codice fiscale: business.codice_fiscale
-      partita IVA: business.partita_iva
-      sede: business.sede_legale_*
-      titolare: gennaro:identity.*
-      residenza del titolare: gennaro:residenza.*
-      qualità: gennaro:ruolo.tipo
+      forma giuridica: business.forma_giuridica (ditta_individuale → IMPRESA INDIVIDUALE)
+      codice fiscale, P.IVA: business.codice_fiscale, partita_iva
+      sede: business.sede_legale_* (DUG split as for the residenza)
+      telefono, PEC: business.telefono, pec
     notes: >-
-      A ditta individuale is DITTA/SOCIETA'/IMPRESA, never PERSONA. Never put a procuratore's
-      data here. Unknown: whether the portal checks that the titolare is the person logged in,
-      and what it does with a ditta not yet in the Registro Imprese (no REA): record both.
+      Not prefilled from SPID, and not checked against who is logged in: a made-up titolare
+      and a made-up CF and P.IVA (valid checksums) saved without complaint. The street is
+      split into a DUG dropdown (ALTRO, CORSO, LARGO, PIAZZA, VIA, VIALE) and a name.
 
-  - screen: Qualifica e dati del procuratore
-    source: impresainungiorno news (procura speciale, 7 April 2025)
-    unseen: true
-    choose: none
+  - screen: Domicilio digitale
+    seen: 2026-10-27
+    choose: INI-PEC (a business) rather than INAD (a person)
+    fill:
+      indirizzo: business.pec
+
+  - screen: Domicilio elettronico (domicilio digitale speciale)
+    seen: 2026-10-27
+    fill:
+      PEC for the receipt and every message about the pratica: business.pec
+
+  - screen: Ubicazione dell'attività
+    seen: 2026-10-27
+    fill:
+      CAP: locale.cap
+      via: locale.indirizzo, but as the Comune names it (a lookup)
+      civico: locale.civico
+      scala, piano, interno: locale.interno
     notes: >-
-      The titolare files himself, so no procura. If the portal insists, that is a finding:
-      record it and stop.
+      Comune and provincia are prefilled. The street must be picked from the lookup, which
+      uses the Comune's own toponymy: "Viale Augusto" is VIALE OTTAVIO CESARE AUGUSTO there,
+      and VIALE DI AUGUSTO in the vault's stradario. Search on a distinctive word and pick
+      the exact match.
 
-  - screen: Domicilio elettronico
-    source: impresainungiorno news (procura speciale, 7 April 2025)
-    unseen: true
+  - screen: Dati catastali
+    seen: 2026-10-27
+    choose: NCEU (buildings) for a shop; NCT is land
     fill:
-      PEC: business.pec
+      foglio, particella, subalterno: locale.catasto_foglio, catasto_particella, catasto_subalterno
+      sezione urbana: locale.catasto_sezione
+      categoria: locale.catasto_categoria (C/1 → "C01 Negozi e botteghe")
+    notes: >-
+      Choosing NCEU adds sezione amministrativa, sezione urbana, classe and categoria. The
+      vault has no field for classe or sezione amministrativa.
 
-  - screen: SCIA somministrazione (the module)
-    unseen: true
+  - screen: Dati dell'esercizio di somministrazione
+    seen: 2026-10-27
     fill:
-      indirizzo del locale: locale.indirizzo, locale.civico, locale.cap
-      dati catastali: locale.catasto_foglio, locale.catasto_particella, locale.catasto_subalterno, locale.catasto_categoria
-      superficie: locale.superficie_mq
-      titolo di disponibilità: locale.titolo
-      descrizione: business.descrizione_attivita
+      tipologia di esercizio: business.descrizione_attivita (500 characters)
+    choose:
+      - Permanente (or Stagionale)
+      - not in a centro commerciale
     ask:
-      - superficie di somministrazione (the part with tables and chairs) in m²
-      - requisito professionale of the titolare, and its proof (course, experience, diploma)
-      - orari, if the module asks
-    notes: >-
-      The requisiti morali and professionali are self-declarations (artt. 46–47 DPR 445/2000).
-      In a rehearsal they are invented: say so in the run log.
+      - denominazione insegna (the name on the sign)
+      - superficie di somministrazione in m² (the seating area, not locale.superficie_mq)
 
-  - screen: Notifica sanitaria (the module)
-    unseen: true
-    fill:
-      stabilimento: locale.*
-      distretto ASL: locale.distretto_asl
-    ask:
-      - linee di attività (ristorazione pubblica)
-    notes: The ASL's own diritti (20 euro per linea) are separate from the SUAP's.
+  - screen: Notifica avvio e inizio attività
+    seen: 2026-10-27
+    choose: Avvio contestuale alla data di notifica (or a later date)
+
+  - screen: Tipologia di attività (art. 6, Reg. CE 852/2004)
+    seen: 2026-10-27
+    choose: RISTORAZIONE → Ristorazione pubblica con somministrazione diretta
 
   - screen: Dichiarazione relativa ai diritti di segreteria/istruttori
-    source: SUAP Napoli pagoPA guide
-    unseen: true
-    choose: sono dovuti oneri quali diritti o spese
+    seen: 2026-10-27
+    choose: sono dovuti oneri; pagamento on line alla pagina successiva
     fill:
-      importo: "120 (tabella 2026, S72: somministrazione in zona non tutelata con notifica sanitaria)"
-    then: flag "pagamento on line", Salva, Prosegui
+      importo: "120 (tabella 2026, S72: zona non tutelata con notifica sanitaria)"
+
+  - screen: The declarations
+    seen: 2026-10-27
+    tap: declare
+    notes: >-
+      Seven sections are the dichiarante's own statements and stay unticked until the person
+      ticks them: consapevolezza artt. 46–47; informativa privacy; requisiti di onorabilità
+      (TULPS artt. 11, 92, 131; antimafia art. 67) and professionali (art. 71 d.lgs. 59/2010,
+      own or a preposto's); altre dichiarazioni (norme urbanistiche e igienico-sanitarie,
+      sorvegliabilità D.M. 564/1992, impegno a comunicare variazioni); dichiarazioni art. 6
+      Reg. 852; tasse comunali; art. 75 DPR 445/2000. The portal lets you move on without
+      them and blocks at the attachments.
 
   - screen: Pagamento degli oneri connessi alla pratica
-    source: SUAP Napoli pagoPA guide
-    unseen: true
+    seen: 2026-10-27
     tap: pay
     notes: >-
-      STOP here in a rehearsal. "Procedi con il pagamento tramite pagoPA" creates an IUV, a
-      payment position tied to the draft. In a real pratica the owner pays. To see the screens
-      after it, use the menu on the left, which reaches later steps even when this one isn't
-      done (Verona guide).
+      Tariff tables (Comune di Napoli; ASL, d.lgs. 32/2021) and a pagoPA button. STOP: the
+      button creates a payment position. PROSEGUI moves on without paying; the portal warns
+      that sending needs the payment.
 
   - screen: Allega documenti
-    source: Comune di Verona guide (2021)
-    unseen: true
+    seen: 2026-10-27
+    tap: sign
     upload:
-      - relazione tecnica asseverata, with planimetrie (a professional's; in a rehearsal a
-        placeholder PDF marked FAC-SIMILE)
-      - ricevuta pagoPA (none in a rehearsal)
+      - planimetria quotata dei locali (required; .p7m only)
+      - ricevuta della tariffa sanitaria forfettaria ASL (required; .p7m only)
+      - attestazione versamento oneri (optional; .p7m)
+      - allegati liberi (optional; .p7m or plain pdf, xml, dwf, svg, jpg); the relazione
+        tecnica asseverata goes here, having no slot of its own
     notes: >-
-      The portal also offers fac-simile documents here (the procura, regional forms). Write
-      down which attachments it marks as mandatory.
+      Every named slot takes only CAdES-signed files (.p7m): a firma digitale, not a stamped
+      handwritten signature. PROSEGUI stops with "non è stata completata la compilazione dei
+      riquadri evidenziati dall'indicatore rosso" until the required files and red sections
+      are done. Max 9.77 MB per file, 572 MB per pratica.
 
   - screen: Firma e invio
     unseen: true
     tap: sign, then send
-    notes: >-
-      STOP before sending. Record how signing works: does the portal want each file signed
-      (CAdES .p7m or PAdES), or a summary (distinta) signed? Leave the pratica as a draft
-      ("Pratiche in bozza") and delete it after the walk.
+    notes: Not reached. Never in a rehearsal.

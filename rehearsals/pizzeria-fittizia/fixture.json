@@ -1,5 +1,5 @@
 {
-  "description": "Pizzeria Fittizia: a made-up ditta individuale opening a 20-seat pizzeria with a gas oven at viale Augusto 74, Fuorigrotta (zona C of the 2026 Piano, so a SCIA). Its titolare is Gennaro Fittizio. The partita IVA and codice fiscale pass the checksums and belong to nobody known; no real person's or company's data.",
+  "description": "Pizzeria Fittizia: a made-up ditta individuale opening a 20-seat pizzeria with a gas oven and no alcohol at viale Augusto 74, Fuorigrotta (zona C of the 2026 Piano, so a SCIA). Its titolare is Gennaro Fittizio. The partita IVA and codice fiscale pass the checksums and belong to nobody known; no real person's or company's data.",
   "kind": "impresa",
   "fields": [
     ["gennaro:ruolo.tipo", "titolare"],
@@ -27,7 +27,7 @@
     ["business.codice_fiscale", "FTTGNR90E12F839R"],
     ["business.data_apertura", "2026-10-20"],
     ["business.codice_ateco", "56.10.11"],
-    ["business.descrizione_attivita", "Pizzeria con somministrazione al tavolo, 20 posti, forno a gas, senza superalcolici"],
+    ["business.descrizione_attivita", "Pizzeria con somministrazione al tavolo, 20 posti, forno a gas, senza bevande alcoliche"],
     ["business.pec", "pizzeria.fittizia@pec.example.it"],
     ["business.email", "info@pizzeria-fittizia.example.it"],
     ["business.telefono", "+39 081 000 0001"],

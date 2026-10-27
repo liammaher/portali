@@ -40,7 +40,8 @@ insegna and the dehors.
   art. 76). A draft isn't a declaration.
 - **Never pay, and don't create a pagoPA position**: stop before "Procedi con il pagamento tramite
   pagoPA".
-- **Delete the draft** after each walk (Pratiche in bozza).
+- **Never tick a declaration** in the person's name; they do.
+- **Keep or delete the draft** as the person says (Pratiche in bozza); never send it.
 - **Logins are the person's.** Liam logs in with his own SPID; Claude never types credentials.
 - **No real third party's data.** The titolare is Gennaro Fittizio. If the portal ties the titolare
   to whoever is logged in, record it, and use Liam's own identity for that walk.
@@ -73,4 +74,26 @@ insegna and the dehors.
 
 | Date | Walked by | Reached | Broke on | Fixed |
 |---|---|---|---|---|
-| | | | | |
+| 2026-10-27 | Claude, Liam logged in | Allega documenti: 21 screens, every factual section saved | The attachments gate: two required files must be CAdES-signed (.p7m); the seven declarations are the person's | Map rewritten from what the portal showed |
+
+What the first walk taught, beyond the map:
+
+- **Declarations are a tap of their own.** Seven sections are the dichiarante's statements
+  (DPR 445/2000, requisiti, sorvegliabilità…). Claude fills facts; the person ticks those, so
+  `declare` joins login, sign, pay and send.
+- **Portal attachments need a firma digitale in CAdES (.p7m)**, so the sign gate's stamped
+  signature can't serve here (north star, open question 2).
+- **The portal checks nothing against the login or the registers in a draft**: a made-up
+  titolare, CF and P.IVA saved without complaint. Correctness is ours to guarantee.
+- **The Comune's street names differ from ours**: viale Augusto is VIALE OTTAVIO CESARE AUGUSTO
+  in the SUAP lookup and VIALE DI AUGUSTO in the vault's stradario.
+- **Asks the vault can't answer**: the name on the sign, the seating area (superficie di
+  somministrazione), music, alcohol, start date. Alcohol was set to none for this walk.
+- **Vault values need translating**: ditta_individuale → IMPRESA INDIVIDUALE, titolare →
+  TITOLARE (a list of ~300 Registro Imprese roles), C/1 → C01, dates to gg/MM/aaaa, a street
+  split into DUG and name.
+- **The portal bundles more than the library says**: the insegna can join this pratica, and
+  the relazione tecnica asseverata has no slot of its own (allegati liberi).
+
+The draft ("PROVA NON INVIARE - Pizzeria Fittizia SCIA") was kept in Liam's Pratiche in bozza
+at his request, unpaid and unsent.
