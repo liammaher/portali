@@ -275,10 +275,15 @@ When there is one, follow it instead of exploring the portal:
    token for all of them) and ask its `{{ask.x}}` questions before opening the portal; apply
    the filters `run.py` defines (`FILTERS`: dates gg/MM/aaaa, the street split into DUG and
    name, carica and forma giuridica as the portal names them).
-2. **Walk it in the built-in browser**: the user logs in there; then the wizard screens in
-   order, and each section: fill it, Salva, read every field back from the page and compare
-   with what you typed. Fix a mismatch before the next section. The map's header has the
-   portal's mechanics (dropdown filters, lookups that need real key presses).
+2. **Run it in the built-in browser**: the user logs in there. Then `run.py page` (same
+   arguments as `run`, with `--out DIR`) writes `install.js` and `run.js`; run each on the
+   portal's page with one `javascript_tool` call (install once per browser profile; it stores
+   no personal data), and poll `await __pv.wait(40000)` until `result` is `filled` or
+   `stopped`. It walks the wizard and every section in under a minute, reading each field back
+   after Salva; `__pv.open()` then shows the draft as a normal page. If it stops, its `error`
+   says where: finish that part by hand (fill, Salva, read back and compare) and fix the
+   steps file. By hand, the map's header has the portal's mechanics (dropdown filters,
+   lookups that need real key presses).
 3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
    Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand. Stop at
    the attachments.

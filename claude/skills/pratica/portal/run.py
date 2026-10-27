@@ -4,6 +4,11 @@
   run.py plan --steps STEPS.yaml --answers A.json --server S.json --token NAME
       Resolves every value the steps need and prints what goes where. No browser.
 
+  run.py page --steps STEPS.yaml --answers A.json --server S.json --token NAME --out DIR
+      Writes DIR/install.js and DIR/run.js for the Claude browser pane, where each runs
+      with one call on the portal's page: install.js stores inpage.js and the steps (no
+      personal data), run.js starts a run with the person's values. inpage.js says more.
+
   run.py run  --steps STEPS.yaml --answers A.json --server S.json --token NAME --out DIR
               [--cdp URL | --profile DIR] [--close]
       Opens the portal in Chrome and waits for the person to log in, then walks the
@@ -173,12 +178,52 @@ def plan(steps, values):
     return out
 
 
+def page_scripts(steps, values):
+    """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
+    plan(steps, values)  # stops on a missing required value
+    skeleton = {
+        "start": steps["start"], "logged_in": steps["logged_in"],
+        "wizard": [{k: v for k, v in w.items() if k != "fill"} | (
+            {"fill": {"css": w["fill"]["css"]}} if "fill" in w else {}) for w in steps["wizard"]],
+        "sections": [{"section": s["section"], "open": s.get("open", True),
+                      "fields": [{k: f[k] for k in ("id", "kind", "label") if k in f} for f in s["fields"]]}
+                     for s in steps["sections"]],
+        "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,
+        "dug": sorted(DUG), "label_js": LABEL_JS,
+    }
+    # One entry per field: false when its `when` is false, true for a tick, else the value.
+    vals = {
+        "wizard": [values.render(w["fill"]["value"]) if "fill" in w else None for w in steps["wizard"]],
+        "sections": [[False if "when" in f and not truthy(values.render(f["when"]) or "")
+                      else True if "value" not in f else values.render(f["value"])
+                      for f in s["fields"]] for s in steps["sections"]],
+    }
+    proc = steps["procedure"]
+    runner = Path(__file__).with_name("inpage.js").read_text()
+    # A function's source is its text, so neither part needs escaping into a string.
+    install = (f"localStorage.setItem('pv-runner', '(' + function () {{\n{runner}}} + ')()');\n"
+               f"localStorage.setItem({json.dumps('pv-steps:' + proc)}, JSON.stringify("
+               f"{json.dumps(skeleton, ensure_ascii=False, separators=(',', ':'))}));\n"
+               "'installed'\n")
+    run_js = ("if (!window.__pv) (0, eval)(localStorage.getItem('pv-runner'));\n"
+              f"__pv.start({json.dumps(proc)}, {json.dumps(vals, ensure_ascii=False, separators=(',', ':'))})\n")
+    return install, run_js
+
+
 # --- browser ----------------------------------------------------------------------
 
 LABEL_JS = """(el) => {
   const texts = [];
   const t = el.closest('[title]'); if (t) texts.push(t.title);
   const td = el.closest('td'); if (td) texts.push(td.innerText);
+  // A dynaForm puts a label in the row above, in the same column, or to the left.
+  for (let tr = td && td.parentElement.previousElementSibling; tr; tr = tr.previousElementSibling) {
+    const c = tr.cells[td.cellIndex];
+    if (c && c.innerText.trim()) { texts.push(c.innerText); break; }
+  }
+  for (let c = td && td.previousElementSibling; c; c = c.previousElementSibling) {
+    if (c.innerText.trim()) { texts.push(c.innerText); break; }
+  }
   const labels = [...document.querySelectorAll('.labelDynaFormControl, label')];
   const before = labels.filter(l => l.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && !l.contains(el));
   if (before.length) texts.push(before[before.length - 1].innerText);
@@ -453,7 +498,7 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("command", choices=["plan", "run"])
+    ap.add_argument("command", choices=["plan", "page", "run"])
     ap.add_argument("--steps", required=True, type=Path)
     ap.add_argument("--answers", required=True, type=Path)
     ap.add_argument("--server", required=True, type=Path)
@@ -472,7 +517,14 @@ def main():
                 print(f"{p['section'][:28]:28}  {(p['label'] or p['id'])[:34]:34}  {p['value'] if p['value'] is not None else '(' + p['kind'] + ')'}")
             return 0
         if not a.out:
-            ap.error("run needs --out")
+            ap.error(f"{a.command} needs --out")
+        if a.command == "page":
+            a.out.mkdir(parents=True, exist_ok=True)
+            install, run_js = page_scripts(steps, values)
+            (a.out / "install.js").write_text(install)
+            (a.out / "run.js").write_text(run_js)
+            print(f"{a.out / 'install.js'} ({len(install)} bytes), {a.out / 'run.js'} ({len(run_js)} bytes)")
+            return 0
         return run(steps, values, a.out, a.cdp, a.profile, a.close)
     except StepError as e:
         print(f"stopped: {e}", file=sys.stderr)

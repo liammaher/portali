@@ -56,8 +56,9 @@ sections:
       - {id: "r33c3p87reg:txt", kind: text, label: eMail/PEC, value: "{{t:identity.email}}"}
       - {id: "r33c4p89reg:number", kind: text, label: Telefono fisso/cellulare, value: "{{t:identity.phone|phone_it}}"}
       - {id: "r36c1p93reg", kind: select, label: Carica, value: "{{t:ruolo.tipo|carica}}"}
-      - {id: "r39c1p99reg:txt", kind: text, label: Denominazione, value: "{{business.denominazione}}"}
+      # Forma giuridica first: choosing it re-renders the block and can empty Denominazione.
       - {id: "r41c1p103reg", kind: select, label: Forma giuridica, value: "{{business.forma_giuridica|forma}}"}
+      - {id: "r39c1p99reg:txt", kind: text, label: Denominazione, value: "{{business.denominazione}}"}
       - {id: "r41c2p105reg:txt", kind: text, label: Codice Fiscale, value: "{{business.codice_fiscale}}"}
       - {id: "r41c3p107reg:txt", kind: text, label: P.IVA, value: "{{business.partita_iva}}"}
       - {id: "r44c2p113reg", kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
