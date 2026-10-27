@@ -260,6 +260,18 @@ CASES = {
     "sign-again": ("--sign twice: the second run finds the pratica open and files only the signing request",
                    {"sign": True, "no_reply": True, "again": True}, 0,
                    ["is already open: only the signing request was filed", "is waiting for the user"]),
+    "route-pec": ("route --channel pec: the shared steps and the PEC's own, how it signs, the proof",
+                  {"route": "pec"}, 0,
+                  ["via PEC (other routes:", "dalla propria PEC a entrate.tari-tares-tarsu@pec.comune.napoli.it",
+                   "Signing (Mod. 1", "Proof: legal receipt", "Pagare l'F24 alle scadenze"]),
+    "route-post": ("route --channel post: the raccomandata A/R and the law's signing rule for post",
+                   {"route": "post"}, 0,
+                   ["con raccomandata A/R a Comune di Napoli", "Modulo firmato a mano in originale, con la fotocopia"]),
+    "route-desk": ("route --channel desk: the URP of the Municipalità the vault places the home in",
+                   {"route": "desk"}, 0,
+                   ["Your office: Sede della Municipalità 2", "Piazza Dante 93"]),
+    "route-unknown": ("route --channel fax: a route the entry doesn't have",
+                      {"route": "fax"}, 1, ["has no fax channel; it has desk, email, pec, portal, post"]),
     "sign-channel-post": ("--channel post --sign: the raccomandata takes a handwritten signature too",
                           {"sign": True, "no_reply": True, "channel": "post"}, 0,
                           ["is waiting for the user", f"ok   opens pratiche.{SLUG}_canale"]),
@@ -586,6 +598,11 @@ def main():
             print(f"{'ok  ' if not bad else 'FAIL'} asks: rows that apply only after an answer are asked with it, once"
                   + "".join("\n  " + b for b in bad))
             failed += ["asks"] if bad else []
+        if not os.path.isdir(os.path.join(library, "offices")):
+            # A library from before routes (steps[].channel, offices/) has no route cards to check.
+            skipped = [n for n in names if "route" in CASES[n][1]]
+            print(f"skip {', '.join(skipped)}: the library predates routes")
+            names = [n for n in names if n not in skipped]
         for name in names:
             description, changes, want_exit, want_lines = CASES[name]
             ok, detail = case(base, name, pilot(changes.get("pilot", "mod-1")), changes, want_exit, want_lines)
@@ -594,7 +611,7 @@ def main():
                 shutil.copytree(os.path.join(base, name, "out"), os.path.join(keep, name), dirs_exist_ok=True)
             if not ok:
                 failed.append(name)
-        total = len(names) + (0 if args else 2)
+        total = len(names) + (0 if args else 3)
         print(f"{total - len(failed)}/{total} cases passed")
         return 1 if failed else 0
     finally:
@@ -661,7 +678,8 @@ def case(base, name, p, changes, want_exit, want_lines):
                     return False, "harness: " + f.read()[-800:]
             time.sleep(0.1)
         server = load(os.path.join(work, "server.json"))
-        common = [sys.executable, "-I", FILL, "run", "--entry", os.path.join(work, "entry.json"), "--form", form,
+        common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
+                  "--entry", os.path.join(work, "entry.json"), "--form", form,
                   "--layout", os.path.join(work, "layout.json"), "--pdf", os.path.join(work, "form.pdf"), "--out", out,
                   "--answers", os.path.join(work, "answers.json")] + signer
         if changes.get("library"):
@@ -669,7 +687,11 @@ def case(base, name, p, changes, want_exit, want_lines):
             shutil.copy(os.path.join(work, "form.pdf"), os.path.join(out, "form.pdf"))
             common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
                       "--procedure", pid, "--form", form, "--out", out, "--answers", os.path.join(work, "answers.json")] + signer
-        if changes.get("socket"):
+        if "route" in changes:
+            run = subprocess.run([sys.executable, "-I", FILL, "route", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
+                                  "--procedure", pid, "--channel", changes["route"], "--server", os.path.join(work, "server.json")],
+                                 capture_output=True, text=True)
+        elif changes.get("socket"):
             # As on a real vault: its folder, the token from the environment, a draft.
             if "chmod_run" in changes:
                 os.chmod(os.path.join(server["vault_dir"], "run"), changes["chmod_run"])

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fill a pratiche-napoli form from the vault, and check the result.
 
-  fill.py needs (--library DIR --procedure ID | --entry E.json [--layout L.json])
+  fill.py needs (--library DIR [--procedure ID] | --entry E.json) [--entry E.json] [--layout L.json]
                 --form ID [--for SLUG] [--party ROLE=SLUG[,SLUG]]... [--draft] [--vault-dir DIR]
       The service tokens a run needs, as the pratica skill asks for them:
       prepare (append, the form's categories and pratiche.*, and, when the
@@ -12,7 +12,7 @@
       pvault command that saves it where run --vault-dir looks, and the ask
       rows come with how their answers are written.
 
-  fill.py run (--library DIR --procedure ID | --entry E.json --layout L.json)
+  fill.py run (--library DIR [--procedure ID] | --entry E.json --layout L.json) [--entry ...]
               --form ID [--for SLUG] [--party ROLE=SLUG[,SLUG]]... --out DIR [--pdf FORM.pdf]
               (--server S.json | --vault-dir DIR [--keychain SERVICE])
               [--draft] [--answers A.json] [--reply R.json] [--playbook NAME]
@@ -28,14 +28,24 @@
       nothing to the vault.
       --channel picks the entry's channel by type (default: its preferred one).
       With --sign, once every check passed, it files a signing request for
-      DIR/filled.pdf at the layout's signature boxes (the form's `signing`
-      must list a handwritten signature for the channel it opens the pratica
-      on) and prints the id: the user runs `pvault sign review <id>`, sees the
+      DIR/filled.pdf at the layout's signature boxes (the channel must take a
+      handwritten signature: the form's `signing` for it, else the library's
+      contract/signing.json) and prints the id: the user runs `pvault sign review <id>`, sees the
       signed PDF, and approves it in person. The vault holds the signed file
       until then; this tool can neither approve nor read it. Run again with
       --sign when the request expired (30 minutes, or midnight) or failed: an
       open pratica is not opened twice, only the request is filed again. Only
       the vault's owner signs this way so far (--sign refuses --for).
+
+  fill.py route (--library DIR --procedure ID | --entry E.json) [--channel TYPE]
+                [--server S.json | --vault-dir DIR [--keychain SERVICE]] [--json]
+      What to do on one route (default: the entry's preferred one), start to
+      finish: the shared steps and the route's own (steps[].channel) in order,
+      where to send or take it, how it is signed there, what to attach or
+      bring, the proof it gives back and the deadline. A desk that depends on
+      where the person lives (office: residenza.municipalita) is picked from
+      the library's offices/ with that field, read from the vault when one is
+      given (the prepare or draft token); without one, it says so.
 
 Who signs: the vault's owner, unless --for names another person (a slug of
 the household; ask the user by display name). Their own data (identity,
@@ -64,8 +74,10 @@ service `needs` names: pvault-pratica-fill (pvault-<name>-pratica-fill for
 
 --library is a pratiche-napoli checkout (npm ci done): the entry is
 procedures/<ID>.yaml, read with the library's own YAML parser (node), and
-the layout layouts/<ID>/<form>.json. Without --pdf the form is downloaded
-from the entry's url into DIR. --entry is a procedure already as JSON.
+the layout layouts/<ID>/<form>.json; its contract/ gives the vault schema
+and the signing rules, offices/ the desks by area. Without --pdf the form is
+downloaded from the entry's url into DIR. --entry is a procedure already as
+JSON, in place of the library's file (the library still gives the rest).
 
 The entry says what goes in each box (map, template, columns, optional,
 choices) and the deadline (compute); the layout only where each box is: a
@@ -216,7 +228,7 @@ def library_file(a, folder, ext):
     name a file in there."""
     if not re.fullmatch(r"(napoli|italia)/[a-z0-9-]+/[a-z0-9-]+", a.procedure):
         sys.exit(f"{a.procedure!r} isn't a library procedure ID (napoli/comune/tari-iscrizione-uso-abitativo)")
-    if not re.fullmatch(r"[a-z0-9-]+", a.form):
+    if folder == "layouts" and not re.fullmatch(r"[a-z0-9-]+", a.form):
         sys.exit(f"{a.form!r} isn't a form ID")
     parts = [a.library, folder, a.procedure] + ([a.form] if folder == "layouts" else [])
     path = os.path.join(*parts) + ext
@@ -1586,7 +1598,7 @@ def request_signature(a, prepare, entry, form, layout, channel, slug, check):
     if any(b.get("for", "dichiarante") != "dichiarante" for b in layout["signatures"]):
         check("every signature box is the dichiarante's", False, "only the owner can sign through the vault so far")
         return None
-    way = next((x for x in form.get("signing", []) if x["channel"] == channel["type"]), None)
+    way = signing_rule(a, form, channel["type"])
     if not way or "handwritten" not in way["ways"] or way["status"] == "disputed":
         check(f"the library lists a handwritten signature for {channel['type']}", False,
               "sign it by hand, or have the library say how this channel takes a signature")
@@ -1611,6 +1623,110 @@ def request_signature(a, prepare, entry, form, layout, channel, slug, check):
     return {"id": got["id"], "review": review, "expires_at": got["expires_at"], "date": got["date"]}
 
 
+def signing_rule(a, form, channel_type):
+    """How channel_type takes the signature on form: the form's own entry,
+    else the law's rule for that channel type (the library's
+    contract/signing.json, so verified), else None."""
+    own = next((x for x in form.get("signing", []) if x["channel"] == channel_type), None)
+    if own:
+        return own
+    path = os.path.join(a.library, "contract", "signing.json") if getattr(a, "library", None) else ""
+    rule = load(path)["channels"].get(channel_type) if os.path.isfile(path) else None
+    return {"channel": channel_type, "status": "verified", **rule} if rule else None
+
+
+# --- The route card ----------------------------------------------------------
+
+ROUTE = {"portal": "online", "pec": "via PEC", "email": "by email", "post": "by post", "desk": "at the desk",
+         "app": "in the app", "phone": "by phone"}
+ID_COPY = {"required": "with a copy of the ID document", "handwritten": "with a copy of the ID document if signed by hand",
+           "not_needed": "no ID copy needed", "unknown": "unclear whether an ID copy is needed"}
+
+
+def route(a):
+    """What to do on one route of a procedure, from start to finish: the
+    shared steps and the route's own, in order; where (the person's office
+    when the desk depends on where they live); how to sign there; what to
+    attach; what proof it gives back; the deadline."""
+    entry = entry_of(a)
+    channels = [c for c in entry["channels"] if c["purpose"] == "procedure"]
+    if not channels:
+        sys.exit(f"{entry['id']} lists no channel to carry it out")
+    if a.channel:
+        on = [c for c in channels if c["type"] == a.channel]
+        if not on:
+            sys.exit(f"{entry['id']} has no {a.channel} channel; it has {', '.join(sorted({c['type'] for c in channels}))}")
+    else:
+        on = [next((c for c in channels if c.get("preferred")), channels[0])]
+    kind = on[0]["type"]
+    steps = [{k: s[k] for k in ("do", "who", "human_only") if k in s}
+             for s in entry["steps"] if kind in s.get("channel", [kind])]
+    where = []
+    for c in on:
+        place = {k: c[k] for k in ("name", "address", "url", "hours", "booking", "notes") if k in c}
+        if c.get("office"):
+            place["office"] = office_for(a, c["office"])
+        where.append(place)
+    signed = [f for f in entry.get("forms", []) if f.get("signature_required")]
+    signing = []
+    for f in signed:
+        rule = signing_rule(a, f, kind)
+        signing.append({"form": f["name"], **({k: rule[k] for k in ("ways", "id_copy", "status", "text", "notes") if k in rule}
+                                             if rule else {"text": "not said for this route: ask the ente or sign by hand"})})
+    # The entry's required documents (the forms among them), else its forms.
+    attach = [d["name"] for d in entry.get("documents", []) if d.get("required")] or [f["name"] for f in entry.get("forms", [])]
+    card = {"procedure": entry["id"], "title": entry.get("headline", entry["title"]), "route": kind,
+            "routes": sorted({c["type"] for c in channels}), "steps": steps, "where": where, "signing": signing,
+            "attach": attach, "receipt": on[0].get("receipt"),
+            "deadline": (entry.get("deadline", {}).get("summary") or (entry.get("deadline", {}).get("rules") or [{}])[0]).get("text")}
+    if a.json:
+        print(json.dumps(card, ensure_ascii=False, indent=2))
+        return 0
+    print(f"{card['title']}: {ROUTE.get(kind, kind)} (other routes: {', '.join(r for r in card['routes'] if r != kind) or 'none'})")
+    if card["deadline"]:
+        print(f"Deadline: {card['deadline']}")
+    print("Steps:")
+    for i, s in enumerate(steps, 1):
+        print(f"  {i}. {s['do']}{' [you]' if s.get('human_only') else ''}")
+    for place in where:
+        office = place.pop("office", None)
+        print("Where: " + "; ".join(place.values()))
+        if office:
+            print("  Your office: " + ("; ".join(v for v in office.get("office", {}).values()) if office.get("office")
+                                       else office["why"]))
+    for x in signing:
+        how = x.get("text") or f"{' or '.join(x['ways'])}, {ID_COPY.get(x['id_copy'], x['id_copy'])}"
+        print(f"Signing ({x['form']}): {how}{' ' + x['notes'] if x.get('notes') else ''}")
+    if attach:
+        print("Attach or bring: " + "; ".join(attach))
+    if card["receipt"]:
+        print(f"Proof: {card['receipt']} receipt")
+    return 0
+
+
+def office_for(a, field):
+    """The person's desk for a channel picked by area (office:
+    residenza.municipalita): read the field from the vault when one is given,
+    and look it up in the library's offices/<municipalita|distretto_asl>.json."""
+    kind = field.rsplit(".", 1)[1]
+    path = os.path.join(a.library or "", "offices", f"{kind}.json")
+    if not a.library or not os.path.isfile(path):
+        return {"field": field, "why": f"no offices/{kind}.json in the library"}
+    offices = load(path)
+    if not (a.server or a.vault_dir):
+        return {"field": field, "why": f"{offices['name']}: pass the vault to pick yours ({field})"}
+    try:
+        value = next(iter(connect(a).values())).get(field)
+    except SystemExit as e:  # no token, or a locked vault: the card still names the offices
+        return {"field": field, "why": f"{offices['name']}: {e} (or pick from offices/{kind}.json)"}
+    office = offices["offices"].get(value or "")
+    if not office:
+        return {"field": field, "why": f"{field} isn't known (an address outside Napoli, or one the vault can't place): "
+                                     f"run pvault locate, or pick from offices/{kind}.json"}
+    return {"field": field, "value": value, "office": {k: office[k] for k in ("name", "address", "hours", "phone", "notes")
+                                                       if k in office}}
+
+
 def finish(a, entry, form, pdf_hash, slug, rows, results, checks, signing=None):
     report = {"entry": entry["id"], "form": form["id"], "pdf_sha256": pdf_hash, "slug": slug,
               "rows": rows, "read_back": results, "checks": checks}
@@ -1628,9 +1744,8 @@ def main():
     sub = p.add_subparsers(dest="cmd", required=True)
     for name in ("needs", "run"):
         s = sub.add_parser(name)
-        what = s.add_mutually_exclusive_group(required=True)
-        what.add_argument("--library", help="a pratiche-napoli checkout, with --procedure")
-        what.add_argument("--entry", help="the procedure as JSON")
+        s.add_argument("--library", help="a pratiche-napoli checkout: the procedure (with --procedure) and its contract")
+        s.add_argument("--entry", help="the procedure as JSON, in place of the library's file")
         s.add_argument("--procedure", help="the library procedure ID, e.g. napoli/comune/tari-iscrizione-uso-abitativo")
         s.add_argument("--form", required=True)
         s.add_argument("--draft", action="store_true", help="read only: no pratica record, no reply")
@@ -1656,17 +1771,31 @@ def main():
     r.add_argument("--reply")
     r.add_argument("--slug")
     r.add_argument("--playbook")
+    c = sub.add_parser("route")
+    c.add_argument("--library", help="a pratiche-napoli checkout: the procedure (with --procedure), signing rules, offices")
+    c.add_argument("--entry", help="the procedure as JSON, in place of the library's file")
+    c.add_argument("--procedure")
+    c.add_argument("--channel", help="the route by channel type (pec, post, desk...); default: the entry's preferred one")
+    vault = c.add_mutually_exclusive_group()
+    vault.add_argument("--server", help="the synthetic vault's server.json")
+    vault.add_argument("--vault-dir", help="a real vault's folder, to pick the person's office")
+    c.add_argument("--keychain", help="Keychain service holding the token (default: the one needs names)")
+    c.add_argument("--json", action="store_true", help="the card as JSON")
     a = p.parse_args()
+    if not a.entry and not (a.library and a.procedure):
+        p.error("give --library and --procedure, or --entry")
+    if a.procedure and not a.library:
+        p.error("--procedure is the library's: give --library")
+    if a.cmd == "route":
+        return route(a)
     if getattr(a, "for") != "io" and not SLUG.fullmatch(getattr(a, "for")):
         p.error(f"--for {getattr(a, 'for')!r} isn't io or a person's slug")
-    if bool(a.library) != bool(a.procedure):
-        p.error("--library and --procedure go together")
     if a.cmd == "run" and bool(a.entry) != bool(a.layout):
         p.error("--entry takes --layout; --library finds the layout itself")
     if a.cmd == "needs":
         entry = entry_of(a)
         form = form_of(entry, a.form)
-        layout = load(library_file(a, "layouts", ".json")) if a.library else (load(a.layout) if a.layout else None)
+        layout = load(a.layout) if a.layout else (load(library_file(a, "layouts", ".json")) if a.procedure else None)
         signer = getattr(a, "for")
         parties = parse_parties(a.party)
         out = needs(entry, form, a.draft, signer, person_categories(needs_schema(a)) if signer != "io" else (),

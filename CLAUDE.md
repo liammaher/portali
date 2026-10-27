@@ -69,8 +69,9 @@ mcp/                 MCP server (TypeScript): vault tools over a service token, 
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
   pratica/fill/      fills a library form from the vault at the library's layout, for the
                      owner or --for a person, other people by --party (fill.py; --sign
-                     files a signing request; pilot/ has the pilot forms, one in a
-                     business vault); a real vault only over its socket, as the MCP server
+                     files a signing request; `route` prints what to do on one channel,
+                     the desk picked by municipalità/distretto; pilot/ has the pilot
+                     forms, one in a business vault); a real vault only over its socket
 ```
 
 ## Security Model
