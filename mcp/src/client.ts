@@ -26,6 +26,8 @@ interface FieldInfo {
   sensitivity: string;
   updated_at: string;
   version: number;
+  /** Computed by the vault from an address (municipalità of an address in Napoli), not stored. */
+  derived?: boolean;
 }
 
 interface ContextBundle {

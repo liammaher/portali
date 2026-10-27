@@ -122,6 +122,12 @@ Common ones: `residenza.{indirizzo,civico,interno,cap,comune,provincia,data_iniz
 `domicilio.*` (only if different from residenza), `identity.codice_fiscale`,
 `cie.{numero,data_scadenza}`, `passaporto.{numero,paese_rilascio,data_rilascio,data_scadenza,autorita_rilascio}`,
 `tessera_sanitaria.{numero,data_scadenza,medico_base}`.
+An address in Napoli (`residenza`, `domicilio`, `locale`, `business.sede_legale_*`) also has
+`quartiere`, `municipalita` and `distretto_asl` (ASL Napoli 1 Centro), which the vault computes
+from the street: read them with `pvault get residenza.municipalita`, no need to ask. They need
+only their own scope, not the street's. If a street crosses a boundary the read says which
+quartieri to ask the user about; `pvault locate` shows why and the `pvault set
+residenza.quartiere "<name>"` that settles it. Never store one yourself to fill a form.
 `permesso_soggiorno.*` is only for non-Italian citizens: if `identity.citizenship` is
 italiana, don't ask for it or list it as missing. The same holds per person:
 `leo:permesso_soggiorno.*` only if `leo:identity.citizenship` isn't italiana.

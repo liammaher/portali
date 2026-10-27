@@ -18,7 +18,7 @@ func cmdExport() {
 	}
 
 	needGrant("*", "read")
-	resp, err := apiRequest("GET", "/vault/context", nil)
+	resp, err := apiRequest("GET", "/vault/context?stored=1", nil)
 	if err != nil {
 		fatal("request failed: %v", err)
 	}
@@ -32,6 +32,21 @@ func cmdExport() {
 	// asked for, so a routine `pvault export > backup.json` never writes them
 	// to disk unencrypted.
 	omitted := 0
+	// What the vault computes (an address's municipalità) is not stored data:
+	// an export holds stored fields only.
+	for cat, fields := range ctx.Categories {
+		kept := fields[:0]
+		for _, f := range fields {
+			if !f.Derived {
+				kept = append(kept, f)
+			}
+		}
+		if len(kept) == 0 {
+			delete(ctx.Categories, cat)
+		} else {
+			ctx.Categories[cat] = kept
+		}
+	}
 	if !includePersonal {
 		for cat, fields := range ctx.Categories {
 			kept := fields[:0]
