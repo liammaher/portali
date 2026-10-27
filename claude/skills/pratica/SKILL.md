@@ -263,6 +263,33 @@ A portal channel's `use.ways` says which: `upload` takes the filled PDF (or othe
 fill it first; `web_form` is the portal's own form, so no PDF is filled for that route;
 both when the form asks for files; `read` only shows or downloads something.
 
+### Filling a portal from a steps file
+
+A portal someone has walked has a steps file: `portal-steps.yaml` in a folder of the vault
+repository's `rehearsals/`, next to its map (`portal-map.yaml`) and a README with the runs.
+Find one for the entry with
+`grep -l "procedure: <entry id>" "$(cd ~/.claude/skills/pratica && pwd -P)"/../../../rehearsals/*/portal-steps.yaml`.
+When there is one, follow it instead of exploring the portal:
+
+1. **Values first.** Read every field the steps name (step 2's reading, one `pvault get` or
+   token for all of them) and ask its `{{ask.x}}` questions before opening the portal; apply
+   the filters `run.py` defines (`FILTERS`: dates gg/MM/aaaa, the street split into DUG and
+   name, carica and forma giuridica as the portal names them).
+2. **Walk it in the built-in browser**: the user logs in there; then the wizard screens in
+   order, and each section: fill it, Salva, read every field back from the page and compare
+   with what you typed. Fix a mismatch before the next section. The map's header has the
+   portal's mechanics (dropdown filters, lookups that need real key presses).
+3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
+   Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand. Stop at
+   the attachments.
+4. **When the portal differs** (a screen, a label, a lookup with no single match), stop,
+   correct the steps file and the map, and add the run to the README.
+
+`~/.claude/skills/pratica/portal/run.py run` does the same in a Chrome of its own, with no
+model and in a minute or two, reading values from a pilot vault server (`--server`). Use it
+only when the user agrees to log in in that window: say first that it is a separate Chrome
+with its own profile, which you see only through its report.
+
 ### Filling with fill.py
 
 `~/.claude/skills/pratica/fill/fill.py` reads the library entry and layout, downloads the
@@ -364,6 +391,8 @@ names their desk in every list and what each serves. Never call one the ASL or C
 without saying which service it is. Then:
 
 - approving the SPID/CIE login on their phone (you do the clicking: reference/portal-login.md)
+- the declarations in a portal's form (DPR 445/2000, requisiti, privacy…): name each section
+  and what it states; they tick them, after reading the portal's preview of the pratica
 - signatures: a firma digitale always; a handwritten one by hand, or by approving a signing
   request with `pvault sign review` (reference/signing.md): you file it, they approve it
 - payments (F24, pagoPA): give the amount, codice tributo and deadline; never pay
