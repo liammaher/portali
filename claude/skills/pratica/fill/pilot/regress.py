@@ -108,6 +108,17 @@ CASES = {
                     {"socket": True, "library": True}, 0,
                     ["ok   form is the version the library maps", "ok   the form is ready",
                      "draft: nothing written to the vault", "no pratiche fields in the vault"]),
+    "no-cf-ne": ("a convivente with no codice fiscale: the user's N/E fills the box, the vault untouched",
+                 {"fixture": without("luca:identity.codice_fiscale"),
+                  "values": {"luca:identity.codice_fiscale": "N/E"}}, 0,
+                 ["ok   luca:identity.codice_fiscale from answers.json, not the vault: N/E",
+                  "values read back in their boxes", "ok   the form is ready"]),
+    "value-over-vault": ("an answers.json value for a field the vault has: refused, the vault decides",
+                         {"values": {"luca:identity.codice_fiscale": "N/E"}}, 1,
+                         ["FAIL answers.json value luca:identity.codice_fiscale is not in the vault: the vault has it"]),
+    "value-not-read": ("an answers.json value for a field the form doesn't read: refused",
+                       {"values": {"luca:identity.shoe_size": "42"}}, 1,
+                       ["FAIL answers.json value luca:identity.shoe_size is a field this form reads"]),
     "socket-not-private": ("the socket's run folder isn't private: the token isn't sent",
                            {"socket": True, "chmod_run": 0o755}, 1, ["must be a private folder of yours"]),
     "convivente-gaps": ("a convivente lacks a date of birth, another a codice fiscale",
@@ -271,6 +282,8 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
         changes["layout"](layout)
     answers = load(os.path.join(HERE, "answers.json"))
     answers["answers"] = {} if changes.get("answers") == {} else {**answers["answers"], **changes.get("answers", {})}
+    if "values" in changes:
+        answers["values"] = changes["values"]
     files = {"fixture.json": fixture, "entry.json": entry, "layout.json": layout, "answers.json": answers}
     for file, data in files.items():
         with open(os.path.join(work, file), "w", encoding="utf-8") as f:
