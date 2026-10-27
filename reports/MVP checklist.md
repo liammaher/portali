@@ -30,7 +30,8 @@ pratiche. Claude has to read all of those to fill forms, and 1Password is design
 |---|---|
 | A hosted, remote MCP that his Claude app can add | **Missing**: our MCP runs only locally, in Claude Code |
 | One-click setup and one setup chat | **Missing** |
-| Hosting per business, EU, encrypted | **Missing**: the encryption design exists in the vault |
+| Hosting per business, EU, encrypted | **Missing**: the vault's encryption assumes a key held only on the Mac; hosted keys need their own design (north star, open question 5) |
+| Approval taps once hosted (sign gate, sending PEC, personal-tier reads) | **Missing**: Touch ID and Windows Hello work only locally |
 
 ## Profile (the vault's structured facts)
 
@@ -66,6 +67,8 @@ pratiche. Claude has to read all of those to fill forms, and 1Password is design
 | Recurring dates (TARI, CUP, diritto annuale…) | **Missing** |
 | Recognising notices, deadline counted from delivery | **Missing**: 4 letter procedures, no recognition data |
 | Offices confirming the procedures (L2/L3) | **Missing** |
+| Steps that name the owner's tap (login, sign, pay, send, in person) | **Missing**: `human_only` marks 178 of 349 steps, whole portal steps included |
+| Portal maps, screen by screen (what to choose, what goes in each box, what to upload) | **Missing**: 24 of 30 procedures file on a portal first, 18 only on a portal |
 | Building-works procedures for architects | **Partly**: the CILA only |
 | Immigration procedures for Accoglienza Fittizia | **Missing** |
 
@@ -73,8 +76,11 @@ pratiche. Claude has to read all of those to fill forms, and 1Password is design
 
 | Needed | Status |
 |---|---|
-| Sign gate (the file approved is the file sent) | **Have**: local only (Mac, Touch ID) |
-| Exact filling of flat PDF forms | **Have**: fill.py, 4 layouts, local only |
+| Sign gate (the file approved is the file sent) | **Have**: local only (Mac, Touch ID); a handwritten signature, which PEC, email, post and desk accept |
+| A firma digitale for portal filings (SUAP, SUE) | **Missing**: the owner's remote signature or an intermediary's, on the file prepared (north star, open question 2) |
+| Exact filling of flat PDF forms | **Have**: fill.py, layouts for 4 of the library's 31 forms, local only |
+| Filling forms in the connector, so the Claude app gets the PDF from a tool call | **Missing** |
+| Working a portal | **Partly**: the browser agent is theirs (Claude in Chrome, desktop only); no portal maps, nothing on the phone |
 
 ## Outcomes
 
@@ -104,3 +110,8 @@ validation, the Naples street lookup, the sign gate, the PEC reader, and the out
 **What's missing is mostly packaging and reach:** making it one hosted connector, sending PEC,
 onboarding, deployment, and partners. On the content side: rules a program can check, recurring dates,
 notice recognition, confirmation by offices, and the first outcomes.
+
+**What's missing for completing a pratica is mostly the portal:** most procedures file on
+impresainungiorno, which needs a browser agent, portal maps and a firma digitale. None of those exist
+for us yet, and an intermediary already has the last two. The open questions are in
+[`docs/north-star.md`](../docs/north-star.md#open-questions).
