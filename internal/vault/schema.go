@@ -3,6 +3,7 @@ package vault
 import (
 	"bytes"
 	"encoding/json"
+	"maps"
 	"slices"
 	"strings"
 
@@ -77,6 +78,19 @@ type Schema struct {
 	// check field IDs on their own (pratiche-napoli's validator) rather
 	// than keep a copy.
 	Credentials CredentialWords `json:"credentials"`
+	// Pratiche are the lists a pratica's stato and canale are checked
+	// against, for tools that write or read pratiche (fill.py, the library's
+	// channel types) rather than keep a copy.
+	Pratiche PraticheLists `json:"pratiche"`
+}
+
+// PraticheLists are praticaStati, praticaStatiChiusi, praticaCanali and
+// praticaCanaleAliases as the rules use them.
+type PraticheLists struct {
+	Stati         []string          `json:"stati"`
+	Chiusi        []string          `json:"chiusi"`
+	Canali        []string          `json:"canali"`
+	CanaleAliases map[string]string `json:"canale_aliases"`
 }
 
 // CredentialWords are whole-word patterns (a field ID's category and name
@@ -108,8 +122,8 @@ func SchemaJSON() []byte {
 	return buf.Bytes()
 }
 
-// schemaValues gives the schema's enumerated fields their values from the
-// lists the rules check them against.
+// schemaValues gives the schema's enumerated fields, and the pratiche lists,
+// their values from the lists the rules check them against.
 func schemaValues() {
 	for i := range RecommendedSchema.Categories {
 		for j := range RecommendedSchema.Categories[i].Fields {
@@ -124,6 +138,12 @@ func schemaValues() {
 			}
 		}
 	}
+	RecommendedSchema.Pratiche = PraticheLists{
+		Stati:         slices.Clone(praticaStati),
+		Chiusi:        slices.Clone(praticaStatiChiusi),
+		Canali:        slices.Clone(praticaCanali),
+		CanaleAliases: maps.Clone(praticaCanaleAliases),
+	}
 }
 
 func init() { schemaValues() }
@@ -136,7 +156,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "17",
+	Version: "18",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",

@@ -39,7 +39,7 @@ what a step needs and read it in one `get`: up to 10 field IDs or whole categori
 most forms in one prompt. Before each command, say in chat what the prompt will ask.
 "not approved" means the user said no or is away: don't retry, ask them. Fall back to
 the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
-Filling a form with `fill.py` (step 4) always takes one read token.
+Filling a form with `fill.py` (step 4) takes the tokens it names: one read token for a draft.
 
 ## 0. Find the pratica, its playbook and its library entry
 

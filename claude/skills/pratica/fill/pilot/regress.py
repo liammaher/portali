@@ -595,6 +595,10 @@ def office_checks(library):
         x = by_list.get(name, {})
         if x.get("field") != field or address not in x.get("office", {}).get("address", "") or not x.get("serves"):
             bad.append(f"offices: {name}: {x}")
+    # A value given by hand that no list has (DS 24 is 24/73) says so, not that the vault lacks it.
+    got = fill.office_for(a, {"list": "asl-anagrafe-sanitaria", "from": "residenza.distretto_asl"}, value="24")
+    if "no office for '24'" not in got.get("why", ""):
+        bad.append(f"offices: a value no list has: {got}")
     return bad
 
 

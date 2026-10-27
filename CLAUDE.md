@@ -176,7 +176,8 @@ the page never copies a rule.
   `contract/extensions.json`. `schema.json` is `pvault schema --json`, credential words
   included (`Credentials`, the expressions `IsCredentialField` compiles), and `values` for
   the fields with a fixed list (`ruolo.tipo`, an address's municipalità and distretto:
-  `schemaValues`), which the library reads instead of keeping a copy. It is written without
+  `schemaValues`) and the pratiche stato and canale lists (`Pratiche`: closed stati, the
+  library's channel types as aliases), which the library and fill.py read instead of keeping a copy. It is written without
   HTML escaping, so the library's copy is the same bytes; its CI compares it with main's.
 - **Pratiche** (`pratiche.go`): `pratiche.<slug>_<campo>`, campo/stato/canale from fixed
   lists (canale also takes the library's channel types, `praticaCanaleAliases`), never
