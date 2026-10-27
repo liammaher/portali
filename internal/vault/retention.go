@@ -37,6 +37,11 @@ const (
 	// period for scans (ScanDays). ExpiresOn is the day the last of those
 	// pratiche closed plus that period.
 	ExpiryPraticheClosed = "pratiche_closed"
+	// ExpiryFilesClosed: the same for a file in the file index (files.go)
+	// that is linked to a client with a role naming an ID or procura
+	// category (cie, passaporto, procura...). The vault doesn't hold it and
+	// can't delete it: the user does, where it is. FileID and File say which.
+	ExpiryFilesClosed = "files_closed"
 )
 
 // idScanCategories are the categories whose scans a business keeps only

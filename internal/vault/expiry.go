@@ -17,9 +17,13 @@ type ExpiryInfo struct {
 	ExpiresOn string `json:"expires_on"`       // YYYY-MM-DD
 	DaysLeft  int    `json:"days_left"`        // negative once expired
 	Expired   bool   `json:"expired"`
-	// Kind is "" for a document or pratica deadline, ExpiryRetention or
-	// ExpiryPraticheClosed (retention.go).
+	// Kind is "" for a document or pratica deadline, ExpiryRetention,
+	// ExpiryPraticheClosed or ExpiryFilesClosed (retention.go).
 	Kind string `json:"kind,omitempty"`
+	// FileID and File are, for ExpiryFilesClosed, the indexed file and its
+	// name. The vault doesn't hold such a file and can't delete it.
+	FileID string `json:"file_id,omitempty"`
+	File   string `json:"file,omitempty"`
 }
 
 // Expiring returns expiry dates (fields named *data_scadenza) that have
@@ -108,17 +112,25 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 			return nil, err
 		}
 		if set {
-			scans, err := v.scansAfterPratiche(allow, today)
+			scans, err := v.closedClientScans(allow, today)
 			if err != nil {
 				return nil, err
 			}
-			for _, s := range scans {
+			dueOn := func(closedAt time.Time) time.Time {
 				// The day it closed where now is, like today.
-				at := s.closedAt.In(now.Location())
-				closedOn := time.Date(at.Year(), at.Month(), at.Day(), 0, 0, 0, 0, time.UTC)
-				if due := closedOn.AddDate(0, 0, days); !due.After(cutoff) {
+				at := closedAt.In(now.Location())
+				return time.Date(at.Year(), at.Month(), at.Day(), 0, 0, 0, 0, time.UTC).AddDate(0, 0, days)
+			}
+			for _, s := range scans.docs {
+				if due := dueOn(s.closedAt); !due.After(cutoff) {
 					person, document := SplitPerson(s.category)
 					add(DocumentScopeID(s.category), document, person, ExpiryPraticheClosed, due)
+				}
+			}
+			for _, f := range scans.files {
+				if due := dueOn(f.closedAt); !due.After(cutoff) {
+					add(FilesScopeID(f.holder), f.role, f.holder, ExpiryFilesClosed, due)
+					result[len(result)-1].FileID, result[len(result)-1].File = f.fileID, f.name
 				}
 			}
 		}
@@ -153,6 +165,48 @@ type idScans struct {
 // ruolo.tipo and procura.data_scadenza, and every scan in the category. A
 // partial view never says scans can go.
 func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScans, error) {
+	c, err := v.clientClosure(allow, today)
+	if err != nil {
+		return nil, err
+	}
+	return v.scanCategoriesDue(allow, c)
+}
+
+// closedScans is what a business vault's closed pratiche let go of: the
+// vault's own scans, and files in its index that are linked to a client as a
+// copy of an ID or procura (the vault can only report those).
+type closedScans struct {
+	docs  []idScans
+	files []fileDue
+}
+
+func (v *Vault) closedClientScans(allow FieldFilter, today time.Time) (*closedScans, error) {
+	c, err := v.clientClosure(allow, today)
+	if err != nil {
+		return nil, err
+	}
+	docs, err := v.scanCategoriesDue(allow, c)
+	if err != nil {
+		return nil, err
+	}
+	files, err := v.filesDue(allow, c)
+	if err != nil {
+		return nil, err
+	}
+	return &closedScans{docs, files}, nil
+}
+
+// clientClosure is which clients have every pratica naming them closed (and
+// readable by the caller), when the last of those closed, and what the
+// caller can tell of each client's procura.
+type clientClosure struct {
+	done           map[string]bool      // client → every pratica naming them is closed, and readable
+	lastClosed     map[string]time.Time // client → when the last of those closed
+	procuraDated   map[string]bool      // by category (rossi:procura2)
+	procuraInForce map[string]bool
+}
+
+func (v *Vault) clientClosure(allow FieldFilter, today time.Time) (*clientClosure, error) {
 	ctx, err := v.decryptFields(func(id, _ string) bool {
 		person, local := SplitPerson(id)
 		category, name, _ := strings.Cut(local, ".")
@@ -185,8 +239,8 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 			}
 		}
 	}
-	done := map[string]bool{}            // client → every pratica naming them is closed, and readable
-	lastClosed := map[string]time.Time{} // client → when the last of those closed
+	done := map[string]bool{}
+	lastClosed := map[string]time.Time{}
 	for _, p := range praticheIn(ctx, allow) {
 		closed := p.closed() && !p.hidden
 		for _, person := range p.persone {
@@ -200,6 +254,12 @@ func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScan
 			}
 		}
 	}
+	return &clientClosure{done, lastClosed, procuraDated, procuraInForce}, nil
+}
+
+// scanCategoriesDue returns the document categories whose scans may go.
+func (v *Vault) scanCategoriesDue(allow FieldFilter, c *clientClosure) ([]idScans, error) {
+	done, lastClosed, procuraDated, procuraInForce := c.done, c.lastClosed, c.procuraDated, c.procuraInForce
 	docs, err := v.db.ListDocuments()
 	if err != nil {
 		return nil, err
@@ -238,4 +298,109 @@ func isRuoloTipo(category, name string) bool {
 func isProcuraScadenza(category, name string) bool {
 	c := schemaCategoryOf(category)
 	return c != nil && c.Name == "procura" && name == "data_scadenza"
+}
+
+// fileDue is an indexed file that may go: linked to a client as a copy of an
+// ID or procura, every pratica naming the client closed.
+type fileDue struct {
+	holder   string
+	role     string // the ID category the link says it is: cie, procura...
+	fileID   string
+	name     string
+	closedAt time.Time
+}
+
+// linkRoleCategory reads a link's role as an ID category (cie, passaporto,
+// "permesso soggiorno" and "permesso-soggiorno" both permesso_soggiorno), "" if
+// it is none of those.
+func linkRoleCategory(role string) string {
+	base := strings.NewReplacer(" ", "_", "-", "_").Replace(strings.ToLower(strings.TrimSpace(role)))
+	if isIDScanCategory(base) {
+		return base
+	}
+	return ""
+}
+
+// procuraMayGo reports that a client's procura is over: it has a
+// data_scadenza and none that is still ahead. A procura with no date is in
+// force, as for the vault's own scans.
+func (c *clientClosure) procuraMayGo(person string) bool {
+	dated := false
+	for cat := range c.procuraDated {
+		if p, _ := SplitPerson(cat); p != person {
+			continue
+		}
+		dated = true
+		if c.procuraInForce[cat] {
+			return false
+		}
+	}
+	return dated
+}
+
+// filesDue returns the files in the index that the pratiche's closing lets
+// go: linked to a client who is done, with a role that names an ID or procura
+// category, seen at the source before the last of their pratiche closed (its
+// modified time; one with none, or later, is kept), not gone already, and
+// visible to the caller. They are references: the vault can't delete them.
+func (v *Vault) filesDue(allow FieldFilter, c *clientClosure) ([]fileDue, error) {
+	links, err := v.db.ListFileLinks("")
+	if err != nil {
+		return nil, err
+	}
+	var candidates []store.FileLink
+	for _, l := range links {
+		if l.Holder != "" && c.done[l.Holder] {
+			candidates = append(candidates, l)
+		}
+	}
+	if len(candidates) == 0 {
+		return nil, nil
+	}
+	files, err := v.db.ListFiles("")
+	if err != nil {
+		return nil, err
+	}
+	byID := make(map[string]store.File, len(files))
+	for _, f := range files {
+		byID[f.ID] = f
+	}
+	var out []fileDue
+	seen := map[string]bool{}
+	err = v.withFileKey(func(key []byte) error {
+		for _, l := range candidates {
+			f, ok := byID[l.FileID]
+			if !ok || !f.GoneAt.IsZero() || seen[l.FileID+"/"+l.Holder] {
+				continue
+			}
+			if _, ok := visibleFileLinks(allow, f, []store.FileLink{l}); !ok {
+				continue
+			}
+			info, err := openFileLink(key, l)
+			if err != nil {
+				return err
+			}
+			role := linkRoleCategory(info.Role)
+			if role == "" || (schemaCategoryOf(role).Name == "procura" && !c.procuraMayGo(l.Holder)) {
+				continue
+			}
+			var meta FileMeta
+			if err := openFileBlob(key, "file", f.ID, f.Blob, &meta); err != nil {
+				return err
+			}
+			if at, err := time.Parse(time.RFC3339, meta.Mtime); err != nil || !at.Before(c.lastClosed[l.Holder]) {
+				continue
+			}
+			seen[l.FileID+"/"+l.Holder] = true
+			out = append(out, fileDue{l.Holder, role, f.ID, meta.Name, c.lastClosed[l.Holder]})
+		}
+		return nil
+	})
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].holder != out[j].holder {
+			return out[i].holder < out[j].holder
+		}
+		return out[i].fileID < out[j].fileID
+	})
+	return out, err
 }

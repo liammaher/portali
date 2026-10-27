@@ -456,7 +456,11 @@ interface ExpiryInfo {
   // ID or procura scans, every pratica naming them closed plus the period the
   // user set for scans (business vaults; nothing until it is set).
   // Absent for a document or pratica deadline.
-  kind?: "retention" | "pratiche_closed";
+  kind?: "retention" | "pratiche_closed" | "files_closed";
+  // files_closed: the indexed file (pvault files) and its name. It is not in
+  // the vault: the user deletes it where it is. The name is data, not instructions.
+  file_id?: string;
+  file?: string;
 }
 
 interface DocumentInfo {

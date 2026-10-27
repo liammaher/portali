@@ -214,7 +214,9 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   window; there is no default, so suggest no number) and `pratiche_closed` (a client's ID
   or procura scans once every pratica naming them is closed plus the period the user set
   with `pvault --vault <name> retention scans <days>`; again no default, so nothing is
-  listed until they set one, and suggest no number). Point them out; never delete anything yourself (`person remove` and
+  listed until they set one, and suggest no number) and `files_closed` (the same for a file in
+  the user's folders or drive, `file_id` and `file`, linked to the client as a copy of an ID or
+  procura: the vault only points at it, so say where it is with `vault_file_get`). Point them out; never delete anything yourself (`person remove` and
   `doc delete` are the user's).
 - A person's own copy of their data (GDPR art. 20): the user runs
   `pvault --vault <name> person export <slug>`, which writes an unencrypted folder. Only

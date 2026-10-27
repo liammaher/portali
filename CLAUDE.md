@@ -267,6 +267,11 @@ the page never copies a rule.
   `scan_days`, set only by the session. `Expiring` then reports `kind: retention` (a
   person's `ruolo.data_fine` + years) and `kind: pratiche_closed` (a client's ID and
   procura scans, once every pratica naming them closed, dated last closing + days).
+- A file in the index linked to a client with a role naming an ID or procura category
+  (`linkRoleCategory`) is reported the same way as `kind: files_closed`, as a reference only
+  (`file_id`, `file`): the vault can't delete it. It counts only if its mtime predates the last
+  closing (none: kept), it isn't gone, the caller sees its link, and a procura file waits for
+  the procura's `data_scadenza` like a procura scan.
 - A scan is reported only if it predates the last closing (a same-second one counts as
   after), and a procura's scans only once its `data_scadenza` has passed (a procura with
   none is still in force); a caller that can't see everything relevant gets no entry. Nothing is ever deleted automatically.

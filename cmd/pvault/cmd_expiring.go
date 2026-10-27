@@ -39,6 +39,10 @@ func cmdExpiring() {
 	for _, it := range items {
 		when := fmt.Sprintf("in %d days", it.DaysLeft)
 		switch {
+		case it.Kind == vault.ExpiryFilesClosed && it.DaysLeft > 0:
+			when = fmt.Sprintf("their pratiche are closed: file due in %d days", it.DaysLeft)
+		case it.Kind == vault.ExpiryFilesClosed:
+			when = "their pratiche are closed: delete the file unless still needed"
 		case it.Kind == vault.ExpiryPraticheClosed && it.DaysLeft > 0:
 			when = fmt.Sprintf("their pratiche are closed: scans due in %d days", it.DaysLeft)
 		case it.Kind == vault.ExpiryPraticheClosed:
@@ -53,6 +57,10 @@ func cmdExpiring() {
 			when = "expires TODAY"
 		}
 		fmt.Printf("%-*s %s  %s\n", width, expiryLabel(it), it.ExpiresOn, when)
+		if it.Kind == vault.ExpiryFilesClosed {
+			// The vault holds only a pointer: the file is deleted where it is.
+			fmt.Printf("    %s (%s): not in the vault, so it can't delete it; '%s' says where it is\n", it.File, it.FileID, pvCmd("files show "+it.FileID))
+		}
 	}
 }
 
@@ -65,6 +73,8 @@ func expiryLabel(it vault.ExpiryInfo) string {
 		return "data of " + it.Person
 	case it.Kind == vault.ExpiryPraticheClosed:
 		return it.Document + " scans (" + it.Person + ")"
+	case it.Kind == vault.ExpiryFilesClosed:
+		return it.Document + " file (" + it.Person + ")"
 	case it.Person != "":
 		return it.Document + " (" + it.Person + ")"
 	}

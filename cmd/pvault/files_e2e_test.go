@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
@@ -198,5 +199,43 @@ func TestFiles_BatchesStayUnderTheServerLimits(t *testing.T) {
 	}
 	if n := len(batches(nil)); n != 0 {
 		t.Fatalf("no files made %d batches", n)
+	}
+}
+
+// A client's ID copy that sits in a folder is reported once their pratiche
+// close: the vault can only point at it.
+func TestFiles_ExpiringListsLinkedClientFiles(t *testing.T) {
+	v, _ := touchIDVaultKind(t, vault.KindImpresa, map[string]string{"business.denominazione": "Studio Test"})
+	verifiedKind = ""
+	t.Cleanup(func() { verifiedKind = "" })
+	root := filepath.Join(t.TempDir(), "Clienti")
+	cie := filepath.Join(root, "Rossi", "cie-rossi.pdf")
+	writeFile(t, cie, "x")
+	old := time.Now().Add(-2 * time.Hour)
+	if err := os.Chtimes(cie, old, old); err != nil {
+		t.Fatal(err)
+	}
+	for id, val := range map[string]string{
+		"rossi:ruolo.tipo": "cliente", "pratiche.cila-rossi_persona": "rossi", "pratiche.cila-rossi_stato": "completata",
+	} {
+		if err := v.Set(id, val, ""); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := v.SetScanDays(0); err != nil {
+		t.Fatal(err)
+	}
+
+	runCmd(t, cmdFiles, "files", "source", "add", root, "--label", "Clienti")
+	runCmd(t, cmdFiles, "files", "sync")
+	out := runCmd(t, cmdFiles, "files", "search", "cie")
+	id := fileID(t, out, "cie-rossi.pdf")
+	runCmd(t, cmdFiles, "files", "link", id, "--for", "rossi", "--kind", "client", "--role", "cie")
+
+	out = runCmd(t, cmdExpiring, "expiring")
+	for _, want := range []string{"cie file (rossi)", "delete the file unless still needed", "cie-rossi.pdf (" + id + ")", "files show " + id} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("expiring lacks %q:\n%s", want, out)
+		}
 	}
 }

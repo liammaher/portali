@@ -78,9 +78,8 @@ computed yet.
 
 ## Still to do
 
-1. Retention and `Expiring` entries for linked client scans (`reference_only`).
-2. Microsoft Graph (OneDrive, SharePoint), then Google Drive and Dropbox, as read-only
+1. Microsoft Graph (OneDrive, SharePoint), then Google Drive and Dropbox, as read-only
    clients with refresh tokens in the Keychain: sources without a folder, change feeds, and
    matching an API item to the folder entry of the same file (account + path). Open: who owns
    the OAuth client IDs (Google's restricted scopes, Microsoft tenant-admin consent).
-3. An unattended sync (a launchd job with a `files.*` write token in the Keychain).
+2. An unattended sync (a launchd job with a `files.*` write token in the Keychain).

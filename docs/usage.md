@@ -53,7 +53,7 @@ pvault --vault studio retention                 # show both
 pvault --vault studio expiring                  # also lists data past those periods
 ```
 
-A business vault refuses what only a person has: family data, a home, other people's SPID/CieID accounts and login secrets (a CIE or digital-signature secret is never the business's own), and a ruolo on the business itself. Nothing is ever deleted automatically: `expiring` reports `retention` (a person past their period) and `pratiche_closed` (a client's ID and procura scans, once every pratica naming them has closed; a procura's scans wait until its `data_scadenza` has passed, and a procura with no date counts as still in force). Only your own session can set the periods.
+A business vault refuses what only a person has: family data, a home, other people's SPID/CieID accounts and login secrets (a CIE or digital-signature secret is never the business's own), and a ruolo on the business itself. Nothing is ever deleted automatically: `expiring` reports `retention` (a person past their period) and `pratiche_closed` (a client's ID and procura scans, once every pratica naming them has closed; `files_closed` is the same for a file in the file index that you linked to the client with a role naming an ID or procura category (`pvault files link <id> --for rossi --kind client --role cie`; roles: identity, cie, passaporto, patente, permesso_soggiorno, tessera_sanitaria, procura), counted only if its modified time is before the last closing, and listed only as a reference: the vault holds no such file and can't delete it, you do, where it is; a procura's scans wait until its `data_scadenza` has passed, and a procura with no date counts as still in force). Only your own session can set the periods.
 
 ## Fields
 
@@ -102,7 +102,7 @@ pvault set-sensitivity preferences.timezone public
 
 Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `leo:cie.data_scadenza`), `date_of_<x>` or `<x>_date` (e.g. `identity.date_of_birth`) must be a real calendar date; hyphens count as underscores, and names like `date_format` are not treated as dates. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
 
-`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`). In a business vault with retention periods set, entries with `kind: retention` and `kind: pratiche_closed` appear too (see Other people and business vaults).
+`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`). In a business vault with retention periods set, entries with `kind: retention`, `kind: pratiche_closed` and `kind: files_closed` appear too (see Other people and business vaults).
 
 ## Document scans
 
