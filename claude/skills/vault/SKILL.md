@@ -53,9 +53,9 @@ that address for `curl` and `/vault/schema` with a vault other than the default.
 ## 2. Pick a path to read or change data
 
 **a. Vault MCP tools (preferred when loaded).** `vault_get`, `vault_set`, `vault_list`,
-`vault_context`, `vault_expiring`, `vault_documents`, `vault_document_add`,
-`vault_document_get`, `vault_files_search`, `vault_file_get`, `vault_file_suggest`, `vault_file_register` (§5), `vault_sign_request`, `vault_sign_status` (the pratica skill's signing
-step: a token can ask for a handwritten signature but never approve it). They use a scoped service token, so a call can fail with
+`vault_context` and the rest ([mcp/README.md](../../../mcp/README.md#tools) lists them; the
+file tools are in §5, the signing tools in the pratica skill's signing step: a token can ask
+for a handwritten signature but never approve it). They use a scoped service token, so a call can fail with
 "vault: this is outside the token's scope", 403 or 404 when the field is outside the token's scope, access level
 or sensitivity cap. Then tell the user which scope/access is missing and fall back to b.
 If a tool says there's no token, or it's expired or revoked, and `pvault touchid status`
@@ -208,15 +208,12 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
   data processing agreement (art. 28 DPA) and no training on their data. If you don't know
   that it is, say so once before you read clients' data. This is a note for the user, not a
   check the vault makes.
-- `vault_expiring` also lists what may be due for deletion, with a `kind`: `retention` (a
-  person whose retention period after `ruolo.data_fine`, set by the user with
-  `pvault --vault <name> retention set <years>`, has ended (`expired`) or ends within the
-  window; there is no default, so suggest no number) and `pratiche_closed` (a client's ID
-  or procura scans once every pratica naming them is closed plus the period the user set
-  with `pvault --vault <name> retention scans <days>`; again no default, so nothing is
-  listed until they set one, and suggest no number) and `files_closed` (the same for a file in
-  the user's folders or drive, `file_id` and `file`, linked to the client as a copy of an ID or
-  procura: the vault only points at it, so say where it is with `vault_file_get`). Point them out; never delete anything yourself (`person remove` and
+- `vault_expiring` also lists what may be due for deletion, with a `kind` (`retention`,
+  `pratiche_closed`, `files_closed`; what each means is in
+  [docs/usage.md](../../../docs/usage.md#retention)). The periods are the user's to set
+  (`pvault --vault <name> retention`) and have no default: suggest no number. For a
+  `files_closed` entry the vault only points at the file, so say where it is with
+  `vault_file_get`. Point them out; never delete anything yourself (`person remove` and
   `doc delete` are the user's).
 - A person's own copy of their data (GDPR art. 20): the user runs
   `pvault --vault <name> person export <slug>`, which writes an unencrypted folder. Only

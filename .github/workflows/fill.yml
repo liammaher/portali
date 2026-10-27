@@ -10,6 +10,8 @@ on:
       - claude/skills/pratica/fill/**
       - internal/**
       - schema.json
+      - go.mod
+      - go.sum
       - .github/workflows/fill.yml
   push:
     branches: [main]
@@ -17,6 +19,8 @@ on:
       - claude/skills/pratica/fill/**
       - internal/**
       - schema.json
+      - go.mod
+      - go.sum
       - .github/workflows/fill.yml
   workflow_dispatch:
 

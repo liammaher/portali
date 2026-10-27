@@ -16,3 +16,6 @@ examples/*/node_modules/
 
 # Built binaries belong in bin/ (make build), never in the repo root
 /pvault
+
+# fill.py, imported by its pilots
+__pycache__/

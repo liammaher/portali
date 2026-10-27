@@ -48,11 +48,12 @@ var locatedKinds = []locatedKind{
 		"sede_legale_quartiere", "sede_legale_municipalita", "sede_legale_distretto_asl"},
 }
 
-// Indexes into a located address's three computed fields.
+// Indexes into a located address's three computed fields, in the order
+// LocatedTarget returns them.
 const (
-	locQuartiere = iota
-	locMunicipalita
-	locDistretto
+	LocQuartiere = iota
+	LocMunicipalita
+	LocDistretto
 )
 
 var locatedLabels = [3]string{"quartiere", "municipalità", "distretto"}
@@ -269,8 +270,8 @@ func (v *Vault) locate(vaultKey []byte, category string, k locatedKind, allow Fi
 		return r.exists && r.value != "" && !r.updated.Before(since)
 	}
 	staleSince := [3]time.Time{st.updated, st.updated, st.updated}
-	if st.rows[locMunicipalita].exists && st.rows[locMunicipalita].updated.After(st.updated) {
-		staleSince[locDistretto] = st.rows[locMunicipalita].updated
+	if st.rows[LocMunicipalita].exists && st.rows[LocMunicipalita].updated.After(st.updated) {
+		staleSince[LocDistretto] = st.rows[LocMunicipalita].updated
 	}
 	for i := range st.out {
 		r := st.rows[i]
@@ -296,8 +297,8 @@ func (v *Vault) locate(vaultKey []byte, category string, k locatedKind, allow Fi
 		st.reason = "the address is not in Napoli"
 	default:
 		q := napoli.Query{Street: street, Civico: civico}
-		if st.out[locQuartiere].source == "stored" && (st.rows[locQuartiere].tier != TierPersonal || reachesPersonal) {
-			q.Quartiere = st.out[locQuartiere].value
+		if st.out[LocQuartiere].source == "stored" && (st.rows[LocQuartiere].tier != TierPersonal || reachesPersonal) {
+			q.Quartiere = st.out[LocQuartiere].value
 		}
 		st.res, st.ran = napoli.Lookup(q), true
 		switch st.res.Status {
@@ -308,12 +309,12 @@ func (v *Vault) locate(vaultKey []byte, category string, k locatedKind, allow Fi
 		}
 	}
 	if st.ran && st.res.Status == napoli.Resolved {
-		if st.out[locQuartiere].value == "" {
-			st.out[locQuartiere].value, st.out[locQuartiere].source = st.res.Quartiere, "computed"
+		if st.out[LocQuartiere].value == "" {
+			st.out[LocQuartiere].value, st.out[LocQuartiere].source = st.res.Quartiere, "computed"
 		}
-		if st.out[locMunicipalita].value == "" {
-			st.out[locMunicipalita].value, st.out[locMunicipalita].source = strconv.Itoa(st.res.Municipalita), "computed"
-		} else if stored := st.out[locMunicipalita].value; stored != strconv.Itoa(st.res.Municipalita) {
+		if st.out[LocMunicipalita].value == "" {
+			st.out[LocMunicipalita].value, st.out[LocMunicipalita].source = strconv.Itoa(st.res.Municipalita), "computed"
+		} else if stored := st.out[LocMunicipalita].value; stored != strconv.Itoa(st.res.Municipalita) {
 			differs = "the stored municipalità (" + stored + ") differs from the stradario's (" + strconv.Itoa(st.res.Municipalita) + ")"
 		}
 	}
@@ -324,12 +325,12 @@ func (v *Vault) locate(vaultKey []byte, category string, k locatedKind, allow Fi
 	for i := range st.out {
 		st.out[i].shown = allow == nil || allow(st.out[i].id, st.out[i].tier)
 	}
-	if st.out[locDistretto].value == "" {
-		if st.rows[locMunicipalita].exists && !st.out[locMunicipalita].shown {
-			st.out[locDistretto].shown = false
-		} else if n, err := strconv.Atoi(st.out[locMunicipalita].value); err == nil {
+	if st.out[LocDistretto].value == "" {
+		if st.rows[LocMunicipalita].exists && !st.out[LocMunicipalita].shown {
+			st.out[LocDistretto].shown = false
+		} else if n, err := strconv.Atoi(st.out[LocMunicipalita].value); err == nil {
 			if d, ok := napoli.Distretto(n); ok {
-				st.out[locDistretto].value, st.out[locDistretto].source = d, "computed"
+				st.out[LocDistretto].value, st.out[LocDistretto].source = d, "computed"
 			}
 		}
 	}
@@ -338,13 +339,13 @@ func (v *Vault) locate(vaultKey []byte, category string, k locatedKind, allow Fi
 	for i := range st.out {
 		if st.out[i].stale && st.out[i].shown {
 			since := "the address"
-			if i == locDistretto {
+			if i == LocDistretto {
 				since = "the address or the stored municipalità"
 			}
 			st.notes = append(st.notes, "the stored "+locatedLabels[i]+" is older than "+since+" and was ignored")
 		}
 	}
-	if differs != "" && st.out[locMunicipalita].shown {
+	if differs != "" && st.out[LocMunicipalita].shown {
 		st.notes = append(st.notes, differs)
 	}
 	return st, nil
@@ -455,10 +456,10 @@ func (v *Vault) Locate(category string, allow FieldFilter) (*Located, error) {
 			v.db.LogAccess(auditRead(st.out[i].id))
 		}
 	}
-	if m := st.out[locMunicipalita]; m.shown && m.source == "computed" {
+	if m := st.out[LocMunicipalita]; m.shown && m.source == "computed" {
 		res.Basis, res.Partial = string(st.res.Basis), st.res.Partial
 	}
-	if m := st.out[locMunicipalita]; m.shown && m.value == "" {
+	if m := st.out[LocMunicipalita]; m.shown && m.value == "" {
 		res.Reason, res.Choices = st.reason, st.choices()
 	}
 	return res, nil
@@ -531,7 +532,7 @@ func normalizeLocated(id, category, name, value string) (out string, handled boo
 	}
 	s := strings.ToUpper(strings.TrimSpace(value))
 	switch which {
-	case locQuartiere:
+	case LocQuartiere:
 		if q, ok := napoli.FindQuartiere(value); ok {
 			return q.Name, true, nil
 		}
@@ -540,7 +541,7 @@ func normalizeLocated(id, category, name, value string) (out string, handled boo
 			names = append(names, q.Name)
 		}
 		return fail("must be one of the quartieri of Napoli: " + strings.Join(names, ", "))
-	case locMunicipalita:
+	case LocMunicipalita:
 		if m := reMunicipalita.FindStringSubmatch(s); m != nil {
 			if n, ok := romanNumerals[m[1]]; ok {
 				return strconv.Itoa(n), true, nil

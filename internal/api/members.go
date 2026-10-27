@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -143,7 +142,10 @@ func (s *Server) handleSetRetention(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req retentionSettings
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || (req.Years == nil && req.ScanDays == nil) {
+	if !readJSONBody(w, r, &req) {
+		return
+	}
+	if req.Years == nil && req.ScanDays == nil {
 		writeError(w, http.StatusBadRequest, "invalid_request", `body must be {"years": N} or {"scan_days": N}`)
 		return
 	}

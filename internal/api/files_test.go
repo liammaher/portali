@@ -367,6 +367,14 @@ func TestFiles_ApprovedGrantsAreHeldToWhatWasApproved(t *testing.T) {
 	if w := env.doRequestWithToken(t, "POST", "/vault/files/"+a.ID+"/links", map[string]string{"for": "io"}, leo); w.Code != 403 {
 		t.Errorf("leo's grant linking for the owner = %d, want 403", w.Code)
 	}
+	// Nor take the owner's files: linking one to leo would move it out of the owner's scope.
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/"+a.ID+"/links", map[string]string{"for": "leo"}, leo); w.Code != 404 {
+		t.Errorf("leo's grant linking the owner's file to leo = %d, want 404", w.Code)
+	}
+	rule2 := map[string]string{"source_id": src, "path": "/", "for": "leo"}
+	if w := env.doRequestWithToken(t, "POST", "/vault/files/rules", rule2, leo); w.Code != 403 {
+		t.Errorf("leo's grant adding a rule over the owner's folder = %d, want 403", w.Code)
+	}
 	if w := env.doRequestWithToken(t, "DELETE", "/vault/files/links/"+leoLink, nil, leo); w.Code != 200 {
 		t.Errorf("leo's grant unlinking leo's link = %d", w.Code)
 	}

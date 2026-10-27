@@ -34,7 +34,7 @@ type ExpiryInfo struct {
 // ruolo.data_fine plus the retention period, if one is set, falls in the
 // window, and, in a business vault where the user set a period for scans
 // (ScanDays), a client's ID and procura scans once that period after every
-// pratica naming them closed ends (scansAfterPratiche). Both report only what
+// pratica naming them closed ends (closedClientScans). Both report only what
 // allow accepts.
 func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time) ([]ExpiryInfo, error) {
 	years, err := v.RetentionYears()
@@ -140,14 +140,22 @@ func (v *Vault) Expiring(within time.Duration, allow FieldFilter, now time.Time)
 	return result, nil
 }
 
-// idScans is a client's document category whose scans scansAfterPratiche
+// idScans is a client's document category whose scans closedClientScans
 // reports, and when the last pratica naming the client closed.
 type idScans struct {
 	category string
 	closedAt time.Time
 }
 
-// scansAfterPratiche returns the document categories (rossi:cie) of ID and
+// closedScans is what a business vault's closed pratiche let go of: the
+// vault's own scans, and files in its index that are linked to a client as a
+// copy of an ID or procura (the vault can only report those).
+type closedScans struct {
+	docs  []idScans
+	files []fileDue
+}
+
+// closedClientScans returns the document categories (rossi:cie) of ID and
 // procura scans, sorted, of each client (ruolo.tipo includes cliente) whom
 // at least one pratica names in persona and every pratica naming them is
 // closed. Only clients: the business's own pratiche (persona io) use its
@@ -163,23 +171,8 @@ type idScans struct {
 // caller can't see still counts as open; but a person counts only if the
 // caller can read the persona and stato of every pratica naming them, their
 // ruolo.tipo and procura.data_scadenza, and every scan in the category. A
-// partial view never says scans can go.
-func (v *Vault) scansAfterPratiche(allow FieldFilter, today time.Time) ([]idScans, error) {
-	c, err := v.clientClosure(allow, today)
-	if err != nil {
-		return nil, err
-	}
-	return v.scanCategoriesDue(allow, c)
-}
-
-// closedScans is what a business vault's closed pratiche let go of: the
-// vault's own scans, and files in its index that are linked to a client as a
-// copy of an ID or procura (the vault can only report those).
-type closedScans struct {
-	docs  []idScans
-	files []fileDue
-}
-
+// partial view never says scans can go. Files in the index linked to such a
+// client as an ID or procura copy come with them (filesDue).
 func (v *Vault) closedClientScans(allow FieldFilter, today time.Time) (*closedScans, error) {
 	c, err := v.clientClosure(allow, today)
 	if err != nil {

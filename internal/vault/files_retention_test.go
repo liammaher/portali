@@ -23,7 +23,7 @@ func linkedFile(t *testing.T, v *Vault, src, key, name string, mtime time.Time, 
 		t.Fatalf("%q: %d hits", name, len(hits))
 	}
 	if holder != "" {
-		if _, err := v.LinkFile(hits[0].ID, FileLinkInput{Holder: holder, Kind: FileKindClient, Role: role}, FileOriginManual); err != nil {
+		if _, err := v.LinkFile(nil, hits[0].ID, FileLinkInput{Holder: holder, Kind: FileKindClient, Role: role}, FileOriginManual); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -197,14 +197,14 @@ func TestRetention_AFileWithAnotherLinkIsKept(t *testing.T) {
 
 	link := func(id, holder, role string) {
 		in := FileLinkInput{Holder: holder, Kind: FileKindClient, Role: role}
-		if _, err := v.LinkFile(id, in, FileOriginManual); err != nil {
+		if _, err := v.LinkFile(nil, id, in, FileOriginManual); err != nil {
 			t.Fatal(err)
 		}
 	}
 	pair := linkedFile(t, v, src, "1", "coniugi.pdf", before, "rossi", "cie") // rossi done, bianchi open
 	link(pair, "bianchi", "cie")
 	pratica := linkedFile(t, v, src, "2", "cie rossi per tari.pdf", before, "rossi", "cie")
-	if _, err := v.LinkFile(pratica, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual); err != nil {
+	if _, err := v.LinkFile(nil, pratica, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual); err != nil {
 		t.Fatal(err)
 	}
 	both := linkedFile(t, v, src, "3", "cie rossi e verdi.pdf", before, "rossi", "cie") // two done clients, both as an ID
@@ -284,7 +284,7 @@ func TestRetention_ASharedFileUsesTheEarlierClosing(t *testing.T) {
 	src := fileSource(t, v)
 	for key, age := range map[string]int{"1": 30, "2": 100} {
 		id := linkedFile(t, v, src, key, "cie-"+key+".pdf", now.AddDate(0, 0, -age), "rossi", "cie")
-		if _, err := v.LinkFile(id, FileLinkInput{Holder: "verdi", Kind: FileKindClient, Role: "cie"}, FileOriginManual); err != nil {
+		if _, err := v.LinkFile(nil, id, FileLinkInput{Holder: "verdi", Kind: FileKindClient, Role: "cie"}, FileOriginManual); err != nil {
 			t.Fatal(err)
 		}
 	}

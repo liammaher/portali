@@ -3,6 +3,7 @@ package vault
 import (
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 	"time"
 
@@ -16,9 +17,6 @@ import (
 // file lives in a source with no folder and no sign-in of its own
 // (ViaConnector): nothing syncs it, so it is never marked gone, and it is only
 // as fresh as the day it was accepted.
-
-// ProposalProviders are the providers a proposal can name.
-var ProposalProviders = []string{"gdrive", "onedrive", "sharepoint", "dropbox"}
 
 // FileProposalInput is what an agent proposes: the file as its connector
 // described it, and optionally whom to link it to.
@@ -50,15 +48,6 @@ type FileProposalInfo struct {
 	FileProposalInput
 }
 
-func validProposalProvider(p string) bool {
-	for _, q := range ProposalProviders {
-		if p == q {
-			return true
-		}
-	}
-	return false
-}
-
 // proposalHostOK reports a web address on the provider's own sites: a proposal
 // is untrusted, and the user may open its address from `pvault files open`, so
 // it can't point anywhere else.
@@ -77,10 +66,6 @@ func proposalHostOK(provider, host string) bool {
 	return false
 }
 
-func providerTitle(provider string) string {
-	return map[string]string{"gdrive": "Google Drive", "onedrive": "OneDrive", "sharepoint": "SharePoint", "dropbox": "Dropbox"}[provider]
-}
-
 // observation is the proposal as the index would take it, cleaned. A web
 // address that is a sharing link is dropped; one on another site is an error.
 func (in *FileProposalInput) observation() (FileObservation, error) {
@@ -89,7 +74,7 @@ func (in *FileProposalInput) observation() (FileObservation, error) {
 	if o.WebURL != "" {
 		u, err := url.Parse(o.WebURL)
 		if err != nil || u.Scheme != "https" || !proposalHostOK(in.Provider, u.Hostname()) {
-			return o, &ValidationError{Field: "web_url", Msg: "must be a page of " + providerTitle(in.Provider) + " itself"}
+			return o, &ValidationError{Field: "web_url", Msg: "must be a page of " + ProviderTitle(in.Provider) + " itself"}
 		}
 		// Google: the file's own page (its id is in the address), not a form, a
 		// download or another file's page dressed up as this one's.
@@ -124,8 +109,8 @@ func (in *FileProposalInput) link() FileLinkInput {
 // service token's) may only propose files for the holder it can reach, and
 // only pratiche it can see. The same file proposed again is the same proposal.
 func (v *Vault) ProposeFile(allow FieldFilter, in FileProposalInput, proposedBy string) (*FileProposalInfo, error) {
-	if !validProposalProvider(in.Provider) {
-		return nil, &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(ProposalProviders, ", ")}
+	if !slices.Contains(CloudProviders, in.Provider) {
+		return nil, &ValidationError{Field: "provider", Msg: "use one of " + strings.Join(CloudProviders, ", ")}
 	}
 	o, err := in.observation()
 	if err != nil {
@@ -294,7 +279,7 @@ func (v *Vault) connectorSource(provider string) (string, error) {
 				return nil
 			}
 		}
-		cfg := FileSourceConfig{Label: providerTitle(provider) + " (found through Claude)", Via: ViaConnector}
+		cfg := FileSourceConfig{Label: ProviderTitle(provider) + " (found through Claude)", Via: ViaConnector}
 		if err := CheckFileSourceConfig(provider, &cfg); err != nil {
 			return err
 		}
@@ -386,7 +371,7 @@ func (v *Vault) ResolveFileProposal(allow FieldFilter, id string, accept bool) (
 			return nil, err
 		}
 		if prop.hasLink() {
-			if _, err := v.LinkFile(fileID, prop.link(), FileOriginSuggestion); err != nil {
+			if _, err := v.LinkFile(nil, fileID, prop.link(), FileOriginSuggestion); err != nil {
 				// Linked to no one it would be the owner's: a file this accept just
 				// added goes again.
 				if res.Added == 1 {

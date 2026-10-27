@@ -1,9 +1,12 @@
 package vault
 
 import (
+	"bytes"
 	"encoding/json"
 	"slices"
 	"strings"
+
+	"github.com/lovincyrus/personal-vault/internal/napoli"
 )
 
 // SchemaField describes a recommended field in the vault schema.
@@ -24,6 +27,10 @@ type SchemaField struct {
 	// municipalità of an address in Napoli). Storing one overrides the
 	// computed value until the address changes (located.go).
 	Derived bool `json:"derived,omitempty"`
+	// Values lists what the field may hold (each item, for a list such as
+	// ruolo.tipo), so the library reads the vault's list instead of keeping
+	// its own. Filled in from the rules that check them (schemaValues).
+	Values []string `json:"values,omitempty"`
 }
 
 // Who can have a field (SchemaField.For).
@@ -88,14 +95,38 @@ type CredentialWords struct {
 }
 
 // SchemaJSON is RecommendedSchema as 'pvault schema --json' prints it and
-// schema.json at the repository root holds it.
+// schema.json at the repository root holds it: as JSON.stringify writes it
+// (no \u003c for <), so the library's copy is the same bytes.
 func SchemaJSON() []byte {
-	data, err := json.MarshalIndent(RecommendedSchema, "", "  ")
-	if err != nil {
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(RecommendedSchema); err != nil {
 		panic(err) // a fixed value of plain types
 	}
-	return append(data, '\n')
+	return buf.Bytes()
 }
+
+// schemaValues gives the schema's enumerated fields their values from the
+// lists the rules check them against.
+func schemaValues() {
+	for i := range RecommendedSchema.Categories {
+		for j := range RecommendedSchema.Categories[i].Fields {
+			f := &RecommendedSchema.Categories[i].Fields[j]
+			switch {
+			case f.ID == "ruolo.tipo":
+				f.Values = slices.Clone(ruoli)
+			case f.Derived && strings.HasSuffix(f.ID, "municipalita"):
+				f.Values = napoli.Municipalita()
+			case f.Derived && strings.HasSuffix(f.ID, "distretto_asl"):
+				f.Values = napoli.Distretti()
+			}
+		}
+	}
+}
+
+func init() { schemaValues() }
 
 // RecommendedSchema is the canonical schema that agents can discover.
 var RecommendedSchema = Schema{
@@ -105,7 +136,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "16",
+	Version: "17",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",

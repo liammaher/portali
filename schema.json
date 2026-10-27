@@ -1,5 +1,5 @@
 {
-  "version": "16",
+  "version": "17",
   "categories": [
     {
       "name": "identity",
@@ -205,13 +205,37 @@
           "id": "residenza.municipalita",
           "description": "Municipalità of Napoli (1-10), computed from the address; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the address",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
         },
         {
           "id": "residenza.distretto_asl",
           "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "24/73",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
         }
       ]
     },
@@ -261,19 +285,43 @@
           "id": "domicilio.municipalita",
           "description": "Municipalità of Napoli (1-10), computed from the address; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the address",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
         },
         {
           "id": "domicilio.distretto_asl",
           "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "24/73",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
         }
       ]
     },
     {
       "name": "abitazione",
-      "description": "The home you live in now (the unit at your residenza or domicilio; the address stays there). Catasto data is on the visura catastale and is needed for TARI, RLI registration and ISEE. Attach the visura and APE with 'pvault doc add abitazione \u003cfile\u003e'.",
+      "description": "The home you live in now (the unit at your residenza or domicilio; the address stays there). Catasto data is on the visura catastale and is needed for TARI, RLI registration and ISEE. Attach the visura and APE with 'pvault doc add abitazione <file>'.",
       "scope": "owner",
       "subject": "persona",
       "kinds": [
@@ -349,7 +397,7 @@
     },
     {
       "name": "locazione",
-      "description": "Your rental contract, if you rent. Registration details (estremi di registrazione) are on the RLI receipt and are asked for by utility transfers and tax deductions. Attach the contract and receipt with 'pvault doc add locazione \u003cfile\u003e'.",
+      "description": "Your rental contract, if you rent. Registration details (estremi di registrazione) are on the RLI receipt and are asked for by utility transfers and tax deductions. Attach the contract and receipt with 'pvault doc add locazione <file>'.",
       "scope": "owner",
       "subject": "persona",
       "kinds": [
@@ -541,7 +589,7 @@
     },
     {
       "name": "tari",
-      "description": "Your TARI (waste tax) position with the Comune. Attach the filed declaration with 'pvault doc add tari \u003cfile\u003e'.",
+      "description": "Your TARI (waste tax) position with the Comune. Attach the filed declaration with 'pvault doc add tari <file>'.",
       "scope": "owner",
       "subject": "persona",
       "kinds": [
@@ -577,14 +625,14 @@
     },
     {
       "name": "pratiche",
-      "description": "Procedures in progress with an ente, one set of fields per pratica as \u003cslug\u003e_\u003ccampo\u003e. The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. Campi: titolo, ente, stato, canale, destinatario, protocollo, data_invio, data_scadenza, data_esito, importo, data_pagamento, prossimo_passo, playbook, note, persona. stato is one of da_fare, in_preparazione, pronta, inviata, in_attesa, completata, respinta, annullata; canale is one of portale, pec, email, sportello, posta, app (a pratiche-napoli channel type is accepted as it is: desk is sportello, portal is portale, post is posta). data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. playbook names the procedure's playbook file. persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche \u003cfile\u003e'.",
+      "description": "Procedures in progress with an ente, one set of fields per pratica as <slug>_<campo>. The slug is lower-case words joined by hyphens, e.g. pratiche.tari-iscrizione-2026_stato. Campi: titolo, ente, stato, canale, destinatario, protocollo, data_invio, data_scadenza, data_esito, importo, data_pagamento, prossimo_passo, playbook, note, persona. stato is one of da_fare, in_preparazione, pronta, inviata, in_attesa, completata, respinta, annullata; canale is one of portale, pec, email, sportello, posta, app (a pratiche-napoli channel type is accepted as it is: desk is sportello, portal is portale, post is posta). data_scadenza is the deadline, tracked by 'pvault expiring' until stato is completata, respinta or annullata. playbook names the procedure's playbook file. persona is who it is for: io (the vault's own, the default) or another person's slug (a family member, or a business vault's client). Attach submitted files with 'pvault doc add pratiche <file>'.",
       "scope": "owner",
       "one_only": true,
       "fields": []
     },
     {
       "name": "famiglia",
-      "description": "How your family members relate to you, the vault's owner (as ANPR records every relazione against the intestatario della scheda). Each member is a person with their own data under a prefix, e.g. leo:identity.codice_fiscale, leo:cie.numero; add one with 'pvault member add \u003cslug\u003e --relazione \u003crelazione\u003e'. Member fields: relazione (coniuge, unito_civilmente, convivente, figlio, nipote, genitore, nonno, fratello, nipote_collaterale, zio, cugino, altro_parente, genero_nuora, suocero, cognato, altro_affine, altro); stato_famiglia (si/no: in your stato di famiglia); a_carico_percentuale (0, 50 or 100); genitori (io and/or member slugs, e.g. io,giulia); rappresentanza (tutore, amministratore_sostegno, curatore, delega). Yours: intestatario_scheda (io or a member's slug).",
+      "description": "How your family members relate to you, the vault's owner (as ANPR records every relazione against the intestatario della scheda). Each member is a person with their own data under a prefix, e.g. leo:identity.codice_fiscale, leo:cie.numero; add one with 'pvault member add <slug> --relazione <relazione>'. Member fields: relazione (coniuge, unito_civilmente, convivente, figlio, nipote, genitore, nonno, fratello, nipote_collaterale, zio, cugino, altro_parente, genero_nuora, suocero, cognato, altro_affine, altro); stato_famiglia (si/no: in your stato di famiglia); a_carico_percentuale (0, 50 or 100); genitori (io and/or member slugs, e.g. io,giulia); rappresentanza (tutore, amministratore_sostegno, curatore, delega). Yours: intestatario_scheda (io or a member's slug).",
       "scope": "person",
       "subject": "persona",
       "kinds": [
@@ -634,7 +682,7 @@
     },
     {
       "name": "ruolo",
-      "description": "What each person in a business vault is to the business (business vaults only; personal vaults use famiglia). Each person has their own data under a prefix, e.g. bianchi:identity.codice_fiscale, bianchi:albo.numero; add one with 'pvault person add \u003cslug\u003e --ruolo \u003cruolo\u003e'. Fields: tipo (one or more of titolare, legale_rappresentante, socio, amministratore, procuratore, preposto, responsabile_tecnico, dipendente, collaboratore, cliente, fornitore, impresa_esecutrice, altro); data_inizio, data_fine; quota_percentuale (a socio's share, up to 100); poteri (an amministratore's or procuratore's powers). A business vault never holds other people's SPID/CieID accounts or login secrets.",
+      "description": "What each person in a business vault is to the business (business vaults only; personal vaults use famiglia). Each person has their own data under a prefix, e.g. bianchi:identity.codice_fiscale, bianchi:albo.numero; add one with 'pvault person add <slug> --ruolo <ruolo>'. Fields: tipo (one or more of titolare, legale_rappresentante, socio, amministratore, procuratore, preposto, responsabile_tecnico, dipendente, collaboratore, cliente, fornitore, impresa_esecutrice, altro); data_inizio, data_fine; quota_percentuale (a socio's share, up to 100); poteri (an amministratore's or procuratore's powers). A business vault never holds other people's SPID/CieID accounts or login secrets.",
       "scope": "person",
       "kinds": [
         "impresa"
@@ -645,7 +693,22 @@
           "id": "ruolo.tipo",
           "description": "The person's roles for the business, one or more of: titolare, legale_rappresentante, socio, amministratore, procuratore, preposto, responsabile_tecnico, dipendente, collaboratore, cliente, fornitore, impresa_esecutrice, altro (validated; e.g. socio,amministratore)",
           "sensitivity": "standard",
-          "for": "member"
+          "for": "member",
+          "values": [
+            "titolare",
+            "legale_rappresentante",
+            "socio",
+            "amministratore",
+            "procuratore",
+            "preposto",
+            "responsabile_tecnico",
+            "dipendente",
+            "collaboratore",
+            "cliente",
+            "fornitore",
+            "impresa_esecutrice",
+            "altro"
+          ]
         },
         {
           "id": "ruolo.data_inizio",
@@ -675,7 +738,7 @@
     },
     {
       "name": "procura",
-      "description": "A delega or procura a person gave you (or, in a business vault, the business): e.g. a client's procura speciale for a SUE/SUAP filing, the Agenzia delle Entrate delega unica, an INPS delega. Only on another person, e.g. rossi:procura.ente; a second one goes in procura2. Attach the signed procura with 'pvault doc add rossi:procura \u003cfile\u003e'. data_scadenza is tracked by 'pvault expiring'. Never store the person's SPID or CIE credentials instead: act with your own and the procura.",
+      "description": "A delega or procura a person gave you (or, in a business vault, the business): e.g. a client's procura speciale for a SUE/SUAP filing, the Agenzia delle Entrate delega unica, an INPS delega. Only on another person, e.g. rossi:procura.ente; a second one goes in procura2. Attach the signed procura with 'pvault doc add rossi:procura <file>'. data_scadenza is tracked by 'pvault expiring'. Never store the person's SPID or CIE credentials instead: act with your own and the procura.",
       "scope": "person",
       "fields": [
         {
@@ -883,13 +946,37 @@
           "id": "business.sede_legale_municipalita",
           "description": "Municipalità of Napoli (1-10), computed from the registered office; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the registered office",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
         },
         {
           "id": "business.sede_legale_distretto_asl",
           "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "24/73",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
         },
         {
           "id": "business.tari_codice_contribuente",
@@ -900,7 +987,7 @@
     },
     {
       "name": "locale",
-      "description": "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, but with its own address. A second unit is locale2. Catasto data is on the visura catastale; the tari_ fields are the TARI position of these premises. Attach the visura and the lease with 'pvault doc add locale \u003cfile\u003e'.",
+      "description": "The business premises (locali) where the activity is carried on, one unit; like abitazione for the home, but with its own address. A second unit is locale2. Catasto data is on the visura catastale; the tari_ fields are the TARI position of these premises. Attach the visura and the lease with 'pvault doc add locale <file>'.",
       "scope": "person",
       "subject": "impresa",
       "fields": [
@@ -954,13 +1041,37 @@
           "id": "locale.municipalita",
           "description": "Municipalità of Napoli (1-10), computed from the premises; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the premises",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
         },
         {
           "id": "locale.distretto_asl",
           "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
           "sensitivity": "standard",
-          "derived": true
+          "derived": true,
+          "values": [
+            "24/73",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
         },
         {
           "id": "locale.catasto_sezione",
@@ -1090,7 +1201,7 @@
     },
     {
       "name": "permesso_soggiorno",
-      "description": "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement; not needed when identity.citizenship is italiana). Attach scans with 'pvault doc add permesso_soggiorno \u003cfile\u003e'.",
+      "description": "Permesso / documento di soggiorno (non-EU residents, incl. UK citizens under the Withdrawal Agreement; not needed when identity.citizenship is italiana). Attach scans with 'pvault doc add permesso_soggiorno <file>'.",
       "scope": "person",
       "subject": "persona",
       "fields": [

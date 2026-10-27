@@ -12,7 +12,7 @@ func TestFilesBug_UnlinkedRuleLinkStaysUnlinkedAfterAnUpdate(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:famiglia.relazione", "figlio")
 	src := fileSource(t, v)
-	v.AddFileRule(src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
+	v.AddFileRule(nil, src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
 	v.UpsertFiles(src, []FileObservation{obs("1", "/Leo/a.pdf", "a.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{})
 	if len(f[0].Links) != 1 {
@@ -34,7 +34,7 @@ func TestFilesBug_RuleNeedsAPath(t *testing.T) {
 	v, _ := tmpVault(t)
 	src := fileSource(t, v)
 	var verr *ValidationError
-	if _, _, err := v.AddFileRule(src, FileRuleInput{Path: "", Kind: FileKindPerson}); !errors.As(err, &verr) {
+	if _, _, err := v.AddFileRule(nil, src, FileRuleInput{Path: "", Kind: FileKindPerson}); !errors.As(err, &verr) {
 		t.Fatalf("a rule with no path would link every file: %v", err)
 	}
 }
@@ -171,7 +171,7 @@ func TestFilesBug_OnlyAMoveIntoARuledFolderLinks(t *testing.T) {
 	v, _ := tmpVault(t)
 	mustSet(t, v, "leo:famiglia.relazione", "figlio")
 	src := fileSource(t, v)
-	v.AddFileRule(src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
+	v.AddFileRule(nil, src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
 	// An API source's key is an item ID that survives a move.
 	v.UpsertFiles(src, []FileObservation{obs("item-1", "/Altro/a.pdf", "a.pdf")}, true)
 	if hits, _, _ := v.SearchFiles(nil, FileQuery{}); len(hits[0].Links) != 0 {
@@ -293,7 +293,7 @@ func TestFilesReview_AFileWhosePersonLinkIsGoneStaysOutOfTheOwnersScope(t *testi
 	src := fileSource(t, v)
 	v.UpsertFiles(src, []FileObservation{obs("1", "/Leo/passaporto leo.pdf", "passaporto leo.pdf"), obs("2", "/Casa/contratto.pdf", "contratto.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{Text: "passaporto"})
-	link, _ := v.LinkFile(f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
+	link, _ := v.LinkFile(nil, f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
 
 	owner, everyone := tokenFilter("files.*"), tokenFilter("*:files.*")
 	seen := func(allow FieldFilter) int { _, n, _ := v.SearchFiles(allow, FileQuery{Text: "passaporto"}); return n }
@@ -314,7 +314,7 @@ func TestFilesReview_AFileWhosePersonLinkIsGoneStaysOutOfTheOwnersScope(t *testi
 	}
 
 	// Removing the person does the same.
-	v.LinkFile(f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
+	v.LinkFile(nil, f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
 	if _, err := v.RemovePerson("leo"); err != nil {
 		t.Fatal(err)
 	}
@@ -334,7 +334,7 @@ func TestFilesReview_ASyncTokenLeavesFilesItCannotSeeAlone(t *testing.T) {
 	seed = append(seed, obs("leo", "/Leo/scuola.pdf", "scuola.pdf"), obs("pw", "/pw.txt", "SPID password.txt"))
 	v.UpsertFiles(src, seed, true)
 	scuola, _, _ := v.SearchFiles(nil, FileQuery{Text: "scuola"})
-	v.LinkFile(scuola[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
+	v.LinkFile(nil, scuola[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
 
 	token := tokenFilter("files.*")
 	// It resends the hidden files' keys with other names, and a full listing
@@ -446,7 +446,7 @@ func TestFilesReview_PraticaProbeAndHolderBoundaries(t *testing.T) {
 	}
 
 	// A grant for leo's files can't unlink, accept or remove another holder's.
-	owned, _ := v.LinkFile(f[0].ID, FileLinkInput{Kind: FileKindPerson}, FileOriginManual)
+	owned, _ := v.LinkFile(nil, f[0].ID, FileLinkInput{Kind: FileKindPerson}, FileOriginManual)
 	leoGrant := tokenFilter("leo:files.*")
 	if err := v.UnlinkFile(leoGrant, owned.ID); !errors.Is(err, ErrFileNotFound) {
 		t.Fatalf("leo's grant unlinked the owner's link: %v", err)
@@ -455,7 +455,7 @@ func TestFilesReview_PraticaProbeAndHolderBoundaries(t *testing.T) {
 	if _, err := v.ResolveFileSuggestion(leoGrant, sug.ID, true); !errors.Is(err, ErrFileNotFound) {
 		t.Fatalf("leo's grant accepted a suggestion for the owner: %v", err)
 	}
-	rule, _, _ := v.AddFileRule(src, FileRuleInput{Path: "/x", Kind: FileKindPerson})
+	rule, _, _ := v.AddFileRule(nil, src, FileRuleInput{Path: "/x", Kind: FileKindPerson})
 	if err := v.RemoveFileRule(leoGrant, rule.ID); !errors.Is(err, ErrFileNotFound) {
 		t.Fatalf("leo's grant removed the owner's rule: %v", err)
 	}

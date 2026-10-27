@@ -148,7 +148,10 @@ func (s *Server) handleSigningApprove(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		SHA256 string `json:"sha256"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || strings.TrimSpace(req.SHA256) == "" {
+	if !readJSONBody(w, r, &req) {
+		return
+	}
+	if strings.TrimSpace(req.SHA256) == "" {
 		writeError(w, http.StatusBadRequest, "invalid_request", "sha256 of the reviewed file is required")
 		return
 	}

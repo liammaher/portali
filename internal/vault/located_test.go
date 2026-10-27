@@ -477,7 +477,7 @@ func TestLocatedTarget(t *testing.T) {
 		"rossi:sede_legale": {"rossi:business", "rossi:business.sede_legale_municipalita"},
 	} {
 		category, ids, ok := LocatedTarget(in)
-		if !ok || category != want.category || ids[locMunicipalita] != want.municipalita {
+		if !ok || category != want.category || ids[LocMunicipalita] != want.municipalita {
 			t.Errorf("LocatedTarget(%q) = %q, %v, %v", in, category, ids, ok)
 		}
 	}

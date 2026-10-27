@@ -48,12 +48,22 @@ pvault --vault studio unlock
 pvault --vault studio person add rossi --ruolo cliente --nome Mario --cognome Rossi
 pvault --vault studio doc add rossi:procura procura-firmata.pdf    # the client's signed procura
 pvault --vault studio retention set 10          # keep people's data 10 years after ruolo.data_fine (no default)
-pvault --vault studio retention scans 90        # keep clients' ID scans 90 days after their pratiche close (no default)
+pvault --vault studio retention scans 90        # keep clients' ID and procura scans 90 days after their pratiche close (no default)
 pvault --vault studio retention                 # show both
 pvault --vault studio expiring                  # also lists data past those periods
 ```
 
-A business vault refuses what only a person has: family data, a home, other people's SPID/CieID accounts and login secrets (a CIE or digital-signature secret is never the business's own), and a ruolo on the business itself. Nothing is ever deleted automatically: `expiring` reports `retention` (a person past their period) and `pratiche_closed` (a client's ID and procura scans, once every pratica naming them has closed; `files_closed` is the same for a file in the file index that you linked to the client with a role naming an ID or procura category (`pvault files link <id> --for rossi --kind client --role cie`; roles: identity, cie, passaporto, patente, permesso_soggiorno, tessera_sanitaria, procura), counted only if its modified time is before the last closing, and listed only as a reference: the vault holds no such file and can't delete it, you do, where it is; a procura's scans wait until its `data_scadenza` has passed, and a procura with no date counts as still in force). Only your own session can set the periods.
+A business vault refuses what only a person has: family data, a home, other people's SPID/CieID accounts and login secrets (a CIE or digital-signature secret is never the business's own), and a ruolo on the business itself.
+
+### Retention
+
+Nothing is ever deleted automatically, and no period has a default: only your own session can set them. Once set, `pvault expiring` (and `GET /vault/expiring`) also lists what may be due for deletion, with a `kind`:
+
+- `retention`: a person whose `ruolo.data_fine` plus `retention set <years>` has passed or falls within the window.
+- `pratiche_closed` (business vaults): a client's ID and procura scans (categories identity, cie, passaporto, patente, permesso_soggiorno, tessera_sanitaria, procura, and numbered copies like `cie2`) once every pratica naming them has closed, dated the last closing plus `retention scans <days>`. A scan counts only if it was stored before that closing. A procura's scans wait until its `data_scadenza` has passed; a procura with no date counts as still in force.
+- `files_closed`: the same for a file in the file index that you linked to the client with a role naming one of those categories (`pvault files link <id> --for rossi --kind client --role cie`), with `file_id` and `file`. Every link of the file must be such a role of a client whose pratiche are closed, and the file's modified time must be before the earliest of those closings. It is listed only as a reference: the vault holds no such file and can't delete it; you do, where it is.
+
+An entry appears only when the caller can see everything it concerns.
 
 ## Fields
 
@@ -91,6 +101,8 @@ Each field has a sensitivity tier that controls how it's shared with consumers.
 | `critical` | Payment card number | Only tokens created with `--max-sensitivity critical` |
 | `personal` | SPID login, CIE PIN/PUK | Only you: your own session, or a Touch ID prompt you approve |
 
+New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
+
 A token's `--max-sensitivity` is the highest tier whose values it can read. Fields above it still appear in `GET /vault/fields` (metadata only, no value), and reading one returns 403 `sensitivity_exceeded`; context, category reads and document listings leave them out. `personal` items are hidden from every token completely.
 
 ```sh
@@ -102,7 +114,7 @@ pvault set-sensitivity preferences.timezone public
 
 Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `leo:cie.data_scadenza`), `date_of_<x>` or `<x>_date` (e.g. `identity.date_of_birth`) must be a real calendar date; hyphens count as underscores, and names like `date_format` are not treated as dates. Both `YYYY-MM-DD` and the Italian `DD/MM/YYYY` (also `DD-MM-YYYY`, `DD.MM.YYYY`) are accepted and stored as `YYYY-MM-DD`; impossible dates such as `31/02/2027` are rejected.
 
-`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`). In a business vault with retention periods set, entries with `kind: retention`, `kind: pratiche_closed` and `kind: files_closed` appear too (see Other people and business vaults).
+`pvault expiring [days]` lists every `*data_scadenza` field (permesso di soggiorno, passaporto, CIE, patente, tessera sanitaria, ...) that has expired or expires within the window (default 90 days), soonest first, plus the deadline of every open pratica (shown as `pratica <slug>`). With retention periods set, entries with `kind: retention`, `kind: pratiche_closed` and `kind: files_closed` appear too (see [Retention](#retention)).
 
 ## Naples addresses (municipalità, quartiere, ASL)
 
@@ -144,9 +156,7 @@ pvault sign review <id> [--out file]   # opens the signed PDF; approve with your
 pvault sign reject <id>
 ```
 
-`review` saves `<name>-firmato.pdf` (never over an existing file) only after you approve the exact file you saw; the approval works for that request once, for 10 minutes. Without `--out` it saves in the current folder. Requests expire after 30 minutes and with the day, at most 5 wait at a time (3 per token, 20 an hour), and none survives a lock. The audit log records each request, view, approval and refusal with the file's sha256. With Touch ID the fingerprint prompt names the document, its pages, its hash and who filed it: read it, and don't touch the sensor for a request you didn't expect. A service token needs scope `firma_autografa.signing` with `append` access to file requests; it can see only its own, and can never approve one or read the signed file. This is a handwritten-signature image with your approval, not a firma digitale: forms that need one are still yours to sign.
-
-New fields get the schema default tier (`standard` for fields not in the schema) — use `pvault schema` to see them. Overwriting a field without giving a tier keeps its current tier.
+`review` saves `<name>-firmato.pdf` (never over an existing file) only after you approve the exact file you saw; the approval works for that request once, for 10 minutes. Without `--out` it saves in the current folder. Requests expire after 30 minutes and with the day, at most 5 wait at a time (3 per token, 20 an hour), and none survives a lock. The PDF can be up to 10 MB and the signed file up to 20 MB; an encrypted PDF, a rotated or cropped page, more than 1000 pages or an oversized compressed stream is refused. The audit log records each request, view, approval and refusal with the file's sha256. With Touch ID the fingerprint prompt names the document, its pages, its hash and who filed it: read it, and don't touch the sensor for a request you didn't expect. A service token needs scope `firma_autografa.signing` with `append` access to file requests; it can see only its own, and can never approve one or read the signed file. This is a handwritten-signature image with your approval, not a firma digitale: forms that need one are still yours to sign.
 
 ## Finding files elsewhere (file index)
 
@@ -159,12 +169,13 @@ pvault files search visura --for rossi                            # name or path
 pvault files search --pratica tari-2026
 pvault files rule add onedrive-acme --path /Clienti/Rossi --for rossi   # a whole folder
 pvault files link <file-id> --for rossi --pratica cila-rossi --role visura
-pvault files open <file-id>                                       # shows it in Finder; never opens it
+pvault files open <file-id>                                       # reveals it in Finder, or opens its web page
 pvault files suggestions                                          # links an agent proposed
 ```
 
 - Instead of a sync folder, an account can be read through the provider's API (`pvault files source connect`, below): that sees files that are only online, shared drives and SharePoint libraries you don't sync. Don't add both a folder and the API for the same account: each file would be in the index twice.
-- A file you already reach through Claude's own Drive (or OneDrive, SharePoint, Dropbox) connector can be recorded without signing in to pvault: ask Claude to register it (`vault_file_register`), then review with `pvault files proposals` and accept. Nothing is indexed until you do. It goes into a source "found through Claude", which nothing syncs: the entry is a pointer as fresh as the day you accepted it, never marked gone, and the vault never reads the file. Everything in a proposal came through a model and from whoever named the file, so `pvault files proposals` shows it, quoted, for you to judge: the id, modified time and size too, and whether it would replace an entry you already accepted. An address must be a page of the provider's own site (for SharePoint that is any `*.sharepoint.com`, anyone's tenant included: look at it), and `pvault files open` prints such an address without opening it. One token can have 50 proposals waiting, all agents 200; `pvault files proposals reject --all` empties the queue.
+- A file you already reach through Claude's own Drive (or OneDrive, SharePoint, Dropbox) connector can be recorded without signing in to pvault: ask Claude to register it (`vault_file_register`), then review with `pvault files proposals` and accept. Nothing is indexed until you do. It goes into a source "found through Claude", which nothing syncs: the entry is a pointer as fresh as the day you accepted it, never marked gone, and the vault never reads the file. Everything in a proposal came through a model and from whoever named the file, so `pvault files proposals` shows it, quoted, for you to judge: the id, modified time and size too, and whether it would replace an entry you already accepted. An address must be a page of the provider's own site (for SharePoint that is any `*.sharepoint.com`, anyone's tenant included: look at it). The queue is bounded (see [the design](design/file-index.md#files-found-through-another-connector)); `pvault files proposals reject --all` empties it.
+- `pvault files open` never opens the file itself: a file in a folder is revealed in Finder, a file read through an API opens its page on the provider's site, and a proposed file's address is only printed, for you to check (`--print` only prints, for any of them).
 - Online-only files (the cloud app's placeholders) are listed by name, size and date and never opened, so syncing downloads nothing.
 - A file that disappears is marked gone, with its links; nothing is deleted. `pvault files prune` drops gone files that are linked to nothing. A scan that couldn't read everything (a folder without permission, a disconnected drive, an empty folder) marks nothing gone.
 - Names and paths are encrypted in the vault. A file whose name or path holds a login-secret word (PIN, password, SPID ...) is `personal`, so agents never see it. Sharing links are refused.
@@ -249,7 +260,8 @@ POST /vault/session                      # { password, secret_key?, ttl? } → {
 ```
 GET /vault/expiring?days=90              # Expired or expiring *data_scadenza fields and open pratiche deadlines;
                                          #   a family member's carry "member": "<slug>"; with retention periods set, also
-                                         #   "kind": "retention" and "kind": "pratiche_closed" entries
+                                         #   "kind": "retention", "pratiche_closed" and "files_closed" (with "file_id", "file")
+                                         #   entries (see Retention)
 ```
 
 ### Other people (family members, or a business vault's people)
@@ -263,7 +275,7 @@ DELETE /vault/members/{slug}             # Your session, or a grant you approved
 POST   /vault/members/migrate[?dry_run=1]  # Session only: nucleo_familiare.membro<N>_* → members (dry_run: 1/true/0/false)
 GET    /vault/members/{slug}/export[?include_personal=1]
                                          # Session only, audited: their fields (and those of the pratiche naming them) and documents with content
-GET    /vault/retention                  # { years?, scan_days? } — how long people's data and clients' ID scans are kept (unset: omitted)
+GET    /vault/retention                  # { years?, scan_days? } — how long people's data and clients' ID and procura scans are kept (unset: omitted)
 PUT    /vault/retention                  # Session only: { "years": N } or { "scan_days": N }
 ```
 
@@ -303,6 +315,7 @@ GET    /vault/files/{id}
 POST   /vault/files/sync               # {source_id, sync_id, begin:true on the first, files:[...]} batches of up to 500; or {source_id, full:true, files} in one
 POST   /vault/files/sync/finish        # {source_id, sync_id, confirm?}: marks unseen files gone (needs the same running sync; refuses a mass removal without confirm)
 GET    /vault/files/sources            # POST adds one, DELETE /vault/files/sources/{id} forgets its entries
+POST   /vault/files/sources/{id}/state # {cursor}: records a sync's cursor and time on its source (as for syncing)
 POST   /vault/files/{id}/links         # {for, kind?, pratica?, role?, note?}; DELETE /vault/files/links/{id}
 GET|POST /vault/files/rules            # DELETE /vault/files/rules/{id}
 POST   /vault/files/{id}/suggest       # an agent proposes a link; GET /vault/files/suggestions, POST .../suggestions/{id}/accept|reject
@@ -380,13 +393,7 @@ POST /vault/backup                       # { dir? } → { path } (your session o
 
 ## Security Model
 
-```
-Profile Password + Secret Key (128-bit)
-  → Argon2id KDF (64MB, 3 iterations)
-  → Vault Key (256-bit, in-memory only)
-  → HKDF per category → Category Subkeys
-  → AES-256-GCM per field (12-byte random nonce)
-```
+How the keys are derived is in the [README](../README.md#security-model).
 
 - Profile password is never stored, unless you turn on Touch ID (`pvault touchid enable`): then it is kept in your login Keychain, readable only by the signed `pvault-touchid` helper
 - Secret key lives at `~/.pvault/secret.key` (mode 0600), never in the database or a backup

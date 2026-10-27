@@ -28,9 +28,9 @@ func TestFiles_EverythingSurvivesBackupAndRestore(t *testing.T) {
 	for _, f := range files {
 		byName[f.Name] = f.ID
 	}
-	v.LinkFile(byName["a.pdf"], FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "pagella"}, FileOriginManual)
-	v.LinkFile(byName["b.pdf"], FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual)
-	v.AddFileRule(folder, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
+	v.LinkFile(nil, byName["a.pdf"], FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "pagella"}, FileOriginManual)
+	v.LinkFile(nil, byName["b.pdf"], FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual)
+	v.AddFileRule(nil, folder, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
 	v.SuggestFileLink(tokenFilter("*:files.*"), byName["c.pdf"], FileLinkInput{Holder: "leo", Kind: FileKindPerson}, "agent", "its folder")
 	accepted, _ := v.ProposeFile(tokenFilter("files.*"), driveProposal("d1", "d.pdf"), "claude")
 	v.ResolveFileProposal(nil, accepted.ID, true)
@@ -119,7 +119,7 @@ func TestFiles_ConcurrentUseDoesNotDeadlock(t *testing.T) {
 	for i := 0; i < 150; i++ {
 		batch = append(batch, obs(fmt.Sprint("k", i), fmt.Sprintf("/Leo/f%d.pdf", i), fmt.Sprintf("f%d.pdf", i)))
 	}
-	v.AddFileRule(a, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
+	v.AddFileRule(nil, a, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
 
 	done := make(chan struct{})
 	var wg sync.WaitGroup
@@ -149,7 +149,7 @@ func TestFiles_ConcurrentUseDoesNotDeadlock(t *testing.T) {
 	run(func(i int) {
 		hits, _, _ := v.SearchFiles(nil, FileQuery{Text: "f2", Limit: 5})
 		for _, h := range hits {
-			v.LinkFile(h.ID, FileLinkInput{Kind: FileKindPerson, Role: "x"}, FileOriginManual)
+			v.LinkFile(nil, h.ID, FileLinkInput{Kind: FileKindPerson, Role: "x"}, FileOriginManual)
 			v.SuggestFileLink(agent, h.ID, FileLinkInput{Holder: "leo", Kind: FileKindClient}, "agent", "")
 		}
 		sugs, _ := v.FileSuggestions(nil)

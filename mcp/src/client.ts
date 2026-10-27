@@ -41,8 +41,11 @@ class VaultError extends Error {
   }
 }
 
-/** A vault name, as pvault's ValidPersonSlug has it ("io" is the owner). */
-const VAULT_NAME = /^(?!io$)[a-z][a-z0-9-]{0,31}$/;
+/** A person's slug, as vault.ValidPersonSlug has it ("io" is the owner). */
+export const SLUG = "[a-z][a-z0-9-]{0,31}";
+
+/** A vault name: a slug, as `--vault <name>` takes it. */
+const VAULT_NAME = new RegExp(`^(?!io$)${SLUG}$`);
 
 /** The vault's folder: VAULT_DIR, else ~/.pvault-<VAULT_NAME>, else ~/.pvault. */
 function vaultDir(): string {
@@ -407,7 +410,7 @@ export async function getSchema(): Promise<unknown> {
 // ([person:]category.field_name: letters, digits, _ and -, and a person's
 // slug as vault.ValidPersonSlug has it). A "/" or ".." could otherwise reach
 // another endpoint.
-const FIELD_ID = /^(?:(?!io:)[a-z][a-z0-9-]{0,31}:)?[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+const FIELD_ID = new RegExp(`^(?:(?!io:)${SLUG}:)?[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$`);
 
 function fieldPath(id: string): string {
   if (!FIELD_ID.test(id)) {
@@ -703,17 +706,13 @@ export async function requestSigning(
   pdf: Uint8Array,
   placements: SigningPlacement[],
 ): Promise<SigningInfo> {
-  const resp = await authedFetch("/vault/signing", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, purpose, pdf: Buffer.from(pdf).toString("base64"), placements }),
-  });
-  return (await resp.json()) as SigningInfo;
+  return (await apiRequest("POST", "/vault/signing", {
+    name, purpose, pdf: Buffer.from(pdf).toString("base64"), placements,
+  })) as SigningInfo;
 }
 
 /** This token's signing requests, or one of them. */
 export async function getSignings(id?: string): Promise<SigningInfo[]> {
-  const resp = await authedFetch(id ? `/vault/signing/${encodeURIComponent(id)}` : "/vault/signing", { method: "GET" });
-  const body = await resp.json();
+  const body = await apiRequest("GET", id ? `/vault/signing/${encodeURIComponent(id)}` : "/vault/signing");
   return Array.isArray(body) ? (body as SigningInfo[]) : [body as SigningInfo];
 }

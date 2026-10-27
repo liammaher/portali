@@ -16,7 +16,7 @@
               --form ID [--for SLUG] [--party ROLE=SLUG[,SLUG]]... --out DIR [--pdf FORM.pdf]
               (--server S.json | --vault-dir DIR [--keychain SERVICE])
               [--draft] [--answers A.json] [--reply R.json] [--playbook NAME]
-              [--sign]
+              [--channel TYPE] [--sign]
       Reads the vault over its HTTP API with the prepare token, resolves each
       of the entry's form rows, fills the PDF at the layout's positions, reads
       the PDF back to check every value landed in its box, and, only if every
@@ -48,10 +48,11 @@
       given (the prepare or draft token); without one, it says so.
 
 Who signs: the vault's owner, unless --for names another person (a slug of
-the household; ask the user by display name). Their own data (identity,
-residenza, documents: the schema's person categories) is then read from
-that person's fields; the home, the pratiche, business.* and locale.* stay
-the vault's own, and the pratica record names the person. In a business
+the household; ask the user by display name). Their own data (the library's
+dichiarante: the schema's persona categories each person has, identity,
+residenza, cie..., and ruolo) is then read from that person's fields; the
+rest (the home, the pratiche, business.*, locale.*) stays the vault's own,
+and the pratica record names the person. In a business
 vault a person always signs: --for names one whose ruolo is one of the
 entry's dichiarante roles, and "in qualità di" is the role they sign as.
 
@@ -115,9 +116,7 @@ MAP_KINDS = {"direct", "concat", "fallback", "repeat", "ask", "blank_with_reason
 MAP_KEYS = MAP_KINDS | {"fields", "template", "columns", "party"}
 ROW_KEYS = {"label", "map", "notes", "optional", "choices", "when"}
 INK = (0, 0, 0.55)
-# Person categories that stay the vault's own when someone else signs, as
-# the library's dichiarante says; but the role one signs as is the signer's.
-VAULT_OWN = {"business", "locale"}
+# The role one signs as is the signer's, though business.* is the vault's.
 SIGNERS_OWN = {"business.qualita_dichiarante"}
 SLUG = re.compile(r"[a-z][a-z0-9-]{0,31}")
 ISO_DATE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
@@ -175,9 +174,10 @@ def parse_parties(given):
     return out
 
 
-def party_slug(row, parties):
-    """The person a party row reads, as --party named them, or None."""
-    return next((parties[r][0] for r in role_list(row["map"]["party"]["ruolo"]) if parties.get(r)), None)
+def party_people(row, parties):
+    """Everyone --party named for a party row's ruoli, in order; the row
+    reads the first (the user picks when there are more)."""
+    return list(dict.fromkeys(p for r in role_list(row["map"]["party"]["ruolo"]) for p in parties.get(r, [])))
 
 
 def repeat_people(spec, parties, signer):
@@ -307,16 +307,17 @@ def asks(form, layout, parties=None):
     columns = {r["label"]: [c["label"] for c in r["map"]["columns"]] for r in form["fields"] if r["map"].get("columns")}
     # Party rows that only apply after another answer (when) are one question,
     # asked with that answer: who has the role, if it applies.
+    unnamed = [r for r in form["fields"] if "party" in r["map"] and not party_people(r, parties or {})]
     gated = {}
-    for row in form["fields"]:
-        if "party" in row["map"] and row.get("when") and not party_slug(row, parties or {}):
+    for row in unnamed:
+        if row.get("when"):
             role = role_list(row["map"]["party"]["ruolo"])[0]
             gated.setdefault(row["when"]["field"], {})[role] = row["when"]["ticks"]
     out = []
     for row in form["fields"]:
-        if "party" in row["map"] and row.get("when") and not party_slug(row, parties or {}):
+        if row in unnamed and row.get("when"):
             continue
-        if "party" in row["map"] and not party_slug(row, parties or {}):
+        if row in unnamed:
             roles = " o ".join(human_role(r) for r in role_list(row["map"]["party"]["ruolo"]))
             out.append({"label": row["label"], "question": f"{row['label']}: dati del {roles}. Se è nel vault, "
                         f"--party {role_list(row['map']['party']['ruolo'])[0]}=<slug>; se non c'è per questa pratica, \"no\""})
@@ -349,7 +350,8 @@ def check_supported(entry, form, signer="io"):
         kinds = set(m) & MAP_KINDS
         if len(kinds) != 1 or set(m) - MAP_KEYS or set(row) - ROW_KEYS:
             sys.exit(f"row {row['label']!r}: unknown map or row keys {sorted(set(m) | set(row))}")
-        if row.get("choices") and not ((("direct" in m or "fallback" in m) and "template" not in m) or "ask" in m):
+        if row.get("choices") and not ((("direct" in m or "fallback" in m) and "template" not in m and "party" not in m)
+                                       or "ask" in m):
             sys.exit(f"row {row['label']!r}: choices need a row of one field (direct or fallback, no template) or an ask")
         when = row.get("when")
         if when and not any(r["label"] == when["field"] and "ask" in r["map"] and r.get("choices") for r in form["fields"]):
@@ -357,7 +359,7 @@ def check_supported(entry, form, signer="io"):
         if m.get("repeat") == "famiglia" and not m.get("columns"):
             sys.exit(f"row {row['label']!r}: a table needs the procedure's columns")
         for t in [m.get("template", "")] + [c["template"] for c in m.get("columns", [])]:
-            bad = [f for f in template_filters(t) if f not in ("", "date", "digits") and not f.startswith("or:")]
+            bad = [f for f in template_filters(t) if f not in ("", "date", "digits") and not re.fullmatch(r"or:\S.*", f)]
             if bad:
                 sys.exit(f"row {row['label']!r}: unknown template filter {bad[0]!r}")
 
@@ -375,9 +377,13 @@ def refs(m):
     return [m["direct"]] if "direct" in m else m.get("concat", []) + m.get("fallback", [])
 
 
+def local_id(ref):
+    """A field ID without its person prefix (leo:cie.numero is cie.numero)."""
+    return ref.split(":", 1)[1] if ":" in ref.split(".", 1)[0] else ref
+
+
 def category(ref):
-    local = ref.split(":", 1)[1] if ":" in ref.split(".", 1)[0] else ref
-    return local.split(".", 1)[0]
+    return local_id(ref).split(".", 1)[0]
 
 
 def schema_category(ref):
@@ -387,8 +393,11 @@ def schema_category(ref):
 
 
 def person_categories(schema):
-    """The categories a signer other than the owner brings their own of."""
-    return {c["name"] for c in schema["categories"] if c.get("scope") == "person"} - VAULT_OWN
+    """The categories a signer other than the owner brings their own of: the
+    library's dichiarante (isPersonData in its validator), persona categories
+    each person has, and ruolo."""
+    return {c["name"] for c in schema["categories"]
+            if c.get("scope") == "person" and (c.get("subject") == "persona" or c["name"] == "ruolo")}
 
 
 def signer_id(ref, signer, people):
@@ -405,7 +414,7 @@ def as_signer(values, signer, people):
     """The vault's values as the rows read them when signer signs: their
     person fields unprefixed, in place of the owner's."""
     if signer == "io":
-        return values
+        return dict(values)
     out = {k: v for k, v in values.items() if signer_id(k, signer, people) == k}
     prefix = signer + ":"
     for k, v in values.items():
@@ -432,22 +441,29 @@ def needs_schema(a):
 
 
 def template_vars(template):
-    """Every {name|filter} in a template, in or out of [...], as (name, filter)."""
-    def walk(nodes):
+    """Every {name|filter} in a template as (name, filter, outside): outside
+    any [...], so the text can't do without it."""
+    def walk(nodes, outside):
         for n in nodes:
             if n[0] == "var":
-                yield n[1], n[2]
+                yield n[1], n[2], outside
             elif n[0] == "group":
-                yield from walk(n[1])
-    return list(walk(parse_template(template)))
+                yield from walk(n[1], False)
+    return list(walk(parse_template(template), True))
 
 
 def template_names(template):
-    return [name for name, _ in template_vars(template)]
+    return [name for name, _, _ in template_vars(template)]
 
 
 def template_filters(template):
-    return [f for _, f in template_vars(template)]
+    return [f for _, f, _ in template_vars(template)]
+
+
+def placed_names(template):
+    """Every {name} in a template, and whether the text needs it: outside
+    any [...] and without an |or: to stand in for it."""
+    return list(dict.fromkeys((name, outside and not f.startswith("or:")) for name, f, outside in template_vars(template)))
 
 
 def form_fields(form):
@@ -475,11 +491,12 @@ def needs(entry, form, draft=False, signer="io", people=(), parties=None, layout
             # the run can tell a role nobody was named for.
             patterns.add("*:ruolo.tipo")
             if "party" in m:
-                who = [party_slug(row, parties)] if party_slug(row, parties) else []
+                who = party_people(row, parties)[:1]
             else:
                 who = repeat_people(m["repeat"], parties, None)
-                read = [n for n in m["fields"] + [n for c in m.get("columns", []) for n in template_names(c["template"])]
-                        if "." in n]
+                # Its columns' fields, besides its conditions (*:, each person's).
+                read += [n for n in m["fields"] + [n for c in m.get("columns", []) for n in template_names(c["template"])]
+                         if "." in n]
             patterns |= {f"{p}:{category(ref)}.*" for p in who for ref in read}
             continue
         if m.get("repeat") == "famiglia":
@@ -639,10 +656,6 @@ class Vault:
     def set(self, field_id, value):
         return self.call("PUT", self.field_path(field_id), {"value": value})
 
-    def get(self, field_id):
-        status, got = self.call("GET", self.field_path(field_id))
-        return got["value"] if status == 200 else None
-
 
 # --- Resolving rows ----------------------------------------------------------
 
@@ -666,6 +679,8 @@ def parse_template(template):
         if c == "[":
             stack.append([])
         elif c == "]":
+            if len(stack) == 1:
+                raise ValueError(f"unbalanced ] in {template!r}")
             group = stack.pop()
             stack[-1].append(("group", group))
         else:
@@ -727,17 +742,6 @@ def gaps(names, lookup, optional, conditions, name_of):
         if (outside and rule is None) or needed:
             out.append({"field": name_of(name), "needed": needed})
     return out
-
-
-def placed_names(template):
-    """Every {name} in a template, and whether it is outside any [...]."""
-    def walk(nodes, outside):
-        for n in nodes:
-            if n[0] == "var":
-                yield n[1], outside and not n[2].startswith("or:")
-            elif n[0] == "group":
-                yield from walk(n[1], False)
-    return list(dict.fromkeys(walk(parse_template(template), True)))
 
 
 def resolve(form, values, household, answers, who):
@@ -804,12 +808,12 @@ def party_row(row, who, answers):
     """A row read from the person --party named for its ruolo; without one,
     an ask by its label ("no" when the role isn't part of this pratica)."""
     ruoli = role_list(row["map"]["party"]["ruolo"])
-    named = [p for r in ruoli for p in who.parties.get(r, [])]
-    if len(set(named)) > 1:
+    named = party_people(row, who.parties)
+    if len(named) > 1:
         # One person fills the section: the user picks which.
-        return {"status": "ask", "question": f"which one? --party {ruoli[0]}=" + " or ".join(dict.fromkeys(named))}
-    slug = party_slug(row, who.parties)
-    if slug:
+        return {"status": "ask", "question": f"which one? --party {ruoli[0]}=" + " or ".join(named)}
+    if named:
+        slug = named[0]
         out = scalar_row(row, as_signer(who.raw, slug, who.people))
         for m in out.get("missing", []):
             m["field"] = signer_id(m["field"], slug, who.people)
@@ -842,10 +846,13 @@ def ruolo_row(row, who):
     if not people:
         return {"status": "blank", "reason": f"nobody is {' or '.join(human_role(r) for r in ruoli)}"}
     optional = {o["field"]: o for o in row.get("optional", [])}
-    columns = m.get("columns") or [{"label": "", "template": m.get("template") or " ".join("{" + f + "}" for f in m["fields"])}]
+    columns = m.get("columns") or [{"label": "", "template": " ".join("{" + f + "}" for f in m["fields"])}]
     lines, missing = [], []
     for slug in people:
         def lookup(name, slug=slug):
+            if name == "*:ruolo.tipo":
+                # The role this repeat is about, as a form writes it, never the list.
+                return human_role(next(r for r in ruoli if r in who.roles[slug]))
             return who.raw.get(f"{slug}:{name[2:]}") if name.startswith("*:") else who.raw.get(name)
         cells = {}
         for col in columns:
@@ -1340,10 +1347,11 @@ def layout_problems(fitz, pdf_path, layout):
         for widget in (w for w in writes if isinstance(w, str)):
             if problem := widget_problem(n, widget, ("Text", "ComboBox")):
                 out.append(f"{name}: {problem}")
-        m = marks(n) if any(k in box for k in ("cells", "choices", "table")) else None
-        if m is None and any(k in box for k in ("cells", "choices", "table")):
-            out.append(f"{name}: is on page {n}, which the form doesn't have")
-            continue
+        if any(k in box for k in ("cells", "choices", "table")):
+            m = marks(n)
+            if m is None:
+                out.append(f"{name}: is on page {n}, which the form doesn't have")
+                continue
         for x0, x1 in box.get("cells", []):
             # Drawn, or typed as |__|__| (underscores between the cell's bars).
             drawn = any(abs(r.x0 - x0) <= 1 and abs(r.x1 - x1) <= 1 and 0 <= r.y0 - box["baseline"] <= 3 for r in m["shapes"])
@@ -1427,8 +1435,7 @@ def run(a):
         # fiscale: the user's word for this run, never in place of the vault's.
         # Unprefixed, a person's field is the signer's, as the rows read it.
         field = signer_id(written, signer, people) if "." in written else written
-        local = field.split(":", 1)[1] if ":" in field.split(".", 1)[0] else field
-        if not re.fullmatch(r"([a-z][a-z0-9-]{0,31}:)?[a-z0-9_-]+\.[a-z0-9_]+", field) or local not in read:
+        if not re.fullmatch(r"([a-z][a-z0-9-]{0,31}:)?[a-z0-9_-]+\.[a-z0-9_]+", field) or local_id(field) not in read:
             check(f"answers.json value {field} is a field this form reads", False)
         elif category(field) == "ruolo":
             # Who may sign, and who --party may name, is the vault's to say.
@@ -1446,14 +1453,14 @@ def run(a):
         known = [m["slug"] for m in household.get("members", [])] if status == 200 else []
         check(f"{signer} is a person in the vault", signer in known, "" if signer in known else "not in the household this token sees")
     who = Who(values, signer, people, parties)
-    signing = role_list(entry["dichiarante"]["ruolo"]) if "dichiarante" in entry else []
-    if business and signing:
+    signer_roles = role_list(entry["dichiarante"]["ruolo"]) if "dichiarante" in entry else []
+    if business and signer_roles:
         # The business signs through a person whose ruolo is one of these.
-        can = who.holding(signing)
+        can = who.holding(signer_roles)
         if signer == "io":
-            sys.exit(f"a business vault's form is signed by a person who is {' or '.join(human_role(r) for r in signing)}: "
+            sys.exit(f"a business vault's form is signed by a person who is {' or '.join(human_role(r) for r in signer_roles)}: "
                      f"pass --for to needs and run, " + (f"one of {', '.join(can)}" if can else "and add them to the vault first"))
-        check(f"{signer} signs as {' or '.join(human_role(r) for r in signing)}", signer in can,
+        check(f"{signer} signs as {' or '.join(human_role(r) for r in signer_roles)}", signer in can,
               "" if signer in can else f"their ruolo is {', '.join(sorted(who.roles.get(signer, ()))) or 'not in the vault'}")
     for role, slugs in parties.items():
         for p in slugs:
@@ -1462,7 +1469,7 @@ def run(a):
     view = as_signer(values, signer, people)
     # "In qualità di" is the one role the signer signs as, as a form writes it.
     if "ruolo.tipo" in view and signer != "io":
-        held = [r for r in signing if r in view["ruolo.tipo"].split(",")]
+        held = [r for r in signer_roles if r in view["ruolo.tipo"].split(",")]
         view["ruolo.tipo"] = human_role(held[0] if held else view["ruolo.tipo"].replace(",", ", "))
     if "business.qualita_dichiarante" in view:
         view["business.qualita_dichiarante"] = human_role(view["business.qualita_dichiarante"])
@@ -1492,7 +1499,7 @@ def run(a):
     # The library's deadline, when it runs from a date the vault keeps.
     compute = next((r["compute"] for r in entry.get("deadline", {}).get("rules", []) if "compute" in r), None)
     start = view.get(compute["from"]) if compute else None
-    slug = a.slug or f"{procedure}-{(start or dt.date.today().isoformat())[:4]}"
+    slug = f"{procedure}-{(start or dt.date.today().isoformat())[:4]}"
     failed = [c["check"] for c in checks if not c["ok"]]
     ready = check("the form is ready", not failed, f"{len(failed)} checks failed" if failed else "")
     if a.draft:
@@ -1571,9 +1578,9 @@ def run(a):
             field, value = (f"pratiche.{slug}_{campo}", value) if campo else (signer_id(value[0], signer, people), value[1])
             status, got = track.set(field, str(value))
             check(f"track sets {field}", status == 200, "" if status == 200 else f"{status} {got}")
-        people = sum(len(r["value"]) for r in rows if isinstance(r.get("value"), list))
+        others = sum(len(r["value"]) for r in rows if isinstance(r.get("value"), list))
         for field, want in (("tari.superficie_tassata_mq", values.get("abitazione.superficie_calpestabile_mq")),
-                            ("tari.componenti_tassati", str(1 + people))):
+                            ("tari.componenti_tassati", str(1 + others))):
             if field in reply:
                 check(f"the ente's {field} matches what was declared", str(reply[field]) == want, f"{reply[field]} vs {want}")
         if "data_scadenza" in record:
@@ -1607,7 +1614,8 @@ def request_signature(a, prepare, entry, form, layout, channel, slug, check):
         pdf = f.read()
     placements = [{"page": b.get("page", 1), "rect": b["rect"], **({"date_rect": b["date_rect"]} if "date_rect" in b else {})}
                   for b in layout["signatures"]]
-    purpose = " ".join(f"{entry['title']}: {form['name']}".split())[:200]
+    # The vault takes 200 bytes, and Italian titles have accents.
+    purpose = " ".join(f"{entry['title']}: {form['name']}".split()).encode()[:200].decode(errors="ignore")
     status, got = prepare.call("POST", "/vault/signing", {
         "name": f"{slug}-{form['id']}.pdf", "purpose": purpose,
         "pdf": base64.b64encode(pdf).decode(), "placements": placements})
@@ -1633,12 +1641,12 @@ def signing_rule(a, form, channel_type):
 
 
 def no_rule(a, channel_type):
-    """Why a channel has no signing rule, as the user should hear it."""
-    if channel_type in ("portal", "app"):
-        return "as the portal or app asks: its SPID/CIE login identifies you, and it may not use this form at all"
+    """Why a channel has no signing rule, as the user should hear it: the
+    law sets none for a channel signing.json leaves out (a portal or app,
+    where the SPID/CIE login identifies the person)."""
     if not getattr(a, "library", None):
         return "the law's rule for this channel is in the library's contract/signing.json: pass --library"
-    return "not said for this channel: ask the ente, or sign by hand"
+    return f"as the {channel_type} asks: its SPID/CIE login identifies you, and it may not use this form at all"
 
 
 def procedure_channels(entry, channel_type=None):
@@ -1670,7 +1678,7 @@ def route(a):
     if not on:
         sys.exit(f"{entry['id']} has no {a.channel} channel; it has {', '.join(sorted({c['type'] for c in channels}))}")
     kind = on[0]["type"]
-    steps = [{k: s[k] for k in ("do", "who", "human_only") if k in s}
+    steps = [{k: s[k] for k in ("do", "who", "human_only", "gate") if k in s}
              for s in entry["steps"] if kind in s.get("channel", [kind])]
     where = []
     for c in on:
@@ -1698,7 +1706,8 @@ def route(a):
         print(f"Deadline: {card['deadline']}")
     print("Steps:")
     for i, s in enumerate(steps, 1):
-        print(f"  {i}. {s['do']}{' [you]' if s.get('human_only') else ''}")
+        gate = " (run --sign: the vault's sign gate)" if s.get("gate") == "sign" else ""
+        print(f"  {i}. {s['do']}{' [you]' if s.get('human_only') else ''}{gate}")
     for place in where:
         office = place.pop("office", None)
         print("Where: " + "; ".join(place.values()))
@@ -1788,7 +1797,6 @@ def main():
     r.add_argument("--out", required=True)
     r.add_argument("--answers")
     r.add_argument("--reply")
-    r.add_argument("--slug")
     r.add_argument("--playbook")
     c = sub.add_parser("route")
     c.add_argument("--library", help="a pratiche-napoli checkout: the procedure (with --procedure), signing rules, offices")
@@ -1830,7 +1838,7 @@ def main():
         p.error("--draft writes nothing, so it takes no --reply")
     if a.reply and not a.server:
         p.error("--reply plays the ente's answer on the synthetic vault (--server) only")
-    if a.cmd == "run" and a.sign and a.draft:
+    if a.sign and a.draft:
         p.error("--sign files a request in the vault, which a --draft never writes")
     return run(a)
 

@@ -69,7 +69,7 @@ func TestFiles_ResyncKeepsLinksAcrossRenameAndTombstonesNeverDeletes(t *testing.
 	src := fileSource(t, v)
 	v.UpsertFiles(src, []FileObservation{obs("id-1", "/Old/visura.pdf", "visura.pdf")}, true)
 	hits, _, _ := v.SearchFiles(nil, FileQuery{})
-	if _, err := v.LinkFile(hits[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "visura"}, FileOriginManual); err != nil {
+	if _, err := v.LinkFile(nil, hits[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "visura"}, FileOriginManual); err != nil {
 		t.Fatal(err)
 	}
 
@@ -141,7 +141,7 @@ func TestFiles_TokenScopeAndTiers(t *testing.T) {
 	if spid.Tier != TierPersonal {
 		t.Fatalf("a file named for a login secret should be personal, got %q", spid.Tier)
 	}
-	if _, err := v.LinkFile(scuola.ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual); err != nil {
+	if _, err := v.LinkFile(nil, scuola.ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual); err != nil {
 		t.Fatal(err)
 	}
 
@@ -193,18 +193,18 @@ func TestFiles_LinkRules(t *testing.T) {
 		{Holder: "", Kind: FileKindBusiness},                    // only in a business vault
 		{Holder: "leo", Kind: "boh"},
 	} {
-		if _, err := v.LinkFile(f[0].ID, in, FileOriginManual); !errors.As(err, &verr) {
+		if _, err := v.LinkFile(nil, f[0].ID, in, FileOriginManual); !errors.As(err, &verr) {
 			t.Errorf("LinkFile(%+v) = %v, want ValidationError", in, err)
 		}
 	}
 
 	// A real pratica and a real person link; linking again returns the same link.
 	mustSet(t, v, "pratiche.tari-2026_stato", "in_preparazione")
-	l1, err := v.LinkFile(f[0].ID, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual)
+	l1, err := v.LinkFile(nil, f[0].ID, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual)
 	if err != nil {
 		t.Fatal(err)
 	}
-	l2, err := v.LinkFile(f[0].ID, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual)
+	l2, err := v.LinkFile(nil, f[0].ID, FileLinkInput{Kind: FileKindPratica, Pratica: "tari-2026"}, FileOriginManual)
 	if err != nil || l1.ID != l2.ID {
 		t.Fatalf("second link = %+v, %v", l2, err)
 	}
@@ -226,11 +226,11 @@ func TestFiles_BusinessVaultKinds(t *testing.T) {
 	src := fileSource(t, v)
 	v.UpsertFiles(src, []FileObservation{obs("1", "/a.pdf", "a.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{})
-	if _, err := v.LinkFile(f[0].ID, FileLinkInput{Kind: FileKindBusiness}, FileOriginManual); err != nil {
+	if _, err := v.LinkFile(nil, f[0].ID, FileLinkInput{Kind: FileKindBusiness}, FileOriginManual); err != nil {
 		t.Fatalf("business link: %v", err)
 	}
 	var verr *ValidationError
-	if _, err := v.LinkFile(f[0].ID, FileLinkInput{Kind: FileKindPerson}, FileOriginManual); !errors.As(err, &verr) {
+	if _, err := v.LinkFile(nil, f[0].ID, FileLinkInput{Kind: FileKindPerson}, FileOriginManual); !errors.As(err, &verr) {
 		t.Fatalf("a person link to nobody in a business vault = %v", err)
 	}
 }
@@ -244,7 +244,7 @@ func TestFiles_FolderRulesLinkNowAndLater(t *testing.T) {
 		obs("2", "/Clienti/Rossini/b.pdf", "b.pdf"), // not below /Clienti/Rossi
 	}, true)
 
-	rule, n, err := v.AddFileRule(src, FileRuleInput{Path: "clienti/rossi", Holder: "leo", Kind: FileKindPerson})
+	rule, n, err := v.AddFileRule(nil, src, FileRuleInput{Path: "clienti/rossi", Holder: "leo", Kind: FileKindPerson})
 	if err != nil || n != 1 || rule.Path != "/clienti/rossi" {
 		t.Fatalf("rule = %+v, linked %d, %v", rule, n, err)
 	}
@@ -343,8 +343,8 @@ func TestFiles_RemovePersonDropsTheirLinksButNotTheIndex(t *testing.T) {
 	src := fileSource(t, v)
 	v.UpsertFiles(src, []FileObservation{obs("1", "/Leo/a.pdf", "a.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{})
-	v.LinkFile(f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
-	v.AddFileRule(src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
+	v.LinkFile(nil, f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson}, FileOriginManual)
+	v.AddFileRule(nil, src, FileRuleInput{Path: "/Leo", Holder: "leo", Kind: FileKindPerson})
 
 	out, err := v.RemovePerson("leo")
 	if err != nil {
@@ -373,8 +373,8 @@ func TestFiles_ForgetSourceErasesItsRows(t *testing.T) {
 	v.UpsertFiles(a, []FileObservation{obs("1", "/a.pdf", "a.pdf")}, true)
 	v.UpsertFiles(b, []FileObservation{obs("1", "/b.pdf", "b.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{SourceID: a})
-	v.LinkFile(f[0].ID, FileLinkInput{Kind: FileKindPerson}, FileOriginManual)
-	v.AddFileRule(a, FileRuleInput{Path: "/", Kind: FileKindPerson})
+	v.LinkFile(nil, f[0].ID, FileLinkInput{Kind: FileKindPerson}, FileOriginManual)
+	v.AddFileRule(nil, a, FileRuleInput{Path: "/", Kind: FileKindPerson})
 
 	n, err := v.ForgetFileSource(a)
 	if err != nil || n != 1 {
@@ -400,7 +400,7 @@ func TestFiles_SurviveBackupAndRestore(t *testing.T) {
 	src := fileSource(t, v)
 	v.UpsertFiles(src, []FileObservation{obs("1", "/Leo/a.pdf", "a.pdf")}, true)
 	f, _, _ := v.SearchFiles(nil, FileQuery{})
-	v.LinkFile(f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "pagella"}, FileOriginManual)
+	v.LinkFile(nil, f[0].ID, FileLinkInput{Holder: "leo", Kind: FileKindPerson, Role: "pagella"}, FileOriginManual)
 
 	if err := v.SetBackupDir(filepath.Join(t.TempDir(), "bk")); err != nil {
 		t.Fatal(err)

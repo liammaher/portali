@@ -18,6 +18,8 @@ import {
 import { quarantine, safeFilename, writeNewFile } from "./files.js";
 import { fileContent } from "./content.js";
 
+const PERSON = z.string().regex(PERSON_REF, "a person's slug (see vault_household), or io for the user or the business");
+
 function ok(text: string): CallToolResult {
   return { content: [{ type: "text", text }] };
 }
@@ -204,7 +206,7 @@ server.registerTool(
       ". Never store one yourself to fill a form. The token's scope must reach <address>.municipalita, .quartiere and .distretto_asl.",
     inputSchema: {
       address: z.enum(["residenza", "domicilio", "locale", "sede_legale"]).describe("Which address (sede_legale: the business's registered office)"),
-      for: z.string().regex(PERSON_REF, "a person's slug (see vault_household), or io").optional().describe("Whose address: a person's slug, or io (default) for the user or the business"),
+      for: PERSON.optional().describe("Whose address: a person's slug, or io (default) for the user or the business"),
     },
   },
   async ({ address, for: who }): Promise<CallToolResult> => {
@@ -360,7 +362,7 @@ server.registerTool(
   "vault_sign_request",
   {
     description:
-      "Ask for the user's handwritten signature on a filled PDF form. The vault stamps it on the PDF and holds the result; nothing is released until the user reviews that exact file and approves it with a password or fingerprint (you cannot approve, and cannot read the signed file). Needs a token scoped to firma_autografa.signing with append access (the MCP server's own token, so the user must have created it with that scope), and a signature stored by the user as a PNG with a transparent background with 'pvault doc add firma_autografa <image.png>'. Only files inside the import folders (default ~/Downloads, VAULT_IMPORT_DIRS) can be sent, so a filled form saved elsewhere must be copied there first. When fill.py --sign is available, prefer it. Afterwards tell the user to run the command in the result; the request expires after 30 minutes. Only for a form whose procedure takes a handwritten signature (check the library entry's signing ways): never for one that needs a firma digitale.",
+      "Ask for the user's handwritten signature on a filled PDF form. The vault stamps it on the PDF and holds the result; nothing is released until the user reviews that exact file and approves it with a password or fingerprint (you cannot approve, and cannot read the signed file). Needs a token scoped to firma_autografa.signing with append access (the MCP server's own token, so the user must have created it with that scope), and a signature stored by the user as a PNG with a transparent background with '" + pvCmd("doc add firma_autografa <image.png>") + "'. Only files inside the import folders (default ~/Downloads, VAULT_IMPORT_DIRS) can be sent, so a filled form saved elsewhere must be copied there first. When fill.py --sign is available, prefer it. Afterwards tell the user to run the command in the result; the request expires after 30 minutes. Only for a form whose procedure takes a handwritten signature (check the library entry's signing ways): never for one that needs a firma digitale.",
     inputSchema: {
       path: z.string().describe("Absolute path of the filled PDF"),
       purpose: z.string().refine((p) => Buffer.byteLength(p) <= 200, "at most 200 bytes").describe("One line: which pratica and why, e.g. 'TARI nuova iscrizione, Mod. 1' (up to 200 bytes)"),
@@ -404,7 +406,7 @@ server.registerTool(
         list = await getSignings(id);
       } catch (e) {
         if (/not found/.test((e as Error).message)) {
-          return err("vault: no such signing request for this token: it may have expired (requests last 30 minutes and are forgotten after a lock), or it was filed by another token (fill.py files its own: look for the saved -firmato.pdf, or ask the user to run pvault sign list)");
+          return err("vault: no such signing request for this token: it may have expired (requests last 30 minutes and are forgotten after a lock), or it was filed by another token (fill.py files its own: look for the saved -firmato.pdf, or ask the user to run " + pvCmd("sign list") + ")");
         }
         throw e;
       }
@@ -418,8 +420,6 @@ server.registerTool(
 // --- file index (pvault files) ---
 // Where the user's files are and whom they are linked to. Only metadata: no tool
 // here reads a file, and none changes one. The vault enforces the token's scope.
-
-const PERSON = z.string().regex(PERSON_REF, "a person's slug (see vault_household), or io for the user or the business");
 
 server.registerTool(
   "vault_files_search",
@@ -483,7 +483,7 @@ server.registerTool(
   {
     description:
       "Propose that a file is for a person, a client, the business or a pratica. This does not link it: the proposal waits until the user accepts it " +
-      "('pvault files suggestions'), so say so when you make one. Suggest when the folder or name makes it clear (a file in /Clienti/Rossi for client rossi); " +
+      "('" + pvCmd("files suggestions") + "'), so say so when you make one. Suggest when the folder or name makes it clear (a file in /Clienti/Rossi for client rossi); " +
       "don't guess. Needs a token with append or write access.",
     inputSchema: {
       id: z.string().describe("File id from vault_files_search"),
@@ -497,7 +497,7 @@ server.registerTool(
     try {
       if (!holder && !pratica) return err("say whom the file is for (for) or which pratica (pratica)");
       const s = await suggestFileLink(id, { for: holder ?? "", kind, pratica, reason });
-      return ok(`Proposed (suggestion ${s.id}). It is not linked yet: the user decides with 'pvault files suggestions'.`);
+      return ok(`Proposed (suggestion ${s.id}). It is not linked yet: the user decides with '${pvCmd("files suggestions")}'.`);
     } catch (e) {
       return err((e as Error).message);
     }
@@ -510,7 +510,7 @@ server.registerTool(
     description:
       "Propose that a file you found through ANOTHER connector (Claude's own Google Drive, OneDrive, SharePoint or Dropbox connector) is added to the user's file index, " +
       "optionally linked to a person, client, the business or a pratica. Pass exactly what that connector returned for the file (its id as key, name, path, page address, type, size, modified time); don't guess or fill in anything. " +
-      "This adds nothing: the proposal waits until the user accepts it ('pvault files proposals'), so say so when you make one, and make one only when the user asked for the file to be recorded or it is clearly what they want. " +
+      "This adds nothing: the proposal waits until the user accepts it ('" + pvCmd("files proposals") + "'), so say so when you make one, and make one only when the user asked for the file to be recorded or it is clearly what they want. " +
       "An accepted file is only a pointer as fresh as that day (nothing keeps it up to date) and the vault never reads its content. Needs a token with append or write access. " + UNTRUSTED_FILES,
     inputSchema: {
       provider: z.enum(["gdrive", "onedrive", "sharepoint", "dropbox"]).describe("Which service the connector reads"),
@@ -535,7 +535,7 @@ server.registerTool(
         provider: a.provider, key: a.key, name: a.name, path: a.path, web_url: a.web_url, mime: a.mime, size: a.size,
         mtime: a.modified, provider_hash: a.hash, for: a.for, kind: a.kind, pratica: a.pratica, role: a.role, reason: a.reason,
       });
-      return ok(`Proposed (proposal ${p.id}). It is not in the index yet: the user decides with 'pvault files proposals'.`);
+      return ok(`Proposed (proposal ${p.id}). It is not in the index yet: the user decides with '${pvCmd("files proposals")}'.`);
     } catch (e) {
       return err((e as Error).message);
     }

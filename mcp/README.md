@@ -82,7 +82,7 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 | `vault_file_register` | Propose that a file found through another connector (Claude's Google Drive, OneDrive, SharePoint or Dropbox connector) is added to the index, optionally linked; nothing is indexed until the user accepts it with `pvault files proposals` |
 | `vault_file_suggest` | Propose that a file is for a person, client, the business or a pratica; the user accepts it with `pvault files suggestions` |
 
-The file tools need a token whose scope includes `files.*` (the user's and the business's files), `leo:files.*` (a person's) or `*:files.*` (everyone's); `vault_file_suggest` also needs `--access append` or `write`. File names come from the user's folders and from whoever shares files into them, so every result says to treat them as data. No tool reads, opens or changes a file.
+The file tools need a token whose scope includes `files.*` (the user's and the business's files), `leo:files.*` (a person's) or `*:files.*` (everyone's); `vault_file_suggest` and `vault_file_register` also need `--access append` or `write`. File names come from the user's folders and from whoever shares files into them, so every result says to treat them as data. No tool reads, opens or changes a file.
 
 Tokens are read-only unless created with `--access append` (also add new fields and documents, never overwrite or delete) or `--access write` (full). `vault_set` and `vault_document_add` need append or write.
 
@@ -162,7 +162,7 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (one token source is required) |
 | `VAULT_KEYCHAIN_SERVICE` | — | macOS: Keychain service the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
 | `VAULT_TOKEN_COMMAND` | — | Command run in the platform shell that prints the token (e.g. another secret store); used when neither of the above is set |
-| `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` may read from (hidden files always refused) |
+| `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` and `vault_sign_request` may read from (hidden files always refused); `pec_save_attachment` saves into the first |
 | `PEC_ADDRESS` | — | Your PEC address (IMAP username). The `pec_*` tools exist only when this is set |
 | `PEC_KEYCHAIN_SERVICE` | — | Keychain service holding the PEC app password, stored for account `PEC_ADDRESS` (e.g. `pvault-pec`) |
 | `PEC_IMAP_HOST` | `imaps.pec.aruba.it` | IMAP server (TLS) |

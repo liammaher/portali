@@ -22,7 +22,7 @@ ID copy, post and desk a handwritten signature with the ID copy):
 
 To use the gate, the user needs a signature image stored once: `pvault doc add
 firma_autografa ~/Desktop/signature.png`, a PNG with a transparent background (a white one
-would cover the signature line), up to 500 KB, kept as `personal` so no token reads it. You
+would cover the signature line), kept as `personal` so no token reads it. You
 can't check it; the request says if it's missing. Then:
 
 1. Run `needs` as in SKILL.md "Filling with fill.py" but without `--draft`: its `prepare` token also
@@ -39,9 +39,10 @@ can't check it; the request says if it's missing. Then:
    terminal, in the topic folder: it saves `<name>-firmato.pdf` in the current folder, or
    where `--out <file>` says (a file path, never an existing one). It opens the signed PDF;
    they check it, approve with their password or Touch ID, and type the first 8 characters
-   of its hash. Nothing is signed otherwise. The request expires after 30 minutes and with
-   the day (the date beside the signature is today's): run `fill.py ... --sign` again
-   after that. The user's `pvault sign list` shows it; you see the saved file. `vault_sign_status`
+   of its hash. Nothing is signed otherwise. The request expires soon, and with the day (the date
+   beside the signature is today's; the limits are in
+   [docs/usage.md](../../../../docs/usage.md#signing-forms-the-sign-gate)): run
+   `fill.py ... --sign` again after that. The user's `pvault sign list` shows it; you see the saved file. `vault_sign_status`
    only sees requests of its own token, not `fill.py`'s.
 4. Once approved, list the files to send: the signed PDF and, if the route's `id_copy` is
    `required` (or `handwritten`), a copy of the ID document (they have it in the vault: `vault_documents`, or

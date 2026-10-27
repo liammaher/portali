@@ -95,12 +95,13 @@ POST /vault/signing/{id}/approve    needs the sign grant for {id} and the full h
 DELETE /vault/signing/{id}     reject (session or the requesting token)
 ```
 
-On `POST`, the vault checks the body is a PDF of at most `MaxDocumentSize`, that the page
+On `POST`, the vault checks the body is a PDF of at most `MaxSigningPDF` (10 MB), that the page
 and rects exist on it, and that the signer has a signature on file. It decrypts the image
 with the document's subkey (`requireUnlocked`, cleared after), stamps it and today's date
 at the placement, and holds the resulting file with its sha256. At most 5 pending per
-vault, 30 minutes each, on the same calendar day as the stamped date; lock and auto-lock
-drop them all. A token sees only the requests it made (`GET` with that token) and never the
+vault (3 per token, and 20 requests an hour), 30 minutes each, on the same calendar day as
+the stamped date; lock and auto-lock drop them all. The current limits are in
+`docs/usage.md` (Signing forms). A token sees only the requests it made (`GET` with that token) and never the
 candidate.
 
 Stamping must happen here, not in `fill.py`: the vault is the only process that decrypts
@@ -194,7 +195,7 @@ Changes to `contract/` and the procedures, none of them required for the vault h
        signing:
          - channel: pec            # a channel type of this procedure
            ways: [handwritten, digital]
-           id_copy: required       # required | not_needed | unknown
+           id_copy: required       # required | handwritten | not_needed | unknown
            status: unverified      # verified once an ente or a source says so
            source: mod-1
          - channel: portal
@@ -276,6 +277,13 @@ Changes to `contract/` and the procedures, none of them required for the vault h
   the validator rules, as above; `status` reuses the library's `verified|unverified|disputed`.
   The TARI Mod. 1 has its signature and date boxes measured on the pinned form, and every
   `signing` entry there is `unverified`.
+- **`id_copy: handwritten`** was added for channels that take either way: the ID copy goes
+  with a hand-signed form, not with one under a firma digitale.
+- **The default per channel** (D8): the library's `contract/signing.json` holds the law's rule
+  per channel type (PEC and email: a firma digitale or a hand-signed scan with the ID copy;
+  post and desk: handwritten with the ID copy). A form's own `signing` for a channel overrides
+  it (fill.py `signing_rule`). Only where neither has one (a portal or app) is the step
+  handed over as the channel asks.
 - **`fill.py --sign`** files the request after the checks and before the pratica record (an open `pronta` pratica is resumed: only the request is filed again; `--channel` picks the channel), names the
   command the user runs (with `--vault <name>` where needed), and records it in `report.json`
   and `prossimo_passo`. The pilot's `regress.py sign` plays the user's review over the
@@ -283,7 +291,7 @@ Changes to `contract/` and the procedures, none of them required for the vault h
 
 ## Decisions, as taken
 
-All were taken as recommended; D8 is refined in "As built" (the user chooses when a way is unverified).
+All were taken as recommended; D8 is refined in "As built" (the user chooses when a way is unverified, and the library's `contract/signing.json` is the default per channel type).
 
 **D1. How to stamp the PDF.** (a) A pure-Go library inside the vault, with no CGO
 (pdfcpu stamps images; to be confirmed in the spike), (b) a Python helper launched by the

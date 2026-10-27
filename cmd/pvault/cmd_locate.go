@@ -14,13 +14,6 @@ const locateUsage = `usage: pvault locate [residenza | domicilio | locale | sede
        pvault locate --street <via> [--civico <n>] [--quartiere <name>]
          an address typed here: reads nothing from the vault, asks for no password`
 
-// The three computed fields of an address, in the order LocatedTarget returns them.
-const (
-	locQuartiere = iota
-	locMunicipalita
-	locDistretto
-)
-
 // exitUnresolved is the exit status when the municipalità can't be worked
 // out (1 is an error), so a script can tell the two apart.
 const exitUnresolved = 3
@@ -80,7 +73,7 @@ func runLocate(args []string) (string, bool, error) {
 // formatLocated renders what the vault says about an address.
 func formatLocated(loc vault.Located, ids [3]string) (string, bool) {
 	var b strings.Builder
-	mun := loc.Fields[ids[locMunicipalita]]
+	mun := loc.Fields[ids[vault.LocMunicipalita]]
 	if mun.Value == "" {
 		reason := loc.Reason
 		if reason == "" {
@@ -90,15 +83,15 @@ func formatLocated(loc vault.Located, ids [3]string) (string, bool) {
 		if len(loc.Choices) > 0 {
 			b.WriteString("Which quartiere is the address in?\n")
 			for _, c := range loc.Choices {
-				fmt.Fprintf(&b, "  pvault set %s %q%s\n", ids[locQuartiere], c, consequence(c))
+				fmt.Fprintf(&b, "  pvault set %s %q%s\n", ids[vault.LocQuartiere], c, consequence(c))
 			}
 		} else {
-			fmt.Fprintf(&b, "If you know it: pvault set %s <1-10>\n", ids[locMunicipalita])
+			fmt.Fprintf(&b, "If you know it: pvault set %s <1-10>\n", ids[vault.LocMunicipalita])
 		}
 		writeNotes(&b, loc.Notes)
 		return b.String(), false
 	}
-	q, d := loc.Fields[ids[locQuartiere]], loc.Fields[ids[locDistretto]]
+	q, d := loc.Fields[ids[vault.LocQuartiere]], loc.Fields[ids[vault.LocDistretto]]
 	b.WriteString(summary(mun.Value, q.Value, d.Value))
 	if mun.Source == "stored" {
 		b.WriteString("  municipalità: stored by you (an override)\n")

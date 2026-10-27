@@ -12,7 +12,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"unicode"
 
 	"github.com/lovincyrus/personal-vault/internal/crypto"
 	"github.com/lovincyrus/personal-vault/internal/store"
@@ -368,10 +367,8 @@ func cleanDocumentName(name string) (string, error) {
 	if len(name) > 255 {
 		return "", &ValidationError{Field: "name", Msg: "filename is longer than 255 bytes"}
 	}
-	for _, r := range name {
-		if unicode.IsControl(r) {
-			return "", &ValidationError{Field: "name", Msg: "filename contains control characters"}
-		}
+	if hasUnsafe(name) {
+		return "", &ValidationError{Field: "name", Msg: "filename contains control or bidi characters"}
 	}
 	return name, nil
 }

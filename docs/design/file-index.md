@@ -3,7 +3,7 @@
 Status: built, for folders on disk (including the sync folders of OneDrive, SharePoint, Google
 Drive and Dropbox): the store and vault layers, the API, `pvault files`, the local sync
 (`internal/filesync`) and the MCP tools (`vault_files_search`, `vault_file_get`,
-`vault_file_suggest`) with the pratica skill's step 0.4 using them. Also built: `files_closed` entries for linked client ID files, and read-only connectors for
+`vault_file_suggest`, `vault_file_register`) with the pratica skill's step 0.4 using them. Also built: `files_closed` entries for linked client ID files, and read-only connectors for
 OneDrive, SharePoint, Google Drive and Dropbox through their APIs (`internal/filesync`: OAuth
 with PKCE on a loopback port, tokens in the Keychain, full listing per sync). The connectors
 have been tested against fake servers only (see the end).
@@ -101,10 +101,16 @@ An agent with Claude's own Drive connector can `vault_file_register` a file: pro
 provider's file id, name, path, page address, and optionally whom to link it to. The vault
 queues it (`vault_file_proposals`, encrypted, bounded, one per provider+key); only the user's
 `pvault files proposals accept` indexes it, then in a source with `via: connector`: no folder,
-no sign-in, never synced (a sync is refused for such a source), so nothing marks it gone and nothing refreshes it. Accepting is all or nothing: the link is checked first and a file this accept added is discarded if linking then fails. The proposal
-is untrusted (names and words through a model), so the web address must be on the provider's own
-site (it is what `pvault files open` would open), a sharing link is dropped, and a token can
-propose only for the holders and pratiche its scope reaches.
+no sign-in, never synced (a sync is refused for such a source), so nothing marks it gone and
+nothing refreshes it. Accepting is all or nothing: the link is checked first and a file this
+accept added is discarded if linking then fails. A file linked again with a role takes the role.
+
+The proposal is untrusted (names and words through a model), so the web address must be on the
+provider's own site (a Google one the file's own page, with its id in it), a sharing link is
+dropped, and `pvault files open` only prints the address for the user to check. A token can
+propose only for the holders and pratiche its scope reaches, and a duplicate of a proposal it
+can't see is refused without showing it. The queue holds 200 proposals, at most 50 from one
+token, so one agent can't fill it.
 
 ## Still to do
 

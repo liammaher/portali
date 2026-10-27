@@ -563,7 +563,7 @@ func TestSigningPlacementsAreCapped(t *testing.T) {
 	v, _ := signingVault(t)
 	in := signingInput()
 	in.Placements = nil
-	for i := 0; i < 2*MaxPlacements+1; i++ {
+	for i := 0; i < MaxPlacements+1; i++ {
 		in.Placements = append(in.Placements, Placement{Page: 1, Rect: [4]float64{100, 40, 190, 90}})
 	}
 	if _, err := v.RequestSigning(in); err == nil || !strings.Contains(err.Error(), "signature boxes") {
