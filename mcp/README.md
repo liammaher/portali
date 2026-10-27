@@ -51,7 +51,11 @@ pvault --vault studio create-service-token claude --scope "business.*" --ttl 2h 
 
 The MCP server talks to the vault only over its socket, `<vault folder>/run/pvault.sock`
 (`~/.pvault-studio` here), never over TCP: while a vault is locked anything can listen on
-its port, but only you can put a socket in that private folder.
+its port, but only you can put a socket in that private folder. On Windows the server listens
+on a named pipe instead: it writes the pipe's random name to `<vault folder>\run\pipe` and
+holds that file open while it runs, and this server uses the name only while the file can't be
+deleted (while the server still holds it), so a pipe another account made under an old name
+never gets the token.
 
 Elsewhere, pass the token directly (stored in plain text in `~/.claude.json`):
 

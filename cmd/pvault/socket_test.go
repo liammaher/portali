@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -225,6 +226,33 @@ func TestLock_StopsServerOfAnotherBuild(t *testing.T) {
 	case <-exited:
 	case <-time.After(10 * time.Second):
 		t.Fatal("the other build's server is still running")
+	}
+}
+
+// POST /vault/stop over the socket locks and stops the server, as SIGTERM
+// does: it is how pvault lock stops a server on Windows, which has no SIGTERM.
+func TestServe_StopsWhenAskedOverSocket(t *testing.T) {
+	shortVaultDir(t)
+	server, _ := startServe(t, buildPvault(t, true))
+	client := &http.Client{Transport: &http.Transport{
+		DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
+			return (&net.Dialer{}).DialContext(ctx, "unix", socketPath())
+		},
+	}}
+	resp, err := client.Post("http://localhost/vault/stop", "application/json", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusAccepted {
+		t.Fatalf("status %d", resp.StatusCode)
+	}
+	exited := make(chan struct{})
+	go func() { server.Wait(); close(exited) }()
+	select {
+	case <-exited:
+	case <-time.After(10 * time.Second):
+		t.Fatal("the server is still running")
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -114,7 +115,7 @@ func TestFiles_EndToEnd(t *testing.T) {
 
 	// An unreadable folder makes a scan incomplete: nothing is marked gone,
 	// even for the files that did vanish from the part that was read.
-	if os.Geteuid() != 0 {
+	if os.Geteuid() != 0 && runtime.GOOS != "windows" { // chmod can't close a folder there
 		os.Remove(filepath.Join(root, "Casa", "contratto.pdf"))
 		writeFile(t, filepath.Join(root, "Chiusa", "x.pdf"), "x")
 		closed := filepath.Join(root, "Chiusa")

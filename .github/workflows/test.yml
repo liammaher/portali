@@ -41,6 +41,23 @@ jobs:
       - name: Test
         run: go test -race ./cmd/...
 
+  # The named pipe, peer checks and folder ACLs of *_windows.go compile and run
+  # only here. No -race: it needs cgo on Windows.
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
   mcp:
     runs-on: ubuntu-latest
     defaults:

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -13,6 +14,9 @@ import (
 // and handles grant by exiting with grantExit (printing a token on 0).
 func fakeTouchID(t *testing.T, addr string, grantExit int) (argsFile string) {
 	t.Helper()
+	if runtime.GOOS == "windows" {
+		t.Skip("Touch ID is macOS only, and the fake helper is a shell script")
+	}
 	exe, err := os.Executable()
 	if err != nil {
 		t.Fatal(err)

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -232,9 +233,20 @@ func InitWithOptions(dir, password string, opts InitOptions) (secretKey string, 
 	if err := CanInit(dir); err != nil {
 		return "", err
 	}
-	// Create directory
+	// On Windows the folder is made private with a DACL, which would rewrite
+	// the access of everything already in it: only a new or empty one will do.
+	entries, err := os.ReadDir(dir)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return "", fmt.Errorf("read vault dir: %w", err)
+	}
+	if len(entries) > 0 && runtime.GOOS == "windows" {
+		return "", fmt.Errorf("%s already has files in it: on Windows a vault needs a new or empty folder, which it makes private to you", dir)
+	}
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return "", fmt.Errorf("create vault dir: %w", err)
+	}
+	if err := RestrictDir(dir); err != nil {
+		return "", fmt.Errorf("make vault dir private: %w", err)
 	}
 	dbPath := filepath.Join(dir, "vault.db")
 	skPath := filepath.Join(dir, "secret.key")

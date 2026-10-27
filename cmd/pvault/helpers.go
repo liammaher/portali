@@ -87,11 +87,6 @@ func removeStalePID() {
 	removePID()
 }
 
-func processRunning(pid int) bool {
-	p, err := os.FindProcess(pid)
-	return err == nil && p.Signal(syscall.Signal(0)) == nil
-}
-
 func promptPassword(prompt string) (string, error) {
 	fmt.Fprint(os.Stderr, prompt)
 	pw, err := term.ReadPassword(int(syscall.Stdin))

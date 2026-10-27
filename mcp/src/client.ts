@@ -1,5 +1,5 @@
 import { exec } from "node:child_process";
-import { lstat } from "node:fs/promises";
+import { lstat, readFile, unlink } from "node:fs/promises";
 import { request } from "node:http";
 import { homedir, userInfo } from "node:os";
 import { dirname, join } from "node:path";
@@ -67,11 +67,41 @@ function notRunning(): VaultError {
   return new VaultError(`vault: server not running — run '${pvCmd("unlock")}'`);
 }
 
+const PIPE_NAME = /^\\\\\.\\pipe\\pvault-[0-9a-f]{32}$/;
+
+/**
+ * The named pipe of this vault's Windows server, from the file it writes in
+ * <vault dir>\run, a folder only this user can enter. Pipe names are
+ * machine-wide and any account can create one, so a name is trusted only
+ * while the server still holds that file open: Windows won't delete a file
+ * another process holds open, so if the delete works the server is gone and
+ * the name may be someone else's by now.
+ */
+export async function serverPipe(
+  file: string,
+  fs: { readFile: (f: string) => Promise<string>; unlink: (f: string) => Promise<void> } = {
+    readFile: (f) => readFile(f, "ascii"), unlink,
+  },
+): Promise<string> {
+  const name = (await fs.readFile(file).catch(() => { throw notRunning(); })).trim();
+  try {
+    await fs.unlink(file);
+  } catch (e) {
+    const code = (e as NodeJS.ErrnoException).code;
+    if (code === "ENOENT") throw notRunning();
+    if (code !== "EBUSY") throw new VaultError(`vault: refusing to send the token: can't tell whether ${file} is the server's (${code})`);
+    if (!PIPE_NAME.test(name)) throw new VaultError(`vault: refusing to send the token: ${file} doesn't name a vault server's pipe`);
+    return name;
+  }
+  throw notRunning();
+}
+
 /**
  * Requests, the token included, go only to the server's socket in the vault
  * folder, never over TCP: anything can listen on 127.0.0.1:7200 while the
  * vault is locked, but only this user can put a socket in <vault dir>/run,
- * which the server keeps private (0700).
+ * which the server keeps private (0700). On Windows the server listens on a
+ * named pipe instead (serverPipe).
  */
 async function checkSocket(path: string): Promise<void> {
   const uid = process.getuid?.();
@@ -130,8 +160,13 @@ function socketRequest(socketPath: string, path: string, init: SocketInit): Prom
  * so an MCP server set up for one vault never answers from another's.
  */
 async function vaultFetch(path: string, init: SocketInit): Promise<Response> {
-  const sock = join(vaultDir(), "run", "pvault.sock");
-  await checkSocket(sock);
+  let sock: string;
+  if (process.platform === "win32") {
+    sock = await serverPipe(join(vaultDir(), "run", "pipe"));
+  } else {
+    sock = join(vaultDir(), "run", "pvault.sock");
+    await checkSocket(sock);
+  }
   const send = async (p: string, i: SocketInit) => {
     try {
       return await socketRequest(sock, p, i);

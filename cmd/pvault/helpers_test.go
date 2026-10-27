@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -59,6 +60,9 @@ func TestSetValueArg(t *testing.T) {
 // A PID file naming a live process stays (its own pvault needs it to stop
 // that server); one naming a finished process goes.
 func TestRemoveStalePIDKeepsLiveServer(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("uses true(1)")
+	}
 	shortVaultDir(t)
 	writePID(os.Getpid())
 	removeStalePID()

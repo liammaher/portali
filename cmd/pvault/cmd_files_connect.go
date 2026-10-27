@@ -64,10 +64,21 @@ func scanSource(src vault.FileSourceInfo) (scan *filesync.Scan, where string, ok
 func openInBrowser(addr string) {
 	// Only a provider's https sign-in page: the address came from a template
 	// with the user's own client ID, not from anything read off the network.
-	if u, err := url.Parse(addr); err != nil || u.Scheme != "https" || runtime.GOOS != "darwin" {
+	openHTTPS(addr)
+}
+
+// openHTTPS opens an https address in the default browser (macOS, Windows).
+// Nothing else: on Windows the same handler would run a local program.
+func openHTTPS(addr string) {
+	if u, err := url.Parse(addr); err != nil || u.Scheme != "https" {
 		return
 	}
-	exec.Command("/usr/bin/open", addr).Run()
+	switch runtime.GOOS {
+	case "darwin":
+		exec.Command("/usr/bin/open", addr).Run()
+	case "windows":
+		shellOpen(addr)
+	}
 }
 
 func readClientSecret(provider string) string {

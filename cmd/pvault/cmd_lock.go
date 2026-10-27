@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"syscall"
 	"time"
 )
 
@@ -61,11 +60,11 @@ func stopOwnServer() bool {
 	return stopServer(pid)
 }
 
-// stopServer sends pid SIGTERM, which a vault server takes as lock (the key
-// zeroed, a pending backup written first), and waits until it is gone.
+// stopServer asks the server pid to stop, which a vault server takes as lock
+// (the key zeroed, a pending backup written first), and waits until it is
+// gone.
 func stopServer(pid int) bool {
-	p, err := os.FindProcess(pid)
-	if err != nil || p.Signal(syscall.SIGTERM) != nil {
+	if !askServerToStop(pid) {
 		return false
 	}
 	// The server writes any pending backup before it locks, which can take a

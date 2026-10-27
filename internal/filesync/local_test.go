@@ -3,6 +3,7 @@ package filesync
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 	"testing"
@@ -91,6 +92,9 @@ func TestWalk_NamesTheVaultWouldRefuseAreSkippedNotFatal(t *testing.T) {
 func TestWalk_UnreadableFolderMakesTheScanIncomplete(t *testing.T) {
 	if os.Geteuid() == 0 {
 		t.Skip("root reads everything")
+	}
+	if runtime.GOOS == "windows" {
+		t.Skip("chmod can't close a folder on Windows")
 	}
 	root, _ := ResolveRoot(t.TempDir())
 	write(t, filepath.Join(root, "open", "a.pdf"), "x")

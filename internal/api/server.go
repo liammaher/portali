@@ -74,6 +74,9 @@ type Server struct {
 	unlockLimit *rateLimiter
 	grantLimit  *rateLimiter
 	uploadSlots chan struct{} // bounds concurrent document uploads
+	// stopped is closed by POST /vault/stop (see Stopped).
+	stopped  chan struct{}
+	stopOnce sync.Once
 	// tcpAddr is the address Start listens on. Status reports it, so a client
 	// that verified the server over its Unix socket can tell whether its TCP
 	// address reaches the same server or something else.
@@ -90,6 +93,7 @@ func New(v *vault.Vault, addr string) *Server {
 		unlockLimit: newRateLimiter(5, time.Minute),
 		grantLimit:  newRateLimiter(10, time.Minute),
 		uploadSlots: make(chan struct{}, maxConcurrentUploads),
+		stopped:     make(chan struct{}),
 	}
 	s.mux = http.NewServeMux()
 	s.registerRoutes()
@@ -97,10 +101,12 @@ func New(v *vault.Vault, addr string) *Server {
 	s.server = &http.Server{
 		Addr:    addr,
 		Handler: s.handler,
-		// Marks requests that arrived on a Unix socket, which the sign gate's
-		// password route and summary are limited to (see viaSocket).
+		// Marks requests that arrived on the private channel, a Unix socket
+		// or a Windows named pipe, which the sign gate's password route and
+		// summary are limited to (see viaSocket).
 		ConnContext: func(ctx context.Context, c net.Conn) context.Context {
-			return context.WithValue(ctx, socketKey{}, c.LocalAddr().Network() == "unix")
+			network := c.LocalAddr().Network()
+			return context.WithValue(ctx, socketKey{}, network == "unix" || network == "pipe")
 		},
 		// A request that trickles in can't hold an upload slot or a rate
 		// limit attempt indefinitely. Uploads are at most 20 MB over loopback.
@@ -119,6 +125,7 @@ func (s *Server) registerRoutes() {
 		http.Redirect(w, r, "/ui", http.StatusMovedPermanently)
 	})
 	s.mux.HandleFunc("POST /vault/unlock", s.handleUnlock)
+	s.mux.HandleFunc("POST /vault/stop", s.handleStop)
 	s.mux.HandleFunc("POST /vault/session", s.handleSessionGrant)
 	s.mux.HandleFunc("GET /vault/status", s.handleStatus)
 	s.mux.HandleFunc("GET /vault/schema", s.handleSchema)
@@ -197,6 +204,9 @@ func (s *Server) Start() (net.Listener, error) {
 func (s *Server) Serve(ln net.Listener) {
 	go s.server.Serve(ln)
 }
+
+// Stopped is closed when POST /vault/stop asks the server to lock and exit.
+func (s *Server) Stopped() <-chan struct{} { return s.stopped }
 
 // Stop gracefully shuts down the server.
 func (s *Server) Stop(ctx context.Context) error {

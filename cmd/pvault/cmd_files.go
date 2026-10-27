@@ -572,8 +572,8 @@ func cmdFilesOpen() {
 			if src != nil && src.Via == vault.ViaConnector {
 				// The address came from an agent's proposal: look at it before opening it.
 				fmt.Println("(this address came from a proposal an agent made: check it before you open it)")
-			} else if !bools["--print"] && runtime.GOOS == "darwin" {
-				exec.Command("/usr/bin/open", l.WebURL).Run()
+			} else if !bools["--print"] {
+				openHTTPS(l.WebURL)
 			}
 			return
 		}
@@ -603,11 +603,15 @@ func localPathOf(root, rel string) (string, error) {
 	return p, nil
 }
 
-// revealInFinder selects the file in Finder: unlike opening it, that neither
-// runs an application nor downloads an online-only file.
+// revealInFinder selects the file in Finder, or Explorer on Windows: unlike
+// opening it, that neither runs an application nor downloads an online-only
+// file.
 func revealInFinder(p string) {
-	if runtime.GOOS == "darwin" {
+	switch runtime.GOOS {
+	case "darwin":
 		exec.Command("/usr/bin/open", "-R", p).Run()
+	case "windows":
+		revealInExplorer(p)
 	}
 }
 

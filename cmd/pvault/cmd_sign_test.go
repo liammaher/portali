@@ -10,6 +10,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -106,7 +107,7 @@ func TestSignReview_ApprovesAndSaves(t *testing.T) {
 	if !bytes.Equal(got, shown) {
 		t.Fatal("the user reviewed a different file from the one saved")
 	}
-	if fi, _ := os.Stat(out); fi.Mode().Perm() != 0o600 {
+	if fi, _ := os.Stat(out); runtime.GOOS != "windows" && fi.Mode().Perm() != 0o600 {
 		t.Fatalf("saved with mode %v", fi.Mode().Perm())
 	}
 	if _, err := os.Stat(filepath.Dir(viewed)); !os.IsNotExist(err) {

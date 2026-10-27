@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 	"testing"
@@ -65,7 +66,7 @@ func TestBackupRestoreRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info.Mode().Perm() != 0600 {
+	if runtime.GOOS != "windows" && info.Mode().Perm() != 0600 {
 		t.Fatalf("backup mode %v, want 0600", info.Mode().Perm())
 	}
 	data, _ := os.ReadFile(path)
@@ -187,7 +188,7 @@ func TestSetBackupDirValidates(t *testing.T) {
 	if err := v.SetBackupDir(missing); err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(missing); err != nil || info.Mode().Perm() != 0700 {
+	if info, err := os.Stat(missing); err != nil || runtime.GOOS != "windows" && info.Mode().Perm() != 0700 {
 		t.Fatalf("created folder: %v, %v", info, err)
 	}
 }
