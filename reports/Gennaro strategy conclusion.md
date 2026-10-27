@@ -45,16 +45,23 @@ Gennaro never sees us; his assistant just gets noticeably smarter about Naples t
 
 ## What to do
 
-**Stop building what others will do better:** the assistant, watcher, notifications and PEC sending
-(Duet, Muse); the vault as a product (1Password, IT-Wallet, assistants' secure storage; keep it only as a
-bridge to about 2027); per-form PDF layouts, per-user playbooks, the CLI as an interface, the file
-index's cloud sources.
+**Stop building what others will do better:** the assistant and the inbox watcher (Duet, Muse; Duet's
+arrival in Europe is a time lag); more per-form PDF layouts beyond the existing bridge, per-user
+playbooks, the CLI as an interface, the file index's cloud sources.
+
+**Keep the vault, in a new form** (corrected later the same day; see `MVP checklist.md` and `Vault
+sensitivity ranking.md`): 1Password holds only the secrets (SPID login, CIE PIN and PUK, PEC and portal
+passwords, cards), because it never lets the agent read anything. The vault's structured, validated,
+Naples-aware profile (identity, business, locale, people and roles, documents, dates, pratiche) is still
+needed, moved from the Mac CLI into the hosted Napoli connector. Claude also lacks PEC (reading, and
+sending on his tap) and a sign gate, so those move into the connector too.
 
 **Do, in order:**
 1. Publish: the site 404s at its default address and the reports backend isn't deployed. Serve the
    library as a public connector.
 2. Add the recurring Naples obligations as machine-checkable rules: given his facts, "you owe X on these dates."
-3. Add the Naples business schema and its checks as connector tools (the useful part of the vault's schema).
+3. Move the vault's structured profile (schema, validation, the street → municipalità lookup) into the
+   hosted connector, encrypted per business, with the PEC reader (plus sending on his tap) and the sign gate.
 4. Turn on outcomes: a connector tool to report how a pratica went, with consent; the municipalità in
    each report; incoming events (demands, inspections, unanswered PECs); "you're one of N with this."
 5. Take the five procedures that matter most to L2/L3: TARI non domestica (variazione, autotutela), CUP,

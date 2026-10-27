@@ -68,8 +68,10 @@ The network works because those roles differ, not because the needs overlap.
   already in the library.
 - **Then split.** Building works for architects, immigration for Accoglienza Fittizia. Each has its own content, and
   immigration has a stricter privacy tier.
-- **The vault only matters for intermediaries,** and mostly for Accoglienza Fittizia. Treat it as a later, separate,
-  higher-risk decision, not part of the core.
+- **The vault's structured profile matters to all three,** inside the one hosted Napoli connector;
+  1Password holds only the secrets, because it never lets the agent read anything (corrected later the
+  same day; see `MVP checklist.md` and `Vault sensitivity ranking.md`). Accoglienza Fittizia's many-client data is its
+  heaviest, highest-risk use, so that part comes later, with stricter handling.
 
 ## How sure is this?
 
