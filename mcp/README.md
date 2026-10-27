@@ -33,6 +33,17 @@ replaces, so only one Keychain token is ever valid:
 pvault create-service-token claude --scope "residenza.*" --access read --ttl 2h --keychain pvault-mcp
 ```
 
+On Windows the token lives in Credential Manager, which the server reads through
+`pvault.exe`: give its full path in `PVAULT_BIN` unless it is on PATH.
+
+```powershell
+claude mcp add vault --scope user `
+  -e VAULT_KEYCHAIN_SERVICE=pvault-mcp `
+  -e PVAULT_BIN=C:\Users\you\AppData\Local\Programs\pvault\pvault.exe `
+  -- node C:\path\to\personal-vault-italia\mcp\dist\index.js
+pvault create-service-token claude --scope "residenza.*" --access read --ttl 2h --keychain pvault-mcp
+```
+
 ### A second vault (e.g. a business vault)
 
 Each vault (`pvault --vault <name>`) has its own server, so give it its own MCP server:
@@ -115,6 +126,8 @@ The server can read your PEC mailbox over IMAP so an agent can find notices from
    security add-generic-password -U -a you@pec.it -s pvault-pec -w
    ```
 
+   On Windows, store it in Credential Manager instead: `pvault credential write pvault-pec --account you@pec.it`.
+
 3. Add the PEC settings to the server's registration:
 
    ```sh
@@ -152,7 +165,7 @@ A token with `--scope "*"` reaches family members' data too.
 
 It never uses your own session, which has full, uncapped access and would bypass the scope and sensitivity limits. The server refuses to start when none of these is set.
 
-`VAULT_KEYCHAIN_SERVICE` reads the item `--keychain` wrote, for the same macOS user, with `/usr/bin/security`. Keychain lookups and `VAULT_TOKEN_COMMAND` run for every request (nothing is cached), so a replaced token is used immediately, and their error is included when they fail. Until a token is stored, tools answer with the exact command to create one.
+`VAULT_KEYCHAIN_SERVICE` reads the item `--keychain` wrote, for the same user: on macOS with `/usr/bin/security`, on Windows from Credential Manager through `pvault credential read` (Node has no Credential Manager API). Keychain lookups and `VAULT_TOKEN_COMMAND` run for every request (nothing is cached), so a replaced token is used immediately, and their error is included when they fail. Until a token is stored, tools answer with the exact command to create one.
 
 The token keeps working across vault lock/unlock cycles until it expires or is revoked.
 
@@ -164,11 +177,12 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `VAULT_DIR` | `~/.pvault` | The vault folder, for one outside `~/.pvault-<name>`; wins over `VAULT_NAME` |
 | `VAULT_ADDR` | — | Optional check: the address `pvault status` prints; a request is refused unless the vault's server listens there. Requests never go to it |
 | `VAULT_TOKEN` | — | Service token from `pvault create-service-token` (one token source is required) |
-| `VAULT_KEYCHAIN_SERVICE` | — | macOS: Keychain service the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
+| `VAULT_KEYCHAIN_SERVICE` | — | Keychain service (macOS) or Credential Manager name (Windows) the token was saved under with `--keychain` (e.g. `pvault-mcp`); used when `VAULT_TOKEN` is unset |
 | `VAULT_TOKEN_COMMAND` | — | Command run in the platform shell that prints the token (e.g. another secret store); used when neither of the above is set |
 | `VAULT_IMPORT_DIRS` | `~/Downloads` | Colon-separated folders `vault_document_add` and `vault_sign_request` may read from (hidden files always refused); `pec_save_attachment` saves into the first |
 | `PEC_ADDRESS` | — | Your PEC address (IMAP username). The `pec_*` tools exist only when this is set |
-| `PEC_KEYCHAIN_SERVICE` | — | Keychain service holding the PEC app password, stored for account `PEC_ADDRESS` (e.g. `pvault-pec`) |
+| `PEC_KEYCHAIN_SERVICE` | — | Keychain service (macOS) or Credential Manager name (Windows) holding the PEC app password, stored for account `PEC_ADDRESS` (e.g. `pvault-pec`) |
+| `PVAULT_BIN` | — | Windows: full path of `pvault.exe`, which reads Credential Manager for this server; without it, `pvault.exe` is looked for in the PATH folders (never the current folder) |
 | `PEC_IMAP_HOST` | `imaps.pec.aruba.it` | IMAP server (TLS) |
 | `PEC_IMAP_PORT` | `993` | IMAP port |
 
@@ -185,5 +199,5 @@ The token keeps working across vault lock/unlock cycles until it expires or is r
 | `vault: this token is read-only` | Create a token with `--access append` or `--access write` |
 | `vault: this token can add new items but not overwrite or delete` | Overwriting or deleting needs `--access write` |
 | `vault: not found` | Field ID doesn't exist |
-| `pec: no password in Keychain service ...` | Store the app password with `security add-generic-password -U -a <address> -s <service> -w` |
+| `pec: no password in Keychain service ...` | Store the app password with `security add-generic-password -U -a <address> -s <service> -w` (Windows: `pvault credential write <service> --account <address>`) |
 | `pec: login to ... failed` | The app password is wrong or expired; generate a new one and store it again |

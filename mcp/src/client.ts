@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 import {
   findGenericPassword, KEYCHAIN_SERVICE_PATTERN, LOOKUP_MAX_BYTES, LOOKUP_TIMEOUT_MS,
-  SECURITY_ITEM_NOT_FOUND, SECURITY_PATH,
+  SECRET_KIND, SECRET_STORE, SECURITY_ITEM_NOT_FOUND, storeToolMissing,
 } from "./keychain.js";
 
 const execAsync = promisify(exec);
@@ -261,19 +261,19 @@ export function lookupFailure(label: string, e: unknown): string {
 /** Reads the token pvault create-service-token --keychain stored for this user. */
 async function keychainToken(service: string): Promise<string> {
   if (!KEYCHAIN_SERVICE_PATTERN.test(service)) {
-    throw new VaultError(`vault: VAULT_KEYCHAIN_SERVICE "${service}" is not a valid Keychain service name`);
+    throw new VaultError(`vault: VAULT_KEYCHAIN_SERVICE "${service}" is not a valid ${SECRET_KIND} name`);
   }
   try {
     return await findGenericPassword(service, userInfo().username);
   } catch (e) {
     const code = (e as { code?: number | string }).code;
     if (code === SECURITY_ITEM_NOT_FOUND) {
-      throw missingToken(`nothing stored in Keychain service "${service}"`);
+      throw missingToken(`nothing stored in ${SECRET_KIND} "${service}"`);
     }
     if (code === "ENOENT") {
-      throw missingToken(`${SECURITY_PATH} not found; VAULT_KEYCHAIN_SERVICE needs macOS`);
+      throw missingToken(storeToolMissing("VAULT_KEYCHAIN_SERVICE"));
     }
-    throw missingToken(lookupFailure("Keychain lookup", e));
+    throw missingToken(lookupFailure(`${SECRET_STORE} lookup`, e));
   }
 }
 
@@ -307,7 +307,7 @@ async function resolveToken(): Promise<string> {
     const service = keychainService();
     const command = tokenCommand();
     if (service) {
-      source = `Keychain service "${service}"`;
+      source = `${SECRET_KIND} "${service}"`;
       token = await keychainToken(service);
     } else if (command) {
       source = "VAULT_TOKEN_COMMAND output";

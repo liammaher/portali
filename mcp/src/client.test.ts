@@ -311,3 +311,17 @@ test("serverPipe trusts a name only while the server holds its file", async () =
   await assert.rejects(serverPipe("run/pipe", fs(good + "\\x", "EBUSY")), /refusing/);
   await assert.rejects(serverPipe("run/pipe", { readFile: async () => { throw err("ENOENT"); }, unlink: async () => {} }), /server not running/);
 });
+
+// On Windows the token comes from Credential Manager through pvault.exe, which
+// is found only by an absolute path: PVAULT_BIN, or a PATH folder, never the
+// current folder.
+test("pvaultPath finds pvault.exe only by an absolute path", async () => {
+  const { pvaultPath } = await import("./keychain.js");
+  const has = (...paths: string[]) => (p: string) => paths.includes(p);
+  assert.equal(pvaultPath({ PVAULT_BIN: "C:\\pv\\pvault.exe" }, has()), "C:\\pv\\pvault.exe");
+  assert.equal(pvaultPath({ PVAULT_BIN: "pvault.exe" }, has("pvault.exe")), undefined);
+  assert.equal(pvaultPath({ PATH: ".;C:\\tools;C:\\bin" }, has(".\\pvault.exe", "C:\\bin\\pvault.exe")), "C:\\bin\\pvault.exe");
+  assert.equal(pvaultPath({ Path: "C:\\bin" }, has("C:\\bin\\pvault.exe")), "C:\\bin\\pvault.exe");
+  assert.equal(pvaultPath({ PATH: ";relative\\dir" }, has("relative\\dir\\pvault.exe")), undefined);
+  assert.equal(pvaultPath({ PATH: '"C:\\Program Files\\pvault";C:\\bin' }, has("C:\\Program Files\\pvault\\pvault.exe")), "C:\\Program Files\\pvault\\pvault.exe");
+});
