@@ -39,6 +39,7 @@ what a step needs and read it in one `get`: up to 10 field IDs or whole categori
 most forms in one prompt. Before each command, say in chat what the prompt will ask.
 "not approved" means the user said no or is away: don't retry, ask them. Fall back to
 the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
+Filling a form with `fill.py` (step 4) always takes one read token.
 
 ## 0. Find the pratica, its playbook and its library entry
 
@@ -142,8 +143,8 @@ A row can also say exactly what goes in its box:
 - `choices`: boxes to tick, each with the values that tick it; `write_value` also writes
   the value beside the box ("altro ____").
 
-`claude/skills/pratica/fill/fill.py` does all this for a form that has a layout in the
-library's `layouts/`.
+For a form with a layout in the library's `layouts/<id>/<form>.json`, `fill.py` does all
+this and the filling (step 4, "Filling with fill.py"): don't map it by hand.
 
 A numbered category (`locale2.indirizzo`) is the vault's copy of that category, here a second
 premises; the vault may spell it `locale2`, `locale-2` or `locale_2`, so look for each. Its rows
@@ -229,11 +230,72 @@ user decides.
 
 In order of preference:
 
-1. **Fill the official PDF** (pdf skill) and save it in the user's folder for the
-   topic, never in this repo. The user signs it.
+1. **Fill the official PDF** and save it in the user's folder for the topic, never in
+   this repo. The user signs it. With a layout in the library, use `fill.py` (below);
+   otherwise the pdf skill.
 2. **Portal** in the built-in browser: log in as below, fill from vault values,
    stop before the final submit, show a summary and let the user submit or approve
    it explicitly.
+
+### Filling with fill.py
+
+`~/.claude/skills/pratica/fill/fill.py` reads the library entry and layout, downloads the
+form and checks its sha256, reads the vault over its socket with one read-only token,
+fills the PDF, then reads it back to check every value is in its box. A draft writes
+nothing to the vault. It needs `node`, and Python with PyMuPDF (`python3 -c 'import fitz'`;
+if that fails, ask before `pip3 install --user pymupdf`). It reads only entries without a
+`dichiarante` (the personal vault's own procedures); for the rest it says so, and you
+fill by hand.
+
+1. **The library, on `main`.** In a cache of your own:
+   ```sh
+   lib=~/.cache/pratiche-napoli
+   [ -d "$lib/.git" ] || git clone -q --depth 1 https://github.com/liammaher/pratiche-napoli "$lib"
+   git -C "$lib" fetch -q --depth 1 origin main && git -C "$lib" reset -q --hard origin/main
+   [ -d "$lib/node_modules/yaml" ] || npm --prefix "$lib" ci --omit=dev --ignore-scripts --silent
+   ```
+   Use `$PRATICHE_NAPOLI_DIR` as it is instead only when the user asks to test a library
+   change.
+2. **What it needs**:
+   ```sh
+   python3 -I ~/.claude/skills/pratica/fill/fill.py needs --library "$lib" \
+     --procedure <entry id> --form <form id> --draft [--vault-dir ~/.pvault-<name>]
+   ```
+   `commands.draft` is the one token command; `ask` lists the questions the vault can't
+   answer. In one message, give the user the command to run in their terminal, exactly as
+   printed (it asks for their password or Touch ID, saves a 1-hour read token in their
+   Keychain and revokes the last one; never run it yourself, never ask for the token), and
+   ask the `ask` questions. Answers the playbook or this conversation already give don't
+   need asking. This holds with Touch ID too: `fill.py` reads with that token, not `pvault get`.
+3. **Answers**: write them by label, in the output folder's `answers.json`:
+   `{"answers": {"<label>": "<answer>"}}`. "no" or "nessuno" leaves a box empty. A row
+   with `ticks` takes the user's answer as said (`si` ticks the box). A row with
+   `rows_by_column` takes a list of rows, each `{"<column>": "<text>"}`, or "nessuno".
+4. **The draft**, once the user says the token is saved. The output folder is the user's
+   folder for the topic plus `bozza-automatica` (ask where that is if the playbook and
+   step 0 didn't find it):
+   ```sh
+   python3 -I ~/.claude/skills/pratica/fill/fill.py run --library "$lib" \
+     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft \
+     --answers "<out>/answers.json" --out "<out>"
+   ```
+   (the same `--vault-dir` as `needs`). It prints each check and exits 1 if one failed;
+   `<out>/report.json` has every row. A run takes a few seconds, so run it again after each fix.
+   - "not in the vault": missing data, as in step 2. Ask, offer the `pvault set`, run again.
+   - "is answered": an `ask` row with no answer. Ask it, add it to `answers.json`.
+   - "refused the token" or "Keychain": give the token command again. "locked" or "no
+     vault server": the user runs `pvault unlock`.
+   - A form, layout or box check failing means the Comune changed the form or the
+     library is wrong: don't hand over that PDF. Fill by hand and list it for step 7.
+5. **Show it.** Look at `<out>/page-1.png` yourself first. Then send the user
+   `<out>/filled.pdf` (SendUserFile, `display: render`, where you have it; otherwise
+   `open "<out>/filled.pdf"`) with a short list of what came from where and anything
+   left blank on purpose. Compare it with any copy the user already filled (step 2).
+
+The draft is the check before the record: when the user is happy with it, open the
+pratica (step 3). Run it again without `--draft`, using the command `needs` prints without
+`--draft` (`prepare`: append, including `pratiche.*`), when they'd rather `fill.py` open
+the record itself: it does, and dates `data_scadenza` from the library's `compute`.
 
 ### Logging in to a portal
 

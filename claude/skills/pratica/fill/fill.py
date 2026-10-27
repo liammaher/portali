@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Fill a pratiche-napoli form from the vault, and check the result.
 
-  fill.py needs --entry E.json --form ID [--draft]
+  fill.py needs (--library DIR --procedure ID | --entry E.json) --form ID
+                [--draft] [--vault-dir DIR]
       The service tokens a run needs, as the pratica skill asks for them:
       prepare (append, the form's categories and pratiche.*) and track
       (write, pratiche.* and the categories the entry's records go to); with
-      --draft, one read token for the form's categories.
+      --draft, one read token for the form's categories. Each comes with the
+      pvault command that saves it where run --vault-dir looks, and the ask
+      rows come with how their answers are written.
 
-  fill.py run --entry E.json --form ID --layout L.json --pdf FORM.pdf --out DIR
+  fill.py run (--library DIR --procedure ID | --entry E.json --layout L.json)
+              --form ID --out DIR [--pdf FORM.pdf]
               (--server S.json | --vault-dir DIR [--keychain SERVICE])
               [--draft] [--answers A.json] [--reply R.json] [--playbook NAME]
       Reads the vault over its HTTP API with the prepare token, resolves each
@@ -23,15 +27,21 @@ The vault: --server S.json, {"url": ..., "tokens": {"prepare": ..., "track":
 ...}}, is the synthetic vault over TCP. --vault-dir is a real one (~/.pvault,
 or ~/.pvault-<name>): requests, the token included, go only to its
 run/pvault.sock, after checking that folder is yours and private, as the MCP
-server does; the token is the one `pvault create-service-token ... --keychain
-SERVICE` stored, else $VAULT_TOKEN.
+server does; the token is the one `pvault create-service-token ...
+--keychain SERVICE` stored. Without --keychain it is $VAULT_TOKEN, else the
+service `needs` names: pvault-pratica-fill (pvault-<name>-pratica-fill for
+~/.pvault-<name>).
 
-The entry is a library procedure as JSON (its YAML, converted): what goes in
-each box (map, template, columns, optional, choices) and the deadline
-(compute). The layout is the library's layouts/<procedure>/<form>.json: only
-where each box is. Answers are the ask rows' answers by label; one whose
-answers go into a table (into_table) takes a list of rows, each by column
-label. Needs PyMuPDF (fitz).
+--library is a pratiche-napoli checkout (npm ci done): the entry is
+procedures/<ID>.yaml, read with the library's own YAML parser (node), and
+the layout layouts/<ID>/<form>.json. Without --pdf the form is downloaded
+from the entry's url into DIR. --entry is a procedure already as JSON.
+
+The entry says what goes in each box (map, template, columns, optional,
+choices) and the deadline (compute); the layout only where each box is.
+Answers are the ask rows' answers by label; one whose answers go into a
+table (into_table) takes a list of rows, each by column label. Needs
+PyMuPDF (fitz).
 """
 
 import argparse
@@ -42,11 +52,13 @@ import http.client
 import json
 import os
 import re
+import shlex
 import socket
 import stat
 import subprocess
 import sys
 import urllib.parse
+import urllib.request
 
 # The vault's word for a library channel type (it takes the library's as is,
 # saving these three as the Italian word).
@@ -89,6 +101,104 @@ def form_of(entry, form_id):
         if form["id"] == form_id:
             return form
     sys.exit(f"{entry['id']} has no form {form_id}")
+
+
+# YAML 1.2 by the library's own parser, as its validator reads it.
+READ_YAML = """
+import { parse } from "yaml";
+import { readFileSync } from "node:fs";
+process.stdout.write(JSON.stringify(parse(readFileSync(process.argv[1], "utf8"), { version: "1.2" })));
+"""
+
+
+def library_file(a, folder, ext):
+    """<library>/<folder>/<procedure>[/<form>].<ext>, for an ID that can only
+    name a file in there."""
+    if not re.fullmatch(r"(napoli|italia)/[a-z0-9-]+/[a-z0-9-]+", a.procedure):
+        sys.exit(f"{a.procedure!r} isn't a library procedure ID (napoli/comune/tari-iscrizione-uso-abitativo)")
+    if not re.fullmatch(r"[a-z0-9-]+", a.form):
+        sys.exit(f"{a.form!r} isn't a form ID")
+    parts = [a.library, folder, a.procedure] + ([a.form] if folder == "layouts" else [])
+    path = os.path.join(*parts) + ext
+    if not os.path.isfile(path):
+        sys.exit(f"no {path}: is {a.library} a pratiche-napoli checkout on main?")
+    return path
+
+
+def entry_of(a):
+    if a.entry:
+        return load(a.entry)
+    path = library_file(a, "procedures", ".yaml")
+    got = subprocess.run(["node", "--input-type=module", "-e", READ_YAML, path], cwd=a.library,
+                         capture_output=True, text=True, timeout=60)
+    if got.returncode != 0:
+        sys.exit(f"reading {path} failed (npm ci in {a.library}?): {got.stderr.strip()}")
+    return json.loads(got.stdout)
+
+
+def form_pdf(a, form):
+    """The form: --pdf, else the entry's url downloaded into the output
+    folder (kept there, and fetched again only if it isn't that version).
+    The run checks its sha256 either way."""
+    if a.pdf:
+        return a.pdf
+    path = os.path.join(a.out, "form.pdf")
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            if hashlib.sha256(f.read()).hexdigest() == form.get("sha256"):
+                return path
+    if not form.get("url", "").startswith("https://"):
+        sys.exit(f"form {form['id']} has no https url to download: pass --pdf")
+    try:
+        with urllib.request.urlopen(form["url"], timeout=60) as resp, open(path, "wb") as f:
+            f.write(resp.read())
+    except OSError as e:
+        sys.exit(f"downloading {form['url']} failed: {e}")
+    return path
+
+
+def default_keychain(vault_dir):
+    """The Keychain service for this vault's fill token: one per vault, since
+    a new token saved under a service revokes the one it replaces."""
+    base = os.path.basename(os.path.normpath(os.path.expanduser(vault_dir)))
+    if base == ".pvault":
+        return "pvault-pratica-fill"
+    name = re.sub(r"[^A-Za-z0-9._-]", "-", base.removeprefix(".pvault-").lstrip("."))[:32]
+    return f"pvault-{name}-pratica-fill"
+
+
+def token_command(vault_dir, token):
+    """The pvault command that saves this token where run --vault-dir reads it."""
+    full = os.path.normpath(os.path.expanduser(vault_dir))
+    base = os.path.basename(full)
+    if base == ".pvault" and os.path.dirname(full) == os.path.expanduser("~"):
+        pvault = ["pvault"]
+    elif base.startswith(".pvault-") and os.path.dirname(full) == os.path.expanduser("~"):
+        pvault = ["pvault", "--vault", base.removeprefix(".pvault-")]
+    else:
+        pvault = [f"VAULT_DIR={shlex.quote(full)}", "pvault"]
+    args = ["create-service-token", "pratica-fill", "--scope", token["scope"], "--access", token["access"],
+            "--ttl", "1h", "--keychain", default_keychain(full)]
+    return " ".join(pvault + [shlex.quote(x) for x in args])
+
+
+def asks(form, layout):
+    """The ask rows, as the user is asked them: a row whose answers go into a
+    table takes rows by column; one with boxes to tick, the values that tick
+    each box."""
+    tables = {b["label"]: b["into_table"] for b in (layout or {}).get("boxes", []) if "into_table" in b}
+    columns = {r["label"]: [c["label"] for c in r["map"]["columns"]] for r in form["fields"] if "repeat" in r["map"]}
+    out = []
+    for row in form["fields"]:
+        if "ask" not in row["map"]:
+            continue
+        q = {"label": row["label"], "question": row["map"]["ask"]}
+        if row.get("choices"):
+            q["ticks"] = {c["box"]: c["values"] for c in row["choices"]}
+        if row["label"] in tables:
+            q["rows_by_column"] = columns[tables[row["label"]]]
+        out.append(q)
+    return out
 
 
 def check_supported(entry, form):
@@ -209,9 +319,11 @@ def connect(a):
         server = load(a.server)
         return {name: Vault(token, url=server["url"]) for name, token in server["tokens"].items()}
     sock = vault_socket(os.path.expanduser(a.vault_dir))
-    token = keychain_token(a.keychain) if a.keychain else os.environ.get("VAULT_TOKEN", "").strip()
+    token = os.environ.get("VAULT_TOKEN", "").strip() if not a.keychain else ""
+    if not token:
+        token = keychain_token(a.keychain or default_keychain(a.vault_dir))
     if not re.fullmatch(r"[\x21-\x7e]+", token):
-        sys.exit("no service token: pass --keychain SERVICE, or set VAULT_TOKEN")
+        sys.exit("no service token: run the command fill.py needs prints, or set VAULT_TOKEN")
     vault = Vault(token, socket_path=sock)
     status, info = vault.call("GET", "/vault/status")
     if status != 200 or info.get("locked", True):
@@ -259,6 +371,8 @@ class Vault:
         """Every field the token may read, in one request (the server leaves
         out what the token can't see)."""
         status, bundle = self.call("GET", "/vault/context")
+        if status == 401:
+            sys.exit("the vault refused the token (expired after its hour, or revoked): run the command fill.py needs prints again")
         if status != 200:
             sys.exit(f"reading the vault: {status} {bundle}")
         return {f["id"]: f["value"] for fields in bundle["categories"].values() for f in fields}
@@ -698,7 +812,8 @@ def pratiche_by_slug(values):
 def run(a):
     import fitz  # PyMuPDF
 
-    entry, layout = load(a.entry), load(a.layout)
+    entry = entry_of(a)
+    layout = load(a.layout or library_file(a, "layouts", ".json"))
     form = form_of(entry, a.form)
     check_supported(entry, form)
     vaults = connect(a)
@@ -712,6 +827,7 @@ def run(a):
 
     print(f"{entry['id']} #{form['id']}")
     os.makedirs(a.out, exist_ok=True)
+    a.pdf = form_pdf(a, form)
     with open(a.pdf, "rb") as f:
         pdf_hash = hashlib.sha256(f.read()).hexdigest()
     check("form is the version the library maps", pdf_hash == form.get("sha256"), pdf_hash[:12])
@@ -840,26 +956,38 @@ def main():
     sub = p.add_subparsers(dest="cmd", required=True)
     for name in ("needs", "run"):
         s = sub.add_parser(name)
-        s.add_argument("--entry", required=True)
+        what = s.add_mutually_exclusive_group(required=True)
+        what.add_argument("--library", help="a pratiche-napoli checkout, with --procedure")
+        what.add_argument("--entry", help="the procedure as JSON")
+        s.add_argument("--procedure", help="the library procedure ID, e.g. napoli/comune/tari-iscrizione-uso-abitativo")
         s.add_argument("--form", required=True)
-    r = sub.choices["run"]
-    r.add_argument("--layout", required=True, help="the library's layouts/<procedure>/<form>.json")
-    for s in sub.choices.values():
         s.add_argument("--draft", action="store_true", help="read only: no pratica record, no reply")
+    sub.choices["needs"].add_argument("--vault-dir", default="~/.pvault",
+                                      help="the vault the token commands are for (default ~/.pvault)")
+    r = sub.choices["run"]
+    r.add_argument("--layout", help="the library's layouts/<procedure>/<form>.json (--entry only)")
     where = r.add_mutually_exclusive_group(required=True)
     where.add_argument("--server", help="the synthetic vault's server.json")
     where.add_argument("--vault-dir", help="a real vault's folder, e.g. ~/.pvault")
-    r.add_argument("--keychain", help="Keychain service holding the token (else $VAULT_TOKEN)")
-    r.add_argument("--pdf", required=True)
+    r.add_argument("--keychain", help="Keychain service holding the token (default: the one needs names)")
+    r.add_argument("--pdf", help="the form (default: downloaded from the entry's url into --out)")
     r.add_argument("--out", required=True)
     r.add_argument("--answers")
     r.add_argument("--reply")
     r.add_argument("--slug")
     r.add_argument("--playbook")
     a = p.parse_args()
+    if bool(a.library) != bool(a.procedure):
+        p.error("--library and --procedure go together")
+    if a.cmd == "run" and bool(a.entry) != bool(a.layout):
+        p.error("--entry takes --layout; --library finds the layout itself")
     if a.cmd == "needs":
-        entry = load(a.entry)
-        print(json.dumps(needs(entry, form_of(entry, a.form), a.draft), indent=2))
+        entry = entry_of(a)
+        form = form_of(entry, a.form)
+        out = needs(entry, form, a.draft)
+        out["commands"] = {name: token_command(a.vault_dir, t) for name, t in out["tokens"].items()}
+        out["ask"] = asks(form, load(library_file(a, "layouts", ".json")) if a.library else None)
+        print(json.dumps(out, ensure_ascii=False, indent=2))
         return 0
     if a.draft and a.reply:
         p.error("--draft writes nothing, so it takes no --reply")

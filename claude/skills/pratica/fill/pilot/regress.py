@@ -104,6 +104,10 @@ CASES = {
                      {"fixture": setting({"abitazione.titolo": ["comodatario"]})}, 0, ["values read back in their boxes"]),
     "socket-draft": ("a draft over the vault's socket, as on a real vault: filled, nothing written",
                      {"socket": True}, 0, ["ok   the form is ready", "draft: nothing written to the vault", "no pratiche fields in the vault"]),
+    "skill-draft": ("as the pratica skill runs it: the library checkout, the form already downloaded, a draft",
+                    {"socket": True, "library": True}, 0,
+                    ["ok   form is the version the library maps", "ok   the form is ready",
+                     "draft: nothing written to the vault", "no pratiche fields in the vault"]),
     "socket-not-private": ("the socket's run folder isn't private: the token isn't sent",
                            {"socket": True, "chmod_run": 0o755}, 1, ["must be a private folder of yours"]),
     "convivente-gaps": ("a convivente lacks a date of birth, another a codice fiscale",
@@ -181,8 +185,33 @@ def written_pratiche(server):
     return "\nno pratiche fields in the vault\n" if not ids else f"\npratiche fields in the vault: {ids}\n"
 
 
+def token_commands():
+    """The command for each kind of vault folder, and the Keychain service run
+    then reads: one per vault, quoted for the shell."""
+    sys.path.insert(0, os.path.dirname(FILL))
+    sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
+    import fill
+    home = os.path.expanduser("~")
+    token = {"scope": "*:identity.*,abitazione.*", "access": "read"}
+    tail = "create-service-token pratica-fill --scope '*:identity.*,abitazione.*' --access read --ttl 1h --keychain "
+    want = {
+        "~/.pvault": "pvault " + tail + "pvault-pratica-fill",
+        home + "/.pvault/": "pvault " + tail + "pvault-pratica-fill",
+        "~/.pvault-studio": "pvault --vault studio " + tail + "pvault-studio-pratica-fill",
+        "/srv/my vault": "VAULT_DIR='/srv/my vault' pvault " + tail + "pvault-my-vault-pratica-fill",
+    }
+    bad = []
+    for folder, command in want.items():
+        got = fill.token_command(folder, token)
+        if got != command:
+            bad.append(f"{folder}: {got}")
+        if fill.default_keychain(folder) != command.rsplit(" ", 1)[1]:
+            bad.append(f"{folder}: run reads {fill.default_keychain(folder)}")
+    return bad
+
+
 def main():
-    library = os.environ.get("PRATICHE_NAPOLI_DIR") or sys.exit("set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout")
+    library =os.environ.get("PRATICHE_NAPOLI_DIR") or sys.exit("set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout")
     args = sys.argv[1:]
     keep = None
     if args[:1] == ["--keep"]:
@@ -207,6 +236,11 @@ def main():
                                 "--form", FORM], check=True, capture_output=True, text=True).stdout
         layout = load(os.path.join(library, "layouts", ID, FORM + ".json"))
         failed = []
+        if not args:
+            bad = token_commands()
+            print(f"{'ok  ' if not bad else 'FAIL'} token-commands: the pvault command needs prints for each vault"
+                  + "".join("\n  " + b for b in bad))
+            failed += ["token-commands"] if bad else []
         for name in names:
             description, changes, want_exit, want_lines = CASES[name]
             ok, detail = case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines)
@@ -215,7 +249,8 @@ def main():
                 shutil.copytree(os.path.join(base, name, "out"), os.path.join(keep, name), dirs_exist_ok=True)
             if not ok:
                 failed.append(name)
-        print(f"{len(names) - len(failed)}/{len(names)} cases passed")
+        total = len(names) + (0 if args else 1)
+        print(f"{total - len(failed)}/{total} cases passed")
         return 1 if failed else 0
     finally:
         shutil.rmtree(base, ignore_errors=True)
@@ -258,6 +293,11 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
         common = [sys.executable, "-I", FILL, "run", "--entry", os.path.join(work, "entry.json"), "--form", FORM,
                   "--layout", os.path.join(work, "layout.json"), "--pdf", os.path.join(work, "form.pdf"), "--out", out,
                   "--answers", os.path.join(work, "answers.json")]
+        if changes.get("library"):
+            # The form a past run left in the output folder is used, not fetched again.
+            shutil.copy(os.path.join(work, "form.pdf"), os.path.join(out, "form.pdf"))
+            common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
+                      "--procedure", ID, "--form", FORM, "--out", out, "--answers", os.path.join(work, "answers.json")]
         if changes.get("socket"):
             # As on a real vault: its folder, the token from the environment, a draft.
             if "chmod_run" in changes:
