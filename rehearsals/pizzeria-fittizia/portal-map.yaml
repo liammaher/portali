@@ -1,0 +1,226 @@
+# Portal map: SCIA unica for a pizzeria in zona C (somministrazione + notifica sanitaria)
+# on impresainungiorno-Napoli (SUAP, codice catastale F839).
+#
+# Walked once on 2026-10-27 (README, Runs) up to the attachments, where the portal stops
+# until the signed files and the declarations are in. Screens marked `seen` are as the
+# portal showed them; the last two (attachments onward, signing and sending) are known
+# only up to the gate. Level stays L0 until a walk reaches the send button with nothing to
+# fix. Library entry: napoli/comune/scia-somministrazione-alimenti-bevande.
+#
+# fill: vault field IDs in the business vault (the titolare is the person whose ruolo.tipo
+# is titolare; here `gennaro`). ask: something no vault field holds. tap: what only the
+# person does: login, declare (tick a legal declaration in their name), sign, pay, send.
+# A rehearsal never pays or sends, and Claude never ticks a declaration.
+#
+# Mechanics: the front office is PrimeFaces. Each section saves with its own Salva and the
+# page reloads. Dropdowns: open, type the label into the panel's filter with real key
+# presses, arrow to the exact label (the filter matches substrings: "napoli" lists
+# CASALNUOVO DI NAPOLI first), Enter; clicking an item misses while the panel settles, and
+# arrows on a closed dropdown fire a reload per step. Street fields are lookups that show
+# suggestions only on real key presses. Radios are clicked on their visible box, not the
+# input. The steps file (portal-steps.yaml) holds the exact fields; URLs are
+# /fnsuap/cmd/create?execution=eNsM.
+
+procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+channel: impresainungiorno – SUAP del Comune di Napoli
+level: L0
+last_walked: 2026-10-27
+
+screens:
+  - screen: Sportello SUAP di Napoli
+    url: https://www.impresainungiorno.gov.it/route/suap?codComune=F839&locale=IT
+    choose: COMPILA UNA PRATICA
+    seen: 2026-10-27
+
+  - screen: Login (iasu.infocamere.it)
+    tap: login
+    seen: 2026-10-27
+    notes: SPID, CIE, EIDAS, TELEMACO, CNS. The person logs in; Claude never types credentials.
+
+  - screen: Assegna una descrizione alla pratica
+    seen: 2026-10-27
+    choose: COMPILA NUOVA PRATICA (or IMPORTA DATI DA PRATICA PRECEDENTE)
+    fill:
+      descrizione: "3–60 characters, only for the user's desk; e.g. SCIA somministrazione <denominazione>"
+
+  - screen: Controlla l'accesso alla pratica
+    seen: 2026-10-27
+    choose: CONFERMA without adding anyone
+    notes: >-
+      Optional. Gives other people a profile on the draft (1 read, 2 write, 3 send, 4 delete,
+      5 access control); the creator is the person logged in.
+
+  - screen: Scelta settore attività
+    seen: 2026-10-27
+    choose: >-
+      Strutture Ricettive (Alloggio) e Ristorazione (Ateco da 55 a 56) → Ristorazione e
+      Somministrazione di alimenti e bevande → Esercizio di somministrazione di alimenti e
+      bevande in zone NON tutelate
+    check:
+      - business.codice_ateco starts with 56
+      - the locale is in zona C (the Piano's street list); otherwise "... in zone tutelate"
+    notes: The tree is hard to click; the search box above it finds the node.
+
+  - screen: Scelta operazioni
+    seen: 2026-10-27
+    choose:
+      - Avvio, gestione, cessazione attività → Aprire l'attività
+      - >-
+        ALTRE ESIGENZE → Notifica ai fini della registrazione impresa alimentare (art. 6,
+        Reg. CE n. 852/2004) → Notifica ai fini della registrazione - avvio
+        attività/trasferimento
+    notes: >-
+      The same tree holds the dehors ("Domanda di occupazione suolo pubblico per area annessa
+      ad esercizio di somministrazione"), the insegna ("SCIA per installazione insegna di
+      esercizio"), the Dogane notice for alcohol, the VVF PIN forms and GISA. Not GISA for a
+      restaurant: the Reg. 852 notifica is the one.
+
+  - screen: Scelta interventi eventuali
+    seen: 2026-10-27
+    choose: none, unless one applies
+    ask:
+      - music (comunicazione or nulla osta impatto acustico)
+      - alcohol ("in caso di vendita di alcolici")
+      - an outside sign ("in caso di attività che preveda insegna esterna"), which bundles the
+        insegna into this pratica
+
+  - screen: Scelta del destinatario della pratica
+    seen: 2026-10-27
+    choose: SUAP DEL COMUNE DI NAPOLI (the only option, preselected)
+
+  - screen: Scelte eventuali
+    seen: 2026-10-27
+    choose: none when the titolare files himself
+    notes: >-
+      Other options: other soci's requirements; "IL PRESENTATORE DELLA DOMANDA È UN
+      PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE" (the intermediary route);
+      Terzo settore.
+
+  - screen: Compilazione della domanda telematica
+    seen: 2026-10-27
+    notes: >-
+      Generated from the choices: "SCIA per apertura di esercizio di somministrazione di
+      alimenti e bevande" (Uffici Comune di Napoli) and "Notifica ai fini della registrazione"
+      (ASL Napoli 1 Centro). Sixteen sections below, each saved on its own; a green check
+      means complete. VISUALIZZA ANTEPRIMA gives a PDF preview.
+
+  - screen: Scheda anagrafica
+    seen: 2026-10-27
+    choose: DITTA/SOCIETA'/IMPRESA (preselected), then NON ANCORA ISCRITTA when there is no REA
+    fill:
+      nome, cognome, codice fiscale: gennaro:identity.first_name, last_name, codice_fiscale
+      sesso: gennaro:identity.sex (Maschile/Femminile)
+      data nascita: gennaro:identity.date_of_birth (gg/MM/aaaa)
+      luogo di nascita: gennaro:identity.birth_province, birth_comune (dropdowns)
+      residenza: gennaro:residenza.provincia, comune; DUG + denominazione from residenza.indirizzo; civico, cap
+      email/PEC, telefono: gennaro:identity.email, phone (digits, no +39)
+      carica: gennaro:ruolo.tipo (titolare → TITOLARE, from the Registro Imprese list)
+      denominazione: business.denominazione
+      forma giuridica: business.forma_giuridica (ditta_individuale → IMPRESA INDIVIDUALE)
+      codice fiscale, P.IVA: business.codice_fiscale, partita_iva
+      sede: business.sede_legale_* (DUG split as for the residenza)
+      telefono, PEC: business.telefono, pec
+    notes: >-
+      Not prefilled from SPID, and not checked against who is logged in: a made-up titolare
+      and a made-up CF and P.IVA (valid checksums) saved without complaint. The street is
+      split into a DUG dropdown (ALTRO, CORSO, LARGO, PIAZZA, VIA, VIALE) and a name.
+
+  - screen: Domicilio digitale
+    seen: 2026-10-27
+    choose: INI-PEC (a business) rather than INAD (a person)
+    fill:
+      indirizzo: business.pec
+
+  - screen: Domicilio elettronico (domicilio digitale speciale)
+    seen: 2026-10-27
+    fill:
+      PEC for the receipt and every message about the pratica: business.pec
+
+  - screen: Ubicazione dell'attività
+    seen: 2026-10-27
+    fill:
+      CAP: locale.cap
+      via: locale.indirizzo, but as the Comune names it (a lookup)
+      civico: locale.civico
+      scala, piano, interno: locale.interno
+    notes: >-
+      Comune and provincia are prefilled. The street must be picked from the lookup, which
+      uses the Comune's own toponymy: "Viale Augusto" is VIALE OTTAVIO CESARE AUGUSTO there,
+      and VIALE DI AUGUSTO in the vault's stradario. Search on a distinctive word and pick
+      the exact match.
+
+  - screen: Dati catastali
+    seen: 2026-10-27
+    choose: NCEU (buildings) for a shop; NCT is land
+    fill:
+      foglio, particella, subalterno: locale.catasto_foglio, catasto_particella, catasto_subalterno
+      sezione urbana: locale.catasto_sezione
+      categoria: locale.catasto_categoria (C/1 → "C01 Negozi e botteghe")
+    notes: >-
+      Choosing NCEU adds sezione amministrativa, sezione urbana, classe and categoria. The
+      vault has no field for classe or sezione amministrativa.
+
+  - screen: Dati dell'esercizio di somministrazione
+    seen: 2026-10-27
+    fill:
+      tipologia di esercizio: business.descrizione_attivita (500 characters)
+    choose:
+      - Permanente (or Stagionale)
+      - not in a centro commerciale
+    ask:
+      - denominazione insegna (the name on the sign)
+      - superficie di somministrazione in m² (the seating area, not locale.superficie_mq)
+
+  - screen: Notifica avvio e inizio attività
+    seen: 2026-10-27
+    choose: Avvio contestuale alla data di notifica (or a later date)
+
+  - screen: Tipologia di attività (art. 6, Reg. CE 852/2004)
+    seen: 2026-10-27
+    choose: RISTORAZIONE → Ristorazione pubblica con somministrazione diretta
+
+  - screen: Dichiarazione relativa ai diritti di segreteria/istruttori
+    seen: 2026-10-27
+    choose: sono dovuti oneri; pagamento on line alla pagina successiva
+    fill:
+      importo: "120 (tabella 2026, S72: zona non tutelata con notifica sanitaria)"
+
+  - screen: The declarations
+    seen: 2026-10-27
+    tap: declare
+    notes: >-
+      Seven sections are the dichiarante's own statements and stay unticked until the person
+      ticks them: consapevolezza artt. 46–47; informativa privacy; requisiti di onorabilità
+      (TULPS artt. 11, 92, 131; antimafia art. 67) and professionali (art. 71 d.lgs. 59/2010,
+      own or a preposto's); altre dichiarazioni (norme urbanistiche e igienico-sanitarie,
+      sorvegliabilità D.M. 564/1992, impegno a comunicare variazioni); dichiarazioni art. 6
+      Reg. 852; tasse comunali; art. 75 DPR 445/2000. The portal lets you move on without
+      them and blocks at the attachments.
+
+  - screen: Pagamento degli oneri connessi alla pratica
+    seen: 2026-10-27
+    tap: pay
+    notes: >-
+      Tariff tables (Comune di Napoli; ASL, d.lgs. 32/2021) and a pagoPA button. STOP: the
+      button creates a payment position. PROSEGUI moves on without paying; the portal warns
+      that sending needs the payment.
+
+  - screen: Allega documenti
+    seen: 2026-10-27
+    tap: sign
+    upload:
+      - planimetria quotata dei locali (required; .p7m only)
+      - ricevuta della tariffa sanitaria forfettaria ASL (required; .p7m only)
+      - attestazione versamento oneri (optional; .p7m)
+      - allegati liberi (optional; .p7m or plain pdf, xml, dwf, svg, jpg); the relazione
+        tecnica asseverata goes here, having no slot of its own
+    notes: >-
+      Every named slot takes only CAdES-signed files (.p7m): a firma digitale, not a stamped
+      handwritten signature. PROSEGUI stops with "non è stata completata la compilazione dei
+      riquadri evidenziati dall'indicatore rosso" until the required files and red sections
+      are done. Max 9.77 MB per file, 572 MB per pratica.
+
+  - screen: Firma e invio
+    unseen: true
+    tap: sign, then send
+    notes: Not reached. Never in a rehearsal.
