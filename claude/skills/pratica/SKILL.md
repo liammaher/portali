@@ -258,6 +258,10 @@ In order of preference:
    stop before the final submit, show a summary and let the user submit or approve
    it explicitly.
 
+A portal channel's `use.ways` says which: `upload` takes the filled PDF (or other files), so
+fill it first; `web_form` is the portal's own form, so no PDF is filled for that route;
+both when the form asks for files; `read` only shows or downloads something.
+
 ### Filling with fill.py
 
 `~/.claude/skills/pratica/fill/fill.py` reads the library entry and layout, downloads the
@@ -349,7 +353,8 @@ python3 -I ~/.claude/skills/pratica/fill/fill.py route --library "$lib" \
 
 It lists the steps in order (`[you]` marks theirs), where to send or take it (with
 `--vault-dir` and the token saved for the draft, the desk of their own municipalità or ASL
-distretto for that service), how it is signed there, what to attach or bring, the proof to
+distretto for that service), on a portal what you do there (its own form or an upload), how
+it is signed there, what to attach or bring, the proof to
 keep, and the deadline. Pass it on in your own words, in one message, with the file paths.
 
 When the user asks where their offices are, run `fill.py offices --library "$lib"` with the
