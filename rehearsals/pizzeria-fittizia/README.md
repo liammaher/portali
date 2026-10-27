@@ -31,8 +31,24 @@ so this is web-form filling from vault facts, not a PDF layout.
 
 The screens, box by box: [`portal-map.yaml`](portal-map.yaml) (L0 until walked).
 
-Next in the chain, once this one holds: TARI non domestica by PEC (filled, never sent), then the
-insegna and the dehors.
+Next in the chain: TARI non domestica by PEC (below), then the insegna and the dehors.
+
+## The second pratica: TARI non domestica by PEC
+
+The Mod. 5 (library: `napoli/comune/tari-iscrizione-non-domestica`), the declaration a business
+makes within 90 days of occupying its premises; here from 1 November 2026. PEC is its preferred
+route and takes a handwritten signature scanned with an ID copy, so no firma digitale is needed.
+
+- **Filled** by `fill.py` from this business vault (the regression pilot `mod-5`): 12/12 checks,
+  every value back in its box, titolare ticked, the second premises row empty. The library got
+  the form's layout (pratiche-napoli, `layouts/.../tari-iscrizione-non-domestica/mod-5.json`) and
+  a mapping that matches the form (born abroad in one line, the tick boxes, what is optional).
+- **Not signed through the vault:** the sign gate signs only for a personal vault's owner, and a
+  business's titolare is a person in a business vault (pilot case `mod-5-sign`). So the titolare
+  prints, signs by hand and scans, or the gate learns to sign for a business's people.
+- **To send**, the person's: from the ditta's PEC to entrate.tari-tares-tarsu@pec.comune.napoli.it,
+  with the signed Mod. 5, a copy of the titolare's ID and the planimetria (measures and use of each
+  area); keep the PEC receipts. Then the F24 from the Comune's simulator. Never sent here.
 
 ## Lines we don't cross
 

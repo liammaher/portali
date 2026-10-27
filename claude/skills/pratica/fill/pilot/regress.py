@@ -3,11 +3,13 @@
 
   PRATICHE_NAPOLI_DIR=<pratiche-napoli checkout> regress.py [--keep DIR] [case ...]
 
-The pilots are four library forms: the TARI Mod. 1 (drawn on, with the
+The pilots are five library forms: the TARI Mod. 1 (drawn on, with the
 stato di famiglia's table), the ricorso al Prefetto (drawn on, two pages, tick
-boxes that are font characters), the CILA Allegato A (fillable fields) and
-the Regione Campania scheda anagrafica, in a business vault (signed by its
-legale rappresentante, a procuratore read by --party, typed |__| cells).
+boxes that are font characters), the CILA Allegato A (fillable fields), the
+Regione Campania scheda anagrafica, in a business vault (signed by its
+legale rappresentante, a procuratore read by --party, typed |__| cells), and
+the TARI Mod. 5 in the Pizzeria Fittizia rehearsal's business vault
+(rehearsals/pizzeria-fittizia/fixture.json).
 Each case changes a pilot's inputs (the made-up vault, the answers, the
 library entry, the library's layout, the form, who signs), runs fill.py
 against its own synthetic vault, and checks the exit code and that each
@@ -48,6 +50,8 @@ PILOTS = {
     "cila": ("napoli/comune/cila-lavori-edilizi", "allegato-a-programma-100", "cila-answers.json", None, "fixture.json"),
     "scheda": ("napoli/comune/cessazione-attivita-commerciale", "scheda-anagrafica", "scheda-answers.json", None,
                "business-fixture.json"),
+    "mod-5": ("napoli/comune/tari-iscrizione-non-domestica", "mod-5", "mod5-answers.json", None,
+              os.path.join("..", "..", "..", "..", "..", "rehearsals", "pizzeria-fittizia", "fixture.json")),
 }
 ID, FORM = PILOTS["mod-1"][:2]
 SLUG = "tari-iscrizione-uso-abitativo-2026"
@@ -455,6 +459,14 @@ CASES = {
                ["ok   rossi signs as titolare or legale rappresentante", "ok   every layout box sits on the form's own blank",
                 "ok   the form is ready", "wrote: Rossi", "wrote: R", "wrote: 0", "wrote: Italia", "wrote: X", "wrote: 1",
                 "wrote: 6", "wrote: Pizzeria Esempio SRL", "wrote: Via dei Tribunali", "page 2: "]),
+    "mod-5": ("the TARI Mod. 5 of the Pizzeria Fittizia rehearsal, signed by its titolare (drawn on, |__| cells)",
+              {"pilot": "mod-5", "for": "gennaro"}, 0,
+              ["ok   gennaro signs as titolare or legale rappresentante", "ok   every layout box sits on the form's own blank",
+               "ok   the form is ready", "wrote: Fittizio Gennaro", "wrote: Viale Augusto, 74", "wrote: X",
+               "wrote: 56.10.11", "wrote: negozio"]),
+    "mod-5-sign": ("a business's titolare can't sign through the vault yet: the sign gate is the personal vault owner's",
+                   {"pilot": "mod-5", "for": "gennaro", "sign": True, "no_reply": True}, 1,
+                   ["FAIL the signer is the vault's owner"]),
     "scheda-no-signer": ("a business vault's form without --for: refused, naming who can sign", {"pilot": "scheda"}, 1,
                          ["pass --for to needs and run, one of rossi"]),
     "scheda-socio-signs": ("a socio who isn't legale rappresentante can't sign for the business",
