@@ -160,8 +160,10 @@ its open procedures live in `pratiche.<slug>_<campo>` (see `/vault/schema`).
 - To see who is there: `vault_household` (MCP), or `pvault person list` (Touch ID
   prompt "read everyone's famiglia ... and identity fields ..."). It gives each member's
   slug, relazione, `relazione_label` (moglie, figlia: the word forms use), age, `minor`.
-- Adding: the user runs `pvault person add <slug> --relazione <r> --nome <N>` (or the
-  "Aggiungi persona" form in `pvault ui`). Removing (`pvault person remove`) and
+- Adding: the user runs `pvault person add <slug> --relazione <r> --nome <N>
+  --nome-pubblico <P>` (or the "Aggiungi persona" form in `pvault ui`). `--nome-pubblico`
+  is `identity.display_name` (public): the name agents use to ask whom a form is for;
+  the user's own is `pvault set identity.display_name <P>`. Removing (`pvault person remove`) and
   `pvault person migrate` (old `nucleo_familiare.membro<N>_*` fields) are theirs to run.
 - For a minor, procedures need both parents in `genitori` (CIE valid for travel, SPID
   minori, INPS delega, Assegno Unico). A parent who isn't the user's spouse can be a

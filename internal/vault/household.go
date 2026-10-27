@@ -19,11 +19,13 @@ import (
 // business vault someone with a ruolo) as far as the caller may see: derived
 // values appear only when the fields they come from are visible.
 type MemberInfo struct {
-	Slug      string            `json:"slug"`
-	Famiglia  map[string]string `json:"famiglia,omitempty"` // famiglia fields by name
-	Ruolo     map[string]string `json:"ruolo,omitempty"`    // ruolo fields by name (business vaults)
-	FirstName string            `json:"first_name,omitempty"`
-	LastName  string            `json:"last_name,omitempty"`
+	Slug string `json:"slug"`
+	// DisplayName is identity.display_name: what agents call the person.
+	DisplayName string            `json:"display_name,omitempty"`
+	Famiglia    map[string]string `json:"famiglia,omitempty"` // famiglia fields by name
+	Ruolo       map[string]string `json:"ruolo,omitempty"`    // ruolo fields by name (business vaults)
+	FirstName   string            `json:"first_name,omitempty"`
+	LastName    string            `json:"last_name,omitempty"`
 	// Denominazione is a company's name (business.denominazione), e.g. a
 	// client that is an SRL.
 	Denominazione string `json:"denominazione,omitempty"`
@@ -39,23 +41,30 @@ type MemberInfo struct {
 }
 
 // Household lists the vault's other people: family members, or in a
-// business vault its people with their ruolo.
+// business vault its people with their ruolo; and the owner's display name,
+// so an agent can ask whom a form is for.
 type Household struct {
+	Owner              *OwnerInfo   `json:"owner,omitempty"`
 	IntestatarioScheda string       `json:"intestatario_scheda,omitempty"`
 	Members            []MemberInfo `json:"members"`
+}
+
+// OwnerInfo is the vault owner ("io") as the household shows them.
+type OwnerInfo struct {
+	DisplayName string `json:"display_name"`
 }
 
 // householdField reports the fields Household decrypts.
 func householdField(id string) bool {
 	member, local := SplitPerson(id)
 	if member == "" {
-		return local == "famiglia.intestatario_scheda"
+		return local == "famiglia.intestatario_scheda" || local == "identity.display_name"
 	}
 	if strings.HasPrefix(local, "famiglia.") || strings.HasPrefix(local, "ruolo.") {
 		return true
 	}
 	switch local {
-	case "identity.first_name", "identity.last_name", "identity.date_of_birth", "identity.sex", "business.denominazione":
+	case "identity.first_name", "identity.last_name", "identity.display_name", "identity.date_of_birth", "identity.sex", "business.denominazione":
 		return true
 	}
 	return false
@@ -123,7 +132,11 @@ func (v *Vault) Household(allow FieldFilter, everyone bool, now time.Time) (*Hou
 				}
 			}
 			if slug == "" {
-				h.IntestatarioScheda = value
+				if local == "identity.display_name" {
+					h.Owner = &OwnerInfo{DisplayName: value}
+				} else {
+					h.IntestatarioScheda = value
+				}
 				continue
 			}
 			if values[slug] == nil {
@@ -152,6 +165,7 @@ func (v *Vault) Household(allow FieldFilter, everyone bool, now time.Time) (*Hou
 				m.Ruolo[name] = value
 			}
 		}
+		m.DisplayName = vals["identity.display_name"]
 		m.FirstName, m.LastName = vals["identity.first_name"], vals["identity.last_name"]
 		m.Denominazione = vals["business.denominazione"]
 		if dob, ok := vals["identity.date_of_birth"]; ok {

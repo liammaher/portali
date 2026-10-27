@@ -29,9 +29,10 @@ before(async () => {
     }
     if (req.url === "/vault/members") {
       res.end(JSON.stringify({
+        owner: { display_name: "Liam" },
         intestatario_scheda: "io",
         members: [
-          { slug: "leo", famiglia: { relazione: "figlio" }, first_name: "Leo", age: 6, minor: true, anpr_relazione: "3", relazione_label: "figlio", fields: 5 },
+          { slug: "leo", display_name: "Leo", famiglia: { relazione: "figlio" }, first_name: "Leo", age: 6, minor: true, anpr_relazione: "3", relazione_label: "figlio", fields: 5 },
           { slug: "giulia", famiglia: { relazione: "coniuge" }, first_name: "Giulia", fields: 2 },
         ],
       }));
@@ -67,6 +68,8 @@ const text = (r: unknown) => ((r as { content: { text: string }[] }).content[0]?
 test("vault_household passes on what the vault's scope allows", async () => {
   const out = JSON.parse(text(await client.callTool({ name: "vault_household", arguments: {} })));
   assert.deepEqual(out.members.map((m: { slug: string }) => m.slug), ["leo", "giulia"]);
+  assert.equal(out.owner.display_name, "Liam");
+  assert.equal(out.members[0].display_name, "Leo");
 });
 
 test("refuses to start with VAULT_SCOPE set", async () => {

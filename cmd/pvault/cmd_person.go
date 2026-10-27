@@ -19,8 +19,9 @@ const personUsage = `usage:
   pvault person list
   pvault person show <slug>
   pvault person add <slug> --relazione <relazione> [--nome N] [--cognome C] [--codice-fiscale CF]
-                    [--data-nascita YYYY-MM-DD] [--sesso M|F]
-      e.g. pvault person add giulia --relazione moglie --nome Giulia
+                    [--data-nascita YYYY-MM-DD] [--sesso M|F] [--nome-pubblico P]
+      e.g. pvault person add giulia --relazione moglie --nome Giulia --nome-pubblico Giulia
+      --nome-pubblico is identity.display_name, the name agents may see (public).
   pvault --vault <name> person add <slug> --ruolo <ruolo> [--nome N] [--cognome C] [--denominazione D] ...
       in a business vault, e.g. pvault --vault studio person add rossi --ruolo cliente --nome Mario
   pvault person remove <slug>
@@ -235,6 +236,7 @@ var personAddFlags = []struct{ flag, field string }{
 	{"--codice-fiscale", "identity.codice_fiscale"},
 	{"--data-nascita", "identity.date_of_birth"},
 	{"--sesso", "identity.sex"},
+	{"--nome-pubblico", "identity.display_name"},
 }
 
 // personAddFields reads person add's options into the fields to write, and
