@@ -62,9 +62,10 @@ internal/
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
-  pratica/fill/      pilot: fills a library form from the vault at the library's layout
-                     (fill.py, pilot/; --sign files a signing request); a real vault only
-                     over its socket, as the MCP server
+  pratica/fill/      fills a library form from the vault at the library's layout, for the
+                     owner or --for a person (fill.py; --sign files a signing request;
+                     pilot/ has the pilot forms); a real vault only over its socket, as
+                     the MCP server
 ```
 
 ## Security Model
@@ -219,6 +220,9 @@ the page never copies a rule.
   such slugs; a field in scope reads as written) and never create one (`checkPersonExists`:
   a write under `*:` is refused for a slug that doesn't exist, so it can tell whether a
   slug exists, only within what it may write); public status counts only the owner's data.
+- `identity.display_name` (`public`) is what agents call a person; the household view
+  gives it, the owner's as `owner`, so `*:identity.display_name` is enough to ask whom a
+  form is for.
 - A closed pratica may keep naming a removed person; reopening it, by writing its stato
   or deleting it, checks `persona` again (`checkPraticaPersona`, whatever the caller reads).
 - Old JSON and audit names stay for compatibility: `/vault/members`, `member`, `members`,

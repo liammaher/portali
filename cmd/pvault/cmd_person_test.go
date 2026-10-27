@@ -9,7 +9,7 @@ import (
 )
 
 func TestPersonAddFields(t *testing.T) {
-	fields, err := personAddFields("giulia", vault.KindPersona, []string{"--nome", "Giulia", "--relazione", "moglie", "--sesso", "F"})
+	fields, err := personAddFields("giulia", vault.KindPersona, []string{"--nome", "Giulia", "--relazione", "moglie", "--sesso", "F", "--nome-pubblico", "Giulia"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -18,7 +18,7 @@ func TestPersonAddFields(t *testing.T) {
 		got = append(got, f[0]+"="+f[1])
 	}
 	// relazione first, so the member exists before the rest is written.
-	if want := "giulia:famiglia.relazione=moglie,giulia:identity.first_name=Giulia,giulia:identity.sex=F"; strings.Join(got, ",") != want {
+	if want := "giulia:famiglia.relazione=moglie,giulia:identity.first_name=Giulia,giulia:identity.sex=F,giulia:identity.display_name=Giulia"; strings.Join(got, ",") != want {
 		t.Fatalf("fields = %v, want %s", got, want)
 	}
 	for _, bad := range [][]string{{"--nome", "Giulia"}, {"--relazione"}, {"--relazione", "x", "--relazione", "y"}, {"--eta", "3"},

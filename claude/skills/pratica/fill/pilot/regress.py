@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""Cases the Mod. 1 pilot must get right, good and bad.
+"""Cases the fill pilots must get right, good and bad.
 
   PRATICHE_NAPOLI_DIR=<pratiche-napoli checkout> regress.py [--keep DIR] [case ...]
 
-Each case changes the pilot's inputs (the made-up vault, the answers, the
-library entry, the library's layout, the form), runs fill.py against its own synthetic
-vault, and checks the exit code and that each expected line is in the output.
-The form is downloaded once from the entry's URL. --keep copies each case's
-filled.pdf, page-1.png and report.json to DIR/<case>/.
+The pilots are three library forms: the TARI Mod. 1 (drawn on, with the
+stato di famiglia's table), the ricorso al Prefetto (drawn on, two pages, tick
+boxes that are font characters) and the CILA Allegato A (fillable fields).
+Each case changes a pilot's inputs (the made-up vault, the answers, the
+library entry, the library's layout, the form, who signs), runs fill.py
+against its own synthetic vault, and checks the exit code and that each
+expected line is in the output, which ends with a "wrote: <text>" line for
+each value written. Each form is downloaded once from its entry's URL. --keep
+copies each case's filled.pdf, page PNGs and report.json to DIR/<case>/.
 """
 
 import copy
@@ -25,8 +29,18 @@ import urllib.request
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
 FILL = os.path.join(HERE, "..", "fill.py")
-ID, FORM = "napoli/comune/tari-iscrizione-uso-abitativo", "mod-1"
+# name: the procedure, its form, the answers to its asks, and the ente's reply, if one is played
+PILOTS = {
+    "mod-1": ("napoli/comune/tari-iscrizione-uso-abitativo", "mod-1", "answers.json", "reply.json"),
+    "ricorso": ("napoli/comune/verbale-pagamento-ricorso", "ricorso-prefetto", "ricorso-answers.json", None),
+    "cila": ("napoli/comune/cila-lavori-edilizi", "allegato-a-programma-100", "cila-answers.json", None),
+}
+ID, FORM = PILOTS["mod-1"][:2]
 SLUG = "tari-iscrizione-uso-abitativo-2026"
+RICORSO_SLUG = "verbale-pagamento-ricorso-2026"
+LR = "in proprio / in qualità di Legale Rappresentante di"
+PENDENZE = ("Dichiara di non avere pendenze verso il Comune di Napoli per IMU, Tassa rifiuti, Imposta di soggiorno, "
+            "Canone di occupazione suolo pubblico (fino al 2020) e Canone patrimoniale (dal 2021)")
 
 
 def load(path):
@@ -54,11 +68,13 @@ def setting(changes):
     return edit
 
 
-def row(name, **changes):
+def row(name, choice=None, **changes):
+    """An entry change: the row labelled name in any of its forms, or with
+    choice, that box of its choices."""
     def edit(entry):
-        for r in next(f for f in entry["forms"] if f["id"] == FORM)["fields"]:
+        for r in (r for f in entry["forms"] for r in f.get("fields", [])):
             if r["label"] == name:
-                r.update(changes)
+                (next(c for c in r["choices"] if c["box"] == choice) if choice else r).update(changes)
     return edit
 
 
@@ -83,6 +99,19 @@ def people(n):
                  [f"{s}:identity.date_of_birth", "2015-06-10"], [f"{s}:identity.birth_comune", "Napoli"],
                  [f"{s}:identity.codice_fiscale", "RSSLCU15H10F839Q"]]
     return with_fields(*rows)
+
+
+GIULIA_HOME = [["giulia:residenza.indirizzo", "Via Chiaia"], ["giulia:residenza.civico", "12"],
+               ["giulia:residenza.comune", "Napoli"], ["giulia:residenza.provincia", "NA"],
+               ["giulia:identity.phone", "+39 333 111 1111"]]
+LONG_MOTIVI = " ".join(["Il veicolo era regolarmente parcheggiato nell'area di sosta a pagamento con ticket valido, "
+                        "esposto sul cruscotto e allegato in copia, come risulta dalla ricevuta del parcometro."] * 9)
+def deadline_from(field, records):
+    """An entry change: a deadline counted from field, and records the ente's reply fills."""
+    def edit(entry):
+        entry.setdefault("deadline", {}).setdefault("rules", []).append({"compute": {"from": field, "days": 0}})
+        entry["records"] = [{"field": f, "from": "la risposta"} for f in records]
+    return edit
 
 
 CONVIVENTI = "Conviventi (nominativo, luogo e data di nascita, rapporto, codice fiscale)"
@@ -185,7 +214,8 @@ def review_signing(server, out, layout):
 # name: (description, changes, expected exit, lines the output must contain)
 CASES = {
     "baseline": ("the pilot as it is", {}, 0, ["ok   the form is ready", "opens pratiche.",
-                                                "the deadline shows in expiring: 2026-11-30", "a closed pratica leaves expiring"]),
+                                                "the deadline shows in expiring: 2026-11-30", "a closed pratica leaves expiring",
+                                                "wrote: 01/01/1980", "wrote: Toledo", "wrote: Toledo, 100, int. 5, piano 3"]),
     "sign": ("--sign files a request; the user's review stamps the signature and date in their boxes only",
              {"sign": True}, 0,
              ["ok   the form is ready", "is waiting for the user", "ok   the report names the signing request",
@@ -302,6 +332,61 @@ CASES = {
                     {"entry": row("Sub.", map={"dirct": "abitazione.catasto_subalterno"})}, 1, ["unknown map"]),
     "unanswered": ("no answers to the ask rows (an empty answers map replaces them)", {"answers": {}}, 1,
                    ["'Eventuali note' is answered"]),
+    "mod1-for-giulia": ("Mod. 1 for someone else: its table is the intestatario's, so --for is refused",
+                        {"for": "giulia"}, 1, ["signed by the intestatario"]),
+
+    "ricorso": ("the ricorso al Prefetto as it is: two pages, its tick boxes font characters", {"pilot": "ricorso"}, 0,
+                ["ok   every layout box sits on the form's own blank", "ok   the form is ready", f"opens pratiche.{RICORSO_SLUG}_titolo",
+                 "wrote: Rossi Mario", "wrote: 14/09/2026", "wrote: 01/01/1980", "wrote: X"]),
+    "ricorso-long-motivi": ("motivi longer than page 1's lines run onto page 2", {"pilot": "ricorso", "answers": {
+        "propone RICORSO per i seguenti motivi": LONG_MOTIVI}}, 0, ["values read back in their boxes", "page 2: "]),
+    "ricorso-for-giulia": ("filed by Giulia (--for giulia): her name, birth and home, and the pratica is hers",
+                           {"pilot": "ricorso", "for": "giulia", "fixture": with_fields(*GIULIA_HOME)}, 0,
+                           ["for giulia", "ok   giulia is a person in the vault", "wrote: Bianchi Giulia", "wrote: Londra",
+                            "wrote: 15/03/1982", "wrote: Chiaia", f"opens pratiche.{RICORSO_SLUG}_persona"]),
+    "ricorso-for-giulia-gaps": ("filed by Giulia, who has no residenza in the vault: asked, never the owner's",
+                                {"pilot": "ricorso", "for": "giulia"}, 1,
+                                ["giulia:residenza.comune not in the vault", "giulia:identity.phone not in the vault"]),
+    "ricorso-box-missing": ("a tick box moved off the form's box character", {"pilot": "ricorso", "layout": box(
+        "in qualità di conducente / proprietario", choices={"conducente": [100, 391.0, 106, 399.0], "proprietario": [176.5, 391.0, 182.5, 399.0]})},
+                            1, ["no checkbox at [100, 391.0, 106, 399.0]"]),
+    "ricorso-no-page": ("a continuation line on a page the form doesn't have: reported, not a crash", {"pilot": "ricorso", "layout": box(
+        "propone RICORSO per i seguenti motivi", continuation=[{"page": 3, "rect": [48.3, 58.3, 540.3, 69.3]}])}, 1,
+                        ["on page 3, which the form doesn't have", "page 3: the form has 2 pages", "checks passed"]),
+    "ricorso-for-giulia-deadline": ("filed by Giulia: a deadline from her own date, and the ente's records saved as hers",
+                                    {"pilot": "ricorso", "for": "giulia", "needs_from_entry": True,
+                                     "entry": deadline_from("cie.data_scadenza", ["cie.numero"]),
+                                     "fixture": with_fields(*GIULIA_HOME, ["cie.data_scadenza", "2028-01-01"],
+                                                            ["giulia:cie.data_scadenza", "2027-03-01"]),
+                                     "reply": {"records": {"cie.numero": "CA12345AB"}}}, 0,
+                                    ["the deadline shows in expiring: 2027-03-01", "ok   track sets giulia:cie.numero",
+                                     "a closed pratica leaves expiring"]),
+    "ricorso-for-giulia-value": ("filed by Giulia, her phone given in answers.json unprefixed: it is hers",
+                                 {"pilot": "ricorso", "for": "giulia", "fixture": with_fields(*GIULIA_HOME[:4]),
+                                  "values": {"identity.phone": "+39 333 222 2222"}}, 0,
+                                 ["ok   giulia:identity.phone from answers.json, not the vault: +39 333 222 2222",
+                                  "wrote: +39 333 222 2222"]),
+    "ricorso-not-address": ("a box after a printed Via that isn't an address keeps its first word",
+                            {"pilot": "ricorso", "entry": row("Via", map={"ask": "Via?"}), "answers": {"Via": "Via Crucis 3"}}, 0,
+                            ["wrote: Via Crucis 3"]),
+
+    "cila": ("the CILA Allegato A as it is: its own fillable fields, in proprio", {"pilot": "cila"}, 0,
+             ["ok   every layout box sits on the form's own blank", "ok   the form is ready", "wrote: Rossi Mario",
+              "wrote: 01/01/1980", "wrote: X", "wrote: Napoli, 27/10/2026"]),
+    "cila-legale-rappresentante": ("as legale rappresentante: the business's name and codice fiscale are needed",
+                                   {"pilot": "cila", "answers": {LR: "legale rappresentante"}}, 1,
+                                   ["business.denominazione not in the vault", "business.codice_fiscale not in the vault"]),
+    "cila-unknown-answer": ("an answer that ticks neither in proprio nor legale rappresentante: reported, not left blank",
+                            {"pilot": "cila", "answers": {LR: "legale rapp."}}, 1, ["ticks none of its boxes"]),
+    "cila-write-widget": ("a box with write_value whose text goes in one of the form's fillable fields",
+                          {"pilot": "cila", "entry": row(PENDENZE, choice="dichiara", write_value=True),
+                           "layout": box(PENDENZE, write={"dichiara": "Text Box 1_10"})}, 0,
+                          ["ok   the form is ready", "wrote: sì"]),
+    "cila-wrong-widget": ("a box names a fillable field the form doesn't have", {"pilot": "cila", "layout": box("C.F.", widget="Text Box 99")}, 1,
+                          ["no fillable field 'Text Box 99' on page 1"]),
+    "cila-drawn-over-field": ("a box drawn over one of the form's fillable fields instead of naming it",
+                              {"pilot": "cila", "layout": lambda l: l["boxes"].__setitem__(1, {"label": "C.F.", "rect": [80, 152, 228, 167]})},
+                              1, ["covers the fillable field 'Text Box 1_2'"]),
 }
 
 
@@ -338,6 +423,31 @@ def token_commands():
     return bad
 
 
+def unit_checks(ricorso_entry):
+    """What a case can't reach: an address box after text fill.py itself
+    wrote, and needs finding the vault schema through a symlinked skill."""
+    sys.path.insert(0, os.path.dirname(FILL))
+    sys.dont_write_bytecode = True
+    import fill
+    import fitz
+    bad = []
+    doc = fitz.open()
+    page = doc.new_page()
+    page.insert_text((20, 100), "Indirizzo")
+    pen = fill.Pen(fitz, doc, 9)
+    pen.put([70, 90, 100, 102], "Via")
+    if (got := pen.address(1, [110, 90, 400, 102], "Via Roma 3")) != "Via Roma 3":
+        bad.append(f"after our own 'Via', an address became {got!r}")
+    with tempfile.TemporaryDirectory() as d:
+        os.symlink(os.path.abspath(FILL), os.path.join(d, "fill.py"))
+        got = subprocess.run([sys.executable, "-I", os.path.join(d, "fill.py"), "needs", "--entry", ricorso_entry,
+                              "--form", "ricorso-prefetto", "--for", "giulia", "--vault-dir", os.path.join(d, "none")],
+                             capture_output=True, text=True)
+        if got.returncode != 0 or "giulia:identity.*" not in got.stdout:
+            bad.append(f"needs through a symlink: {got.stdout[-200:]}{got.stderr[-300:]}")
+    return bad
+
+
 def main():
     library =os.environ.get("PRATICHE_NAPOLI_DIR") or sys.exit("set PRATICHE_NAPOLI_DIR to a pratiche-napoli checkout")
     args = sys.argv[1:]
@@ -346,53 +456,81 @@ def main():
         keep, args = args[1], args[2:]
     names = args or list(CASES)
     base = tempfile.mkdtemp()
+    pilots = {}
+
+    def pilot(name):
+        """The pilot's entry, form, layout and pdf, fetched once."""
+        if name not in pilots:
+            pid, form = PILOTS[name][:2]
+            entry_json = subprocess.run(
+                ["node", "--input-type=module", "-e",
+                 'import {parse} from "yaml"; import {readFileSync} from "node:fs";'
+                 'process.stdout.write(JSON.stringify(parse(readFileSync(process.argv[1],"utf8"),{version:"1.2"})))',
+                 f"procedures/{pid}.yaml"], cwd=library, check=True, capture_output=True, text=True).stdout
+            entry = json.loads(entry_json)
+            url = next(f["url"] for f in entry["forms"] if f["id"] == form)
+            if name == "mod-1" and os.environ.get("PILOT_FORM_PDF"):
+                # A copy already on disk, e.g. offline; fill.py still checks its sha256.
+                with open(os.environ["PILOT_FORM_PDF"], "rb") as f:
+                    pdf = f.read()
+            else:
+                with urllib.request.urlopen(url, timeout=60) as resp:
+                    pdf = resp.read()
+            path = os.path.join(base, f"{name}-entry.json")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(entry_json)
+            pilots[name] = {"entry": entry, "entry_path": path, "pdf": pdf,
+                            "layout": load(os.path.join(library, "layouts", pid, form + ".json"))}
+        return pilots[name]
+
     try:
-        entry_json = subprocess.run(
-            ["node", "--input-type=module", "-e",
-             'import {parse} from "yaml"; import {readFileSync} from "node:fs";'
-             'process.stdout.write(JSON.stringify(parse(readFileSync(process.argv[1],"utf8"),{version:"1.2"})))',
-             f"procedures/{ID}.yaml"], cwd=library, check=True, capture_output=True, text=True).stdout
-        entry = json.loads(entry_json)
-        url = next(f["url"] for f in entry["forms"] if f["id"] == FORM)
-        if os.environ.get("PILOT_FORM_PDF"):
-            # A copy already on disk, e.g. offline; fill.py still checks its sha256.
-            with open(os.environ["PILOT_FORM_PDF"], "rb") as f:
-                pdf = f.read()
-        else:
-            with urllib.request.urlopen(url, timeout=60) as resp:
-                pdf = resp.read()
-        # Every case gets the unchanged entry's tokens: an entry fill.py
-        # refuses must be refused by run, which is what a case checks.
-        with open(os.path.join(base, "entry.json"), "w", encoding="utf-8") as f:
-            f.write(entry_json)
-        needs = subprocess.run([sys.executable, "-I", FILL, "needs", "--entry", os.path.join(base, "entry.json"),
-                                "--form", FORM], check=True, capture_output=True, text=True).stdout
-        layout = load(os.path.join(library, "layouts", ID, FORM + ".json"))
         failed = []
         if not args:
             bad = token_commands()
             print(f"{'ok  ' if not bad else 'FAIL'} token-commands: the pvault command needs prints for each vault"
                   + "".join("\n  " + b for b in bad))
             failed += ["token-commands"] if bad else []
+            bad = unit_checks(pilot("ricorso")["entry_path"])
+            print(f"{'ok  ' if not bad else 'FAIL'} units: an address after our own text; needs through a symlinked skill"
+                  + "".join("\n  " + b for b in bad))
+            failed += ["units"] if bad else []
         for name in names:
             description, changes, want_exit, want_lines = CASES[name]
-            ok, detail = case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines)
+            ok, detail = case(base, name, pilot(changes.get("pilot", "mod-1")), changes, want_exit, want_lines)
             print(f"{'ok  ' if ok else 'FAIL'} {name}: {description}{'' if ok else chr(10) + detail}")
-            if keep:
+            if keep and os.path.isdir(os.path.join(base, name, "out")):
                 shutil.copytree(os.path.join(base, name, "out"), os.path.join(keep, name), dirs_exist_ok=True)
             if not ok:
                 failed.append(name)
-        total = len(names) + (0 if args else 1)
+        total = len(names) + (0 if args else 2)
         print(f"{total - len(failed)}/{total} cases passed")
         return 1 if failed else 0
     finally:
         shutil.rmtree(base, ignore_errors=True)
 
 
-def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
+def case(base, name, p, changes, want_exit, want_lines):
+    pid, form, answers_file, reply = PILOTS[changes.get("pilot", "mod-1")]
+    entry, layout, pdf = p["entry"], p["layout"], p["pdf"]
+    signer = ["--for", changes["for"]] if "for" in changes else []
     work = os.path.join(base, name)
     out = os.path.join(work, "out")
     os.makedirs(out)
+    # The unchanged entry's tokens: an entry fill.py refuses must be refused
+    # by run, which is what a case checks. needs refusing is the case's output.
+    entry_path = p["entry_path"]
+    if changes.get("needs_from_entry"):
+        # Tokens for what the changed entry reads (a deadline, records).
+        changed = copy.deepcopy(entry)
+        changes["entry"](changed)
+        entry_path = os.path.join(work + "-needs.json")
+        with open(entry_path, "w", encoding="utf-8") as f:
+            json.dump(changed, f, ensure_ascii=False)
+    got = subprocess.run([sys.executable, "-I", FILL, "needs", "--entry", entry_path, "--form", form] + signer,
+                         capture_output=True, text=True)
+    if got.returncode != 0:
+        return result(got.returncode, got.stdout + got.stderr, out, want_exit, want_lines)
+    needs = got.stdout
     fixture = load(os.path.join(HERE, "fixture.json"))
     if "fixture" in changes:
         changes["fixture"](fixture)
@@ -402,7 +540,7 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
     layout = copy.deepcopy(layout)
     if "layout" in changes:
         changes["layout"](layout)
-    answers = load(os.path.join(HERE, "answers.json"))
+    answers = load(os.path.join(HERE, answers_file))
     answers["answers"] = {} if changes.get("answers") == {} else {**answers["answers"], **changes.get("answers", {})}
     if "values" in changes:
         answers["values"] = changes["values"]
@@ -414,7 +552,7 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
         # The prepare token also files signing requests, as it is asked for
         # when the layout has a signature box.
         needs = subprocess.run([sys.executable, "-I", FILL, "needs", "--entry", os.path.join(work, "entry.json"),
-                                "--layout", os.path.join(work, "layout.json"), "--form", FORM],
+                                "--layout", os.path.join(work, "layout.json"), "--form", form] + signer,
                                check=True, capture_output=True, text=True).stdout
     with open(os.path.join(work, "form.pdf"), "wb") as f:
         f.write(pdf + changes.get("pdf", b""))
@@ -431,14 +569,14 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
                     return False, "harness: " + f.read()[-800:]
             time.sleep(0.1)
         server = load(os.path.join(work, "server.json"))
-        common = [sys.executable, "-I", FILL, "run", "--entry", os.path.join(work, "entry.json"), "--form", FORM,
+        common = [sys.executable, "-I", FILL, "run", "--entry", os.path.join(work, "entry.json"), "--form", form,
                   "--layout", os.path.join(work, "layout.json"), "--pdf", os.path.join(work, "form.pdf"), "--out", out,
-                  "--answers", os.path.join(work, "answers.json")]
+                  "--answers", os.path.join(work, "answers.json")] + signer
         if changes.get("library"):
             # The form a past run left in the output folder is used, not fetched again.
             shutil.copy(os.path.join(work, "form.pdf"), os.path.join(out, "form.pdf"))
             common = [sys.executable, "-I", FILL, "run", "--library", os.environ["PRATICHE_NAPOLI_DIR"],
-                      "--procedure", ID, "--form", FORM, "--out", out, "--answers", os.path.join(work, "answers.json")]
+                      "--procedure", pid, "--form", form, "--out", out, "--answers", os.path.join(work, "answers.json")] + signer
         if changes.get("socket"):
             # As on a real vault: its folder, the token from the environment, a draft.
             if "chmod_run" in changes:
@@ -447,8 +585,12 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
                                  env={**os.environ, "VAULT_TOKEN": server["tokens"]["prepare"]})
             run.stdout += written_pratiche(server)
         else:
-            args = ["--server", os.path.join(work, "server.json")]
-            args += [] if changes.get("no_reply") else ["--reply", os.path.join(HERE, "reply.json")]
+            if "reply" in changes:
+                reply = os.path.join(work, "reply.json")
+                with open(reply, "w", encoding="utf-8") as f:
+                    json.dump(changes["reply"], f)
+            played = ["--reply", os.path.join(HERE, reply)] if reply and not changes.get("no_reply") else []
+            args = ["--server", os.path.join(work, "server.json")] + played
             args += ["--sign"] if changes.get("sign") else []
             args += ["--channel", changes["channel"]] if changes.get("channel") else []
             run = subprocess.run(common + args, capture_output=True, text=True)
@@ -463,10 +605,23 @@ def case(base, name, entry, layout, pdf, needs, changes, want_exit, want_lines):
         open(os.path.join(work, "done"), "w").close()
         harness.wait()
         log.close()
-    output = run.stdout + run.stderr
+    return result(run.returncode, run.stdout + run.stderr, out, want_exit, want_lines)
+
+
+def result(code, output, out, want_exit, want_lines):
+    """The case's verdict: its exit code, and each wanted line in the output
+    or among the values the report says were written."""
+    try:
+        report = load(os.path.join(out, "report.json"))
+        output += "".join(f"\nwrote: {r['expected']}" for r in report["read_back"])
+        output += "".join(f"\npage {n}: " for n in sorted({r.get("page", 1) for r in report["read_back"]}))
+    except FileNotFoundError:
+        pass
     lacking = [line for line in want_lines if line not in output]
-    if run.returncode != want_exit or lacking:
-        return False, f"  exit {run.returncode} (want {want_exit}); lacking {lacking}\n" + "\n".join("  | " + l for l in output.splitlines()[-25:])
+    if "Traceback (most recent call last)" in output:
+        lacking.append("no traceback")
+    if code != want_exit or lacking:
+        return False, f"  exit {code} (want {want_exit}); lacking {lacking}\n" + "\n".join("  | " + l for l in output.splitlines()[-25:])
     return True, ""
 
 

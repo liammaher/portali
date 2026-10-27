@@ -73,7 +73,9 @@ server.registerTool(
   "vault_household",
   {
     description:
-      "List the other people kept in the vault, each with their slug (their field IDs are <slug>:<category>.<field>, e.g. leo:identity.codice_fiscale). " +
+      "List the other people kept in the vault, each with their slug (their field IDs are <slug>:<category>.<field>, e.g. leo:identity.codice_fiscale) " +
+      "and display_name (identity.display_name, the name to call them by), plus owner.display_name for the user. " +
+      "Before filling a form for someone other than the user, ask whom it is for by display name. " +
       "In a personal vault (vault_status kind persona) they are the user's family: famiglia fields (relazione to the user, stato_famiglia si/no, " +
       "a_carico_percentuale, genitori, rappresentanza), name, age and minor flag, the ANPR relazione code and the word forms use (moglie, figlia), " +
       "and who is intestatario_scheda (io = the user). In a business vault (kind impresa; io = the business) they are the business's people: " +

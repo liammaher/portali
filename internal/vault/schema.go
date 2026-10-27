@@ -101,7 +101,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "14",
+	Version: "15",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -111,6 +111,7 @@ var RecommendedSchema = Schema{
 				{ID: "identity.first_name", Description: "First/given name", Sensitivity: "standard"},
 				{ID: "identity.last_name", Description: "Last/family name", Sensitivity: "standard"},
 				{ID: "identity.full_name", Description: "Full display name", Sensitivity: "standard"},
+				{ID: "identity.display_name", Description: "The name agents see for this person, e.g. Giulia or Mamma; public, so a token scoped to *:identity.display_name can ask who a pratica is for without reading anything else", Sensitivity: "public"},
 				{ID: "identity.email", Description: "Primary email address", Sensitivity: "standard"},
 				{ID: "identity.phone", Description: "Mobile number with country code (e.g. +39 333 123 4567)", Sensitivity: "sensitive"},
 				{ID: "identity.pec", Description: "Personal PEC (posta elettronica certificata) address", Sensitivity: "standard"},

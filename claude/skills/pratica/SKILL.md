@@ -156,7 +156,13 @@ names who signs. In it, unprefixed fields of a person's own categories (`/vault/
 categories with `subject` persona and `scope` person: `identity`, `residenza`, `cie`,
 `permesso_soggiorno`, ...) and `ruolo.*`, in `forms` and in `records`, are the signer's:
 
-- default vault: the user, as always; their role is `business.qualita_dichiarante`.
+- default vault: the user, unless the form is for someone else in the household (their
+  own fine, their CIE): then that person signs, and their fields are read as
+  `<slug>:identity.*`. Don't guess: when it isn't clearly the user, ask whom it is for
+  by name, from `vault_household` (`owner.display_name`, each member's `display_name`,
+  which a token scoped to `*:identity.display_name` can read without seeing anything
+  else; with no display name, their first name or slug). The user's role is
+  `business.qualita_dichiarante`.
 - business vault: the person whose `ruolo.tipo` includes one of the listed roles
   (several: ask who signs), so `identity.last_name` is read as `<slug>:identity.last_name`.
   "In qualità di" is `fallback: [business.qualita_dichiarante, ruolo.tipo]`: write the
@@ -242,11 +248,14 @@ In order of preference:
 
 `~/.claude/skills/pratica/fill/fill.py` reads the library entry and layout, downloads the
 form and checks its sha256, reads the vault over its socket with one read-only token,
-fills the PDF, then reads it back to check every value is in its box. A draft writes
-nothing to the vault. It needs `node`, and Python with PyMuPDF (`python3 -c 'import fitz'`;
-if that fails, ask before `pip3 install --user pymupdf`). It reads only entries without a
-`dichiarante` (the personal vault's own procedures); for the rest it says so, and you
-fill by hand.
+fills the PDF (drawn on any page, or the form's own fillable fields), then reads it back
+to check every value is in its box. Dates come out DD/MM/YYYY. A draft writes nothing to
+the vault. It needs `node`, and Python with PyMuPDF (`python3 -c 'import fitz'`; if that
+fails, ask before `pip3 install --user pymupdf`). In a personal vault the user signs, or
+with `--for <slug>` (on both `needs` and `run`) the person the form is for (step 2 above:
+ask by display name when it isn't clearly the user); it reads that person's own fields,
+and the pratica record names them in `persona`. A business vault's dichiarante, party
+rows and rows repeated by ruolo it refuses, and you fill by hand.
 
 1. **The library, on `main`.** In a cache of your own:
    ```sh
@@ -260,7 +269,7 @@ fill by hand.
 2. **What it needs**:
    ```sh
    python3 -I ~/.claude/skills/pratica/fill/fill.py needs --library "$lib" \
-     --procedure <entry id> --form <form id> --draft [--vault-dir ~/.pvault-<name>]
+     --procedure <entry id> --form <form id> --draft [--for <slug>] [--vault-dir ~/.pvault-<name>]
    ```
    `commands.draft` is the one token command; `ask` lists the questions the vault can't
    answer. In one message, give the user the command to run in their terminal, exactly as
@@ -277,10 +286,10 @@ fill by hand.
    step 0 didn't find it):
    ```sh
    python3 -I ~/.claude/skills/pratica/fill/fill.py run --library "$lib" \
-     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft \
+     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft [--for <slug>] \
      --answers "<out>/answers.json" --out "<out>"
    ```
-   (the same `--vault-dir` as `needs`). It prints each check and exits 1 if one failed;
+   (the same `--vault-dir` and `--for` as `needs`). It prints each check and exits 1 if one failed;
    `<out>/report.json` has every row. A run takes a few seconds, so run it again after each fix.
    - "not in the vault": missing data, as in step 2. Ask, offer the `pvault set`, run again.
      When the answer is one the vault can't hold (someone with no codice fiscale: `N/E`),
@@ -292,7 +301,7 @@ fill by hand.
      vault server": the user runs `pvault unlock`.
    - A form, layout or box check failing means the Comune changed the form or the
      library is wrong: don't hand over that PDF. Fill by hand and list it for step 7.
-5. **Show it.** Look at `<out>/page-1.png` yourself first. Then send the user
+5. **Show it.** Look at `<out>/page-1.png` (and any other `page-<n>.png`) yourself first. Then send the user
    `<out>/filled.pdf` (SendUserFile, `display: render`, where you have it; otherwise
    `open "<out>/filled.pdf"`) with a short list of what came from where and anything
    left blank on purpose. Compare it with any copy the user already filled (step 2).
