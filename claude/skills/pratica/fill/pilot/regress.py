@@ -249,6 +249,11 @@ def review_signing(server, out, layout):
     return "\n" + "\n".join(lines)
 
 
+def own_form(entry):
+    """The entry's portal as one that takes no upload, only its own online form."""
+    next(c for c in entry["channels"] if c["type"] == "portal")["use"] = {"ways": ["web_form"], "status": "unverified"}
+
+
 # name: (description, changes, expected exit, lines the output must contain)
 CASES = {
     "baseline": ("the pilot as it is", {}, 0, ["ok   the form is ready", "opens pratiche.",
@@ -279,8 +284,13 @@ CASES = {
     "route-entry-only": ("route --entry without --library: the law's signing rule is the library's, so it says to pass it",
                          {"route": "post", "entry_only": True}, 0,
                          ["by post (other routes:", "contract/signing.json: pass --library"]),
-    "route-portal": ("route --channel portal: the form's own signing for the portal (its login)",
-                     {"route": "portal"}, 0, ["online (other routes:", "login, unclear whether an ID copy is needed"]),
+    "route-portal": ("route --channel portal: what you do there, and the form's own signing for it (its login)",
+                     {"route": "portal"}, 0, ["online (other routes:", "There: fill in the portal's own online form and upload",
+                                              "login, unclear whether an ID copy is needed"]),
+    "route-portal-own-form": ("route --channel portal, a portal with only its own form: the PDF isn't used there",
+                              {"route": "portal", "entry_only": True, "entry": own_form}, 0,
+                              ["There: fill in the portal's own online form (unverified)",
+                               "Forms: not used on this route; the portal has its own"]),
     "route-unknown": ("route --channel fax: a route the entry doesn't have",
                       {"route": "fax"}, 1, ["has no fax channel; it has desk, email, pec, portal, post"]),
     "sign-channel-post": ("--channel post --sign: the raccomandata takes a handwritten signature too",
@@ -289,6 +299,9 @@ CASES = {
     "sign-channel-portal": ("--channel portal --sign: the login is the signature, so there is nothing to stamp",
                             {"sign": True, "no_reply": True, "channel": "portal"}, 1,
                             ["FAIL the library lists a handwritten signature for portal"]),
+    "channel-portal-own-form": ("--channel portal on a portal with only its own form: no PDF to fill for it",
+                                {"no_reply": True, "channel": "portal", "entry": own_form}, 1,
+                                ["FAIL the portal route takes this form: the portal has its own online form"]),
     "channel-unknown": ("--channel with a type the entry doesn't have",
                         {"sign": True, "no_reply": True, "channel": "fax"}, 1,
                         ["FAIL the entry has a fax channel for this procedure"]),

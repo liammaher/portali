@@ -1548,6 +1548,11 @@ def run(a):
     if a.channel and not check(f"the entry has a {a.channel} channel for this procedure", bool(on),
                                ", ".join(sorted({c["type"] for c in channels}))):
         return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
+    # A portal with its own form never sees this PDF: fill that form there instead.
+    takes = any("upload" in c["use"]["ways"] if "use" in c else True for c in on)
+    if a.channel and not check(f"the {a.channel} route takes this form", takes,
+                               "" if takes else "the portal has its own online form: fill it there from the vault"):
+        return finish(a, entry, form, pdf_hash, slug, rows, results, checks)
     channel = on[0]
     destinatario = channel.get("address") or channel.get("url") or channel.get("name", "")
     signing = request_signature(a, prepare, entry, form, layout, channel, slug, check) if a.sign else None
@@ -1661,12 +1666,15 @@ def no_rule(a, channel):
     """Why a channel has no signing rule, as the user should hear it: the
     law sets none for a channel signing.json leaves out (a portal or app).
     Only its auth says whether a login identifies the person; without one
-    (ComUnica wants a firma digitale) the library hasn't said."""
+    (ComUnica wants a firma digitale) the library hasn't said. Its use says
+    whether it takes the form as an upload."""
     if not getattr(a, "library", None):
         return "the law's rule for this channel is in the library's contract/signing.json: pass --library"
     logins = [x.upper() for x in channel.get("auth", []) if x in ("spid", "cie", "cns")]
     if not logins:
         return f"as the {channel['type']} asks: the library doesn't say how it takes a signature, so check before filing"
+    if "upload" in channel.get("use", {}).get("ways", []):
+        return f"as the {channel['type']} asks: its {'/'.join(logins)} login identifies you; whether the uploaded form must be signed too, check before filing"
     return f"as the {channel['type']} asks: its {'/'.join(logins)} login identifies you, and it may not use this form at all"
 
 
@@ -1683,6 +1691,9 @@ def procedure_channels(entry, channel_type=None):
 
 ROUTE = {"portal": "online", "pec": "via PEC", "email": "by email", "post": "by post", "desk": "at the desk",
          "app": "in the app", "phone": "by phone"}
+# What you do on a portal (the channel's use): its own form, or the PDF uploaded.
+USE = {"web_form": "fill in the portal's own online form", "upload": "upload the signed form or documents",
+       "read": "only read or download"}
 ID_COPY = {"required": "with a copy of the ID document", "handwritten": "with a copy of the ID document if signed by hand",
            "not_needed": "no ID copy needed", "unknown": "unclear whether an ID copy is needed"}
 
@@ -1703,21 +1714,23 @@ def route(a):
              for s in entry["steps"] if kind in s.get("channel", [kind])]
     where = []
     for c in on:
-        place = {k: c[k] for k in ("name", "address", "url", "hours", "booking", "notes") if k in c}
+        place = {k: c[k] for k in ("name", "address", "url", "hours", "booking", "notes", "use") if k in c}
         if c.get("office"):
             place["office"] = office_for(a, c["office"])
         where.append(place)
-    signed = [f for f in entry.get("forms", []) if f.get("signature_required")]
+    # A portal that takes no upload has its own form: the entry's PDFs aren't used there.
+    own_form = all(c.get("use") and "upload" not in c["use"]["ways"] for c in on)
+    signed = [] if own_form else [f for f in entry.get("forms", []) if f.get("signature_required")]
     signing = []
     for f in signed:
         rule = signing_rule(a, f, kind)
         signing.append({"form": f["name"], **({k: rule[k] for k in ("ways", "id_copy", "status", "text", "notes") if k in rule}
                                              if rule else {"text": no_rule(a, on[0])})})
     # The entry's required documents (the forms among them), else its forms.
-    attach = [d["name"] for d in entry.get("documents", []) if d.get("required")] or [f["name"] for f in entry.get("forms", [])]
+    attach = [d["name"] for d in entry.get("documents", []) if d.get("required")] or ([] if own_form else [f["name"] for f in entry.get("forms", [])])
     card = {"procedure": entry["id"], "title": entry.get("headline", entry["title"]), "route": kind,
             "routes": sorted({c["type"] for c in channels}), "steps": steps, "where": where, "signing": signing,
-            "attach": attach, "receipt": on[0].get("receipt"),
+            "attach": attach, "forms_used": not own_form, "receipt": on[0].get("receipt"),
             "deadline": (entry.get("deadline", {}).get("summary") or (entry.get("deadline", {}).get("rules") or [{}])[0]).get("text")}
     if a.json:
         print(json.dumps(card, ensure_ascii=False, indent=2))
@@ -1731,10 +1744,16 @@ def route(a):
         print(f"  {i}. {s['do']}{' [you]' if s.get('human_only') else ''}{gate}")
     for place in where:
         office = place.pop("office", None)
+        use = place.pop("use", None)
         print("Where: " + "; ".join(place.values()))
+        if use:
+            print("There: " + " and ".join(USE.get(w, w) for w in use["ways"])
+                  + ("" if use["status"] == "verified" else f" ({use['status']})") + (f". {use['notes']}" if use.get("notes") else ""))
         if office:
             print(f"  Your office ({office.get('name', office['list'])}): "
                   + ("; ".join(office["office"].values()) if "office" in office else office["why"]))
+    if own_form and entry.get("forms"):
+        print("Forms: not used on this route; the portal has its own")
     for x in signing:
         how = x.get("text") or f"{' or '.join(x['ways'])}, {ID_COPY.get(x['id_copy'], x['id_copy'])}"
         print(f"Signing ({x['form']}): {how}{' ' + x['notes'] if x.get('notes') else ''}")
