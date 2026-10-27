@@ -1,10 +1,10 @@
 # North star
 
-Status: **proposed, 2026-10-27.** The direction below comes from the strategy work in [`reports/`](../reports/).
-The open decisions at the end aren't taken yet. Until they are, the design rules in
+Status: **decided, 2026-10-27.** The direction below comes from the strategy work in [`reports/`](../reports/),
+and Liam took all eight decisions at the end, each as recommended. The design rules in
 [`CLAUDE.md`](../CLAUDE.md) and the design docs (local-first, credentials never over TCP, the vault
-never goes online, no SMTP for PEC) stay exactly as they are, even where this document points away
-from them.
+never goes online, no SMTP for PEC) describe the code as it is: each one changes in the pull request
+that implements the decision affecting it, not before.
 
 ## The north star
 
@@ -71,21 +71,21 @@ Good for a personal vault, not part of the product. Kept working, not developed 
 
 Client features (retention, many clients, per-person export) wait for the migrant-services segment.
 
-## Open decisions
+## Decisions
 
-Each has a recommendation; none is taken.
+All eight were taken on 2026-10-27, each as recommended. Each section keeps the question it answered.
 
 ### 1. Hosted or local
 
 The connector has to be remote for the Claude app on a phone. The vault's rules say it never goes
 online and never takes credentials over TCP.
 
-**Recommendation:** host it in the EU. Do it in two steps: first the parts with no personal data
+**Decided:** host it in the EU. Do it in two steps: first the parts with no personal data
 (rules, notices, outcomes), then the profile and PEC, encrypted per business. Keep a local option for
 organisations that must hold client data themselves. This makes us a GDPR processor: it needs a
 data-processing agreement and a security review before the second step.
 
-**Changes if taken:** the README's "local-first, no cloud", `docs/design/file-index.md` D10, and the
+**Changes when implemented:** the README's "local-first, no cloud", `docs/design/file-index.md` D10, and the
 credential and socket rules in `CLAUDE.md`.
 
 ### 2. Sending PEC
@@ -93,23 +93,23 @@ credential and socket rules in `CLAUDE.md`.
 Claude can't send PEC, and the owner must never forward anything by hand. The PEC tools have no SMTP by
 design.
 
-**Recommendation:** add sending, only after an explicit tap on the exact message, checked the way the
+**Decided:** add sending, only after an explicit tap on the exact message, checked the way the
 sign gate checks a file (the message approved is the message sent), and audited.
 
-**Changes if taken:** the PEC rule in `CLAUDE.md` and `mcp/README.md`.
+**Changes when implemented:** the PEC rule in `CLAUDE.md` and `mcp/README.md`.
 
 ### 3. Where the connector lives
 
 The plan put a read-only MCP in the library repo. The profile, PEC and sign gate live in this repo.
 
-**Recommendation:** one connector service in this repo that reads the library's published JSON. The
+**Decided:** one connector service in this repo that reads the library's published JSON. The
 library stays pure data, site and reports backend, and never depends on the vault.
 
 ### 4. Who comes first
 
 The plan says owners; the analysis says intermediaries contribute the outcomes.
 
-**Recommendation:** design the experience for owners, but recruit intermediaries first, as contributors
+**Decided:** design the experience for owners, but recruit intermediaries first, as contributors
 and as the people who set owners up. Start with the business-opening chain.
 
 ### 5. Immigration
@@ -117,14 +117,14 @@ and as the people who set owners up. Start with the business-opening chain.
 The plan puts residents' procedures out of scope until its Phase 3; the migrant-services analysis shows
 the biggest unmet need and the vault's best fit.
 
-**Recommendation:** second segment, after business opening, built with a partner (Sportellino, a
+**Decided:** second segment, after business opening, built with a partner (Sportellino, a
 non-profit chatbot for migrants), with its own stricter privacy tier for outcomes.
 
 ### 6. An interim nudge before Duet
 
 Until Claude can wake itself up in Europe, nothing starts the assistant on its own.
 
-**Recommendation:** build nothing now. If the connector launches before Duet reaches Europe, add the
+**Decided:** build nothing now. If the connector launches before Duet reaches Europe, add the
 smallest notification that sends the owner into Claude, and remove it when Duet arrives.
 
 ### 7. The sensitivity tier changes
@@ -133,11 +133,11 @@ Seven changes are recommended in [`reports/Vault sensitivity ranking.md`](../rep
 (SPID provider and dates to standard, citizenship and permit type to sensitive, payment cards and
 credentials to 1Password, drop the US-only fields).
 
-**Recommendation:** make them in one schema change of their own, with the library's copy synced as usual.
+**Decided:** make them in one schema change of their own, with the library's copy synced as usual.
 
 ### 8. Name and funding
 
-**Recommendation:** pick the name with the first partner. Fund the hosting (a few euros per business per
+**Decided:** pick the name with the first partner. Fund the hosting (a few euros per business per
 month, an estimate) from Camera di Commercio programmes, Regione Campania calls, Fondazione CON IL SUD,
 or AI-provider credits, as the plan already lists.
 
