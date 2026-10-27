@@ -1,0 +1,8 @@
+{
+  "description": "What the user would answer to the scheda anagrafica's ask rows, by label: no procura.",
+  "answers": {
+    "iscritta alla C.C.I.A.A.": "sì",
+    "Altro domicilio elettronico per invio delle comunicazioni inerenti la pratica": "no",
+    "3 – Procura conferita (dati del procuratore/delegato)?": "no"
+  }
+}

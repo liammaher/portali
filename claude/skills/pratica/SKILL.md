@@ -254,8 +254,14 @@ the vault. It needs `node`, and Python with PyMuPDF (`python3 -c 'import fitz'`;
 fails, ask before `pip3 install --user pymupdf`). In a personal vault the user signs, or
 with `--for <slug>` (on both `needs` and `run`) the person the form is for (step 2 above:
 ask by display name when it isn't clearly the user); it reads that person's own fields,
-and the pratica record names them in `persona`. A business vault's dichiarante, party
-rows and rows repeated by ruolo it refuses, and you fill by hand.
+and the pratica record names them in `persona`. In a business vault a person always
+signs: `--for <slug>` of someone whose `ruolo.tipo` is one of the entry's dichiarante
+roles (`vault_household`; several: ask which). For other people the form reads, pass
+`--party <ruolo>=<slug>` (repeatable; `--party socio=verdi,gialli` for every socio of a
+repeat by ruolo), the same on `needs` and `run`: party rows read that person, a repeat
+gets a table row or an allegato copy per person. A role the vault has but `--party`
+didn't name fails the run (nobody is left off); a party row with nobody named is asked
+by its label ("no" when the role isn't part of this pratica).
 
 1. **The library, on `main`.** In a cache of your own:
    ```sh
@@ -269,7 +275,8 @@ rows and rows repeated by ruolo it refuses, and you fill by hand.
 2. **What it needs**:
    ```sh
    python3 -I ~/.claude/skills/pratica/fill/fill.py needs --library "$lib" \
-     --procedure <entry id> --form <form id> --draft [--for <slug>] [--vault-dir ~/.pvault-<name>]
+     --procedure <entry id> --form <form id> --draft [--for <slug>] [--party <ruolo>=<slug>]... \
+     [--vault-dir ~/.pvault-<name>]
    ```
    `commands.draft` is the one token command; `ask` lists the questions the vault can't
    answer. In one message, give the user the command to run in their terminal, exactly as
@@ -286,10 +293,10 @@ rows and rows repeated by ruolo it refuses, and you fill by hand.
    step 0 didn't find it):
    ```sh
    python3 -I ~/.claude/skills/pratica/fill/fill.py run --library "$lib" \
-     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft [--for <slug>] \
+     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft [--for <slug>] [--party ...] \
      --answers "<out>/answers.json" --out "<out>"
    ```
-   (the same `--vault-dir` and `--for` as `needs`). It prints each check and exits 1 if one failed;
+   (the same `--vault-dir`, `--for` and `--party` as `needs`). It prints each check and exits 1 if one failed;
    `<out>/report.json` has every row. A run takes a few seconds, so run it again after each fix.
    - "not in the vault": missing data, as in step 2. Ask, offer the `pvault set`, run again.
      When the answer is one the vault can't hold (someone with no codice fiscale: `N/E`),
