@@ -19,7 +19,7 @@ const maxSyncBatch = 500
 // userRead refuses anyone but the user: the session or a grant they approved
 // in person. Which rows it then shows is the vault's filter (callerFilter).
 func userRead(w http.ResponseWriter, r *http.Request) bool {
-	if !reachesPersonal(r) {
+	if !isUser(r) {
 		sessionRequired(w)
 		return false
 	}
@@ -32,17 +32,11 @@ func userWrite(w http.ResponseWriter, r *http.Request, holders ...string) bool {
 	if !userRead(w, r) {
 		return false
 	}
-	if accessFromRequest(r) != vault.AccessWrite {
-		writeError(w, http.StatusForbidden, "read_only", "this grant is read-only")
-		return false
+	ids := make([]string, len(holders))
+	for i, h := range holders {
+		ids[i] = vault.FilesScopeID(h)
 	}
-	for _, h := range holders {
-		if !vault.ScopeAllows(scopeFromRequest(r), vault.FilesScopeID(h)) {
-			scopeDenied(w)
-			return false
-		}
-	}
-	return true
+	return requireAccess(w, r, true) && requireScope(w, r, ids...)
 }
 
 // holderOf turns a person reference (io for the owner) into a holder.
@@ -71,8 +65,7 @@ func decodeJSON(w http.ResponseWriter, r *http.Request, v any) bool {
 // canIndex reports a caller that may read or write the index as a whole:
 // its scope reaches the owner's files and its cap reaches sensitive.
 func canIndex(w http.ResponseWriter, r *http.Request) bool {
-	if !vault.ScopeAllows(scopeFromRequest(r), vault.FilesScopeID("")) {
-		scopeDenied(w)
+	if !requireScope(w, r, vault.FilesScopeID("")) {
 		return false
 	}
 	if !vault.TierAllows(maxTierFromRequest(r), "sensitive") {
@@ -376,8 +369,7 @@ func (s *Server) handleSuggestFileLink(w http.ResponseWriter, r *http.Request) {
 	if req.Holder, ok = holderOf(w, req.Holder); !ok {
 		return
 	}
-	if !vault.ScopeAllows(scopeFromRequest(r), vault.FilesScopeID(req.Holder)) {
-		scopeDenied(w)
+	if !requireScope(w, r, vault.FilesScopeID(req.Holder)) {
 		return
 	}
 	sug, err := s.vault.SuggestFileLink(callerFilter(r), r.PathValue("id"), req.FileLinkInput, consumerFromRequest(r), req.Reason)

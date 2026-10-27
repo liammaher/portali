@@ -71,6 +71,7 @@ claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/
 | `vault_context` | Get all decrypted fields grouped by category |
 | `vault_set` | Set an encrypted field value in the vault |
 | `vault_expiring` | Documents expired or expiring within N days (default 90), plus open pratiche deadlines |
+| `vault_locate` | A Naples address's municipalità, quartiere and distretto ASL, stored or computed (never the street), and which quartieri to ask about when the street crosses a boundary |
 | `vault_documents` | List encrypted document scans the token may access |
 | `vault_document_add` | Encrypt and archive a local file (e.g. a downloaded receipt) |
 | `vault_sign_request` | Ask for the user's handwritten signature on a filled PDF (token scope `firma_autografa.signing`, append); the user approves it with `pvault sign review`, never the agent |

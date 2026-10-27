@@ -126,7 +126,7 @@ An address in Napoli (`residenza`, `domicilio`, `locale`, `business.sede_legale_
 `quartiere`, `municipalita` and `distretto_asl` (ASL Napoli 1 Centro), which the vault computes
 from the street: read them with `pvault get residenza.municipalita`, no need to ask. They need
 only their own scope, not the street's. If a street crosses a boundary the read says which
-quartieri to ask the user about; `pvault locate` shows why and the `pvault set
+quartieri to ask the user about; `vault_locate` (or `pvault locate`) shows why and the `pvault set
 residenza.quartiere "<name>"` that settles it. Never store one yourself to fill a form.
 `permesso_soggiorno.*` is only for non-Italian citizens: if `identity.citizenship` is
 italiana, don't ask for it or list it as missing. The same holds per person:

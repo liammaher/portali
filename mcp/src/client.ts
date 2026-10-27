@@ -499,6 +499,21 @@ export async function getExpiring(days: number): Promise<ExpiryInfo[]> {
   return apiRequest("GET", `/vault/expiring?days=${days}`) as Promise<ExpiryInfo[]>;
 }
 
+/** Where one of the vault's Naples addresses is (GET /vault/located); never the street. */
+export interface Located {
+  category: string;
+  fields: Record<string, { value: string; source: "stored" | "computed" }>;
+  basis?: string;
+  partial?: boolean;
+  choices?: string[];
+  reason?: string;
+  notes?: string[];
+}
+
+export async function getLocated(target: string): Promise<Located> {
+  return apiRequest("GET", `/vault/located/${target}`) as Promise<Located>;
+}
+
 export async function listDocuments(category?: string): Promise<DocumentInfo[]> {
   const q = category ? `?category=${encodeURIComponent(category)}` : "";
   return apiRequest("GET", `/vault/documents${q}`) as Promise<DocumentInfo[]>;

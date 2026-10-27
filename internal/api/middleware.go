@@ -45,6 +45,13 @@ func reachesPersonal(r *http.Request) bool {
 	return maxTierFromRequest(r) == vault.TierPersonal
 }
 
+// isUser reports the user themself: their session, or a scoped grant they
+// approved in person. Only those reach the personal tier; a service token
+// never does.
+func isUser(r *http.Request) bool {
+	return reachesPersonal(r)
+}
+
 // accessFromRequest returns the caller's access level. Session tokens get
 // write; requests without auth context get read.
 func accessFromRequest(r *http.Request) string {

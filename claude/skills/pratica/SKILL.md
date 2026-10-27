@@ -143,7 +143,8 @@ A library entry's `forms[].fields` already does this; each `map` is one of:
 A row can also say exactly what goes in its box:
 
 - `template`: how its fields make the text, e.g. `{identity.birth_comune}[ ({identity.birth_country})]`.
-  A `[...]` part is left out when a field in it is empty, `{x|date}` writes DD/MM/YYYY, and
+  A `[...]` part is left out when a field in it is empty, `{x|date}` writes DD/MM/YYYY,
+  `{x|or:Italia}` writes Italia when x is empty, `{x|digits}` keeps only its digits, and
   in a fallback `{.civico}` is the civico of the place it picked.
 - `columns` (on a repeat): one template per column of the table; `{relazione}` is the
   `relazione_label`.
@@ -151,6 +152,8 @@ A row can also say exactly what goes in its box:
   (the stato estero of someone born abroad). Any other empty field is asked for.
 - `choices`: boxes to tick, each with the values that tick it; `write_value` also writes
   the value beside the box ("altro ____").
+- `when: { field, ticks }`: the row applies only when the answer to that ask row ticks one
+  of those boxes; otherwise leave it empty and don't ask for what it reads.
 
 For a form with a layout in the library's `layouts/<id>/<form>.json`, `fill.py` does all
 this and the filling (step 4, "Filling with fill.py"): don't map it by hand.
@@ -291,8 +294,8 @@ by its label ("no" when the role isn't part of this pratica).
    answer. In one message, give the user the command to run in their terminal, exactly as
    printed (it asks for their password or Touch ID, saves a 1-hour read token in their
    Keychain and revokes the last one; never run it yourself, never ask for the token), and
-   ask the `ask` questions. Answers the playbook or this conversation already give don't
-   need asking. This holds with Touch ID too: `fill.py` reads with that token, not `pvault get`.
+   ask the `ask` questions (one with `when` only if the answer it names ticks one of its
+   `ticks`). Answers the playbook or this conversation already give don't need asking. This holds with Touch ID too: `fill.py` reads with that token, not `pvault get`.
 3. **Answers**: write them by label, in the output folder's `answers.json`:
    `{"answers": {"<label>": "<answer>"}}`. "no" or "nessuno" leaves a box empty. A row
    with `ticks` takes the user's answer as said (`si` ticks the box). A row with
@@ -340,8 +343,9 @@ another; `fill.py --channel <type>` takes their choice):
 - `login` or `none`: no signature step. Say why (the SPID/CIE login, or the PEC from their own
   domicilio digitale, identifies them). Don't ask for a signature.
 - `digital` only: a firma digitale is the user's. Hand it over (step 5).
-- `handwritten`, and the layout has `signatures`: the gate can carry it. If `status` is
-  `unverified`, say the Comune hasn't confirmed that way (and, for `id_copy: required`, that
+- `handwritten`, and the layout has `signatures`: the gate can carry it (the step it
+  carries is the one with `gate: sign`). If `status` is `disputed`, sign by hand: `fill.py
+  --sign` refuses it. If it is `unverified`, say the Comune hasn't confirmed that way (and, for `id_copy: required`, that
   the ID copy goes with it), and let the user choose: the gate, or signing by hand as usual.
 - No `signing` for the channel: sign by hand, as before. Never guess from another comune.
 

@@ -7,7 +7,7 @@ import { homedir } from "node:os";
 import { basename, extname, join, relative, isAbsolute, resolve, sep } from "node:path";
 import {
   getStatus, getSchema, getField, listFields, getContext, setField, assertTokenConfigured,
-  getExpiring, listDocuments, addDocument, getDocument, listMembers, requestSigning, getSignings, pvCmd,
+  getExpiring, getLocated, listDocuments, addDocument, getDocument, listMembers, requestSigning, getSignings, pvCmd,
   searchFiles, getIndexedFile, listFileSources, suggestFileLink, checkFileId,
 } from "./client.js";
 import { UNTRUSTED_FILES, describeFile, PERSON_REF, PRATICA_SLUG } from "./vaultfiles.js";
@@ -189,6 +189,28 @@ server.registerTool(
     try {
       const items = await getExpiring(days ?? 90);
       return ok(JSON.stringify(items, null, 2));
+    } catch (e) {
+      return err((e as Error).message);
+    }
+  }
+);
+
+server.registerTool(
+  "vault_locate",
+  {
+    description:
+      "Where one of the vault's Naples addresses is: its municipalità, quartiere and distretto ASL (ASL Napoli 1 Centro), each stored or computed from the street, never the street itself. vault_get reads the same fields; this also says why one is unknown. When the street crosses a municipalità boundary, choices are the quartieri to ask the user about, then the user stores theirs with " +
+      pvCmd("set <address>.quartiere \"<name>\"") +
+      ". Never store one yourself to fill a form. The token's scope must reach <address>.municipalita, .quartiere and .distretto_asl.",
+    inputSchema: {
+      address: z.enum(["residenza", "domicilio", "locale", "sede_legale"]).describe("Which address (sede_legale: the business's registered office)"),
+      for: z.string().regex(PERSON_REF, "a person's slug (see vault_household), or io").optional().describe("Whose address: a person's slug, or io (default) for the user or the business"),
+    },
+  },
+  async ({ address, for: who }): Promise<CallToolResult> => {
+    try {
+      const target = who && who !== "io" ? `${who}:${address}` : address;
+      return ok(JSON.stringify(await getLocated(target), null, 2));
     } catch (e) {
       return err((e as Error).message);
     }

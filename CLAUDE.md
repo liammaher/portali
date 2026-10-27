@@ -26,7 +26,7 @@ go test -race ./internal/vault/   # One layer: crypto, store, vault, api
 ## CLI Usage
 
 ```sh
-pvault init [--impresa]                  # Create new vault (~/.pvault/); --impresa: a business vault
+pvault init [--impresa] | onboard        # Create new vault (~/.pvault/); --impresa: a business vault
 pvault --vault <name> <command>          # Any command on another vault (~/.pvault-<name>)
 pvault unlock | lock | serve             # Background server / stop it, zero keys / foreground
 pvault set <category.field> <value>      # Set encrypted field
@@ -34,12 +34,15 @@ pvault get <category.field|category.*> [...]  # Get decrypted field(s); several 
 pvault list [category]                   # List fields
 pvault delete <category.field>           # Delete field
 pvault set-sensitivity <id> <tier>       # Set sensitivity tier
+pvault schema [--json]                   # Recommended fields; --json is schema.json
+pvault locate [residenza|...] | --street # Municipalità, quartiere, distretto ASL of a Naples address
 pvault export | audit | status           # All fields as JSON / access log / status
 pvault backup [--to <folder>]            # Encrypted backup now; --to sets the auto-backup folder
 pvault restore <file> [--check] [--ask-key]  # Recreate vault from a backup / only verify it
 pvault expiring [days]                   # Expired/expiring *data_scadenza fields and pratiche
 pvault doc add|list|get|delete           # Encrypted document scans
 pvault sign list|review|reject           # Signing requests an agent filed: you review the signed PDF and approve it
+pvault files source|sync|search|link ... # File index: where files are, linked to people, clients, pratiche
 pvault person list|show|add|remove|export|migrate  # Other people (leo:cie.numero); alias: member
 pvault retention [set <years>|unset]     # How long people's data is kept after ruolo.data_fine (no default)
 pvault retention scans <days>|unset      # How long clients' ID scans are kept after their pratiche close (no default)
@@ -61,6 +64,7 @@ internal/
   vault/             Business logic: rules, encrypt/decrypt, sessions, people, backups
   api/               HTTP server, handlers, auth middleware, onboarding page (ui/)
   napoli/            Street → municipalità → ASL distretto, offline (vault: located.go)
+  filesync/          File index sources: scans a folder for `pvault files sync`
 mcp/                 MCP server (TypeScript): vault tools over a service token, read-only PEC
 claude/skills/       vault and pratica skills; pratica keeps one playbook per procedure
   pratica/fill/      fills a library form from the vault at the library's layout, for the
@@ -139,7 +143,8 @@ Profile Password + Secret Key (128-bit)
   tokens (a restore must not revive a revoked one). Session-only.
 - Every write calls `markChanged` (backup 1m after the last change); lock and auto-lock
   flush first. Pruning touches only this vault's files.
-- Lock order: `backup.mu` → `writeMu` → `v.mu` → session `mu` → `signingStore.mu`. `backup.stateMu` is a leaf.
+- Lock order: `backup.mu` → `writeMu` → `filesMu` → `v.mu` → session `mu` → `signingStore.mu`
+  (lock and auto-lock hold `v.mu`, so they only `TryLock` `filesMu`). `backup.stateMu` is a leaf.
   Every single write holds `writeMu` for reading; removing or migrating people holds it
   exclusively.
 
@@ -297,6 +302,8 @@ the page never copies a rule.
   person's links, rules and suggestions, not the index rows.
 
 ### MCP (`mcp/src`)
+- Signing (`vault_sign_request`, `vault_sign_status`) can ask and watch, never approve or read
+  the signed file. `vault_locate` reads `/vault/located` under the token's scope.
 - File index tools (`vault_files_search`, `vault_file_get`, `vault_file_suggest`; `vaultfiles.ts`):
   metadata only, no tool reads or changes a file. Every result carries the untrusted-names
   note; ids and person/pratica slugs are checked before any request; `local_path` is the
@@ -338,6 +345,7 @@ tests compile the helper with `-D DEBUG`, which adds `describe-grant` and test e
 (`TestPraticaPilotVault`) runs only with `PVAULT_PILOT_DIR`; run it through
 `claude/skills/pratica/fill/pilot/run.sh` or `regress.py` (both need `PRATICHE_NAPOLI_DIR` and PyMuPDF;
 `PILOT_FORM_PDF` gives the form from disk; the `sign` case needs a library whose layout has `signatures`).
+CI runs `regress.py` against the library's main (`fill.yml`); the library runs it on its own changes.
 
 ```go
 // Pattern: create temp vault, run test
