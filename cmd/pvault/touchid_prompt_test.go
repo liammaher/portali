@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -31,48 +32,65 @@ func buildDebugHelper(t *testing.T) string {
 	return bin
 }
 
+// loadPromptFixture reads internal/vault/testdata/prompts.json, which also
+// holds the vault's own wording (approval_prompt_test.go) for Windows Hello.
+func loadPromptFixture(t *testing.T) (f struct {
+	Grants []struct {
+		Vault  string
+		Scope  *string
+		Access string
+		TTL    int
+		Want   string
+	}
+	Signs []struct {
+		Vault, Name, Hash8, Requester, Want string
+		Pages                               int
+	}
+	RefusedScopes  []string
+	AcceptedScopes []string
+}) {
+	t.Helper()
+	data, err := os.ReadFile(filepath.Join("..", "..", "internal", "vault", "testdata", "prompts.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal(data, &f); err != nil {
+		t.Fatal(err)
+	}
+	return f
+}
+
+// describe runs a debug helper command with VAULT_DIR set to a folder named
+// vault (.pvault if empty), so the prompt names that vault.
+func describe(t *testing.T, helper, vault string, args ...string) (string, error) {
+	t.Helper()
+	if vault == "" {
+		vault = ".pvault"
+	}
+	cmd := exec.Command(helper, args...)
+	cmd.Env = append(os.Environ(), "VAULT_DIR="+filepath.Join(t.TempDir(), vault))
+	out, err := cmd.CombinedOutput()
+	return strings.TrimSpace(string(out)), err
+}
+
 func TestTouchIDHelper_PromptWording(t *testing.T) {
 	helper := buildDebugHelper(t)
-	cases := []struct {
-		args []string
-		want string
-	}{
-		{[]string{"--scope", "identity.full_name,residenza.cap"},
-			"read identity.full_name, residenza.cap from your vault for 2 minutes"},
-		// Append and write grants can read too, and a category covers its documents.
-		{[]string{"--scope", "spid.*", "--access", "append"},
-			"read and add new entries to all your spid fields and documents in your vault for 2 minutes"},
-		{[]string{"--scope", "tari.documents", "--access", "append"},
-			"read and add new entries to your tari documents in your vault for 2 minutes"},
-		{[]string{"--scope", "passaporto.*", "--access", "write"},
-			"read, change and delete all your passaporto fields and documents in your vault for 2 minutes"},
-		// "*" is named alone, never at the end of a list.
-		{[]string{"--scope", "identity.full_name,spid.*,*", "--access", "write"},
-			"read, change and delete everything in your vault, your family's data included for 2 minutes"},
-		// Family members: one member's data, or everyone's.
-		{[]string{"--scope", "leo:*"}, "read everything about leo from your vault for 2 minutes"},
-		{[]string{"--scope", "leo:cie.*", "--access", "append"},
-			"read and add new entries to all of leo's cie fields and documents in your vault for 2 minutes"},
-		{[]string{"--scope", "*:identity.*"}, "read everyone's identity fields and documents from your vault for 2 minutes"},
-		{[]string{"--scope", "leo:cie.numero,giulia:cie.documents"},
-			"read leo's cie.numero, giulia's cie documents from your vault for 2 minutes"},
-		// What pvault retention and person list ask for.
-		{[]string{"--scope", "*:ruolo.data_fine"}, "read everyone's ruolo.data_fine from your vault for 2 minutes"},
-		{[]string{"--scope", "*:ruolo.*,*:business.denominazione"},
-			"read everyone's ruolo fields and documents, everyone's business.denominazione from your vault for 2 minutes"},
-		// Durations round up.
-		{[]string{"--scope", "residenza.cap", "--ttl", "89"}, "read residenza.cap from your vault for 2 minutes"},
-		{[]string{"--scope", "residenza.cap", "--ttl", "45"}, "read residenza.cap from your vault for 45 seconds"},
-		{nil, "get full access to your vault, including settings and agent tokens, for 2 minutes"},
-	}
-	for _, c := range cases {
-		out, err := exec.Command(helper, append([]string{"describe-grant"}, c.args...)...).CombinedOutput()
-		if err != nil {
-			t.Errorf("%q: %v\n%s", c.args, err, out)
-			continue
+	for _, c := range loadPromptFixture(t).Grants {
+		args := []string{"describe-grant"}
+		if c.Scope != nil {
+			args = append(args, "--scope", *c.Scope)
 		}
-		if got := strings.TrimSpace(string(out)); got != c.want {
-			t.Errorf("%q:\n got  %q\n want %q", c.args, got, c.want)
+		if c.Access != "" {
+			args = append(args, "--access", c.Access)
+		}
+		if c.TTL != 0 {
+			args = append(args, "--ttl", strconv.Itoa(c.TTL))
+		}
+		got, err := describe(t, helper, c.Vault, args...)
+		if err != nil {
+			t.Errorf("%s %q: %v\n%s", c.Vault, args, err, got)
+		} else if got != c.Want {
+			t.Errorf("%s %q:\n got  %q\n want %q", c.Vault, args, got, c.Want)
 		}
 	}
 }
@@ -81,74 +99,27 @@ func TestTouchIDHelper_PromptWording(t *testing.T) {
 // reports it (made harmless), and never understates what the grant does.
 func TestTouchIDHelper_SignPromptWording(t *testing.T) {
 	helper := buildDebugHelper(t)
-	long := strings.Repeat("x", 80)
-	tail := `, with your handwritten signature from your vault, for 10 minutes`
-	cases := []struct{ name, pages, requester, want string }{
-		{"mod-1.pdf", "1", "tari-agent", `review and sign "mod-1.pdf" (1 page, hash ab12cd34), filed by tari-agent` + tail},
-		{"tari-2026-mod-1.pdf", "3", "agent", `review and sign "tari-2026-mod-1.pdf" (3 pages, hash ab12cd34), filed by agent` + tail},
-		// What an agent put in a name can't break the sentence.
-		{"a\"b\u202eexe.pdf", "1", "x", `review and sign "a?b?exe.pdf" (1 page, hash ab12cd34), filed by x` + tail},
-		{"x\ny", "1", "x", `review and sign "x?y" (1 page, hash ab12cd34), filed by x` + tail},
-		{long, "1", "x", `review and sign "` + long[:49] + `…" (1 page, hash ab12cd34), filed by x` + tail},
-		{"mod-1.pdf", "1", "the user\u202e", `review and sign "mod-1.pdf" (1 page, hash ab12cd34), filed by the user?` + tail},
-	}
-	for _, c := range cases {
-		out, err := exec.Command(helper, "describe-sign", c.name, c.pages, "ab12cd34", c.requester).CombinedOutput()
+	for _, c := range loadPromptFixture(t).Signs {
+		got, err := describe(t, helper, c.Vault, "describe-sign", c.Name, strconv.Itoa(c.Pages), c.Hash8, c.Requester)
 		if err != nil {
-			t.Errorf("%q: %v\n%s", c.name, err, out)
-			continue
-		}
-		if got := strings.TrimSpace(string(out)); got != c.want {
-			t.Errorf("%q:\n got  %q\n want %q", c.name, got, c.want)
-		}
-	}
-}
-
-// With several vaults the prompt names the one a fingerprint is for.
-func TestTouchIDHelper_PromptNamesVault(t *testing.T) {
-	helper := buildDebugHelper(t)
-	cases := []struct {
-		dir  string
-		args []string
-		want string
-	}{
-		{".pvault-studio", []string{"--scope", "business.*"}, "read all your business fields and documents from your studio vault for 2 minutes"},
-		{".pvault-studio", []string{"--scope", "*"}, "read everything in your studio vault, everyone's data in it included for 2 minutes"},
-		{".pvault-studio", nil, "get full access to your studio vault, including settings and agent tokens, for 2 minutes"},
-		{".pvault", []string{"--scope", "*"}, "read everything in your vault, your family's data included for 2 minutes"},
-		{"elsewhere", []string{"--scope", "cie.*"}, "read all your cie fields and documents from your vault for 2 minutes"},
-	}
-	for _, c := range cases {
-		cmd := exec.Command(helper, append([]string{"describe-grant"}, c.args...)...)
-		cmd.Env = append(os.Environ(), "VAULT_DIR="+filepath.Join(t.TempDir(), c.dir))
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Errorf("%s %q: %v\n%s", c.dir, c.args, err, out)
-			continue
-		}
-		if got := strings.TrimSpace(string(out)); got != c.want {
-			t.Errorf("%s %q:\n got  %q\n want %q", c.dir, c.args, got, c.want)
+			t.Errorf("%q: %v\n%s", c.Name, err, got)
+		} else if got != c.Want {
+			t.Errorf("%q:\n got  %q\n want %q", c.Name, got, c.Want)
 		}
 	}
 }
 
 func TestTouchIDHelper_RejectsOddScopes(t *testing.T) {
 	helper := buildDebugHelper(t)
-	for _, scope := range []string{
-		"identity.full_name\n",
-		"identity.full_name\r\n,spid.*",
-		"identity.full_name\u2028",
-		"identity." + strings.Repeat("x", 100),
-		"x",
-		"",
-		strings.Repeat("a.b,", 10) + "c.d",
-		// Malformed member prefixes, and io (the owner has no prefix).
-		"leo:", ":cie.*", "leo:cie:x.y", "Leo:*", "leo:*\n", "*:*", "io:*", "io:cie.*",
-		"leo:cie", "leo_x:cie.*", strings.Repeat("a", 33) + ":*",
-	} {
-		out, err := exec.Command(helper, "describe-grant", "--scope", scope).CombinedOutput()
-		if err == nil {
+	f := loadPromptFixture(t)
+	for _, scope := range f.RefusedScopes {
+		if out, err := describe(t, helper, "", "describe-grant", "--scope", scope); err == nil {
 			t.Errorf("scope %q accepted: %s", scope, out)
+		}
+	}
+	for _, scope := range f.AcceptedScopes {
+		if out, err := describe(t, helper, "", "describe-grant", "--scope", scope); err != nil {
+			t.Errorf("scope %q refused: %v\n%s", scope, err, out)
 		}
 	}
 }
