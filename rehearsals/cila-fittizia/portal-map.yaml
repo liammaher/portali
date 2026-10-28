@@ -209,10 +209,10 @@ screens:
       - non avere titolarità esclusiva, ma disporre della dichiarazione di assenso dei terzi titolari (a.2): a tenant
     fill when a.2, "Soggetti coinvolti – TITOLARI" (the terzi titolari who gave assent; + adds one):
       cognome, nome, C.F., data di nascita, sesso: giulia:identity.* (the owner company's legale rappresentante)
-      luogo di nascita: provincia (dropdown) + comune (text): giulia:identity.birth_province, birth_comune
+      luogo di nascita: "provincia (dropdown) + comune (text): giulia:identity.birth_province, birth_comune"
       residenza: provincia (dropdown) + comune, via, n., CAP (texts)
       PEC / posta elettronica: immobiliare:business.pec
-      telefono: required ("Il valore è obbligatorio")
+      telefono: 'required ("Il valore è obbligatorio")'
       ditta o società (checkbox), in qualità di, della ditta/società, CF/P.IVA: legale rappresentante, immobiliare:business.denominazione, partita_iva
     notes: >-
       Choosing "altro" adds the specificare row and renumbers every id below it (r5c1p6reg
@@ -230,7 +230,7 @@ screens:
       one of four radios: non riguardano parti comuni (b.1); parti comuni di un condominio;
       parti comuni di un fabbricato non in condominio, approvato dai comproprietari; parti
       comuni che non necessitano di assenso (art. 1102 c.c.)
-    ask: whether the works touch common parts (P6: no)
+    ask: 'whether the works touch common parts (P6: no)'
 
   - screen: c) Presentazione della comunicazione di inizio dei lavori asseverata
     seen: 2026-10-28
@@ -248,7 +248,7 @@ screens:
       ricevuta di € 333,00; d.3 intervento realizzato, ricevuta di € 1000,00. All three
       online (the paper Mod.CILA calls d.3 "procedura cartacea"; on the SUE it's here).
     fill when d.2:
-      intervento iniziato in data: the start date (calendar, gg/MM/aaaa): 19/10/2026
+      intervento iniziato in data: 'the start date (calendar, gg/MM/aaaa): 19/10/2026'
       ricevuta di versamento di € 333,00: a file box in the section (xml, dwf, svg, jpg,
       pdf, each also .p7m; max 9.77 MB): a plain PDF is accepted
     notes: >-
@@ -277,9 +277,83 @@ screens:
     fill:
       studio in: provincia (dropdown) from business.sede_legale_provincia; comune, via, N., CAP (texts) from business.sede_legale_*
       iscritto all'ordine/collegio, di, al n.: chiara:albo.ordine, albo.provincia (as NAPOLI), albo.numero
-      telefono: business.telefono (digits); cell.: chiara:identity.phone (digits)
+      telefono: 'business.telefono (digits); cell.: chiara:identity.phone (digits)'
       posta elettronica certificata: chiara:identity.pec
     notes: >-
       With "colui che presenta la pratica" the progettista's name and CF come from the
       procuratore's section: none asked here. The made-up albo number (9999) saved with no
       warning: no registry check of the albo at draft time.
+
+  # From here on mapped by crawl.js (claude/skills/pratica/portal/crawl.js) on 2026-10-28,
+  # not by hand: each choice tried and undone with Annulla, nothing saved. i), the relazione
+  # and the diritti in 30 s; b), d), i), a), h) again in 35 s.
+
+  - screen: h) Impresa esecutrice dei lavori (crawled)
+    seen: 2026-10-28
+    choose: lavori in prima persona (modest works, no firms) | eseguiti dalle imprese indicate
+    fill when imprese, per firm (+ adds one):
+      firm: ragione sociale, CF/P.IVA, CCIAA di (dropdown) + n., sede (comune text, provincia, stato), via, N., CAP
+      legale rappresentante: cognome, nome, CF, nato a (text) + provincia + stato, nato il
+      contacts: telefono, fax, cell., posta elettronica
+      DURC: >-
+        each a checkbox opening its own boxes. Cassa edile (sede, codice impresa, codice
+        cassa), INPS (sede, matricola/posizione contributiva), INAIL (sede, codice impresa,
+        posizione assicurativa territoriale)
+    notes: >-
+      Each DURC checkbox adds rows and renumbers what follows. The vault holds the firms but
+      not their representatives' birth data nor the Cassa edile/INPS/INAIL codes.
+
+  - screen: i) Rispetto degli obblighi in materia di salute e sicurezza (crawled)
+    seen: 2026-10-28
+    choose:
+      - non ricade nel d.lgs. 81/2008 | ricade, e pertanto | ricade, ma si riserva di presentare le dichiarazioni prima dell'inizio lavori
+      - when ricade: cantiere sotto 200 uomini-giorno senza rischi particolari | pari o sopra 200 o con rischi dell'allegato XI
+      - when ricade: non soggetto a notifica | soggetto a notifica, e pertanto "allega alla presente comunicazione la notifica" (checkbox)
+    notes: 'The same options as the schema''s obblighi_salute_sicurezza. P6: ricade, sotto 200, soggetto a notifica, allegata.'
+
+  - screen: Relazione tecnica di asseverazione C.I.L.A. (crawled)
+    seen: 2026-10-28
+    fill:
+      progettista: cognome, nome, iscritto all'ordine/collegio, di, al n. (texts, here again)
+    choose:
+      - "tipo di intervento (checkboxes): manutenzione straordinaria (art. 3 c. 1 b); restauro e risanamento conservativo; barriere architettoniche; ricerca nel sottosuolo; movimenti di terra; serre mobili stagionali; pertinenze minori; altri interventi (+ specificare)"
+      - "tolleranze costruttive: si | no. Si opens art. 34-bis c. 1 e 1-ter (2%–6% by floor area), c. 1-bis, c. 2, c. 2-bis, art. 34-ter c. 4, and zona sismica bassa | media/alta (rilevanza strutturale si/no)"
+    ask:
+      dettaglio dell'intervento: textarea, 500 characters
+      altre comunicazioni, atti di assenso, note: 'two rows each of comunicazione + autorità and of tipo di atto + autorità; note: textarea 500'
+    notes: >-
+      The progettista's asseverazione, date and signature aren't boxes here: they are the
+      signed CILA. The tolerance list is the schema's dichiarazioni_tolleranze one for one.
+
+  - screen: Dichiarazione relativa ai diritti di segreteria/istruttori (crawled)
+    seen: 2026-10-28
+    choose: >-
+      non sono dovuti (non previsti dal tariffario | esentati) | sono dovuti, per un totale di
+      Euro (number), pagamento on line alla pagina successiva
+    notes: The SUAP's section, same ids. For the CILA, 151 €.
+
+  - screen: Pagamento degli oneri connessi alla pratica
+    seen: 2026-10-28
+    notes: >-
+      "Non sono presenti metodi di pagamento per la pratica corrente": no pagoPA for the
+      Napoli SUE. Fees are paid outside the portal (the library: bonifico on the Comune's
+      IBAN) and receipts uploaded here: "Richiesta marca da bollo" (pdf) and "Ricevute
+      pagamenti elettronici" (pdf or .p7m). PROSEGUI moves on with sections still empty.
+
+  - screen: Allega documenti
+    seen: 2026-10-28
+    upload:
+      - "Procura speciale: REQUIRED, .p7m only; 'Scarica il documento' gives the portal's own procura (/fnsuap/template.do?id=A_PRC5x11), built from the Scheda anagrafica, the procuratore and the Domicilio elettronico"
+      - "Copia del documento di identità del/i titolare/i e/o del tecnico: optional, pdf ok"
+      - "Fotocopia del documento di identità di chi conferisce la procura: REQUIRED, pdf ok"
+      - "Dichiarazione di assenso dei terzi titolari: optional (even with a.2), pdf ok"
+      - "Copia dei documenti d'identità dei titolari, comproprietari: REQUIRED, pdf ok"
+      - "Copia attestazione versamento oneri, diritti e spese: optional here, .p7m only"
+      - "Quadro riepilogativo della documentazione già disponibile e allegata (CILA DSC): REQUIRED; 'Scarica il documento' gives the portal's form (template.do?id=D3664), then upload it back, pdf ok"
+      - "Elaborati grafici dello stato di fatto e progetto: REQUIRED, pdf ok"
+      - "Documentazione per altre comunicazioni; per atti di assenso; Allegati liberi: optional, pdf ok"
+    notes: >-
+      Max 9.77 MB per file, 572 MB per pratica. The runner's upload put the FAC-SIMILE
+      assent in its slot and Salva kept it. No slot of its own for the notifica preliminare,
+      the relazione, the photos, the Allegato A or the Modello DP: Allegati liberi. Not
+      clicked yet: the two "Scarica il documento" (downloads), PROSEGUI to Firma.

@@ -156,6 +156,41 @@ walk must settle and record here:
 - **Validation of fake data:** codice fiscale, catasto foglio and particella, albo number.
 - **The front office:** whether the SUE modules use the same widgets as the SUAP's.
 
+## What the first walk settled (2026-10-28)
+
+`portal-map.yaml` has every screen up to the attachments; `schema/schema-vs-portal.md` the
+official schema against it.
+
+- **Who may log in:** anyone with SPID. Liam (not an architect) walked it all. The procuratore's
+  section opens with the logged-in name and CF but takes another person's (a made-up architect)
+  without complaint. The test needs no partner at the keyboard to map; whether the SUE checks
+  the signer at sending is past the stop point.
+- **Fake data:** made-up codici fiscali, P.IVA and albo number save with no warning. A made-up
+  catasto reference saves with "Attenzione! Dati catastali sconosciuti" on each field, and an
+  address once showed "Indirizzo sconosciuto": orange warnings, values kept, draft not blocked.
+  Whether they block sending isn't known (never sent). Every fake-data run will show them.
+- **The late CILA:** online, in quadro d: "intervento in corso di esecuzione (art. 6-bis c. 5)",
+  the start date, and an upload box in the quadro for the 333 € receipt (plain PDF accepted).
+  The works-done case (d.3, 1000 €) is online too, against the paper Mod.CILA's "procedura
+  cartacea". No pagoPA on the SUE ("Non sono presenti metodi di pagamento"): fees are paid
+  outside the portal and the receipts uploaded.
+- **Same widgets as the SUAP:** yes, the same front office (fnsuap, PrimeFaces): the Scheda
+  anagrafica, Ubicazione, Dati catastali and Diritti have the SCIA's ids, and the runner's tree,
+  dropdown, lookup and upload all worked. New: ids renumber when a choice adds rows (a's
+  "altro", h's DURC boxes), and a required field is marked by `.error-message-text`, which the
+  runner doesn't read yet.
+- **The stop point is reachable and is:** Allega documenti, after Pagamento oneri. Required: the
+  portal's own procura (download, sign, back as `.p7m` only), the identity documents of the
+  titolare and of who gives the procura (plain PDF), the portal's own "Quadro riepilogativo
+  CILA DSC" (download, back as PDF), the elaborati grafici. Everything else has no slot of its own
+  but Allegati liberi.
+- **Drafts:** reopened from "Pratiche in bozza" with every value kept. An old draft address
+  (`execution=eXsY`) gives the portal's error page once the flow has moved on, so
+  `run.py --resume` must reopen from the list, not from report.json's url.
+- **Mapping by program:** `crawl.js` mapped i), the relazione tecnica and the diritti (and
+  re-mapped b, d, a, h) in about a minute, trying each choice and undoing it with Annulla; every
+  branch it found is in the official schema.
+
 ## Lines we don't cross
 
 As in `rehearsals/pizzeria-fittizia/README.md`: never send, never pay or create a pagoPA
