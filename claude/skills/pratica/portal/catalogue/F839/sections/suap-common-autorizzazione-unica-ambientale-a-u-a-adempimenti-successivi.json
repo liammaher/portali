@@ -1,0 +1,289 @@
+{
+ "crawled": "2026-10-28T19:37:29.866Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Adempimenti successivi al rilascio dell'autorizzazione › Comunicazione messa in esercizio/a regime impianto e data campionamenti analitici (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 21.9,
+ "generated": {
+  "interventi": "Comunicazione messa in esercizio/a regime impianto e data campionamenti analitici",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione messa in esercizio/a regime impianto e data campionamenti analitici",
+    "amministrazione": "Regione Campania - (UOD) Unità Operativa Dirigenziale Autorizzazioni ambientali e rifiuti Napoli"
+   },
+   {
+    "adempimento": "Comunicazione all'ARPA",
+    "amministrazione": "ARPA Campania Dipartimento Provinciale di Napoli"
+   },
+   {
+    "adempimento": "Comunicazione al Comune",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'impianto produttivo",
+   "dati catastali",
+   "estremi di autorizzazione",
+   "data di messa in esercizio/a regime impianto e data campionamento ai sensi del dell'art. 269 c.6 del D.Lgs. 152/2006 e s.m.i.",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'impianto produttivo",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "estremi di autorizzazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "autorizzazione numero P.G.",
+     "max": 15
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "data autorizzazione"
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "rilasciata da",
+     "max": 70
+    },
+    {
+     "id": "r4c2p10reg:calendar_input",
+     "kind": "date",
+     "label": "con scadenza il"
+    }
+   ],
+   "fingerprint": "c845ea7b0887d84a",
+   "text": "estremi di autorizzazione autorizzazione numero P.G. data autorizzazione rilasciata da con scadenza il",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "data di messa in esercizio/a regime impianto e data campionamento ai sensi del dell'art. 269 c.6 del D.Lgs. 152/2006 e s.m.i.",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "per tutti gli impianti e le attività;",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "per i seguenti impianti/attività:",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "(specificare gli impianti/attività facendo riferimento alle lettere identificative di cui al testo dell'autorizzazione)",
+     "max": 300
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "alla messa in esercizio"
+    },
+    {
+     "id": "r6c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "alla messa a regime"
+    },
+    {
+     "id": "r8c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "ed all'effettuazione dei campionamenti analitici (se prescritti per la messa a regime)"
+    },
+    {
+     "id": "r10c2p16reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r10c3p18reg:calendar_input",
+     "kind": "date",
+     "label": "e in data"
+    }
+   ],
+   "fingerprint": "d3233aea599a21f7",
+   "text": "data di messa in esercizio/a regime impianto e data campionamento ai sensi del dell'art. 269 c.6 del D.Lgs. 152/2006 e s.m.i. per tutti gli impianti e le attività; per i seguenti impianti/attività: (specificare gli impianti/attività facendo riferimento alle lettere identificative di cui al testo dell'autorizzazione) 300 Caratteri restanti in data alla messa in esercizio in data alla messa a regime in data e in data ed all'effettuazione dei campionamenti analitici (se prescritti per la messa a regime) IMPORTANTE: la comunicazione di messa in esercizio deve essere spedita almeno 15 giorni prima della messa in esercizio dell'impianto/attività.",
+   "branches": [
+    {
+     "choice": "per tutti gli impianti e le attività;",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r10c2p16reg:calendar_input",
+       "r6c2p8reg:calendar_input"
+      ],
+      [
+       "r10c2p16reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "per i seguenti impianti/attività:",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r10c2p16reg:calendar_input",
+       "r6c2p8reg:calendar_input"
+      ],
+      [
+       "r10c2p16reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "alla messa in esercizio",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r10c2p16reg:calendar_input",
+       "r6c2p8reg:calendar_input"
+      ],
+      [
+       "r10c2p16reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "alla messa a regime",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r10c2p16reg:calendar_input",
+       "r6c2p8reg:calendar_input"
+      ],
+      [
+       "r10c2p16reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "ed all'effettuazione dei campionamenti analitici (se prescritti per la messa a regime)",
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r10c2p16reg:calendar_input",
+       "r6c2p8reg:calendar_input"
+      ],
+      [
+       "r10c2p16reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 8.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

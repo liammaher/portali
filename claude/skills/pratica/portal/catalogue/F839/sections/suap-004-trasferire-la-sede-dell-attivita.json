@@ -1,0 +1,714 @@
+{
+ "crawled": "2026-10-28T18:40:48.781Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Trasferire la sede dell'attività (sector Panificio)",
+ "seconds": 27.3,
+ "generated": {
+  "interventi": "Trasferimento di sede di esercizio di Panificazione",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per trasferimento di sede di esercizio di panificazione",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "nuovo indirizzo dell'esercizio commerciale",
+   "dati catastali della nuova ubicazione",
+   "precedente ubicazione dell'esercizio",
+   "dati relativi al trasferimento dell'attività",
+   "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "Altre dichiarazioni",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "nuovo indirizzo dell'esercizio commerciale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali della nuova ubicazione",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "precedente ubicazione dell'esercizio",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 50,
+     "prefilled": true
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Frazione",
+     "max": 60
+    },
+    {
+     "id": "r2c3p6reg:txt",
+     "kind": "text",
+     "label": "Prov.",
+     "max": 2,
+     "prefilled": true
+    },
+    {
+     "id": "r2c4p8reg:txtws_input",
+     "kind": "lookup",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r5c1p13reg:txtws_input",
+     "kind": "lookup",
+     "label": "Via, Viale, Piazza",
+     "max": 60
+    },
+    {
+     "id": "r5c2p15reg:txtws_input",
+     "kind": "lookup",
+     "label": "n° civico",
+     "max": 20
+    },
+    {
+     "id": "r7c1p19reg:txtws_input",
+     "kind": "lookup",
+     "label": "scala",
+     "max": 9999
+    },
+    {
+     "id": "r7c2p21reg:txtws_input",
+     "kind": "lookup",
+     "label": "piano",
+     "max": 10
+    },
+    {
+     "id": "r7c3p23reg:txtws_input",
+     "kind": "lookup",
+     "label": "interno",
+     "max": 10
+    },
+    {
+     "id": "r9c1p27reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r9c1p27reg:radio"
+    },
+    {
+     "id": "r9c2p28reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r9c2p28reg:radio"
+    },
+    {
+     "id": "r13c1p37reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r13c1p37reg:radio"
+    },
+    {
+     "id": "r13c2p38reg:radio:3_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r13c2p38reg:radio"
+    }
+   ],
+   "fingerprint": "c2a0b79ead7a02f0",
+   "text": "precedente ubicazione dell'esercizio Comune Frazione Prov. CAP ATTENZIONE - l'ubicazione dell'attività o intervento coincide con il Comune a cui è destinata la pratica Via, Viale, Piazza n° civico scala piano interno Esercizio in Centro Commerciale Naturale riconosciuto Si No Attività collocata in centro commerciale/mercato coperto/altra struttura di vendita Si No",
+   "branches": [
+    {
+     "choice": "Si",
+     "id": "r9c1p27reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p33reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 20
+      },
+      {
+       "id": "r12c2p35reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      },
+      {
+       "id": "r12c3p37reg:txt",
+       "kind": "text",
+       "label": "emanata da",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p37reg:radio:2_clone",
+       "r9c1p27reg:radio:0_clone"
+      ],
+      [
+       "r13c2p38reg:radio:3_clone",
+       "r9c2p28reg:radio:1_clone"
+      ],
+      [
+       "r13c1p37reg:radio:2_clone",
+       "r14c1p41reg:radio:2_clone"
+      ],
+      [
+       "r13c2p38reg:radio:3_clone",
+       "r14c2p42reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r9c2p28reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p37reg:radio:2_clone",
+       "r9c1p27reg:radio:0_clone"
+      ],
+      [
+       "r13c2p38reg:radio:3_clone",
+       "r9c2p28reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r13c1p37reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r15c1p41reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p37reg:radio:2_clone",
+       "r9c1p27reg:radio:0_clone"
+      ],
+      [
+       "r13c2p38reg:radio:3_clone",
+       "r9c2p28reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r13c2p38reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p37reg:radio:2_clone",
+       "r9c1p27reg:radio:0_clone"
+      ],
+      [
+       "r13c2p38reg:radio:3_clone",
+       "r9c2p28reg:radio:1_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.1
+  },
+  {
+   "section": "dati relativi al trasferimento dell'attività",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "prot./n.",
+     "max": 30
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "presentata al Comune di",
+     "max": 9999
+    },
+    {
+     "id": "r8c1p15reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r8c1p15reg:radio"
+    },
+    {
+     "id": "r8c2p16reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r8c2p16reg:radio"
+    },
+    {
+     "id": "r12c1p25reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r12c1p25reg:radio"
+    },
+    {
+     "id": "r12c2p26reg:radio:3_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r12c2p26reg:radio"
+    },
+    {
+     "id": "r15c1p31reg:radio:4_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r15c1p31reg:radio"
+    },
+    {
+     "id": "r15c2p32reg:radio:5_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r15c2p32reg:radio"
+    },
+    {
+     "id": "r17c1p35reg:radio:6_clone",
+     "kind": "radio",
+     "label": "Permanente",
+     "group": "r17c1p35reg:radio"
+    },
+    {
+     "id": "r18c1p37reg:radio:7_clone",
+     "kind": "radio",
+     "label": "Stagionale",
+     "group": "r18c1p37reg:radio"
+    }
+   ],
+   "fingerprint": "df115f6b94412968",
+   "text": "dati relativi al trasferimento dell'attività Il/la sottoscritto/a SEGNALA che l'attività di panificazione¹ già avviata con la SCIA/DIA/autorizzazione prot./n. del presentata al Comune di sarà trasferito nel nuovo esercizio: Esercizio in Centro Commerciale Naturale riconosciuto Si No Attività collocata in centro commerciale/mercato coperto/altra struttura di vendita Si No Attività congiunta di vendita dei prodotti, purché in misura prevalente di propria produzione², per il consumo immediato sul posto (esclusa la somministrazione) Si No Esercizio a carattere Permanente Stagionale ¹ Come previsto dall'art. 4, comma 2, del D.L. n. 223 del 2006, convertito con modificazioni dalla L. n. 248 del 2006. ² Ai sensi dell'art. 7 della L.R. n. 10 del 2014.",
+   "branches": [
+    {
+     "choice": "Si",
+     "id": "r8c1p15reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p21reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 20
+      },
+      {
+       "id": "r11c3p25reg:txt",
+       "kind": "text",
+       "label": "emanata da",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r3c2p5reg:calendar_input",
+       "r11c2p23reg:calendar_input"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r13c1p29reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r13c2p30reg:radio:3_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r16c1p35reg:radio:4_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r16c2p36reg:radio:5_clone"
+      ],
+      [
+       "r17c1p35reg:radio:6_clone",
+       "r18c1p39reg:radio:6_clone"
+      ],
+      [
+       "r18c1p37reg:radio:7_clone",
+       "r19c1p41reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r8c2p16reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r12c1p25reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r14c1p29reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r16c1p33reg:radio:4_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r16c2p34reg:radio:5_clone"
+      ],
+      [
+       "r17c1p35reg:radio:6_clone",
+       "r18c1p37reg:radio:6_clone"
+      ],
+      [
+       "r18c1p37reg:radio:7_clone",
+       "r19c1p39reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r12c2p26reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r15c1p31reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r15c2p32reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Permanente",
+     "id": "r17c1p35reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Stagionale",
+     "id": "r18c1p37reg:radio:7_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r20c1p40reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r20c2p42reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r8c1p15reg:radio:0_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r8c2p16reg:radio:1_clone"
+      ],
+      [
+       "r15c1p31reg:radio:4_clone",
+       "r12c1p25reg:radio:2_clone"
+      ],
+      [
+       "r15c2p32reg:radio:5_clone",
+       "r12c2p26reg:radio:3_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal (gg/mm)",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 8.9
+  },
+  {
+   "section": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "fingerprint": "94e8127ec5d86ea6",
+   "same_as": "suap-004-aprire-l-attivita#DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "seconds": 0.6
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

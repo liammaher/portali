@@ -1,0 +1,257 @@
+{
+ "crawled": "2026-10-28T18:19:18.522Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Comunicazione per variazione in attivita’ di locazione breve/turistica in forma NON imprenditoriale (sector Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna))",
+ "seconds": 20.5,
+ "generated": {
+  "interventi": "Comunicazione per variazione in attivita’ di locazione breve/turistica in forma NON imprenditoriale",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazione in attivita’ di locazione breve/turistica in forma NON imprenditoriale",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione",
+   "dati catastali",
+   "Oggetto della comunicazione",
+   "DATI RELATIVI ALL'IMMOBILE",
+   "ALTRE DICHIARAZIONI",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "La variazione riguarda la superficie"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "La variazione riguarda la superficie",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "Oggetto della comunicazione",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Proprietario",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Locatario /sublocatario/comodatario/etc.",
+     "group": "r2c2p4reg:radio"
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "avente codice identificativo nazionale CIN",
+     "max": 9999
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "e codice identificativo regionale CUSR",
+     "max": 9999
+    },
+    {
+     "id": "r11c1p13reg:txt",
+     "kind": "text",
+     "label": "DA (situazione ante variazione)",
+     "max": 9999
+    },
+    {
+     "id": "r13c1p15reg:txt",
+     "kind": "text",
+     "label": "A (situazione post variazione)",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "777a82dd880352cb",
+   "text": "Oggetto della comunicazione Il/la sottoscritto/a, in qualità di : Proprietario Locatario /sublocatario/comodatario/etc. dell’attività di locazione di un immobile ad uso abitativo, stipulato da persone fisiche al di fuori dell'esercizio di attività di impresa, di cui alla Legge 15 dicembre 2023, n. 191 e al Decreto-Legge 24 aprile 2017, n. 50 convertito con modificazioni dalla L. 21 giugno 2017, n. 96, avente codice identificativo nazionale CIN e codice identificativo regionale CUSR VARIERA’ COME DI SEGUITO SPECIFICATO: (per variazioni ai dati catastali o alla forma di gestione presentare nuova comunicazione di avvio attività) DA (situazione ante variazione) A (situazione post variazione)",
+   "branches": [
+    {
+     "choice": "Proprietario",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "DA (situazione ante variazione)",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Locatario /sublocatario/comodatario/etc.",
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "DA (situazione ante variazione)",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 3.4
+  },
+  {
+   "section": "DATI RELATIVI ALL'IMMOBILE",
+   "fields": [
+    {
+     "id": "r6c1p6reg:real",
+     "kind": "text",
+     "label": "Superficie totale immobile (superficie utile abitabile) Mq",
+     "max": 8
+    },
+    {
+     "id": "r9c1p9reg:number",
+     "kind": "text",
+     "label": "N. camere",
+     "max": 5
+    },
+    {
+     "id": "r9c2p11reg:number",
+     "kind": "text",
+     "label": "N. bagni",
+     "max": 3
+    },
+    {
+     "id": "r9c3p13reg:number",
+     "kind": "text",
+     "label": "N. posti letto complessivi",
+     "max": 5
+    },
+    {
+     "id": "r11c1p15reg:number",
+     "kind": "text",
+     "label": "Camera n.",
+     "max": 5
+    },
+    {
+     "id": "r11c2p17reg:real",
+     "kind": "text",
+     "label": "mq",
+     "max": 8
+    },
+    {
+     "id": "r14c1p21reg:txt",
+     "kind": "text",
+     "label": "Periodo di disponibilità",
+     "max": 9999
+    },
+    {
+     "id": "r16c1p23reg:txt",
+     "kind": "text",
+     "label": "Denominazione dell’attività ai fini della locazione turistica/breve ¹",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "2f274d8e9506fbcd",
+   "text": "DATI RELATIVI ALL'IMMOBILE Dati di classificazione ISTAT : Codice macrocategoria classificazione nazionale C Codice categoria classificazione nazionale C2 Codice sottocategoria classificazione nazionale C204 Superficie totale immobile (superficie utile abitabile) Mq Superficie utile abitabile camere a disposizione degli ospiti: N. camere N. bagni N. posti letto complessivi Camera n. mq Periodo di disponibilità Denominazione dell’attività ai fini della locazione turistica/breve ¹ ¹ La denominazione è una dicitura di fantasia che non deve contenere indicazioni fuorvianti e proprie delle strutture ricettive turistiche (es. Casa Vacanza, B&B, Residence, etc.)",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "ALTRE DICHIARAZIONI",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

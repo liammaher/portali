@@ -1,0 +1,621 @@
+{
+ "crawled": "2026-10-28T18:39:46.905Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector Panificio)",
+ "seconds": 34,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività di Panificazione",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per apertura attività di Panificazione",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "dati relativi all'attività",
+   "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "Altre dichiarazioni",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati relativi all'attività",
+   "fields": [
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r3c2p4reg:radio"
+    },
+    {
+     "id": "r5c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r5c1p6reg:radio"
+    },
+    {
+     "id": "r5c2p7reg:radio:3_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r5c2p7reg:radio"
+    },
+    {
+     "id": "r9c1p16reg:radio:4_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r9c1p16reg:radio"
+    },
+    {
+     "id": "r9c2p17reg:radio:5_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r9c2p17reg:radio"
+    },
+    {
+     "id": "r13c1p24reg:radio:6_clone",
+     "kind": "radio",
+     "label": "Permanente",
+     "group": "r13c1p24reg:radio"
+    },
+    {
+     "id": "r14c1p26reg:radio:7_clone",
+     "kind": "radio",
+     "label": "Stagionale",
+     "group": "r14c1p26reg:radio"
+    }
+   ],
+   "fingerprint": "585e5bbd22adcbf0",
+   "text": "dati relativi all'attività Il/la sottoscritto/a, SEGNALA l'avvio dell'attività di panificazione (1) Attività congiunta di vendita dei prodotti in misura prevalente di propria produzione (2) per il consumo immediato sul posto (esclusa la somministrazione) SI NO Esercizio in Centro Commerciale Naturale riconosciuto Si No Attività collocata in centro commerciale/mercato coperto/altra struttura di vendita Si No Esercizio a carattere Permanente Stagionale (1) Come previsto dall'art. 4, comma 2, del D.L. n. 223 del 2006, convertito con modificazioni dalla L. n. 248 del 2006. (2) Ai sensi dell'art. 7 della L.R. n. 10 del 2014.",
+   "branches": [
+    {
+     "choice": "SI",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r3c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r5c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c1p12reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 20
+      },
+      {
+       "id": "r8c2p14reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      },
+      {
+       "id": "r8c3p16reg:txt",
+       "kind": "text",
+       "label": "emanata da",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r10c1p20reg:radio:4_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r10c2p21reg:radio:5_clone"
+      ],
+      [
+       "r13c1p24reg:radio:6_clone",
+       "r14c1p28reg:radio:6_clone"
+      ],
+      [
+       "r14c1p26reg:radio:7_clone",
+       "r15c1p30reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r5c2p7reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r9c1p16reg:radio:4_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p20reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      },
+      {
+       "id": "r13c1p24reg:txt",
+       "kind": "text",
+       "label": "tipologia",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ],
+      [
+       "r13c1p24reg:radio:6_clone",
+       "r15c1p28reg:radio:6_clone"
+      ],
+      [
+       "r14c1p26reg:radio:7_clone",
+       "r16c1p30reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r9c2p17reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Permanente",
+     "id": "r13c1p24reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Stagionale",
+     "id": "r14c1p26reg:radio:7_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r16c1p29reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r16c2p31reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r3c1p3reg:radio:0_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r3c2p4reg:radio:1_clone"
+      ],
+      [
+       "r9c1p16reg:radio:4_clone",
+       "r5c1p6reg:radio:2_clone"
+      ],
+      [
+       "r9c2p17reg:radio:5_clone",
+       "r5c2p7reg:radio:3_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal (gg/mm)",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 8.9
+  },
+  {
+   "section": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "fields": [
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti de"
+    },
+    {
+     "id": "r4c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di essere il/la responsabile dell'attività produttiva, e di assicurare:",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "l'utilizzo delle materie prime in conformità alle norme vigenti"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "l'osservanza delle norme igienico-sanitarie e di sicurezza dei luoghi di lavoro e la qualità del prodotto finito"
+    },
+    {
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r9c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "label": "che il/la responsabile dell'attività produttiva è:",
+     "group": "r9c1p10reg:radio"
+    },
+    {
+     "id": "r11c1p12reg:txt",
+     "kind": "text",
+     "label": "il/la Sig./ra",
+     "max": 150
+    }
+   ],
+   "fingerprint": "94e8127ec5d86ea6",
+   "text": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI Il/la sottoscritto/a, consapevole delle sanzioni penali previste dalla legge per le false dichiarazioni e attestazioni (art. 76 del DPR n. 445 del 2000 e Codice penale e art.19, comma 6, della L. n. 241 del 1990), sotto la propria responsabilità, dichiara: che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti delle misure di prevenzione previste dal Codice delle leggi antimafia e delle misure di prevenzione, nonché nuove disposizioni in materia di documentazione antimafia”). di essere il/la responsabile dell'attività produttiva, e di assicurare: l'utilizzo delle materie prime in conformità alle norme vigenti l'osservanza delle norme igienico-sanitarie e di sicurezza dei luoghi di lavoro e la qualità del prodotto finito altro oppure (sia per le imprese individuali sia per le società) che il/la responsabile dell'attività produttiva è: il/la Sig./ra",
+   "branches": [
+    {
+     "choice": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti de",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r4c1p5reg:radio:0_clone",
+       "r7c1p8reg:radio:0_clone"
+      ],
+      [
+       "r5c1p6reg:chk",
+       "r8c1p9reg:chk"
+      ],
+      [
+       "r6c1p7reg:chk",
+       "r9c1p10reg:chk"
+      ],
+      [
+       "r7c1p8reg:chk",
+       "r10c1p11reg:chk"
+      ],
+      [
+       "r9c1p10reg:radio:1_clone",
+       "r12c1p13reg:radio:1_clone"
+      ],
+      [
+       "r11c1p12reg:txt",
+       "r14c1p15reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "di essere il/la responsabile dell'attività produttiva, e di assicurare:",
+     "id": "r4c1p5reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "l'utilizzo delle materie prime in conformità alle norme vigenti",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "l'osservanza delle norme igienico-sanitarie e di sicurezza dei luoghi di lavoro e la qualità del prodotto finito",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che il/la responsabile dell'attività produttiva è:",
+     "id": "r9c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r15c1p18reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allegato B e copia del documento di identità:",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    }
+   ],
+   "seconds": 5.6
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

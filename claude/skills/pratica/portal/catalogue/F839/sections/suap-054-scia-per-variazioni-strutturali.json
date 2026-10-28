@@ -1,0 +1,901 @@
+{
+ "crawled": "2026-10-28T18:39:20.249Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › SCIA per variazioni strutturali (sector Strutture ricettive alberghiere (alberghi, motel, villaggi-albergo residenze turistico-alberghiere alberghi diffusi, condhotel e loro dipendenze))",
+ "seconds": 26.7,
+ "generated": {
+  "interventi": "Variazioni in attività di struttura ricettiva alberghiera",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per variazioni di attività di struttura ricettiva alberghiera",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "Variazioni",
+   "carattere dell'esercizio",
+   "Tipologia di esercizio",
+   "Dotazioni e servizi della struttura",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone tutelate"
+    },
+    {
+     "key": "5_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "5_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "5_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "5_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "5_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "6",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "6_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "6_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "6_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "6_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "6_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "6_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "6_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in caso di autodichiarazione per la classificazione della struttura R.T.A."
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di autodichiarazione per la classificazione della struttura relativamente ad alberghi, motel, villaggi albergo, alberghi diffusi, dipendenze"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "Variazioni",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "che la struttura ricettiva in oggetto, già avviata con la SCIA/DIA/autorizzazione prot./n",
+     "max": 50
+    },
+    {
+     "id": "r5c1p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c2p7reg:txt",
+     "kind": "text",
+     "label": "presentata al Comune di",
+     "max": 50
+    },
+    {
+     "id": "r5c3p9reg:txt",
+     "kind": "text",
+     "label": "prov.",
+     "max": 2
+    },
+    {
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA CAPACITÀ RICETTIVA:"
+    },
+    {
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA CLASSIFICAZIONE:"
+    },
+    {
+     "id": "r11c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "ALTRO"
+    }
+   ],
+   "fingerprint": "ce943a1df6f3e048",
+   "text": "Variazioni Il sottoscritto segnala: che la struttura ricettiva in oggetto, già avviata con la SCIA/DIA/autorizzazione prot./n del presentata al Comune di prov. è soggetta alle seguenti variazioni: VARIAZIONE DELLA CAPACITÀ RICETTIVA: VARIAZIONE DELLA CLASSIFICAZIONE: ALTRO",
+   "branches": [
+    {
+     "choice": "VARIAZIONE DELLA CAPACITÀ RICETTIVA:",
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r8c1p12reg:chk",
+       "kind": "checkbox",
+       "label": "camere"
+      },
+      {
+       "id": "r9c1p13reg:chk",
+       "kind": "checkbox",
+       "label": "unità abitative"
+      },
+      {
+       "id": "r12c1p17reg:number",
+       "kind": "text",
+       "label": "TOTALE complessivo posti letto della struttura a seguito di variazione n.",
+       "max": 3
+      },
+      {
+       "id": "r15c1p20reg:chk",
+       "kind": "checkbox",
+       "label": "Camere"
+      },
+      {
+       "id": "r18c1p26reg:chk",
+       "kind": "checkbox",
+       "label": "Unità abitative"
+      },
+      {
+       "id": "r21c1p32reg:chk",
+       "kind": "checkbox",
+       "label": "Unità abitative ad uso residenziale (solo in caso di condhotel)"
+      },
+      {
+       "id": "r26c1p43reg:chk",
+       "kind": "checkbox",
+       "label": "Ubicazione camere/unità abitative (da compilare se albergo diffuso)"
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p21reg:chk",
+       "r10c1p14reg:chk"
+      ],
+      [
+       "r8c1p12reg:chk",
+       "r27c1p44reg:chk"
+      ],
+      [
+       "r11c1p21reg:chk",
+       "r30c1p53reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "camere",
+       "id": "r8c1p12reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r10c1p14reg:number",
+         "kind": "text",
+         "label": "n. camere",
+         "max": 3
+        },
+        {
+         "id": "r10c2p16reg:number",
+         "kind": "text",
+         "label": "a n. camere",
+         "max": 3
+        },
+        {
+         "id": "r10c3p18reg:number",
+         "kind": "text",
+         "label": "da n. posti letto",
+         "max": 25
+        },
+        {
+         "id": "r10c4p20reg:number",
+         "kind": "text",
+         "label": "a n. posti letto",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p20reg:chk",
+         "r8c1p12reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r11c1p21reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r12c1p22reg:chk"
+        ],
+        [
+         "r12c1p17reg:number",
+         "r14c1p25reg:number"
+        ],
+        [
+         "r15c1p20reg:chk",
+         "r17c1p28reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r20c1p34reg:chk"
+        ],
+        [
+         "r21c1p32reg:chk",
+         "r23c1p40reg:chk"
+        ],
+        [
+         "r26c1p43reg:chk",
+         "r28c1p51reg:chk"
+        ],
+        [
+         "r27c1p44reg:chk",
+         "r29c1p52reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r32c1p61reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "unità abitative",
+       "id": "r9c1p13reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r11c1p15reg:number",
+         "kind": "text",
+         "label": "da n. unità abitative",
+         "max": 3
+        },
+        {
+         "id": "r11c2p17reg:number",
+         "kind": "text",
+         "label": "a n. unità abitative",
+         "max": 3
+        },
+        {
+         "id": "r11c3p19reg:number",
+         "kind": "text",
+         "label": "da n. posti letto",
+         "max": 3
+        },
+        {
+         "id": "r11c4p21reg:number",
+         "kind": "text",
+         "label": "a n. posti letto",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p20reg:chk",
+         "r8c1p12reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r9c1p13reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r12c1p22reg:chk"
+        ],
+        [
+         "r12c1p17reg:number",
+         "r14c1p25reg:number"
+        ],
+        [
+         "r15c1p20reg:chk",
+         "r17c1p28reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r20c1p34reg:chk"
+        ],
+        [
+         "r21c1p32reg:chk",
+         "r23c1p40reg:chk"
+        ],
+        [
+         "r26c1p43reg:chk",
+         "r28c1p51reg:chk"
+        ],
+        [
+         "r27c1p44reg:chk",
+         "r29c1p52reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r32c1p61reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Camere",
+       "id": "r15c1p20reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r17c1p23reg:number",
+         "kind": "text",
+         "label": "Totale camere n.",
+         "max": 4
+        },
+        {
+         "id": "r17c2p25reg:number",
+         "kind": "text",
+         "label": "per posti letto complessivi in camere n.",
+         "max": 4
+        },
+        {
+         "id": "r18c1p28reg:chk",
+         "kind": "checkbox",
+         "label": "Numero camere singole"
+        },
+        {
+         "id": "r19c1p32reg:chk",
+         "kind": "checkbox",
+         "label": "Numero camere doppie"
+        },
+        {
+         "id": "r20c1p36reg:chk",
+         "kind": "checkbox",
+         "label": "Numero camere triple"
+        },
+        {
+         "id": "r21c1p40reg:chk",
+         "kind": "checkbox",
+         "label": "Numero camere quadruple"
+        },
+        {
+         "id": "r22c1p44reg:chk",
+         "kind": "checkbox",
+         "label": "Numero camere con più di 4 letti"
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p20reg:chk",
+         "r8c1p12reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r9c1p13reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r10c1p14reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r23c1p48reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r25c1p51reg:chk"
+        ],
+        [
+         "r21c1p32reg:chk",
+         "r28c1p57reg:chk"
+        ],
+        [
+         "r26c1p43reg:chk",
+         "r33c1p68reg:chk"
+        ],
+        [
+         "r27c1p44reg:chk",
+         "r34c1p69reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r37c1p78reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Unità abitative",
+       "id": "r18c1p26reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r20c1p29reg:number",
+         "kind": "text",
+         "label": "Totale unità abitative con uso cucina n.",
+         "max": 3
+        },
+        {
+         "id": "r20c2p31reg:number",
+         "kind": "text",
+         "label": "per posti letto complessivi in unità abitative n.",
+         "max": 4
+        },
+        {
+         "id": "r22c1p35reg:number",
+         "kind": "text",
+         "label": "Unità dello stesso tipo n.",
+         "max": 3
+        },
+        {
+         "id": "r22c2p37reg",
+         "kind": "select",
+         "label": "Tipologia",
+         "options": [
+          "Monolocali",
+          "Appartamenti composti da più locali"
+         ]
+        },
+        {
+         "id": "r24c1p41reg",
+         "kind": "select",
+         "label": "Soggiorno",
+         "options": [
+          "in vano con pernottamento",
+          "in vano separato dal pernottamento"
+         ]
+        },
+        {
+         "id": "r25c2p45reg:radio:0_clone",
+         "kind": "radio",
+         "label": "si",
+         "group": "r25c2p45reg:radio"
+        },
+        {
+         "id": "r25c3p46reg:radio:1_clone",
+         "kind": "radio",
+         "label": "no",
+         "group": "r25c3p46reg:radio"
+        },
+        {
+         "id": "r27c1p49reg:number",
+         "kind": "text",
+         "label": "Bagni privati n.",
+         "max": 2
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p20reg:chk",
+         "r8c1p12reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r9c1p13reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r10c1p14reg:chk"
+        ],
+        [
+         "r21c1p32reg:chk",
+         "r30c1p55reg:chk"
+        ],
+        [
+         "r26c1p43reg:chk",
+         "r35c1p66reg:chk"
+        ],
+        [
+         "r27c1p44reg:chk",
+         "r36c1p67reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r39c1p76reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Unità abitative ad uso residenziale (solo in caso di condhotel)",
+       "id": "r21c1p32reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r23c2p37reg:number",
+         "kind": "text",
+         "label": "n.",
+         "context": "Numero unità abitative con posti letto",
+         "max": 3
+        },
+        {
+         "id": "r26c2p45reg:number",
+         "kind": "text",
+         "label": "n.",
+         "context": "Totale unità abitative",
+         "max": 4
+        },
+        {
+         "id": "r28c2p51reg:number",
+         "kind": "text",
+         "label": "mq",
+         "context": "Totale superficie unità abitative ¹",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p20reg:chk",
+         "r8c1p12reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r9c1p13reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r10c1p14reg:chk"
+        ],
+        [
+         "r26c1p43reg:chk",
+         "r32c1p58reg:chk"
+        ],
+        [
+         "r27c1p44reg:chk",
+         "r33c1p59reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r36c1p68reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Ubicazione camere/unità abitative (da compilare se albergo diffuso)",
+       "id": "r26c1p43reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r28c1p45reg:number",
+         "kind": "text",
+         "label": "Camera/unità abitativa n.",
+         "max": 3
+        },
+        {
+         "id": "r28c2p47reg:txt",
+         "kind": "text",
+         "label": "indirizzo",
+         "max": 100
+        },
+        {
+         "id": "r28c3p49reg:txt",
+         "kind": "text",
+         "label": "n.",
+         "max": 30
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p20reg:chk",
+         "r8c1p12reg:chk"
+        ],
+        [
+         "r18c1p26reg:chk",
+         "r9c1p13reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r10c1p14reg:chk"
+        ],
+        [
+         "r27c1p44reg:chk",
+         "r30c1p54reg:chk"
+        ],
+        [
+         "r30c1p53reg:chk",
+         "r33c1p63reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA CLASSIFICAZIONE:",
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c1p13reg:chk",
+       "kind": "checkbox",
+       "label": "Struttura principale"
+      },
+      {
+       "id": "r10c1p17reg:chk",
+       "kind": "checkbox",
+       "label": "Dipendenza"
+      }
+     ],
+     "then": [
+      {
+       "choice": "Struttura principale",
+       "id": "r9c1p13reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r10c2p16reg:txt",
+         "kind": "text",
+         "label": "da n. stelle",
+         "context": "Struttura principale",
+         "max": 20
+        },
+        {
+         "id": "r10c3p18reg:txt",
+         "kind": "text",
+         "label": "a n. stelle",
+         "context": "Struttura principale",
+         "max": 30
+        }
+       ],
+       "moved": [
+        [
+         "r9c1p13reg:chk",
+         "r10c1p14reg:chk"
+        ],
+        [
+         "r10c1p17reg:chk",
+         "r11c1p21reg:chk"
+        ],
+        [
+         "r11c1p21reg:chk",
+         "r12c1p25reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Dipendenza",
+       "id": "r10c1p17reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r11c2p20reg:txt",
+         "kind": "text",
+         "label": "da n. stelle",
+         "context": "Dipendenza",
+         "max": 30
+        },
+        {
+         "id": "r11c3p22reg:txt",
+         "kind": "text",
+         "label": "a n. stelle",
+         "context": "Dipendenza",
+         "max": 30
+        }
+       ],
+       "moved": [
+        [
+         "r10c1p17reg:chk",
+         "r11c1p18reg:chk"
+        ],
+        [
+         "r11c1p21reg:chk",
+         "r12c1p25reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "ALTRO",
+     "id": "r11c1p21reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r12c2p24reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "ALTRO",
+       "max": 200
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p21reg:chk",
+       "r12c1p22reg:chk"
+      ]
+     ]
+    }
+   ],
+   "seconds": 13
+  },
+  {
+   "section": "carattere dell'esercizio",
+   "fingerprint": "a813ea7ddc5066d0",
+   "same_as": "suap-056-aprire-l-attivita#carattere dell'esercizio",
+   "seconds": 0.6
+  },
+  {
+   "section": "Tipologia di esercizio",
+   "fingerprint": "648b60a2e2983086",
+   "same_as": "suap-054-aprire-l-attivita#Tipologia di esercizio",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dotazioni e servizi della struttura",
+   "fingerprint": "5802461be2ecea53",
+   "same_as": "suap-054-aprire-l-attivita#Dotazioni e servizi della struttura",
+   "seconds": 0.6
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

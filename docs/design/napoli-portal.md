@@ -30,14 +30,17 @@ the pratiche. `claude/skills/pratica/portal/`:
 Where it stands (2026-10-28): `crawl.js` crawls in batches on one scratch draft, each section
 once by fingerprint (`catalogue/README.md`). SUE: all 27 pratiche crawled, 127 distinct
 sections, 88 in the dictionary (88% of uses), 20 pratiche complete; 7 generated and run
-(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 39 of 361
-operations crawled so far (the batch continues), 58 distinct sections, 18 in the dictionary
-(84% of uses); the acconciatore and a restaurant's opening generated and run. A drift check
+(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 160 pratiche
+crawled so far (the priority sectors; the batch continues, 1,028 trips in all), 236 distinct
+sections, 21 in the dictionary (71% of uses); the acconciatore, a restaurant's opening and its
+closure generated and run. A drift check
 reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
-`draft.py` measured honestly (`schema/README.md`): on the restaurant it was improved on, 113
-of 115 boxes right; on two SUAP pratiche it wasn't, 27 of 47 right and 13 wrong. Drafts are
-for a person to check, never used unchecked.
+`draft.py` pairs boxes with the national schema by order and type, since the portal draws a
+section in the schema's order (`schema/README.md`): on two SUAP pratiche it wasn't tuned on, 44
+of 49 boxes right (33 before), and sections it marks `exact` held 17 of 18. Drafts are for a
+person to check, never used unchecked. The pratica's XML, which would name each box's schema
+field, exists only once a pratica is sent: the portal offers PDFs before (`rehearsals/cessazione-fittizia`).
 
 Next: finish the SUAP batch and import it; the dictionary in order of use; the SUE's last
 seven pratiche with a professional (asseverazioni, landscape classifications).

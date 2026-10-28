@@ -1,0 +1,568 @@
+{
+ "crawled": "2026-10-28T18:00:35.187Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni soggetti (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 72.3,
+ "generated": {
+  "interventi": "Variazioni soggetti in attività di commercio al dettaglio Vicinato - settore merceologico Alimentare o Misto",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazioni soggetti in attività di commercio al dettaglio",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dati catastali",
+   "Estremi del titolo/i abilitativo/i",
+   "dichiarazione relativa alle variazioni della società o dei soggetti",
+   "dichiarazioni sul possesso dei requisiti di onorabilità",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "L'attività esercitata comprende il settore alimentare e la variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "La variazione riguarda la compagine sociale"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "L'attività esercitata comprende il settore alimentare e la variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione di possesso dei requisiti di onorabilità e professionali"
+   ],
+   "drops": [
+    "dichiarazioni sul possesso dei requisiti di onorabilità"
+   ]
+  },
+  {
+   "option": "La variazione riguarda la compagine sociale",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.5
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.3
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.1
+  },
+  {
+   "section": "Estremi del titolo/i abilitativo/i",
+   "fingerprint": "2a5e5f2dfd5d1a69",
+   "same_as": "suap-060-variazione-del-preposto-in-attivita-di-somministra#estremi del/i titolo/i autorizzatorio/i posseduto/i",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione relativa alle variazioni della società o dei soggetti",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "CAMBIO LEGALE RAPPRESENTANTE"
+    },
+    {
+     "id": "r4c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "CAMBIO DELLA PERSONA IN POSSESSO DEI REQUISITI PROFESSIONALI"
+    },
+    {
+     "id": "r7c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "MODIFICA DENOMINAZIONE / RAGIONE SOCIALE / SEDE LEGALE"
+    }
+   ],
+   "fingerprint": "736895c47de0d1f2",
+   "text": "dichiarazione relativa alle variazioni della società o dei soggetti CAMBIO LEGALE RAPPRESENTANTE CAMBIO DELLA PERSONA IN POSSESSO DEI REQUISITI PROFESSIONALI MODIFICA DENOMINAZIONE / RAGIONE SOCIALE / SEDE LEGALE",
+   "branches": [
+    {
+     "choice": "CAMBIO LEGALE RAPPRESENTANTE",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r3c1p5reg:radio:0_clone",
+       "kind": "radio",
+       "label": "Verbale",
+       "group": "r3c1p5reg:radio"
+      },
+      {
+       "id": "r4c1p8reg:radio:1_clone",
+       "kind": "radio",
+       "label": "Delibera societaria del CdA o Assemblea",
+       "group": "r4c1p8reg:radio"
+      },
+      {
+       "id": "r5c1p11reg:radio:2_clone",
+       "kind": "radio",
+       "label": "Altro",
+       "group": "r5c1p11reg:radio"
+      },
+      {
+       "id": "r8c1p17reg:calendar_input",
+       "kind": "date",
+       "label": "in data"
+      },
+      {
+       "id": "r8c2p19reg:txt",
+       "kind": "text",
+       "label": "è stato nominato LEGALE RAPPRESENTANTE il/la Sig./la Sig.ra",
+       "max": 100
+      },
+      {
+       "id": "r10c1p23reg:txt",
+       "kind": "text",
+       "label": "in sostituzione del/della Sig./Sig.ra",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p9reg:chk",
+       "r11c1p24reg:chk"
+      ],
+      [
+       "r7c1p17reg:chk",
+       "r14c1p32reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Verbale",
+       "id": "r3c1p5reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r4c2p8reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r3c1p5reg:radio:0_clone",
+         "r4c1p6reg:radio:0_clone"
+        ],
+        [
+         "r4c1p8reg:radio:1_clone",
+         "r5c1p11reg:radio:1_clone"
+        ],
+        [
+         "r5c1p11reg:radio:2_clone",
+         "r6c1p14reg:radio:2_clone"
+        ],
+        [
+         "r8c1p17reg:calendar_input",
+         "r9c1p20reg:calendar_input"
+        ],
+        [
+         "r8c2p19reg:txt",
+         "r9c2p22reg:txt"
+        ],
+        [
+         "r10c1p23reg:txt",
+         "r11c1p26reg:txt"
+        ],
+        [
+         "r11c1p24reg:chk",
+         "r12c1p27reg:chk"
+        ],
+        [
+         "r14c1p32reg:chk",
+         "r15c1p35reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Delibera societaria del CdA o Assemblea",
+       "id": "r4c1p8reg:radio:1_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r5c2p11reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r4c1p8reg:radio:1_clone",
+         "r5c1p9reg:radio:1_clone"
+        ],
+        [
+         "r5c1p11reg:radio:2_clone",
+         "r6c1p14reg:radio:2_clone"
+        ],
+        [
+         "r8c1p17reg:calendar_input",
+         "r9c1p20reg:calendar_input"
+        ],
+        [
+         "r8c2p19reg:txt",
+         "r9c2p22reg:txt"
+        ],
+        [
+         "r10c1p23reg:txt",
+         "r11c1p26reg:txt"
+        ],
+        [
+         "r11c1p24reg:chk",
+         "r12c1p27reg:chk"
+        ],
+        [
+         "r14c1p32reg:chk",
+         "r15c1p35reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Altro",
+       "id": "r5c1p11reg:radio:2_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r6c2p14reg:txt",
+         "kind": "text",
+         "label": "specificare",
+         "context": "Altro",
+         "max": 200
+        }
+       ],
+       "moved": [
+        [
+         "r5c1p11reg:radio:2_clone",
+         "r6c1p12reg:radio:2_clone"
+        ],
+        [
+         "r8c1p17reg:calendar_input",
+         "r9c1p19reg:calendar_input"
+        ],
+        [
+         "r8c2p19reg:txt",
+         "r9c2p21reg:txt"
+        ],
+        [
+         "r10c1p23reg:txt",
+         "r11c1p25reg:txt"
+        ],
+        [
+         "r11c1p24reg:chk",
+         "r12c1p26reg:chk"
+        ],
+        [
+         "r14c1p32reg:chk",
+         "r15c1p34reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "CAMBIO DELLA PERSONA IN POSSESSO DEI REQUISITI PROFESSIONALI",
+     "id": "r4c1p9reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c1p14reg:radio:0_clone",
+       "kind": "radio",
+       "label": "Verbale",
+       "group": "r7c1p14reg:radio"
+      },
+      {
+       "id": "r8c1p17reg:radio:1_clone",
+       "kind": "radio",
+       "label": "Delibera societaria del CdA o Assemblea",
+       "group": "r8c1p17reg:radio"
+      },
+      {
+       "id": "r9c1p20reg:radio:2_clone",
+       "kind": "radio",
+       "label": "Altro",
+       "group": "r9c1p20reg:radio"
+      },
+      {
+       "id": "r12c1p26reg:calendar_input",
+       "kind": "date",
+       "label": "in data"
+      },
+      {
+       "id": "r12c2p28reg:txt",
+       "kind": "text",
+       "label": "è stato nominato il/la Sig./la Sig.ra",
+       "max": 100
+      },
+      {
+       "id": "r14c1p32reg:txt",
+       "kind": "text",
+       "label": "in sostituzione del/della Sig./Sig.ra",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p17reg:chk",
+       "r15c1p33reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Verbale",
+       "id": "r7c1p14reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r8c2p17reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r7c1p14reg:radio:0_clone",
+         "r8c1p15reg:radio:0_clone"
+        ],
+        [
+         "r8c1p17reg:radio:1_clone",
+         "r9c1p20reg:radio:1_clone"
+        ],
+        [
+         "r9c1p20reg:radio:2_clone",
+         "r10c1p23reg:radio:2_clone"
+        ],
+        [
+         "r12c1p26reg:calendar_input",
+         "r13c1p29reg:calendar_input"
+        ],
+        [
+         "r12c2p28reg:txt",
+         "r13c2p31reg:txt"
+        ],
+        [
+         "r14c1p32reg:txt",
+         "r15c1p35reg:txt"
+        ],
+        [
+         "r15c1p33reg:chk",
+         "r16c1p36reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Delibera societaria del CdA o Assemblea",
+       "id": "r8c1p17reg:radio:1_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r9c2p20reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r8c1p17reg:radio:1_clone",
+         "r9c1p18reg:radio:1_clone"
+        ],
+        [
+         "r9c1p20reg:radio:2_clone",
+         "r10c1p23reg:radio:2_clone"
+        ],
+        [
+         "r12c1p26reg:calendar_input",
+         "r13c1p29reg:calendar_input"
+        ],
+        [
+         "r12c2p28reg:txt",
+         "r13c2p31reg:txt"
+        ],
+        [
+         "r14c1p32reg:txt",
+         "r15c1p35reg:txt"
+        ],
+        [
+         "r15c1p33reg:chk",
+         "r16c1p36reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Altro",
+       "id": "r9c1p20reg:radio:2_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r10c2p23reg:txt",
+         "kind": "text",
+         "label": "specificare",
+         "context": "Altro",
+         "max": 200
+        }
+       ],
+       "moved": [
+        [
+         "r9c1p20reg:radio:2_clone",
+         "r10c1p21reg:radio:2_clone"
+        ],
+        [
+         "r12c1p26reg:calendar_input",
+         "r13c1p28reg:calendar_input"
+        ],
+        [
+         "r12c2p28reg:txt",
+         "r13c2p30reg:txt"
+        ],
+        [
+         "r14c1p32reg:txt",
+         "r15c1p34reg:txt"
+        ],
+        [
+         "r15c1p33reg:chk",
+         "r16c1p35reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "MODIFICA DENOMINAZIONE / RAGIONE SOCIALE / SEDE LEGALE",
+     "id": "r7c1p17reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r8c1p19reg:chk",
+       "kind": "checkbox",
+       "label": "Il/La sottoscritto/a COMUNICA la modifica della DENOMINAZIONE/RAGIONE SOCIALE"
+      },
+      {
+       "id": "r10c1p23reg:chk",
+       "kind": "checkbox",
+       "label": "Il/la sottoscritto/a comunica la modifica della SEDE LEGALE"
+      }
+     ]
+    }
+   ],
+   "seconds": 29.6
+  },
+  {
+   "section": "dichiarazioni sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 2.5
+  },
+  {
+   "section": "dichiarazione di possesso dei requisiti di onorabilità e professionali",
+   "skipped": "the person's declarations",
+   "scelta": "L'attività esercitata comprende il settore alimentare e la variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.3,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

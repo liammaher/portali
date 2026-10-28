@@ -1,0 +1,1007 @@
+{
+ "crawled": "2026-10-28T18:21:20.349Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › SCIA per variazioni strutturali (sector Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna))",
+ "seconds": 33,
+ "generated": {
+  "interventi": "Variazioni in attività di struttura ricettiva extralberghiera",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per strutture ricettive extralberghiere",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "TIPOLOGIA",
+   "Variazioni",
+   "carattere dell'esercizio",
+   "Dotazioni e servizi della struttura",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di esercizio con capacità ricettiva superiore a 25 posti letto o comunque in caso di attività soggetta ai controlli di prevenzione incendi"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "4_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "6",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone tutelate"
+    },
+    {
+     "key": "6_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "6_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "6_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "6_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "6_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "6_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "6_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "7",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "7_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "7_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "7_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "7_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "7_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "7_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "7_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "TIPOLOGIA",
+   "fingerprint": "c538e9c641921b16",
+   "same_as": "suap-056-aprire-l-attivita#TIPOLOGIA",
+   "seconds": 0.7
+  },
+  {
+   "section": "Variazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Il sottoscritto SEGNALA:",
+     "max": 50
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "che la struttura ricettiva in oggetto, già avviata con la SCIA/DIA/autorizzazione prot./n.",
+     "max": 50
+    },
+    {
+     "id": "r4c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r6c1p12reg:txt",
+     "kind": "text",
+     "label": "presentata al Comune di",
+     "max": 100
+    },
+    {
+     "id": "r6c2p14reg:txt",
+     "kind": "text",
+     "label": "prov.",
+     "max": 2
+    },
+    {
+     "id": "r8c1p18reg:txt",
+     "kind": "text",
+     "label": "avente CIN",
+     "max": 50
+    },
+    {
+     "id": "r8c2p20reg:txt",
+     "kind": "text",
+     "label": "e CUSR",
+     "max": 50
+    },
+    {
+     "id": "r9c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA CAPACITÀ RICETTIVA:"
+    },
+    {
+     "id": "r11c1p27reg:number",
+     "kind": "text",
+     "label": "TOTALE complessivo posti letto della struttura a seguito di variazione n.",
+     "max": 5
+    },
+    {
+     "id": "r13c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "Camere"
+    },
+    {
+     "id": "r15c1p36reg:chk",
+     "kind": "checkbox",
+     "label": "Unità abitative"
+    }
+   ],
+   "fingerprint": "e70c51b6ef1df7cf",
+   "text": "Variazioni Il sottoscritto SEGNALA: che la struttura ricettiva in oggetto, già avviata con la SCIA/DIA/autorizzazione prot./n. del presentata al Comune di prov. avente CIN e CUSR è soggetta alle seguenti variazioni: VARIAZIONE DELLA CAPACITÀ RICETTIVA: TOTALE complessivo posti letto della struttura a seguito di variazione n. DETTAGLIO della capacità ricettiva a seguito di variazione: Camere Unità abitative",
+   "branches": [
+    {
+     "choice": "VARIAZIONE DELLA CAPACITÀ RICETTIVA:",
+     "id": "r9c1p25reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r11c1p27reg:number",
+       "kind": "text",
+       "label": "da n. camere",
+       "max": 5
+      },
+      {
+       "id": "r11c2p29reg:number",
+       "kind": "text",
+       "label": "a n. camere",
+       "max": 5
+      },
+      {
+       "id": "r11c3p31reg:number",
+       "kind": "text",
+       "label": "da n. posti letto",
+       "max": 5
+      },
+      {
+       "id": "r11c4p33reg:number",
+       "kind": "text",
+       "label": "a n. posti letto",
+       "max": 5
+      },
+      {
+       "id": "r13c1p37reg:number",
+       "kind": "text",
+       "label": "da n. unità abitative",
+       "max": 5
+      },
+      {
+       "id": "r13c2p39reg:number",
+       "kind": "text",
+       "label": "a n. unità abitative",
+       "max": 5
+      },
+      {
+       "id": "r13c3p41reg:number",
+       "kind": "text",
+       "label": "da n. posti letto",
+       "max": 5
+      },
+      {
+       "id": "r13c4p43reg:number",
+       "kind": "text",
+       "label": "a n. posti letto",
+       "max": 5
+      },
+      {
+       "id": "r15c1p47reg:txt",
+       "kind": "text",
+       "label": "altro (specificare)",
+       "max": 500
+      },
+      {
+       "id": "r21c1p55reg:chk",
+       "kind": "checkbox",
+       "label": "altro"
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p27reg:number",
+       "r17c1p49reg:number"
+      ],
+      [
+       "r13c1p31reg:chk",
+       "r19c1p53reg:chk"
+      ],
+      [
+       "r15c1p36reg:chk",
+       "r20c1p54reg:chk"
+      ],
+      [
+       "r11c1p27reg:number",
+       "r23c1p58reg:number"
+      ],
+      [
+       "r13c1p31reg:chk",
+       "r25c1p60reg:chk"
+      ],
+      [
+       "r15c1p36reg:chk",
+       "r27c1p65reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "altro",
+       "id": "r21c1p55reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r22c2p58reg:txt",
+         "kind": "text",
+         "label": "specificare",
+         "context": "altro",
+         "max": 200
+        }
+       ],
+       "moved": [
+        [
+         "r13c3p41reg:number",
+         "r11c3p31reg:number"
+        ],
+        [
+         "r13c4p43reg:number",
+         "r11c4p33reg:number"
+        ],
+        [
+         "r23c1p58reg:number",
+         "r17c1p49reg:number"
+        ],
+        [
+         "r25c1p60reg:chk",
+         "r19c1p53reg:chk"
+        ],
+        [
+         "r27c1p65reg:chk",
+         "r20c1p54reg:chk"
+        ],
+        [
+         "r21c1p55reg:chk",
+         "r22c1p56reg:chk"
+        ],
+        [
+         "r23c1p58reg:number",
+         "r24c1p60reg:number"
+        ],
+        [
+         "r25c1p60reg:chk",
+         "r26c1p62reg:chk"
+        ],
+        [
+         "r27c1p65reg:chk",
+         "r28c1p67reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "Camere",
+     "id": "r13c1p31reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r14c1p33reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere singole"
+      },
+      {
+       "id": "r15c1p39reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere doppie"
+      },
+      {
+       "id": "r16c1p45reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere triple"
+      },
+      {
+       "id": "r17c1p51reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere quadruple"
+      },
+      {
+       "id": "r18c1p57reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere con più di 4 letti"
+      },
+      {
+       "id": "r19c1p63reg:chk",
+       "kind": "checkbox",
+       "label": "Cuccette (per rifugi di montagna)"
+      },
+      {
+       "id": "r21c1p67reg:number",
+       "kind": "text",
+       "label": "TOTALE camere n.",
+       "max": 4
+      },
+      {
+       "id": "r21c2p69reg:number",
+       "kind": "text",
+       "label": "TOTALE posti letto camere n.",
+       "max": 4
+      }
+     ],
+     "moved": [
+      [
+       "r15c1p36reg:chk",
+       "r22c1p72reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Numero camere singole",
+       "id": "r14c1p33reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r15c2p36reg:number",
+         "kind": "text",
+         "label": "con bagno (n.)",
+         "context": "Numero camere singole",
+         "max": 3
+        },
+        {
+         "id": "r15c3p38reg:number",
+         "kind": "text",
+         "label": "senza bagno (n.)",
+         "context": "Numero camere singole",
+         "max": 3
+        },
+        {
+         "id": "r15c4p40reg:number",
+         "kind": "text",
+         "label": "totale camere (n.)",
+         "context": "Numero camere singole",
+         "max": 5
+        },
+        {
+         "id": "r15c5p42reg:number",
+         "kind": "text",
+         "label": "Totale posti letto (n.)",
+         "context": "Numero camere singole",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r14c1p33reg:chk",
+         "r15c1p34reg:chk"
+        ],
+        [
+         "r15c1p39reg:chk",
+         "r16c1p45reg:chk"
+        ],
+        [
+         "r16c1p45reg:chk",
+         "r17c1p51reg:chk"
+        ],
+        [
+         "r17c1p51reg:chk",
+         "r18c1p57reg:chk"
+        ],
+        [
+         "r18c1p57reg:chk",
+         "r19c1p63reg:chk"
+        ],
+        [
+         "r19c1p63reg:chk",
+         "r20c1p69reg:chk"
+        ],
+        [
+         "r21c1p67reg:number",
+         "r22c1p73reg:number"
+        ],
+        [
+         "r21c2p69reg:number",
+         "r22c2p75reg:number"
+        ],
+        [
+         "r22c1p72reg:chk",
+         "r23c1p78reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere doppie",
+       "id": "r15c1p39reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r16c2p42reg:number",
+         "kind": "text",
+         "label": "con bagno (n.)",
+         "context": "Numero camere doppie",
+         "max": 3
+        },
+        {
+         "id": "r16c3p44reg:number",
+         "kind": "text",
+         "label": "senza bagno (n.)",
+         "context": "Numero camere doppie",
+         "max": 3
+        },
+        {
+         "id": "r16c4p46reg:number",
+         "kind": "text",
+         "label": "totale camere (n.)",
+         "context": "Numero camere doppie",
+         "max": 5
+        },
+        {
+         "id": "r16c5p48reg:number",
+         "kind": "text",
+         "label": "Totale posti letto (n.)",
+         "context": "Numero camere doppie",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r15c1p39reg:chk",
+         "r16c1p40reg:chk"
+        ],
+        [
+         "r16c1p45reg:chk",
+         "r17c1p51reg:chk"
+        ],
+        [
+         "r17c1p51reg:chk",
+         "r18c1p57reg:chk"
+        ],
+        [
+         "r18c1p57reg:chk",
+         "r19c1p63reg:chk"
+        ],
+        [
+         "r19c1p63reg:chk",
+         "r20c1p69reg:chk"
+        ],
+        [
+         "r21c1p67reg:number",
+         "r22c1p73reg:number"
+        ],
+        [
+         "r21c2p69reg:number",
+         "r22c2p75reg:number"
+        ],
+        [
+         "r22c1p72reg:chk",
+         "r23c1p78reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere triple",
+       "id": "r16c1p45reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r17c2p48reg:number",
+         "kind": "text",
+         "label": "con bagno (n.)",
+         "context": "Numero camere triple",
+         "max": 3
+        },
+        {
+         "id": "r17c3p50reg:txt",
+         "kind": "text",
+         "label": "senza bagno (n.)",
+         "context": "Numero camere triple",
+         "max": 3
+        },
+        {
+         "id": "r17c4p52reg:number",
+         "kind": "text",
+         "label": "totale camere (n.)",
+         "context": "Numero camere triple",
+         "max": 5
+        },
+        {
+         "id": "r17c5p54reg:number",
+         "kind": "text",
+         "label": "Totale posti letto (n.)",
+         "context": "Numero camere triple",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r16c1p45reg:chk",
+         "r17c1p46reg:chk"
+        ],
+        [
+         "r17c1p51reg:chk",
+         "r18c1p57reg:chk"
+        ],
+        [
+         "r18c1p57reg:chk",
+         "r19c1p63reg:chk"
+        ],
+        [
+         "r19c1p63reg:chk",
+         "r20c1p69reg:chk"
+        ],
+        [
+         "r21c1p67reg:number",
+         "r22c1p73reg:number"
+        ],
+        [
+         "r21c2p69reg:number",
+         "r22c2p75reg:number"
+        ],
+        [
+         "r22c1p72reg:chk",
+         "r23c1p78reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere quadruple",
+       "id": "r17c1p51reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r18c2p54reg:number",
+         "kind": "text",
+         "label": "con bagno (n.)",
+         "context": "Numero camere quadruple",
+         "max": 3
+        },
+        {
+         "id": "r18c3p56reg:number",
+         "kind": "text",
+         "label": "senza bagno (n.)",
+         "context": "Numero camere quadruple",
+         "max": 3
+        },
+        {
+         "id": "r18c4p58reg:number",
+         "kind": "text",
+         "label": "totale camere (n.)",
+         "context": "Numero camere quadruple",
+         "max": 5
+        },
+        {
+         "id": "r18c5p60reg:number",
+         "kind": "text",
+         "label": "Totale posti letto (n.)",
+         "context": "Numero camere quadruple",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r17c1p51reg:chk",
+         "r18c1p52reg:chk"
+        ],
+        [
+         "r18c1p57reg:chk",
+         "r19c1p63reg:chk"
+        ],
+        [
+         "r19c1p63reg:chk",
+         "r20c1p69reg:chk"
+        ],
+        [
+         "r21c1p67reg:number",
+         "r22c1p73reg:number"
+        ],
+        [
+         "r21c2p69reg:number",
+         "r22c2p75reg:number"
+        ],
+        [
+         "r22c1p72reg:chk",
+         "r23c1p78reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere con più di 4 letti",
+       "id": "r18c1p57reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r19c2p60reg:number",
+         "kind": "text",
+         "label": "con bagno (n.)",
+         "context": "Numero camere con più di 4 letti",
+         "max": 3
+        },
+        {
+         "id": "r19c3p62reg:number",
+         "kind": "text",
+         "label": "senza bagno (n.)",
+         "context": "Numero camere con più di 4 letti",
+         "max": 3
+        },
+        {
+         "id": "r19c4p64reg:number",
+         "kind": "text",
+         "label": "totale camere (n.)",
+         "context": "Numero camere con più di 4 letti",
+         "max": 5
+        },
+        {
+         "id": "r19c5p66reg:number",
+         "kind": "text",
+         "label": "Totale posti letto (n.)",
+         "context": "Numero camere con più di 4 letti",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r18c1p57reg:chk",
+         "r19c1p58reg:chk"
+        ],
+        [
+         "r19c1p63reg:chk",
+         "r20c1p69reg:chk"
+        ],
+        [
+         "r21c1p67reg:number",
+         "r22c1p73reg:number"
+        ],
+        [
+         "r21c2p69reg:number",
+         "r22c2p75reg:number"
+        ],
+        [
+         "r22c1p72reg:chk",
+         "r23c1p78reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Cuccette (per rifugi di montagna)",
+       "id": "r19c1p63reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r20c2p66reg:number",
+         "kind": "text",
+         "label": "Totale posti letto (n.)",
+         "context": "Cuccette (per rifugi di montagna)",
+         "max": 5
+        }
+       ],
+       "moved": [
+        [
+         "r19c1p63reg:chk",
+         "r20c1p64reg:chk"
+        ],
+        [
+         "r21c1p67reg:number",
+         "r22c1p70reg:number"
+        ],
+        [
+         "r21c2p69reg:number",
+         "r22c2p72reg:number"
+        ],
+        [
+         "r22c1p72reg:chk",
+         "r23c1p75reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "Unità abitative",
+     "id": "r15c1p36reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r17c1p39reg:number",
+       "kind": "text",
+       "label": "Unità dello stesso tipo n.",
+       "max": 3
+      },
+      {
+       "id": "r17c2p41reg",
+       "kind": "select",
+       "label": "Tipologia",
+       "options": [
+        "Monolocali",
+        "Appartamenti composti da più locali"
+       ]
+      },
+      {
+       "id": "r19c1p45reg",
+       "kind": "select",
+       "label": "Soggiorno",
+       "options": [
+        "in vano con pernottamento",
+        "in vano separato dal pernottamento"
+       ]
+      },
+      {
+       "id": "r20c2p49reg:radio:0_clone",
+       "kind": "radio",
+       "label": "si",
+       "group": "r20c2p49reg:radio"
+      },
+      {
+       "id": "r20c3p50reg:radio:1_clone",
+       "kind": "radio",
+       "label": "no",
+       "group": "r20c3p50reg:radio"
+      },
+      {
+       "id": "r22c1p53reg:number",
+       "kind": "text",
+       "label": "Bagni privati n.",
+       "max": 2
+      },
+      {
+       "id": "r25c1p59reg:number",
+       "kind": "text",
+       "label": "TOTALE unità abitative n.",
+       "max": 3
+      },
+      {
+       "id": "r25c2p61reg:number",
+       "kind": "text",
+       "label": "TOTALE posti letto unità abitative n.",
+       "max": 4
+      }
+     ],
+     "plus": {
+      "anchor": "Unità dello stesso tipo n.",
+      "adds": 12
+     },
+     "then": [
+      {
+       "choice": "Tipologia = Monolocali",
+       "id": "r17c2p41reg",
+       "kind": "select",
+       "option": "Monolocali"
+      },
+      {
+       "choice": "Tipologia = Appartamenti composti da più locali",
+       "id": "r17c2p41reg",
+       "kind": "select",
+       "option": "Appartamenti composti da più locali"
+      },
+      {
+       "choice": "Soggiorno = in vano con pernottamento",
+       "id": "r19c1p45reg",
+       "kind": "select",
+       "option": "in vano con pernottamento"
+      },
+      {
+       "choice": "Soggiorno = in vano separato dal pernottamento",
+       "id": "r19c1p45reg",
+       "kind": "select",
+       "option": "in vano separato dal pernottamento"
+      },
+      {
+       "choice": "si",
+       "id": "r20c2p49reg:radio:0_clone",
+       "kind": "radio"
+      },
+      {
+       "choice": "no",
+       "id": "r20c3p50reg:radio:1_clone",
+       "kind": "radio"
+      }
+     ]
+    }
+   ],
+   "seconds": 18.8
+  },
+  {
+   "section": "carattere dell'esercizio",
+   "fingerprint": "a813ea7ddc5066d0",
+   "same_as": "suap-056-aprire-l-attivita#carattere dell'esercizio",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dotazioni e servizi della struttura",
+   "fingerprint": "4b61536ed9c47557",
+   "same_as": "suap-056-aprire-l-attivita#Dotazioni e servizi della struttura",
+   "seconds": 0.7
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

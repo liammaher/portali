@@ -1,0 +1,230 @@
+{
+ "crawled": "2026-10-28T18:22:26.557Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Affitto di poltrona/cabina per esercizio attività di acconciatore e/o estetista (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 14.9,
+ "generated": {
+  "interventi": "Comunicazione di affitto di poltrona/cabina per esercizio attività di acconciatore e/o estetista",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di affitto di poltrona/cabina per esercizio attività di acconciatore e/o estetista",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "Dati catastali",
+   "oggetto della comunicazione",
+   "dichiarazione relativa al contratto di affitto",
+   "altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "oggetto della comunicazione",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "per l'attività di:",
+     "max": 50
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "nell'esercizio di:",
+     "max": 50
+    }
+   ],
+   "fingerprint": "ee1160c5e628d211",
+   "text": "oggetto della comunicazione Il/la sottoscritto/a COMUNICA l'avvio dell'affitto di poltrona e/o cabina: per l'attività di: nell'esercizio di:",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa al contratto di affitto",
+   "fields": [
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "atto pubblico",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:number",
+     "kind": "text",
+     "label": "rep. n°",
+     "context": "atto pubblico",
+     "max": 30
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "label": "scrittura privata",
+     "group": "r5c1p11reg:radio"
+    },
+    {
+     "id": "r5c2p13reg:number",
+     "kind": "text",
+     "label": "registrata al n°",
+     "context": "scrittura privata",
+     "max": 30
+    },
+    {
+     "id": "r5c3p15reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c1p19reg:calendar_input",
+     "kind": "date",
+     "label": "con validità fino alla data del"
+    },
+    {
+     "id": "r16c1p34reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+     "context": "Allegare la copia del contratto di affitto di poltrona, in forma di atto pubblico o scrittura privata, registrata all'Ag",
+     "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+    }
+   ],
+   "fingerprint": "d3a4104e60fb8016",
+   "text": "dichiarazione relativa al contratto di affitto Il/la sottoscritto/a dichiara che ha sottoscritto un contratto di affitto, ai sensi dell'art. 1615 cod.civ., nella forma prevista dalla normativa vigente per l'affitto di poltrona/cabina: rep. n° del atto pubblico registrata al n° del scrittura privata con validità fino alla data del Contratto stipulato tra il locatore e il conduttore in forma di atto pubblico o scrittura privata con firma autenticata, registrato all’Agenzia delle Entrate, contenente, tra l’altro, necessariamente: - la durata contrattuale di almeno un anno; - gli spazi lavorativi dati in uso dal locatore, appositamente specificati in una planimetria del locale allegata al contratto, nella quale sono, inoltre, specificate le postazioni di lavoro oggetto dell’affitto ad uso esclusivo del conduttore; - ove non previsto nel contratto di affitto, scrittura privata che definisca i criteri per l'utilizzo della strumentazione in modo che venga assicurata la netta distinzione degli strumenti e delle attrezzature in uso al conduttore da quelle del locatore, nonché indicazioni relative al tipo di prodotti utilizzati; - l’attività che verrà esercitata su ogni postazione di lavoro data in affitto; - il rapporto economico intercorrente tra le parti; - facoltà di recesso anticipato e le cause di risoluzione anticipata. Allegare la copia del contratto di affitto di poltrona, in forma di atto pubblico o scrittura privata, registrata all'Agenzia delle entrate Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+   "branches": [
+    {
+     "choice": "atto pubblico",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c3p15reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "scrittura privata",
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c3p15reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    }
+   ],
+   "seconds": 3.4
+  },
+  {
+   "section": "altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

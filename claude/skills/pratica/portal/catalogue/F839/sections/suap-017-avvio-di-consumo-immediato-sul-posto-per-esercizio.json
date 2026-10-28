@@ -1,0 +1,279 @@
+{
+ "crawled": "2026-10-28T17:50:45.296Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Avvio di consumo immediato sul posto per esercizio di vicinato alimentare (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 53,
+ "generated": {
+  "interventi": "Avvio di consumo immediato sul posto per esercizio di vicinato alimentare",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per avvio di consumo immediato sul posto per esercizio di vicinato alimentare",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "Estremi del titolo abilitativo dell'esercizio",
+   "prescrizioni per consumo immediato sul posto",
+   "Dichiarazione sul possesso dei requisiti di onorabilità e professionali",
+   "Altre dichiarazioni",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.5
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.4
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.3
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "Estremi del titolo abilitativo dell'esercizio",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "autorizzazione",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "comunicazione",
+     "group": "r2c2p4reg:radio"
+    },
+    {
+     "id": "r2c3p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "D.I.A.",
+     "group": "r2c3p5reg:radio"
+    },
+    {
+     "id": "r2c4p6reg:radio:3_clone",
+     "kind": "radio",
+     "label": "S.C.I.A.",
+     "group": "r2c4p6reg:radio"
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "prot. n°",
+     "max": 20
+    },
+    {
+     "id": "r4c2p10reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    }
+   ],
+   "fingerprint": "34d27f86ec97a534",
+   "text": "Estremi del titolo abilitativo dell'esercizio Estremi del titolo abilitativo posseduto autorizzazione comunicazione D.I.A. S.C.I.A. prot. n° del",
+   "branches": [
+    {
+     "choice": "autorizzazione",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "comunicazione",
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "D.I.A.",
+     "id": "r2c3p5reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "S.C.I.A.",
+     "id": "r2c4p6reg:radio:3_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 8.4
+  },
+  {
+   "section": "prescrizioni per consumo immediato sul posto",
+   "fields": [
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "PRESA VISIONE"
+    }
+   ],
+   "fingerprint": "297785383d09c1b0",
+   "text": "prescrizioni per consumo immediato sul posto ART. 17 co. 1, lett. a, b, c del regolamento per commercio al dettaglio in sede fissa su aree private approvato con delibera di c.c. n.35 del 30/06/2017 1. Negli esercizi di vicinato abilitati alla vendita di prodotti alimentari è consentito il consumo immediato dei medesimi prodotti utilizzando i locali dell’esercizio e gli arredi dell’azienda con esclusione del servizio assistito di somministrazione, in presenza dei necessari requisiti igienico-sanitari, con le seguenti modalità: a) l'utilizzo solo di arredi tipici degli esercizi di vicinato (es. banco di vendita, piano di appoggio), di piatti, bicchieri e posate monouso; b) il ritiro direttamente al banco di vendita degli alimenti pronti per il consumo sul posto; c) la vendita di bevande in confezione originale. Resta precluso l’utilizzo di tavoli e sedie tipici dell’attività di ristorazione, ma è consentito aprire bottiglie, lattine o altro, senza servire il prodotto. PRESA VISIONE",
+   "branches": [],
+   "seconds": 1.2
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità e professionali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 1.2
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 2.1
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.6,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 2.2,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

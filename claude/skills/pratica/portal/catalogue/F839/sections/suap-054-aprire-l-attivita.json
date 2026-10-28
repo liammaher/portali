@@ -1,0 +1,2047 @@
+{
+ "crawled": "2026-10-28T18:36:45.982Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector Strutture ricettive alberghiere (alberghi, motel, villaggi-albergo residenze turistico-alberghiere alberghi diffusi, condhotel e loro dipendenze))",
+ "seconds": 91.7,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività per strutture ricettive alberghiere",
+  "adempimenti": [
+   {
+    "adempimento": "Segnalazione Certificata di Inizio Attività per strutture ricettive alberghiere",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "apertura",
+   "carattere dell'esercizio",
+   "Tipologia di esercizio",
+   "classificazione della struttura",
+   "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "Dotazioni e servizi della struttura",
+   "capacità ricettiva",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di esercizio con capacità ricettiva superiore a 25 posti letto o comunque in caso di attività soggetta ai controlli di prevenzione incendi"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "4_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "6",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone tutelate"
+    },
+    {
+     "key": "6_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "6_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "6_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "6_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "6_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "6_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "6_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "7",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "7_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "7_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "7_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "7_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "7_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "7_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "7_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di NOMINA del RAPPRESENTANTE per l'esercizio dell'attività"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di autodichiarazione per la classificazione della struttura R.T.A."
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "in caso di autodichiarazione per la classificazione della struttura relativamente ad alberghi, motel, villaggi albergo, alberghi diffusi, dipendenze"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in caso di autodichiarazione per la classificazione della struttura R.T.A.",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "in caso di autodichiarazione per la classificazione della struttura relativamente ad alberghi, motel, villaggi albergo, alberghi diffusi, dipendenze",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "apertura",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Denominazione commerciale della struttura",
+     "max": 200
+    }
+   ],
+   "fingerprint": "53d23108f23e4dda",
+   "text": "apertura Il/la sottoscritto/a SEGNALA l'avvio dell'attività di una struttura ricettiva alberghiera: Denominazione commerciale della struttura",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "carattere dell'esercizio",
+   "fingerprint": "a813ea7ddc5066d0",
+   "same_as": "suap-056-aprire-l-attivita#carattere dell'esercizio",
+   "seconds": 0.7
+  },
+  {
+   "section": "Tipologia di esercizio",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "albergo",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "motel",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "villaggio-albergo",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "residenza turistico-alberghiera (RTA)",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio",
+     "label": "albergo diffuso",
+     "group": "r6c1p6reg:radio"
+    },
+    {
+     "id": "r7c1p7reg:radio:5_clone",
+     "kind": "radio",
+     "label": "condhotel",
+     "group": "r7c1p7reg:radio"
+    },
+    {
+     "id": "r10c1p13reg:radio:6_clone",
+     "kind": "radio",
+     "label": "dipendenza della struttura",
+     "group": "r10c1p13reg:radio"
+    }
+   ],
+   "fingerprint": "648b60a2e2983086",
+   "text": "Tipologia di esercizio Tipologia di esercizio albergo motel villaggio-albergo residenza turistico-alberghiera (RTA) albergo diffuso condhotel dipendenza della struttura",
+   "branches": [
+    {
+     "choice": "albergo",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "motel",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "villaggio-albergo",
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "residenza turistico-alberghiera (RTA)",
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "albergo diffuso",
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "condhotel",
+     "id": "r7c1p7reg:radio:5_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r9c1p9reg:chk",
+       "kind": "checkbox",
+       "label": "esecuzione di un intervento di riqualificazione edilizia di cui al PdC/SCIA"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p13reg:radio:6_clone",
+       "r11c1p14reg:radio:6_clone"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "esecuzione di un intervento di riqualificazione edilizia di cui al PdC/SCIA",
+       "id": "r9c1p9reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r11c1p12reg:txt",
+         "kind": "text",
+         "label": "n.",
+         "max": 20
+        },
+        {
+         "id": "r11c2p14reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r11c1p14reg:radio:6_clone",
+         "r12c1p17reg:radio:6_clone"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "dipendenza della struttura",
+     "id": "r10c1p13reg:radio:6_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p15reg:txt",
+       "kind": "text",
+       "label": "Denominazione della dipendenza",
+       "max": 100
+      },
+      {
+       "id": "r14c1p17reg:txt",
+       "kind": "text",
+       "label": "indirizzo",
+       "max": 100
+      },
+      {
+       "id": "r14c2p19reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 30
+      },
+      {
+       "id": "r16c1p21reg:txt",
+       "kind": "text",
+       "label": "comune",
+       "max": 50
+      },
+      {
+       "id": "r16c2p23reg:txt",
+       "kind": "text",
+       "label": "prov.",
+       "max": 2
+      },
+      {
+       "id": "r16c3p25reg:number",
+       "kind": "text",
+       "label": "CAP",
+       "max": 5
+      },
+      {
+       "id": "r18c1p29reg:txt",
+       "kind": "text",
+       "label": "Denominazione della struttura alberghiera principale",
+       "max": 100
+      },
+      {
+       "id": "r20c1p31reg:txt",
+       "kind": "text",
+       "label": "indirizzo",
+       "max": 9999
+      },
+      {
+       "id": "r20c2p33reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 30
+      },
+      {
+       "id": "r22c1p35reg:txt",
+       "kind": "text",
+       "label": "comune",
+       "max": 100
+      },
+      {
+       "id": "r22c2p37reg:txt",
+       "kind": "text",
+       "label": "prov.",
+       "max": 30
+      },
+      {
+       "id": "r22c3p39reg:number",
+       "kind": "text",
+       "label": "CAP",
+       "max": 5
+      }
+     ]
+    }
+   ],
+   "seconds": 8
+  },
+  {
+   "section": "classificazione della struttura",
+   "fields": [
+    {
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "1 stella",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "2 stelle",
+     "group": "r3c2p5reg:radio"
+    },
+    {
+     "id": "r3c3p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "3 stelle",
+     "group": "r3c3p6reg:radio"
+    },
+    {
+     "id": "r3c4p7reg:radio:3_clone",
+     "kind": "radio",
+     "label": "4 stelle",
+     "group": "r3c4p7reg:radio"
+    },
+    {
+     "id": "r3c5p8reg:radio:4_clone",
+     "kind": "radio",
+     "label": "5 stelle",
+     "group": "r3c5p8reg:radio"
+    },
+    {
+     "id": "r3c6p9reg:radio:5_clone",
+     "kind": "radio",
+     "label": "5 stelle lusso",
+     "group": "r3c6p9reg:radio"
+    },
+    {
+     "id": "r5c1p12reg:radio:6_clone",
+     "kind": "radio",
+     "label": "1 stella",
+     "group": "r5c1p12reg:radio"
+    },
+    {
+     "id": "r5c2p13reg:radio:7_clone",
+     "kind": "radio",
+     "label": "2 stelle",
+     "group": "r5c2p13reg:radio"
+    },
+    {
+     "id": "r5c3p14reg:radio:8_clone",
+     "kind": "radio",
+     "label": "3 stelle",
+     "group": "r5c3p14reg:radio"
+    },
+    {
+     "id": "r5c4p15reg:radio:9_clone",
+     "kind": "radio",
+     "label": "4 stelle",
+     "group": "r5c4p15reg:radio"
+    },
+    {
+     "id": "r5c5p16reg:radio:10_clone",
+     "kind": "radio",
+     "label": "5 stelle",
+     "group": "r5c5p16reg:radio"
+    },
+    {
+     "id": "r5c6p17reg:radio:11_clone",
+     "kind": "radio",
+     "label": "5 stelle lusso",
+     "group": "r5c6p17reg:radio"
+    }
+   ],
+   "fingerprint": "ef96bb3079f19c74",
+   "text": "classificazione della struttura Classificazione La struttura ricettiva in oggetto, in base ai punteggi ricavati dalla somma dei coefficienti numerici corrispondenti ai singoli requisiti posseduti e dichiarati nel modello di autovalutazione allegato alla presente Scia, detiene i requisiti per la classificazione con: 1 stella 2 stelle 3 stelle 4 stelle 5 stelle 5 stelle lusso La dipendenza (eventuale) in oggetto, in base ai punteggi ricavati dalla somma dei coefficienti numerici corrispondenti ai singoli requisiti posseduti e dichiarati nel modello di autovalutazione allegato alla presente Scia, detiene i requisiti per la classificazione con 1 stella 2 stelle 3 stelle 4 stelle 5 stelle 5 stelle lusso",
+   "branches": [
+    {
+     "choice": "1 stella",
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "2 stelle",
+     "id": "r3c2p5reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "3 stelle",
+     "id": "r3c3p6reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "4 stelle",
+     "id": "r3c4p7reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "5 stelle",
+     "id": "r3c5p8reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "5 stelle lusso",
+     "id": "r3c6p9reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "1 stella",
+     "id": "r5c1p12reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "2 stelle",
+     "id": "r5c2p13reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "3 stelle",
+     "id": "r5c3p14reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "4 stelle",
+     "id": "r5c4p15reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "5 stelle",
+     "id": "r5c5p16reg:radio:10_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "5 stelle lusso",
+     "id": "r5c6p17reg:radio:11_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c1p12reg:radio:6_clone",
+       "r3c1p4reg:radio:0_clone"
+      ],
+      [
+       "r5c2p13reg:radio:7_clone",
+       "r3c2p5reg:radio:1_clone"
+      ],
+      [
+       "r5c3p14reg:radio:8_clone",
+       "r3c3p6reg:radio:2_clone"
+      ],
+      [
+       "r5c4p15reg:radio:9_clone",
+       "r3c4p7reg:radio:3_clone"
+      ],
+      [
+       "r5c5p16reg:radio:10_clone",
+       "r3c5p8reg:radio:4_clone"
+      ],
+      [
+       "r5c6p17reg:radio:11_clone",
+       "r3c6p9reg:radio:5_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 10.2
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dotazioni e servizi della struttura",
+   "fields": [
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "non ha servizio di somministrazione di alimenti e bevande",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "prevede la somministrazione di alimenti e bevande confezionati agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "prevede la somministrazione di alimenti e bevande preparati agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p6reg:radio:3_clone",
+     "kind": "radio",
+     "label": "ha un servizio di somministrazione di alimenti e bevande aperto al pubblico in zona non sottoposta a tutela",
+     "group": "r6c1p6reg:radio"
+    },
+    {
+     "id": "r7c1p7reg:radio:4_clone",
+     "kind": "radio",
+     "label": "ha un servizio di somministrazione di alimenti e bevande aperto al pubblico in zona sottoposta a tutela",
+     "group": "r7c1p7reg:radio"
+    },
+    {
+     "id": "r9c1p9reg:radio:5_clone",
+     "kind": "radio",
+     "label": "non ha impianti ad uso natatorio",
+     "group": "r9c1p9reg:radio"
+    },
+    {
+     "id": "r11c1p11reg:radio:6_clone",
+     "kind": "radio",
+     "label": "ha impianti natatori riservati agli alloggiati",
+     "group": "r11c1p11reg:radio"
+    },
+    {
+     "id": "r11c2p13reg:number",
+     "kind": "text",
+     "label": "n. impianti",
+     "context": "ha impianti natatori riservati agli alloggiati",
+     "max": 2
+    },
+    {
+     "id": "r13c2p17reg:number",
+     "kind": "text",
+     "label": "di mq.",
+     "max": 5
+    },
+    {
+     "id": "r15c1p21reg:radio:7_clone",
+     "kind": "radio",
+     "label": "ha impianti natatori aperti al pubblico",
+     "group": "r15c1p21reg:radio"
+    },
+    {
+     "id": "r15c2p23reg:number",
+     "kind": "text",
+     "label": "n. impianti",
+     "context": "ha impianti natatori aperti al pubblico",
+     "max": 2
+    },
+    {
+     "id": "r17c2p27reg:number",
+     "kind": "text",
+     "label": "di mq.",
+     "max": 5
+    },
+    {
+     "id": "r19c1p31reg:radio:8_clone",
+     "kind": "radio",
+     "label": "non è dotata di centro estetico/benessere",
+     "group": "r19c1p31reg:radio"
+    },
+    {
+     "id": "r20c1p32reg:radio:9_clone",
+     "kind": "radio",
+     "label": "è dotata di centro estetico riservato agli alloggiati",
+     "group": "r20c1p32reg:radio"
+    },
+    {
+     "id": "r21c1p33reg:radio:10_clone",
+     "kind": "radio",
+     "label": "è dotata di centro estetico aperto al pubblico",
+     "group": "r21c1p33reg:radio"
+    },
+    {
+     "id": "r23c1p35reg:radio:11_clone",
+     "kind": "radio",
+     "label": "non è dotata di palestra/sala con attrezzi da palestra",
+     "group": "r23c1p35reg:radio"
+    },
+    {
+     "id": "r24c1p36reg:radio:12_clone",
+     "kind": "radio",
+     "label": "è dotata di palestra/sala con attrezzi da palestra riservata agli alloggiati",
+     "group": "r24c1p36reg:radio"
+    },
+    {
+     "id": "r25c1p37reg:radio:13_clone",
+     "kind": "radio",
+     "label": "è dotata di palestra/sala con attrezzi da palestra aperta al pubblico",
+     "group": "r25c1p37reg:radio"
+    },
+    {
+     "id": "r27c1p40reg:radio:14_clone",
+     "kind": "radio",
+     "label": "non effettua vendita di prodotti alimentari e artigianali",
+     "group": "r27c1p40reg:radio"
+    },
+    {
+     "id": "r28c1p41reg:radio:15_clone",
+     "kind": "radio",
+     "label": "effettua vendita di prodotti alimentari e artigianali agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni",
+     "group": "r28c1p41reg:radio"
+    },
+    {
+     "id": "r29c1p42reg:radio:16_clone",
+     "kind": "radio",
+     "label": "effettua vendita di prodotti alimentari e artigianali a non alloggiati",
+     "group": "r29c1p42reg:radio"
+    },
+    {
+     "id": "r32c1p45reg:txt",
+     "kind": "text",
+     "label": "altro",
+     "max": 200
+    },
+    {
+     "id": "r35c1p48reg:txt",
+     "kind": "text",
+     "label": "Servizio",
+     "max": 200
+    },
+    {
+     "id": "r35c2p50reg:txt",
+     "kind": "text",
+     "label": "Soggetto gestore",
+     "max": 200
+    }
+   ],
+   "fingerprint": "5802461be2ecea53",
+   "text": "Dotazioni e servizi della struttura Il/la sottoscritto/a dichiara che la struttura: Somministrazione di alimenti e bevande non ha servizio di somministrazione di alimenti e bevande prevede la somministrazione di alimenti e bevande confezionati agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni prevede la somministrazione di alimenti e bevande preparati agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni ha un servizio di somministrazione di alimenti e bevande aperto al pubblico in zona non sottoposta a tutela ha un servizio di somministrazione di alimenti e bevande aperto al pubblico in zona sottoposta a tutela Piscina non ha impianti ad uso natatorio n. impianti ha impianti natatori riservati agli alloggiati di mq. n. impianti ha impianti natatori aperti al pubblico di mq. Centro estetico/benessere non è dotata di centro estetico/benessere è dotata di centro estetico riservato agli alloggiati è dotata di centro estetico aperto al pubblico Palestra o sala con attrezzi da palestra non è dotata di palestra/sala con attrezzi da palestra è dotata di palestra/sala con attrezzi da palestra riservata agli alloggiati è dotata di palestra/sala con attrezzi da palestra aperta al pubblico Vendita di prodotti alimentari e artigianali In caso di ulteriori attività e servizi e per la vendita di specifici prodotti si applicano i relativi regimi amministrativi non effettua vendita di prodotti alimentari e artigianali effettua vendita di prodotti alimentari e artigianali agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni effettua vendita di prodotti alimentari e artigianali a non alloggiati Altro altro Specificare quali servizi sono gestiti da altri soggetti: Servizio Soggetto gestore",
+   "branches": [
+    {
+     "choice": "non ha servizio di somministrazione di alimenti e bevande",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "prevede la somministrazione di alimenti e bevande confezionati agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni",
+     "id": "r4c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "prevede la somministrazione di alimenti e bevande preparati agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni",
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "ha un servizio di somministrazione di alimenti e bevande aperto al pubblico in zona non sottoposta a tutela",
+     "id": "r6c1p6reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "ha un servizio di somministrazione di alimenti e bevande aperto al pubblico in zona sottoposta a tutela",
+     "id": "r7c1p7reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "non ha impianti ad uso natatorio",
+     "id": "r9c1p9reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "ha impianti natatori riservati agli alloggiati",
+     "id": "r11c1p11reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ],
+      [
+       "r15c1p21reg:radio:7_clone",
+       "r16c1p23reg:radio:7_clone"
+      ],
+      [
+       "r15c2p23reg:number",
+       "r16c2p25reg:number"
+      ],
+      [
+       "r17c2p27reg:number",
+       "r18c2p29reg:number"
+      ],
+      [
+       "r19c1p31reg:radio:8_clone",
+       "r20c1p33reg:radio:8_clone"
+      ],
+      [
+       "r20c1p32reg:radio:9_clone",
+       "r21c1p34reg:radio:9_clone"
+      ],
+      [
+       "r21c1p33reg:radio:10_clone",
+       "r22c1p35reg:radio:10_clone"
+      ],
+      [
+       "r23c1p35reg:radio:11_clone",
+       "r24c1p37reg:radio:11_clone"
+      ],
+      [
+       "r24c1p36reg:radio:12_clone",
+       "r25c1p38reg:radio:12_clone"
+      ],
+      [
+       "r25c1p37reg:radio:13_clone",
+       "r26c1p39reg:radio:13_clone"
+      ],
+      [
+       "r27c1p40reg:radio:14_clone",
+       "r28c1p42reg:radio:14_clone"
+      ],
+      [
+       "r28c1p41reg:radio:15_clone",
+       "r29c1p43reg:radio:15_clone"
+      ],
+      [
+       "r29c1p42reg:radio:16_clone",
+       "r30c1p44reg:radio:16_clone"
+      ],
+      [
+       "r32c1p45reg:txt",
+       "r33c1p47reg:txt"
+      ],
+      [
+       "r35c1p48reg:txt",
+       "r36c1p50reg:txt"
+      ],
+      [
+       "r35c2p50reg:txt",
+       "r36c2p52reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "ha impianti natatori aperti al pubblico",
+     "id": "r15c1p21reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ],
+      [
+       "r19c1p31reg:radio:8_clone",
+       "r20c1p33reg:radio:8_clone"
+      ],
+      [
+       "r20c1p32reg:radio:9_clone",
+       "r21c1p34reg:radio:9_clone"
+      ],
+      [
+       "r21c1p33reg:radio:10_clone",
+       "r22c1p35reg:radio:10_clone"
+      ],
+      [
+       "r23c1p35reg:radio:11_clone",
+       "r24c1p37reg:radio:11_clone"
+      ],
+      [
+       "r24c1p36reg:radio:12_clone",
+       "r25c1p38reg:radio:12_clone"
+      ],
+      [
+       "r25c1p37reg:radio:13_clone",
+       "r26c1p39reg:radio:13_clone"
+      ],
+      [
+       "r27c1p40reg:radio:14_clone",
+       "r28c1p42reg:radio:14_clone"
+      ],
+      [
+       "r28c1p41reg:radio:15_clone",
+       "r29c1p43reg:radio:15_clone"
+      ],
+      [
+       "r29c1p42reg:radio:16_clone",
+       "r30c1p44reg:radio:16_clone"
+      ],
+      [
+       "r32c1p45reg:txt",
+       "r33c1p47reg:txt"
+      ],
+      [
+       "r35c1p48reg:txt",
+       "r36c1p50reg:txt"
+      ],
+      [
+       "r35c2p50reg:txt",
+       "r36c2p52reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "non è dotata di centro estetico/benessere",
+     "id": "r19c1p31reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "è dotata di centro estetico riservato agli alloggiati",
+     "id": "r20c1p32reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "è dotata di centro estetico aperto al pubblico",
+     "id": "r21c1p33reg:radio:10_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "non è dotata di palestra/sala con attrezzi da palestra",
+     "id": "r23c1p35reg:radio:11_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "è dotata di palestra/sala con attrezzi da palestra riservata agli alloggiati",
+     "id": "r24c1p36reg:radio:12_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "è dotata di palestra/sala con attrezzi da palestra aperta al pubblico",
+     "id": "r25c1p37reg:radio:13_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "non effettua vendita di prodotti alimentari e artigianali",
+     "id": "r27c1p40reg:radio:14_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "effettua vendita di prodotti alimentari e artigianali agli alloggiati, ai loro ospiti e a coloro che sono presenti in caso di eventi o manifestazioni",
+     "id": "r28c1p41reg:radio:15_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "effettua vendita di prodotti alimentari e artigianali a non alloggiati",
+     "id": "r29c1p42reg:radio:16_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p27reg:number",
+       "r13c2p17reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Servizio",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 25.1
+  },
+  {
+   "section": "capacità ricettiva",
+   "fields": [
+    {
+     "id": "r2c2p4reg:number",
+     "kind": "text",
+     "label": "n.",
+     "context": "Totale complessivo posti letto",
+     "max": 4
+    },
+    {
+     "id": "r3c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "Camere"
+    },
+    {
+     "id": "r5c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "Unità abitative"
+    },
+    {
+     "id": "r7c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "Unità abitative ad uso residenziale (solo in caso di condhotel)"
+    },
+    {
+     "id": "r11c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "Ubicazione camere/unità abitative (da compilare se albergo diffuso)"
+    }
+   ],
+   "fingerprint": "82365c8524a1d162",
+   "text": "capacità ricettiva n. Totale complessivo posti letto Camere Unità abitative Unità abitative ad uso residenziale (solo in caso di condhotel) Ubicazione camere/unità abitative (da compilare se albergo diffuso)",
+   "branches": [
+    {
+     "choice": "Camere",
+     "id": "r3c1p7reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r5c1p10reg:number",
+       "kind": "text",
+       "label": "Totale camere n.",
+       "max": 4
+      },
+      {
+       "id": "r5c2p12reg:number",
+       "kind": "text",
+       "label": "per posti letto complessivi in camere n.",
+       "max": 4
+      },
+      {
+       "id": "r6c1p15reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere singole"
+      },
+      {
+       "id": "r7c1p19reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere doppie"
+      },
+      {
+       "id": "r8c1p23reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere triple"
+      },
+      {
+       "id": "r9c1p27reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere quadruple"
+      },
+      {
+       "id": "r10c1p31reg:chk",
+       "kind": "checkbox",
+       "label": "Numero camere con più di 4 letti"
+      },
+      {
+       "id": "r11c1p35reg:chk",
+       "kind": "checkbox",
+       "label": "Altro"
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p12reg:chk",
+       "r12c1p37reg:chk"
+      ],
+      [
+       "r7c1p16reg:chk",
+       "r14c1p41reg:chk"
+      ],
+      [
+       "r11c1p26reg:chk",
+       "r18c1p51reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Numero camere singole",
+       "id": "r6c1p15reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r7c2p18reg:number",
+         "kind": "text",
+         "label": "con bagno",
+         "context": "Numero camere singole",
+         "max": 3
+        },
+        {
+         "id": "r7c3p20reg:number",
+         "kind": "text",
+         "label": "senza bagno",
+         "context": "Numero camere singole",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r6c1p15reg:chk",
+         "r7c1p16reg:chk"
+        ],
+        [
+         "r7c1p19reg:chk",
+         "r8c1p23reg:chk"
+        ],
+        [
+         "r8c1p23reg:chk",
+         "r9c1p27reg:chk"
+        ],
+        [
+         "r9c1p27reg:chk",
+         "r10c1p31reg:chk"
+        ],
+        [
+         "r10c1p31reg:chk",
+         "r11c1p35reg:chk"
+        ],
+        [
+         "r11c1p35reg:chk",
+         "r12c1p39reg:chk"
+        ],
+        [
+         "r12c1p37reg:chk",
+         "r13c1p41reg:chk"
+        ],
+        [
+         "r14c1p41reg:chk",
+         "r15c1p45reg:chk"
+        ],
+        [
+         "r18c1p51reg:chk",
+         "r19c1p55reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere doppie",
+       "id": "r7c1p19reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r8c2p22reg:number",
+         "kind": "text",
+         "label": "con bagno",
+         "context": "Numero camere doppie",
+         "max": 3
+        },
+        {
+         "id": "r8c3p24reg:number",
+         "kind": "text",
+         "label": "senza bagno",
+         "context": "Numero camere doppie",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r7c1p19reg:chk",
+         "r8c1p20reg:chk"
+        ],
+        [
+         "r8c1p23reg:chk",
+         "r9c1p27reg:chk"
+        ],
+        [
+         "r9c1p27reg:chk",
+         "r10c1p31reg:chk"
+        ],
+        [
+         "r10c1p31reg:chk",
+         "r11c1p35reg:chk"
+        ],
+        [
+         "r11c1p35reg:chk",
+         "r12c1p39reg:chk"
+        ],
+        [
+         "r12c1p37reg:chk",
+         "r13c1p41reg:chk"
+        ],
+        [
+         "r14c1p41reg:chk",
+         "r15c1p45reg:chk"
+        ],
+        [
+         "r18c1p51reg:chk",
+         "r19c1p55reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere triple",
+       "id": "r8c1p23reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r9c2p26reg:number",
+         "kind": "text",
+         "label": "con bagno",
+         "context": "Numero camere triple",
+         "max": 3
+        },
+        {
+         "id": "r9c3p28reg:txt",
+         "kind": "text",
+         "label": "senza bagno",
+         "context": "Numero camere triple",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r8c1p23reg:chk",
+         "r9c1p24reg:chk"
+        ],
+        [
+         "r9c1p27reg:chk",
+         "r10c1p31reg:chk"
+        ],
+        [
+         "r10c1p31reg:chk",
+         "r11c1p35reg:chk"
+        ],
+        [
+         "r11c1p35reg:chk",
+         "r12c1p39reg:chk"
+        ],
+        [
+         "r12c1p37reg:chk",
+         "r13c1p41reg:chk"
+        ],
+        [
+         "r14c1p41reg:chk",
+         "r15c1p45reg:chk"
+        ],
+        [
+         "r18c1p51reg:chk",
+         "r19c1p55reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere quadruple",
+       "id": "r9c1p27reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r10c2p30reg:number",
+         "kind": "text",
+         "label": "con bagno",
+         "context": "Numero camere quadruple",
+         "max": 3
+        },
+        {
+         "id": "r10c3p32reg:number",
+         "kind": "text",
+         "label": "senza bagno",
+         "context": "Numero camere quadruple",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r9c1p27reg:chk",
+         "r10c1p28reg:chk"
+        ],
+        [
+         "r10c1p31reg:chk",
+         "r11c1p35reg:chk"
+        ],
+        [
+         "r11c1p35reg:chk",
+         "r12c1p39reg:chk"
+        ],
+        [
+         "r12c1p37reg:chk",
+         "r13c1p41reg:chk"
+        ],
+        [
+         "r14c1p41reg:chk",
+         "r15c1p45reg:chk"
+        ],
+        [
+         "r18c1p51reg:chk",
+         "r19c1p55reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Numero camere con più di 4 letti",
+       "id": "r10c1p31reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r11c2p34reg:number",
+         "kind": "text",
+         "label": "con bagno",
+         "context": "Numero camere con più di 4 letti",
+         "max": 3
+        },
+        {
+         "id": "r11c3p36reg:number",
+         "kind": "text",
+         "label": "senza bagno",
+         "context": "Numero camere con più di 4 letti",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r10c1p31reg:chk",
+         "r11c1p32reg:chk"
+        ],
+        [
+         "r11c1p35reg:chk",
+         "r12c1p39reg:chk"
+        ],
+        [
+         "r12c1p37reg:chk",
+         "r13c1p41reg:chk"
+        ],
+        [
+         "r14c1p41reg:chk",
+         "r15c1p45reg:chk"
+        ],
+        [
+         "r18c1p51reg:chk",
+         "r19c1p55reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Altro",
+       "id": "r11c1p35reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r13c2p40reg:number",
+         "kind": "text",
+         "label": "n.",
+         "context": "Altro",
+         "max": 3
+        }
+       ],
+       "moved": [
+        [
+         "r12c1p37reg:chk",
+         "r15c1p45reg:chk"
+        ],
+        [
+         "r14c1p41reg:chk",
+         "r17c1p49reg:chk"
+        ],
+        [
+         "r18c1p51reg:chk",
+         "r21c1p59reg:chk"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "Unità abitative",
+     "id": "r5c1p12reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c1p15reg:number",
+       "kind": "text",
+       "label": "Unità dello stesso tipo n.",
+       "max": 3
+      },
+      {
+       "id": "r7c2p17reg",
+       "kind": "select",
+       "label": "Tipologia",
+       "options": [
+        "Monolocali",
+        "Appartamenti composti da più locali"
+       ]
+      },
+      {
+       "id": "r9c1p21reg",
+       "kind": "select",
+       "label": "Soggiorno",
+       "options": [
+        "in vano con pernottamento",
+        "in vano separato dal pernottamento"
+       ]
+      },
+      {
+       "id": "r10c2p25reg:radio:0_clone",
+       "kind": "radio",
+       "label": "si",
+       "group": "r10c2p25reg:radio"
+      },
+      {
+       "id": "r10c3p26reg:radio:1_clone",
+       "kind": "radio",
+       "label": "no",
+       "group": "r10c3p26reg:radio"
+      },
+      {
+       "id": "r12c1p29reg:number",
+       "kind": "text",
+       "label": "Bagni privati n.",
+       "max": 2
+      },
+      {
+       "id": "r15c1p35reg:number",
+       "kind": "text",
+       "label": "TOTALE posti letto unità abitative n.",
+       "max": 4
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p16reg:chk",
+       "r16c1p38reg:chk"
+      ],
+      [
+       "r11c1p26reg:chk",
+       "r20c1p48reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "Unità dello stesso tipo n.",
+      "adds": 12
+     },
+     "then": [
+      {
+       "choice": "Tipologia = Monolocali",
+       "id": "r7c2p17reg",
+       "kind": "select",
+       "option": "Monolocali"
+      },
+      {
+       "choice": "Tipologia = Appartamenti composti da più locali",
+       "id": "r7c2p17reg",
+       "kind": "select",
+       "option": "Appartamenti composti da più locali"
+      },
+      {
+       "choice": "Soggiorno = in vano con pernottamento",
+       "id": "r9c1p21reg",
+       "kind": "select",
+       "option": "in vano con pernottamento"
+      },
+      {
+       "choice": "Soggiorno = in vano separato dal pernottamento",
+       "id": "r9c1p21reg",
+       "kind": "select",
+       "option": "in vano separato dal pernottamento"
+      },
+      {
+       "choice": "si",
+       "id": "r10c2p25reg:radio:0_clone",
+       "kind": "radio"
+      },
+      {
+       "choice": "no",
+       "id": "r10c3p26reg:radio:1_clone",
+       "kind": "radio"
+      }
+     ]
+    },
+    {
+     "choice": "Unità abitative ad uso residenziale (solo in caso di condhotel)",
+     "id": "r7c1p16reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c2p21reg:number",
+       "kind": "text",
+       "label": "n.",
+       "context": "Numero unità abitative con posti letto",
+       "max": 3
+      },
+      {
+       "id": "r12c2p29reg:number",
+       "kind": "text",
+       "label": "n.",
+       "context": "Totale unità abitative",
+       "max": 4
+      },
+      {
+       "id": "r14c2p35reg:number",
+       "kind": "text",
+       "label": "mq",
+       "context": "Totale superficie unità abitative ¹",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p26reg:chk",
+       "r17c1p41reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "n.",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "Ubicazione camere/unità abitative (da compilare se albergo diffuso)",
+     "id": "r11c1p26reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r13c1p28reg:number",
+       "kind": "text",
+       "label": "Camera/unità abitativa n.",
+       "max": 3
+      },
+      {
+       "id": "r13c2p30reg:txt",
+       "kind": "text",
+       "label": "indirizzo",
+       "max": 100
+      },
+      {
+       "id": "r13c3p32reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 30
+      }
+     ],
+     "plus": {
+      "anchor": "Camera/unità abitativa n.",
+      "adds": 6
+     }
+    }
+   ],
+   "seconds": 20.2
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

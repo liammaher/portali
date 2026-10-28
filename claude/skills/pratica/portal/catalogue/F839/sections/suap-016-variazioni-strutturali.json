@@ -1,0 +1,595 @@
+{
+ "crawled": "2026-10-28T18:12:15.688Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni strutturali (sector Vicinato - settore merceologico NON alimentare)",
+ "seconds": 30.3,
+ "generated": {
+  "interventi": "Variazioni nell'esercizio di commercio di vicinato non alimentare",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per variazioni nell'esercizio di commercio di vicinato non alimentare",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "dati sull'entità delle variazioni",
+   "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "1_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "1_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di armi comuni"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "4_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "in caso di vendita di farmaci da banco o medicinali veterinari"
+    },
+    {
+     "key": "5_0",
+     "type": "CHK",
+     "label": "Presenta contestualmente la SCIA del commercio al dettaglio del vicinato"
+    },
+    {
+     "key": "5_0_0",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "5_0_1",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "5_0_1_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_1_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_2",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di armi comuni"
+    },
+    {
+     "key": "5_0_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "5_0_4",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "5_0_4_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5_0_5",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "5_0_5_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5_0_6",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di oggetti preziosi"
+    },
+    {
+     "key": "5_0_7",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "5_0_7_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "5_0_7_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "5_0_7_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "5_0_7_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "5_0_7_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_7_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_7_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "5_1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "6",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "6_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "7",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di oggetti preziosi"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati sull'entità delle variazioni",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "prot./n.",
+     "max": 10
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "la superficie di vendita sarà"
+    },
+    {
+     "id": "r7c2p15reg:chk",
+     "kind": "checkbox",
+     "label": "ampliata"
+    },
+    {
+     "id": "r7c3p17reg:real",
+     "kind": "text",
+     "label": "da mq",
+     "context": "ampliata",
+     "max": 11
+    },
+    {
+     "id": "r7c4p19reg:real",
+     "kind": "text",
+     "label": "a mq",
+     "context": "ampliata",
+     "max": 11
+    },
+    {
+     "id": "r8c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "i settori di vendita e/o tabelle speciali varieranno per:"
+    },
+    {
+     "id": "r9c2p25reg:chk",
+     "kind": "checkbox",
+     "label": "aggiunta di settore merceologico"
+    },
+    {
+     "id": "r10c2p28reg:chk",
+     "kind": "checkbox",
+     "label": "aggiunta di settori e/o di prodotti appartenenti alle tabelle speciali"
+    },
+    {
+     "id": "r11c2p31reg:chk",
+     "kind": "checkbox",
+     "label": "eliminazione di settori e/o di prodotti appartenenti alle tabelle speciali"
+    },
+    {
+     "id": "r12c2p34reg:chk",
+     "kind": "checkbox",
+     "label": "sostituzione di settore e/o di prodotti appartenenti alle tabelle speciali preesistenti"
+    },
+    {
+     "id": "r15c1p39reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r15c2p41reg:real",
+     "kind": "text",
+     "label": "superficie di vendita da mq",
+     "context": "Alimentare",
+     "max": 6
+    },
+    {
+     "id": "r15c3p43reg:real",
+     "kind": "text",
+     "label": "a mq",
+     "context": "Alimentare",
+     "max": 6
+    },
+    {
+     "id": "r17c1p47reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare",
+     "checked": true
+    },
+    {
+     "id": "r17c2p49reg:real",
+     "kind": "text",
+     "label": "superficie di vendita da mq",
+     "context": "Non alimentare",
+     "max": 6
+    },
+    {
+     "id": "r17c3p51reg:real",
+     "kind": "text",
+     "label": "a mq",
+     "context": "Non alimentare",
+     "max": 6
+    },
+    {
+     "id": "r19c2p57reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di vendita complessiva risultante dopo la variazione",
+     "max": 6
+    },
+    {
+     "id": "r24c1p67reg:chk",
+     "kind": "checkbox",
+     "label": "Generi di monopolio"
+    },
+    {
+     "id": "r25c1p71reg:chk",
+     "kind": "checkbox",
+     "label": "Farmacie"
+    },
+    {
+     "id": "r26c1p75reg:chk",
+     "kind": "checkbox",
+     "label": "Carburanti"
+    }
+   ],
+   "fingerprint": "97c93efaa621a6fe",
+   "text": "dati sull'entità delle variazioni l/la sottoscritto/a SEGNALA che nell'esercizio commerciale (1) già avviato con la SCIA/DIA/autorizzazione prot./n. del interverranno le seguenti variazioni: la superficie di vendita sarà da mq a mq ampliata i settori di vendita e/o tabelle speciali varieranno per: aggiunta di settore merceologico aggiunta di settori e/o di prodotti appartenenti alle tabelle speciali eliminazione di settori e/o di prodotti appartenenti alle tabelle speciali sostituzione di settore e/o di prodotti appartenenti alle tabelle speciali preesistenti con la conseguente distribuzione della superficie di vendita: superficie di vendita da mq a mq Alimentare superficie di vendita da mq a mq Non alimentare mq Superficie di vendita complessiva risultante dopo la variazione (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Di cui: Prodotti appartenenti alle seguenti Tabelle speciali: Generi di monopolio Farmacie Carburanti (1) Come previsto dall'art. 7 del D.Lgs. n. 114/1998 e dall'art. 65 del D.Lgs. n. 59/2010 e dalle disposizioni regionali di settore.",
+   "branches": [
+    {
+     "choice": "la superficie di vendita sarà",
+     "id": "r5c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ampliata",
+     "id": "r7c2p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "i settori di vendita e/o tabelle speciali varieranno per:",
+     "id": "r8c1p22reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "aggiunta di settore merceologico",
+     "id": "r9c2p25reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "aggiunta di settori e/o di prodotti appartenenti alle tabelle speciali",
+     "id": "r10c2p28reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "eliminazione di settori e/o di prodotti appartenenti alle tabelle speciali",
+     "id": "r11c2p31reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "sostituzione di settore e/o di prodotti appartenenti alle tabelle speciali preesistenti",
+     "id": "r12c2p34reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Alimentare",
+     "id": "r15c1p39reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Generi di monopolio",
+     "id": "r24c1p67reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r25c2p70reg:real",
+       "kind": "text",
+       "label": "superficie di vendita da mq",
+       "context": "Generi di monopolio",
+       "max": 6
+      },
+      {
+       "id": "r25c3p72reg:real",
+       "kind": "text",
+       "label": "a mq",
+       "context": "Generi di monopolio",
+       "max": 6
+      }
+     ],
+     "moved": [
+      [
+       "r24c1p67reg:chk",
+       "r25c1p68reg:chk"
+      ],
+      [
+       "r25c1p71reg:chk",
+       "r26c1p75reg:chk"
+      ],
+      [
+       "r26c1p75reg:chk",
+       "r27c1p79reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "Farmacie",
+     "id": "r25c1p71reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r26c2p74reg:real",
+       "kind": "text",
+       "label": "superficie di vendita da mq",
+       "context": "Farmacie",
+       "max": 6
+      },
+      {
+       "id": "r26c3p76reg:real",
+       "kind": "text",
+       "label": "a mq",
+       "context": "Farmacie",
+       "max": 6
+      }
+     ],
+     "moved": [
+      [
+       "r25c1p71reg:chk",
+       "r26c1p72reg:chk"
+      ],
+      [
+       "r26c1p75reg:chk",
+       "r27c1p79reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "Carburanti",
+     "id": "r26c1p75reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r27c2p78reg:real",
+       "kind": "text",
+       "label": "superficie di vendita da mq",
+       "context": "Carburanti",
+       "max": 6
+      },
+      {
+       "id": "r27c3p80reg:real",
+       "kind": "text",
+       "label": "a mq",
+       "context": "Carburanti",
+       "max": 6
+      }
+     ],
+     "moved": [
+      [
+       "r26c1p75reg:chk",
+       "r27c1p76reg:chk"
+      ]
+     ]
+    }
+   ],
+   "seconds": 8.9
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

@@ -1,0 +1,442 @@
+{
+ "crawled": "2026-10-28T18:20:57.606Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Comunicazione per la variazione nelle strutture ricettive (denominazione, periodo di apertura, legale rappresentante, altro) (sector Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna))",
+ "seconds": 22.7,
+ "generated": {
+  "interventi": "Comunicazione per la variazione nelle Strutture Ricettive",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per la variazione nelle Strutture Ricettive",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione",
+   "dati catastali",
+   "CODICE ISTAT",
+   "Variazione",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "SIN",
+     "label": "la variazione riguarda il/la legale rappresentante"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "la variazione riguarda il/la legale rappresentante",
+   "type": "SIN",
+   "adds": [
+    "rappresentante"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "CODICE ISTAT",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT del Comune",
+     "max": 9999
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT della Provincia",
+     "max": 9999
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT della Regione",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "8f1d10e63bcff5fc",
+   "text": "CODICE ISTAT Codice ISTAT del Comune Codice ISTAT della Provincia Codice ISTAT della Regione",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "Variazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Il/la sottoscritto/a COMUNICA che l’attività di",
+     "max": 50
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "denominata",
+     "max": 9999
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "avente codice identificativo nazionale CIN",
+     "max": 9999
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "e codice identificativo regionale CUSR",
+     "max": 9999
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "già avviata con la SCIA/comunicazione prot./n.",
+     "max": 50
+    },
+    {
+     "id": "r6c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r8c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione denominazione della struttura ricettiva ¹"
+    },
+    {
+     "id": "r9c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione periodo di apertura"
+    },
+    {
+     "id": "r12c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione del rappresentante come meglio dettagliati nel riquadro “Rappresentante”"
+    },
+    {
+     "id": "r13c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "altre variazioni non soggette a presentazione di Scia dalla normativa in vigore"
+    },
+    {
+     "id": "r16c1p29reg:txt",
+     "kind": "text",
+     "label": "DA (situazione ante variazione)",
+     "max": 9999
+    },
+    {
+     "id": "r18c1p31reg:txt",
+     "kind": "text",
+     "label": "A (situazione post variazione)",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "9a4bb1aac276d02c",
+   "text": "Variazione Il/la sottoscritto/a COMUNICA che l’attività di denominata avente codice identificativo nazionale CIN e codice identificativo regionale CUSR già avviata con la SCIA/comunicazione prot./n. del presentata al Comune varierà come segue : Variazione denominazione della struttura ricettiva ¹ Variazione periodo di apertura Variazione del rappresentante come meglio dettagliati nel riquadro “Rappresentante” altre variazioni non soggette a presentazione di Scia dalla normativa in vigore DA (situazione ante variazione) A (situazione post variazione) ¹ Ai sensi della Legge Regionale 7 agosto 2014, n. 16, art. 1 comma 50 ter, “gli esercizi ricettivi di nuova istituzione, o quelli che intendono cambiare denominazione, non possono assumere denominazioni uguali o analoghe ad altri esercizi ricettivi già esistenti nel Comune. Per le denominazioni uguali o analoghe alle aziende cessate si applica quanto previsto dal Codice civile in materia.” ² Per apertura annuale si intende un periodo di apertura di almeno nove mesi complessivi nell’arco dell’anno solare. Per ulteriori specifiche far riferimento alle normative regionali di disciplina delle tipologie ricettive.",
+   "branches": [
+    {
+     "choice": "Variazione denominazione della struttura ricettiva ¹",
+     "id": "r8c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Variazione periodo di apertura",
+     "id": "r9c1p19reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r10c1p20reg:radio:0_clone",
+       "kind": "radio",
+       "label": "Annuale ²",
+       "group": "r10c1p20reg:radio"
+      },
+      {
+       "id": "r12c1p24reg:radio:1_clone",
+       "kind": "radio",
+       "label": "Stagionale",
+       "group": "r12c1p24reg:radio"
+      },
+      {
+       "id": "r13c1p25reg:radio:2_clone",
+       "kind": "radio",
+       "label": "Variazione del periodo di apertura da stagionale ad annuale",
+       "group": "r13c1p25reg:radio"
+      }
+     ],
+     "moved": [
+      [
+       "r12c1p24reg:chk",
+       "r14c1p26reg:chk"
+      ],
+      [
+       "r13c1p25reg:chk",
+       "r15c1p27reg:chk"
+      ],
+      [
+       "r16c1p29reg:txt",
+       "r18c1p31reg:txt"
+      ],
+      [
+       "r18c1p31reg:txt",
+       "r20c1p33reg:txt"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Annuale ²",
+       "id": "r10c1p20reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r11c1p22reg:chk",
+         "kind": "checkbox",
+         "label": "apertura inferiore ai 12 mesi"
+        }
+       ]
+      },
+      {
+       "choice": "Stagionale",
+       "id": "r12c1p24reg:radio:1_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r14c1p26reg:calendar_input",
+         "kind": "date",
+         "label": "Dal"
+        },
+        {
+         "id": "r14c2p28reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        }
+       ],
+       "moved": [
+        [
+         "r13c1p25reg:radio:2_clone",
+         "r16c1p31reg:radio:2_clone"
+        ],
+        [
+         "r14c1p26reg:chk",
+         "r17c1p32reg:chk"
+        ],
+        [
+         "r15c1p27reg:chk",
+         "r18c1p33reg:chk"
+        ],
+        [
+         "r18c1p31reg:txt",
+         "r21c1p37reg:txt"
+        ],
+        [
+         "r20c1p33reg:txt",
+         "r23c1p39reg:txt"
+        ]
+       ]
+      },
+      {
+       "choice": "Variazione del periodo di apertura da stagionale ad annuale",
+       "id": "r13c1p25reg:radio:2_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r14c1p26reg:chk",
+         "kind": "checkbox",
+         "label": "Il/la sottoscritto/a dichiara, relativamente ai locali destinati all’attività oggetto della presente comunicazione di essere dotati di impianto di riscaldamento"
+        }
+       ],
+       "moved": [
+        [
+         "r14c1p26reg:chk",
+         "r15c1p27reg:chk"
+        ],
+        [
+         "r15c1p27reg:chk",
+         "r16c1p28reg:chk"
+        ],
+        [
+         "r18c1p31reg:txt",
+         "r19c1p32reg:txt"
+        ],
+        [
+         "r20c1p33reg:txt",
+         "r21c1p34reg:txt"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "Variazione del rappresentante come meglio dettagliati nel riquadro “Rappresentante”",
+     "id": "r12c1p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altre variazioni non soggette a presentazione di Scia dalla normativa in vigore",
+     "id": "r13c1p25reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r15c1p27reg:txt",
+       "kind": "text",
+       "label": "Specificare",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r16c1p29reg:txt",
+       "r17c1p31reg:txt"
+      ],
+      [
+       "r18c1p31reg:txt",
+       "r19c1p33reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 7.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "rappresentante",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Cognome",
+     "max": 9999
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "Nome",
+     "max": 9999
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "il/la sig/ra Cognome",
+     "max": 30
+    },
+    {
+     "id": "r5c2p9reg:txt",
+     "kind": "text",
+     "label": "Nome",
+     "max": 30
+    },
+    {
+     "id": "r9c1p13reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+     "context": "allegare il documento compilato",
+     "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+    }
+   ],
+   "fingerprint": "d78b034f6695bf5e",
+   "text": "rappresentante Il sottoscritto/a dichiara di voler nominare come proprio rappresentante, ai sensi degli artt. 8 e 93 del T.U.L.P.S., approvato con R.D. n. 773/1931, in sostituzione del/della sig/ra. Cognome Nome il/la sig/ra Cognome Nome scaricare la dichiarazione sul possesso dei requisiti da parte del rappresentante - Allegato A Scarica il documento allegare il documento compilato Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+   "branches": [],
+   "seconds": 0.8,
+   "scelta": "la variazione riguarda il/la legale rappresentante"
+  }
+ ]
+}

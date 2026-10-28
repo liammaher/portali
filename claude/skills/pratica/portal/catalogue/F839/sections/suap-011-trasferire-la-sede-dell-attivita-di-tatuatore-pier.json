@@ -1,0 +1,303 @@
+{
+ "crawled": "2026-10-28T18:25:14.743Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Trasferire la sede dell'attività di tatuatore/ piercer (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 23.4,
+ "generated": {
+  "interventi": "Trasferimento di sede per attività di tatuatore / piercer",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per trasferimento di sede per attività di tatuatore / piercer",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione locale",
+   "dati catastali",
+   "dichiarazione relativa agli estremi dell’atto amministrativo",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione del titolo di disponibilità dei locali",
+   "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "dichiarazione al tipo di attestazione relativa allo stato dei luoghi ove si svolge l'attività",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione di denuncia occupazione dei locali ai fini TARSU",
+   "Dichiarazione per inquinamento acustico",
+   "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia di tatuatori / piercers",
+   "dichiarazione della precedente ubicazione del locale",
+   "dichiarazione relativa alla superficie dei locali da adibire all'attività, prima della variazione",
+   "dichiarazione relativa alla superficie dei locali da adibire all'attività, successivamente alla variazione",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione locale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa agli estremi dell’atto amministrativo",
+   "fingerprint": "2a5e5f2dfd5d1a69",
+   "same_as": "suap-060-variazione-del-preposto-in-attivita-di-somministra#estremi del/i titolo/i autorizzatorio/i posseduto/i",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del titolo di disponibilità dei locali",
+   "fingerprint": "3fe70b0690454e05",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione del titolo di disponibilità dei locali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "fingerprint": "fa207f5414241787",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "fingerprint": "072898a981cd1b8c",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione al tipo di attestazione relativa allo stato dei luoghi ove si svolge l'attività",
+   "fingerprint": "7fb4087378b7de19",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione al tipo di attestazione relativa allo stato dei luoghi ove si svolge l'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di denuncia occupazione dei locali ai fini TARSU",
+   "fingerprint": "ad0d9b2e39dd5fa9",
+   "same_as": "inizio-lavori#dichiarazione relativa alla comunicazione di inizio lavori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione per inquinamento acustico",
+   "fingerprint": "eeabb50d285e5179",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#Dichiarazione per inquinamento acustico",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia di tatuatori / piercers",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di rispettare tutte le norme di legge e regolamenti vigenti in materia di esercizio di tatuatore / piercer nonché del Regolamento comunale in materia di igiene "
+    }
+   ],
+   "fingerprint": "df5a624e0b0d252f",
+   "text": "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia di tatuatori / piercers di rispettare tutte le norme di legge e regolamenti vigenti in materia di esercizio di tatuatore / piercer nonché del Regolamento comunale in materia di igiene e sanità pubblica relativamente alle norme specifiche per tale attività",
+   "branches": [
+    {
+     "choice": "di rispettare tutte le norme di legge e regolamenti vigenti in materia di esercizio di tatuatore / piercer nonché del Regolamento comunale in materia di igiene ",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.6
+  },
+  {
+   "section": "dichiarazione della precedente ubicazione del locale",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 150
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "località",
+     "max": 150
+    },
+    {
+     "id": "r2c3p6reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "via, viale, piazza",
+     "max": 150
+    },
+    {
+     "id": "r4c2p10reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 5
+    }
+   ],
+   "fingerprint": "2587acd983caf46c",
+   "text": "dichiarazione della precedente ubicazione del locale Comune località CAP via, viale, piazza numero civico",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla superficie dei locali da adibire all'attività, prima della variazione",
+   "fingerprint": "f316d1d62db7694b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla superficie dei locali da adibire all'attività, successivamente alla variazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "superficie complessiva dell'esercizio (mq)",
+     "max": 5
+    },
+    {
+     "id": "r2c2p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "con ampliamento",
+     "group": "r2c2p4reg:radio"
+    },
+    {
+     "id": "r2c3p6reg:radio:1_clone",
+     "kind": "radio",
+     "label": "con riduzione",
+     "group": "r2c3p6reg:radio"
+    },
+    {
+     "id": "r2c4p8reg:radio:2_clone",
+     "kind": "radio",
+     "label": "con redistribuzione degli spazi",
+     "group": "r2c4p8reg:radio"
+    }
+   ],
+   "fingerprint": "0cadac6c3a3cde2b",
+   "text": "dichiarazione relativa alla superficie dei locali da adibire all'attività, successivamente alla variazione superficie complessiva dell'esercizio (mq) con ampliamento con riduzione con redistribuzione degli spazi",
+   "branches": [
+    {
+     "choice": "con ampliamento",
+     "id": "r2c2p4reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "con riduzione",
+     "id": "r2c3p6reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "con redistribuzione degli spazi",
+     "id": "r2c4p8reg:radio:2_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

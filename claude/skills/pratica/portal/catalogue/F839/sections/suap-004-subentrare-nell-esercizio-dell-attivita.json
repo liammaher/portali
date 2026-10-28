@@ -1,0 +1,478 @@
+{
+ "crawled": "2026-10-28T18:40:20.914Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Subentrare nell'esercizio dell'attività (sector Panificio)",
+ "seconds": 27.9,
+ "generated": {
+  "interventi": "Subingresso in attività di panificazione",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per subingresso di attività di panificazione",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'esercizio",
+   "dati catastali",
+   "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione del titolo di disponibilità dei locali",
+   "dichiarazione della modalità di subingresso",
+   "dichiarazione della data di inizio della nuova attività",
+   "dichiarazione della denominazione dell'attività precedente",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione di denuncia occupazione dei locali ai fini TARSU",
+   "dichiarazione relativa all'attività di panificazione",
+   "dichiarazione di esercizio di altra attività commerciale",
+   "dichiarazione di responsabilità dell'attività di panificio",
+   "dichiarazione relativa alla Prevenzione Incendi",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si rende necessario presentare la valutazione di impatto acustico di attività commerciali e terziarie (Art.4, comma 1, lett. d) L.447/1995 - D.P.C.M. 14.11.1997)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'esercizio",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "fingerprint": "94f9e919eed08517",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione del titolo di disponibilità dei locali",
+   "fingerprint": "3fe70b0690454e05",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione del titolo di disponibilità dei locali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della modalità di subingresso",
+   "fingerprint": "a1fc93491bcc61c1",
+   "same_as": "suap-011-subentrare-nell-attivita-di-tatuatore-piercer#dichiarazione della modalità di subingresso",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della data di inizio della nuova attività",
+   "fingerprint": "f991f8b09879ba6a",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione della data di inizio dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della denominazione dell'attività precedente",
+   "fingerprint": "4e2a3803a9e81ddd",
+   "same_as": "suap-011-subentrare-nell-attivita-di-tatuatore-piercer#dichiarazione della denominazione dell'attività precedente",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione di denuncia occupazione dei locali ai fini TARSU",
+   "fingerprint": "ad0d9b2e39dd5fa9",
+   "same_as": "inizio-lavori#dichiarazione relativa alla comunicazione di inizio lavori",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa all'attività di panificazione",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "numero forni di panificazione",
+     "max": 4
+    },
+    {
+     "id": "r5c1p7reg:real",
+     "kind": "text",
+     "label": "mq complessivi dei forni di panificazione",
+     "max": 13
+    },
+    {
+     "id": "r7c1p11reg:real",
+     "kind": "text",
+     "label": "pari a una potenzialità teorica nelle 24 ore di Kg.",
+     "max": 13
+    },
+    {
+     "id": "r9c1p15reg:txta",
+     "kind": "textarea",
+     "label": "350 Caratteri restanti",
+     "context": "altre caratteristiche",
+     "max": 350
+    },
+    {
+     "id": "r12c1p18reg:txt",
+     "kind": "text",
+     "label": "descrizione forno (tipo, alimentazione, Kcal, ecc.)",
+     "max": 300
+    }
+   ],
+   "fingerprint": "ef182ecc60594bf0",
+   "text": "dichiarazione relativa all'attività di panificazione - caratteristiche dell'impianto numero forni di panificazione mq complessivi dei forni di panificazione pari a una potenzialità teorica nelle 24 ore di Kg. altre caratteristiche 350 Caratteri restanti - caratteristiche dei forni utilizzati descrizione forno (tipo, alimentazione, Kcal, ecc.)",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione di esercizio di altra attività commerciale",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "la vendita diretta al pubblico dei prodotti di propria produzione"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "altra attività commerciale"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "tipo di attività e la relativa superficie",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "numero autorizzazione / SCIA / DIA",
+     "max": 30
+    },
+    {
+     "id": "r8c1p10reg:calendar_input",
+     "kind": "date",
+     "label": "data di rilascio / presentazione"
+    },
+    {
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "l'attività di vendita dei prodotti di propria produzione per il consumo immediato, utilizzando i locali e gli arredi dell'azienda, con l'esclusione del servizio"
+    },
+    {
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r11c2p17reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "altro",
+     "max": 350
+    }
+   ],
+   "fingerprint": "40b9eb58b451c259",
+   "text": "dichiarazione di esercizio di altra attività commerciale la vendita diretta al pubblico dei prodotti di propria produzione altra attività commerciale tipo di attività e la relativa superficie numero autorizzazione / SCIA / DIA data di rilascio / presentazione l'attività di vendita dei prodotti di propria produzione per il consumo immediato, utilizzando i locali e gli arredi dell'azienda, con l'esclusione del servizio di somministrazione con l'osservanza delle prescrizioni igienico-sanitarie (specificare) altro",
+   "branches": [
+    {
+     "choice": "la vendita diretta al pubblico dei prodotti di propria produzione",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altra attività commerciale",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "l'attività di vendita dei prodotti di propria produzione per il consumo immediato, utilizzando i locali e gli arredi dell'azienda, con l'esclusione del servizio",
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 4.1
+  },
+  {
+   "section": "dichiarazione di responsabilità dell'attività di panificio",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r2c3p6reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "luogo di nascita",
+     "max": 30
+    },
+    {
+     "id": "r4c2p10reg:calendar_input",
+     "kind": "date",
+     "label": "data di nascita"
+    },
+    {
+     "id": "r6c1p14reg:txt",
+     "kind": "text",
+     "label": "comune di residenza",
+     "max": 50
+    },
+    {
+     "id": "r6c2p16reg:txt",
+     "kind": "text",
+     "label": "via, viale, piazza",
+     "max": 50
+    },
+    {
+     "id": "r6c3p18reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 10
+    },
+    {
+     "id": "r8c1p20reg:txt",
+     "kind": "text",
+     "label": "rapporto con l'impresa titolare dell'attività (titolare, socio, dipendente, altro)",
+     "max": 30
+    }
+   ],
+   "fingerprint": "3e6c2d858141e7d5",
+   "text": "dichiarazione di responsabilità dell'attività di panificio cognome nome codice fiscale luogo di nascita data di nascita comune di residenza via, viale, piazza numero civico rapporto con l'impresa titolare dell'attività (titolare, socio, dipendente, altro) che il medesimo assicurerà l'utilizzo di materie prime in conformità alle norme vigenti, l'osservanza delle norme igieniche sanitarie e di sicurezza sui luoghi di lavoro e la qualità del prodotto finito e che a mezzo del suddetto responsabile, la ditta titolare dell'impianto intende svolgere attività di vendita dei prodotti di propria produzione per il consumo immediato, utilizzando i locali e gli arredi dell'azienda con l'esclusione del servizio assistito di somministrazione e con l'osservanza delle prescrizioni igienico - sanitarie",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa alla Prevenzione Incendi",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "presentare la documentazione relativa alla prevenzione incendi contestualmente alla presente",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "essere in possesso di Certificato di Prevenzione Incendi",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:number",
+     "kind": "text",
+     "label": "prot. n.",
+     "max": 30
+    },
+    {
+     "id": "r5c2p7reg:number",
+     "kind": "text",
+     "label": "n° fascicolo",
+     "max": 10
+    },
+    {
+     "id": "r5c3p9reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c1p11reg:txt",
+     "kind": "text",
+     "label": "rilasciato dal Comando provinciale dei Vigili del Fuoco di",
+     "max": 50
+    },
+    {
+     "id": "r7c2p13reg:calendar_input",
+     "kind": "date",
+     "label": "con scadenza il"
+    },
+    {
+     "id": "r8c1p14reg:radio:2_clone",
+     "kind": "radio",
+     "label": "essere già in possesso della valutazione di conformità del progetto",
+     "group": "r8c1p14reg:radio"
+    },
+    {
+     "id": "r10c1p16reg:txt",
+     "kind": "text",
+     "label": "rilasciata dal Comando Provinciale dei Vigili del Fuoco di",
+     "max": 50
+    },
+    {
+     "id": "r10c2p18reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r11c1p19reg:radio:3_clone",
+     "kind": "radio",
+     "label": "che l'attività esercitata non ricade tra quelle previste nell'Allegato I del D.P.R. 151/2011",
+     "group": "r11c1p19reg:radio"
+    },
+    {
+     "id": "r13c1p21reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "ulteriori dichiarazioni",
+     "max": 200
+    }
+   ],
+   "fingerprint": "649d2ecfac75455e",
+   "text": "dichiarazione relativa alla Prevenzione Incendi Il sottoscritto dichiara di: presentare la documentazione relativa alla prevenzione incendi contestualmente alla presente essere in possesso di Certificato di Prevenzione Incendi prot. n. n° fascicolo del rilasciato dal Comando provinciale dei Vigili del Fuoco di con scadenza il essere già in possesso della valutazione di conformità del progetto rilasciata dal Comando Provinciale dei Vigili del Fuoco di in data che l'attività esercitata non ricade tra quelle previste nell'Allegato I del D.P.R. 151/2011 ulteriori dichiarazioni 200 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "presentare la documentazione relativa alla prevenzione incendi contestualmente alla presente",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "essere in possesso di Certificato di Prevenzione Incendi",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "essere già in possesso della valutazione di conformità del progetto",
+     "id": "r8c1p14reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che l'attività esercitata non ricade tra quelle previste nell'Allegato I del D.P.R. 151/2011",
+     "id": "r11c1p19reg:radio:3_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 4.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

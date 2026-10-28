@@ -1,0 +1,209 @@
+{
+ "crawled": "2026-10-28T18:42:14.333Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) senza attività di vicinato alimentare)",
+ "seconds": 20.4,
+ "generated": {
+  "interventi": "Domanda di autorizzazione per laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) SENZA attività di vicinato alimentare Zona “A” (Centro Storico) zona “B” (Buffer zone)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione per apertura di laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) SENZA attività di vicinato alimentare Zona “A” (Centro Storico) zona “B” (Buffer zone)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dello stabilimento",
+   "normative comunali",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "normative comunali",
+   "fingerprint": "0c25f486d179118b",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#normative comunali",
+   "seconds": 0.7
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fields": [
+    {
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "label": "Pasta secca e/o fresca, paste alimentari, cuscus e farinacei simili"
+    },
+    {
+     "id": "r3c2p6reg:chk",
+     "kind": "checkbox",
+     "label": "Pane, pizza e altri prodotti da forno freschi e secchi"
+    },
+    {
+     "id": "r4c2p9reg:chk",
+     "kind": "checkbox",
+     "label": "Prodotti di pasticceria freschi e secchi"
+    },
+    {
+     "id": "r5c2p12reg:chk",
+     "kind": "checkbox",
+     "label": "Prodotti di gelateria (in impianti non soggetti a riconoscimento)"
+    },
+    {
+     "id": "r6c2p15reg:chk",
+     "kind": "checkbox",
+     "label": "Cacao, cioccolato, produzione pastigliaggi, gomme, confetti, caramelle, ecc."
+    },
+    {
+     "id": "r7c2p18reg:chk",
+     "kind": "checkbox",
+     "label": "Cibi pronti in genere (prodotti di gastronomia, di rosticceria, di friggitoria, alimenti pronti al consumo, etc.)"
+    }
+   ],
+   "fingerprint": "abd3ac39b3313bf9",
+   "text": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004 PRODOTTI DA FORNO E DI PASTICCERIA, GELATI E PIATTI PRONTI - PRODUZIONE, TRASFORMAZIONE E CONGELAMENTO: Pasta secca e/o fresca, paste alimentari, cuscus e farinacei simili Pane, pizza e altri prodotti da forno freschi e secchi Prodotti di pasticceria freschi e secchi Prodotti di gelateria (in impianti non soggetti a riconoscimento) Cacao, cioccolato, produzione pastigliaggi, gomme, confetti, caramelle, ecc. Cibi pronti in genere (prodotti di gastronomia, di rosticceria, di friggitoria, alimenti pronti al consumo, etc.)",
+   "branches": [
+    {
+     "choice": "Pasta secca e/o fresca, paste alimentari, cuscus e farinacei simili",
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Pane, pizza e altri prodotti da forno freschi e secchi",
+     "id": "r3c2p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Prodotti di pasticceria freschi e secchi",
+     "id": "r4c2p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Prodotti di gelateria (in impianti non soggetti a riconoscimento)",
+     "id": "r5c2p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Cacao, cioccolato, produzione pastigliaggi, gomme, confetti, caramelle, ecc.",
+     "id": "r6c2p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Cibi pronti in genere (prodotti di gastronomia, di rosticceria, di friggitoria, alimenti pronti al consumo, etc.)",
+     "id": "r7c2p18reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 4.9
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  }
+ ]
+}
