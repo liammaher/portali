@@ -119,12 +119,31 @@ QUALITA = {"proprietario": "Proprietario", "comproprietario": "Comproprietario",
            "amministratore di condominio": "Amministratore di condominio"}
 
 
+def _albo_tipo(v):
+    """An ordine's name ("Ordine degli Architetti P.P.C.") as the SUE's list has it."""
+    v = v.lower()
+    for word, option in (("architett", "Architetto"), ("ingegner", "Ingegnere"), ("geometr", "Geometra"), ("perit", "Perito")):
+        if word in v:
+            return option
+    return "Altro"
+
+
 def _qualita(v):
     return QUALITA.get(v.strip().lower(), "Altro")
 
 
-FILTERS = {
+class Filters(dict):
+    """`is_<answer>` is true when the value is that answer, spaces as underscores
+    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`."""
+    def __missing__(self, name):
+        if not name.startswith("is_"):
+            raise KeyError(name)
+        return lambda v: "true" if re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_") == name[3:] else "false"
+
+
+FILTERS = Filters({
     "upper": str.upper,
+    "albo_tipo": _albo_tipo,
     "sesso": lambda v: {"F": "Femmina", "M": "Maschio"}[v.strip().upper()],
     "provincia_nome": lambda v: PROVINCE[v.strip().upper()],
     "qualita": _qualita,
@@ -142,7 +161,7 @@ FILTERS = {
     "empty": lambda v: "true" if not v else "false",
     "not": lambda v: "false" if truthy(v) else "true",
     "positive": lambda v: "true" if float(str(v or 0).replace(",", ".")) > 0 else "false",
-}
+})
 
 
 def truthy(v):

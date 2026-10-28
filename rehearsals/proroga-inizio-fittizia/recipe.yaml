@@ -21,7 +21,7 @@ yours:
   - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - when: "{{ask.titolo_dia|not}}"
+  - when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"
     else: "So far only for a permesso di costruire: the DIA branch isn't run yet."
   - when: "{{ask.bollo_marche|not}}"
     else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

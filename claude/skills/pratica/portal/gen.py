@@ -356,14 +356,13 @@ def generate(recipe, base=HERE):
         names = [n for i, n in zip(op["sections"], names) if i not in sc.get("drops", [])] + \
             [catalogue["sections"][i] for i in sc.get("adds", [])]
     # A batch crawl names a section it had seen elsewhere (`same_as`: "pratica#section").
+    import catalogue as cat_py
     others = {}
     for i, s in enumerate(crawl["sections"]):
         if s.get("same_as"):
-            other, _, title = s["same_as"].partition("#")
-            if other not in others:
-                others[other] = json.loads((cat_dir / "sections" / f"{other}.json").read_text())
-            seen = next((x for x in others[other]["sections"] if x["section"] == title), None)
-            if not seen:
+            try:
+                seen = cat_py.resolve(s["same_as"], others, cat_dir / "sections")
+            except (StopIteration, FileNotFoundError, ValueError):
                 raise GenError(f"{s['section']}: {s['same_as']} isn't in the catalogue")
             crawl["sections"][i] = {**seen, "section": s["section"]}
     crawled = {norm(s["section"]): s for s in crawl["sections"]}

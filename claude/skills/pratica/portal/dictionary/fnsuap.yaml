@@ -62,7 +62,13 @@ asks:
   pdc_anno: {type: text, question: "Its protocollo generale year"}
   pdc_interventi: {type: text, question: "What it permits, in a few words (per interventi di ...)"}
   fine_presentata: {type: yes_no, question: "Was the comunicazione di fine lavori already filed?"}
-  titolo_dia: {type: yes_no, question: "Is the works' title a DIA (rather than a permesso di costruire)?", default: "false"}
+  titolo_tipo:
+    type: choice
+    question: "The works' title: what was filed or issued"
+    options: [permesso di costruire, SCIA, DIA, CILA, variante]
+    default: permesso di costruire
+  titolo_id_pratica: {type: text, question: "The title's pratica number on the SUAP/SUE (ID pratica)"}
+  data_nomina: {type: date, question: "From when the new direttore dei lavori takes over"}
   proroga_giorni: {type: text, question: "How many days of extension are asked (e.g. 365)"}
   proroga_motivo: {type: text, question: "Why the extension is needed: the facts beyond the holder's control (500 characters)"}
   proroga_tipo_lavori: {type: text, question: "The works still to finish, in a few words (30 characters)"}
@@ -449,12 +455,12 @@ sections:
       - {kind: text, label: "via , viale, piazza", value: "{{ask.immobile_indirizzo}}"}
       - {kind: text, label: numero civico, value: "{{ask.immobile_civico}}"}
       - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
-      - {kind: radio, label: di cui al Permesso di costruire, when: "{{ask.titolo_dia|not}}"}
-      - {kind: text, label: P.G. numero, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_dia|not}}"}
-      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_dia|not}}"}
-      - {kind: radio, label: di cui alla DIA, when: "{{ask.titolo_dia}}"}
-      - {kind: text, label: P.G. numero, nth: 2, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_dia}}"}
-      - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_dia}}"}
+      - {kind: radio, label: di cui al Permesso di costruire, when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: text, label: P.G. numero, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: radio, label: di cui alla DIA, when: "{{ask.titolo_tipo|is_dia}}"}
+      - {kind: text, label: P.G. numero, nth: 2, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_tipo|is_dia}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_dia}}"}
       - {kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
       - {kind: text, label: mappale, value: "{{ask.catasto_particella}}"}
       - {kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
@@ -463,6 +469,59 @@ sections:
       - {kind: date, label: la cui data di inizio lavori è prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
       - {kind: date, label: la cui data di fine lavori dovrebbe essere entro il, value: "{{ask.fine_termine|date_it}}", if_present: true}
       - {kind: date, label: ed è invece prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
+
+  # The same references where the proroga's property is asked elsewhere (the proroga di
+  # ultimazione, the 30-month extensions of art. 10-septies L. 51/2022): a permesso or a SCIA.
+  - section: riferimenti titolo edilizio e data prevista
+    leave: [N.Put]
+    fields:
+      - {kind: radio, label: di cui al Permesso di costruire, when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: text, label: P.G. numero, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: radio, label: di cui alla SCIA, when: "{{ask.titolo_tipo|is_scia}}"}
+      - {kind: text, label: P.G. numero, nth: 2, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_tipo|is_scia}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_scia}}"}
+      - {kind: text, label: per (specificare l'oggetto dell'intervento), value: "{{ask.pdc_interventi}}"}
+      - {kind: text, label: intestato a, value: "{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}"}
+      - {kind: date, label: la cui data di inizio lavori è prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
+      - {kind: date, label: la cui data di fine lavori dovrebbe essere entro il, value: "{{ask.fine_termine|date_it}}", if_present: true}
+      - {kind: date, label: ed è invece prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
+
+  # A new direttore dei lavori: the studio's architect (`t:`), her studio's address and her albo.
+  - section: nomina nuovo direttore dei lavori
+    leave: [fax]
+    fields:
+      - {kind: text, label: cognome, value: "{{t:identity.last_name|upper}}"}
+      - {kind: text, label: nome, value: "{{t:identity.first_name|upper}}"}
+      - {kind: text, label: codice fiscale, value: "{{t:identity.codice_fiscale}}"}
+      - {kind: text, label: "via, viale, piazza", value: "{{business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: numero civico, value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: comune, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: text, label: Provincia (sigla), value: "{{business.sede_legale_provincia}}"}
+      - {kind: text, label: telefono, value: "{{t:identity.phone|phone_it}}"}
+      - {kind: select, label: ordine/collegio/albo, value: "{{t:albo.ordine|albo_tipo}}"}
+      - {kind: text, label: Provincia (sigla), nth: 2, value: "{{t:albo.provincia}}"}
+      - {kind: text, label: numero iscrizione, value: "{{t:albo.numero}}"}
+      - {kind: date, label: a partire dalla data, value: "{{ask.data_nomina|date_it}}"}
+
+  # The title the works run under, by its pratica number on the portal.
+  - section: titolo di legittimazione dell'intervento
+    fields:
+      - {kind: radio, label: permesso di costruire, when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: text, label: ID pratica SUAP, value: "{{ask.titolo_id_pratica}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
+      - {kind: radio, label: DIA, when: "{{ask.titolo_tipo|is_dia}}"}
+      - {kind: text, label: ID pratica SUAP, nth: 2, value: "{{ask.titolo_id_pratica}}", when: "{{ask.titolo_tipo|is_dia}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_dia}}"}
+      - {kind: radio, label: SCIA, when: "{{ask.titolo_tipo|is_scia}}"}
+      - {kind: text, label: ID pratica SUAP, nth: 3, value: "{{ask.titolo_id_pratica}}", when: "{{ask.titolo_tipo|is_scia}}"}
+      - {kind: date, label: del, nth: 3, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_scia}}"}
+      - {kind: radio, label: CILA, when: "{{ask.titolo_tipo|is_cila}}"}
+      - {kind: text, label: ID pratica SUAP, nth: 4, value: "{{ask.titolo_id_pratica}}", when: "{{ask.titolo_tipo|is_cila}}"}
+      - {kind: date, label: del, nth: 4, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_cila}}"}
+      - {kind: radio, label: Variante, when: "{{ask.titolo_tipo|is_variante}}"}
+      - {kind: text, label: ID pratica SUAP, nth: 5, value: "{{ask.titolo_id_pratica}}", when: "{{ask.titolo_tipo|is_variante}}"}
+      - {kind: date, label: del, nth: 5, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_variante}}"}
 
   - section: dichiarazione periodo di proroga
     fields:

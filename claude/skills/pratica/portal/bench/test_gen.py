@@ -262,5 +262,13 @@ def _():
     assert not seen, seen
 
 
+@case("a choice's answer picks its branch (is_<answer>), and an ordine's name its albo option")
+def _():
+    import run
+    assert run.FILTERS["is_permesso_di_costruire"]("Permesso di costruire") == "true"
+    assert run.FILTERS["is_scia"]("permesso di costruire") == "false"
+    assert run.FILTERS["albo_tipo"]("Ordine degli Architetti P.P.C.") == "Architetto"
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

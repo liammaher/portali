@@ -25,7 +25,7 @@ asks:
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
-  titolo_dia: {type: yes_no, question: 'Is the works'' title a DIA (rather than a permesso di costruire)?', default: 'false'}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante], default: permesso di costruire}
   proroga_giorni: {type: text, question: How many days of extension are asked (e.g. 365)}
   proroga_motivo: {type: text, question: 'Why the extension is needed: the facts beyond the holder''s control (500 characters)'}
   proroga_data_prevista: {type: date, question: The new date the works are now expected to start}
@@ -34,7 +34,7 @@ asks:
   bollo_data: {type: date, question: The marca da bollo's date}
   diritti_euro: {type: number, question: The SUE's diritti for this pratica in euro (0 when none are due)}
 supports:
-- when: '{{ask.titolo_dia|not}}'
+- when: '{{ask.titolo_tipo|is_permesso_di_costruire}}'
   else: 'So far only for a permesso di costruire: the DIA branch isn''t run yet.'
 - when: '{{ask.bollo_marche|not}}'
   else: 'So far only with the bollo paid on pagoPA: the marche route isn''t run yet.'
@@ -128,12 +128,12 @@ sections:
   - {id: 'r2c1p2reg:txt', kind: text, value: '{{ask.immobile_indirizzo}}', max: 30, label: 'via , viale, piazza'}
   - {id: 'r2c2p4reg:txt', kind: text, value: '{{ask.immobile_civico}}', max: 30, label: numero civico}
   - {id: 'r4c2p8reg:txt', kind: text, value: '{{ask.immobile_cap}}', max: 5, label: CAP}
-  - {id: 'r6c1p12reg:radio:0_clone', kind: radio, when: '{{ask.titolo_dia|not}}', label: di cui al Permesso di costruire}
-  - {id: 'r6c2p14reg:txt', kind: text, value: '{{ask.pdc_protocollo}}', when: '{{ask.titolo_dia|not}}', max: 30, label: P.G. numero}
-  - {id: 'r6c3p16reg:calendar_input', kind: date, value: '{{ask.pdc_data|date_it}}', when: '{{ask.titolo_dia|not}}', label: del}
-  - {id: 'r8c1p20reg:radio:1_clone', kind: radio, when: '{{ask.titolo_dia}}', label: di cui alla DIA}
-  - {id: 'r8c2p22reg:txt', kind: text, value: '{{ask.pdc_protocollo}}', when: '{{ask.titolo_dia}}', max: 30, label: P.G. numero, nth: 2}
-  - {id: 'r8c3p24reg:calendar_input', kind: date, value: '{{ask.pdc_data|date_it}}', when: '{{ask.titolo_dia}}', label: del, nth: 2}
+  - {id: 'r6c1p12reg:radio:0_clone', kind: radio, when: '{{ask.titolo_tipo|is_permesso_di_costruire}}', label: di cui al Permesso di costruire}
+  - {id: 'r6c2p14reg:txt', kind: text, value: '{{ask.pdc_protocollo}}', when: '{{ask.titolo_tipo|is_permesso_di_costruire}}', max: 30, label: P.G. numero}
+  - {id: 'r6c3p16reg:calendar_input', kind: date, value: '{{ask.pdc_data|date_it}}', when: '{{ask.titolo_tipo|is_permesso_di_costruire}}', label: del}
+  - {id: 'r8c1p20reg:radio:1_clone', kind: radio, when: '{{ask.titolo_tipo|is_dia}}', label: di cui alla DIA}
+  - {id: 'r8c2p22reg:txt', kind: text, value: '{{ask.pdc_protocollo}}', when: '{{ask.titolo_tipo|is_dia}}', max: 30, label: P.G. numero, nth: 2}
+  - {id: 'r8c3p24reg:calendar_input', kind: date, value: '{{ask.pdc_data|date_it}}', when: '{{ask.titolo_tipo|is_dia}}', label: del, nth: 2}
   - {id: 'r11c1p27reg:txt', kind: text, value: '{{ask.catasto_foglio}}', max: 15, label: foglio}
   - {id: 'r11c2p29reg:txt', kind: text, value: '{{ask.catasto_particella}}', max: 15, label: mappale}
   - {id: 'r11c3p31reg:txt', kind: text, value: '{{ask.catasto_subalterno}}', max: 15, label: subalterno}

@@ -61,13 +61,20 @@ def crawls():
     return {p.stem: json.loads(p.read_text()) for p in sorted(SECTIONS.glob("*.json"))}
 
 
-def resolve(ref, cache=None):
-    """`pratica#section` to that crawled section."""
+def resolve(ref, cache=None, sections=None):
+    """`pratica#section` to that crawled section, following a reference to a reference."""
     cache = cache if cache is not None else {}
-    name, _, section = ref.partition("#")
-    if name not in cache:
-        cache[name] = json.loads((SECTIONS / f"{name}.json").read_text())
-    return next(s for s in cache[name]["sections"] if s["section"] == section)
+    for _ in range(10):
+        name, _, section = ref.partition("#")
+        if name not in cache:
+            cache[name] = json.loads(((sections or SECTIONS) / f"{name}.json").read_text())
+        s = next(s for s in cache[name]["sections"] if s["section"] == section and not s.get("scelta")) \
+            if any(s["section"] == section and not s.get("scelta") for s in cache[name]["sections"]) \
+            else next(s for s in cache[name]["sections"] if s["section"] == section)
+        if not s.get("same_as"):
+            return s
+        ref = s["same_as"]
+    raise ValueError(f"{ref}: references go round")
 
 
 def cmd_ops(args):
@@ -146,6 +153,10 @@ def cmd_import(args):
             if k in r:
                 doc["generated" if k == "pratica" else k] = r[k]
         doc["sections"] = r["sections"]
+        old = SECTIONS / f"{r['name']}.json"
+        if old.exists():  # a crawl again keeps the attachments slots read on their screen
+            prev = json.loads(old.read_text())
+            doc.update({k: prev[k] for k in ("slots", "slots_note") if k in prev and k not in doc})
         (SECTIONS / f"{r['name']}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")
         drift = CAT / "drift.json"  # a new crawl settles what the last check found
         if drift.exists():
