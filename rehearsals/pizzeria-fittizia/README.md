@@ -108,6 +108,7 @@ planimetria from the business's PEC. Output: `~/.cache/pratica-rehearsal/pizzeri
 | 2026-10-27 | Benchmark: 3 timed runs from the steps file, bigger batches | Every factual section saved and read back, each run | Run 1: a re-render after Forma giuridica wiped CF and P.IVA; run 3: it wiped Denominazione | Forma giuridica now comes before Denominazione in `portal-steps.yaml` |
 | 2026-10-27 | `inpage.js` in the Claude browser, one call to start it | Every factual section saved and read back, in 53 s | Four things the first tries found: the pane slows page timers, dropdowns build their list on first open, the last wizard screen loads twice, labels sit above or left of their box | All four in `inpage.js` and the shared label check |
 | 2026-10-28 | `do.py scia`: `run.py run` in a Playwright window, Liam logged in there | Every factual section saved and read back, 45 s after the login | Nothing | |
+| 2026-10-28 | `run.py run --vault-dir ~/.pvault-fittizia`: the real business vault, as the pratica skill does it | Every factual section saved and read back, 58 s | A window left open by the last run held the profile ("Opening in existing browser session") | Ran with `--profile` on a new folder |
 
 Time: about an hour for the first walk, **14 min 51 s** for the second (7 wizard screens in
 about 4 minutes, the 9 sections in about 11), with the steps known and every value computed
