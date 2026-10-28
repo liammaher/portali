@@ -1,0 +1,279 @@
+{
+ "crawled": "2026-10-28T17:05:50.277Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Trasferire la sede dell'attività (sector Esercizio di somministrazione di alimenti e bevande in zone tutelate)",
+ "seconds": 28.6,
+ "generated": {
+  "interventi": "Trasferimento di sede di esercizio di somministrazione di alimenti e bevande (in zone tutelate)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione per il trasferimento di sede di esercizio di somministrazione di alimenti e bevande",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "nuovo indirizzo dell'esercizio di somministrazione",
+   "dati catastali della nuova ubicazione",
+   "precedente ubicazione dell'esercizio",
+   "normative comunali",
+   "Dati dell'esercizio di somministrazione",
+   "Altre dichiarazioni",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "2_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "nuovo indirizzo dell'esercizio di somministrazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali della nuova ubicazione",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "precedente ubicazione dell'esercizio",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "normative comunali",
+   "fingerprint": "0c25f486d179118b",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#normative comunali",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dati dell'esercizio di somministrazione",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "già avviato con la SCIA/DIA/autorizzazione prot./n.",
+     "max": 10
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "presentata al SUAP del Comune di",
+     "max": 50
+    },
+    {
+     "id": "r8c2p16reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di somministrazione",
+     "max": 7
+    }
+   ],
+   "fingerprint": "efe2dac918f65bf7",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.9,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 0.8,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

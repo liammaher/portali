@@ -1,0 +1,868 @@
+{
+ "crawled": "2026-10-28T18:30:24.676Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni soggetti in attività di tatuatore/piercer (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 56.9,
+ "generated": {
+  "interventi": "Variazioni soggetti in attività di tatuatore e piercer",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazioni soggetti in attività di tatuatore e piercing",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione locale",
+   "dati catastali",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "dichiarazione di possesso della qualifica professionale in caso di impresa individuale:",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "Dichiarazione per inquinamento acustico",
+   "dichiarazione relativa alle variazioni dei soggetti",
+   "dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione locale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "fingerprint": "6daa74c4b0cb428c",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione di possesso della qualifica professionale in caso di impresa individuale:",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in possesso del certificato attestante la qualificazione professionale per l'attività rilasciato dalla Commissione Provinciale Artigianato c/o la Came"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "di",
+     "max": 50
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "max": 30
+    },
+    {
+     "id": "r4c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in possesso di altro titolo professionale"
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 150
+    }
+   ],
+   "fingerprint": "f1e4a1d3341d4cfb",
+   "text": "dichiarazione di possesso della qualifica professionale in caso di impresa individuale: di essere in possesso del certificato attestante la qualificazione professionale per l'attività rilasciato dalla Commissione Provinciale Artigianato c/o la Camera di Commercio di in data numero di essere in possesso di altro titolo professionale specificare",
+   "branches": [
+    {
+     "choice": "di essere in possesso del certificato attestante la qualificazione professionale per l'attività rilasciato dalla Commissione Provinciale Artigianato c/o la Came",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere in possesso di altro titolo professionale",
+     "id": "r4c1p8reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.7
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione per inquinamento acustico",
+   "fingerprint": "eeabb50d285e5179",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#Dichiarazione per inquinamento acustico",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione relativa alle variazioni dei soggetti",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA DENOMINAZIONE O RAGIONE SOCIALE"
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "a far data dal"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "precedente denominazione o ragione sociale",
+     "max": 80
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "nuova denominazione o ragione sociale",
+     "max": 80
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "TRASFORMAZIONE SOCIETARIA"
+    },
+    {
+     "id": "r8c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "a far data dal"
+    },
+    {
+     "id": "r10c1p14reg:txt",
+     "kind": "text",
+     "label": "precedente tipologia societaria",
+     "max": 80
+    },
+    {
+     "id": "r12c1p16reg:txt",
+     "kind": "text",
+     "label": "nuova tipologia societaria",
+     "max": 80
+    },
+    {
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DEL LEGALE RAPPRESENTANTE"
+    },
+    {
+     "id": "r14c2p20reg:calendar_input",
+     "kind": "date",
+     "label": "a far data dal"
+    },
+    {
+     "id": "r17c1p23reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r17c2p25reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r19c1p27reg:calendar_input",
+     "kind": "date",
+     "label": "data di nascita"
+    },
+    {
+     "id": "r19c2p29reg:txt",
+     "kind": "text",
+     "label": "luogo di nascita",
+     "max": 40
+    },
+    {
+     "id": "r19c3p31reg:txt",
+     "kind": "text",
+     "label": "prov.",
+     "max": 2
+    },
+    {
+     "id": "r21c1p33reg:txt",
+     "kind": "text",
+     "label": "residente nel comune di",
+     "max": 50
+    },
+    {
+     "id": "r21c2p35reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r21c3p37reg:txt",
+     "kind": "text",
+     "label": "prov.",
+     "max": 2
+    },
+    {
+     "id": "r23c1p39reg:txt",
+     "kind": "text",
+     "label": "Via/Viale/Piazza",
+     "max": 40
+    },
+    {
+     "id": "r23c2p41reg:txt",
+     "kind": "text",
+     "label": "n.civico",
+     "max": 5
+    },
+    {
+     "id": "r26c1p46reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r26c2p48reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r28c1p50reg:calendar_input",
+     "kind": "date",
+     "label": "data di nascita"
+    },
+    {
+     "id": "r28c2p52reg:txt",
+     "kind": "text",
+     "label": "luogo di nascita",
+     "max": 40
+    },
+    {
+     "id": "r28c3p54reg:txt",
+     "kind": "text",
+     "label": "prov.",
+     "max": 2
+    },
+    {
+     "id": "r30c1p56reg:txt",
+     "kind": "text",
+     "label": "residente nel comune di",
+     "max": 40
+    },
+    {
+     "id": "r30c2p58reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r30c3p60reg:txt",
+     "kind": "text",
+     "label": "prov.",
+     "max": 2
+    },
+    {
+     "id": "r32c1p62reg:txt",
+     "kind": "text",
+     "label": "via, viale, piazza",
+     "max": 40
+    },
+    {
+     "id": "r32c2p64reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 5
+    },
+    {
+     "id": "r34c1p68reg:txt",
+     "kind": "text",
+     "label": "cittadinanza",
+     "max": 15
+    },
+    {
+     "id": "r34c2p70reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    },
+    {
+     "id": "r36c1p74reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DEI SOGGETTI IN POSSESSO DEI REQUISITI PROFESSIONALI"
+    },
+    {
+     "id": "r36c2p76reg",
+     "kind": "select",
+     "label": "specificare",
+     "options": [
+      "Responsabile tecnico",
+      "Collaboratore familiare",
+      "Preposto"
+     ]
+    },
+    {
+     "id": "r38c1p78reg:txt",
+     "kind": "text",
+     "label": "precedente soggetto titolare dei requisiti professionali",
+     "max": 80
+    },
+    {
+     "id": "r40c1p80reg:txt",
+     "kind": "text",
+     "label": "nuovo soggetto titolare dei requisiti professionali",
+     "max": 80
+    },
+    {
+     "id": "r42c1p82reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE COMPAGINE SOCIALE"
+    },
+    {
+     "id": "r42c2p84reg:txt",
+     "kind": "text",
+     "label": "specificare (rappresentante, soci partecipanti, ecc.)",
+     "context": "VARIAZIONE COMPAGINE SOCIALE",
+     "max": 30
+    },
+    {
+     "id": "r44c1p86reg:txt",
+     "kind": "text",
+     "label": "precedente soggetto partecipante",
+     "max": 50
+    },
+    {
+     "id": "r46c1p88reg:txt",
+     "kind": "text",
+     "label": "nuovo soggetto partecipante",
+     "max": 50
+    }
+   ],
+   "fingerprint": "ab78964dfdb77dbc",
+   "text": "dichiarazione relativa alle variazioni dei soggetti a far data dal VARIAZIONE DELLA DENOMINAZIONE O RAGIONE SOCIALE precedente denominazione o ragione sociale nuova denominazione o ragione sociale a far data dal TRASFORMAZIONE SOCIETARIA precedente tipologia societaria nuova tipologia societaria a far data dal VARIAZIONE DEL LEGALE RAPPRESENTANTE generalità del precedente legale rappresentante cognome nome data di nascita luogo di nascita prov. residente nel comune di CAP prov. Via/Viale/Piazza n.civico generalità del nuovo legale rappresentante cognome nome data di nascita luogo di nascita prov. residente nel comune di CAP prov. via, viale, piazza numero civico cittadinanza codice fiscale specificare VARIAZIONE DEI SOGGETTI IN POSSESSO DEI REQUISITI PROFESSIONALI precedente soggetto titolare dei requisiti professionali nuovo soggetto titolare dei requisiti professionali specificare (rappresentante, soci partecipanti, ecc.) VARIAZIONE COMPAGINE SOCIALE precedente soggetto partecipante nuovo soggetto partecipante vengono allegate le dichiarazioni relative ai nuovi soggetti",
+   "branches": [
+    {
+     "choice": "VARIAZIONE DELLA DENOMINAZIONE O RAGIONE SOCIALE",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "TRASFORMAZIONE SOCIETARIA",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DEL LEGALE RAPPRESENTANTE",
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DEI SOGGETTI IN POSSESSO DEI REQUISITI PROFESSIONALI",
+     "id": "r36c1p74reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "specificare = Responsabile tecnico",
+     "id": "r36c2p76reg",
+     "kind": "select",
+     "option": "Responsabile tecnico",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "specificare = Collaboratore familiare",
+     "id": "r36c2p76reg",
+     "kind": "select",
+     "option": "Collaboratore familiare",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "specificare = Preposto",
+     "id": "r36c2p76reg",
+     "kind": "select",
+     "option": "Preposto",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE COMPAGINE SOCIALE",
+     "id": "r42c1p82reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p20reg:calendar_input",
+       "r2c2p4reg:calendar_input"
+      ],
+      [
+       "r14c2p20reg:calendar_input",
+       "r8c2p12reg:calendar_input"
+      ],
+      [
+       "r26c1p46reg:txt",
+       "r17c1p23reg:txt"
+      ],
+      [
+       "r26c2p48reg:txt",
+       "r17c2p25reg:txt"
+      ],
+      [
+       "r28c1p50reg:calendar_input",
+       "r19c1p27reg:calendar_input"
+      ],
+      [
+       "r28c2p52reg:txt",
+       "r19c2p29reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r19c3p31reg:txt"
+      ],
+      [
+       "r30c1p56reg:txt",
+       "r21c1p33reg:txt"
+      ],
+      [
+       "r30c2p58reg:txt",
+       "r21c2p35reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r21c3p37reg:txt"
+      ],
+      [
+       "r30c3p60reg:txt",
+       "r28c3p54reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 30.4
+  },
+  {
+   "section": "dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "fingerprint": "f316d1d62db7694b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "seconds": 1.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 2.5
+  }
+ ]
+}

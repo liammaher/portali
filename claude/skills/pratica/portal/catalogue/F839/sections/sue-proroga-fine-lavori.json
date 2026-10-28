@@ -1,0 +1,293 @@
+{
+ "crawled": "2026-10-28T16:44:41.872Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.) › Proroga fine lavori (sector Edilizia e pianificazione urbana)",
+ "seconds": 20.3,
+ "generated": {
+  "interventi": "Proroga del termine di ultimazione lavori",
+  "adempimenti": [
+   {
+    "adempimento": "Provvedimento di proroga del termine di ultimazione lavori",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dichiarazione delle motivazioni della richiesta di proroga",
+   "dichiarazione periodo di proroga",
+   "richiesta della proroga di ultimazione dei lavori",
+   "dichiarazione dell'immobile oggetto della domanda, riferimenti titolo edilizio e data prevista della fine lavori",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione delle motivazioni della richiesta di proroga",
+   "fingerprint": "0cd4b48a866a5e24",
+   "same_as": "sue-proroga-inizio-lavori#dichiarazione delle motivazioni della richiesta di proroga",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione periodo di proroga",
+   "fingerprint": "4a13a20b9ac3615b",
+   "same_as": "sue-proroga-inizio-lavori#dichiarazione periodo di proroga",
+   "seconds": 0.7
+  },
+  {
+   "section": "richiesta della proroga di ultimazione dei lavori",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "tipo lavori",
+     "max": 30
+    }
+   ],
+   "fingerprint": "10395948f398f904",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione dell'immobile oggetto della domanda, riferimenti titolo edilizio e data prevista della fine lavori",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "via , viale, piazza",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 10
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "Località",
+     "max": 30
+    },
+    {
+     "id": "r4c2p10reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r6c1p14reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di cui al Permesso di costruire",
+     "group": "r6c1p14reg:radio"
+    },
+    {
+     "id": "r6c2p16reg:txt",
+     "kind": "text",
+     "label": "P.G. numero",
+     "context": "di cui al Permesso di costruire",
+     "max": 10
+    },
+    {
+     "id": "r6c3p18reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r6c4p20reg:txt",
+     "kind": "text",
+     "label": "N.Put",
+     "max": 30
+    },
+    {
+     "id": "r8c1p22reg:radio:1_clone",
+     "kind": "radio",
+     "label": "di cui alla DIA",
+     "group": "r8c1p22reg:radio"
+    },
+    {
+     "id": "r8c2p24reg:txt",
+     "kind": "text",
+     "label": "P.G. numero",
+     "context": "di cui alla DIA",
+     "max": 10
+    },
+    {
+     "id": "r8c3p26reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r11c1p29reg:txt",
+     "kind": "text",
+     "label": "foglio",
+     "max": 15
+    },
+    {
+     "id": "r11c2p31reg:txt",
+     "kind": "text",
+     "label": "mappale",
+     "max": 15
+    },
+    {
+     "id": "r11c3p33reg:txt",
+     "kind": "text",
+     "label": "subalterno",
+     "max": 15
+    },
+    {
+     "id": "r13c1p37reg:txt",
+     "kind": "text",
+     "label": "per (specificare l'oggetto dell'intervento)",
+     "max": 100
+    },
+    {
+     "id": "r15c1p39reg:txt",
+     "kind": "text",
+     "label": "intestato a",
+     "max": 50
+    },
+    {
+     "id": "r17c1p41reg:calendar_input",
+     "kind": "date",
+     "label": "la cui data di fine lavori dovrebbe essere entro il"
+    },
+    {
+     "id": "r17c2p43reg:calendar_input",
+     "kind": "date",
+     "label": "ed è invece prevista per"
+    }
+   ],
+   "fingerprint": "5d5252a0a6a679c3",
+   "branches": [
+    {
+     "choice": "di cui al Permesso di costruire",
+     "id": "r6c1p14reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c3p26reg:calendar_input",
+       "r6c3p18reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "di cui alla DIA",
+     "id": "r8c1p22reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c3p26reg:calendar_input",
+       "r6c3p18reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 2.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.8,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

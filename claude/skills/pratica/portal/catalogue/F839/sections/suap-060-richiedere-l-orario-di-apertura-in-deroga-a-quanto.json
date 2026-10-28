@@ -1,0 +1,196 @@
+{
+ "crawled": "2026-10-28T16:50:49.456Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Richiedere l'orario di apertura in deroga a quanto disposto (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 18.3,
+ "generated": {
+  "interventi": "Autorizzazione alla deroga degli orari di apertura e chiusura dell'esercizio pubblico di somministrazione in zone NON tutelate",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione deroga orari esercizi pubblici somministrazione alimenti e bevande",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'esercizio",
+   "dati catastali",
+   "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "dichiarazione dell'insegna dell'esercizio",
+   "dichiarazione relativa alla deroga dell'orario di apertura",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'esercizio",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "specificare la tipologia del titolo (autorizzazione/comunicazione/DIA/SCIA/ecc.)",
+     "max": 30
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "n. autorizzazione/comunicazione o n. protocollo DIA/SCIA",
+     "max": 30
+    },
+    {
+     "id": "r4c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    }
+   ],
+   "fingerprint": "6daa74c4b0cb428c",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione dell'insegna dell'esercizio",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "descrizione insegna (nome del locale)",
+     "max": 30
+    }
+   ],
+   "fingerprint": "91770c2e0f55753b",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla deroga dell'orario di apertura",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txta",
+     "kind": "textarea",
+     "label": "350 Caratteri restanti",
+     "context": "orario di apertura richiesto",
+     "max": 350
+    },
+    {
+     "id": "r4c1p4reg:txta",
+     "kind": "textarea",
+     "label": "350 Caratteri restanti",
+     "context": "motivazione della richiesta di deroga",
+     "max": 350
+    }
+   ],
+   "fingerprint": "1567bc2d85bcbf2b",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.8,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

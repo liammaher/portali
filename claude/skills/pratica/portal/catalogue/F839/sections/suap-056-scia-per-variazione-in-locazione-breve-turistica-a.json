@@ -1,0 +1,437 @@
+{
+ "crawled": "2026-10-28T18:20:10.359Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › SCIA per variazione in locazione breve/turistica a carattere imprenditoriale (sector Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna))",
+ "seconds": 21.9,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività per locazione breve turistica - Variazioni",
+  "adempimenti": [
+   {
+    "adempimento": "Segnalazione Certificata di Inizio Attività per locazione breve/turistica - Variazioni",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Ubicazione",
+   "Dati catastali",
+   "Codici istat e ateco",
+   "Titolo di disponibilità",
+   "Variazioni",
+   "Capacità ricettiva e dotazioni dell’unità immobiliare",
+   "ALTRE DICHIARAZIONI",
+   "Dichiarazioni sul possesso dei requisiti di onorabilità",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Ubicazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "Codici istat e ateco",
+   "fingerprint": "4a756c3e367fc435",
+   "same_as": "suap-056-scia-per-avvio-locazione-breve-turistica-a-caratte#Codici istat e ateco",
+   "seconds": 0.7
+  },
+  {
+   "section": "Titolo di disponibilità",
+   "fingerprint": "5f497ad5762b4d1c",
+   "same_as": "suap-056-scia-per-avvio-locazione-breve-turistica-a-caratte#Titolo di disponibilità",
+   "seconds": 0.6
+  },
+  {
+   "section": "Variazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Il/la sottoscritto/a segnala che l’attività di locazione breve / locazione turistica, avente codice CIN (3),",
+     "max": 50
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "CUSR(4) regionale",
+     "max": 9999
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "già avviata con la SCIA/comunicazione prot./n.",
+     "max": 50
+    },
+    {
+     "id": "r6c2p10reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r8c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione della capacità ricettiva (5)"
+    },
+    {
+     "id": "r11c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione della superficie totale/utile abitabile delle camere a disposizione degli ospiti (5)"
+    },
+    {
+     "id": "r13c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione del titolo di disponibilità dell’immobile: come meglio dettagliato nel riquadro “Titolo di disponibilità”"
+    }
+   ],
+   "fingerprint": "f450e59c87231d2c",
+   "text": "Variazioni Il/la sottoscritto/a segnala che l’attività di locazione breve / locazione turistica, avente codice CIN (3), CUSR(4) regionale già avviata con la SCIA/comunicazione prot./n. del viene modificata come di seguito indicato: Variazione della capacità ricettiva (5) Variazione della superficie totale/utile abitabile delle camere a disposizione degli ospiti (5) Variazione del titolo di disponibilità dell’immobile: come meglio dettagliato nel riquadro “Titolo di disponibilità” (3) Codice Identificativo Nazionale di cui all’art. 13 ter della legge 15 dicembre 2023, n. 191 (4) Codice Unico regionale delle Strutture Ricettive e delle attività di locazione breve di cui all’art. 13 della Legge Regionale 7 agosto 2019, n. 16. (5) In tale caso allegare nuova planimetria dell’immobile",
+   "branches": [
+    {
+     "choice": "Variazione della capacità ricettiva (5)",
+     "id": "r8c1p15reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r10c1p18reg:number",
+       "kind": "text",
+       "label": "Da posti letto n.",
+       "max": 4
+      },
+      {
+       "id": "r10c2p20reg:number",
+       "kind": "text",
+       "label": "a posti letto n.",
+       "max": 4
+      },
+      {
+       "id": "r12c1p24reg:number",
+       "kind": "text",
+       "label": "da camere n.",
+       "max": 2
+      },
+      {
+       "id": "r12c2p26reg:number",
+       "kind": "text",
+       "label": "a camere n.",
+       "max": 2
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p23reg:chk",
+       "r14c1p30reg:chk"
+      ],
+      [
+       "r13c1p27reg:chk",
+       "r16c1p34reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "Variazione della superficie totale/utile abitabile delle camere a disposizione degli ospiti (5)",
+     "id": "r11c1p23reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r12c1p24reg:chk",
+       "kind": "checkbox",
+       "label": "Superficie totale immobile (superficie utile abitabile):"
+      },
+      {
+       "id": "r14c1p28reg:chk",
+       "kind": "checkbox",
+       "label": "Superficie utile abitabile camere a disposizione degli ospiti: come dettagliato nel riquadro “Capacità ricettiva e dotazioni”"
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p27reg:chk",
+       "r15c1p29reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Superficie totale immobile (superficie utile abitabile):",
+       "id": "r12c1p24reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r14c1p26reg:real",
+         "kind": "text",
+         "label": "da Mq",
+         "max": 8
+        },
+        {
+         "id": "r14c2p28reg:real",
+         "kind": "text",
+         "label": "a mq",
+         "max": 8
+        }
+       ],
+       "moved": [
+        [
+         "r14c1p28reg:chk",
+         "r15c1p31reg:chk"
+        ],
+        [
+         "r15c1p29reg:chk",
+         "r16c1p32reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "Superficie utile abitabile camere a disposizione degli ospiti: come dettagliato nel riquadro “Capacità ricettiva e dotazioni”",
+       "id": "r14c1p28reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "Variazione del titolo di disponibilità dell’immobile: come meglio dettagliato nel riquadro “Titolo di disponibilità”",
+     "id": "r13c1p27reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.1
+  },
+  {
+   "section": "Capacità ricettiva e dotazioni dell’unità immobiliare",
+   "fields": [
+    {
+     "id": "r1c2p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "sì",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r1c3p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r1c3p3reg:radio"
+    },
+    {
+     "id": "r2c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Unità immobiliare con più locali",
+     "group": "r2c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p16reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Monolocale",
+     "group": "r5c1p16reg:radio"
+    }
+   ],
+   "fingerprint": "5fcf4ac417a19f0a",
+   "text": "Capacità ricettiva e dotazioni dell’unità immobiliare UNITA’ IMMOBILIARE che consente il superamento delle barriere architettoniche sì no Unità immobiliare con più locali Monolocale",
+   "branches": [
+    {
+     "choice": "sì",
+     "id": "r1c2p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "no",
+     "id": "r1c3p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Unità immobiliare con più locali",
+     "id": "r2c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r4c1p7reg:real",
+       "kind": "text",
+       "label": "Superficie (mq)",
+       "max": 9
+      },
+      {
+       "id": "r4c2p9reg:real",
+       "kind": "text",
+       "label": "Locale soggiorno mq",
+       "max": 9
+      },
+      {
+       "id": "r4c3p11reg:number",
+       "kind": "text",
+       "label": "Locale soggiorno n.",
+       "max": 3
+      },
+      {
+       "id": "r4c4p13reg:real",
+       "kind": "text",
+       "label": "Camera mq",
+       "max": 9
+      },
+      {
+       "id": "r4c5p15reg:number",
+       "kind": "text",
+       "label": "Camera posti letto n.",
+       "max": 3
+      },
+      {
+       "id": "r6c1p19reg:number",
+       "kind": "text",
+       "label": "Cucina/ angolo cottura n.",
+       "max": 3
+      },
+      {
+       "id": "r6c2p21reg:number",
+       "kind": "text",
+       "label": "Servizi igienici n.",
+       "max": 3
+      },
+      {
+       "id": "r6c3p23reg:number",
+       "kind": "text",
+       "label": "Totale posti letto n.",
+       "max": 3
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p16reg:radio:3_clone",
+       "r7c1p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Monolocale",
+     "id": "r5c1p16reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r7c1p19reg:real",
+       "kind": "text",
+       "label": "Superficie (mq)",
+       "max": 9
+      },
+      {
+       "id": "r7c2p21reg:real",
+       "kind": "text",
+       "label": "Angolo cottura, soggiorno camera (mq)",
+       "max": 65
+      },
+      {
+       "id": "r7c3p23reg:number",
+       "kind": "text",
+       "label": "Servizi igienici n.",
+       "max": 3
+      },
+      {
+       "id": "r7c4p25reg:number",
+       "kind": "text",
+       "label": "Totale posti letto n.",
+       "max": 3
+      }
+     ]
+    }
+   ],
+   "seconds": 3.8
+  },
+  {
+   "section": "ALTRE DICHIARAZIONI",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazioni sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

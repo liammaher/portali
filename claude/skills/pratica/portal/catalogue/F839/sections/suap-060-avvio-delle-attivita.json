@@ -1,0 +1,632 @@
+{
+ "crawled": "2026-10-28T16:59:18.114Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Sicurezza alimentare e sanità pubblica veterinaria (GISA) › Comunicazione per linee d'attività inerenti la sicurezza alimentare e la sanità pubblica veterinaria non ricompresi negli accordi Stato-Regioni › Avvio delle attività (da utilizzare esclusivamente per linee di attività per le quali è indicata la “Comunicazione” nella colonna della master list denominata “Procedura amministrativa”) (procedura n. 1) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 45,
+ "generated": {
+  "interventi": "Comunicazione avvio delle attività di uno stabilimento",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione avvio delle attività di uno stabilimento",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dello stabilimento",
+   "dati catastali",
+   "Avvio dello stabilimento",
+   "periodo dell'attività",
+   "Linee d'attività svolte nello stabilimento",
+   "ulteriori dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si presenta contestualmente la SCIA sanitaria per attività a sede fissa ai sensi dell'art. 6 Reg. CE n. 852/2004 (notifica sanitaria ex accordo 77/2017) VERIFICARE LA NECESSITA' DI PRESENTARE LA NOTIFICA SANITARIA EX ACCORDO 77/2017 CONSULTANDO LA MASTER LIST REV. 11, SCARICABILE NELLA SEZIONE LINEE DI INTERVENTO IN FASE DI COMPILAZIONE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si presenta contestualmente la SCIA sanitaria per attività SENZA sede fissa ai sensi dell'art. 6 Reg. CE n. 852/2004 (notifica sanitaria ex accordo 77/2017) VERIFICARE LA NECESSITA' DI PRESENTARE LA NOTIFICA SANITARIA EX ACCORDO 77/2017 CONSULTANDO LA MASTER LIST REV. 11, SCARICABILE NELLA SEZIONE LINEE DI INTERVENTO IN FASE DI COMPILAZIONE"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "la notifica riguarda uno stabilimento SENZA sede fissa"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "la notifica riguarda uno stabilimento SENZA sede fissa",
+   "type": "CHK",
+   "adds": [],
+   "drops": [
+    "indirizzo dello stabilimento",
+    "dati catastali"
+   ]
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "Avvio dello stabilimento",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "A sede fissa",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Senza sede fissa",
+     "group": "r3c1p4reg:radio"
+    }
+   ],
+   "fingerprint": "f285ab714a27d99d",
+   "branches": [
+    {
+     "choice": "A sede fissa",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Senza sede fissa",
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.2
+  },
+  {
+   "section": "periodo dell'attività",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "permanente",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "stagionale",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r4c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "label": "temporaneo",
+     "group": "r4c1p7reg:radio"
+    }
+   ],
+   "fingerprint": "0a594589f798020b",
+   "branches": [
+    {
+     "choice": "permanente",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "stagionale",
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r5c1p8reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r5c2p10reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p7reg:radio:2_clone",
+       "r7c1p15reg:radio:2_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal (gg/mm)",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "temporaneo",
+     "id": "r4c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p10reg:calendar_input",
+       "kind": "date",
+       "label": "dal ( gg/mm/aaaa )"
+      },
+      {
+       "id": "r6c2p12reg:calendar_input",
+       "kind": "date",
+       "label": "al ( gg/mm/aaaa )"
+      }
+     ],
+     "plus": {
+      "anchor": "dal ( gg/mm/aaaa )",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 3.8
+  },
+  {
+   "section": "Linee d'attività svolte nello stabilimento",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "più linee di attività",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "un'unica linea di attività",
+     "group": "r2c2p4reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "ALLEVAMENTI",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r8c1p10reg:radio:3_clone",
+     "kind": "radio",
+     "label": "REGISTRATI",
+     "group": "r8c1p10reg:radio"
+    },
+    {
+     "id": "r13c1p15reg:radio:4_clone",
+     "kind": "radio",
+     "label": "RICONOSCIUTI",
+     "group": "r13c1p15reg:radio"
+    },
+    {
+     "id": "r20c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo ''DOCUMENTI DA ALLEGARE'', trovate il/i codici dei documenti obbligatori da a"
+    },
+    {
+     "id": "r26c1p28reg:chk",
+     "kind": "checkbox",
+     "label": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo \"SCHEDA SUPPLEMENTARE N.\", vi è indicato l'eventuale numero di scheda supplem"
+    }
+   ],
+   "fingerprint": "4862896d0d122cca",
+   "branches": [
+    {
+     "choice": "più linee di attività",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "un'unica linea di attività",
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "ALLEVAMENTI",
+     "id": "r3c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r21c1p23reg:txt",
+       "kind": "text",
+       "label": "Macroarea",
+       "max": 100
+      },
+      {
+       "id": "r23c1p27reg:txt",
+       "kind": "text",
+       "label": "Aggregazione",
+       "max": 100
+      },
+      {
+       "id": "r25c1p31reg:txt",
+       "kind": "text",
+       "label": "Linee d'attività",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p22reg:chk",
+       "r27c1p36reg:chk"
+      ],
+      [
+       "r26c1p28reg:chk",
+       "r33c1p42reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "REGISTRATI",
+     "id": "r8c1p10reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r21c1p23reg:txt",
+       "kind": "text",
+       "label": "Macroarea",
+       "max": 100
+      },
+      {
+       "id": "r23c1p27reg:txt",
+       "kind": "text",
+       "label": "Aggregazione",
+       "max": 100
+      },
+      {
+       "id": "r25c1p31reg:txt",
+       "kind": "text",
+       "label": "Linee d'attività",
+       "max": 100
+      },
+      {
+       "id": "r27c1p35reg:txt",
+       "kind": "text",
+       "label": "Codice univoco",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p22reg:chk",
+       "r29c1p40reg:chk"
+      ],
+      [
+       "r26c1p28reg:chk",
+       "r35c1p46reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "RICONOSCIUTI",
+     "id": "r13c1p15reg:radio:4_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r21c1p23reg:txt",
+       "kind": "text",
+       "label": "Macroarea",
+       "max": 100
+      },
+      {
+       "id": "r23c1p27reg:txt",
+       "kind": "text",
+       "label": "Aggregazione",
+       "max": 100
+      },
+      {
+       "id": "r25c1p31reg:txt",
+       "kind": "text",
+       "label": "Linee d'attività",
+       "max": 100
+      },
+      {
+       "id": "r27c1p35reg:txt",
+       "kind": "text",
+       "label": "Codice univoco",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p22reg:chk",
+       "r29c1p40reg:chk"
+      ],
+      [
+       "r26c1p28reg:chk",
+       "r35c1p46reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo ''DOCUMENTI DA ALLEGARE'', trovate il/i codici dei documenti obbligatori da a",
+     "id": "r20c1p22reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r24c1p26reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Documenti da allegare",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r26c1p28reg:chk",
+       "r27c1p30reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo \"SCHEDA SUPPLEMENTARE N.\", vi è indicato l'eventuale numero di scheda supplem",
+     "id": "r26c1p28reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r36c1p38reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Caricare SCHEDA SUPPLEMENTARE necessaria",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      },
+      {
+       "id": "r42c1p47reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Allegare l'eventuale form di autocertificazione previsto dalla scheda supplementare",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      }
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    }
+   ],
+   "seconds": 10.4
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "sono state rispettate le disposizioni generali stabilite dalla legislazione vigente in materia di sicurezza alimentare e sanità pubblica veterinaria"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "sono state rispettate le disposizioni specifiche stabilite dalla legislazione vigente relative alle linee d'attività svolte nello stabilimento"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dal D.Lgs. 06/09/2011, n. 159. (Autocertificazione Antimafia"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "nel caso lo stabilimento sia a sede fissa, di aver rispettato i regolamenti locali di polizia urbana, annonaria e di igiene e sanità, i regolamenti edilizi e le"
+    },
+    {
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "rispettare l'obbligo di comunicare ogni successiva modifica significativa a quanto sopra descritto ivi compresa la cessazione dell'attività"
+    },
+    {
+     "id": "r9c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "che la presente comunicazione non comprende né sostituisce altri eventuali adempimenti di legge e/o altre autocertificazioni previste ai fini dell'avvio dell'at"
+    },
+    {
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "che l'eventuale affido di un reparto dello stabilimento ad un'altra impresa, non è opponibile alle Autorità di controllo in quanto è un contratto che produce ef"
+    },
+    {
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "degli obblighi previsti dal D.Lgs 194/08 sui diritti sanitari"
+    },
+    {
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "dell'eventualità che per le linee d'attività svolte nello stabilimento, la master list preveda l'obbligo di compilare schede supplementari alla presente notific"
+    },
+    {
+     "id": "r13c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "che eventuali variazioni delle informazioni riportate nelle schede supplementari devono obbligatoriamente essere comunicate all'ASL via pec oppure in via autono"
+    },
+    {
+     "id": "r14c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "che il mancato aggiornamento delle schede supplementari alla presente notifica è considerata una non conformità da cui può scaturire la contestazione di sanzion"
+    },
+    {
+     "id": "r15c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "Il sottoscritto dichiara inoltre di essere informato ai sensi e per gli effetti di cui all'art. 13 del D.L.vo 196/03 che i dati personali raccolti, anche con st"
+    }
+   ],
+   "fingerprint": "a322bfb40e3db39a",
+   "branches": [
+    {
+     "choice": "sono state rispettate le disposizioni generali stabilite dalla legislazione vigente in materia di sicurezza alimentare e sanità pubblica veterinaria",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "sono state rispettate le disposizioni specifiche stabilite dalla legislazione vigente relative alle linee d'attività svolte nello stabilimento",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dal D.Lgs. 06/09/2011, n. 159. (Autocertificazione Antimafia",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "nel caso lo stabilimento sia a sede fissa, di aver rispettato i regolamenti locali di polizia urbana, annonaria e di igiene e sanità, i regolamenti edilizi e le",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "rispettare l'obbligo di comunicare ogni successiva modifica significativa a quanto sopra descritto ivi compresa la cessazione dell'attività",
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che la presente comunicazione non comprende né sostituisce altri eventuali adempimenti di legge e/o altre autocertificazioni previste ai fini dell'avvio dell'at",
+     "id": "r9c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l'eventuale affido di un reparto dello stabilimento ad un'altra impresa, non è opponibile alle Autorità di controllo in quanto è un contratto che produce ef",
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "degli obblighi previsti dal D.Lgs 194/08 sui diritti sanitari",
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "dell'eventualità che per le linee d'attività svolte nello stabilimento, la master list preveda l'obbligo di compilare schede supplementari alla presente notific",
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che eventuali variazioni delle informazioni riportate nelle schede supplementari devono obbligatoriamente essere comunicate all'ASL via pec oppure in via autono",
+     "id": "r13c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che il mancato aggiornamento delle schede supplementari alla presente notifica è considerata una non conformità da cui può scaturire la contestazione di sanzion",
+     "id": "r14c1p16reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 8.5
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.8,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

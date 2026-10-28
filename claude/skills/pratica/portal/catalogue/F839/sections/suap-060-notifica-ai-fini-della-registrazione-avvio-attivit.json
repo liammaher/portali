@@ -1,0 +1,157 @@
+{
+ "crawled": "2026-10-28T16:54:40.975Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Notifica ai fini della registrazione impresa alimentare (art. 6, Reg. CE n. 852/2004) › Notifica ai fini della registrazione - avvio attività/trasferimento (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 25.3,
+ "generated": {
+  "interventi": "Presentazione della SCIA sanitaria per attività a sede fissa ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+  "adempimenti": [
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dello stabilimento",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 0.7,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

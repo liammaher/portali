@@ -1,0 +1,468 @@
+{
+ "crawled": "2026-10-28T17:04:03.563Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Sicurezza alimentare e sanità pubblica veterinaria (GISA) › Riconoscimento per linee d'attività inerenti la sicurezza alimentare e la sanità pubblica veterinaria non ricompresi negli accordi Stato-Regioni › Richiesta di approvazione del progetto teso all’aggiunzione di linee d’attività in uno stabilimento già riconosciuto (procedura n. 9) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 25.9,
+ "generated": {
+  "interventi": "Richiesta di approvazione progetto teso all'aggiunzione di linee d'attività in uno stabilimento già riconosciuto",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere l'approvazione del progetto teso all'aggiunzione di linee d'attività in uno stabilimento già riconosciuto",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dello stabilimento",
+   "dati catastali",
+   "dichiarazione per approvazione progetto teso all'aggiunzione di linee di attività",
+   "ulteriori dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione per approvazione progetto teso all'aggiunzione di linee di attività",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "già riconosciuto con numero",
+     "max": 9999
+    },
+    {
+     "id": "r5c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "label": "ALLEVAMENTI",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r10c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "label": "REGISTRATI",
+     "group": "r10c1p10reg:radio"
+    },
+    {
+     "id": "r15c1p15reg:radio:2_clone",
+     "kind": "radio",
+     "label": "RICONOSCIUTI",
+     "group": "r15c1p15reg:radio"
+    },
+    {
+     "id": "r22c1p22reg:txt",
+     "kind": "text",
+     "label": "Macroarea",
+     "max": 100
+    },
+    {
+     "id": "r24c1p26reg:txt",
+     "kind": "text",
+     "label": "Aggregazione",
+     "max": 100
+    },
+    {
+     "id": "r26c1p30reg:txt",
+     "kind": "text",
+     "label": "Linee d'attività",
+     "max": 100
+    },
+    {
+     "id": "r27c1p33reg:chk",
+     "kind": "checkbox",
+     "label": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo ''DOCUMENTI DA ALLEGARE'', trovate il/i codici dei documenti obbligatori da a"
+    },
+    {
+     "id": "r33c1p39reg:chk",
+     "kind": "checkbox",
+     "label": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo \"SCHEDA SUPPLEMENTARE N.\", vi è indicato l'eventuale numero di scheda supplem"
+    },
+    {
+     "id": "r51c1p59reg:chk",
+     "kind": "checkbox",
+     "label": "che il procedimento si svolga mediante l'indizione della:"
+    },
+    {
+     "id": "r52c2p61reg:radio:3_clone",
+     "kind": "radio",
+     "label": "conferenza dei servizi decisoria in forma semplificata e in modalità asincrona",
+     "group": "r52c2p61reg:radio"
+    },
+    {
+     "id": "r53c2p64reg:radio:4_clone",
+     "kind": "radio",
+     "label": "conferenza dei servizi decisoria in forma simultanea e in modalità sincrona",
+     "group": "r53c2p64reg:radio"
+    },
+    {
+     "id": "r55c2p69reg:txt",
+     "kind": "text",
+     "label": "per i seguenti motivi:",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "9fff362cea90c500",
+   "branches": [
+    {
+     "choice": "ALLEVAMENTI",
+     "id": "r5c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r27c1p33reg:chk",
+       "r28c1p35reg:chk"
+      ],
+      [
+       "r33c1p39reg:chk",
+       "r34c1p41reg:chk"
+      ],
+      [
+       "r51c1p59reg:chk",
+       "r52c1p61reg:chk"
+      ],
+      [
+       "r52c2p61reg:radio:3_clone",
+       "r53c2p63reg:radio:3_clone"
+      ],
+      [
+       "r53c2p64reg:radio:4_clone",
+       "r54c2p66reg:radio:4_clone"
+      ],
+      [
+       "r55c2p69reg:txt",
+       "r56c2p71reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "REGISTRATI",
+     "id": "r10c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r28c1p34reg:txt",
+       "kind": "text",
+       "label": "Codice univoco",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r22c1p22reg:txt",
+       "r31c1p40reg:txt"
+      ],
+      [
+       "r24c1p26reg:txt",
+       "r33c1p44reg:txt"
+      ],
+      [
+       "r26c1p30reg:txt",
+       "r35c1p48reg:txt"
+      ],
+      [
+       "r27c1p33reg:chk",
+       "r36c1p51reg:chk"
+      ],
+      [
+       "r33c1p39reg:chk",
+       "r42c1p57reg:chk"
+      ],
+      [
+       "r51c1p59reg:chk",
+       "r60c1p77reg:chk"
+      ],
+      [
+       "r52c2p61reg:radio:3_clone",
+       "r61c2p79reg:radio:3_clone"
+      ],
+      [
+       "r53c2p64reg:radio:4_clone",
+       "r62c2p82reg:radio:4_clone"
+      ],
+      [
+       "r55c2p69reg:txt",
+       "r64c2p87reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 11
+     }
+    },
+    {
+     "choice": "RICONOSCIUTI",
+     "id": "r15c1p15reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r28c1p34reg:txt",
+       "kind": "text",
+       "label": "Codice univoco",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r22c1p22reg:txt",
+       "r31c1p40reg:txt"
+      ],
+      [
+       "r24c1p26reg:txt",
+       "r33c1p44reg:txt"
+      ],
+      [
+       "r26c1p30reg:txt",
+       "r35c1p48reg:txt"
+      ],
+      [
+       "r27c1p33reg:chk",
+       "r36c1p51reg:chk"
+      ],
+      [
+       "r33c1p39reg:chk",
+       "r42c1p57reg:chk"
+      ],
+      [
+       "r51c1p59reg:chk",
+       "r60c1p77reg:chk"
+      ],
+      [
+       "r52c2p61reg:radio:3_clone",
+       "r61c2p79reg:radio:3_clone"
+      ],
+      [
+       "r53c2p64reg:radio:4_clone",
+       "r62c2p82reg:radio:4_clone"
+      ],
+      [
+       "r55c2p69reg:txt",
+       "r64c2p87reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 11
+     }
+    },
+    {
+     "choice": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo ''DOCUMENTI DA ALLEGARE'', trovate il/i codici dei documenti obbligatori da a",
+     "id": "r27c1p33reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r31c1p37reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Documenti da allegare",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r33c1p39reg:chk",
+       "r34c1p41reg:chk"
+      ],
+      [
+       "r51c1p59reg:chk",
+       "r52c1p61reg:chk"
+      ],
+      [
+       "r52c2p61reg:radio:3_clone",
+       "r53c2p63reg:radio:3_clone"
+      ],
+      [
+       "r53c2p64reg:radio:4_clone",
+       "r54c2p66reg:radio:4_clone"
+      ],
+      [
+       "r55c2p69reg:txt",
+       "r56c2p71reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo \"SCHEDA SUPPLEMENTARE N.\", vi è indicato l'eventuale numero di scheda supplem",
+     "id": "r33c1p39reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r43c1p49reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Caricare SCHEDA SUPPLEMENTARE necessaria",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      },
+      {
+       "id": "r49c1p58reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Allegare l'eventuale form di autocertificazione previsto dalla scheda supplementare",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r51c1p59reg:chk",
+       "r53c1p63reg:chk"
+      ],
+      [
+       "r52c2p61reg:radio:3_clone",
+       "r54c2p65reg:radio:3_clone"
+      ],
+      [
+       "r53c2p64reg:radio:4_clone",
+       "r55c2p68reg:radio:4_clone"
+      ],
+      [
+       "r55c2p69reg:txt",
+       "r57c2p73reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "che il procedimento si svolga mediante l'indizione della:",
+     "id": "r51c1p59reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "conferenza dei servizi decisoria in forma semplificata e in modalità asincrona",
+     "id": "r52c2p61reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "conferenza dei servizi decisoria in forma simultanea e in modalità sincrona",
+     "id": "r53c2p64reg:radio:4_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 9.4
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fingerprint": "f28e6dc8dd87cd6d",
+   "same_as": "suap-060-richiesta-di-approvazione-progetto-per-riconoscime#ulteriori dichiarazioni",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.6,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

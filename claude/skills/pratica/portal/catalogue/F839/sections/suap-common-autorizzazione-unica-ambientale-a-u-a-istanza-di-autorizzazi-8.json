@@ -1,0 +1,519 @@
+{
+ "crawled": "2026-10-28T19:33:41.074Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › E) Comunicazioni o nulla osta relativi all'impatto acustico di cui all'articolo 8, com. 4 e com. 6, della legge 26 ottobre 1995, n. 447 (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 34.2,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "SCHEDA E – IMPATTO ACUSTICO",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 0.7
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 1
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 1
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 1
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 1
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 0.8
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 1
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 0.9
+  },
+  {
+   "section": "SCHEDA E – IMPATTO ACUSTICO",
+   "fields": [
+    {
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "rientra nella categoria degli Impianti a ciclo produttivo continuo.",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non rientra nella categoria degli Impianti a ciclo produttivo continuo.",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r8c1p10reg:radio:2_clone",
+     "kind": "radio",
+     "label": "è stata presentata documentazione di impatto acustico",
+     "group": "r8c1p10reg:radio"
+    },
+    {
+     "id": "r8c2p12reg:txt",
+     "kind": "text",
+     "label": "a",
+     "context": "è stata presentata documentazione di impatto acustico",
+     "max": 30
+    },
+    {
+     "id": "r8c3p14reg:txt",
+     "kind": "text",
+     "label": "prot. n.",
+     "context": "è stata presentata documentazione di impatto acustico",
+     "max": 20
+    },
+    {
+     "id": "r8c4p16reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r9c1p17reg:radio:3_clone",
+     "kind": "radio",
+     "label": "si allega documentazione di impatto acustico, a firma di tecnico abilitato competente in acustica ambientale, in quanto l'intervento rientra nell'ambito di appl",
+     "group": "r9c1p17reg:radio"
+    },
+    {
+     "id": "r10c1p18reg:radio:4_clone",
+     "kind": "radio",
+     "label": "si allega dichiarazione sostitutiva dell'atto di notorietà, resa dal legale rappresentante ai sensi dell'art. 8, comma 5 della l. 447/1995, relativa al rispetto",
+     "group": "r10c1p18reg:radio"
+    },
+    {
+     "id": "r12c1p20reg:radio:5_clone",
+     "kind": "radio",
+     "label": "è stato predisposto un Piano di Risanamento Acustico",
+     "group": "r12c1p20reg:radio"
+    },
+    {
+     "id": "r12c2p22reg:txt",
+     "kind": "text",
+     "label": "presentato a",
+     "context": "è stato predisposto un Piano di Risanamento Acustico",
+     "max": 100
+    },
+    {
+     "id": "r12c3p24reg:txt",
+     "kind": "text",
+     "label": "prot. n.",
+     "context": "è stato predisposto un Piano di Risanamento Acustico",
+     "max": 20
+    },
+    {
+     "id": "r12c4p26reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r14c1p28reg:radio:6_clone",
+     "kind": "radio",
+     "label": "è in corso di realizzazione il Piano di Risanamento Acustico",
+     "group": "r14c1p28reg:radio"
+    },
+    {
+     "id": "r14c2p30reg:txt",
+     "kind": "text",
+     "label": "presentato a",
+     "context": "è in corso di realizzazione il Piano di Risanamento Acustico",
+     "max": 100
+    },
+    {
+     "id": "r14c3p32reg:txt",
+     "kind": "text",
+     "label": "prot. n.",
+     "context": "è in corso di realizzazione il Piano di Risanamento Acustico",
+     "max": 20
+    },
+    {
+     "id": "r14c4p34reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r16c1p37reg:radio:7_clone",
+     "kind": "radio",
+     "label": "che nell'impianto/stabilimento/attività vengono svolte esclusivamente attività a bassa rumorosità (elencate nell'allegato B del D.P.R. n. 227/2011) che non comp",
+     "group": "r16c1p37reg:radio"
+    }
+   ],
+   "fingerprint": "51c933a07d7138bd",
+   "text": "SCHEDA E – IMPATTO ACUSTICO E.1 Impianto a ciclo produttivo continuo che l'impianto/stabilimento/attività, ai sensi dell'art. 2, 3 e 4 del decreto ministeriale 11 dicembre 1996 (Applicazione del criterio differenziale per gli impianti a ciclo produttivo continuo): rientra nella categoria degli Impianti a ciclo produttivo continuo. non rientra nella categoria degli Impianti a ciclo produttivo continuo. E.2 Verifica delle sorgenti rumorose che è stata verificata la compatibilità delle sorgenti rumorose con i valori limiti di emissione ed immissione, stabiliti in base alla classificazione acustica del territorio, e con il criterio differenziale, se applicabile, e che: a prot. n. in data è stata presentata documentazione di impatto acustico si allega documentazione di impatto acustico, a firma di tecnico abilitato competente in acustica ambientale, in quanto l'intervento rientra nell'ambito di applicazione dell' art. 8, commi 4 e 6 della l. 447/1995 si allega dichiarazione sostitutiva dell'atto di notorietà, resa dal legale rappresentante ai sensi dell'art. 8, comma 5 della l. 447/1995, relativa al rispetto dei limiti stabiliti dal documento di classificazione acustica del territorio comunale di riferimento ovvero, ove questo non sia stato adottato, ai limiti individuati dal D.P.C.M. 14 novembre 1997 (art. 4, commi 1 e 2, D.P.R. 227/2011) presentato a prot. n. in data è stato predisposto un Piano di Risanamento Acustico presentato a prot. n. in data è in corso di realizzazione il Piano di Risanamento Acustico E.3 Attività a bassa rumorosità che nell'impianto/stabilimento/attività vengono svolte esclusivamente attività a bassa rumorosità (elencate nell'allegato B del D.P.R. n. 227/2011) che non comportano emissioni di rumore superiori ai limiti stabiliti dalla classificazione acustica del territorio comunale ovvero, ove questa non sia adottata, dal D.P.C.M. 14/11/1997 e pertanto (ai sensi dell'art. 4, commi 1 e 3, D.P.R. n. 227/2011) NON allega documentazione di impatto acustico",
+   "branches": [
+    {
+     "choice": "rientra nella categoria degli Impianti a ciclo produttivo continuo.",
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r12c4p26reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "non rientra nella categoria degli Impianti a ciclo produttivo continuo.",
+     "id": "r4c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r12c4p26reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "è stata presentata documentazione di impatto acustico",
+     "id": "r8c1p10reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r12c4p26reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "si allega documentazione di impatto acustico, a firma di tecnico abilitato competente in acustica ambientale, in quanto l'intervento rientra nell'ambito di appl",
+     "id": "r9c1p17reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p19reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allegare la valutazione di Impatto Acustico ai sensi della l. 447/1995, art. 8, commi 4 e 6, predisposta da Tecnico Comp",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r10c1p18reg:radio:4_clone",
+       "r13c1p21reg:radio:4_clone"
+      ],
+      [
+       "r12c1p20reg:radio:5_clone",
+       "r15c1p23reg:radio:5_clone"
+      ],
+      [
+       "r12c2p22reg:txt",
+       "r15c2p25reg:txt"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r15c3p27reg:txt"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r15c4p29reg:calendar_input"
+      ],
+      [
+       "r14c1p28reg:radio:6_clone",
+       "r17c1p31reg:radio:6_clone"
+      ],
+      [
+       "r14c2p30reg:txt",
+       "r17c2p33reg:txt"
+      ],
+      [
+       "r14c3p32reg:txt",
+       "r17c3p35reg:txt"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r17c4p37reg:calendar_input"
+      ],
+      [
+       "r16c1p37reg:radio:7_clone",
+       "r19c1p40reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "si allega dichiarazione sostitutiva dell'atto di notorietà, resa dal legale rappresentante ai sensi dell'art. 8, comma 5 della l. 447/1995, relativa al rispetto",
+     "id": "r10c1p18reg:radio:4_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p20reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allegare la dichiarazione sostitutiva dell'atto di notorietà,",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r12c1p20reg:radio:5_clone",
+       "r15c1p23reg:radio:5_clone"
+      ],
+      [
+       "r12c2p22reg:txt",
+       "r15c2p25reg:txt"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r15c3p27reg:txt"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r15c4p29reg:calendar_input"
+      ],
+      [
+       "r14c1p28reg:radio:6_clone",
+       "r17c1p31reg:radio:6_clone"
+      ],
+      [
+       "r14c2p30reg:txt",
+       "r17c2p33reg:txt"
+      ],
+      [
+       "r14c3p32reg:txt",
+       "r17c3p35reg:txt"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r17c4p37reg:calendar_input"
+      ],
+      [
+       "r16c1p37reg:radio:7_clone",
+       "r19c1p40reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "è stato predisposto un Piano di Risanamento Acustico",
+     "id": "r12c1p20reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r12c4p26reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "è in corso di realizzazione il Piano di Risanamento Acustico",
+     "id": "r14c1p28reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r12c4p26reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "che nell'impianto/stabilimento/attività vengono svolte esclusivamente attività a bassa rumorosità (elencate nell'allegato B del D.P.R. n. 227/2011) che non comp",
+     "id": "r16c1p37reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c4p34reg:calendar_input",
+       "r8c4p16reg:calendar_input"
+      ],
+      [
+       "r14c4p34reg:calendar_input",
+       "r12c4p26reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 10.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.8
+  }
+ ]
+}

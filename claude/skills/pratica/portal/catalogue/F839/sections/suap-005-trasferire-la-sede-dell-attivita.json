@@ -1,0 +1,145 @@
+{
+ "crawled": "2026-10-28T18:42:46.073Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Trasferire la sede dell'attività (sector laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) senza attività di vicinato alimentare)",
+ "seconds": 11.7,
+ "generated": {
+  "interventi": "Trasferimento di sede di esercizio di laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) SENZA attività di vicinato alimentare Zona “A” (Centro Storico) zona “B” (Buffer zone)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione per il trasferimento dI esercizio di laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) SENZA attività di vicinato alimentare Zona “A” (Centro Storico) zona “B” (Buffer zone)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dello stabilimento",
+   "normative comunali",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "normative comunali",
+   "fingerprint": "0c25f486d179118b",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#normative comunali",
+   "seconds": 0.6
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "abd3ac39b3313bf9",
+   "same_as": "suap-005-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  }
+ ]
+}

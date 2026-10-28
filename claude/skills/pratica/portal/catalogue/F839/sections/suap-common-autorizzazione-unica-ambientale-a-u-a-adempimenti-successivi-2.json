@@ -1,0 +1,150 @@
+{
+ "crawled": "2026-10-28T19:37:51.747Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Adempimenti successivi al rilascio dell'autorizzazione › Comunicare l'analisi dei fumi (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 16.2,
+ "generated": {
+  "interventi": "Comunicazione delle analisi delle emissioni in atmosfera per impianti autorizzati",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione delle analisi delle emissioni in atmosfera per impianti autorizzati",
+    "amministrazione": "Regione Campania - (UOD) Unità Operativa Dirigenziale Autorizzazioni ambientali e rifiuti Napoli"
+   },
+   {
+    "adempimento": "Comunicazione all'ARPA",
+    "amministrazione": "ARPA Campania Dipartimento Provinciale di Napoli"
+   },
+   {
+    "adempimento": "Comunicazione al Comune",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'impianto produttivo",
+   "dati catastali",
+   "estremi di autorizzazione",
+   "oggetto dell'istanza",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'impianto produttivo",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1
+  },
+  {
+   "section": "estremi di autorizzazione",
+   "fingerprint": "c845ea7b0887d84a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-adempimenti-successivi#estremi di autorizzazione",
+   "seconds": 0.8
+  },
+  {
+   "section": "oggetto dell'istanza",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "presenta il referto analitico delle emissioni in atmosfera in base ai commi 4 e 6 dell'articolo 269 del D.Lgs. 152/2006 e s.m.i."
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "la ditta è tenuta a seguire i metodi di campionamento ed analisi espressamente indicati nell'autorizzazione o altrimenti richiamati nel provvedimento autorizzat"
+    }
+   ],
+   "fingerprint": "401a8d4341d18e9a",
+   "text": "oggetto dell'istanza presenta il referto analitico delle emissioni in atmosfera in base ai commi 4 e 6 dell'articolo 269 del D.Lgs. 152/2006 e s.m.i. la ditta è tenuta a seguire i metodi di campionamento ed analisi espressamente indicati nell'autorizzazione o altrimenti richiamati nel provvedimento autorizzativo in adempimento al D.Lgs. 152/06 e s.m.i.",
+   "branches": [
+    {
+     "choice": "presenta il referto analitico delle emissioni in atmosfera in base ai commi 4 e 6 dell'articolo 269 del D.Lgs. 152/2006 e s.m.i.",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

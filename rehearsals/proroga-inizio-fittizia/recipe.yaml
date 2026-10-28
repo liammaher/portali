@@ -1,0 +1,27 @@
+# Proroga del termine di inizio lavori of a permesso di costruire (art. 15 c. 2 DPR 380/2001)
+# on Napoli's SUE, as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-proroga-inizio-lavori.json). The CILA rehearsal's architect and
+# client (rehearsals/cila-fittizia), the client holding an invented permesso.
+procedure: napoli/comune/proroga-inizio-lavori
+title: "Proroga del termine di inizio lavori (permesso di costruire), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-proroga-inizio-lavori
+operation: Proroga inizio lavori
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - proroga inizio {{c:identity.last_name}}"}
+  titolo: {question: "The permit holder's title to the property (proprietario, locatario, ...)"}
+  proroga_data_prevista: {question: "The new date the works are now expected to start"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), consapevolezza (artt. 46-47), informativa privacy, tasse comunali"
+  - "Pay the imposta di bollo (two marche da 16 €) and any diritti on pagoPA after sending"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"
+    else: "So far only for a permesso di costruire: the DIA branch isn't run yet."
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

@@ -6,8 +6,9 @@ works, SUAP for businesses), up to the steps the law keeps for them: logging in,
 declarations, paying, signing and sending. `supported-flows.md` is the promise for one mapped
 pratica; this is what it takes for the whole platform, in five pieces.
 
-Status (2026-10-28): pieces 1 and 5 built for the SUE's common pratiche and one SUAP pratica;
-3 and 4 partly; 2 not started as data. Vault PR #87, library PR #62.
+Status (2026-10-28): piece 1 built for the whole SUE and under way for the SUAP (batch crawl,
+fingerprints, drift check); 5 built; 3 and 4 partly; 2 not started as data. Vault PRs #87,
+#88 and this branch; library PR #62.
 
 ## 1. The portal map: every box, and what goes in it
 
@@ -26,14 +27,23 @@ the pratiche. `claude/skills/pratica/portal/`:
 - `gen.py` writes a pratica's steps file from its crawl, the dictionary and a short recipe,
   or nothing if a box is unaccounted for.
 
-Where it stands: SUE, 79 of 150 sections in the dictionary, 74% of section uses across its
-27 pratiche; 6 SUE pratiche generated and run (CILA, CIL, SCIA, inizio and fine lavori,
-agibilità). SUAP, 1 of about 283 pratiche (acconciatore, apertura). Each covers its plain
-case.
+Where it stands (2026-10-28): `crawl.js` crawls in batches on one scratch draft, each section
+once by fingerprint (`catalogue/README.md`). SUE: all 27 pratiche crawled, 127 distinct
+sections, 88 in the dictionary (88% of uses), 20 pratiche complete; 7 generated and run
+(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 160 pratiche
+crawled so far (the priority sectors; the batch continues, 1,028 trips in all), 236 distinct
+sections, 21 in the dictionary (71% of uses); the acconciatore, a restaurant's opening and its
+closure generated and run. A drift check
+reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
-Next: make `crawl.js` reuse one scratch draft (as `wizard.js` does) and crawl every SUAP
-pratica unattended, which counts its distinct sections; then the dictionary in order of how
-many pratiche use a section; test `draft.py` on a SUAP pratica it wasn't tuned on.
+`draft.py` pairs boxes with the national schema by order and type, since the portal draws a
+section in the schema's order (`schema/README.md`): on two SUAP pratiche it wasn't tuned on, 44
+of 49 boxes right (33 before), and sections it marks `exact` held 17 of 18. Drafts are for a
+person to check, never used unchecked. The pratica's XML, which would name each box's schema
+field, exists only once a pratica is sent: the portal offers PDFs before (`rehearsals/cessazione-fittizia`).
+
+Next: finish the SUAP batch and import it; the dictionary in order of use; the SUE's last
+seven pratiche with a professional (asseverazioni, landscape classifications).
 
 ## 2. The legal layer: which pratica, which choices, which answers
 

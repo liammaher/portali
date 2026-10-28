@@ -1,0 +1,857 @@
+{
+ "crawled": "2026-10-28T19:30:24.034Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › B) Comunicazione  preventiva  di  cui  all'articolo   112  del  Codice  dell'ambiente   per  l'utilizzazione agronomica degli effluenti di allevamento, delle acque di vegetazione dei frantoi oleari e delle acque reflue provenienti dalle aziende ivi previste › B3) Acque reflue provenienti dalle aziende di cui all'art. 101, comma 7, lettere a), b), e c) del codice dell'ambiente e da piccole aziende agroalimentari (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 54.3,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "B.3.1 Dichiarazioni e impegni del titolare della comunicazione",
+   "B.3.2 Provenienza, quantità ed azoto prodotto nelle acque reflue",
+   "B.3.3 DATI RELATIVI ALLE SUPERFICI INTERESSATE ALLO SPANDIMENTO",
+   "B.3.4 STOCCAGGI",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 0.7
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 0.8
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 0.8
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 0.9
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 0.9
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 1
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 0.8
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 0.8
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 0.6
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 0.7
+  },
+  {
+   "section": "B.3.1 Dichiarazioni e impegni del titolare della comunicazione",
+   "fields": [
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "che l'azienda è produttrice di acque reflue per l'utilizzo agronomico in quanto rientra nella seguente tipologia di cui alla D.G.R. 771/2012:"
+    },
+    {
+     "id": "r9c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza della normativa in materia di utilizzazione agronomica delle acque reflue e delle sanzioni che derivano dall'inosservanza delle disposizi"
+    },
+    {
+     "id": "r10c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "che le attività di utilizzazione agronomica verranno effettuate non prima di 30 giorni dalla presentazione all'autorità competente/Comune della presente comunic"
+    },
+    {
+     "id": "r12c1p29reg:chk",
+     "kind": "checkbox",
+     "label": "ad effettuare l'utilizzazione agronomica conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente, alle disposizioni igienico-sanit"
+    },
+    {
+     "id": "r13c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "a comunicare all'autorità competente tempestivamente, e prima dell'inizio delle operazioni di spandimento, le eventuali variazioni/aggiornamenti della situazion"
+    },
+    {
+     "id": "r15c1p33reg:chk",
+     "kind": "checkbox",
+     "label": "di conservare presso SEDE LEGALE"
+    },
+    {
+     "id": "r15c2p35reg:number",
+     "kind": "text",
+     "label": "N. assieme alla copia della comunicazione inviata al SUAP",
+     "context": "di conservare presso SEDE LEGALE",
+     "max": 3
+    }
+   ],
+   "fingerprint": "5cdecc72f81c4519",
+   "text": "B.3.1 Dichiarazioni e impegni del titolare della comunicazione Dichiara: che l'azienda è produttrice di acque reflue per l'utilizzo agronomico in quanto rientra nella seguente tipologia di cui alla D.G.R. 771/2012: di essere a conoscenza della normativa in materia di utilizzazione agronomica delle acque reflue e delle sanzioni che derivano dall'inosservanza delle disposizioni di legge; che le attività di utilizzazione agronomica verranno effettuate non prima di 30 giorni dalla presentazione all'autorità competente/Comune della presente comunicazione relativa all'utilizzazione agronomica delle acque reflue; di impegnarsi: ad effettuare l'utilizzazione agronomica conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente, alle disposizioni igienico-sanitarie ed urbanistiche; a comunicare all'autorità competente tempestivamente, e prima dell'inizio delle operazioni di spandimento, le eventuali variazioni/aggiornamenti della situazione aziendale e della documentazione a corredo della presente Comunicazione; N. assieme alla copia della comunicazione inviata al SUAP di conservare presso SEDE LEGALE la seguente documentazione: - il registro di utilizzazione delle acque reflue; - la documentazione di accompagnamento inerente al trasporto delle acque reflue;",
+   "branches": [
+    {
+     "choice": "che l'azienda è produttrice di acque reflue per l'utilizzo agronomico in quanto rientra nella seguente tipologia di cui alla D.G.R. 771/2012:",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r3c2p5reg:chk",
+       "kind": "checkbox",
+       "label": "imprese dedite esclusivamente alla coltivazione del terreno e/o alla silvicoltura (art. 13, comma 1);"
+      },
+      {
+       "id": "r4c2p8reg:chk",
+       "kind": "checkbox",
+       "label": "imprese dedite all'allevamento del bestiame (art.13, comma 1);"
+      },
+      {
+       "id": "r5c2p11reg:chk",
+       "kind": "checkbox",
+       "label": "imprese dedite alle attività di cui ai punti precedenti che esercitano anche attività di trasformazione o di valorizzazione della produzione agricola, inserita "
+      },
+      {
+       "id": "r6c2p14reg:chk",
+       "kind": "checkbox",
+       "label": "aziende agroalimentari appartenenti ai settori lattiero caseario, vitivinicolo e ortofrutticolo che producono quantitativi di acque reflue contenenti sostanze n"
+      }
+     ],
+     "then": [
+      {
+       "choice": "imprese dedite esclusivamente alla coltivazione del terreno e/o alla silvicoltura (art. 13, comma 1);",
+       "id": "r3c2p5reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "imprese dedite all'allevamento del bestiame (art.13, comma 1);",
+       "id": "r4c2p8reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "imprese dedite alle attività di cui ai punti precedenti che esercitano anche attività di trasformazione o di valorizzazione della produzione agricola, inserita ",
+       "id": "r5c2p11reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "aziende agroalimentari appartenenti ai settori lattiero caseario, vitivinicolo e ortofrutticolo che producono quantitativi di acque reflue contenenti sostanze n",
+       "id": "r6c2p14reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r8c1p19reg:chk",
+         "kind": "checkbox",
+         "label": "azienda del settore caseario;"
+        },
+        {
+         "id": "r8c2p20reg:chk",
+         "kind": "checkbox",
+         "label": "azienda del settore vitivini"
+        },
+        {
+         "id": "r8c3p21reg:chk",
+         "kind": "checkbox",
+         "label": "colo;"
+        },
+        {
+         "id": "r8c4p22reg:chk",
+         "kind": "checkbox",
+         "label": "azienda del settore ortofrutticolo;"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "di essere a conoscenza della normativa in materia di utilizzazione agronomica delle acque reflue e delle sanzioni che derivano dall'inosservanza delle disposizi",
+     "id": "r9c1p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che le attività di utilizzazione agronomica verranno effettuate non prima di 30 giorni dalla presentazione all'autorità competente/Comune della presente comunic",
+     "id": "r10c1p26reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ad effettuare l'utilizzazione agronomica conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente, alle disposizioni igienico-sanit",
+     "id": "r12c1p29reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "a comunicare all'autorità competente tempestivamente, e prima dell'inizio delle operazioni di spandimento, le eventuali variazioni/aggiornamenti della situazion",
+     "id": "r13c1p31reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di conservare presso SEDE LEGALE",
+     "id": "r15c1p33reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 13.1
+  },
+  {
+   "section": "B.3.2 Provenienza, quantità ed azoto prodotto nelle acque reflue",
+   "fields": [
+    {
+     "id": "r3c2p8reg:txt",
+     "kind": "text",
+     "label": "ACQUE REFLUE PRODOTTE (m3/q di prodotto lavorato)",
+     "context": "Settore caseario",
+     "max": 10
+    },
+    {
+     "id": "r3c3p10reg:txt",
+     "kind": "text",
+     "label": "AZOTO CONTENUTO",
+     "context": "Settore caseario",
+     "max": 100
+    },
+    {
+     "id": "r3c4p12reg:txt",
+     "kind": "text",
+     "label": "AZOTO TOTALE PRODOTTO",
+     "context": "Settore caseario",
+     "max": 50
+    },
+    {
+     "id": "r5c2p18reg:txt",
+     "kind": "text",
+     "label": "ACQUE REFLUE PRODOTTE (m3/q di prodotto lavorato)",
+     "context": "Settore vitivinicolo",
+     "max": 10
+    },
+    {
+     "id": "r5c3p20reg:txt",
+     "kind": "text",
+     "label": "AZOTO CONTENUTO",
+     "context": "Settore vitivinicolo",
+     "max": 100
+    },
+    {
+     "id": "r5c4p22reg:txt",
+     "kind": "text",
+     "label": "AZOTO TOTALE PRODOTTO",
+     "context": "Settore vitivinicolo",
+     "max": 50
+    },
+    {
+     "id": "r7c2p28reg:txt",
+     "kind": "text",
+     "label": "ACQUE REFLUE PRODOTTE (m3/q di prodotto lavorato)",
+     "context": "Settore ortofrutticolo",
+     "max": 10
+    },
+    {
+     "id": "r7c3p30reg:txt",
+     "kind": "text",
+     "label": "AZOTO CONTENUTO",
+     "context": "Settore ortofrutticolo",
+     "max": 100
+    },
+    {
+     "id": "r7c4p32reg:txt",
+     "kind": "text",
+     "label": "AZOTO TOTALE PRODOTTO",
+     "context": "Settore ortofrutticolo",
+     "max": 50
+    }
+   ],
+   "fingerprint": "3cee2b082fcec180",
+   "text": "B.3.2 Provenienza, quantità ed azoto prodotto nelle acque reflue PROVENIENZA ACQUE REFLUE PRODOTTE (m3/q di prodotto lavorato) AZOTO CONTENUTO AZOTO TOTALE PRODOTTO Settore caseario Settore vitivinicolo Settore ortofrutticolo",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B.3.3 DATI RELATIVI ALLE SUPERFICI INTERESSATE ALLO SPANDIMENTO",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Provincia",
+     "max": 2
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 100
+    },
+    {
+     "id": "r2c3p6reg:txt",
+     "kind": "text",
+     "label": "Sezione",
+     "max": 3
+    },
+    {
+     "id": "r2c4p8reg:number",
+     "kind": "text",
+     "label": "Foglio",
+     "max": 3
+    },
+    {
+     "id": "r2c5p10reg:number",
+     "kind": "text",
+     "label": "Particella",
+     "max": 7
+    },
+    {
+     "id": "r4c1p12reg:real",
+     "kind": "text",
+     "label": "superficie catastale (ha)",
+     "max": 13
+    },
+    {
+     "id": "r4c2p14reg:real",
+     "kind": "text",
+     "label": "superficie condotta (ha)",
+     "max": 13
+    },
+    {
+     "id": "r4c3p16reg:real",
+     "kind": "text",
+     "label": "superficie da utilizzare per lo spandimento (ha)",
+     "max": 13
+    },
+    {
+     "id": "r4c4p18reg:number",
+     "kind": "text",
+     "label": "quantità di acque reflue da distribuire (m3)",
+     "max": 10
+    },
+    {
+     "id": "r6c1p22reg:txt",
+     "kind": "text",
+     "label": "tipo di conduzione",
+     "max": 50
+    },
+    {
+     "id": "r6c2p24reg:txt",
+     "kind": "text",
+     "label": "Ordinamento colturale",
+     "max": 50
+    },
+    {
+     "id": "r6c3p26reg",
+     "kind": "select",
+     "label": "Zona vulnerabile",
+     "options": [
+      "Sì",
+      "No"
+     ]
+    },
+    {
+     "id": "r6c4p28reg",
+     "kind": "select",
+     "label": "Condotta da terzi",
+     "options": [
+      "Sì",
+      "No"
+     ]
+    },
+    {
+     "id": "r11c1p40reg:real",
+     "kind": "text",
+     "label": "superficie catastale (ha)",
+     "max": 13
+    },
+    {
+     "id": "r11c2p42reg:real",
+     "kind": "text",
+     "label": "superficie condotta (ha)",
+     "max": 13
+    },
+    {
+     "id": "r11c3p44reg:real",
+     "kind": "text",
+     "label": "superficie da utilizzare per lo spandimento (ha)",
+     "max": 13
+    },
+    {
+     "id": "r11c4p46reg:number",
+     "kind": "text",
+     "label": "quantità di acque reflue da distribuire (m3)",
+     "max": 10
+    },
+    {
+     "id": "r13c1p50reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+     "context": "documentazione probante la disponibilità, ai fini dell'utilizzazione agronomica degli altri effluenti di cui al D.M. 7 a",
+     "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+    }
+   ],
+   "fingerprint": "9981dd69d4b8cb06",
+   "text": "B.3.3 DATI RELATIVI ALLE SUPERFICI INTERESSATE ALLO SPANDIMENTO Provincia Comune Sezione Foglio Particella superficie catastale (ha) superficie condotta (ha) superficie da utilizzare per lo spandimento (ha) quantità di acque reflue da distribuire (m3) tipo di conduzione Ordinamento colturale Zona vulnerabile Condotta da terzi --------------------------------------------------------------------------------------------------------- TOTALE superficie catastale (ha) superficie condotta (ha) superficie da utilizzare per lo spandimento (ha) quantità di acque reflue da distribuire (m3) documentazione probante la disponibilità, ai fini dell'utilizzazione agronomica degli altri effluenti di cui al D.M. 7 aprile 2006, delle superfici non condotte direttamente (atti di assenso). Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+   "branches": [
+    {
+     "choice": "Zona vulnerabile = Sì",
+     "id": "r6c3p26reg",
+     "kind": "select",
+     "option": "Sì",
+     "moved": [
+      [
+       "r11c1p40reg:real",
+       "r4c1p12reg:real"
+      ],
+      [
+       "r11c2p42reg:real",
+       "r4c2p14reg:real"
+      ],
+      [
+       "r11c3p44reg:real",
+       "r4c3p16reg:real"
+      ],
+      [
+       "r11c4p46reg:number",
+       "r4c4p18reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Zona vulnerabile = No",
+     "id": "r6c3p26reg",
+     "kind": "select",
+     "option": "No",
+     "moved": [
+      [
+       "r11c1p40reg:real",
+       "r4c1p12reg:real"
+      ],
+      [
+       "r11c2p42reg:real",
+       "r4c2p14reg:real"
+      ],
+      [
+       "r11c3p44reg:real",
+       "r4c3p16reg:real"
+      ],
+      [
+       "r11c4p46reg:number",
+       "r4c4p18reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Condotta da terzi = Sì",
+     "id": "r6c4p28reg",
+     "kind": "select",
+     "option": "Sì",
+     "reveals": [
+      {
+       "id": "r6c5p30reg:txt",
+       "kind": "text",
+       "label": "indicare nominativo",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p40reg:real",
+       "r4c1p12reg:real"
+      ],
+      [
+       "r11c2p42reg:real",
+       "r4c2p14reg:real"
+      ],
+      [
+       "r11c3p44reg:real",
+       "r4c3p16reg:real"
+      ],
+      [
+       "r11c4p46reg:number",
+       "r4c4p18reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Condotta da terzi = No",
+     "id": "r6c4p28reg",
+     "kind": "select",
+     "option": "No",
+     "moved": [
+      [
+       "r11c1p40reg:real",
+       "r4c1p12reg:real"
+      ],
+      [
+       "r11c2p42reg:real",
+       "r4c2p14reg:real"
+      ],
+      [
+       "r11c3p44reg:real",
+       "r4c3p16reg:real"
+      ],
+      [
+       "r11c4p46reg:number",
+       "r4c4p18reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    }
+   ],
+   "seconds": 8.9
+  },
+  {
+   "section": "B.3.4 STOCCAGGI",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "Tipologia di stoccaggio",
+     "max": 100
+    },
+    {
+     "id": "r3c2p6reg:number",
+     "kind": "text",
+     "label": "Numero stoccaggi",
+     "max": 20
+    },
+    {
+     "id": "r3c3p8reg:number",
+     "kind": "text",
+     "label": "Volume",
+     "max": 10
+    },
+    {
+     "id": "r3c4p10reg:number",
+     "kind": "text",
+     "label": "Copertura (%)",
+     "max": 3
+    },
+    {
+     "id": "r5c1p12reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 100
+    },
+    {
+     "id": "r5c2p14reg:number",
+     "kind": "text",
+     "label": "Foglio",
+     "max": 3
+    },
+    {
+     "id": "r5c3p16reg:number",
+     "kind": "text",
+     "label": "Particella",
+     "max": 7
+    },
+    {
+     "id": "r5c4p18reg:number",
+     "kind": "text",
+     "label": "Subalterno",
+     "max": 7
+    },
+    {
+     "id": "r11c2p34reg",
+     "kind": "select",
+     "label": "Effluenti",
+     "options": [
+      "non palabili",
+      "palabili"
+     ]
+    },
+    {
+     "id": "r11c3p36reg:txt",
+     "kind": "text",
+     "label": "Durata (giorni)",
+     "max": 5
+    },
+    {
+     "id": "r11c4p38reg:txt",
+     "kind": "text",
+     "label": "Volumi (m3)",
+     "max": 10
+    },
+    {
+     "id": "r13c2p42reg",
+     "kind": "select",
+     "label": "Effluenti",
+     "options": [
+      "non palabili",
+      "palabili"
+     ]
+    },
+    {
+     "id": "r13c3p44reg:txt",
+     "kind": "text",
+     "label": "Durata (giorni)",
+     "max": 5
+    },
+    {
+     "id": "r13c4p46reg:txt",
+     "kind": "text",
+     "label": "Volumi (m3)",
+     "max": 10
+    }
+   ],
+   "fingerprint": "269e19b3a57b41e5",
+   "text": "B.3.4 STOCCAGGI Tipologia e volume disponibile delle strutture di stoccaggio in uso in azienda per le acque reflue Tipologia di stoccaggio Numero stoccaggi Volume Copertura (%) Comune Foglio Particella Subalterno ----------------------------------------------------------------------------------------------------------------------- Situazione stoccaggi Fabbisogni/disponibilità Tipologia Durata (giorni) Volumi (m3) Effluenti Fabbisogno: effluenti da stoccare Effluenti Disponibilità: Stoccaggi presenti in azienda",
+   "branches": [
+    {
+     "choice": "Effluenti = non palabili",
+     "id": "r11c2p34reg",
+     "kind": "select",
+     "option": "non palabili",
+     "moved": [
+      [
+       "r13c2p42reg",
+       "r11c2p34reg"
+      ],
+      [
+       "r13c3p44reg:txt",
+       "r11c3p36reg:txt"
+      ],
+      [
+       "r13c4p46reg:txt",
+       "r11c4p38reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia di stoccaggio",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "Effluenti = palabili",
+     "id": "r11c2p34reg",
+     "kind": "select",
+     "option": "palabili",
+     "moved": [
+      [
+       "r13c2p42reg",
+       "r11c2p34reg"
+      ],
+      [
+       "r13c3p44reg:txt",
+       "r11c3p36reg:txt"
+      ],
+      [
+       "r13c4p46reg:txt",
+       "r11c4p38reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia di stoccaggio",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "Effluenti = non palabili",
+     "id": "r13c2p42reg",
+     "kind": "select",
+     "option": "non palabili",
+     "moved": [
+      [
+       "r13c2p42reg",
+       "r11c2p34reg"
+      ],
+      [
+       "r13c3p44reg:txt",
+       "r11c3p36reg:txt"
+      ],
+      [
+       "r13c4p46reg:txt",
+       "r11c4p38reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia di stoccaggio",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "Effluenti = palabili",
+     "id": "r13c2p42reg",
+     "kind": "select",
+     "option": "palabili",
+     "moved": [
+      [
+       "r13c2p42reg",
+       "r11c2p34reg"
+      ],
+      [
+       "r13c3p44reg:txt",
+       "r11c3p36reg:txt"
+      ],
+      [
+       "r13c4p46reg:txt",
+       "r11c4p38reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia di stoccaggio",
+      "adds": 16
+     }
+    }
+   ],
+   "seconds": 8.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  }
+ ]
+}

@@ -1,0 +1,1078 @@
+{
+ "crawled": "2026-10-28T17:52:54.146Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Trasferire la sede dell'attività (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 104,
+ "generated": {
+  "interventi": "Trasferimento di sede di esercizio di commercio di vicinato alimentare",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per trasferimento di sede di esercizio di commercio di vicinato alimentare",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "nuovo indirizzo dell'esercizio commerciale",
+   "dati catastali della nuova ubicazione",
+   "precedente ubicazione dell'esercizio",
+   "Dati sull'esercizio di vicinato",
+   "dichiarazioni sul possesso dei requisiti di onorabilità e professionali",
+   "Altre dichiarazioni",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "1_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "1_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "3_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "in caso di vendita di farmaci da banco o medicinali veterinari"
+    },
+    {
+     "key": "4_0",
+     "type": "CHK",
+     "label": "Presenta contestualmente la SCIA del commercio al dettaglio del vicinato"
+    },
+    {
+     "key": "4_0_0",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "4_0_1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "4_0_2",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "4_0_2_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4_0_2_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4_0_3",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di armi comuni"
+    },
+    {
+     "key": "4_0_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "4_0_5",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "4_0_5_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "4_0_6",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "4_0_6_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "4_0_7",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di oggetti preziosi"
+    },
+    {
+     "key": "4_0_8",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "4_0_8_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "4_0_8_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "4_0_8_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "4_0_8_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "4_0_8_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4_0_8_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4_0_8_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "4_1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "5_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "nuovo indirizzo dell'esercizio commerciale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 2.1
+  },
+  {
+   "section": "dati catastali della nuova ubicazione",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 2
+  },
+  {
+   "section": "precedente ubicazione dell'esercizio",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 2
+  },
+  {
+   "section": "Dati sull'esercizio di vicinato",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "prot./n.",
+     "max": 10
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "presentata al Comune di",
+     "max": 50
+    },
+    {
+     "id": "r6c1p14reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r6c1p14reg:radio"
+    },
+    {
+     "id": "r6c2p15reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r6c2p15reg:radio"
+    },
+    {
+     "id": "r10c1p25reg:radio:2_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r10c1p25reg:radio"
+    },
+    {
+     "id": "r10c2p26reg:radio:3_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r10c2p26reg:radio"
+    },
+    {
+     "id": "r12c1p29reg:txt",
+     "kind": "text",
+     "label": "Delibera di riconoscimento n.",
+     "max": 9999
+    },
+    {
+     "id": "r12c2p31reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r14c1p33reg:txt",
+     "kind": "text",
+     "label": "emanata da",
+     "max": 9999
+    },
+    {
+     "id": "r16c1p35reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r16c1p35reg:radio"
+    },
+    {
+     "id": "r16c2p36reg:radio:5_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r16c2p36reg:radio"
+    },
+    {
+     "id": "r20c1p43reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r20c2p45reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Alimentare",
+     "max": 6
+    },
+    {
+     "id": "r22c1p49reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    },
+    {
+     "id": "r22c2p51reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Non alimentare",
+     "max": 6
+    },
+    {
+     "id": "r24c2p57reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di vendita complessiva",
+     "max": 6
+    },
+    {
+     "id": "r30c1p68reg:chk",
+     "kind": "checkbox",
+     "label": "Generi di monopolio"
+    },
+    {
+     "id": "r30c2p70reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Generi di monopolio",
+     "max": 6
+    },
+    {
+     "id": "r32c1p74reg:chk",
+     "kind": "checkbox",
+     "label": "Farmacie"
+    },
+    {
+     "id": "r32c2p76reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Farmacie",
+     "max": 6
+    },
+    {
+     "id": "r34c1p80reg:chk",
+     "kind": "checkbox",
+     "label": "Carburanti"
+    },
+    {
+     "id": "r34c2p82reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Carburanti",
+     "max": 6
+    }
+   ],
+   "fingerprint": "2106b6bc51298333",
+   "text": "Dati sull'esercizio di vicinato Il/la sottoscritto/a SEGNALA che l'esercizio commerciale (1) già avviato con la SCIA/DIA/autorizzazione prot./n. del presentata al Comune di sarà trasferito nel nuovo esercizio: Esercizio collocato in centro commerciale Si No Esercizio inserito in C.C.N. riconosciuto SI NO Delibera di riconoscimento n. del emanata da Esercizio collocato in factory outlet center SI NO Settori merceologici e superfici di vendita superficie di vendita mq Alimentare superficie di vendita mq Non alimentare mq Superficie di vendita complessiva (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Vendita di prodotti appartenenti alle seguenti Tabelle speciali: superficie di vendita mq Generi di monopolio superficie di vendita mq Farmacie superficie di vendita mq Carburanti (1) Come previsto dall'art. 7 del D.Lgs. n. 114/1998 e dall'art. 65 del D.Lgs. n. 59/2010 e dalle disposizioni regionali di settore.",
+   "branches": [
+    {
+     "choice": "Si",
+     "id": "r6c1p14reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c1p18reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      },
+      {
+       "id": "r10c1p22reg:radio:2_clone",
+       "kind": "radio",
+       "label": "G2CQ",
+       "group": "r10c1p22reg:radio"
+      },
+      {
+       "id": "r10c2p23reg:radio:3_clone",
+       "kind": "radio",
+       "label": "G2CI",
+       "group": "r10c2p23reg:radio"
+      },
+      {
+       "id": "r10c3p24reg:radio:4_clone",
+       "kind": "radio",
+       "label": "G2CS",
+       "group": "r10c3p24reg:radio"
+      },
+      {
+       "id": "r10c4p25reg:radio:5_clone",
+       "kind": "radio",
+       "label": "GACP",
+       "group": "r10c4p25reg:radio"
+      }
+     ],
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r12c1p28reg:radio:6_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r12c2p29reg:radio:7_clone"
+      ],
+      [
+       "r12c1p29reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r12c2p31reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r14c1p33reg:txt",
+       "r16c1p36reg:txt"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r18c1p38reg:radio:8_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r18c2p39reg:radio:9_clone"
+      ],
+      [
+       "r20c1p43reg:chk",
+       "r22c1p46reg:chk"
+      ],
+      [
+       "r20c2p45reg:real",
+       "r22c2p48reg:real"
+      ],
+      [
+       "r22c1p49reg:chk",
+       "r24c1p52reg:chk"
+      ],
+      [
+       "r22c2p51reg:real",
+       "r24c2p54reg:real"
+      ],
+      [
+       "r24c2p57reg:real",
+       "r26c2p60reg:real"
+      ],
+      [
+       "r30c1p68reg:chk",
+       "r32c1p71reg:chk"
+      ],
+      [
+       "r30c2p70reg:real",
+       "r32c2p73reg:real"
+      ],
+      [
+       "r32c1p74reg:chk",
+       "r34c1p77reg:chk"
+      ],
+      [
+       "r32c2p76reg:real",
+       "r34c2p79reg:real"
+      ],
+      [
+       "r34c1p80reg:chk",
+       "r36c1p83reg:chk"
+      ],
+      [
+       "r34c2p82reg:real",
+       "r36c2p85reg:real"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "G2CQ",
+       "id": "r10c1p22reg:radio:2_clone",
+       "kind": "radio",
+       "moved": [
+        [
+         "r14c2p34reg:calendar_input",
+         "r3c2p5reg:calendar_input"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r6c1p14reg:radio:0_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r6c2p15reg:radio:1_clone"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r12c1p28reg:radio:6_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r12c2p29reg:radio:7_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "G2CI",
+       "id": "r10c2p23reg:radio:3_clone",
+       "kind": "radio",
+       "moved": [
+        [
+         "r14c2p34reg:calendar_input",
+         "r3c2p5reg:calendar_input"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r6c1p14reg:radio:0_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r6c2p15reg:radio:1_clone"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r12c1p28reg:radio:6_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r12c2p29reg:radio:7_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "G2CS",
+       "id": "r10c3p24reg:radio:4_clone",
+       "kind": "radio",
+       "moved": [
+        [
+         "r14c2p34reg:calendar_input",
+         "r3c2p5reg:calendar_input"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r6c1p14reg:radio:0_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r6c2p15reg:radio:1_clone"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r12c1p28reg:radio:6_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r12c2p29reg:radio:7_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "GACP",
+       "id": "r10c4p25reg:radio:5_clone",
+       "kind": "radio",
+       "moved": [
+        [
+         "r14c2p34reg:calendar_input",
+         "r3c2p5reg:calendar_input"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r6c1p14reg:radio:0_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r6c2p15reg:radio:1_clone"
+        ],
+        [
+         "r18c1p38reg:radio:8_clone",
+         "r12c1p28reg:radio:6_clone"
+        ],
+        [
+         "r18c2p39reg:radio:9_clone",
+         "r12c2p29reg:radio:7_clone"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r6c2p15reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r10c1p25reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r10c2p26reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r16c1p35reg:radio:4_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r18c1p39reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 150
+      }
+     ],
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ],
+      [
+       "r20c1p43reg:chk",
+       "r21c1p45reg:chk"
+      ],
+      [
+       "r20c2p45reg:real",
+       "r21c2p47reg:real"
+      ],
+      [
+       "r22c1p49reg:chk",
+       "r23c1p51reg:chk"
+      ],
+      [
+       "r22c2p51reg:real",
+       "r23c2p53reg:real"
+      ],
+      [
+       "r24c2p57reg:real",
+       "r25c2p59reg:real"
+      ],
+      [
+       "r30c1p68reg:chk",
+       "r31c1p70reg:chk"
+      ],
+      [
+       "r30c2p70reg:real",
+       "r31c2p72reg:real"
+      ],
+      [
+       "r32c1p74reg:chk",
+       "r33c1p76reg:chk"
+      ],
+      [
+       "r32c2p76reg:real",
+       "r33c2p78reg:real"
+      ],
+      [
+       "r34c1p80reg:chk",
+       "r35c1p82reg:chk"
+      ],
+      [
+       "r34c2p82reg:real",
+       "r35c2p84reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r16c2p36reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Alimentare",
+     "id": "r20c1p43reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r22c1p49reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Generi di monopolio",
+     "id": "r30c1p68reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Farmacie",
+     "id": "r32c1p74reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Carburanti",
+     "id": "r34c1p80reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c2p31reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r6c1p14reg:radio:0_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r6c2p15reg:radio:1_clone"
+      ],
+      [
+       "r16c1p35reg:radio:4_clone",
+       "r10c1p25reg:radio:2_clone"
+      ],
+      [
+       "r16c2p36reg:radio:5_clone",
+       "r10c2p26reg:radio:3_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 52.8
+  },
+  {
+   "section": "dichiarazioni sul possesso dei requisiti di onorabilità e professionali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 1.3
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 2.4
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 2.3
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 1.7,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

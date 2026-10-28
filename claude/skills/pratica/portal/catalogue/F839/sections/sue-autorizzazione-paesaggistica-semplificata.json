@@ -1,0 +1,636 @@
+{
+ "crawled": "2026-10-28T17:17:59.407Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Beni Paesaggistici › Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune) (sector Edilizia e pianificazione urbana)",
+ "seconds": 77.4,
+ "generated": {
+  "interventi": "Autorizzazione paesaggistica semplificata per interventi di lieve entità in aree soggette a vincolo paesaggistico (DPR 31/2017)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione Paesaggistica Semplificata ex DPR 31/2017 (Ente Comune)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione dell'intervento",
+   "dati catastali",
+   "dati relativi al nome del tecnico",
+   "Qualificazione dell'intervento",
+   "Ambito dell'intervento",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.2
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.3
+  },
+  {
+   "section": "dati relativi al nome del tecnico",
+   "fingerprint": "ffddb90f4d2ab273",
+   "same_as": "sue-autorizzazione-paesaggistica-ordinaria#dati relativi al nome del tecnico",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualificazione dell'intervento",
+   "fields": [
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "B.1. Incrementi di volume non superiori al 10 per cento della volumetria della costruzione originaria e comunque non superiori a 100 mc, eseguiti nel rispetto d"
+    },
+    {
+     "id": "r4c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "B.2. realizzazione o modifica di aperture esterne o finestre a tetto riguardanti beni vincolati ai sensi del Codice, art. 136, comma 1, lettere a), b) e c) limi"
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "B.3. interventi sui prospetti, diversi da quelli di cui alla voce B.2, comportanti alterazione dell'aspetto esteriore degli edifici mediante modifica delle cara"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "B.4. interventi sulle coperture, diversi da quelli di cui alla voce B.2, comportanti alterazione dell'aspetto esteriore degli edifici mediante modifica delle ca"
+    },
+    {
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "B.5. interventi di adeguamento alla normativa antisismica ovvero finalizzati al contenimento dei consumi energetici degli edifici, laddove comportanti innovazio"
+    },
+    {
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "B.6. interventi necessari per il superamento di barriere architettoniche, laddove comportanti la realizzazione di rampe per il superamento di dislivelli superio"
+    },
+    {
+     "id": "r9c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "B.7. installazione di impianti tecnologici esterni a servizio di singoli edifici, quali condizionatori e impianti di climatizzazione dotati di unità esterna, ca"
+    },
+    {
+     "id": "r10c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "B.8. installazione di pannelli solari (termici o fotovoltaici) a servizio di singoli edifici, purché integrati nella configurazione delle coperture, o posti in "
+    },
+    {
+     "id": "r11c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "B.9. installazione di micro generatori eolici con altezza complessiva non superiore a ml 1,50 e diametro non superiore a ml 1,00, qualora tali interventi intere"
+    },
+    {
+     "id": "r12c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "B.10. installazione di cabine per impianti tecnologici a rete o colonnine modulari ovvero sostituzione delle medesime con altre diverse per tipologia, dimension"
+    },
+    {
+     "id": "r13c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "B.11. interventi puntuali di adeguamento della viabilità esistente, quali: sistemazioni di rotatorie, riconfigurazione di incroci stradali, realizzazione di ban"
+    },
+    {
+     "id": "r14c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "B.12. interventi sistematici di arredo urbano comportanti l'installazione di manufatti e componenti, compresi gli impianti di pubblica illuminazione;"
+    },
+    {
+     "id": "r15c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "B.13. opere di urbanizzazione primaria previste in piani attuativi già valutati ai fini paesaggistici, ove non siano oggetto di accordi di collaborazione tra il"
+    },
+    {
+     "id": "r16c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "B.14. interventi di cui alla voce A.12 dell'Allegato «A», da eseguirsi nelle aree di pertinenza degli edifici, ove si tratti di beni vincolati ai sensi dell'art"
+    },
+    {
+     "id": "r17c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "B.15. interventi di demolizione senza ricostruzione di edifici, e manufatti edilizi in genere, privi di interesse architettonico, storico o testimoniale;"
+    },
+    {
+     "id": "r18c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "B.16. realizzazione di autorimesse, collocate fuori terra ovvero parzialmente interrate, con volume emergente fuori terra non superiore a 50 mc, compresi i perc"
+    },
+    {
+     "id": "r19c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "B.17. realizzazione di tettoie, porticati, chioschi da giardino di natura permanente e manufatti consimili aperti su piu' lati, aventi una superficie non superi"
+    },
+    {
+     "id": "r20c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "B.18. interventi sistematici di configurazione delle aree di pertinenza di edifici esistenti, diversi da quelli di cui alla voce B.14, quali: nuove pavimentazio"
+    },
+    {
+     "id": "r21c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "B.19. installazione di tettoie aperte di servizio a capannoni destinati ad attività produttive, o di collegamento tra i capannoni stessi, entro il limite del 10"
+    },
+    {
+     "id": "r22c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "B.20. impianti tecnici esterni al servizio di edifici esistenti a destinazione produttiva, quali strutture per lo stoccaggio dei prodotti ovvero per la canalizz"
+    },
+    {
+     "id": "r23c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "B.21. realizzazione di cancelli, recinzioni, muri di cinta o di contenimento del terreno, inserimento di elementi antintrusione sui cancelli, le recinzioni e su"
+    },
+    {
+     "id": "r24c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "B.22. taglio, senza sostituzione, di alberi, ferma l'autorizzazione degli uffici competenti, ove prevista; sostituzione o messa a dimora di alberi e arbusti nel"
+    },
+    {
+     "id": "r25c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "B.23. realizzazione di opere accessorie in soprasuolo correlate alla realizzazione di reti di distribuzione locale di servizi di pubblico interesse o di fognatu"
+    },
+    {
+     "id": "r26c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "B.24. posa in opera di manufatti parzialmente o completamente interrati quali serbatoi e cisterne, ove comportanti la modifica permanente della morfologia del t"
+    },
+    {
+     "id": "r27c1p28reg:chk",
+     "kind": "checkbox",
+     "label": "B.25. occupazione temporanea di suolo privato, pubblico, o di uso pubblico, mediante installazione di strutture o di manufatti semplicemente ancorati al suolo s"
+    },
+    {
+     "id": "r28c1p29reg:chk",
+     "kind": "checkbox",
+     "label": "B.26. verande e strutture in genere poste all'esterno (dehors), tali da configurare spazi chiusi funzionali ad attività economiche quali esercizi di somministra"
+    },
+    {
+     "id": "r29c1p30reg:chk",
+     "kind": "checkbox",
+     "label": "B.27. manufatti in soprasuolo correlati alla realizzazione di pozzi ed opere di presa e prelievo da falda per uso domestico;"
+    },
+    {
+     "id": "r30c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "B.28. realizzazione di ponticelli di attraversamento di corsi d'acqua, o tombinamento parziale dei medesimi, limitatamente al tratto necessario per dare accesso"
+    },
+    {
+     "id": "r31c1p32reg:chk",
+     "kind": "checkbox",
+     "label": "B.29. manufatti per ricovero attrezzi agricoli, realizzati con opere murarie o di fondazione, con superficie non superiore a dieci metri quadrati;"
+    },
+    {
+     "id": "r32c1p33reg:chk",
+     "kind": "checkbox",
+     "label": "B.30. realizzazione di nuove strutture relative all'esercizio dell'attività ittica con superficie non superiore a 30 mq;"
+    },
+    {
+     "id": "r33c1p34reg:chk",
+     "kind": "checkbox",
+     "label": "B.31. interventi di adeguamento della viabilità vicinale e poderale eseguiti nel rispetto della normativa di settore;"
+    },
+    {
+     "id": "r34c1p35reg:chk",
+     "kind": "checkbox",
+     "label": "B.32. interventi di ripristino delle attività agricole e pastorali nelle aree rurali invase da formazioni di vegetazione arbustiva o arborea, previo accertament"
+    },
+    {
+     "id": "r35c1p36reg:chk",
+     "kind": "checkbox",
+     "label": "B.33. interventi di diradamento boschivo con inserimento di colture agricole di radura;"
+    },
+    {
+     "id": "r36c1p37reg:chk",
+     "kind": "checkbox",
+     "label": "B.34. riduzione di superfici boscate in aree di pertinenza di immobili esistenti, per superfici non superiori a 2.000 mq, purché preventivamente assentita dalle"
+    },
+    {
+     "id": "r37c1p38reg:chk",
+     "kind": "checkbox",
+     "label": "B.35. interventi di realizzazione o adeguamento della viabilità forestale in assenza di piani o strumenti di gestione forestale approvati dalla Regione previo p"
+    },
+    {
+     "id": "r38c1p39reg:chk",
+     "kind": "checkbox",
+     "label": "B.36. posa in opera di cartelli e altri mezzi pubblicitari non temporanei di cui all'art. 153, comma 1, del Codice, di dimensioni inferiori a 18 mq, ivi compres"
+    },
+    {
+     "id": "r39c1p40reg:chk",
+     "kind": "checkbox",
+     "label": "B.37. installazione di linee elettriche e telefoniche su palo a servizio di singole utenze di altezza non superiore, rispettivamente, a metri 10 e a metri 6,30;"
+    },
+    {
+     "id": "r40c1p41reg:chk",
+     "kind": "checkbox",
+     "label": "B.38. installazione di impianti delle reti di comunicazione elettronica o di impianti radioelettrici, diversi da quelli di cui all'art. 6, comma 4, del decreto-"
+    },
+    {
+     "id": "r41c1p42reg:chk",
+     "kind": "checkbox",
+     "label": "B.39. interventi di modifica di manufatti di difesa dalle acque delle sponde dei corsi d'acqua e dei laghi per adeguamento funzionale;"
+    },
+    {
+     "id": "r42c1p43reg:chk",
+     "kind": "checkbox",
+     "label": "B.40. interventi sistematici di ingegneria naturalistica diretti alla regimazione delle acque, alla conservazione del suolo o alla difesa dei versanti da frane "
+    },
+    {
+     "id": "r43c1p44reg:chk",
+     "kind": "checkbox",
+     "label": "B.41. interventi di demolizione e ricostruzione di edifici e manufatti, ivi compresi gli impianti tecnologici, con volumetria, sagoma ed area di sedime corrispo"
+    },
+    {
+     "id": "r44c1p45reg:chk",
+     "kind": "checkbox",
+     "label": "B.42. interventi di ripascimento circoscritti di tratti di arenile in erosione, manutenzione di dune artificiali in funzione antierosiva, ripristino di opere di"
+    }
+   ],
+   "fingerprint": "24951c61da272643",
+   "branches": [
+    {
+     "choice": "B.1. Incrementi di volume non superiori al 10 per cento della volumetria della costruzione originaria e comunque non superiori a 100 mc, eseguiti nel rispetto d",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.2. realizzazione o modifica di aperture esterne o finestre a tetto riguardanti beni vincolati ai sensi del Codice, art. 136, comma 1, lettere a), b) e c) limi",
+     "id": "r4c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.3. interventi sui prospetti, diversi da quelli di cui alla voce B.2, comportanti alterazione dell'aspetto esteriore degli edifici mediante modifica delle cara",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.4. interventi sulle coperture, diversi da quelli di cui alla voce B.2, comportanti alterazione dell'aspetto esteriore degli edifici mediante modifica delle ca",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.5. interventi di adeguamento alla normativa antisismica ovvero finalizzati al contenimento dei consumi energetici degli edifici, laddove comportanti innovazio",
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.6. interventi necessari per il superamento di barriere architettoniche, laddove comportanti la realizzazione di rampe per il superamento di dislivelli superio",
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.7. installazione di impianti tecnologici esterni a servizio di singoli edifici, quali condizionatori e impianti di climatizzazione dotati di unità esterna, ca",
+     "id": "r9c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.8. installazione di pannelli solari (termici o fotovoltaici) a servizio di singoli edifici, purché integrati nella configurazione delle coperture, o posti in ",
+     "id": "r10c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.9. installazione di micro generatori eolici con altezza complessiva non superiore a ml 1,50 e diametro non superiore a ml 1,00, qualora tali interventi intere",
+     "id": "r11c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.10. installazione di cabine per impianti tecnologici a rete o colonnine modulari ovvero sostituzione delle medesime con altre diverse per tipologia, dimension",
+     "id": "r12c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.11. interventi puntuali di adeguamento della viabilità esistente, quali: sistemazioni di rotatorie, riconfigurazione di incroci stradali, realizzazione di ban",
+     "id": "r13c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.12. interventi sistematici di arredo urbano comportanti l'installazione di manufatti e componenti, compresi gli impianti di pubblica illuminazione;",
+     "id": "r14c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.13. opere di urbanizzazione primaria previste in piani attuativi già valutati ai fini paesaggistici, ove non siano oggetto di accordi di collaborazione tra il",
+     "id": "r15c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.14. interventi di cui alla voce A.12 dell'Allegato «A», da eseguirsi nelle aree di pertinenza degli edifici, ove si tratti di beni vincolati ai sensi dell'art",
+     "id": "r16c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.15. interventi di demolizione senza ricostruzione di edifici, e manufatti edilizi in genere, privi di interesse architettonico, storico o testimoniale;",
+     "id": "r17c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.16. realizzazione di autorimesse, collocate fuori terra ovvero parzialmente interrate, con volume emergente fuori terra non superiore a 50 mc, compresi i perc",
+     "id": "r18c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.17. realizzazione di tettoie, porticati, chioschi da giardino di natura permanente e manufatti consimili aperti su piu' lati, aventi una superficie non superi",
+     "id": "r19c1p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.18. interventi sistematici di configurazione delle aree di pertinenza di edifici esistenti, diversi da quelli di cui alla voce B.14, quali: nuove pavimentazio",
+     "id": "r20c1p21reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.19. installazione di tettoie aperte di servizio a capannoni destinati ad attività produttive, o di collegamento tra i capannoni stessi, entro il limite del 10",
+     "id": "r21c1p22reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.20. impianti tecnici esterni al servizio di edifici esistenti a destinazione produttiva, quali strutture per lo stoccaggio dei prodotti ovvero per la canalizz",
+     "id": "r22c1p23reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.21. realizzazione di cancelli, recinzioni, muri di cinta o di contenimento del terreno, inserimento di elementi antintrusione sui cancelli, le recinzioni e su",
+     "id": "r23c1p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.23. realizzazione di opere accessorie in soprasuolo correlate alla realizzazione di reti di distribuzione locale di servizi di pubblico interesse o di fognatu",
+     "id": "r25c1p26reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.24. posa in opera di manufatti parzialmente o completamente interrati quali serbatoi e cisterne, ove comportanti la modifica permanente della morfologia del t",
+     "id": "r26c1p27reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.25. occupazione temporanea di suolo privato, pubblico, o di uso pubblico, mediante installazione di strutture o di manufatti semplicemente ancorati al suolo s",
+     "id": "r27c1p28reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.26. verande e strutture in genere poste all'esterno (dehors), tali da configurare spazi chiusi funzionali ad attività economiche quali esercizi di somministra",
+     "id": "r28c1p29reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.27. manufatti in soprasuolo correlati alla realizzazione di pozzi ed opere di presa e prelievo da falda per uso domestico;",
+     "id": "r29c1p30reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.28. realizzazione di ponticelli di attraversamento di corsi d'acqua, o tombinamento parziale dei medesimi, limitatamente al tratto necessario per dare accesso",
+     "id": "r30c1p31reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.29. manufatti per ricovero attrezzi agricoli, realizzati con opere murarie o di fondazione, con superficie non superiore a dieci metri quadrati;",
+     "id": "r31c1p32reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.30. realizzazione di nuove strutture relative all'esercizio dell'attività ittica con superficie non superiore a 30 mq;",
+     "id": "r32c1p33reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B.31. interventi di adeguamento della viabilità vicinale e poderale eseguiti nel rispetto della normativa di settore;",
+     "id": "r33c1p34reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "truncated": 41,
+   "seconds": 48
+  },
+  {
+   "section": "Ambito dell'intervento",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "dell'art. 136, c.1, del D.lgs 42/2004"
+    },
+    {
+     "id": "r4c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "dell'art. 142, c.1, del D.lgs 42/2004"
+    },
+    {
+     "id": "r5c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "dell'art. 134, c.1, del D.Lgs 42/2004"
+    },
+    {
+     "id": "r6c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "In caso di intervento in VARIANTE :"
+    }
+   ],
+   "fingerprint": "8cbcfdd54fdcde26",
+   "branches": [
+    {
+     "choice": "dell'art. 136, c.1, del D.lgs 42/2004",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r3c2p5reg:txt",
+       "kind": "text",
+       "label": "lettera",
+       "context": "dell'art. 136, c.1, del D.lgs 42/2004",
+       "max": 9999
+      },
+      {
+       "id": "r5c1p9reg:txt",
+       "kind": "text",
+       "label": "Citare estremi del provvedimento D.M./ D.G.R.",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r2c1p2reg:chk",
+       "r3c1p3reg:chk"
+      ],
+      [
+       "r4c1p7reg:chk",
+       "r6c1p12reg:chk"
+      ],
+      [
+       "r5c1p10reg:chk",
+       "r7c1p15reg:chk"
+      ],
+      [
+       "r6c1p12reg:chk",
+       "r8c1p17reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "dell'art. 142, c.1, del D.lgs 42/2004",
+     "id": "r4c1p7reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r5c2p10reg:txt",
+       "kind": "text",
+       "label": "lettera",
+       "context": "dell'art. 142, c.1, del D.lgs 42/2004",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p7reg:chk",
+       "r5c1p8reg:chk"
+      ],
+      [
+       "r5c1p10reg:chk",
+       "r6c1p13reg:chk"
+      ],
+      [
+       "r6c1p12reg:chk",
+       "r7c1p15reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "dell'art. 134, c.1, del D.Lgs 42/2004",
+     "id": "r5c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "In caso di intervento in VARIANTE :",
+     "id": "r6c1p12reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c1p16reg:txt",
+       "kind": "text",
+       "label": "Num.",
+       "max": 9999
+      },
+      {
+       "id": "r9c2p18reg:calendar_input",
+       "kind": "date",
+       "label": "Data"
+      },
+      {
+       "id": "r9c3p20reg:txt",
+       "kind": "text",
+       "label": "Ente",
+       "max": 9999
+      }
+     ]
+    }
+   ],
+   "seconds": 6.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.3
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

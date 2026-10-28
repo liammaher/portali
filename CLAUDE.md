@@ -86,7 +86,10 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      Where a choice or "+" renumbers ids, fields are found by label
                      (`label` + `anchor`/`block`/`nth`; `kind: add` presses "+"); the job's other
                      people are roles in answers.json `people`. `crawl.js` maps a draft's
-                     sections, `wizard.js` a comune's whole wizard (`catalogue/<comune>/`).
+                     sections (`batch`: many pratiche on one scratch draft, each section once
+                     by fingerprint), `wizard.js` a comune's whole wizard (`catalogue/<comune>/`);
+                     catalogue.py imports a batch, counts sections and records drift, which
+                     gen.py and pre-flight refuse.
                      gen.py writes a steps file from a crawl, `dictionary/fnsuap.yaml` (each
                      section's fields by label, shared by every pratica) and a recipe
                      (rehearsals/*/recipe.yaml); it writes nothing if a field is unaccounted for.

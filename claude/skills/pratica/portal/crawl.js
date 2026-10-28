@@ -6,10 +6,17 @@
 // portal's reloads don't end it.
 //
 //   __crawl.start({url, sections: [names] | null, depth: 2})  starts, returns at once
+//   __crawl.batch({draft, ops: [{name, sector, path, check, like}], variants, check})  many pratiche on
+//       one draft (variants: true, false, or "new": each scelta label once);
+//       `check`: fingerprints only (catalogue.py drift), for the batch or one op (`like`:
+//       the crawled pratica it should match)
 //   await __crawl.wait(ms)                               the map so far, once done or after ms
 //   __crawl.slots()                                      the attachments screen's slots
 //
 // A choice's node says what it reveals, hides and moves (old id → new id); gen.py reads them.
+// Each section carries a fingerprint of what it shows before any choice (ids, kinds, labels):
+// in a batch a section seen before under that fingerprint isn't crawled again (`same_as`), and
+// a later crawl of the same section with another fingerprint means the portal changed it.
 (() => {
   const DECLARATIONS = /consapevolezza|informativa sulla privacy|requisiti di o|altre dichiarazioni|dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75/i;
   // A checkbox never ticked, even for a moment: an acknowledgement in the person's name.
@@ -205,36 +212,170 @@
     }
   }
 
-  async function crawl(opts) {
-    const t0 = performance.now();
-    if (frame) frame.remove();
-    frame = document.createElement("iframe");
-    frame.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:2147483647;background:#fff";
-    const loaded = new Promise((r) => frame.addEventListener("load", r, { once: true }));
-    frame.src = opts.url || location.href;
-    document.body.append(frame);
-    await loaded;
-    await idle();
-    // The open section has no link of its own: it goes first.
-    const names = opts.sections || [current(), ...[...doc().querySelectorAll("a.linkmenu")].map((a) => a.textContent.trim())].filter(Boolean);
-    for (const name of names) {
-      const s0 = performance.now();
-      const sec = { section: name };
-      report.sections.push(sec);
-      if (DECLARATIONS.test(name)) { sec.skipped = "the person's declarations"; continue; }
-      try {
-        await open(name);
-        if (!norm(current()).startsWith(norm(name).slice(0, 20))) throw new Error(`opened ${current()}`);
-        sec.fields = snap();
+  // What the section shows before any choice, hashed: ids, kinds, labels, lengths, short
+  // lists. Never a prefilled box's text (the login's name and CF aren't in `snap` anyway).
+  async function fingerprint(fields) {
+    const basis = fields.filter((f) => f.kind !== "message")
+      .map((f) => [f.id, f.kind, f.label, f.context || "", f.max || 0, Array.isArray(f.options) ? f.options : []]);
+    const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(basis)));
+    return [...new Uint8Array(h)].slice(0, 8).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  // The section's own words (its intro, notes, the text around its boxes), which say what a
+  // box means ("l'ubicazione dell'attività o intervento ..."). Never a box's content: inputs,
+  // dropdowns and the selected labels (the login's name and CF) are taken out first.
+  function words() {
+    const li = doc().querySelector("li#corrente");
+    if (!li) return "";
+    const c = li.cloneNode(true);
+    c.querySelectorAll("input, select, option, textarea, button, script, style, .ui-selectonemenu-label, " +
+      ".ui-helper-hidden-accessible, .ui-autocomplete-panel, .ui-selectonemenu-panel").forEach((e) => e.remove());
+    return c.textContent.replace(/\s+/g, " ").trim().slice(0, 3000);
+  }
+
+  // One section: open it, read it, try its choices. `known` (fingerprint → "pratica#section")
+  // skips one already crawled elsewhere; a new one is added to it as `where`.
+  async function section(name, opts, known, where) {
+    const s0 = performance.now();
+    const sec = { section: name };
+    if (DECLARATIONS.test(name)) { sec.skipped = "the person's declarations"; return sec; }
+    try {
+      await open(name);
+      if (!norm(current()).startsWith(norm(name).slice(0, 20))) throw new Error(`opened ${current()}`);
+      sec.fields = snap();
+      sec.fingerprint = await fingerprint(sec.fields);
+      if (opts.check) {
+        delete sec.fields; // a drift check: the fingerprint is all it reads
+      } else if (known && known[sec.fingerprint]) {
+        sec.same_as = known[sec.fingerprint];
+        delete sec.fields;
+      } else {
+        sec.text = words();
         sec.branches = [];
         const cs = choices(sec.fields);
         for (const c of cs.slice(0, opts.limit || 30)) await explore([c], sec.fields, opts.depth || 2, sec.branches);
         if (cs.length > (opts.limit || 30)) sec.truncated = cs.length;
-      } catch (e) {
-        sec.error = String(e.message || e);
-        try { await undo(); } catch (_) { /* nothing to undo */ }
+        if (known) known[sec.fingerprint] = `${where}#${name}`;
       }
-      sec.seconds = +((performance.now() - s0) / 1000).toFixed(1);
+    } catch (e) {
+      sec.error = String(e.message || e);
+      try { await undo(); } catch (_) { /* nothing to undo */ }
+    }
+    sec.seconds = +((performance.now() - s0) / 1000).toFixed(1);
+    return sec;
+  }
+
+  async function newFrame(url) {
+    if (frame) frame.remove();
+    frame = document.createElement("iframe");
+    frame.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:2147483647;background:#fff";
+    const loaded = new Promise((r) => frame.addEventListener("load", r, { once: true }));
+    frame.src = url || location.href;
+    document.body.append(frame);
+    await loaded;
+    await idle();
+  }
+
+  async function crawl(opts) {
+    const t0 = performance.now();
+    await newFrame(opts.url);
+    // The open section has no link of its own: it goes first.
+    const names = opts.sections || [current(), ...[...doc().querySelectorAll("a.linkmenu")].map((a) => a.textContent.trim())].filter(Boolean);
+    for (const name of names) report.sections.push(await section(name, opts, null));
+    report.seconds = +((performance.now() - t0) / 1000).toFixed(1);
+    report.done = true;
+  }
+
+  // Many pratiche on one scratch draft, as wizard.js walks it (load wizard.js first): for each
+  // operation, the sector (SUAP) and the operation picked, forward to the generated pratica with
+  // the defaults, its sections crawled, then back with "Pagina precedente". With `variants`,
+  // each scelta eventuale alone too, crawling the sections it adds. Each pratica's result goes
+  // to localStorage `crawl:op:<name>` as it's done, so a batch stopped by a logout resumes
+  // where it stopped (one with an error is tried again); `crawl:known` holds the fingerprints.
+  const tag = (s) => s.replace(/^(RAD|CHK|SIN): /, "");
+  // A tree node by its label path ("a › b › leaf"); `nth` for a path the tree repeats.
+  function findPath(tree, path, nth = 0) {
+    const labels = path.split(" › ").map(norm);
+    const byKey = new Map(tree.map((n) => [n.key, n]));
+    return tree.filter((n) => {
+      if (norm(n.label) !== labels[labels.length - 1]) return false;
+      // The path's other labels are ancestors in order, not necessarily each level: a path
+      // can skip one, and "EDILIZIA" stands for "EDILIZIA (Interventi …)".
+      let i = labels.length - 2;
+      for (let p = n.parent && byKey.get(n.parent); p && i >= 0; p = p.parent && byKey.get(p.parent)) {
+        if (p.label && norm(p.label).startsWith(labels[i])) i--;
+      }
+      return i < 0;
+    })[nth];
+  }
+  async function pick(nav, path, nth) {
+    const n = findPath(nav.tree(), tag(path), nth);
+    if (!n) throw new Error(`not in the tree: ${path}`);
+    for (const other of nav.tree().filter((x) => x.selected && x.key !== n.key && (x.type === "RAD" || x.type === "CHK"))) await nav.setSelected(other.key, false);
+    if (!(await nav.setSelected(n.key, true))) throw new Error(`didn't select ${path}`);
+  }
+  const loggedOut = () => !/impresainungiorno/.test(doc().location.host) || /login/i.test(doc().location.pathname);
+
+  async function batch(opts) {
+    const t0 = performance.now();
+    if (!window.__wizard) throw new Error("load wizard.js first");
+    await newFrame();
+    const nav = window.__wizard.driver(frame, opts.draft);
+    await nav.reopen(true);
+    const known = JSON.parse(localStorage.getItem("crawl:known") || "{}");
+    // variants: "new" tries a scelta only the first time its label is seen: the same few (the
+    // procura, other soci, the Terzo settore exemption) add the same sections to every pratica.
+    const seen = new Set(JSON.parse(localStorage.getItem("crawl:scelte") || "[]"));
+    const variants = opts.variants === "new" ? (label) => !seen.has(norm(label)) : !!opts.variants;
+    let sector = null;
+    for (const op of opts.ops) {
+      if (report.stop) { report.stopped = "stopped"; break; } // __crawl.stop(): between pratiche
+      // An op can be a check of its own (`check`), of the pratica it should match (`like`): the
+      // same operation in another sector, crawled there.
+      const check = !!(opts.check || op.check);
+      const stored = JSON.parse(localStorage.getItem((check ? "crawl:check:" : "crawl:op:") + op.name) || "null");
+      if (stored && !stored.error) { report.skipped++; continue; }
+      const o0 = performance.now();
+      const r = { name: op.name, sector: op.sector, operation: op.path, crawled: new Date().toISOString(), sections: [] };
+      if (op.like) r.like = op.like;
+      report.current = op.name;
+      try {
+        if (op.sector) {
+          if (sector !== `${op.sector}#${op.sector_nth || 0}`) {
+            await nav.toScreen("scelta settore");
+            await pick(nav, op.sector, op.sector_nth);
+            await nav.go(() => nav.button("Conferma").click());
+            sector = `${op.sector}#${op.sector_nth || 0}`;
+          }
+        }
+        await nav.toScreen("scelta operazioni");
+        await pick(nav, op.path, op.nth);
+        const w = { label: op.path };
+        await nav.follow(w, variants, async (p, v) => {
+          for (const name of v ? v.adds : p.sections) {
+            const sec = await section(name, { ...opts, check }, known, op.name);
+            if (v) sec.scelta = v.option;
+            r.sections.push(sec);
+            report.tried = (report.tried || 0) + 1;
+          }
+        });
+        for (const k of ["refused", "pratica", "screens", "variants"]) if (w[k]) r[k] = w[k];
+        for (const v of w.variants || []) if (!v.error) seen.add(norm(v.option));
+        localStorage.setItem("crawl:scelte", JSON.stringify([...seen]));
+        const n = await nav.setSelected(findPath(nav.tree(), tag(op.path), op.nth).key, false);
+        if (!n) throw new Error("didn't unselect");
+      } catch (e) {
+        r.error = String(e.message || e);
+        if (loggedOut()) { report.stopped = "logged out: log in, then batch() again"; break; }
+        sector = null;
+      }
+      // A section that failed (its frame gone, the portal busy) makes the pratica one to redo.
+      if (!r.error && r.sections.some((x) => x.error)) r.error = `sections failed: ${r.sections.filter((x) => x.error).map((x) => x.section).join("; ").slice(0, 200)}`;
+      r.seconds = +((performance.now() - o0) / 1000).toFixed(1);
+      localStorage.setItem((check ? "crawl:check:" : "crawl:op:") + op.name, JSON.stringify(r));
+      if (!check) localStorage.setItem("crawl:known", JSON.stringify(known));
+      report.done_ops++;
+      if (r.error) report.errors.push(`${op.name}: ${r.error}`);
     }
     report.seconds = +((performance.now() - t0) / 1000).toFixed(1);
     report.done = true;
@@ -264,6 +405,14 @@
   window.__crawl = {
     slots: () => { frame = frame || document.querySelector("iframe"); return slots(); },
     report: () => report,
+    // Ends a batch after the pratica under way (await __crawl.wait() for it): before another
+    // script drives the portal, so two never drive one draft through wizard.js's shared frame.
+    stop() { if (report) report.stop = true; },
+    batch(opts = {}) {
+      report = { started: new Date().toISOString(), batch: true, done_ops: 0, skipped: 0, errors: [], done: false };
+      batch(opts).catch((e) => { report.error = String(e.message || e); report.done = true; });
+      return "started";
+    },
     start(opts = {}) {
       report = { started: new Date().toISOString(), sections: [], tried: 0, done: false };
       crawl(opts).catch((e) => { report.error = String(e.message || e); report.done = true; });

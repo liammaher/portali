@@ -1,0 +1,1740 @@
+{
+ "crawled": "2026-10-28T16:55:30.772Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Notifica ai fini della registrazione impresa alimentare (art. 6, Reg. CE n. 852/2004) › Presentare l'aggiornamento della registrazione impresa alimentare - modifica della tipologia di attività (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 187,
+ "generated": {
+  "interventi": "Presentazione dell'aggiornamento della registrazione per attività a sede fissa ai sensi dell'art. 6 del Regolamento CE n. 852/2004 - modifica della tipologia di attività",
+  "adempimenti": [
+   {
+    "adempimento": "Aggiornamento della registrazione ai sensi dell'art. 6 del Regolamento (CE) 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dello stabilimento",
+   "dati relativi alla nuova tipologia di attività ai sensi dell'art.6, Reg. CE n. 852/2004",
+   "decorrenza delle modifiche",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dati relativi alla nuova tipologia di attività ai sensi dell'art.6, Reg. CE n. 852/2004",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "di cui alla notifica/SCIA prot./n.",
+     "max": 20
+    },
+    {
+     "id": "r3c2p6reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "PRODUZIONE PRIMARIA (non destinata all'autoconsumo e non già registrata in altri elenchi):"
+    },
+    {
+     "id": "r6c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "VEGETALI - PRODUZIONE, TRASFORMAZIONE E CONFEZIONAMENTO:"
+    },
+    {
+     "id": "r7c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "PRODOTTI DA FORNO E DI PASTICCERIA, GELATI E PIATTI PRONTI - PRODUZIONE, TRASFORMAZIONE E CONGELAMENTO:"
+    },
+    {
+     "id": "r8c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "ALTRI ALIMENTI - PRODUZIONE E TRASFORMAZIONE:"
+    },
+    {
+     "id": "r9c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "IMMISSIONE IN COMMERCIO DI ALIMENTI A PROPRIO NOME/MARCHIO (senza un proprio stabilimento di produzione)"
+    },
+    {
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "ALIMENTI DI ORIGINE ANIMALE - REGISTRAZIONE PER PRODUZIONE, TRASFORMAZIONE E CONFEZIONAMENTO (se non è richiesto il riconoscimento):"
+    },
+    {
+     "id": "r11c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "RISTORAZIONE:"
+    },
+    {
+     "id": "r12c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "COMMERCIO ALL'INGROSSO DI ALIMENTI E BEVANDE:"
+    },
+    {
+     "id": "r13c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "COMMERCIO AL DETTAGLIO DI ALIMENTI E BEVANDE:"
+    },
+    {
+     "id": "r14c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "COMMERCIO AMBULANTE:"
+    },
+    {
+     "id": "r15c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "DISTRIBUTORI:"
+    },
+    {
+     "id": "r16c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "DEPOSITO ALIMENTI E BEVANDE CONTO TERZI, NON SOGGETTI A RICONOSCIMENTO:"
+    },
+    {
+     "id": "r17c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "PIATTAFORMA DI DISTRIBUZIONE ALIMENTI"
+    },
+    {
+     "id": "r18c1p28reg:chk",
+     "kind": "checkbox",
+     "label": "DEPOSITO ALIMENTI E BEVANDE FUNZIONALMENTE (MA NON MATERIALMENTE) ANNESSO AD ESERCIZI DI VENDITA FISSI O AD ATTIVITA' DI COMMERCIO AMBULANTE:"
+    },
+    {
+     "id": "r19c1p30reg:chk",
+     "kind": "checkbox",
+     "label": "TRASPORTO ALIMENTI E BEVANDE CONTO TERZI:"
+    },
+    {
+     "id": "r20c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "ALTRO"
+    }
+   ],
+   "fingerprint": "703b371bf5023ad1",
+   "branches": [
+    {
+     "choice": "PRODUZIONE PRIMARIA (non destinata all'autoconsumo e non già registrata in altri elenchi):",
+     "id": "r5c1p10reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r6c2p13reg:chk",
+       "kind": "checkbox",
+       "label": "Caccia - Centro di raccolta selvaggina cacciata"
+      },
+      {
+       "id": "r7c2p16reg:chk",
+       "kind": "checkbox",
+       "label": "Pesca - Imbarcazioni da pesca"
+      },
+      {
+       "id": "r8c2p19reg:chk",
+       "kind": "checkbox",
+       "label": "Raccolta molluschi bivalvi vivi - Imbarcazioni per raccolta di molluschi bivalvi vivi"
+      },
+      {
+       "id": "r9c2p22reg:chk",
+       "kind": "checkbox",
+       "label": "Vendita diretta di latte crudo presso l'allevamento di produzione"
+      },
+      {
+       "id": "r10c2p25reg:chk",
+       "kind": "checkbox",
+       "label": "Vendita diretta di uova presso l'allevamento di produzione"
+      },
+      {
+       "id": "r11c2p28reg:chk",
+       "kind": "checkbox",
+       "label": "Vendita diretta di miele da parte dell'apicoltore"
+      },
+      {
+       "id": "r12c2p31reg:chk",
+       "kind": "checkbox",
+       "label": "Raccolta di funghi e tartufi"
+      },
+      {
+       "id": "r13c2p34reg:chk",
+       "kind": "checkbox",
+       "label": "Raccolta di vegetali spontanei (esclusi funghi e tartufi)"
+      },
+      {
+       "id": "r14c2p37reg:chk",
+       "kind": "checkbox",
+       "label": "Coltivazioni permanenti ad uso alimentare umano"
+      },
+      {
+       "id": "r15c2p40reg:chk",
+       "kind": "checkbox",
+       "label": "Coltivazioni non permanenti ad uso alimentare umano"
+      }
+     ],
+     "moved": [
+      [
+       "r6c1p12reg:chk",
+       "r16c1p42reg:chk"
+      ],
+      [
+       "r7c1p14reg:chk",
+       "r17c1p44reg:chk"
+      ],
+      [
+       "r8c1p15reg:chk",
+       "r18c1p45reg:chk"
+      ],
+      [
+       "r9c1p17reg:chk",
+       "r19c1p47reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r20c1p48reg:chk"
+      ],
+      [
+       "r11c1p19reg:chk",
+       "r21c1p49reg:chk"
+      ],
+      [
+       "r12c1p20reg:chk",
+       "r22c1p50reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r23c1p51reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r24c1p52reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r25c1p53reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r26c1p54reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r27c1p56reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r28c1p58reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r29c1p60reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r30c1p61reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Caccia - Centro di raccolta selvaggina cacciata",
+       "id": "r6c2p13reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Pesca - Imbarcazioni da pesca",
+       "id": "r7c2p16reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Raccolta molluschi bivalvi vivi - Imbarcazioni per raccolta di molluschi bivalvi vivi",
+       "id": "r8c2p19reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Vendita diretta di latte crudo presso l'allevamento di produzione",
+       "id": "r9c2p22reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Vendita diretta di uova presso l'allevamento di produzione",
+       "id": "r10c2p25reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Vendita diretta di miele da parte dell'apicoltore",
+       "id": "r11c2p28reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Raccolta di funghi e tartufi",
+       "id": "r12c2p31reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Raccolta di vegetali spontanei (esclusi funghi e tartufi)",
+       "id": "r13c2p34reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Coltivazioni permanenti ad uso alimentare umano",
+       "id": "r14c2p37reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Coltivazioni non permanenti ad uso alimentare umano",
+       "id": "r15c2p40reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "VEGETALI - PRODUZIONE, TRASFORMAZIONE E CONFEZIONAMENTO:",
+     "id": "r6c1p12reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c2p15reg:chk",
+       "kind": "checkbox",
+       "label": "Conserve e semiconserve vegetali (II^ gamma)"
+      },
+      {
+       "id": "r8c2p18reg:chk",
+       "kind": "checkbox",
+       "label": "Vegetali congelati e surgelati (III^ gamma)"
+      },
+      {
+       "id": "r9c2p21reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti pronti all'uso o \"fresh cut\" (IV^ gamma)"
+      },
+      {
+       "id": "r10c2p24reg:chk",
+       "kind": "checkbox",
+       "label": "Ortofrutticoli precotti (V^ gamma)"
+      },
+      {
+       "id": "r11c2p27reg:chk",
+       "kind": "checkbox",
+       "label": "Vegetali secchi e/o tostati comprese le spezie"
+      },
+      {
+       "id": "r12c2p30reg:chk",
+       "kind": "checkbox",
+       "label": "Bevande/succhi di frutta e/o di ortaggi"
+      },
+      {
+       "id": "r13c2p33reg:chk",
+       "kind": "checkbox",
+       "label": "Olio"
+      },
+      {
+       "id": "r14c2p36reg:chk",
+       "kind": "checkbox",
+       "label": "Grassi vegetali"
+      },
+      {
+       "id": "r15c2p39reg:chk",
+       "kind": "checkbox",
+       "label": "Vini e mosti"
+      },
+      {
+       "id": "r16c2p42reg:chk",
+       "kind": "checkbox",
+       "label": "Alcolici (distillazione, rettifica e miscelatura)"
+      },
+      {
+       "id": "r17c2p45reg:chk",
+       "kind": "checkbox",
+       "label": "Sidro e altri vini a base di frutta"
+      },
+      {
+       "id": "r18c2p48reg:chk",
+       "kind": "checkbox",
+       "label": "Birra, malto e altre bevande fermentate non distillate"
+      },
+      {
+       "id": "r19c2p51reg:chk",
+       "kind": "checkbox",
+       "label": "Molitura del frumento ed altri cereali"
+      },
+      {
+       "id": "r20c2p54reg:chk",
+       "kind": "checkbox",
+       "label": "Lavorazione del riso"
+      },
+      {
+       "id": "r21c2p57reg:chk",
+       "kind": "checkbox",
+       "label": "Altre lavorazioni di semi, granaglie e legumi"
+      },
+      {
+       "id": "r22c2p60reg:chk",
+       "kind": "checkbox",
+       "label": "Amidi e prodotti amidacei"
+      },
+      {
+       "id": "r23c2p63reg:chk",
+       "kind": "checkbox",
+       "label": "Zucchero"
+      },
+      {
+       "id": "r24c2p66reg:chk",
+       "kind": "checkbox",
+       "label": "Caffè"
+      },
+      {
+       "id": "r25c2p69reg:chk",
+       "kind": "checkbox",
+       "label": "Tè ed altri preparati per infusi"
+      },
+      {
+       "id": "r26c2p72reg:chk",
+       "kind": "checkbox",
+       "label": "Produzione di alimenti vegetali in cucina domestica (home food)"
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p14reg:chk",
+       "r27c1p74reg:chk"
+      ],
+      [
+       "r8c1p15reg:chk",
+       "r28c1p75reg:chk"
+      ],
+      [
+       "r9c1p17reg:chk",
+       "r29c1p77reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r30c1p78reg:chk"
+      ],
+      [
+       "r11c1p19reg:chk",
+       "r31c1p79reg:chk"
+      ],
+      [
+       "r12c1p20reg:chk",
+       "r32c1p80reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r33c1p81reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r34c1p82reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r35c1p83reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r36c1p84reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r37c1p86reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r38c1p88reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r39c1p90reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r40c1p91reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Conserve e semiconserve vegetali (II^ gamma)",
+       "id": "r7c2p15reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Vegetali congelati e surgelati (III^ gamma)",
+       "id": "r8c2p18reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Prodotti pronti all'uso o \"fresh cut\" (IV^ gamma)",
+       "id": "r9c2p21reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Ortofrutticoli precotti (V^ gamma)",
+       "id": "r10c2p24reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Vegetali secchi e/o tostati comprese le spezie",
+       "id": "r11c2p27reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Bevande/succhi di frutta e/o di ortaggi",
+       "id": "r12c2p30reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Olio",
+       "id": "r13c2p33reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Grassi vegetali",
+       "id": "r14c2p36reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Vini e mosti",
+       "id": "r15c2p39reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Alcolici (distillazione, rettifica e miscelatura)",
+       "id": "r16c2p42reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Sidro e altri vini a base di frutta",
+       "id": "r17c2p45reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Birra, malto e altre bevande fermentate non distillate",
+       "id": "r18c2p48reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "PRODOTTI DA FORNO E DI PASTICCERIA, GELATI E PIATTI PRONTI - PRODUZIONE, TRASFORMAZIONE E CONGELAMENTO:",
+     "id": "r7c1p14reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r8c2p16reg:chk",
+       "kind": "checkbox",
+       "label": "Pasta secca e/o fresca, paste alimentari, cuscus e farinacei simili"
+      },
+      {
+       "id": "r9c2p19reg:chk",
+       "kind": "checkbox",
+       "label": "Pane, pizza e altri prodotti da forno freschi e secchi"
+      },
+      {
+       "id": "r10c2p22reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti di pasticceria freschi e secchi"
+      },
+      {
+       "id": "r11c2p25reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti di gelateria (in impianti non soggetti a riconoscimento)"
+      },
+      {
+       "id": "r12c2p28reg:chk",
+       "kind": "checkbox",
+       "label": "Cacao, cioccolato, produzione pastigliaggi, gomme, confetti, caramelle, ecc."
+      },
+      {
+       "id": "r13c2p31reg:chk",
+       "kind": "checkbox",
+       "label": "Cibi pronti in genere (prodotti di gastronomia, di rosticceria, di friggitoria, alimenti pronti al consumo, etc.)"
+      },
+      {
+       "id": "r14c2p34reg:chk",
+       "kind": "checkbox",
+       "label": "Produzione di alimenti in cucina domestica (home food)"
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p15reg:chk",
+       "r15c1p36reg:chk"
+      ],
+      [
+       "r9c1p17reg:chk",
+       "r16c1p38reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r17c1p39reg:chk"
+      ],
+      [
+       "r11c1p19reg:chk",
+       "r18c1p40reg:chk"
+      ],
+      [
+       "r12c1p20reg:chk",
+       "r19c1p41reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r20c1p42reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r22c1p44reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r23c1p45reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r24c1p47reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r25c1p49reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r26c1p51reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r27c1p52reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Pasta secca e/o fresca, paste alimentari, cuscus e farinacei simili",
+       "id": "r8c2p16reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Pane, pizza e altri prodotti da forno freschi e secchi",
+       "id": "r9c2p19reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Prodotti di pasticceria freschi e secchi",
+       "id": "r10c2p22reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Prodotti di gelateria (in impianti non soggetti a riconoscimento)",
+       "id": "r11c2p25reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Cacao, cioccolato, produzione pastigliaggi, gomme, confetti, caramelle, ecc.",
+       "id": "r12c2p28reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Cibi pronti in genere (prodotti di gastronomia, di rosticceria, di friggitoria, alimenti pronti al consumo, etc.)",
+       "id": "r13c2p31reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Produzione di alimenti in cucina domestica (home food)",
+       "id": "r14c2p34reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "ALTRI ALIMENTI - PRODUZIONE E TRASFORMAZIONE:",
+     "id": "r8c1p15reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c2p18reg:chk",
+       "kind": "checkbox",
+       "label": "Bibite analcoliche, acque minerali ed altre acque in bottiglia"
+      },
+      {
+       "id": "r10c2p21reg:chk",
+       "kind": "checkbox",
+       "label": "Ghiaccio"
+      },
+      {
+       "id": "r11c2p24reg:chk",
+       "kind": "checkbox",
+       "label": "Sale - estrazione"
+      },
+      {
+       "id": "r12c2p27reg:chk",
+       "kind": "checkbox",
+       "label": "Sale iodato"
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p17reg:chk",
+       "r13c1p29reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r14c1p30reg:chk"
+      ],
+      [
+       "r11c1p19reg:chk",
+       "r15c1p31reg:chk"
+      ],
+      [
+       "r12c1p20reg:chk",
+       "r16c1p32reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r17c1p33reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r18c1p34reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r19c1p35reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r20c1p36reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r21c1p38reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r22c1p40reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r23c1p42reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r24c1p43reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Bibite analcoliche, acque minerali ed altre acque in bottiglia",
+       "id": "r9c2p18reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Ghiaccio",
+       "id": "r10c2p21reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Sale - estrazione",
+       "id": "r11c2p24reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Sale iodato",
+       "id": "r12c2p27reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "IMMISSIONE IN COMMERCIO DI ALIMENTI A PROPRIO NOME/MARCHIO (senza un proprio stabilimento di produzione)",
+     "id": "r9c1p17reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r10c2p19reg:chk",
+       "kind": "checkbox",
+       "label": "integratori alimentari"
+      },
+      {
+       "id": "r11c2p22reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti addizionati di vitamine e minerali"
+      },
+      {
+       "id": "r12c2p24reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti a fini medici speciali"
+      },
+      {
+       "id": "r13c2p27reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti a fini medici speciali per lattanti e bambini sotto i 3 anni"
+      },
+      {
+       "id": "r14c2p29reg:chk",
+       "kind": "checkbox",
+       "label": "formule per lattanti e di proseguimento"
+      },
+      {
+       "id": "r15c2p31reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti per la prima infanzia"
+      },
+      {
+       "id": "r16c2p34reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti senza glutine specificamente formulati per celiaci"
+      },
+      {
+       "id": "r17c2p36reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti sostituti totali del pasto"
+      },
+      {
+       "id": "r18c2p38reg:chk",
+       "kind": "checkbox",
+       "label": "alimenti diversi da quelli indicati sopra"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p18reg:chk",
+       "r19c1p39reg:chk"
+      ],
+      [
+       "r11c1p19reg:chk",
+       "r20c1p40reg:chk"
+      ],
+      [
+       "r12c1p20reg:chk",
+       "r21c1p41reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r22c1p42reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r23c1p43reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r24c1p44reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r25c1p45reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r26c1p47reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r27c1p49reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r28c1p51reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r29c1p52reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "integratori alimentari",
+       "id": "r10c2p19reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti addizionati di vitamine e minerali",
+       "id": "r11c2p22reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti a fini medici speciali",
+       "id": "r12c2p24reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti a fini medici speciali per lattanti e bambini sotto i 3 anni",
+       "id": "r13c2p27reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "formule per lattanti e di proseguimento",
+       "id": "r14c2p29reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti per la prima infanzia",
+       "id": "r15c2p31reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti senza glutine specificamente formulati per celiaci",
+       "id": "r16c2p34reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti sostituti totali del pasto",
+       "id": "r17c2p36reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "alimenti diversi da quelli indicati sopra",
+       "id": "r18c2p38reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "ALIMENTI DI ORIGINE ANIMALE - REGISTRAZIONE PER PRODUZIONE, TRASFORMAZIONE E CONFEZIONAMENTO (se non è richiesto il riconoscimento):",
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r11c2p20reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti della pesca - macellazione ed eviscerazione presso aziende di acquacoltura per vendita diretta al consumatore o a dettaglianti della Provincia/province"
+      },
+      {
+       "id": "r12c2p23reg:chk",
+       "kind": "checkbox",
+       "label": "Avicoli e/o cunicoli - macellazione presso aziende agricole"
+      },
+      {
+       "id": "r13c2p26reg:chk",
+       "kind": "checkbox",
+       "label": "Carne, prodotti a base di carne e preparazioni di carne - lavorazione e trasformazione in impianti non soggetti a riconoscimento, funzionalmente annessi a eserc"
+      },
+      {
+       "id": "r14c2p29reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti della pesca - lavorazione e trasformazione in impianti non soggetti a riconoscimento, funzionalmente annessi a esercizi di vendita, contigui o meno ad "
+      },
+      {
+       "id": "r15c2p32reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti dell'apiario - raccolta e lavorazione"
+      },
+      {
+       "id": "r16c2p35reg:chk",
+       "kind": "checkbox",
+       "label": "Prodotti a base di latte - produzione in impianti non soggetti a riconoscimento"
+      },
+      {
+       "id": "r17c2p38reg:chk",
+       "kind": "checkbox",
+       "label": "raccoglitore di uova (CC) ai sensi del regolamento CE 589/2008 non annesso a stabilimento riconosciuto"
+      },
+      {
+       "id": "r18c2p41reg:chk",
+       "kind": "checkbox",
+       "label": "Produzione di alimenti in cucina domestica (home food)"
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p19reg:chk",
+       "r19c1p43reg:chk"
+      ],
+      [
+       "r12c1p20reg:chk",
+       "r20c1p44reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r21c1p45reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r22c1p46reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r23c1p47reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r24c1p48reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r25c1p50reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r26c1p52reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r27c1p54reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r28c1p55reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Prodotti della pesca - macellazione ed eviscerazione presso aziende di acquacoltura per vendita diretta al consumatore o a dettaglianti della Provincia/province",
+       "id": "r11c2p20reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Avicoli e/o cunicoli - macellazione presso aziende agricole",
+       "id": "r12c2p23reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Carne, prodotti a base di carne e preparazioni di carne - lavorazione e trasformazione in impianti non soggetti a riconoscimento, funzionalmente annessi a eserc",
+       "id": "r13c2p26reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Prodotti della pesca - lavorazione e trasformazione in impianti non soggetti a riconoscimento, funzionalmente annessi a esercizi di vendita, contigui o meno ad ",
+       "id": "r14c2p29reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Prodotti dell'apiario - raccolta e lavorazione",
+       "id": "r15c2p32reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Prodotti a base di latte - produzione in impianti non soggetti a riconoscimento",
+       "id": "r16c2p35reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "raccoglitore di uova (CC) ai sensi del regolamento CE 589/2008 non annesso a stabilimento riconosciuto",
+       "id": "r17c2p38reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Produzione di alimenti in cucina domestica (home food)",
+       "id": "r18c2p41reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "RISTORAZIONE:",
+     "id": "r11c1p19reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r13c2p22reg:chk",
+       "kind": "checkbox",
+       "label": "Produzione pasti pronti per ristorazione collettiva (catering continuativo e per eventi)"
+      },
+      {
+       "id": "r14c2p25reg:chk",
+       "kind": "checkbox",
+       "label": "Somministrazione pasti in ristorazione collettiva (mense, terminali di distribuzione, sedi per eventi e banqueting)"
+      },
+      {
+       "id": "r15c2p28reg:chk",
+       "kind": "checkbox",
+       "label": "Ristorazione pubblica con somministrazione diretta (anche connessa con aziende agricole e con strutture ricettive turistiche)"
+      },
+      {
+       "id": "r16c2p31reg:chk",
+       "kind": "checkbox",
+       "label": "Bar e altri esercizi pubblici simili senza laboratorio di gastronomia fredda e/o calda / enoteca senza laboratorio di gastronomia fredda e/o calda"
+      },
+      {
+       "id": "r18c1p36reg:chk",
+       "kind": "checkbox",
+       "label": "Bar e altri esercizi pubblici simili con laboratorio di gastronomia fredda e/o calda / enoteca con laboratorio di gastronomia fredda e/o calda"
+      },
+      {
+       "id": "r19c2p38reg:chk",
+       "kind": "checkbox",
+       "label": "Ristorazione pubblica in ambito di manifestazioni temporanee (fiere, sagre ecc.)"
+      },
+      {
+       "id": "r20c2p41reg:chk",
+       "kind": "checkbox",
+       "label": "Home restaurant"
+      }
+     ],
+     "moved": [
+      [
+       "r12c1p20reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r13c1p21reg:chk",
+       "r22c1p44reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r23c1p45reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r24c1p46reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r25c1p47reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r26c1p49reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r27c1p51reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r28c1p53reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r29c1p54reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Produzione pasti pronti per ristorazione collettiva (catering continuativo e per eventi)",
+       "id": "r13c2p22reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Somministrazione pasti in ristorazione collettiva (mense, terminali di distribuzione, sedi per eventi e banqueting)",
+       "id": "r14c2p25reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Ristorazione pubblica con somministrazione diretta (anche connessa con aziende agricole e con strutture ricettive turistiche)",
+       "id": "r15c2p28reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Bar e altri esercizi pubblici simili senza laboratorio di gastronomia fredda e/o calda / enoteca senza laboratorio di gastronomia fredda e/o calda",
+       "id": "r16c2p31reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Bar e altri esercizi pubblici simili con laboratorio di gastronomia fredda e/o calda / enoteca con laboratorio di gastronomia fredda e/o calda",
+       "id": "r18c1p36reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Ristorazione pubblica in ambito di manifestazioni temporanee (fiere, sagre ecc.)",
+       "id": "r19c2p38reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Home restaurant",
+       "id": "r20c2p41reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "COMMERCIO ALL'INGROSSO DI ALIMENTI E BEVANDE:",
+     "id": "r12c1p20reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r14c2p23reg:chk",
+       "kind": "checkbox",
+       "label": "Cash & Carry"
+      },
+      {
+       "id": "r15c2p26reg:chk",
+       "kind": "checkbox",
+       "label": "Intermediari - senza deposito (broker)"
+      },
+      {
+       "id": "r16c2p29reg:chk",
+       "kind": "checkbox",
+       "label": "Commercio all'ingrosso con deposito"
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p21reg:chk",
+       "r17c1p31reg:chk"
+      ],
+      [
+       "r14c1p22reg:chk",
+       "r18c1p32reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r19c1p33reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r20c1p34reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r21c1p36reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r22c1p38reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r23c1p40reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r24c1p41reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Cash & Carry",
+       "id": "r14c2p23reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Intermediari - senza deposito (broker)",
+       "id": "r15c2p26reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Commercio all'ingrosso con deposito",
+       "id": "r16c2p29reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "COMMERCIO AL DETTAGLIO DI ALIMENTI E BEVANDE:",
+     "id": "r13c1p21reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r15c2p24reg:chk",
+       "kind": "checkbox",
+       "label": "In Esercizi di vicinato"
+      },
+      {
+       "id": "r16c2p27reg:chk",
+       "kind": "checkbox",
+       "label": "In Media struttura di vendita"
+      },
+      {
+       "id": "r17c2p30reg:chk",
+       "kind": "checkbox",
+       "label": "In Grande struttura di vendita"
+      },
+      {
+       "id": "r18c2p33reg:chk",
+       "kind": "checkbox",
+       "label": "Per corrispondenza/internet / Forme speciali di vendita al dettaglio"
+      }
+     ],
+     "moved": [
+      [
+       "r14c1p22reg:chk",
+       "r19c1p35reg:chk"
+      ],
+      [
+       "r15c1p23reg:chk",
+       "r20c1p36reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r21c1p37reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r22c1p39reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r23c1p41reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r24c1p43reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r25c1p44reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "In Esercizi di vicinato",
+       "id": "r15c2p24reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "In Media struttura di vendita",
+       "id": "r16c2p27reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "In Grande struttura di vendita",
+       "id": "r17c2p30reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Per corrispondenza/internet / Forme speciali di vendita al dettaglio",
+       "id": "r18c2p33reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "COMMERCIO AMBULANTE:",
+     "id": "r14c1p22reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r15c2p24reg:chk",
+       "kind": "checkbox",
+       "label": "A posto fisso"
+      },
+      {
+       "id": "r16c2p27reg:chk",
+       "kind": "checkbox",
+       "label": "In forma itinerante"
+      }
+     ],
+     "moved": [
+      [
+       "r15c1p23reg:chk",
+       "r17c1p29reg:chk"
+      ],
+      [
+       "r16c1p24reg:chk",
+       "r18c1p30reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r19c1p32reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r20c1p34reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r21c1p36reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r22c1p37reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "A posto fisso",
+       "id": "r15c2p24reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "In forma itinerante",
+       "id": "r16c2p27reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "DISTRIBUTORI:",
+     "id": "r15c1p23reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r16c2p25reg:chk",
+       "kind": "checkbox",
+       "label": "Distributori automatici di alimenti confezionati e di bevande"
+      },
+      {
+       "id": "r17c2p28reg:chk",
+       "kind": "checkbox",
+       "label": "Distributori di latte crudo"
+      },
+      {
+       "id": "r18c2p31reg:chk",
+       "kind": "checkbox",
+       "label": "Distributori di acqua potabile trattata - \"casette\" dell'acqua"
+      }
+     ],
+     "moved": [
+      [
+       "r16c1p24reg:chk",
+       "r19c1p33reg:chk"
+      ],
+      [
+       "r17c1p26reg:chk",
+       "r20c1p35reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r21c1p37reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r22c1p39reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r23c1p40reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Distributori automatici di alimenti confezionati e di bevande",
+       "id": "r16c2p25reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Distributori di latte crudo",
+       "id": "r17c2p28reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Distributori di acqua potabile trattata - \"casette\" dell'acqua",
+       "id": "r18c2p31reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "DEPOSITO ALIMENTI E BEVANDE CONTO TERZI, NON SOGGETTI A RICONOSCIMENTO:",
+     "id": "r16c1p24reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r17c2p27reg:chk",
+       "kind": "checkbox",
+       "label": "Alimenti in regime di temperatura controllata"
+      },
+      {
+       "id": "r18c2p30reg:chk",
+       "kind": "checkbox",
+       "label": "Alimenti non in regime di temperatura controllata"
+      }
+     ],
+     "moved": [
+      [
+       "r17c1p26reg:chk",
+       "r19c1p32reg:chk"
+      ],
+      [
+       "r18c1p28reg:chk",
+       "r20c1p34reg:chk"
+      ],
+      [
+       "r19c1p30reg:chk",
+       "r21c1p36reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r22c1p37reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Alimenti in regime di temperatura controllata",
+       "id": "r17c2p27reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Alimenti non in regime di temperatura controllata",
+       "id": "r18c2p30reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "PIATTAFORMA DI DISTRIBUZIONE ALIMENTI",
+     "id": "r17c1p26reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "DEPOSITO ALIMENTI E BEVANDE FUNZIONALMENTE (MA NON MATERIALMENTE) ANNESSO AD ESERCIZI DI VENDITA FISSI O AD ATTIVITA' DI COMMERCIO AMBULANTE:",
+     "id": "r18c1p28reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r19c2p31reg:chk",
+       "kind": "checkbox",
+       "label": "Alimenti in regime di temperatura"
+      },
+      {
+       "id": "r20c2p34reg:chk",
+       "kind": "checkbox",
+       "label": "Alimenti non in regime di temperatura"
+      }
+     ],
+     "moved": [
+      [
+       "r19c1p30reg:chk",
+       "r21c1p36reg:chk"
+      ],
+      [
+       "r20c1p31reg:chk",
+       "r22c1p37reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "Alimenti in regime di temperatura",
+       "id": "r19c2p31reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Alimenti non in regime di temperatura",
+       "id": "r20c2p34reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "TRASPORTO ALIMENTI E BEVANDE CONTO TERZI:",
+     "id": "r19c1p30reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r20c2p32reg:chk",
+       "kind": "checkbox",
+       "label": "In cisterna a temperatura controllata"
+      },
+      {
+       "id": "r21c2p35reg:chk",
+       "kind": "checkbox",
+       "label": "In cisterna a temperatura non controllata"
+      },
+      {
+       "id": "r22c2p38reg:chk",
+       "kind": "checkbox",
+       "label": "In regime di temperatura controllata"
+      },
+      {
+       "id": "r23c2p41reg:chk",
+       "kind": "checkbox",
+       "label": "Non in regime di temperatura controllata"
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p31reg:chk",
+       "r24c1p43reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "In cisterna a temperatura controllata",
+       "id": "r20c2p32reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "In cisterna a temperatura non controllata",
+       "id": "r21c2p35reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "In regime di temperatura controllata",
+       "id": "r22c2p38reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "Non in regime di temperatura controllata",
+       "id": "r23c2p41reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "ALTRO",
+     "id": "r20c1p31reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r22c2p35reg:txt",
+       "kind": "text",
+       "label": "(specificare)",
+       "max": 200
+      }
+     ]
+    }
+   ],
+   "seconds": 164.7
+  },
+  {
+   "section": "decorrenza delle modifiche",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Avvio contestuale alla data di notifica",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Avvio con decorrenza",
+     "group": "r2c1p3reg:radio"
+    }
+   ],
+   "fingerprint": "08786ab34a134287",
+   "branches": [
+    {
+     "choice": "Avvio contestuale alla data di notifica",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Avvio con decorrenza",
+     "id": "r2c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r3c2p6reg:calendar_input",
+       "kind": "date",
+       "label": "dal"
+      }
+     ],
+     "moved": [
+      [
+       "r2c1p3reg:radio:1_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.8,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 0.6,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

@@ -155,5 +155,151 @@ def _():
     assert by[("Nome", 1)] == "{{ask.nome}}", by
 
 
+def batch_copy(tmp):
+    """A copy of the catalogue where a batch crawled the fine lavori again: every section it
+    had seen before named by reference (`same_as`), as crawl.js's batch writes them."""
+    import shutil
+    base = Path(tmp)
+    shutil.copytree(HERE.parent / "catalogue", base / "catalogue")
+    shutil.copytree(HERE.parent / "dictionary", base / "dictionary")
+    fine = gen.json.loads((base / "catalogue/F839/sections/fine-lavori.json").read_text())
+    for s in fine["sections"]:
+        if s.get("fields") is not None:
+            for k in [k for k in s if k != "section"]:
+                del s[k]
+            s["same_as"] = f"fine-lavori#{s['section']}"
+    (base / "catalogue/F839/sections/fine-batch.json").write_text(gen.json.dumps(fine))
+    return base
+
+
+@case("a section a batch crawl names by reference (same_as) generates as the section itself")
+def _():
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        base = batch_copy(tmp)
+        recipe = gen.load_yaml(FINE / "recipe.yaml")
+        want = gen.generate(recipe)
+        got = gen.generate(dict(recipe, crawl="fine-batch"), base=base)
+        want.pop("generated"), got.pop("generated")
+        assert got == want
+
+
+@case("a section's fingerprint is the one crawl.js computed in the page, for every crawled section")
+def _():
+    import catalogue
+    n = 0
+    for name, c in catalogue.crawls().items():
+        for s in c["sections"]:
+            if s.get("fields") is not None and s.get("fingerprint"):
+                assert catalogue.fingerprint(s["fields"]) == s["fingerprint"], (name, s["section"])
+                n += 1
+    assert n > 100, n
+
+
+@case("a pratica the last drift check found changed is refused by gen.py and by pre-flight")
+def _():
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        base = batch_copy(tmp)
+        (base / "catalogue/F839/drift.json").write_text(gen.json.dumps(
+            {"pratiche": {"fine-lavori": {"checked": "2026-10-28", "differences": ["changed: Dati catastali"]}}}))
+        try:
+            gen.generate(gen.load_yaml(FINE / "recipe.yaml"), base=base)
+            raise AssertionError("generated")
+        except gen.GenError as e:
+            assert "changed: Dati catastali" in str(e), e
+        import catalogue
+        old = catalogue.CAT
+        catalogue.CAT = base / "catalogue/F839"
+        try:
+            import run
+            steps = gen.load_yaml(FINE / "portal-steps.generated.yaml")
+            assert "Dati catastali" in run.portal_changed(steps)[0]
+            assert run.portal_changed(gen.load_yaml(CILA / "portal-steps.yaml")) == []  # hand-written
+        finally:
+            catalogue.CAT = old
+
+
+@case("draft.py drafts a restaurant's opening from two national forms (its SCIA and the Reg. 852 notifica)")
+def _():
+    import draft
+    crawl = gen.json.loads((HERE.parent / "catalogue/F839/sections/suap-060-aprire-l-attivita.json").read_text())
+    schema = [x for f in ("mod_somministrazione_zone_non_tutelate_apertura", "mod_notifica_sanitaria")
+              for x in gen.json.loads((HERE.parent / f"schema/{f}_v1.0.7-fields.json").read_text())]
+    sec = lambda name: next(x for x in crawl["sections"] if x["section"].startswith(name))
+    leaf = lambda asks, v: asks[gen.re.findall(r"ask\.(\w+)", v)[-1]]["schema"].rsplit("/", 1)[-1]
+    e, asks, n, missed = draft.draft_section(sec("Dati dell'esercizio"), schema)
+    got = {f["label"]: leaf(asks, f.get("value") or f["when"]) for f in e["fields"]}
+    assert got["mq"] == "superficie" and got["Tipologia di esercizio"] == "tipologia_esercizio", got  # not the form's own word
+    assert got["dal (gg/mm)"] == "da_stagionale", got
+    e, asks, n, missed = draft.draft_section(sec("tipologia di attivit"), schema)
+    assert e["schema"].endswith("avvio_attivita_section"), e["schema"]  # the second form's group
+    got = lambda start: next(leaf(asks, f["when"]) for f in e["fields"] if f["label"].startswith(start))
+    assert got("COMMERCIO AL DETTAGLIO") == "commercio_dettaglio"
+    assert got("Carne, prodotti") == "carne"  # the rare word, not "prodotti"
+    assert got("Ristorazione pubblica con") == "ristorazione_pubblica"
+    e, asks, n, missed = draft.draft_section(sec("DICHIARAZIONE ESENZIONE"), schema)
+    assert e.get("theirs") and not e["fields"], e  # "Presa visione": the person's
+
+
+@case("draft.py pairs by order and type: the portal's address block on the form's one-line address, the previous site's side")
+def _():
+    import draft
+    crawl = gen.json.loads((HERE.parent / "catalogue/F839/sections/suap-060-trasferire-la-sede-dell-attivita.json").read_text())
+    schema = gen.json.loads((HERE.parent / "schema/mod_somministrazione_zone_non_tutelate_trasferimento_v1.0.7-fields.json").read_text())
+    e, asks, n, missed = draft.draft_section(next(x for x in crawl["sections"] if x["section"].startswith("precedente")), schema)
+    own = [f["label"] for f in e["fields"] if f.get("note")]
+    assert "Frazione" in own and "Via, Viale, Piazza" not in own, own  # the address block: its Via is the line
+    leaf = lambda f: asks[gen.re.findall(r"ask\.(\w+)", f.get("value") or f["when"])[-1]]["schema"].rsplit("/", 1)[-1]
+    got = {f["label"]: leaf(f) for f in e["fields"] if not f.get("note")}
+    assert got["Via, Viale, Piazza"] == "indirizzo_da" and got["CAP"] == "cap_da", got  # "precedente": the _da side
+    assert got["Si"] == "centro_commerciale_si_da", got
+
+
+@case("the dictionary names each question once (YAML keeps the last of two quietly)")
+def _():
+    seen = []
+
+    class Strict(gen.yaml.SafeLoader):
+        def construct_mapping(self, node, deep=False):
+            keys = [self.construct_object(k, deep=deep) for k, _ in node.value]
+            seen.extend(k for k in set(keys) if keys.count(k) > 1)
+            return super().construct_mapping(node, deep)
+    gen.yaml.load((HERE.parent / "dictionary/fnsuap.yaml").read_text(), Loader=Strict)
+    assert not seen, seen
+
+
+@case("a choice's answer picks its branch (is_<answer>), and an ordine's name its albo option")
+def _():
+    import run
+    assert run.FILTERS["is_permesso_di_costruire"]("Permesso di costruire") == "true"
+    assert run.FILTERS["is_scia"]("permesso di costruire") == "false"
+    assert run.FILTERS["albo_tipo"]("Ordine degli Architetti P.P.C.") == "Architetto"
+
+
+@case("an operation checked in another sector is that pratica when every fingerprint matches, else one to crawl")
+def _():
+    import tempfile, catalogue
+    with tempfile.TemporaryDirectory() as tmp:
+        base = batch_copy(tmp)
+        old = (catalogue.CAT, catalogue.SECTIONS, catalogue.SAME)
+        catalogue.CAT = base / "catalogue/F839"
+        catalogue.SECTIONS, catalogue.SAME = catalogue.CAT / "sections", catalogue.CAT / "same.json"
+        try:
+            fps = catalogue.stored_fingerprints("fine-lavori")
+            check = lambda name, change: {"name": name, "like": "fine-lavori", "crawled": "2026-10-28T00:00:00Z", "sections":
+                [{"section": k, "fingerprint": ("0" * 16 if k == change else v)} for k, v in fps.items()]}
+            export = base / "export.json"
+            export.write_text(gen.json.dumps({"crawl:check:suap-001-x": check("suap-001-x", None),
+                                              "crawl:check:suap-002-x": check("suap-002-x", "Oggetto della pratica")}))
+            out = catalogue.cmd_drift(type("a", (), {"export": str(export)}))
+            same = gen.json.loads(catalogue.SAME.read_text())
+            assert same["same"] == {"suap-001-x": "fine-lavori"}, out
+            assert same["different"]["suap-002-x"]["differences"] == ["changed: Oggetto della pratica"], out
+            assert not (catalogue.CAT / "drift.json").exists() or "suap-001-x" not in (catalogue.CAT / "drift.json").read_text()
+        finally:
+            catalogue.CAT, catalogue.SECTIONS, catalogue.SAME = old
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

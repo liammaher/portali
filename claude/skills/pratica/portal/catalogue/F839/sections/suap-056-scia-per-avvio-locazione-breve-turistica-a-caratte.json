@@ -1,0 +1,897 @@
+{
+ "crawled": "2026-10-28T18:19:39.031Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › SCIA per avvio locazione breve/turistica a carattere imprenditoriale (sector Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna))",
+ "seconds": 31.3,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività per locazione breve/turistica - Avvio",
+  "adempimenti": [
+   {
+    "adempimento": "Segnalazione Certificata di Inizio Attività per locazione breve/turistica",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Ubicazione",
+   "Dati catastali",
+   "Codici istat e ateco",
+   "Titolo di disponibilità",
+   "Capacità ricettiva e dotazioni",
+   "Apertura",
+   "Dichiarazioni sul possesso dei requisiti di onorabilità",
+   "ALTRE DICHIARAZIONI",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "0_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "0_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Ubicazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "Codici istat e ateco",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT del Comune",
+     "max": 9999
+    },
+    {
+     "id": "r4c2p8reg",
+     "kind": "select",
+     "label": "Codice ISTAT Provincia",
+     "options": [
+      "61 Caserta",
+      "62 Benevento",
+      "64 Avellino",
+      "65 Salerno",
+      "263 Napoli"
+     ]
+    },
+    {
+     "id": "r7c1p11reg:txt",
+     "kind": "text",
+     "label": "Codice ATECO prevalente",
+     "max": 9999
+    },
+    {
+     "id": "r7c2p13reg:txt",
+     "kind": "text",
+     "label": "Codice ATECO secondario",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "4a756c3e367fc435",
+   "text": "Codici istat e ateco Codice ISTAT del Comune Codice ISTAT Provincia Codice ISTAT Regione 15 ISTAT: Codice macrocategoria classificazione nazionale B Codice categoria classificazione nazionale B4 Codice sottocategoria classificazione nazionale B405 Codice ATECO prevalente Codice ATECO secondario Quali sono i codici delle macrocategorie, categorie e sottocategorie della tassonomia nazionale per la locazione turistica? Di seguito un estratto dell’allegato 2 BDSR. Macrocategoria: Esercizi extralberghieri complementari Codice macrocategoria: B Categoria: Alloggi in affitto gestiti in forma imprenditoriale Codice categoria: B4 Sottocategoria: Unità abitative ammobiliate per uso turistico Codice sottocategoria: B405 Descrizione sottocategoria: Unità immobiliari composte da uno o più locali arredati e dotati di servizi igienici e di cucina autonoma. Nelle unità abitative ammobiliate ad uso turistico sono assicurati servizi essenziali quali l’erogazione di energia elettrica, acqua, gas, la sostituzione di arredi, corredi e dotazioni deteriorati, la pulizia ad ogni cambio di cliente e il riscaldamento. Il codice Ateco è una combinazione alfanumerica approvata dall’Istat che identifica un’attività economica individuando il macro-settore economico e le specifiche articolazioni e sottocategorie dei settori stessi.",
+   "branches": [
+    {
+     "choice": "Codice ISTAT Provincia = 61 Caserta",
+     "id": "r4c2p8reg",
+     "kind": "select",
+     "option": "61 Caserta"
+    },
+    {
+     "choice": "Codice ISTAT Provincia = 62 Benevento",
+     "id": "r4c2p8reg",
+     "kind": "select",
+     "option": "62 Benevento"
+    },
+    {
+     "choice": "Codice ISTAT Provincia = 64 Avellino",
+     "id": "r4c2p8reg",
+     "kind": "select",
+     "option": "64 Avellino"
+    },
+    {
+     "choice": "Codice ISTAT Provincia = 65 Salerno",
+     "id": "r4c2p8reg",
+     "kind": "select",
+     "option": "65 Salerno"
+    },
+    {
+     "choice": "Codice ISTAT Provincia = 263 Napoli",
+     "id": "r4c2p8reg",
+     "kind": "select",
+     "option": "263 Napoli"
+    }
+   ],
+   "seconds": 5.3
+  },
+  {
+   "section": "Titolo di disponibilità",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "proprietà",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "usufrutto",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r4c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "locazione",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r5c1p8reg:radio:3_clone",
+     "kind": "radio",
+     "label": "comodato",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r6c1p10reg:radio:4_clone",
+     "kind": "radio",
+     "label": "mandato con rappresentanza (che si allega alla presente)",
+     "group": "r6c1p10reg:radio"
+    },
+    {
+     "id": "r7c1p12reg:radio:5_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r7c1p12reg:radio"
+    },
+    {
+     "id": "r10c1p16reg:txt",
+     "kind": "text",
+     "label": "Specificare i dati della proprietà immobiliare nel caso in cui il titolo della disponibilità sia diverso dalla proprietà",
+     "max": 9999
+    },
+    {
+     "id": "r12c1p18reg:txt",
+     "kind": "text",
+     "label": "Tipo di persona (fisica, fisica con P.IVA, giuridica)",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "5f497ad5762b4d1c",
+   "text": "Titolo di disponibilità Titolo di disponibilità dell’unità immobiliare oggetto di SCIA: proprietà usufrutto locazione comodato mandato con rappresentanza (che si allega alla presente) altro Indicare: Specificare i dati della proprietà immobiliare nel caso in cui il titolo della disponibilità sia diverso dalla proprietà Tipo di persona (fisica, fisica con P.IVA, giuridica)",
+   "branches": [
+    {
+     "choice": "proprietà",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c1p16reg:calendar_input",
+       "kind": "date",
+       "label": "atto del"
+      },
+      {
+       "id": "r10c2p18reg:txt",
+       "kind": "text",
+       "label": "registrazione n.",
+       "max": 50
+      },
+      {
+       "id": "r10c3p20reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p16reg:txt",
+       "r12c1p24reg:txt"
+      ],
+      [
+       "r12c1p18reg:txt",
+       "r14c1p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "usufrutto",
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c1p16reg:calendar_input",
+       "kind": "date",
+       "label": "atto del"
+      },
+      {
+       "id": "r10c2p18reg:txt",
+       "kind": "text",
+       "label": "registrazione n.",
+       "max": 50
+      },
+      {
+       "id": "r10c3p20reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p16reg:txt",
+       "r12c1p24reg:txt"
+      ],
+      [
+       "r12c1p18reg:txt",
+       "r14c1p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "locazione",
+     "id": "r4c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c1p16reg:calendar_input",
+       "kind": "date",
+       "label": "atto del"
+      },
+      {
+       "id": "r10c2p18reg:txt",
+       "kind": "text",
+       "label": "registrazione n.",
+       "max": 50
+      },
+      {
+       "id": "r10c3p20reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p16reg:txt",
+       "r12c1p24reg:txt"
+      ],
+      [
+       "r12c1p18reg:txt",
+       "r14c1p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "comodato",
+     "id": "r5c1p8reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c1p16reg:calendar_input",
+       "kind": "date",
+       "label": "atto del"
+      },
+      {
+       "id": "r10c2p18reg:txt",
+       "kind": "text",
+       "label": "registrazione n.",
+       "max": 50
+      },
+      {
+       "id": "r10c3p20reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p16reg:txt",
+       "r12c1p24reg:txt"
+      ],
+      [
+       "r12c1p18reg:txt",
+       "r14c1p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "mandato con rappresentanza (che si allega alla presente)",
+     "id": "r6c1p10reg:radio:4_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c1p16reg:calendar_input",
+       "kind": "date",
+       "label": "atto del"
+      },
+      {
+       "id": "r10c2p18reg:txt",
+       "kind": "text",
+       "label": "registrazione n.",
+       "max": 50
+      },
+      {
+       "id": "r10c3p20reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p16reg:txt",
+       "r12c1p24reg:txt"
+      ],
+      [
+       "r12c1p18reg:txt",
+       "r14c1p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "altro",
+     "id": "r7c1p12reg:radio:5_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c2p15reg:txt",
+       "kind": "text",
+       "label": "(precisare)",
+       "context": "altro",
+       "max": 80
+      },
+      {
+       "id": "r11c1p18reg:calendar_input",
+       "kind": "date",
+       "label": "atto del"
+      },
+      {
+       "id": "r11c2p20reg:txt",
+       "kind": "text",
+       "label": "registrazione n.",
+       "max": 50
+      },
+      {
+       "id": "r11c3p22reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p12reg:radio:5_clone",
+       "r8c1p13reg:radio:5_clone"
+      ],
+      [
+       "r10c1p16reg:txt",
+       "r13c1p26reg:txt"
+      ],
+      [
+       "r12c1p18reg:txt",
+       "r15c1p28reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 5.3
+  },
+  {
+   "section": "Capacità ricettiva e dotazioni",
+   "fields": [
+    {
+     "id": "r1c2p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "sì",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r1c3p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r1c3p3reg:radio"
+    },
+    {
+     "id": "r2c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Unità immobiliare con più locali",
+     "group": "r2c1p4reg:radio"
+    },
+    {
+     "id": "r4c1p9reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Monolocale",
+     "group": "r4c1p9reg:radio"
+    }
+   ],
+   "fingerprint": "f09d71a45dca236e",
+   "text": "Capacità ricettiva e dotazioni UNITA’ IMMOBILIARE che consente il superamento delle barriere architettoniche sì no Unità immobiliare con più locali Monolocale",
+   "branches": [
+    {
+     "choice": "sì",
+     "id": "r1c2p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "no",
+     "id": "r1c3p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Unità immobiliare con più locali",
+     "id": "r2c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r4c1p6reg:real",
+       "kind": "text",
+       "label": "Superficie (mq)",
+       "max": 9
+      },
+      {
+       "id": "r6c1p8reg:number",
+       "kind": "text",
+       "label": "Locali soggiorno n.",
+       "max": 3
+      },
+      {
+       "id": "r8c1p10reg:real",
+       "kind": "text",
+       "label": "Locali soggiorno (mq)",
+       "max": 103
+      },
+      {
+       "id": "r11c1p14reg:number",
+       "kind": "text",
+       "label": "Camere n.",
+       "max": 3
+      },
+      {
+       "id": "r13c1p16reg:real",
+       "kind": "text",
+       "label": "Camere (mq)",
+       "max": 103
+      },
+      {
+       "id": "r13c2p18reg:number",
+       "kind": "text",
+       "label": "Posti letto n.",
+       "max": 3
+      },
+      {
+       "id": "r16c1p22reg:number",
+       "kind": "text",
+       "label": "Cucina/angolo cottura n.",
+       "max": 3
+      },
+      {
+       "id": "r16c2p24reg:number",
+       "kind": "text",
+       "label": "Servizi igienici n.",
+       "max": 3
+      },
+      {
+       "id": "r16c3p26reg:number",
+       "kind": "text",
+       "label": "Totale posti letto n.",
+       "max": 3
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p9reg:radio:3_clone",
+       "r17c1p29reg:radio:3_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Camere (mq)",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Monolocale",
+     "id": "r4c1p9reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p12reg:real",
+       "kind": "text",
+       "label": "Superficie (mq)",
+       "max": 9
+      },
+      {
+       "id": "r6c2p14reg:real",
+       "kind": "text",
+       "label": "Angolo cottura, soggiorno camera (mq)",
+       "max": 65
+      },
+      {
+       "id": "r6c3p16reg:number",
+       "kind": "text",
+       "label": "Servizi igienici n.",
+       "max": 3
+      },
+      {
+       "id": "r6c4p18reg:number",
+       "kind": "text",
+       "label": "Totale posti letto n.",
+       "max": 3
+      }
+     ]
+    }
+   ],
+   "seconds": 4.3
+  },
+  {
+   "section": "Apertura",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "Avvio dell’attività con decorrenza"
+    },
+    {
+     "id": "r5c1p7reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Annuale",
+     "group": "r5c1p7reg:radio"
+    },
+    {
+     "id": "r6c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Stagionale",
+     "group": "r6c1p8reg:radio"
+    },
+    {
+     "id": "r9c1p11reg:txt",
+     "kind": "text",
+     "label": "Denominazione (1) dell’attività ai fini della locazione breve o locazione turistica",
+     "max": 9999
+    },
+    {
+     "id": "r11c1p13reg:txt",
+     "kind": "text",
+     "label": "E-mail associata all’attività di locazione",
+     "max": 9999
+    },
+    {
+     "id": "r11c2p15reg:txt",
+     "kind": "text",
+     "label": "Telefono associato all’attività di locazione",
+     "max": 9999
+    },
+    {
+     "id": "r13c1p17reg:real",
+     "kind": "text",
+     "label": "Superficie totale immobile (superficie utile abitabile) Mq",
+     "max": 8
+    },
+    {
+     "id": "r16c1p20reg:number",
+     "kind": "text",
+     "label": "Camera n.",
+     "max": 5
+    },
+    {
+     "id": "r16c2p22reg:real",
+     "kind": "text",
+     "label": "mq",
+     "max": 8
+    },
+    {
+     "id": "r19c1p26reg:number",
+     "kind": "text",
+     "label": "Totale n. camere",
+     "max": 5
+    },
+    {
+     "id": "r19c2p28reg:number",
+     "kind": "text",
+     "label": "N. posti letto complessivi",
+     "max": 5
+    },
+    {
+     "id": "r19c3p30reg:number",
+     "kind": "text",
+     "label": "Totale bagni",
+     "max": 3
+    },
+    {
+     "id": "r22c1p33reg:calendar_input",
+     "kind": "date",
+     "label": "La planimetria è stata presentata in data"
+    },
+    {
+     "id": "r22c2p35reg:txt",
+     "kind": "text",
+     "label": "con prot. n.",
+     "max": 9999
+    },
+    {
+     "id": "r25c1p38reg:txt",
+     "kind": "text",
+     "label": "Eventuali siti web prevalentemente utilizzati per la pubblicizzazione dell’unità immobiliare",
+     "max": 200
+    }
+   ],
+   "fingerprint": "e9190502b6d5dca4",
+   "text": "Apertura Il/la sottoscritto/a SEGNALA l’avvio dell’attività di locazione breve / turistica a carattere IMPRENDITORIALE e (solo in caso di avvio dell’attività non contestuale alla presentazione della SCIA) Avvio dell’attività con decorrenza Esercizio a carattere Annuale Stagionale In caso di apertura annuale il/la sottoscritto/a dichiara, relativamente ai locali destinati all’attività oggetto della presente comunicazione, di essere dotati di impianto di riscaldamento. Denominazione (1) dell’attività ai fini della locazione breve o locazione turistica E-mail associata all’attività di locazione Telefono associato all’attività di locazione Superficie totale immobile (superficie utile abitabile) Mq Superficie utile abitabile camere a disposizione degli ospiti: Camera n. mq Totale n. camere N. posti letto complessivi Totale bagni Qualora la planimetria sia già in possesso della Pubblica Amministrazione, indicare i seguenti dati: La planimetria è stata presentata in data con prot. n. Qualora la planimetria non sia già in possesso della Pubblica Amministrazione, la si allega alla fine della pratica (2). Eventuali siti web prevalentemente utilizzati per la pubblicizzazione dell’unità immobiliare (1) La denominazione è una dicitura di fantasia che non deve contenere indicazioni fuorvianti e proprie delle strutture ricettive turistiche (es. Casa Vacanza, Alloggio Vacanza, B&B, Residence, etc.) (2) Allegare planimetria in scala di almeno 1:50",
+   "branches": [
+    {
+     "choice": "Avvio dell’attività con decorrenza",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r4c2p6reg:calendar_input",
+       "kind": "date",
+       "label": "dal"
+      }
+     ],
+     "moved": [
+      [
+       "r3c1p3reg:chk",
+       "r4c1p4reg:chk"
+      ],
+      [
+       "r5c1p7reg:radio:0_clone",
+       "r6c1p10reg:radio:0_clone"
+      ],
+      [
+       "r6c1p8reg:radio:1_clone",
+       "r7c1p11reg:radio:1_clone"
+      ],
+      [
+       "r9c1p11reg:txt",
+       "r10c1p14reg:txt"
+      ],
+      [
+       "r11c1p13reg:txt",
+       "r12c1p16reg:txt"
+      ],
+      [
+       "r11c2p15reg:txt",
+       "r12c2p18reg:txt"
+      ],
+      [
+       "r13c1p17reg:real",
+       "r14c1p20reg:real"
+      ],
+      [
+       "r16c1p20reg:number",
+       "r17c1p23reg:number"
+      ],
+      [
+       "r16c2p22reg:real",
+       "r17c2p25reg:real"
+      ],
+      [
+       "r19c1p26reg:number",
+       "r20c1p29reg:number"
+      ],
+      [
+       "r19c2p28reg:number",
+       "r20c2p31reg:number"
+      ],
+      [
+       "r19c3p30reg:number",
+       "r20c3p33reg:number"
+      ],
+      [
+       "r22c1p33reg:calendar_input",
+       "r23c1p36reg:calendar_input"
+      ],
+      [
+       "r22c2p35reg:txt",
+       "r23c2p38reg:txt"
+      ],
+      [
+       "r25c1p38reg:txt",
+       "r26c1p41reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Camera n.",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Annuale",
+     "id": "r5c1p7reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Camera n.",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Stagionale",
+     "id": "r6c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c1p10reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r8c2p12reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p11reg:txt",
+       "r12c1p19reg:txt"
+      ],
+      [
+       "r11c1p13reg:txt",
+       "r14c1p21reg:txt"
+      ],
+      [
+       "r11c2p15reg:txt",
+       "r14c2p23reg:txt"
+      ],
+      [
+       "r13c1p17reg:real",
+       "r16c1p25reg:real"
+      ],
+      [
+       "r16c1p20reg:number",
+       "r19c1p28reg:number"
+      ],
+      [
+       "r16c2p22reg:real",
+       "r19c2p30reg:real"
+      ],
+      [
+       "r19c1p26reg:number",
+       "r22c1p34reg:number"
+      ],
+      [
+       "r19c2p28reg:number",
+       "r22c2p36reg:number"
+      ],
+      [
+       "r19c3p30reg:number",
+       "r22c3p38reg:number"
+      ],
+      [
+       "r22c1p33reg:calendar_input",
+       "r25c1p41reg:calendar_input"
+      ],
+      [
+       "r22c2p35reg:txt",
+       "r25c2p43reg:txt"
+      ],
+      [
+       "r25c1p38reg:txt",
+       "r28c1p46reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Camera n.",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 4.9
+  },
+  {
+   "section": "Dichiarazioni sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ALTRE DICHIARAZIONI",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

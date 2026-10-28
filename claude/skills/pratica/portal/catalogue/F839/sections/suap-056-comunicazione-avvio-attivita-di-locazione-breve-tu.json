@@ -1,0 +1,273 @@
+{
+ "crawled": "2026-10-28T18:19:00.713Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Comunicazione avvio attivita’ di locazione breve/turistica in forma NON imprenditoriale (AVVERTENZA: ISTANZA VALIDA SOLO SE NON SI SUPERANO N. 2 UNITA' IMMOBILIARI TOTALMENTE AVVIATE. DIVERSAMENTE, VA PRESENTATA LA SCIA) (sector Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna))",
+ "seconds": 17.8,
+ "generated": {
+  "interventi": "Comunicazione avvio attivita’ di locazione breve/turistica in forma NON imprenditoriale",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione avvio attivita’ di locazione breve/turistica in forma NON imprenditoriale",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione",
+   "dati catastali",
+   "Oggetto della comunicazione",
+   "DATI RELATIVI ALL'IMMOBILE, CODICE ISTAT",
+   "ALTRE DICHIARAZIONI",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "SIN",
+     "label": "Il soggetto titolare ha già avviato altre attività di locazione turistica/breve"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "Il soggetto titolare ha già avviato altre attività di locazione turistica/breve",
+   "type": "SIN",
+   "adds": [
+    "Ulteriori unità immobiliari"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "Oggetto della comunicazione",
+   "fields": [
+    {
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Proprietario",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Locatario /sublocatario/comodatario/etc.",
+     "group": "r3c2p5reg:radio"
+    }
+   ],
+   "fingerprint": "275459cd63f63dc4",
+   "text": "Oggetto della comunicazione Il/la sottoscritto/a COMUNICA, la disponibilità per la locazione di un immobile ad uso abitativo, stipulato da persone fisiche al di fuori dell'esercizio di attività di impresa, di cui alla Legge 15 dicembre 2023, n. 191 e al Decreto-Legge 24 aprile 2017, n. 50 convertito con modificazioni dalla L. 21 giugno 2017, n. 96, in qualità di Proprietario Locatario /sublocatario/comodatario/etc.",
+   "branches": [
+    {
+     "choice": "Proprietario",
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Locatario /sublocatario/comodatario/etc.",
+     "id": "r3c2p5reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.2
+  },
+  {
+   "section": "DATI RELATIVI ALL'IMMOBILE, CODICE ISTAT",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT del Comune",
+     "max": 9999
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT della Provincia",
+     "max": 9999
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "Codice ISTAT della Regione",
+     "max": 9999
+    },
+    {
+     "id": "r12c1p12reg:real",
+     "kind": "text",
+     "label": "Superficie totale immobile (superficie utile abitabile) Mq",
+     "max": 8
+    },
+    {
+     "id": "r15c1p15reg:number",
+     "kind": "text",
+     "label": "N. camere",
+     "max": 5
+    },
+    {
+     "id": "r15c2p17reg:number",
+     "kind": "text",
+     "label": "N. bagni",
+     "max": 3
+    },
+    {
+     "id": "r15c3p19reg:number",
+     "kind": "text",
+     "label": "N. posti letto complessivi",
+     "max": 5
+    },
+    {
+     "id": "r17c1p21reg:number",
+     "kind": "text",
+     "label": "Camera n.",
+     "max": 5
+    },
+    {
+     "id": "r17c2p23reg:real",
+     "kind": "text",
+     "label": "mq",
+     "max": 8
+    },
+    {
+     "id": "r20c1p27reg:txt",
+     "kind": "text",
+     "label": "Periodo di disponibilità",
+     "max": 9999
+    },
+    {
+     "id": "r22c1p29reg:txt",
+     "kind": "text",
+     "label": "Denominazione dell’attività ai fini della locazione turistica/breve ¹",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "1c8e0cb4f4ae5120",
+   "text": "DATI RELATIVI ALL'IMMOBILE, CODICE ISTAT Codice ISTAT del Comune Codice ISTAT della Provincia Codice ISTAT della Regione Dati di classificazione ISTAT : Codice macrocategoria classificazione nazionale C Codice categoria classificazione nazionale C2 Codice sottocategoria classificazione nazionale C204 Superficie totale immobile (superficie utile abitabile) Mq Superficie utile abitabile camere a disposizione degli ospiti: N. camere N. bagni N. posti letto complessivi Camera n. mq Periodo di disponibilità Denominazione dell’attività ai fini della locazione turistica/breve ¹ ¹ La denominazione è una dicitura di fantasia che non deve contenere indicazioni fuorvianti e proprie delle strutture ricettive turistiche (es. Casa Vacanza, B&B, Residence, etc.)",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "ALTRE DICHIARAZIONI",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Ulteriori unità immobiliari",
+   "fields": [
+    {
+     "id": "r4c1p5reg:number",
+     "kind": "text",
+     "label": "Numero appartamenti :",
+     "max": 5
+    },
+    {
+     "id": "r7c1p10reg:txt",
+     "kind": "text",
+     "label": "Codice identificativo Regionale CUSR",
+     "max": 9999
+    },
+    {
+     "id": "r7c2p12reg:txt",
+     "kind": "text",
+     "label": "Codice Identificativo Nazionale CIN",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "6123ae86e11ad5bb",
+   "text": "Ulteriori unità immobiliari Il/La sottoscritto/a comunica, inoltre di avere già avviato a suo nome contratti di locazione turistica/breve, in appartamenti dei quali ha disponibilità e i cui codici identificativi regionali e nazionali sono riportati di seguito Numero appartamenti : (indicare il numero delle attività avviate e i relativi codici identificativi assegnati alle attività) Codice identificativo Regionale CUSR Codice Identificativo Nazionale CIN Disposizioni per chi ha già avviato attività di locazione breve/turistica Ai sensi dell’articolo 1, comma 17, della Legge 30 dicembre 2025, n. 199, nel caso in cui il titolare dell’attività di locazione oggetto della presente comunicazione abbia già avviato, a proprio nome, due attività di locazione breve o turistica (sia in forma imprenditoriale che non imprenditoriale), l’avvio di una terza attività comporta la presunzione di esercizio in forma imprenditoriale per tutte le attività di locazione. Pertanto, qualora l’attività oggetto della presente segnalazione rientri in tale casistica, non andrà presentata la presente comunicazione, bensì un’apposita Segnalazione Certificata di Inizio Attività (SCIA) per la locazione turistica/breve in forma imprenditoriale sia per la quinta attività che si intende avviare a locazione, sia per ognuna delle attività di locazione non imprenditoriali già avviate. A seguito di tale adempimento, verranno assegnati nuovi Codici Identificativi Regionali (CUSR), i quali dovranno essere utilizzati per la richiesta di relativi nuovi Codici Identificativi Nazionali (CIN).",
+   "branches": [],
+   "seconds": 0.8,
+   "scelta": "Il soggetto titolare ha già avviato altre attività di locazione turistica/breve"
+  }
+ ]
+}

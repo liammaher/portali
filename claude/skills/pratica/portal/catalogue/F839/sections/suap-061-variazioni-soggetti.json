@@ -1,0 +1,189 @@
+{
+ "crawled": "2026-10-28T17:11:40.329Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni soggetti (sector Esercizio di somministrazione di alimenti e bevande in zone tutelate)",
+ "seconds": 30.7,
+ "generated": {
+  "interventi": "Variazioni soggetti in attività di somministrazione di alimenti e bevande (bar / ristorante / pizzeria / osteria etc.) in zona tutelata",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazioni soggetti in attività di somministrazione di alimenti e bevande",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "Dati catastali",
+   "normative comunali",
+   "dichiarazione relativa alle variazioni della società o dei soggetti",
+   "estremi del/i titolo/i autorizzatorio/i posseduto/i dall'impresa per l'esercizio dell'attività",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "La variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "La variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI",
+   "type": "CHK",
+   "adds": [
+    "Dichiarazione sul possesso dei requisiti di onorabilità e professionali"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.4
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.2
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.9
+  },
+  {
+   "section": "normative comunali",
+   "fingerprint": "0c25f486d179118b",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#normative comunali",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa alle variazioni della società o dei soggetti",
+   "fingerprint": "3ac0a53d7185b6d8",
+   "same_as": "suap-060-variazioni-soggetti#dichiarazione relativa alle variazioni della società o dei soggetti",
+   "seconds": 0.7
+  },
+  {
+   "section": "estremi del/i titolo/i autorizzatorio/i posseduto/i dall'impresa per l'esercizio dell'attività",
+   "fingerprint": "8e439ec419d8cc52",
+   "same_as": "suap-060-variazioni-soggetti#estremi del/i titolo/i autorizzatorio/i posseduto/i dall'impresa per l'esercizio dell'attività",
+   "seconds": 1.2
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità e professionali",
+   "skipped": "the person's declarations",
+   "scelta": "La variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI"
+  }
+ ]
+}

@@ -1,0 +1,167 @@
+{
+ "crawled": "2026-10-28T18:23:40.667Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Subentrare nell'attività di acconciatore (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 14.7,
+ "generated": {
+  "interventi": "Subingresso in esercizio di attività di acconciatore",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di subingresso in esercizio di attività di acconciatore",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "Dati catastali",
+   "Dati della impresa a cui si subentra",
+   "motivazioni del subingresso",
+   "variazione della denominazione",
+   "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA",
+   "Dichiarazione sul possesso dei requisiti professionali (attività di acconciatore)",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dati della impresa a cui si subentra",
+   "fingerprint": "0be7a68be22af642",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#dati dell'impresa a cui si subentra",
+   "seconds": 0.6
+  },
+  {
+   "section": "motivazioni del subingresso",
+   "fingerprint": "50cef73513a7a88c",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#motivazioni del subingresso",
+   "seconds": 0.6
+  },
+  {
+   "section": "variazione della denominazione",
+   "fingerprint": "5d486483318e66e9",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#variazione della denominazione",
+   "seconds": 0.6
+  },
+  {
+   "section": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA",
+   "fingerprint": "ab8abdefa773e8a4",
+   "same_as": "acconciatore#Dichiarazione sul possesso dei requisiti antimafia",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti professionali (attività di acconciatore)",
+   "fingerprint": "21e6af5c4236e8c8",
+   "same_as": "acconciatore#Dichiarazione sul possesso dei requisiti professionali (attività di acconciatore)",
+   "seconds": 1
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

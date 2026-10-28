@@ -1,0 +1,1031 @@
+{
+ "crawled": "2026-10-28T18:22:41.470Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Aprire l'attività di tatuatore / piercer (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 59.2,
+ "generated": {
+  "interventi": "Nuova apertura attività di tatuatore / piercer",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per apertura attività di tatuatore e piercer",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione locale",
+   "dati catastali",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione del titolo di disponibilità dei locali",
+   "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia",
+   "dichiarazione al tipo di attestazione relativa allo stato dei luoghi ove si svolge l'attività",
+   "dichiarazione relativa all'iscrizione all'albo delle imprese artigiane",
+   "dichiarazione di denuncia occupazione dei locali ai fini TARSU",
+   "Dichiarazione per inquinamento acustico",
+   "dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "nella conduzione dell'attività partecipano soci qualificati / familiari coadiuvanti/ collaboratori/ dipendenti dell'impresa"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "si rende necessario presentare la valutazione di impatto acustico di attività commerciali e terziarie (Art.4, comma 1, lett. d) L.447/1995 - D.P.C.M. 14.11.1997)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "la conduzione dell'attività è effettuata dal \"responsabile tecnico\""
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione di possesso dei requisiti morali delle persone coinvolte nel procedimento (art.85 D.L.vo 159/2011)"
+   ],
+   "drops": []
+  },
+  {
+   "option": "nella conduzione dell'attività partecipano soci qualificati / familiari coadiuvanti/ collaboratori/ dipendenti dell'impresa",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE RELATIVA AI REQUISITI PROFESSIONALI PER L'ATTIVITÀ DI TATUATORE E PIERCER"
+   ],
+   "drops": []
+  },
+  {
+   "option": "si rende necessario presentare la valutazione di impatto acustico di attività commerciali e terziarie (Art.4, comma 1, lett. d) L.447/1995 - D.P.C.M. 14.11.1997)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "la conduzione dell'attività è effettuata dal \"responsabile tecnico\"",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione di qualifica professionale del responsabile tecnico"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione locale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che nei propri confronti non sussistono le cause di divieto, di decadenza, di sospensione di cui al D.LGS. 159/2011 (normativa antimafia)"
+    }
+   ],
+   "fingerprint": "732ba5b4f8103c5b",
+   "text": "dichiarazione antimafia D.LGS. 159/2011 che nei propri confronti non sussistono le cause di divieto, di decadenza, di sospensione di cui al D.LGS. 159/2011 (normativa antimafia)",
+   "branches": [
+    {
+     "choice": "che nei propri confronti non sussistono le cause di divieto, di decadenza, di sospensione di cui al D.LGS. 159/2011 (normativa antimafia)",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione del titolo di disponibilità dei locali",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "proprietario",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "affittuario",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r1c3p3reg:radio:2_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r1c3p3reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 30
+    }
+   ],
+   "fingerprint": "3fe70b0690454e05",
+   "text": "dichiarazione del titolo di disponibilità dei locali proprietario affittuario altro specificare",
+   "branches": [
+    {
+     "choice": "proprietario",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "affittuario",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro",
+     "id": "r1c3p3reg:radio:2_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.1
+  },
+  {
+   "section": "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che il locale ove intende svolgere l'attività è conforme alle vigenti norme in materia edilizia, urbanistica, igienico-sanitaria, alle norme sulla destinazione "
+    }
+   ],
+   "fingerprint": "fa207f5414241787",
+   "text": "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità che il locale ove intende svolgere l'attività è conforme alle vigenti norme in materia edilizia, urbanistica, igienico-sanitaria, alle norme sulla destinazione d'uso dei locali",
+   "branches": [
+    {
+     "choice": "che il locale ove intende svolgere l'attività è conforme alle vigenti norme in materia edilizia, urbanistica, igienico-sanitaria, alle norme sulla destinazione ",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "permanente",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "stagionale",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:calendar_input",
+     "kind": "date",
+     "label": "data inizio periodo"
+    },
+    {
+     "id": "r6c1p8reg:calendar_input",
+     "kind": "date",
+     "label": "data fine periodo"
+    }
+   ],
+   "fingerprint": "072898a981cd1b8c",
+   "text": "dichiarazione della tipologia dell'esercizio (permanente/stagionale) permanente stagionale data inizio periodo data fine periodo",
+   "branches": [
+    {
+     "choice": "permanente",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "stagionale",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.3
+  },
+  {
+   "section": "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di rispettare tutte le norme di legge e regolamenti vigenti in materia nonché del Regolamento comunale in materia di igiene e sanità pubblica relativamente alle"
+    }
+   ],
+   "fingerprint": "3c486f7fec11f48c",
+   "text": "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia di rispettare tutte le norme di legge e regolamenti vigenti in materia nonché del Regolamento comunale in materia di igiene e sanità pubblica relativamente alle norme specifiche per tale attività",
+   "branches": [
+    {
+     "choice": "di rispettare tutte le norme di legge e regolamenti vigenti in materia nonché del Regolamento comunale in materia di igiene e sanità pubblica relativamente alle",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.5
+  },
+  {
+   "section": "dichiarazione al tipo di attestazione relativa allo stato dei luoghi ove si svolge l'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "comunicazione per attività edilizia libera"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "context": "comunicazione per attività edilizia libera",
+     "max": 10
+    },
+    {
+     "id": "r2c3p6reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r4c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "certificato di conformità edilizia e agibilità del locale"
+    },
+    {
+     "id": "r4c2p10reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "context": "certificato di conformità edilizia e agibilità del locale",
+     "max": 10
+    },
+    {
+     "id": "r4c3p12reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r6c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "dichiarazione di fine lavori di DIA o Permesso di costruire"
+    },
+    {
+     "id": "r6c2p16reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "context": "dichiarazione di fine lavori di DIA o Permesso di costruire",
+     "max": 10
+    },
+    {
+     "id": "r6c3p18reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r8c2p22reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "altro",
+     "max": 350
+    }
+   ],
+   "fingerprint": "7fb4087378b7de19",
+   "text": "dichiarazione al tipo di attestazione relativa allo stato dei luoghi ove si svolge l'attività n. data comunicazione per attività edilizia libera n. data certificato di conformità edilizia e agibilità del locale n. data dichiarazione di fine lavori di DIA o Permesso di costruire (specificare) altro",
+   "branches": [
+    {
+     "choice": "comunicazione per attività edilizia libera",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c3p18reg:calendar_input",
+       "r2c3p6reg:calendar_input"
+      ],
+      [
+       "r6c3p18reg:calendar_input",
+       "r4c3p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "certificato di conformità edilizia e agibilità del locale",
+     "id": "r4c1p8reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c3p18reg:calendar_input",
+       "r2c3p6reg:calendar_input"
+      ],
+      [
+       "r6c3p18reg:calendar_input",
+       "r4c3p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "dichiarazione di fine lavori di DIA o Permesso di costruire",
+     "id": "r6c1p14reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c3p18reg:calendar_input",
+       "r2c3p6reg:calendar_input"
+      ],
+      [
+       "r6c3p18reg:calendar_input",
+       "r4c3p12reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "altro",
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c3p18reg:calendar_input",
+       "r2c3p6reg:calendar_input"
+      ],
+      [
+       "r6c3p18reg:calendar_input",
+       "r4c3p12reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.4
+  },
+  {
+   "section": "dichiarazione relativa all'iscrizione all'albo delle imprese artigiane",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "non è iscritta",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "è iscritta",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "al R.I. sezione speciale di",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "con n.",
+     "max": 10
+    },
+    {
+     "id": "r6c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    }
+   ],
+   "fingerprint": "73f97394f3f85d47",
+   "text": "dichiarazione relativa all'iscrizione all'albo delle imprese artigiane non è iscritta è iscritta al R.I. sezione speciale di con n. dal",
+   "branches": [
+    {
+     "choice": "non è iscritta",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "è iscritta",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.2
+  },
+  {
+   "section": "dichiarazione di denuncia occupazione dei locali ai fini TARSU",
+   "fingerprint": "ad0d9b2e39dd5fa9",
+   "same_as": "inizio-lavori#dichiarazione relativa alla comunicazione di inizio lavori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione per inquinamento acustico",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "non sono presenti sorgenti sonore significative"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "è stata presentata al comune la \"previsione di impatto acustico\" redatta da un tecnico abilitato"
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "in data:"
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r5c2p9reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 350
+    }
+   ],
+   "fingerprint": "eeabb50d285e5179",
+   "text": "Dichiarazione per inquinamento acustico non sono presenti sorgenti sonore significative in data: è stata presentata al comune la \"previsione di impatto acustico\" redatta da un tecnico abilitato specificare altro",
+   "branches": [
+    {
+     "choice": "non sono presenti sorgenti sonore significative",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "è stata presentata al comune la \"previsione di impatto acustico\" redatta da un tecnico abilitato",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 3.1
+  },
+  {
+   "section": "dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "superficie complessiva dell'esercizio (mq)",
+     "max": 5
+    }
+   ],
+   "fingerprint": "f316d1d62db7694b",
+   "text": "dichiarazione relativa alla superficie dei locali da adibire all'attività superficie complessiva dell'esercizio (mq)",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione di possesso dei requisiti morali delle persone coinvolte nel procedimento (art.85 D.L.vo 159/2011)",
+   "fields": [
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei loro confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia);"
+    },
+    {
+     "id": "r8c1p8reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r8c2p10reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r8c3p12reg:txt",
+     "kind": "text",
+     "label": "C.F.",
+     "max": 16
+    },
+    {
+     "id": "r8c4p14reg:txt",
+     "kind": "text",
+     "label": "carica posseduta",
+     "max": 35
+    },
+    {
+     "id": "r10c1p16reg:txt",
+     "kind": "text",
+     "label": "nato/a a",
+     "max": 30
+    },
+    {
+     "id": "r10c2p18reg:calendar_input",
+     "kind": "date",
+     "label": "il"
+    },
+    {
+     "id": "r12c1p22reg:txt",
+     "kind": "text",
+     "label": "residente a",
+     "max": 30
+    },
+    {
+     "id": "r12c2p24reg:txt",
+     "kind": "text",
+     "label": "via o",
+     "max": 50
+    },
+    {
+     "id": "r12c3p26reg:txt",
+     "kind": "text",
+     "label": "n° civico",
+     "max": 10
+    }
+   ],
+   "fingerprint": "55f486a8876fc0e1",
+   "text": "dichiarazione di possesso dei requisiti morali delle persone coinvolte nel procedimento (art.85 D.L.vo 159/2011) IL/ LA SOTTOSCRITTO/ A - consapevole che le dichiarazioni false, la falsità negli atti e l'uso di atti falsi comportano l'applicazione delle sanzioni penali previste dall'art.76 del DPR 28/12/2000, n. 445, nonché la decadenza dei benefici prodotti da provvedimenti emanati sulla base di dichiarazioni non veritiere ai sensi dell'art.75, del medesimo decreto; - consapevole inoltre che, dove il fatto non costituisca più grave reato, chiunque, nelle dichiarazioni o attestazioni o asseverazioni che corredano la segnalazione di inizio attività, dichiara o attesta falsamente l'esistenza dei requisiti o dei presupposti di cui al comma 1 dell'art. 19, legge 241/90, è punito con la reclusione da uno a tre anni; DICHIARA in relazione ai soggetti elencati all'art. 85 del D.L.vo 159/2011 che sono coinvolti nel procedimento e di seguito individuati: che non sussistono nei loro confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia); cognome nome C.F. carica posseduta nato/a a il residente a via o n° civico",
+   "branches": [
+    {
+     "choice": "che non sussistono nei loro confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia);",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 18
+     }
+    }
+   ],
+   "seconds": 2.2,
+   "scelta": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+  },
+  {
+   "section": "DICHIARAZIONE RELATIVA AI REQUISITI PROFESSIONALI PER L'ATTIVITÀ DI TATUATORE E PIERCER",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "titolare"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "socio"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "familiare coadiuvante/ collaboratore/ dipendende dell'impresa"
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 25
+    },
+    {
+     "id": "r8c1p10reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 25
+    },
+    {
+     "id": "r10c1p14reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    },
+    {
+     "id": "r12c1p18reg:calendar_input",
+     "kind": "date",
+     "label": "data di nascita"
+    },
+    {
+     "id": "r14c1p22reg",
+     "kind": "select",
+     "label": "cittadinanza",
+     "options": "251 options"
+    },
+    {
+     "id": "r15c2p26reg:radio:0_clone",
+     "kind": "radio",
+     "label": "M",
+     "group": "r15c2p26reg:radio"
+    },
+    {
+     "id": "r15c3p27reg:radio:1_clone",
+     "kind": "radio",
+     "label": "F",
+     "group": "r15c3p27reg:radio"
+    },
+    {
+     "id": "r17c2p31reg",
+     "kind": "select",
+     "label": "Stato",
+     "options": "251 options"
+    },
+    {
+     "id": "r19c1p33reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 50
+    },
+    {
+     "id": "r19c2p35reg:txt",
+     "kind": "text",
+     "label": "Provincia",
+     "max": 2
+    },
+    {
+     "id": "r22c1p38reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 30
+    },
+    {
+     "id": "r22c2p40reg:txt",
+     "kind": "text",
+     "label": "Provincia",
+     "max": 2
+    },
+    {
+     "id": "r24c1p44reg:txt",
+     "kind": "text",
+     "label": "via, piazza",
+     "max": 30
+    },
+    {
+     "id": "r24c2p46reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 8
+    },
+    {
+     "id": "r24c3p48reg:number",
+     "kind": "text",
+     "label": "C.A.P.",
+     "max": 5
+    },
+    {
+     "id": "r26c1p52reg:txt",
+     "kind": "text",
+     "label": "in possesso di attestato relativo al corso di formazione per l'attività rilasciato da:",
+     "max": 80
+    },
+    {
+     "id": "r28c1p54reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r30c1p58reg:txt",
+     "kind": "text",
+     "label": "L’attestato inoltre è riconosciuto dalla Regione (indicare la Regione)",
+     "max": 100
+    },
+    {
+     "id": "r32c1p62reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r32c2p64reg:txt",
+     "kind": "text",
+     "label": "con il numero identificativo:",
+     "max": 30
+    },
+    {
+     "id": "r34c1p68reg:txt",
+     "kind": "text",
+     "label": "In possesso di attestato di frequenza di corso abilitante all’attività di tatuatore/percing organizzato dall’ASL di",
+     "max": 100
+    },
+    {
+     "id": "r36c1p70reg:calendar_input",
+     "kind": "date",
+     "label": "Rilasciato in data:"
+    },
+    {
+     "id": "r36c2p72reg:txt",
+     "kind": "text",
+     "label": "con il numero identificativo:",
+     "max": 30
+    }
+   ],
+   "fingerprint": "c79c6ef4f941e582",
+   "text": "DICHIARAZIONE RELATIVA AI REQUISITI PROFESSIONALI PER L'ATTIVITÀ DI TATUATORE E PIERCER in qualità di: titolare socio familiare coadiuvante/ collaboratore/ dipendende dell'impresa cognome nome codice fiscale data di nascita cittadinanza sesso: M F Stato luogo di nascita: Comune Provincia residenza: Comune Provincia via, piazza numero civico C.A.P. in possesso di attestato relativo al corso di formazione per l'attività rilasciato da: in data L’attestato inoltre è riconosciuto dalla Regione (indicare la Regione) in data con il numero identificativo: In possesso di attestato di frequenza di corso abilitante all’attività di tatuatore/percing organizzato dall’ASL di Rilasciato in data: con il numero identificativo: si impegna al rispetto delle norme igienico-sanitarie applicabili all'attività ad alle indicazioni di cui al Decreto D.G. Sanità 27 aprile 2004 n. 6932 nell'esercizio dell'attività",
+   "branches": [
+    {
+     "choice": "titolare",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r22c1p38reg:txt",
+       "r19c1p33reg:txt"
+      ],
+      [
+       "r22c2p40reg:txt",
+       "r19c2p35reg:txt"
+      ],
+      [
+       "r32c1p62reg:calendar_input",
+       "r28c1p54reg:calendar_input"
+      ],
+      [
+       "r36c2p72reg:txt",
+       "r32c2p64reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolare",
+      "adds": 52
+     }
+    },
+    {
+     "choice": "socio",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r22c1p38reg:txt",
+       "r19c1p33reg:txt"
+      ],
+      [
+       "r22c2p40reg:txt",
+       "r19c2p35reg:txt"
+      ],
+      [
+       "r32c1p62reg:calendar_input",
+       "r28c1p54reg:calendar_input"
+      ],
+      [
+       "r36c2p72reg:txt",
+       "r32c2p64reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolare",
+      "adds": 52
+     }
+    },
+    {
+     "choice": "familiare coadiuvante/ collaboratore/ dipendende dell'impresa",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r22c1p38reg:txt",
+       "r19c1p33reg:txt"
+      ],
+      [
+       "r22c2p40reg:txt",
+       "r19c2p35reg:txt"
+      ],
+      [
+       "r32c1p62reg:calendar_input",
+       "r28c1p54reg:calendar_input"
+      ],
+      [
+       "r36c2p72reg:txt",
+       "r32c2p64reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolare",
+      "adds": 52
+     }
+    },
+    {
+     "choice": "M",
+     "id": "r15c2p26reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p38reg:txt",
+       "r19c1p33reg:txt"
+      ],
+      [
+       "r22c2p40reg:txt",
+       "r19c2p35reg:txt"
+      ],
+      [
+       "r32c1p62reg:calendar_input",
+       "r28c1p54reg:calendar_input"
+      ],
+      [
+       "r36c2p72reg:txt",
+       "r32c2p64reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolare",
+      "adds": 52
+     }
+    },
+    {
+     "choice": "F",
+     "id": "r15c3p27reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p38reg:txt",
+       "r19c1p33reg:txt"
+      ],
+      [
+       "r22c2p40reg:txt",
+       "r19c2p35reg:txt"
+      ],
+      [
+       "r32c1p62reg:calendar_input",
+       "r28c1p54reg:calendar_input"
+      ],
+      [
+       "r36c2p72reg:txt",
+       "r32c2p64reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolare",
+      "adds": 52
+     }
+    }
+   ],
+   "seconds": 8.6,
+   "scelta": "nella conduzione dell'attività partecipano soci qualificati / familiari coadiuvanti/ collaboratori/ dipendenti dell'impresa"
+  },
+  {
+   "section": "dichiarazione di qualifica professionale del responsabile tecnico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Sig./sig.a",
+     "max": 30
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "che nei confronti dell'impresa ha il seguente rapporto di lavoro",
+     "max": 30
+    },
+    {
+     "id": "r7c1p12reg:radio:0_clone",
+     "kind": "radio",
+     "label": "È iscritto al REA",
+     "group": "r7c1p12reg:radio"
+    },
+    {
+     "id": "r7c2p14reg:txt",
+     "kind": "text",
+     "label": "numero REA",
+     "context": "È iscritto al REA",
+     "max": 9
+    },
+    {
+     "id": "r7c3p16reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r9c1p20reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Ha presentato domanda di iscrizione al REA",
+     "group": "r9c1p20reg:radio"
+    },
+    {
+     "id": "r9c2p22reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    }
+   ],
+   "fingerprint": "bc43aa82371c3a70",
+   "text": "dichiarazione di qualifica professionale del responsabile tecnico Sig./sig.a che nei confronti dell'impresa ha il seguente rapporto di lavoro che il responsabile tecnico: numero REA in data È iscritto al REA in data Ha presentato domanda di iscrizione al REA",
+   "branches": [
+    {
+     "choice": "È iscritto al REA",
+     "id": "r7c1p12reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c2p22reg:calendar_input",
+       "r7c3p16reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "Ha presentato domanda di iscrizione al REA",
+     "id": "r9c1p20reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r9c2p22reg:calendar_input",
+       "r7c3p16reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 2.4,
+   "scelta": "la conduzione dell'attività è effettuata dal \"responsabile tecnico\""
+  }
+ ]
+}

@@ -1,0 +1,1500 @@
+{
+ "crawled": "2026-10-28T19:31:18.350Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › C) Autorizzazione alle emissioni in atmosfera per gli stabilimenti di cui all'articolo 269 del Codice dell'ambiente (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 105.9,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "Regione Campania"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "C.1.1. Ciclo produttivo",
+   "C.1.2. PRODUZIONI,MATERIE PRIME",
+   "SOSTANZE/MISCELE/MATERIE PRIME E AUSILIARIE UTILIZZATE (tabella 3)",
+   "C.1.3.A  Impianti di combustione industriali",
+   "C.1.3.B  Impianti di combustione civili (1)",
+   "C.2.1. Emissioni convogliate",
+   "C.2.2 Caratteristiche sistemi di abbattimento",
+   "C.2.3 Emissioni diffuse (non soggette ad art. 275)",
+   "C.2.4 Emissioni di COV (per attività soggette ad art.275)",
+   "C.3 Piano di gestione dei solventi",
+   "C.4 INFORMAZIONI GESTIONALI",
+   "C.5.  PROGETTO DI ADEGUAMENTO",
+   "C.6. SPECIFICHE REGIONALI",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 0.9
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 0.8
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 0.9
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 0.7
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 2
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 1.4
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 1.2
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 1.3
+  },
+  {
+   "section": "C.1.1. Ciclo produttivo",
+   "fields": [
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "PER PRESA VISIONE"
+    }
+   ],
+   "fingerprint": "d19d0c8290fa6ed4",
+   "text": "C.1.1. Ciclo produttivo Descrizione del ciclo lavorativo svolto nello stabilimento in cui sono collocati gli impianti/attività oggetto della domanda di autorizzazione. In particolare il Gestore dovrà: a) Per ogni ciclo produttivo/lavorazione, descrivere, in modo dettagliato, tutte le fasi e le operazioni che lo caratterizzano; b) Per ogni singola fase lavorativa/operazione, dovrà essere fornita: - descrizione della fase e individuazione degli impianti che la compongono; - descrizione di ciascun impianto della fase (dimensionamento, potenzialità e condizioni d'esercizio, sistemi di regolazione e controllo nonché il valore dei parametri che ne caratterizzino, eventualmente, il minimo tecnico); - durata e modalità di svolgimento della fase, specificando ore/giorno, giorni/settimane, settimane/anno, e se continuo o discontinuo; - durata e descrizione di eventuali condizioni di funzionamento anomalo (avvio, arresto, guasto degli impianti, transitorio); - tempi necessari per il raggiungimento del regime di funzionamento e per l'interruzione dell'esercizio di ciascun impianto per ciascuna fase. c) Definire lo schema di flusso del ciclo lavorativo svolto nello stabilimento, suddiviso in fasi, con individuazione per ogni singola fase degli input (materie prime, combustibili ecc.) ed output (intermedi, prodotti, ecc). PER PRESA VISIONE",
+   "branches": [],
+   "seconds": 1
+  },
+  {
+   "section": "C.1.2. PRODUZIONI,MATERIE PRIME",
+   "fields": [
+    {
+     "id": "r5c1p10reg:txt",
+     "kind": "text",
+     "label": "Lavorazione/i",
+     "max": 100
+    },
+    {
+     "id": "r5c2p12reg:txt",
+     "kind": "text",
+     "label": "prodotti finiti [tipologia]",
+     "max": 100
+    },
+    {
+     "id": "r5c3p14reg:txt",
+     "kind": "text",
+     "label": "Quantità",
+     "max": 100
+    },
+    {
+     "id": "r5c4p16reg:txt",
+     "kind": "text",
+     "label": "u.m",
+     "max": 100
+    },
+    {
+     "id": "r10c1p26reg:txt",
+     "kind": "text",
+     "label": "Lavorazione/i",
+     "max": 100
+    },
+    {
+     "id": "r10c2p28reg:txt",
+     "kind": "text",
+     "label": "Materie prime, intermedie [tipologia]",
+     "max": 9999
+    },
+    {
+     "id": "r10c3p30reg:txt",
+     "kind": "text",
+     "label": "Quantità annua",
+     "max": 100
+    },
+    {
+     "id": "r10c4p32reg:txt",
+     "kind": "text",
+     "label": "u.m.",
+     "max": 100
+    },
+    {
+     "id": "r10c5p34reg:txt",
+     "kind": "text",
+     "label": "Modalità di stoccaggio/deposito",
+     "max": 100
+    }
+   ],
+   "fingerprint": "21c6c2844f00c60b",
+   "text": "C.1.2. PRODUZIONI,MATERIE PRIME Elencare, per ogni lavorazione/attività: a) la tipologia di prodotti e la capacità produttiva (eventualmente suddivisa per fasi) (1) Lavorazione/i prodotti finiti [tipologia] Quantità u.m b) tutte le materie prime (intermedi, ausiliari, materie prime seconde, combustibili ecc.), il loro consumo (giornaliero o annuo), le loro caratteristiche (tossicità, fasi di rischio ecc.) e le modalità di stoccaggio (silos, serbatoio, cumulo ecc. all'aperto, coperto ecc.) (2) Lavorazione/i Materie prime, intermedie [tipologia] Quantità annua u.m. Modalità di stoccaggio/deposito (1) 1.1. Tab. 1 – Sintesi prodotti (2) Tab. 2 – Sintesi materie prime",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "SOSTANZE/MISCELE/MATERIE PRIME E AUSILIARIE UTILIZZATE (tabella 3)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r2c2p3reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:txt",
+     "kind": "text",
+     "label": "n° progr.",
+     "max": 10
+    },
+    {
+     "id": "r4c2p7reg:txt",
+     "kind": "text",
+     "label": "descrizione (1)",
+     "max": 100
+    },
+    {
+     "id": "r4c3p9reg",
+     "kind": "select",
+     "label": "tipologia (2)",
+     "options": [
+      "mp",
+      "ma"
+     ]
+    },
+    {
+     "id": "r4c4p11reg:txt",
+     "kind": "text",
+     "label": "Impianto /fase di utilizzo (3)",
+     "max": 100
+    },
+    {
+     "id": "r6c1p13reg:txt",
+     "kind": "text",
+     "label": "stato fisico",
+     "max": 50
+    },
+    {
+     "id": "r6c2p15reg:txt",
+     "kind": "text",
+     "label": "Indicazioni di pericolo (4)",
+     "max": 100
+    },
+    {
+     "id": "r6c3p17reg:txt",
+     "kind": "text",
+     "label": "composizione (7)",
+     "max": 100
+    },
+    {
+     "id": "r6c4p19reg:txt",
+     "kind": "text",
+     "label": "tenore di COV (5)",
+     "max": 50
+    },
+    {
+     "id": "r8c1p21reg:txt",
+     "kind": "text",
+     "label": "Quantità annue utilizzate (6)",
+     "max": 20
+    },
+    {
+     "id": "r8c2p23reg:txt",
+     "kind": "text",
+     "label": "u.m.",
+     "max": 10
+    }
+   ],
+   "fingerprint": "e77a366ce959c954",
+   "text": "SOSTANZE/MISCELE/MATERIE PRIME E AUSILIARIE UTILIZZATE (tabella 3) La compilazione della tabella riportata nella scheda presuppone che le schede di sicurezza dei singoli prodotti siano tenute presso lo stabilimento e che siano esibite su richiesta si no n° progr. descrizione (1) tipologia (2) Impianto /fase di utilizzo (3) stato fisico Indicazioni di pericolo (4) composizione (7) tenore di COV (5) Quantità annue utilizzate (6) u.m. (1) Indicare la tipologia del prodotto, accorpando, ove possibile, prodotti con caratteristiche funzionali analoghe, in merito a stato fisico, modalità d'uso, etichettatura e frasi R (ad esempio indicare “fondi”, “basi colore”, “trasparenti ad alto solido”, “inchiostri UV”, “diluenti”, “catalizzatori”, “vernici poliuretaniche”, etc. ). Evitare, ove possibile, di inserire i nomi commerciali. (2) mp = materia prima; ma = materia ausiliaria (3) Indicare il riferimento relativo utilizzato nello schema di flusso di cui alla lett. c) della sezione 1.1. (4) Indicare in questa colonna l'indicazione di pericolo della sostanza/prodotto/miscela (es. H301 - Tossico se ingerito) (5) Compilare il campo solo per i prodotti contenenti COV, indicando il dato ottenuto mediante analisi interna ovvero dedotto dalle indicazioni riportate nelle schede tecniche e/o nelle schede di sicurezza (punto 3 o 9 o 15 della scheda di sicurezza) (6) Inserire un dato previsionale di esercizio, se trattasi di nuovo stabilimento, o un dato relativo ad un anno di esercizio significativo, se trattasi di stabilimento esistente (7) Riportare i dati indicati al punto 3 delle schede di sicurezza, qualora specificati.",
+   "branches": [
+    {
+     "choice": "si",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "n° progr.",
+      "adds": 20
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "n° progr.",
+      "adds": 20
+     }
+    },
+    {
+     "choice": "tipologia (2) = mp",
+     "id": "r4c3p9reg",
+     "kind": "select",
+     "option": "mp",
+     "plus": {
+      "anchor": "n° progr.",
+      "adds": 20
+     }
+    },
+    {
+     "choice": "tipologia (2) = ma",
+     "id": "r4c3p9reg",
+     "kind": "select",
+     "option": "ma",
+     "plus": {
+      "anchor": "n° progr.",
+      "adds": 20
+     }
+    }
+   ],
+   "seconds": 10.6
+  },
+  {
+   "section": "C.1.3.A  Impianti di combustione industriali",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:txt",
+     "kind": "text",
+     "label": "Sigla impianto (es. II01, II02 ecc...)",
+     "max": 10
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "Tipologia (1)",
+     "max": 100
+    },
+    {
+     "id": "r7c2p11reg:real",
+     "kind": "text",
+     "label": "Potenza singolo focolare (MWt)",
+     "max": 8
+    },
+    {
+     "id": "r7c3p13reg",
+     "kind": "select",
+     "label": "Combustibile",
+     "options": [
+      "Gas naturale",
+      "Antracite, prodotti antracitosi e loro miscele con zolfo < 1% m/m",
+      "Miscele di acqua-carbone anche addittivate contenenti zolfo < 1% m/m",
+      "Biodiesel",
+      "Gas d'altoforno, di cockeria e di acciaieria",
+      "Carbone di legna",
+      "GPL",
+      "Legna da ardere",
+      "Materiale vegetale prodotto da coltivazioni dedicate",
+      "Materiale vegetale prodotto da coltivazioni non dedicate",
+      "Materiale vegetale prodotto da potatura",
+      "Materiale vegetale prodotto da cortecce, segatura, trucioli etc",
+      "Materiale vegetale prodotto da prodotti agricoli.",
+      "Materiale vegetale prodotto da sansa di oliva disoleata etc",
+      "Materiale vegetale prodotto da vinacce e pollina",
+      "Oli vegetali",
+      "Biogas da fermentazione",
+      "Gas di raffineria e petrolchimici",
+      "Syngas",
+      "Gasolio",
+      "Emulsioni di acqua-gasolio .. con Zolfo < 0.1% m/m",
+      "Olio combustibile .. con zolfo < 1 % m/m",
+      "Emulsioni di acqua-olio .. con zolfo < 1% m/m",
+      "Carbone da vapore con zolfo < 1 % m/m",
+      "Coke metallurgico e da gas con zolfo < 1% m/m"
+     ]
+    },
+    {
+     "id": "r7c4p15reg:txt",
+     "kind": "text",
+     "label": "Consumo combustibile (mc/h, kg/h)",
+     "max": 50
+    },
+    {
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "label": "SM (2) o SC installato",
+     "options": [
+      "NESSUNO",
+      "SAE",
+      "SC",
+      "SME"
+     ]
+    },
+    {
+     "id": "r9c2p19reg:txt",
+     "kind": "text",
+     "label": "Sistemi di abbattimento",
+     "max": 100
+    },
+    {
+     "id": "r9c3p21reg:txt",
+     "kind": "text",
+     "label": "Sigla emissione (es. E01, E02 ecc...)",
+     "max": 5
+    }
+   ],
+   "fingerprint": "4b12a772c47bbf25",
+   "text": "C.1.3.A Impianti di combustione industriali Esistono impianti industriali? NO SI Sigla impianto (es. II01, II02 ecc...) Tipologia (1) Potenza singolo focolare (MWt) Combustibile Consumo combustibile (mc/h, kg/h) SM (2) o SC installato Sistemi di abbattimento Sigla emissione (es. E01, E02 ecc...) (1) Tipologia dell'impianto (es. caldaia a condensazione, caldaia ad olio diatermico, motore endotermico…) (2) SM: Sistema di Monitoraggio o Sistema di Controllo presenti.",
+   "branches": [
+    {
+     "choice": "NO",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Sigla impianto (es. II01, II02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SI",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Sigla impianto (es. II01, II02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (2) o SC installato = NESSUNO",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "NESSUNO",
+     "plus": {
+      "anchor": "Sigla impianto (es. II01, II02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (2) o SC installato = SAE",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "SAE",
+     "plus": {
+      "anchor": "Sigla impianto (es. II01, II02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (2) o SC installato = SC",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "SC",
+     "plus": {
+      "anchor": "Sigla impianto (es. II01, II02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (2) o SC installato = SME",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "SME",
+     "plus": {
+      "anchor": "Sigla impianto (es. II01, II02 ecc...)",
+      "adds": 16
+     }
+    }
+   ],
+   "seconds": 15.8
+  },
+  {
+   "section": "C.1.3.B  Impianti di combustione civili (1)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "label": "Sigla impianto (es. IC01, IC02 ecc...)",
+     "options": "51 options"
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "Tipologia (2)",
+     "max": 100
+    },
+    {
+     "id": "r7c2p11reg:real",
+     "kind": "text",
+     "label": "Potenza singolo focolare (MWt)",
+     "max": 8
+    },
+    {
+     "id": "r7c3p13reg",
+     "kind": "select",
+     "label": "Combustibile",
+     "options": [
+      "Biodiesel",
+      "GPL",
+      "Legna da ardere",
+      "Materiale vegetale prodotto da coltivazioni dedicate",
+      "Materiale vegetale prodotto da coltivazioni non dedicate",
+      "Materiale vegetale prodotto da potatura",
+      "Materiale vegetale prodotto da cortecce, segatura, trucioli etc",
+      "Materiale vegetale prodotto da prodotti agricoli.",
+      "Materiale vegetale prodotto da sansa di oliva disoleata etc",
+      "Materiale vegetale prodotto da vinacce e pollina",
+      "Gasolio",
+      "Emulsioni di acqua-gasolio .. con Zolfo < 0.1% m/m",
+      "Gas naturale"
+     ]
+    },
+    {
+     "id": "r7c4p15reg:real",
+     "kind": "text",
+     "label": "Consumo combustibile (mc/h, kg/h)",
+     "max": 55
+    },
+    {
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "label": "SM (3) o SC installato",
+     "options": [
+      "SAE",
+      "SC",
+      "SME"
+     ]
+    },
+    {
+     "id": "r9c2p19reg",
+     "kind": "select",
+     "label": "Sigla emissione (es. E01, E02 ecc...)",
+     "options": "51 options"
+    },
+    {
+     "id": "r9c3p21reg:txt",
+     "kind": "text",
+     "label": "Sistemi di abbattimento",
+     "max": 100
+    }
+   ],
+   "fingerprint": "e09214d3e8b62955",
+   "text": "C.1.3.B Impianti di combustione civili (1) Esistono impianti civili? NO SI Sigla impianto (es. IC01, IC02 ecc...) Tipologia (2) Potenza singolo focolare (MWt) Combustibile Consumo combustibile (mc/h, kg/h) SM (3) o SC installato Sigla emissione (es. E01, E02 ecc...) Sistemi di abbattimento (1) Gli impianti termici civili di stabilimento (ovvero quelli la cui produzione di calore è esclusivamente destinata al riscaldamento, alla climatizzazione invernale o estiva di ambienti o al riscaldamento di acqua per usi igienici e sanitari) sono assoggettati alle disposizioni del Titolo II del Codice dell'ambiente però nel caso in cui la potenza termica nominale dell'impianto termico civile, calcolata come somma delle potenze termiche nominali dei singoli focolari costituenti l'impianto (unico sistema di distribuzione e utilizzazione del calore prodotto) risulti uguale o superiore a 3 MW, indipendentemente dal combustibile impiegato, tale impianto viene in ogni caso assoggettato all'autorizzazione prevista dall'art. 269 del Codice dell'ambiente e deve essere descritto in questa sezione. (2) Tipologia dell'impianto (es. caldaia a condensazione, caldaia ad olio diatermico, motore endotermico…) (3) SM: Sistema di Monitoraggio o Sistema di Controllo presenti.",
+   "branches": [
+    {
+     "choice": "NO",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Sigla impianto (es. IC01, IC02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SI",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Sigla impianto (es. IC01, IC02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (3) o SC installato = SAE",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "SAE",
+     "plus": {
+      "anchor": "Sigla impianto (es. IC01, IC02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (3) o SC installato = SC",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "SC",
+     "plus": {
+      "anchor": "Sigla impianto (es. IC01, IC02 ecc...)",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SM (3) o SC installato = SME",
+     "id": "r9c1p17reg",
+     "kind": "select",
+     "option": "SME",
+     "plus": {
+      "anchor": "Sigla impianto (es. IC01, IC02 ecc...)",
+      "adds": 16
+     }
+    }
+   ],
+   "seconds": 13.4
+  },
+  {
+   "section": "C.2.1. Emissioni convogliate",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Punto di emissione è",
+     "max": 50
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "1 - Provenienza (ad es. verniciatura, saldatura, ecc.)",
+     "max": 100
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "2 - Impianti/macchine interessate",
+     "max": 50
+    },
+    {
+     "id": "r9c1p11reg:number",
+     "kind": "text",
+     "label": "3 - Portata dell'aeriforme (Nm3/h)",
+     "max": 20
+    },
+    {
+     "id": "r11c1p15reg:number",
+     "kind": "text",
+     "label": "4 - Durata della emissione (h/g)",
+     "max": 20
+    },
+    {
+     "id": "r13c1p19reg:txt",
+     "kind": "text",
+     "label": "5 - Frequenza della emissione nelle 24 h",
+     "max": 50
+    },
+    {
+     "id": "r14c1p20reg:radio:0_clone",
+     "kind": "radio",
+     "label": "6 - Costante",
+     "group": "r14c1p20reg:radio"
+    },
+    {
+     "id": "r14c2p21reg:radio:1_clone",
+     "kind": "radio",
+     "label": "discontinua",
+     "group": "r14c2p21reg:radio"
+    },
+    {
+     "id": "r16c1p23reg:number",
+     "kind": "text",
+     "label": "7 - Temperatura (C°)",
+     "max": 10
+    },
+    {
+     "id": "r18c1p27reg:txt",
+     "kind": "text",
+     "label": "8 - Inquinanti presenti",
+     "max": 100
+    },
+    {
+     "id": "r20c1p29reg:txt",
+     "kind": "text",
+     "label": "9 - Concentrazione degli inquinanti in emissione (mg/Nm3) (in caso di nuovi impianti fornire stima previsionale)",
+     "max": 100
+    },
+    {
+     "id": "r22c1p31reg:real",
+     "kind": "text",
+     "label": "10 - Flusso di massa degli inquinanti in emissione (kg/h)",
+     "max": 25
+    },
+    {
+     "id": "r24c1p35reg:real",
+     "kind": "text",
+     "label": "11 - Altezza geometrica dell'emissione (m)",
+     "max": 53
+    },
+    {
+     "id": "r26c1p37reg:txt",
+     "kind": "text",
+     "label": "12 - Dimensioni del camino - Circolare – diametro (mm) Rettangolare – lato (mm) X lato (mm) - altezza del camino dal colmo dei tetti",
+     "max": 200
+    },
+    {
+     "id": "r28c1p39reg:txt",
+     "kind": "text",
+     "label": "13 - Materiale di costruzione del camino",
+     "max": 100
+    },
+    {
+     "id": "r30c1p41reg:txt",
+     "kind": "text",
+     "label": "14 - Tipo di impianto di abbattimento",
+     "max": 200
+    },
+    {
+     "id": "r32c1p43reg:txt",
+     "kind": "text",
+     "label": "15 - Coordinate del punto di emissione (1)",
+     "max": 100
+    },
+    {
+     "id": "r34c1p47reg:txta",
+     "kind": "textarea",
+     "label": "500 Caratteri restanti",
+     "context": "16 - Note (2)",
+     "max": 500
+    },
+    {
+     "id": "r37c1p52reg:txt",
+     "kind": "text",
+     "label": "Impianto/macchina di provenienza (riga da compilare per ciascun punto di emissione)",
+     "max": 100
+    },
+    {
+     "id": "r37c2p54reg:txt",
+     "kind": "text",
+     "label": "sigla (3)",
+     "max": 20
+    },
+    {
+     "id": "r37c3p56reg:number",
+     "kind": "text",
+     "label": "Portata (Nm3/h)",
+     "max": 20
+    }
+   ],
+   "fingerprint": "f9313b544b9eae42",
+   "text": "C.2.1. Emissioni convogliate Per ogni emissione dovrà essere compilata una scheda secondo il seguente schema Punto di emissione è 1 - Provenienza (ad es. verniciatura, saldatura, ecc.) 2 - Impianti/macchine interessate 3 - Portata dell'aeriforme (Nm3/h) 4 - Durata della emissione (h/g) 5 - Frequenza della emissione nelle 24 h 6 - Costante discontinua 7 - Temperatura (C°) 8 - Inquinanti presenti 9 - Concentrazione degli inquinanti in emissione (mg/Nm3) (in caso di nuovi impianti fornire stima previsionale) 10 - Flusso di massa degli inquinanti in emissione (kg/h) 11 - Altezza geometrica dell'emissione (m) 12 - Dimensioni del camino - Circolare – diametro (mm) Rettangolare – lato (mm) X lato (mm) - altezza del camino dal colmo dei tetti 13 - Materiale di costruzione del camino 14 - Tipo di impianto di abbattimento 15 - Coordinate del punto di emissione (1) 16 - Note (2) 500 Caratteri restanti Il riepilogo delle emissioni può essere effettuato sulla seguente scheda Impianto/macchina di provenienza (riga da compilare per ciascun punto di emissione) sigla (3) Portata (Nm3/h) (1) Angolo del flusso ° - Indicare in gradi sessagesimali l'angolo che il flusso emissivo genera rispetto al suolo; Georeferenziazione En - Georeferenziare in coordinate UTM dei punti di emissione (2) Per gli impianti di combustione indicare anche il tenore di ossigeno ed il tenore del vapore acqueo (3) Codifica/denominazione attribuita dal gestore al punto di emissione/camino.",
+   "branches": [
+    {
+     "choice": "6 - Costante",
+     "id": "r14c1p20reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Punto di emissione è",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "discontinua",
+     "id": "r14c2p21reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Punto di emissione è",
+      "adds": 42
+     }
+    }
+   ],
+   "seconds": 4.1
+  },
+  {
+   "section": "C.2.2 Caratteristiche sistemi di abbattimento",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Per ogni sistema di abbattimento presente alle emissioni, dovrà essere fornita adeguata descrizione riportante, almeno, le seguenti informazioni:",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r9c1p14reg:txta",
+     "kind": "textarea",
+     "label": "2000 Caratteri restanti",
+     "context": "specificare per ogni sistema di abbattimento presente alle emissioni:",
+     "max": 2000
+    },
+    {
+     "id": "r10c1p15reg:radio:1_clone",
+     "kind": "radio",
+     "label": "In alternativa, allegare scheda dell'impianto di abbattimento con le informazioni sopra riportate, facendo riferimento, eventualmente, a quanto previsto dalla n",
+     "group": "r10c1p15reg:radio"
+    }
+   ],
+   "fingerprint": "ad212375b99405cf",
+   "text": "C.2.2 Caratteristiche sistemi di abbattimento Per ogni sistema di abbattimento presente alle emissioni, dovrà essere fornita adeguata descrizione riportante, almeno, le seguenti informazioni: - caratteristiche della corrente da trattare (portata, temperatura, umidità, concentrazione inquinanti) - tipologia (1) del sistema di abbattimento (es. filtro, scrubber, post-combustore…) - parametri di dimensionamento (es. superficie filtrante, velocità attraversamento, tempo contatto, ecc); - prestazioni del sistema di abbattimento (es. % abbattimento(2), livelli inquinanti in uscita); - sistemi di regolazione e controllo installati (es. pressostato, tribolettrico, pHmetro, ecc.) - modalità, tempi e frequenza della manutenzione del sistema di abbattimento specificare per ogni sistema di abbattimento presente alle emissioni: 2000 Caratteri restanti In alternativa, allegare scheda dell'impianto di abbattimento con le informazioni sopra riportate, facendo riferimento, eventualmente, a quanto previsto dalla normativa regionale pertinente allegare il documento Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB (1) Esempi tipologie: ciclone; filtro a tessuto; precipitatore elettrostatico; abbattitore ad umido; abbattitore ad umido venturi; assorbitore; adsorbitore; post-combustore termico; post-combustore catalitico; (2) L'abbattimento non deve essere inferiore al 90%, anche utilizzando sistemi diversi da quelli di cui alla D.G.R. 243/2015.",
+   "branches": [
+    {
+     "choice": "Per ogni sistema di abbattimento presente alle emissioni, dovrà essere fornita adeguata descrizione riportante, almeno, le seguenti informazioni:",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r10c1p15reg:radio:1_clone",
+       "r11c1p17reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "2000 Caratteri restanti",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "In alternativa, allegare scheda dell'impianto di abbattimento con le informazioni sopra riportate, facendo riferimento, eventualmente, a quanto previsto dalla n",
+     "id": "r10c1p15reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p18reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allegare il documento",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 2
+     }
+    }
+   ],
+   "seconds": 4.9
+  },
+  {
+   "section": "C.2.3 Emissioni diffuse (non soggette ad art. 275)",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Sì",
+     "group": "r3c1p5reg:radio"
+    }
+   ],
+   "fingerprint": "2bb23335e7a0a2fd",
+   "text": "C.2.3 Emissioni diffuse (non soggette ad art. 275) Esistono emissioni diffuse? No Sì Si intendono con questo termine gli effluenti come definiti dall'art. 268.1d del Codice dell'ambiente e s.m.i.. Il Gestore dovrà provvedere alla: a. Individuazione delle fasi del ciclo produttivo dalle quali possono originarsi le emissioni diffuse, fornendo le adeguate informazioni atte a dimostrarne la non convogliabilità, ovvero alla presentazione di un progetto riportante le modalità e le tempistiche del convogliamento qualora l'emissione si rivelasse tecnicamente convogliabile; b.Descrizione, per ogni fase, dei sistemi installati o degli accorgimenti adottati per limitare le emissioni diffuse, effettuan do, se pertinente, un confronto con quanto riportato nell'Allegato V, Parte V del del Codice dell'ambiente c. Laddove espressamente previsto da norme regionali o di carattere sanitario, stima o calcolo delle emissioni diffuse derivanti dallo stabilimento, espresso come flusso di massa di ciascun inquinante presente, descrivendo il procedimento di stima/calcolo utilizzato per ottenere i quantitativi. Se la stima è effettuata a partire da misure effettuate in ambiente di lavoro, è necessario allegare i relativi certificati analitici ed una planimetria nella quale siano indicati i punti di campionamento.",
+   "branches": [
+    {
+     "choice": "No",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Sì",
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c1p11reg:chk",
+       "kind": "checkbox",
+       "label": "PER PRESA VISIONE"
+      }
+     ]
+    }
+   ],
+   "seconds": 3.5
+  },
+  {
+   "section": "C.2.4 Emissioni di COV (per attività soggette ad art.275)",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r6c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Massa di solventi",
+     "group": "r6c1p7reg:radio"
+    },
+    {
+     "id": "r6c2p8reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Massa equivalente di carbonio",
+     "group": "r6c2p8reg:radio"
+    },
+    {
+     "id": "r8c1p10reg",
+     "kind": "select",
+     "label": "Attività",
+     "options": [
+      "1 - Stampa offset (>15)",
+      "2 - Rotocalcografia per pubblicazioni (>25)",
+      "3.1 - Altri tipi di rotocalcografia (>15)",
+      "3.2 - Offset dal rotolo su tessili/cartone (>30)",
+      "4- Pulizia di superficie (>2)",
+      "5- Altri tipi di pulizie di superifice (>2)",
+      "6.1 - Rivestimento di autoveicoli (>0,5)",
+      "6.2 - Rivestimento di autoveicoli (>15)",
+      "6.3 - Finitura di autoveicoli (>0,5)",
+      "7 - Verniciatura in continuo (coil coating) (>25)",
+      "8 - Altri tipi rivestimento (metalli) (>5)",
+      "9 - Rivestimento di filo per avvolgimento (>5)",
+      "10 - Rivestimento delle superfici di legno (>15)",
+      "11 - Pulitura a secco",
+      "12 - Impregnazione del legno (>25)",
+      "13.1 - Rivestimento di cuoio (ad esclusione del 13.2) (>10)",
+      "13.2 - Rivestimento di cuoio (arred.,pelletteria) (>10)",
+      "14 - Fabbricazione di calzature (>5)",
+      "15 - Stratificazione di legno e plastica (>5)",
+      "16 - Rivestimenti adesivi (>5)",
+      "17 - Fabbricazione di preparati per vernici (>100)",
+      "18 - Conversione della gomma (>15)",
+      "19 - Estrazione di olio vegetale e grasso animale (>10)",
+      "20 - Fabbricazione di prodotti farmaceutici (>50)"
+     ]
+    },
+    {
+     "id": "r8c2p12reg:real",
+     "kind": "text",
+     "label": "Soglia di consumo solvente",
+     "max": 18
+    },
+    {
+     "id": "r8c3p14reg:real",
+     "kind": "text",
+     "label": "Consumo max teorico di solventi (t/anno) (1)",
+     "max": 18
+    },
+    {
+     "id": "r10c1p16reg:real",
+     "kind": "text",
+     "label": "Consumo di solventi (t/anno) (2)",
+     "max": 18
+    },
+    {
+     "id": "r10c2p18reg:real",
+     "kind": "text",
+     "label": "Capacità nominale (kg/gg) (3)",
+     "max": 18
+    },
+    {
+     "id": "r10c3p20reg:number",
+     "kind": "text",
+     "label": "Ore di attività/anno",
+     "max": 4
+    },
+    {
+     "id": "r13c1p26reg:txt",
+     "kind": "text",
+     "label": "Materia prima / solvente (4)",
+     "max": 100
+    },
+    {
+     "id": "r13c2p28reg:number",
+     "kind": "text",
+     "label": "COV (%)",
+     "max": 3
+    },
+    {
+     "id": "r15c1p32reg:number",
+     "kind": "text",
+     "label": "Residuo secco (%)",
+     "max": 3
+    },
+    {
+     "id": "r15c2p34reg:real",
+     "kind": "text",
+     "label": "Consumo annuo",
+     "max": 18
+    },
+    {
+     "id": "r15c3p36reg",
+     "kind": "select",
+     "label": "Unità di misura",
+     "options": [
+      "T_C",
+      "T_COV"
+     ]
+    },
+    {
+     "id": "r17c1p40reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r17c1p40reg:radio"
+    },
+    {
+     "id": "r17c2p41reg:radio:5_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r17c2p41reg:radio"
+    },
+    {
+     "id": "r19c1p44reg:real",
+     "kind": "text",
+     "label": "Fattore di conversione (5)",
+     "max": 10
+    }
+   ],
+   "fingerprint": "ba0d0f17f354b02b",
+   "text": "C.2.4 Emissioni di COV (per attività soggette ad art.275) L'azienda rientra nell'ambito di applicazione dell'art. 275 del Codice dell'ambiente? NO SI ATTENZIONE. Compilare la sezione sottostante per ogni attività esercitata che supera singolarmente la soglia di consumo dell'Allegato III alla Parte V Le tabelle dovranno essere redatte utilizzando grandezze di riferimento coerenti per tutte le voci ivi previste. Dovrà pertanto essere specificato se le voci siano tutte quantificate in: Massa di solventi Massa equivalente di carbonio Attività Soglia di consumo solvente Consumo max teorico di solventi (t/anno) (1) Consumo di solventi (t/anno) (2) Capacità nominale (kg/gg) (3) Ore di attività/anno Materia prima / solvente (4) COV (%) Residuo secco (%) Consumo annuo Unità di misura E' stata fatta una conversione da C a COV ? SI NO Fattore di conversione (5) (1) Esempi tipologie: ciclone; filtro a tessuto; precipitatore elettrostatico; abbattitore ad umido; abbattitore ad umido venturi; assorbitore; adsorbitore; post-combustore termico; post-combustore catalitico (2) Consumo di solventi [t/anno]: ex art. 268 comma 1 lettera oo: il quantitativo totale di solventi organici utilizzato in uno stabilimento per le attività di cui all'articolo 275 per anno civile ovvero per qualsiasi altro periodo di dodici mesi, detratto qualsiasi COV recuperato per riutilizzo; (3) Capacità nominale [kg/gg]: ex art. 268 comma 1 lettera nn: la massa giornaliera massima di solventi organici utilizzati per le attività di cui all'articolo 275, svolte in condizioni di normale funzionamento ed in funzione della potenzialità di prodotto per cui le attività sono progettate. (4) allegare le scheda di sicurezza delle sostanza/preparati; (5) ) In alternativa al fattore di conversione da COV a C, dovranno essere fornite le seguenti informazioni: a) PM del COV; b) peso degli atomi di C nel COV o comunque esplicitare i calcoli effettuati;",
+   "branches": [
+    {
+     "choice": "NO",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SI",
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "NO",
+      "adds": 18
+     }
+    },
+    {
+     "choice": "Massa di solventi",
+     "id": "r6c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "Massa equivalente di carbonio",
+     "id": "r6c2p8reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "Unità di misura = T_C",
+     "id": "r15c3p36reg",
+     "kind": "select",
+     "option": "T_C",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "Unità di misura = T_COV",
+     "id": "r15c3p36reg",
+     "kind": "select",
+     "option": "T_COV",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "SI",
+     "id": "r17c1p40reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    },
+    {
+     "choice": "NO",
+     "id": "r17c2p41reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:radio:5_clone",
+       "r2c1p3reg:radio:0_clone"
+      ],
+      [
+       "r17c1p40reg:radio:4_clone",
+       "r3c1p4reg:radio:1_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "Massa di solventi",
+      "adds": 16
+     }
+    }
+   ],
+   "seconds": 14.6
+  },
+  {
+   "section": "C.3 Piano di gestione dei solventi",
+   "fields": [
+    {
+     "id": "r4c2p7reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "I1. Quantità di solventi organici o la loro quantità nei preparati acquistati che sono immessi nel processo nell'arco di",
+     "max": 18
+    },
+    {
+     "id": "r6c2p11reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "I2. Quantità di solventi organici o la loro quantità nei preparati recuperati e reimmessi come solvente nel processo.",
+     "max": 18
+    },
+    {
+     "id": "r9c2p17reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O1. Emissioni negli effluenti gassosi.",
+     "max": 18
+    },
+    {
+     "id": "r11c2p21reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O2. Quantità di solventi organici scaricati nell'acqua.",
+     "max": 18
+    },
+    {
+     "id": "r13c2p25reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O3. Quantità di solventi che rimane come contaminante o residuo nei prodotti all'uscita del processo.",
+     "max": 18
+    },
+    {
+     "id": "r15c2p29reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O4. Emissioni diffuse di solventi organici nell'aria. È inclusa la ventilazione generale dei locali nei quali l'aria è s",
+     "max": 18
+    },
+    {
+     "id": "r17c2p33reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O5. Quantità di solventi organici e composti organici persi a causa di reazioni chimiche o fisiche.",
+     "max": 18
+    },
+    {
+     "id": "r19c2p37reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O6. Quantità di solventi organici contenuti nei rifiuti raccolti.",
+     "max": 18
+    },
+    {
+     "id": "r21c2p41reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O7. Quantità di solventi organici da soli o solventi organici contenuti in preparati che sono o saranno venduti come pro",
+     "max": 18
+    },
+    {
+     "id": "r23c2p45reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O8. Quantità di solventi organici contenuti nei preparati recuperati per riuso, ma non per riutilizzo nel processo, se n",
+     "max": 18
+    },
+    {
+     "id": "r25c2p49reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "O9. Quantità di solventi organici scaricati in altro modo.",
+     "max": 18
+    },
+    {
+     "id": "r29c1p54reg:radio:0_clone",
+     "kind": "radio",
+     "label": "F = I1 - O1 - O5 - O6 - O7 - O8",
+     "group": "r29c1p54reg:radio"
+    },
+    {
+     "id": "r29c2p56reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "F = I1 - O1 - O5 - O6 - O7 - O8",
+     "max": 18
+    },
+    {
+     "id": "r31c1p60reg:radio:1_clone",
+     "kind": "radio",
+     "label": "F = O2 + O3 + O4 + O9",
+     "group": "r31c1p60reg:radio"
+    },
+    {
+     "id": "r31c2p62reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "F = O2 + O3 + O4 + O9",
+     "max": 18
+    },
+    {
+     "id": "r34c2p70reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "E = F + O1",
+     "max": 18
+    },
+    {
+     "id": "r37c2p76reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "C = I1 - O8",
+     "max": 18
+    },
+    {
+     "id": "r40c2p82reg:number",
+     "kind": "text",
+     "label": "t COV / anno",
+     "context": "I = I1 + I2",
+     "max": 18
+    },
+    {
+     "id": "r44c2p90reg:txt",
+     "kind": "text",
+     "label": "t s.s./anno",
+     "context": "IMS. Materia Solida Immessa nel processo. (1) (Massima teorica)",
+     "max": 50
+    },
+    {
+     "id": "r47c2p98reg:number",
+     "kind": "text",
+     "label": "t COV /anno",
+     "context": "FECOV/IMS (Fattore di Emissione ) = t EB (Emissione Bersaglio) / t IMS (Materia Solida Immessa) - VALORE LIMITE DI EMISS",
+     "max": 18
+    }
+   ],
+   "fingerprint": "642a2944731fa636",
+   "text": "C.3 Piano di gestione dei solventi Sia in caso di nuova istanza sia in caso di rinnovo o modifica sostanziale, dovrà essere allegato il Piano di Gestione dei Solventi secondo la tabella proposta, riportando la modalità di determinazione dei valori inseriti. INPUT DI SOLVENTI ORGANICI t COV / anno I1. Quantità di solventi organici o la loro quantità nei preparati acquistati che sono immessi nel processo nell'arco di tempo in cui viene calcolato il bilancio di massa. t COV / anno I2. Quantità di solventi organici o la loro quantità nei preparati recuperati e reimmessi come solvente nel processo. OUTPUT DI SOLVENTI ORGANICI t COV / anno O1. Emissioni negli effluenti gassosi. t COV / anno O2. Quantità di solventi organici scaricati nell'acqua. t COV / anno O3. Quantità di solventi che rimane come contaminante o residuo nei prodotti all'uscita del processo. t COV / anno O4. Emissioni diffuse di solventi organici nell'aria. È inclusa la ventilazione generale dei locali nei quali l'aria è scaricata all'esterno attraverso finestre, porte, sfiati e aperture simili. t COV / anno O5. Quantità di solventi organici e composti organici persi a causa di reazioni chimiche o fisiche. t COV / anno O6. Quantità di solventi organici contenuti nei rifiuti raccolti. t COV / anno O7. Quantità di solventi organici da soli o solventi organici contenuti in preparati che sono o saranno venduti come prodotto avente i requisiti richiesti per il relativo commercio. t COV / anno O8. Quantità di solventi organici contenuti nei preparati recuperati per riuso, ma non per riutilizzo nel processo, se non sono stati considerati ai sensi del punto O7. t COV / anno O9. Quantità di solventi organici scaricati in altro modo. EMISSIONE DIFFUSA E' obbligatorio indicare una delle due modalità di calcolo: t COV / anno F = I1 - O1 - O5 - O6 - O7 - O8 t COV / anno F = O2 + O3 + O4 + O9 EMISSIONE TOTALE t COV / anno E = F + O1 CONSUMO SOLVENTE t COV / anno C = I1 - O8 INPUT DI SOLVENTE t COV / anno I = I1 + I2 EMISSIONE TOTALE BERSAGLIO INPUT DI SOSTANZA SOLIDA t s.s./anno IMS. Materia Solida Immessa nel processo. (1) (Massima teorica) EB = IMS (Massima teorica) X Fattore (Tab. Parte IV) X (F Limite + 5 o 15)% t COV /anno FECOV/IMS (Fattore di Emissione ) = t EB (Emissione Bersaglio) / t IMS (Materia Solida Immessa) - VALORE LIMITE DI EMISSIONE",
+   "branches": [
+    {
+     "choice": "F = I1 - O1 - O5 - O6 - O7 - O8",
+     "id": "r29c1p54reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "F = O2 + O3 + O4 + O9",
+     "id": "r31c1p60reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 4.8
+  },
+  {
+   "section": "C.4 INFORMAZIONI GESTIONALI",
+   "fields": [
+    {
+     "id": "r2c1p2reg:calendar_input",
+     "kind": "date",
+     "label": "data prevista per messa in esercizio dell'attività"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "tempo previsto per messa in esercizio dell'attività",
+     "max": 50
+    }
+   ],
+   "fingerprint": "2330d45486e03069",
+   "text": "C.4 INFORMAZIONI GESTIONALI data prevista per messa in esercizio dell'attività tempo previsto per messa in esercizio dell'attività",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "C.5.  PROGETTO DI ADEGUAMENTO",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r2c2p4reg:radio"
+    }
+   ],
+   "fingerprint": "719659a6d6787af8",
+   "text": "C.5. PROGETTO DI ADEGUAMENTO Richiesti rinnovo dell'autorizzazione e relativi adeguamenti? Si No I Gestori degli impianti ai quali è richiesto un rinnovo dell'autorizzazione in loro possesso e necessitano di adeguamenti dovranno presentare congiuntamente alla presente relazione un piano dettagliato comprendente la descrizione tecnica degli interventi e delle azioni da intraprendere al fine di soddisfare i nuovi requisiti autorizzativi Piano dettagliato comprendente la descrizione tecnica degli interventi e delle azioni da intraprendere al fine di soddisfare i nuovi requisiti autorizzativi Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+   "branches": [
+    {
+     "choice": "Si",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r5c1p7reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Piano dettagliato comprendente la descrizione tecnica degli interventi e delle azioni da intraprendere al fine di soddis",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "No",
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 5
+  },
+  {
+   "section": "C.6. SPECIFICHE REGIONALI",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txta",
+     "kind": "textarea",
+     "label": "2000 Caratteri restanti",
+     "context": "descrivere",
+     "max": 2000
+    }
+   ],
+   "fingerprint": "22d791df14b7d5e2",
+   "text": "C.6. SPECIFICHE REGIONALI descrivere 2000 Caratteri restanti",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1
+  }
+ ]
+}

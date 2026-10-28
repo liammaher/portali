@@ -1,0 +1,470 @@
+{
+ "crawled": "2026-10-28T17:58:02.178Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Affidare in gestione reparto (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 82.2,
+ "generated": {
+  "interventi": "Affidamento in gestione di reparto in esercizio commerciale di vicinato alimentare o misto",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per affidamento in gestione di reparto in esercizio di commercio al dettaglio di vicinato",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'esercizio",
+   "dati catastali",
+   "dichiarazione relativa all'inserimento dell'esercizio in un centro commerciale",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione relativa all'affidamento in gestione di reparto",
+   "dichiarazione relativa al settore ed alla superficie di vendita del reparto",
+   "dichiarazione dell'attuale superficie complessiva dell'esercizio",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività esercitata comprende il settore alimentare"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "l'attività esercitata comprende il settore alimentare",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004"
+   ],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.2
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 2
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'esercizio",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazione relativa all'inserimento dell'esercizio in un centro commerciale",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è inserito in un centro commerciale",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non è inserito in un centro commerciale",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:txt",
+     "kind": "text",
+     "label": "denominazione centro commerciale",
+     "max": 30
+    },
+    {
+     "id": "r6c1p9reg:txt",
+     "kind": "text",
+     "label": "numero provvedimento",
+     "max": 30
+    },
+    {
+     "id": "r8c1p13reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r10c1p17reg:txt",
+     "kind": "text",
+     "label": "ente che ha effettuato il rilascio del provvedimento",
+     "max": 30
+    }
+   ],
+   "fingerprint": "80e7e46833e12516",
+   "text": "dichiarazione relativa all'inserimento dell'esercizio in un centro commerciale è inserito in un centro commerciale non è inserito in un centro commerciale se l'esercizio è inserito in un centro commerciale compilare la parte sottostante denominazione centro commerciale numero provvedimento data ente che ha effettuato il rilascio del provvedimento",
+   "branches": [
+    {
+     "choice": "è inserito in un centro commerciale",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "non è inserito in un centro commerciale",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 6
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che per l'attività oggetto della presente SCIA sono stati rispettati i Regolamenti in vigore presso il Comune sede dell'attività"
+    }
+   ],
+   "fingerprint": "b43944807893542c",
+   "text": "dichiarazione del rispetto dei Regolamenti del Comune che per l'attività oggetto della presente SCIA sono stati rispettati i Regolamenti in vigore presso il Comune sede dell'attività",
+   "branches": [
+    {
+     "choice": "che per l'attività oggetto della presente SCIA sono stati rispettati i Regolamenti in vigore presso il Comune sede dell'attività",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.9
+  },
+  {
+   "section": "dichiarazione relativa all'affidamento in gestione di reparto",
+   "fields": [
+    {
+     "id": "r2c1p2reg:calendar_input",
+     "kind": "date",
+     "label": "con decorrenza dal"
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "fino al (eventuale)"
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "il reparto",
+     "max": 170
+    },
+    {
+     "id": "r4c2p10reg:txt",
+     "kind": "text",
+     "label": "a Marchio",
+     "max": 150
+    },
+    {
+     "id": "r6c1p12reg:txt",
+     "kind": "text",
+     "label": "sarà affidato in gestione alla ditta",
+     "max": 150
+    },
+    {
+     "id": "r6c2p14reg:txt",
+     "kind": "text",
+     "label": "codice fiscale / partita IVA",
+     "max": 16
+    },
+    {
+     "id": "r8c1p16reg:txt",
+     "kind": "text",
+     "label": "con sede nel comune di",
+     "max": 50
+    },
+    {
+     "id": "r8c2p18reg:number",
+     "kind": "text",
+     "label": "C.A.P.",
+     "max": 5
+    },
+    {
+     "id": "r10c1p20reg:txt",
+     "kind": "text",
+     "label": "in via o...",
+     "max": 70
+    },
+    {
+     "id": "r10c2p22reg:txt",
+     "kind": "text",
+     "label": "n° civico",
+     "max": 8
+    },
+    {
+     "id": "r11c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "il cui titolare/ditta individuale o il legale rappresentante ed i soci/ amministratori, in caso di società, è/sono in possesso dei requisiti morali previsti per"
+    },
+    {
+     "id": "r12c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "in caso di vendita prodotti alimentari o somministrazione, la persona in possesso dei requisiti professionali compila l'allegato A"
+    }
+   ],
+   "fingerprint": "7b2340c11acca563",
+   "text": "dichiarazione relativa all'affidamento in gestione di reparto con decorrenza dal fino al (eventuale) il reparto a Marchio sarà affidato in gestione alla ditta codice fiscale / partita IVA con sede nel comune di C.A.P. in via o... n° civico il cui titolare/ditta individuale o il legale rappresentante ed i soci/ amministratori, in caso di società, è/sono in possesso dei requisiti morali previsti per l'esercizio dell'attività in caso di vendita prodotti alimentari o somministrazione, la persona in possesso dei requisiti professionali compila l'allegato A",
+   "branches": [
+    {
+     "choice": "il cui titolare/ditta individuale o il legale rappresentante ed i soci/ amministratori, in caso di società, è/sono in possesso dei requisiti morali previsti per",
+     "id": "r11c1p23reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "in caso di vendita prodotti alimentari o somministrazione, la persona in possesso dei requisiti professionali compila l'allegato A",
+     "id": "r12c1p24reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 8.6
+  },
+  {
+   "section": "dichiarazione relativa al settore ed alla superficie di vendita del reparto",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r2c2p4reg:real",
+     "kind": "text",
+     "label": "superficie settore alimentare (mq)",
+     "context": "Alimentare",
+     "max": 13
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    },
+    {
+     "id": "r4c2p8reg:real",
+     "kind": "text",
+     "label": "superficie settore non alimentare (mq)",
+     "context": "Non alimentare",
+     "max": 13
+    },
+    {
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "Tabella speciale generi di monopolio"
+    },
+    {
+     "id": "r6c2p12reg:real",
+     "kind": "text",
+     "label": "superficie di vendita tabelle speciali generi di monopolio (mq)",
+     "context": "Tabella speciale generi di monopolio",
+     "max": 13
+    },
+    {
+     "id": "r8c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "Tabella speciale farmacie"
+    },
+    {
+     "id": "r8c2p16reg:real",
+     "kind": "text",
+     "label": "superficie di vendita tabelle speciali farmacie (mq)",
+     "context": "Tabella speciale farmacie",
+     "max": 13
+    },
+    {
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "Tabella speciale carburanti"
+    },
+    {
+     "id": "r10c2p20reg:real",
+     "kind": "text",
+     "label": "superficie di vendita tabelle speciali carburanti (mq)(*)",
+     "context": "Tabella speciale carburanti",
+     "max": 13
+    }
+   ],
+   "fingerprint": "32ccfae87776142b",
+   "text": "dichiarazione relativa al settore ed alla superficie di vendita del reparto superficie settore alimentare (mq) Alimentare superficie settore non alimentare (mq) Non alimentare superficie di vendita tabelle speciali generi di monopolio (mq) Tabella speciale generi di monopolio superficie di vendita tabelle speciali farmacie (mq) Tabella speciale farmacie superficie di vendita tabelle speciali carburanti (mq)(*) Tabella speciale carburanti Si ricorda che dalla superficie di vendita è esclusa la superficie adibita a magazzini, servizi, uffici, locali di lavorazione.",
+   "branches": [
+    {
+     "choice": "Alimentare",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Tabella speciale generi di monopolio",
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Tabella speciale farmacie",
+     "id": "r8c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Tabella speciale carburanti",
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 18.4
+  },
+  {
+   "section": "dichiarazione dell'attuale superficie complessiva dell'esercizio",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "superficie complessiva dell'esercizio (mq)",
+     "max": 30
+    }
+   ],
+   "fingerprint": "2bfe9f9b206dd45e",
+   "text": "dichiarazione dell'attuale superficie complessiva dell'esercizio superficie complessiva dell'esercizio (mq)",
+   "branches": [],
+   "seconds": 1.5
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "ha presentato notifica sanitaria",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "all'Azienda Sanitaria di",
+     "max": 30
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "la notifica sanitaria viene presentata contestualmente alla presente",
+     "group": "r4c1p8reg:radio"
+    }
+   ],
+   "fingerprint": "94f9e919eed08517",
+   "text": "dichiarazione dell'obbligo di notifica ai fini della registrazione impresa alimentare prevista dall'art.6 del Reg. CE 852/2004 ha presentato notifica sanitaria all'Azienda Sanitaria di in data la notifica sanitaria viene presentata contestualmente alla presente",
+   "branches": [
+    {
+     "choice": "ha presentato notifica sanitaria",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "la notifica sanitaria viene presentata contestualmente alla presente",
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 6.1,
+   "scelta": "l'attività esercitata comprende il settore alimentare"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 2.5,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

@@ -1,0 +1,2045 @@
+{
+ "crawled": "2026-10-28T19:28:27.180Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › B) Comunicazione  preventiva  di  cui  all'articolo   112  del  Codice  dell'ambiente   per  l'utilizzazione agronomica degli effluenti di allevamento, delle acque di vegetazione dei frantoi oleari e delle acque reflue provenienti dalle aziende ivi previste › B1) Comunicazione preventiva per l'utilizzazione agronomica degli effluenti di allevamento tal quali o trattati (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 79.9,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "B1.1 Dichiarazioni e impegni del titolare della comunicazione",
+   "B1.2 Dati identificativi degli allevamenti/impianti di trattamento di cui alla D.G.R. 771/2012",
+   "B1.3.1 Consistenza e produzione di effluenti di allevamento/i - allevamento",
+   "B1.3.2 Consistenza e produzione di effluenti di allevamento/i - trattamenti",
+   "B1.3.3 Consistenza e produzione di effluenti di allevamento/i - altri lquami",
+   "B1.3.4 Consistenza e produzione di effluenti di allevamento/i - trattamento anaerobico",
+   "B1.3.4-bis Consistenza e produzione di effluenti di allevamento/i - EFFLUENTE",
+   "B1.3.5 Consistenza e produzione di effluenti di allevamento/i - Volumi ceduti",
+   "B1.4 Stoccaggi",
+   "B1.5 dati riassuntivi - liquame",
+   "B1.5  dati riassuntivi - palabili",
+   "B1.5  dati riassuntivi - digestato",
+   "B1.6.1 Terreni",
+   "B1.6.2 Dati identificativi degli appezzamenti omogenei",
+   "B1.6.3 modalità di distribuzione utilizzate",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'azienda cede effluenti a detentori"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "B1.7 - gli effluenti verranno ceduti per l'utilizzazione agronomica"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "l'azienda ha particolari modalità di gestione e trattamento degli effluenti per le quali non possono essere determinate le caratteristiche degli effluenti prodotti con i parametri previsti dalle tabelle della norma vigente"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "l'azienda cede effluenti a detentori",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "B1.7 - gli effluenti verranno ceduti per l'utilizzazione agronomica",
+   "type": "CHK",
+   "adds": [
+    "B1.7 Comunicazione del detentore che acquisisce gli effluenti ceduti per l'utilizzazione agronomica"
+   ],
+   "drops": []
+  },
+  {
+   "option": "l'azienda ha particolari modalità di gestione e trattamento degli effluenti per le quali non possono essere determinate le caratteristiche degli effluenti prodotti con i parametri previsti dalle tabelle della norma vigente",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 0.6
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 0.9
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 0.8
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 0.7
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 0.7
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 0.8
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 0.8
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.1 Dichiarazioni e impegni del titolare della comunicazione",
+   "fields": [
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza della normativa in materia di utilizzazione agronomica degli effluenti di allevamento e delle sanzioni che derivano dall'inosservanza del"
+    },
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che le attività di utilizzazione agronomica verranno effettuate non prima di 30 giorni dalla presentazione all'autorità competente della presente comunicazione "
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "ad effettuare l'utilizzazione agronomica conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente;"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "a comunicare tempestivamente all'autorità competente le variazioni relative alla consistenza dell'allevamento, alla tipologia, quantità e caratteristiche degli "
+    },
+    {
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "di conservare presso SEDE LEGALE / ALLEVAMENTO"
+    },
+    {
+     "id": "r8c2p11reg:txt",
+     "kind": "text",
+     "label": "codice asl N.",
+     "context": "di conservare presso SEDE LEGALE / ALLEVAMENTO",
+     "max": 9
+    },
+    {
+     "id": "r20c1p29reg:radio:0_clone",
+     "kind": "radio",
+     "label": "considerato che l'azienda produce un quantitativo di azoto annuo al campo compreso tra 3001 e 6000 kg ed è situata e/o utilizza terreni ricompresi in zona vulne",
+     "group": "r20c1p29reg:radio"
+    },
+    {
+     "id": "r21c1p30reg:radio:1_clone",
+     "kind": "radio",
+     "label": "considerato che l'azienda produce un quantitativo di azoto annuo al campo superiore a 6000 kg, a predisporre un piano di utilizzazione agronomica completo secon",
+     "group": "r21c1p30reg:radio"
+    },
+    {
+     "id": "r23c1p34reg:radio:2_clone",
+     "kind": "radio",
+     "label": "considerato che l'azienda alleva più di 500 UBA, a predisporre un piano di utilizzazione agronomica completo secondo le modalità e scadenze previste previste da",
+     "group": "r23c1p34reg:radio"
+    },
+    {
+     "id": "r26c1p40reg:radio:3_clone",
+     "kind": "radio",
+     "label": "di non aver richiesto/presentato altre autorizzazioni/comunicazioni in materia ambientale nella presente istanza di AUA (in caso di autorizzazioni/comunicazioni",
+     "group": "r26c1p40reg:radio"
+    },
+    {
+     "id": "r27c1p41reg:radio:4_clone",
+     "kind": "radio",
+     "label": "di aver richiesto/presentato nella presente istanza di AUA l'autorizzazione/comunicazione relativa a",
+     "group": "r27c1p41reg:radio"
+    },
+    {
+     "id": "r29c1p44reg:txt",
+     "kind": "text",
+     "label": "(indicare la relativa scheda di interesse)",
+     "max": 30
+    }
+   ],
+   "fingerprint": "4ba8fce375a7797d",
+   "text": "B1.1 Dichiarazioni e impegni del titolare della comunicazione dichiara di essere a conoscenza della normativa in materia di utilizzazione agronomica degli effluenti di allevamento e delle sanzioni che derivano dall'inosservanza delle disposizioni di legge; che le attività di utilizzazione agronomica verranno effettuate non prima di 30 giorni dalla presentazione all'autorità competente della presente comunicazione relativa all'utilizzazione agronomica degli effluenti di allevamento; di impegnarsi: ad effettuare l'utilizzazione agronomica conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente; a comunicare tempestivamente all'autorità competente le variazioni relative alla consistenza dell'allevamento, alla tipologia, quantità e caratteristiche degli effluenti di allevamento, nonché le modifiche relative agli stoccaggi e ai terreni destinati all'applicazione degli effluenti; codice asl N. di conservare presso SEDE LEGALE / ALLEVAMENTO assieme alla copia della comunicazione inviata al SUAP la seguente documentazione: - le visure ed estratti dei fogli di mappa catastali dei terreni utilizzati per lo spandimento degli effluenti (indicati nel quadro ….); - gli attestati di disponibilità dei terreni non in proprietà utilizzati per lo spandimento (contratti d'affitto, atti privati ...); - il registro di utilizzazione annuale degli effluenti di allevamento e degli altri fertilizzanti azotati; - la documentazione di accompagnamento inerente i trasporti di effluenti zootecnici effettuati nella rete viaria pubblica; - la documentazione fiscale inerente la vendita di quote di effluenti prevista annualmente sulla quale sia espressamente citata la tipologia e il volume dell'effluente venduto; - documentazione dalla quale si evinca la cessione a terzi di effluenti; - gli originali dei verbali di collaudo decennali dei contenitori di stoccaggio degli effluenti non palabili: - le certificazioni analitiche dei materiali provenienti dagli impianti di trattamento di cui alla D.G.R. 771/2012; - (per le aziende tenute alla presentazione del PUA completo ai sensi dell'art. 21 della D.G.R. 771/2012) le certificazioni analitiche degli appezzamenti omogenei; Inoltre (barrare e completare la sezione pertinente in rapporto alla produzione di azoto al campo da effluenti di allevamento) si impegna: considerato che l'azienda produce un quantitativo di azoto annuo al campo compreso tra 3001 e 6000 kg ed è situata e/o utilizza terreni ricompresi in zona vulnerabile ai nitrati, a predisporre un piano di utilizzazione agronomica semplificato secondo le modalità e scadenze previste dalla normativa vigente (art.28 e allegato V del DM 7 aprile 2006 e art. 21 della D.G.R. 771/2012) a trasmetterlo all'autorità competente come allegato alla presente comunicazione, ovvero a conservarne una copia presso LA SEDE LEGALE / ALLEVAMENTO considerato che l'azienda produce un quantitativo di azoto annuo al campo superiore a 6000 kg, a predisporre un piano di utilizza",
+   "branches": [
+    {
+     "choice": "di essere a conoscenza della normativa in materia di utilizzazione agronomica degli effluenti di allevamento e delle sanzioni che derivano dall'inosservanza del",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che le attività di utilizzazione agronomica verranno effettuate non prima di 30 giorni dalla presentazione all'autorità competente della presente comunicazione ",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ad effettuare l'utilizzazione agronomica conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente;",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "a comunicare tempestivamente all'autorità competente le variazioni relative alla consistenza dell'allevamento, alla tipologia, quantità e caratteristiche degli ",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di conservare presso SEDE LEGALE / ALLEVAMENTO",
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "considerato che l'azienda produce un quantitativo di azoto annuo al campo compreso tra 3001 e 6000 kg ed è situata e/o utilizza terreni ricompresi in zona vulne",
+     "id": "r20c1p29reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r22c1p31reg:txt",
+       "kind": "text",
+       "label": "codice asl N.",
+       "max": 9
+      }
+     ],
+     "moved": [
+      [
+       "r21c1p30reg:radio:1_clone",
+       "r23c1p34reg:radio:1_clone"
+      ],
+      [
+       "r23c1p34reg:radio:2_clone",
+       "r25c1p38reg:radio:2_clone"
+      ],
+      [
+       "r26c1p40reg:radio:3_clone",
+       "r28c1p44reg:radio:3_clone"
+      ],
+      [
+       "r27c1p41reg:radio:4_clone",
+       "r29c1p45reg:radio:4_clone"
+      ],
+      [
+       "r29c1p44reg:txt",
+       "r31c1p48reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "considerato che l'azienda produce un quantitativo di azoto annuo al campo superiore a 6000 kg, a predisporre un piano di utilizzazione agronomica completo secon",
+     "id": "r21c1p30reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r23c1p32reg:txt",
+       "kind": "text",
+       "label": "codice asl N.",
+       "max": 9
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p34reg:radio:2_clone",
+       "r24c1p37reg:radio:2_clone"
+      ],
+      [
+       "r26c1p40reg:radio:3_clone",
+       "r27c1p43reg:radio:3_clone"
+      ],
+      [
+       "r27c1p41reg:radio:4_clone",
+       "r28c1p44reg:radio:4_clone"
+      ],
+      [
+       "r29c1p44reg:txt",
+       "r30c1p47reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "considerato che l'azienda alleva più di 500 UBA, a predisporre un piano di utilizzazione agronomica completo secondo le modalità e scadenze previste previste da",
+     "id": "r23c1p34reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r25c1p36reg:txt",
+       "kind": "text",
+       "label": "codice asl N.",
+       "max": 9
+      }
+     ],
+     "moved": [
+      [
+       "r26c1p40reg:radio:3_clone",
+       "r27c1p43reg:radio:3_clone"
+      ],
+      [
+       "r27c1p41reg:radio:4_clone",
+       "r28c1p44reg:radio:4_clone"
+      ],
+      [
+       "r29c1p44reg:txt",
+       "r30c1p47reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "di non aver richiesto/presentato altre autorizzazioni/comunicazioni in materia ambientale nella presente istanza di AUA (in caso di autorizzazioni/comunicazioni",
+     "id": "r26c1p40reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "di aver richiesto/presentato nella presente istanza di AUA l'autorizzazione/comunicazione relativa a",
+     "id": "r27c1p41reg:radio:4_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 12.1
+  },
+  {
+   "section": "B1.2 Dati identificativi degli allevamenti/impianti di trattamento di cui alla D.G.R. 771/2012",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "Identificazione allevamento:"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "CODICE ALLEVAMENTO (DA ANAGRAFE ZOOTECNICA sistema informativo veterinario)",
+     "max": 20
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "COMUNE",
+     "max": 30
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "INDIRIZZO E NUMERO CIVICO",
+     "max": 50
+    },
+    {
+     "id": "r3c4p9reg",
+     "kind": "select",
+     "label": "UBICAZIONE",
+     "options": [
+      "Zona Vulnerabile",
+      "Zona non Vulnerabile"
+     ]
+    },
+    {
+     "id": "r4c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "Identificazione impianto a biogas:"
+    },
+    {
+     "id": "r6c1p12reg:txt",
+     "kind": "text",
+     "label": "DENOMINAZIONE",
+     "max": 50
+    },
+    {
+     "id": "r6c2p14reg:txt",
+     "kind": "text",
+     "label": "INDIRIZZO E NUMERO CIVICO",
+     "max": 50
+    },
+    {
+     "id": "r8c1p16reg:number",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r8c2p18reg:txt",
+     "kind": "text",
+     "label": "COMUNE",
+     "max": 30
+    },
+    {
+     "id": "r8c3p20reg:txt",
+     "kind": "text",
+     "label": "LOCALITÀ",
+     "max": 30
+    },
+    {
+     "id": "r10c1p22reg:txt",
+     "kind": "text",
+     "label": "CUAA Azienda",
+     "max": 16
+    },
+    {
+     "id": "r12c1p26reg:txt",
+     "kind": "text",
+     "label": "Codice anagrafe zootecnica identificativo di ogni Allevamento",
+     "max": 9
+    }
+   ],
+   "fingerprint": "ca949edfcff2d5be",
+   "text": "B1.2 Dati identificativi degli allevamenti/impianti di trattamento di cui alla D.G.R. 771/2012 Identificazione allevamento: CODICE ALLEVAMENTO (DA ANAGRAFE ZOOTECNICA sistema informativo veterinario) COMUNE INDIRIZZO E NUMERO CIVICO UBICAZIONE Identificazione impianto a biogas: DENOMINAZIONE INDIRIZZO E NUMERO CIVICO CAP COMUNE LOCALITÀ CUAA Azienda Codice anagrafe zootecnica identificativo di ogni Allevamento",
+   "branches": [
+    {
+     "choice": "Identificazione allevamento:",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c2p18reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r6c2p14reg:txt",
+       "r3c3p7reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Identificazione allevamento:",
+      "adds": 26
+     }
+    },
+    {
+     "choice": "UBICAZIONE = Zona Vulnerabile",
+     "id": "r3c4p9reg",
+     "kind": "select",
+     "option": "Zona Vulnerabile",
+     "moved": [
+      [
+       "r8c2p18reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r6c2p14reg:txt",
+       "r3c3p7reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Identificazione allevamento:",
+      "adds": 26
+     }
+    },
+    {
+     "choice": "UBICAZIONE = Zona non Vulnerabile",
+     "id": "r3c4p9reg",
+     "kind": "select",
+     "option": "Zona non Vulnerabile",
+     "moved": [
+      [
+       "r8c2p18reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r6c2p14reg:txt",
+       "r3c3p7reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Identificazione allevamento:",
+      "adds": 26
+     }
+    },
+    {
+     "choice": "Identificazione impianto a biogas:",
+     "id": "r4c1p10reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c2p18reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r6c2p14reg:txt",
+       "r3c3p7reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Identificazione allevamento:",
+      "adds": 26
+     }
+    }
+   ],
+   "seconds": 8.6
+  },
+  {
+   "section": "B1.3.1 Consistenza e produzione di effluenti di allevamento/i - allevamento",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Categoria animali",
+     "max": 20
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "Tipo stabulazione",
+     "max": 50
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "Dettagli stabulazione",
+     "max": 50
+    },
+    {
+     "id": "r5c1p9reg:number",
+     "kind": "text",
+     "label": "Media capi n./anno",
+     "max": 10
+    },
+    {
+     "id": "r5c2p11reg:real",
+     "kind": "text",
+     "label": "Peso vivo totale t",
+     "max": 13
+    },
+    {
+     "id": "r7c1p15reg:real",
+     "kind": "text",
+     "label": "Liquame Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r7c2p17reg:txt",
+     "kind": "text",
+     "label": "Liquame Azoto kg/anno",
+     "max": 10
+    },
+    {
+     "id": "r9c1p21reg:real",
+     "kind": "text",
+     "label": "Letame Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r9c2p23reg:txt",
+     "kind": "text",
+     "label": "Letame Azoto kg/anno",
+     "max": 10
+    },
+    {
+     "id": "r11c1p27reg:real",
+     "kind": "text",
+     "label": "Azoto totale kg/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "fdc96d867697238f",
+   "text": "B1.3.1 Consistenza e produzione di effluenti di allevamento/i - allevamento ALLEVAMENTO: consistenza media annuale, produzione di effluenti e azoto netto al campo per singolo allevamento sulla base dei parametri stabiliti in tab.1 e 2 del Dm 7 aprile 2006 (1) Categoria animali Tipo stabulazione Dettagli stabulazione Media capi n./anno Peso vivo totale t Liquame Volume m³/anno Liquame Azoto kg/anno Letame Volume m³/anno Letame Azoto kg/anno Azoto totale kg/anno (1) Per la compilazione della presente tabella fare riferimento alla tabella A dell'Allegato tecnico di cui alla D.G.R. 771/2012.",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "B1.3.2 Consistenza e produzione di effluenti di allevamento/i - trattamenti",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Linea trattamento",
+     "max": 50
+    },
+    {
+     "id": "r3c2p5reg:real",
+     "kind": "text",
+     "label": "Liquame avviato al trattamento m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r3c3p7reg:real",
+     "kind": "text",
+     "label": "Azoto contenuto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c1p9reg:real",
+     "kind": "text",
+     "label": "Palabile post trattamento Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c2p11reg:real",
+     "kind": "text",
+     "label": "Palabile post trattamento Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r7c1p15reg:real",
+     "kind": "text",
+     "label": "Liquidi post trattamento Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r7c2p17reg:real",
+     "kind": "text",
+     "label": "Liquidi post trattamento Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r9c1p21reg:real",
+     "kind": "text",
+     "label": "Azoto totale kg/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "aa797b7a3cf32a96",
+   "text": "B1.3.2 Consistenza e produzione di effluenti di allevamento/i - trattamenti TRATTAMENTI DIVERSI DALL'ANAEROBICO: dati relativi ai liquami trattati per singolo allevamento con riferimento alle linee riportate in tabella 3 del Dm 7 aprile 2006 (1) Linea trattamento Liquame avviato al trattamento m³/anno Azoto contenuto kg/anno Palabile post trattamento Volume m³/anno Palabile post trattamento Azoto kg/anno Liquidi post trattamento Volume m³/anno Liquidi post trattamento Azoto kg/anno Azoto totale kg/anno (1) Da compilarsi esclusivamente per gli allevamenti suinicoli.",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.3.3 Consistenza e produzione di effluenti di allevamento/i - altri lquami",
+   "fields": [
+    {
+     "id": "r3c1p4reg:real",
+     "kind": "text",
+     "label": "da sala mungitura Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c1p8reg:real",
+     "kind": "text",
+     "label": "da platee stoccaggio Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r7c1p12reg:real",
+     "kind": "text",
+     "label": "da spazi esterni Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r9c1p16reg:real",
+     "kind": "text",
+     "label": "Totale m³/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "078726f5a28257fa",
+   "text": "B1.3.3 Consistenza e produzione di effluenti di allevamento/i - altri lquami ALTRI LIQUAMI: quantità di altri liquami prodotti: acque meteoriche e acque di lavaggio delle sale di mungitura da sala mungitura Volume m³/anno da platee stoccaggio Volume m³/anno da spazi esterni Volume m³/anno Totale m³/anno",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.3.4 Consistenza e produzione di effluenti di allevamento/i - trattamento anaerobico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "CUAA AZIENDE CONFERENTI",
+     "max": 30
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "progr",
+     "max": 10
+    },
+    {
+     "id": "r6c2p10reg:txt",
+     "kind": "text",
+     "label": "Cod (pr/n.rea)",
+     "max": 30
+    },
+    {
+     "id": "r6c3p12reg:txt",
+     "kind": "text",
+     "label": "Specie",
+     "max": 50
+    },
+    {
+     "id": "r6c4p14reg:real",
+     "kind": "text",
+     "label": "Liquame/palabile Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r9c1p17reg:txt",
+     "kind": "text",
+     "label": "Tipo",
+     "max": 50
+    },
+    {
+     "id": "r9c2p19reg:real",
+     "kind": "text",
+     "label": "Azoto kg/t",
+     "max": 13
+    },
+    {
+     "id": "r12c1p22reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r12c2p24reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c1p29reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c2p31reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "e87d4f799108dc89",
+   "text": "B1.3.4 Consistenza e produzione di effluenti di allevamento/i - trattamento anaerobico CUAA AZIENDE CONFERENTI TRATTAMENTO ANAEROBICO: dati relativi ai materiali trattati EFFLUENTI DI ALLEVAMENTO progr Cod (pr/n.rea) Specie Liquame/palabile Azoto kg/anno ALTRE BIOMASSE Tipo Azoto kg/t INGRESSO DIGESTORE Volume m³/anno Azoto kg/anno USCITA DIGESTORE Volume m³/anno Azoto kg/anno",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.3.4-bis Consistenza e produzione di effluenti di allevamento/i - EFFLUENTE",
+   "fields": [
+    {
+     "id": "r3c1p3reg:real",
+     "kind": "text",
+     "label": "Effluente avviato al trattamento m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "Azoto contenuto kg/anno",
+     "max": 10
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "Macchina trattamento",
+     "max": 50
+    },
+    {
+     "id": "r3c4p9reg:number",
+     "kind": "text",
+     "label": "Efficienza",
+     "max": 50
+    },
+    {
+     "id": "r5c1p11reg:real",
+     "kind": "text",
+     "label": "% Palabile post trattamento",
+     "max": 13
+    },
+    {
+     "id": "r5c2p13reg:real",
+     "kind": "text",
+     "label": "% Chiarificato",
+     "max": 13
+    },
+    {
+     "id": "r5c3p15reg:real",
+     "kind": "text",
+     "label": "Palabile Volumi m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c4p17reg:real",
+     "kind": "text",
+     "label": "Liquido Volumi m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r7c1p21reg:real",
+     "kind": "text",
+     "label": "Azoto palabile kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r7c2p23reg:real",
+     "kind": "text",
+     "label": "Azoto liquido kg/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "b04197ac9b8befa1",
+   "text": "B1.3.4-bis Consistenza e produzione di effluenti di allevamento/i - EFFLUENTE EFFLUENTE: separazione solido-liquido Effluente avviato al trattamento m³/anno Azoto contenuto kg/anno Macchina trattamento Efficienza % Palabile post trattamento % Chiarificato Palabile Volumi m³/anno Liquido Volumi m³/anno Azoto palabile kg/anno Azoto liquido kg/anno",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.3.5 Consistenza e produzione di effluenti di allevamento/i - Volumi ceduti",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "codice allevamento/denominazione impianto biogas",
+     "max": 50
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "CUAA AZIENDA ACQUIRENTE",
+     "max": 20
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "In qualità di utilizzatrice agronomica (detentore)",
+     "max": 100
+    },
+    {
+     "id": "r4c3p8reg:calendar_input",
+     "kind": "date",
+     "label": "Scadenza contratto cessione"
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "Sostanza ceduta",
+     "max": 50
+    },
+    {
+     "id": "r6c2p12reg:txt",
+     "kind": "text",
+     "label": "Volume ceduto m³/anno",
+     "max": 10
+    },
+    {
+     "id": "r6c3p14reg:real",
+     "kind": "text",
+     "label": "Azoto ceduto kg/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "f32719bf39979fd4",
+   "text": "B1.3.5 Consistenza e produzione di effluenti di allevamento/i - Volumi ceduti codice allevamento/denominazione impianto biogas CUAA AZIENDA ACQUIRENTE In qualità di utilizzatrice agronomica (detentore) Scadenza contratto cessione Sostanza ceduta Volume ceduto m³/anno Azoto ceduto kg/anno",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.4 Stoccaggi",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Tipo di stoccaggio",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Indirizzo o codice allevamento",
+     "max": 50
+    },
+    {
+     "id": "r2c3p6reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    }
+   ],
+   "fingerprint": "8d11d55533c6bbfe",
+   "text": "B1.4 Stoccaggi Tipo di stoccaggio Indirizzo o codice allevamento Volume m³/anno",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "B1.5 dati riassuntivi - liquame",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "Liquame tal quale"
+    },
+    {
+     "id": "r5c1p5reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c2p7reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c3p9reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r7c1p13reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r7c2p15reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r7c3p17reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    },
+    {
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "Liquame dopo trattamento"
+    },
+    {
+     "id": "r10c1p22reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r10c2p24reg:txt",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 10
+    },
+    {
+     "id": "r10c3p26reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r12c1p30reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r12c2p32reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r12c3p34reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    },
+    {
+     "id": "r15c1p39reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c2p41reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c3p43reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r17c1p47reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r17c2p49reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r17c3p51reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    }
+   ],
+   "fingerprint": "b4a9855baab7b73b",
+   "text": "B1.5 dati riassuntivi - liquame Effluenti prodotti per allevamento/impianto LIQUAME Liquame tal quale Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ Liquame dopo trattamento Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ Totale liquami Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³",
+   "branches": [
+    {
+     "choice": "Liquame tal quale",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r15c1p39reg:real",
+       "r5c1p5reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r5c2p7reg:real"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r5c3p9reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r7c1p13reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r7c2p15reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r7c3p17reg:real"
+      ],
+      [
+       "r15c1p39reg:real",
+       "r10c1p22reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r10c2p24reg:txt"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r10c3p26reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r12c1p30reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r12c2p32reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r12c3p34reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Liquame tal quale",
+      "adds": 40
+     }
+    },
+    {
+     "choice": "Liquame dopo trattamento",
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r15c1p39reg:real",
+       "r5c1p5reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r5c2p7reg:real"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r5c3p9reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r7c1p13reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r7c2p15reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r7c3p17reg:real"
+      ],
+      [
+       "r15c1p39reg:real",
+       "r10c1p22reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r10c2p24reg:txt"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r10c3p26reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r12c1p30reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r12c2p32reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r12c3p34reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Liquame tal quale",
+      "adds": 40
+     }
+    }
+   ],
+   "seconds": 4.9
+  },
+  {
+   "section": "B1.5  dati riassuntivi - palabili",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "Letame bovino maturo"
+    },
+    {
+     "id": "r5c1p5reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c2p7reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c3p9reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r7c1p13reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r7c2p15reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r7c3p17reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    },
+    {
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "Palabile/solido post trattamento"
+    },
+    {
+     "id": "r10c1p22reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r10c2p24reg:txt",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 10
+    },
+    {
+     "id": "r10c3p26reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r12c1p30reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r12c2p32reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r12c3p34reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    },
+    {
+     "id": "r15c1p39reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c2p41reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c3p43reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r17c1p47reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r17c2p49reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r17c3p51reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    }
+   ],
+   "fingerprint": "7c32f293597d22ae",
+   "text": "B1.5 dati riassuntivi - palabili Effluenti prodotti per allevamento/impianto PALABILI (1) Letame bovino maturo Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ Palabile/solido post trattamento Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ Totale palabili Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ (1) Distinguere tra letame bovino maturo e palabili non compostati, ad es. pollina, frazione solida separata dai liquami",
+   "branches": [
+    {
+     "choice": "Letame bovino maturo",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r15c1p39reg:real",
+       "r5c1p5reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r5c2p7reg:real"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r5c3p9reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r7c1p13reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r7c2p15reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r7c3p17reg:real"
+      ],
+      [
+       "r15c1p39reg:real",
+       "r10c1p22reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r10c2p24reg:txt"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r10c3p26reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r12c1p30reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r12c2p32reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r12c3p34reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Letame bovino maturo",
+      "adds": 40
+     }
+    },
+    {
+     "choice": "Palabile/solido post trattamento",
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r15c1p39reg:real",
+       "r5c1p5reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r5c2p7reg:real"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r5c3p9reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r7c1p13reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r7c2p15reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r7c3p17reg:real"
+      ],
+      [
+       "r15c1p39reg:real",
+       "r10c1p22reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r10c2p24reg:txt"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r10c3p26reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r12c1p30reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r12c2p32reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r12c3p34reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Letame bovino maturo",
+      "adds": 40
+     }
+    }
+   ],
+   "seconds": 3.9
+  },
+  {
+   "section": "B1.5  dati riassuntivi - digestato",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "Digestato tal quale"
+    },
+    {
+     "id": "r5c1p5reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c2p7reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r5c3p9reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r7c1p13reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r7c2p15reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r7c3p17reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    },
+    {
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "Liquido/chiarificato (dopo trattamento)"
+    },
+    {
+     "id": "r10c1p22reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r10c2p24reg:txt",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 10
+    },
+    {
+     "id": "r10c3p26reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r12c1p30reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r12c2p32reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r12c3p34reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    },
+    {
+     "id": "r15c1p39reg:real",
+     "kind": "text",
+     "label": "Volume m³/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c2p41reg:real",
+     "kind": "text",
+     "label": "Azoto kg/anno",
+     "max": 13
+    },
+    {
+     "id": "r15c3p43reg:real",
+     "kind": "text",
+     "label": "Titolo N kg/m³",
+     "max": 13
+    },
+    {
+     "id": "r17c1p47reg:real",
+     "kind": "text",
+     "label": "Azoto zootecnico %",
+     "max": 6
+    },
+    {
+     "id": "r17c2p49reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio gg",
+     "max": 13
+    },
+    {
+     "id": "r17c3p51reg:real",
+     "kind": "text",
+     "label": "Capacità di stoccaggio m³",
+     "max": 13
+    }
+   ],
+   "fingerprint": "ef9a58aebea1158a",
+   "text": "B1.5 dati riassuntivi - digestato Effluenti prodotti per allevamento/impianto DIGESTATO Digestato tal quale Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ Liquido/chiarificato (dopo trattamento) Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³ Totale liquido Volume m³/anno Azoto kg/anno Titolo N kg/m³ Azoto zootecnico % Capacità di stoccaggio gg Capacità di stoccaggio m³",
+   "branches": [
+    {
+     "choice": "Digestato tal quale",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r15c1p39reg:real",
+       "r5c1p5reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r5c2p7reg:real"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r5c3p9reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r7c1p13reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r7c2p15reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r7c3p17reg:real"
+      ],
+      [
+       "r15c1p39reg:real",
+       "r10c1p22reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r10c2p24reg:txt"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r10c3p26reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r12c1p30reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r12c2p32reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r12c3p34reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Digestato tal quale",
+      "adds": 40
+     }
+    },
+    {
+     "choice": "Liquido/chiarificato (dopo trattamento)",
+     "id": "r8c1p20reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r15c1p39reg:real",
+       "r5c1p5reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r5c2p7reg:real"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r5c3p9reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r7c1p13reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r7c2p15reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r7c3p17reg:real"
+      ],
+      [
+       "r15c1p39reg:real",
+       "r10c1p22reg:real"
+      ],
+      [
+       "r15c2p41reg:real",
+       "r10c2p24reg:txt"
+      ],
+      [
+       "r15c3p43reg:real",
+       "r10c3p26reg:real"
+      ],
+      [
+       "r17c1p47reg:real",
+       "r12c1p30reg:real"
+      ],
+      [
+       "r17c2p49reg:real",
+       "r12c2p32reg:real"
+      ],
+      [
+       "r17c3p51reg:real",
+       "r12c3p34reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Digestato tal quale",
+      "adds": 40
+     }
+    }
+   ],
+   "seconds": 4.6
+  },
+  {
+   "section": "B1.6.1 Terreni",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "Comune catastale",
+     "max": 4
+    },
+    {
+     "id": "r3c2p6reg:txt",
+     "kind": "text",
+     "label": "sezione",
+     "max": 3
+    },
+    {
+     "id": "r3c3p8reg:txt",
+     "kind": "text",
+     "label": "Foglio n°",
+     "max": 6
+    },
+    {
+     "id": "r3c4p10reg:txt",
+     "kind": "text",
+     "label": "Mappale o Particella",
+     "max": 6
+    },
+    {
+     "id": "r5c1p14reg:txt",
+     "kind": "text",
+     "label": "Titolo disponibilità particella",
+     "max": 30
+    },
+    {
+     "id": "r5c2p16reg:txt",
+     "kind": "text",
+     "label": "Nominativo concedente",
+     "max": 100
+    },
+    {
+     "id": "r7c1p18reg:real",
+     "kind": "text",
+     "label": "Superficie catastale disponibile ha, are",
+     "max": 13
+    },
+    {
+     "id": "r7c2p20reg:real",
+     "kind": "text",
+     "label": "Superficie zona vulnerabile ha, are",
+     "max": 13
+    },
+    {
+     "id": "r7c3p22reg:real",
+     "kind": "text",
+     "label": "Superficie zona non vulnerabile ha, are",
+     "max": 13
+    },
+    {
+     "id": "r9c1p26reg:real",
+     "kind": "text",
+     "label": "Azoto spandibile kg",
+     "max": 13
+    },
+    {
+     "id": "r9c2p28reg:txt",
+     "kind": "text",
+     "label": "Ordinamento colturale praticato",
+     "max": 200
+    },
+    {
+     "id": "r9c3p30reg:real",
+     "kind": "text",
+     "label": "distanza da contenitori di stoccaggio km",
+     "max": 13
+    }
+   ],
+   "fingerprint": "a9e1b9200c1f090a",
+   "text": "B1.6.1 Terreni Terreni utilizzabili da allevamento/impianto di trattamento di cui alla D.G.R. 771/2012: Comune catastale sezione Foglio n° Mappale o Particella Titolo disponibilità particella Nominativo concedente Superficie catastale disponibile ha, are Superficie zona vulnerabile ha, are Superficie zona non vulnerabile ha, are Azoto spandibile kg Ordinamento colturale praticato distanza da contenitori di stoccaggio km",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "B1.6.2 Dati identificativi degli appezzamenti omogenei",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Comune catastale",
+     "max": 4
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Sezione",
+     "max": 6
+    },
+    {
+     "id": "r2c3p6reg:number",
+     "kind": "text",
+     "label": "Foglio n°",
+     "max": 7
+    },
+    {
+     "id": "r2c4p8reg:txt",
+     "kind": "text",
+     "label": "Particella",
+     "max": 6
+    },
+    {
+     "id": "r4c1p12reg:txt",
+     "kind": "text",
+     "label": "Superficie (Ha,ARA)",
+     "max": 14
+    },
+    {
+     "id": "r6c1p16reg:txt",
+     "kind": "text",
+     "label": "Tipologia di suolo",
+     "max": 100
+    },
+    {
+     "id": "r8c1p20reg:txt",
+     "kind": "text",
+     "label": "Pratica agronomica precedente",
+     "max": 100
+    },
+    {
+     "id": "r10c1p24reg:txt",
+     "kind": "text",
+     "label": "Morfologia",
+     "max": 100
+    }
+   ],
+   "fingerprint": "9557c471d67cb9b2",
+   "text": "B1.6.2 Dati identificativi degli appezzamenti omogenei Comune catastale Sezione Foglio n° Particella Superficie (Ha,ARA) Tipologia di suolo Pratica agronomica precedente Morfologia",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B1.6.3 modalità di distribuzione utilizzate",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Sì",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r2c2p3reg:radio"
+    }
+   ],
+   "fingerprint": "2381797dddb3e650",
+   "text": "B1.6.3 modalità di distribuzione utilizzate l'azienda è tenuta a presentare la comunicazione semplificata di cui all'art. 21 della D.G.R. 771/2012? Sì No (1) Sono escluse dalla compilazione della presente tabella le aziende tenute alla presentazione della comunicazione semplificata di cui all'art. 21 della D.G.R. 771/2012.",
+   "branches": [
+    {
+     "choice": "Sì",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "No",
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c2p15reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Carrobotte a lunga gittata",
+       "max": 50
+      },
+      {
+       "id": "r8c2p21reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Carrobotte ad alta pressione",
+       "max": 50
+      },
+      {
+       "id": "r10c2p27reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Carrobotte a bassa pressione",
+       "max": 50
+      },
+      {
+       "id": "r12c2p33reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Carrobotte munito di iniettori",
+       "max": 50
+      },
+      {
+       "id": "r14c2p39reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Carrobotte con dispositivi per la distribuzione rasoterra",
+       "max": 80
+      },
+      {
+       "id": "r16c2p45reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Fertirrigazione con rotoloni",
+       "max": 50
+      },
+      {
+       "id": "r18c2p51reg:txt",
+       "kind": "text",
+       "label": "No",
+       "context": "Spandiletame",
+       "max": 50
+      },
+      {
+       "id": "r20c1p55reg:txt",
+       "kind": "text",
+       "label": "Altro (descrizione)",
+       "max": 100
+      },
+      {
+       "id": "r20c2p57reg:txt",
+       "kind": "text",
+       "label": "No",
+       "max": 50
+      },
+      {
+       "id": "r24c1p67reg:txt",
+       "kind": "text",
+       "label": "TIPO DI ATTREZZATURA",
+       "max": 9999
+      },
+      {
+       "id": "r24c2p69reg:txt",
+       "kind": "text",
+       "label": "TARGA O MATRICOLA",
+       "max": 10
+      },
+      {
+       "id": "r24c3p71reg:txt",
+       "kind": "text",
+       "label": "TITOLO DI POSSESSO",
+       "max": 80
+      }
+     ],
+     "plus": {
+      "anchor": "TIPO DI ATTREZZATURA",
+      "adds": 6
+     }
+    }
+   ],
+   "seconds": 3.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  },
+  {
+   "section": "B1.7 Comunicazione del detentore che acquisisce gli effluenti ceduti per l'utilizzazione agronomica",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "CUAA AZIENDA ACQUIRENTE",
+     "max": 50
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "ESTREMI DELLA COMUNICAZIONE INVIATA DAL PRODUTTORE DI EFFLUENTI DI ALLEVAMENTO",
+     "max": 100
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "SCADENZA CONTRATTO CESSIONE"
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "SOSTANZA CEDUTA",
+     "max": 50
+    },
+    {
+     "id": "r5c2p11reg:number",
+     "kind": "text",
+     "label": "VOLUME CEDUTO (m3/anno)",
+     "max": 20
+    },
+    {
+     "id": "r5c3p13reg:number",
+     "kind": "text",
+     "label": "AZOTO CEDUTO (kg/anno)",
+     "max": 20
+    },
+    {
+     "id": "r5c4p15reg:number",
+     "kind": "text",
+     "label": "TITOLO AZOTO CEDUTO (kg/m3)",
+     "max": 20
+    }
+   ],
+   "fingerprint": "f012b419295ca3bf",
+   "text": "B1.7 Comunicazione del detentore che acquisisce gli effluenti ceduti per l'utilizzazione agronomica Il detentore (non produttore) è identificato come segue: CUAA AZIENDA ACQUIRENTE ESTREMI DELLA COMUNICAZIONE INVIATA DAL PRODUTTORE DI EFFLUENTI DI ALLEVAMENTO SCADENZA CONTRATTO CESSIONE SOSTANZA CEDUTA VOLUME CEDUTO (m3/anno) AZOTO CEDUTO (kg/anno) TITOLO AZOTO CEDUTO (kg/m3)",
+   "branches": [],
+   "seconds": 1.1,
+   "scelta": "B1.7 - gli effluenti verranno ceduti per l'utilizzazione agronomica"
+  }
+ ]
+}

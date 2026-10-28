@@ -1,0 +1,551 @@
+{
+ "crawled": "2026-10-28T19:29:47.059Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › B) Comunicazione  preventiva  di  cui  all'articolo   112  del  Codice  dell'ambiente   per  l'utilizzazione agronomica degli effluenti di allevamento, delle acque di vegetazione dei frantoi oleari e delle acque reflue provenienti dalle aziende ivi previste › B2) Comunicazione per utilizzazione agronomica acque di vegetazione e sanse umide dei frantoi oleari (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 37,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "B2.1 Dichiarazioni e impegni del titolare della comunicazione",
+   "B2.2 Caratteristiche del frantoio",
+   "B2.3 Caratteristiche dei siti di spandimento",
+   "B2.4 Caratteristiche dei contenitori di stoccaggio",
+   "B2.5 Dati sulla cessione di acque di vegetazione e di sanse umide",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 0.8
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 0.8
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 1
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 0.7
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 0.9
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 1.6
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 1.5
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 1
+  },
+  {
+   "section": "B2.1 Dichiarazioni e impegni del titolare della comunicazione",
+   "fields": [
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza della normativa in materia di utilizzazione agronomica delle acque di vegetazione e delle sanse umide e delle sanzioni che derivano dall'"
+    },
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che le attività di spandimento non verranno effettuate prima di 30 giorni dalla data di presentazione all'autorità competente della presente comunicazione*"
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "ad effettuare l'utilizzazione agronomica delle acque di vegetazione e delle sanse umide conformemente alle prescrizioni dettate dalla normativa nazionale e regi"
+    },
+    {
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "a comunicare tempestivamente all'autorità competente le variazioni relative alla tipologia del ciclo di lavorazione, alla capacità produttiva del frantoio e ai "
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "di conservare presso SEDE LEGALE / FRANTOI"
+    },
+    {
+     "id": "r8c2p12reg:number",
+     "kind": "text",
+     "label": "N.",
+     "context": "di conservare presso SEDE LEGALE / FRANTOI",
+     "max": 20
+    },
+    {
+     "id": "r16c1p28reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di non aver richiesto/presentato altre autorizzazioni/comunicazioni in materia ambientale nella presente istanza di AUA (in caso di autorizzazioni/comunicazioni",
+     "group": "r16c1p28reg:radio"
+    },
+    {
+     "id": "r17c1p29reg:radio:1_clone",
+     "kind": "radio",
+     "label": "di aver richiesto/presentato nella presente istanza di AUA l'autorizzazione/comunicazione relativa a",
+     "group": "r17c1p29reg:radio"
+    },
+    {
+     "id": "r19c1p32reg:txt",
+     "kind": "text",
+     "label": "(indicare la relativa scheda di interesse)",
+     "max": 30
+    }
+   ],
+   "fingerprint": "2a481173c1bec931",
+   "text": "B2.1 Dichiarazioni e impegni del titolare della comunicazione dichiara di essere a conoscenza della normativa in materia di utilizzazione agronomica delle acque di vegetazione e delle sanse umide e delle sanzioni che derivano dall'inosservanza delle disposizioni di legge; che le attività di spandimento non verranno effettuate prima di 30 giorni dalla data di presentazione all'autorità competente della presente comunicazione* di impegnarsi: ad effettuare l'utilizzazione agronomica delle acque di vegetazione e delle sanse umide conformemente alle prescrizioni dettate dalla normativa nazionale e regionale vigente, alle disposizioni igienico-sanitarie, ambientali e urbanistiche e alle eventuali prescrizioni impartite dall'Autorità competente, nonché conformemente alle modalità della relazione tecnica allegata alla comunicazione; a comunicare tempestivamente all'autorità competente le variazioni relative alla tipologia del ciclo di lavorazione, alla capacità produttiva del frantoio e ai volumi di reflui prodotti, ai siti utilizzati per lo spandimento, alle caratteristiche dei contenitori di stoccaggio; N. di conservare presso SEDE LEGALE / FRANTOI assieme alla copia della comunicazione inviata al SUAP la seguente documentazione: - le visure ed estratti dei fogli di mappa catastali dei terreni utilizzati per lo spandimento delle acque di vegetazione (indicati nel quadro ….); - gli attestati di disponibilità dei terreni non in proprietà utilizzati per lo spandimento (contratti d'affitto, atti privati ...); - la documentazione di accompagnamento inerente i trasporti di acque di vegetazione effettuati nella rete viaria pubblica; - i contratti in originale di cessione delle acque di vegetazione; - gli originali dei verbali di collaudo dei contenitori di stoccaggio delle acque di vegetazione; dichiara inoltre: di non aver richiesto/presentato altre autorizzazioni/comunicazioni in materia ambientale nella presente istanza di AUA (in caso di autorizzazioni/comunicazioni già ottenute/presentate, esse dovranno essere indicate nel quadro 6.1) di aver richiesto/presentato nella presente istanza di AUA l'autorizzazione/comunicazione relativa a (indicare la relativa scheda di interesse) *Il d.m. 6 luglio 2005 prevede la presentazione annuale della comunicazione.",
+   "branches": [
+    {
+     "choice": "di essere a conoscenza della normativa in materia di utilizzazione agronomica delle acque di vegetazione e delle sanse umide e delle sanzioni che derivano dall'",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che le attività di spandimento non verranno effettuate prima di 30 giorni dalla data di presentazione all'autorità competente della presente comunicazione*",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ad effettuare l'utilizzazione agronomica delle acque di vegetazione e delle sanse umide conformemente alle prescrizioni dettate dalla normativa nazionale e regi",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "a comunicare tempestivamente all'autorità competente le variazioni relative alla tipologia del ciclo di lavorazione, alla capacità produttiva del frantoio e ai ",
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di conservare presso SEDE LEGALE / FRANTOI",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non aver richiesto/presentato altre autorizzazioni/comunicazioni in materia ambientale nella presente istanza di AUA (in caso di autorizzazioni/comunicazioni",
+     "id": "r16c1p28reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "di aver richiesto/presentato nella presente istanza di AUA l'autorizzazione/comunicazione relativa a",
+     "id": "r17c1p29reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 8.7
+  },
+  {
+   "section": "B2.2 Caratteristiche del frantoio",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Tipologia del ciclo di lavorazione (pressione, continuo a 3 fasi, 2 fasi, ecc. a risparmio d'acqua)",
+     "max": 50
+    },
+    {
+     "id": "r5c1p5reg:number",
+     "kind": "text",
+     "label": "Tonnellate di olive molibili in otto ore (potenzialità produttiva)",
+     "max": 10
+    },
+    {
+     "id": "r8c1p10reg:number",
+     "kind": "text",
+     "label": "acque di vegetazione m3",
+     "max": 10
+    },
+    {
+     "id": "r8c2p12reg:number",
+     "kind": "text",
+     "label": "sanse umide m3",
+     "max": 10
+    },
+    {
+     "id": "r10c2p18reg:number",
+     "kind": "text",
+     "label": "dal",
+     "context": "Giorni di durata prevedibile della campagna olearia:",
+     "max": 10
+    },
+    {
+     "id": "r10c3p20reg:number",
+     "kind": "text",
+     "label": "al",
+     "context": "Giorni di durata prevedibile della campagna olearia:",
+     "max": 10
+    },
+    {
+     "id": "r12c1p22reg:number",
+     "kind": "text",
+     "label": "Produzione annua media di sanse umide non inviate al sansificio, espressa in m3",
+     "max": 10
+    },
+    {
+     "id": "r14c1p26reg:txt",
+     "kind": "text",
+     "label": "Quantità di sanse umide inviate all'impianto di biogas",
+     "max": 20
+    }
+   ],
+   "fingerprint": "f064fc517c2df6af",
+   "text": "B2.2 Caratteristiche del frantoio che il frantoio presenta le seguenti caratteristiche: Tipologia del ciclo di lavorazione (pressione, continuo a 3 fasi, 2 fasi, ecc. a risparmio d'acqua) Tonnellate di olive molibili in otto ore (potenzialità produttiva) Produzione stimata di acque di vegetazione e di sanse umide espresse in m3 : acque di vegetazione m3 sanse umide m3 dal al Giorni di durata prevedibile della campagna olearia: Produzione annua media di sanse umide non inviate al sansificio, espressa in m3 Quantità di sanse umide inviate all'impianto di biogas",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "B2.3 Caratteristiche dei siti di spandimento",
+   "fields": [
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r6c1p10reg:number",
+     "kind": "text",
+     "label": "acque di vegetazione m3",
+     "max": 20
+    },
+    {
+     "id": "r6c2p12reg:number",
+     "kind": "text",
+     "label": "sanse umide m3",
+     "max": 20
+    },
+    {
+     "id": "r8c1p16reg:txt",
+     "kind": "text",
+     "label": "Nominativo ed indirizzo del/i titolare/i dei siti di spandimenti",
+     "max": 100
+    },
+    {
+     "id": "r10c1p18reg:txt",
+     "kind": "text",
+     "label": "Codice fiscale dell'impresa agricola",
+     "max": 16
+    },
+    {
+     "id": "r13c1p23reg:txt",
+     "kind": "text",
+     "label": "COMUNE",
+     "max": 50
+    },
+    {
+     "id": "r13c2p25reg:txt",
+     "kind": "text",
+     "label": "FG.",
+     "max": 20
+    },
+    {
+     "id": "r13c3p27reg:txt",
+     "kind": "text",
+     "label": "MAPP.",
+     "max": 20
+    },
+    {
+     "id": "r13c4p29reg:txt",
+     "kind": "text",
+     "label": "SUPERFICIE HA ARE",
+     "max": 20
+    },
+    {
+     "id": "r15c1p31reg:txt",
+     "kind": "text",
+     "label": "TITOLO D'USO",
+     "max": 50
+    },
+    {
+     "id": "r15c2p33reg:number",
+     "kind": "text",
+     "label": "ACQUE VEGETAZIONE (M3)",
+     "max": 30
+    },
+    {
+     "id": "r15c3p35reg:number",
+     "kind": "text",
+     "label": "SANSE (M3)",
+     "max": 20
+    },
+    {
+     "id": "r15c4p37reg:number",
+     "kind": "text",
+     "label": "ANNI DI SPANDIMENTO PREVISTI",
+     "max": 10
+    },
+    {
+     "id": "r18c2p43reg:number",
+     "kind": "text",
+     "label": "SUPERFICIE HA ARE",
+     "context": "TOTALE",
+     "max": 20
+    },
+    {
+     "id": "r18c3p45reg:number",
+     "kind": "text",
+     "label": "ACQUE VEGETAZIONE (M3)",
+     "context": "TOTALE",
+     "max": 20
+    },
+    {
+     "id": "r18c4p47reg:number",
+     "kind": "text",
+     "label": "SANSE (M3)",
+     "context": "TOTALE",
+     "max": 20
+    }
+   ],
+   "fingerprint": "c4e2656d6ddb1b91",
+   "text": "B2.3 Caratteristiche dei siti di spandimento che i siti di spandimento risultano così identificati: dal al Periodo entro il quale si prevede di effettuare lo spandimento: Quantità totali di acque di vegetazione e di sanse umide espresse in m3 che si prevede di spandere nei siti: acque di vegetazione m3 sanse umide m3 Nominativo ed indirizzo del/i titolare/i dei siti di spandimenti Codice fiscale dell'impresa agricola Superficie agricola utilizzata per lo spandimento (espressa in ettari e are) ubicazione e attestazione del relativo titolo d'uso: COMUNE FG. MAPP. SUPERFICIE HA ARE TITOLO D'USO ACQUE VEGETAZIONE (M3) SANSE (M3) ANNI DI SPANDIMENTO PREVISTI SUPERFICIE HA ARE ACQUE VEGETAZIONE (M3) SANSE (M3) TOTALE",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "B2.4 Caratteristiche dei contenitori di stoccaggio",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Titolare del contenitore di stoccaggio",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:number",
+     "kind": "text",
+     "label": "acque di vegetazione m3",
+     "max": 20
+    },
+    {
+     "id": "r6c2p8reg:number",
+     "kind": "text",
+     "label": "sanse umide m3",
+     "max": 20
+    },
+    {
+     "id": "r8c1p12reg:txt",
+     "kind": "text",
+     "label": "Localizzazione (indirizzo, comune, provincia)",
+     "max": 100
+    },
+    {
+     "id": "r10c1p14reg:txt",
+     "kind": "text",
+     "label": "Tipologia del contenitore (manufatto in cemento o bacino impermeabilizzato, presenza di copertura)",
+     "max": 100
+    }
+   ],
+   "fingerprint": "67ffb6a17466aad8",
+   "text": "B2.4 Caratteristiche dei contenitori di stoccaggio che i contenitori di stoccaggio presentano le seguenti caratteristiche: Titolare del contenitore di stoccaggio Volume complessivo dei contenitori di stoccaggio delle acque di vegetazione e delle sanse umide recepibili espresso in m3, acque di vegetazione m3 sanse umide m3 Localizzazione (indirizzo, comune, provincia) Tipologia del contenitore (manufatto in cemento o bacino impermeabilizzato, presenza di copertura)",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "B2.5 Dati sulla cessione di acque di vegetazione e di sanse umide",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "CUAA AZIENDA ACQUIRENTE",
+     "max": 50
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "IN QUALITÀ DI UTILIZZATRICE AGRONOMICA (DETENTORE)",
+     "max": 50
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "SCADENZA CONTRATTO CESSIONE"
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "SOSTANZA CEDUTA",
+     "max": 50
+    },
+    {
+     "id": "r5c2p11reg:number",
+     "kind": "text",
+     "label": "VOLUME CEDUTO (m3/anno)",
+     "max": 30
+    },
+    {
+     "id": "r5c3p13reg:number",
+     "kind": "text",
+     "label": "AZOTO CEDUTO (kg/anno)",
+     "max": 20
+    }
+   ],
+   "fingerprint": "f0d250754a5edf75",
+   "text": "B2.5 Dati sulla cessione di acque di vegetazione e di sanse umide che risultano ceduti i seguenti volumi: CUAA AZIENDA ACQUIRENTE IN QUALITÀ DI UTILIZZATRICE AGRONOMICA (DETENTORE) SCADENZA CONTRATTO CESSIONE SOSTANZA CEDUTA VOLUME CEDUTO (m3/anno) AZOTO CEDUTO (kg/anno)",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.8
+  }
+ ]
+}

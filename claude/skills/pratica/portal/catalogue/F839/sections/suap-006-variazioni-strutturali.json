@@ -1,0 +1,322 @@
+{
+ "crawled": "2026-10-28T18:44:23.735Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni strutturali (sector laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) con attività di vicinato alimentare)",
+ "seconds": 14.5,
+ "generated": {
+  "interventi": "Domanda di autorizzazione per ampliamento di attività di laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) CON attività di vicinato alimentare Zona “A” (Centro Storico) zona “B” (Buffer zone) con o senza consumo immediato sul posto",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di autorizzazione per ampliamento di attività di laboratorio artigianale alimentare (gelateria, pasticceria, pizza al taglio, kebab, etc.) CON attività di vicinato alimentare Zona “A” (Centro Storico) zona “B” (Buffer zone) con o senza consumo immediato sul posto",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "normative comunali",
+   "dati sull'entità delle variazioni",
+   "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "Altre dichiarazioni",
+   "consumo immediato sul posto",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di aggiunta di settore alimentare"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "2_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "4_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "in caso di vendita di farmaci da banco o medicinali veterinari"
+    },
+    {
+     "key": "5_0",
+     "type": "CHK",
+     "label": "Presenta contestualmente la SCIA del commercio al dettaglio del vicinato"
+    },
+    {
+     "key": "5_0_0",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "5_0_1",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "5_0_1_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_1_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_2",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di armi comuni"
+    },
+    {
+     "key": "5_0_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "5_0_4",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "5_0_4_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5_0_5",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "5_0_5_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5_0_6",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di oggetti preziosi"
+    },
+    {
+     "key": "5_0_7",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "5_0_7_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "5_0_7_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "5_0_7_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "5_0_7_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "5_0_7_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_7_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "5_0_7_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "5_1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    },
+    {
+     "key": "6",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "6_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "normative comunali",
+   "fingerprint": "0c25f486d179118b",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#normative comunali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati sull'entità delle variazioni",
+   "fingerprint": "e0ad405350fb0b08",
+   "same_as": "suap-017-variazioni-strutturali#dati sull'entità delle variazioni",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "consumo immediato sul posto",
+   "fingerprint": "67ed23a221f7e731",
+   "same_as": "suap-018-aprire-l-attivita#consumo immediato sul posto",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  }
+ ]
+}

@@ -1,0 +1,333 @@
+{
+ "crawled": "2026-10-28T17:47:02.172Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l’attività di temporary shop (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 50.8,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività per Temporary shop in forma di esercizio di vicinato (esercizio commerciale fino a 150/250 mq)",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per Temporary shop in forma di esercizio di vicinato (esercizio commerciale fino a 150/250 mq)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "Dati sull'esercizio di temporary shop",
+   "Dichiarazione sul possesso dei requisiti di onorabilità e professionali",
+   "Altre dichiarazioni",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.2
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.2
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.9
+  },
+  {
+   "section": "Dati sull'esercizio di temporary shop",
+   "fields": [
+    {
+     "id": "r3c1p3reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r10c1p17reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r10c1p17reg:radio"
+    },
+    {
+     "id": "r10c2p18reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r10c2p18reg:radio"
+    },
+    {
+     "id": "r14c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r14c2p27reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Alimentare",
+     "max": 6
+    },
+    {
+     "id": "r16c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    },
+    {
+     "id": "r16c2p33reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Non alimentare",
+     "max": 6
+    },
+    {
+     "id": "r18c2p39reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di vendita complessiva",
+     "max": 6
+    },
+    {
+     "id": "r22c1p45reg:chk",
+     "kind": "checkbox",
+     "label": "Merci ingombranti"
+    },
+    {
+     "id": "r22c2p47reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Merci ingombranti",
+     "max": 6
+    }
+   ],
+   "fingerprint": "26c8c9d46ccc2b15",
+   "branches": [
+    {
+     "choice": "Si",
+     "id": "r10c1p17reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p21reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r14c1p25reg:chk",
+       "r15c1p27reg:chk"
+      ],
+      [
+       "r14c2p27reg:real",
+       "r15c2p29reg:real"
+      ],
+      [
+       "r16c1p31reg:chk",
+       "r17c1p33reg:chk"
+      ],
+      [
+       "r16c2p33reg:real",
+       "r17c2p35reg:real"
+      ],
+      [
+       "r18c2p39reg:real",
+       "r19c2p41reg:real"
+      ],
+      [
+       "r22c1p45reg:chk",
+       "r23c1p47reg:chk"
+      ],
+      [
+       "r22c2p47reg:real",
+       "r23c2p49reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r10c2p18reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Alimentare",
+     "id": "r14c1p25reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r16c1p31reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Merci ingombranti",
+     "id": "r22c1p45reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 17.4
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità e professionali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 1.2
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.5,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 1.5,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

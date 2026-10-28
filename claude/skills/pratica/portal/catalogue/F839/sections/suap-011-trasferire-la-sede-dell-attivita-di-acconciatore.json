@@ -1,0 +1,310 @@
+{
+ "crawled": "2026-10-28T18:24:36.266Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Trasferire la sede dell'attività di acconciatore (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 22.9,
+ "generated": {
+  "interventi": "Trasferimento di sede di esercizio di attività di acconciatore",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per trasferimento di sede di attività di acconciatore e/o estetista",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "nuovo indirizzo dell'ubicazione dell'esercizio",
+   "dati catastali della nuova ubicazione",
+   "precedente ubicazione dell'esercizio",
+   "Dati sull'attività",
+   "Dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "0_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "0_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "nuovo indirizzo dell'ubicazione dell'esercizio",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali della nuova ubicazione",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "precedente ubicazione dell'esercizio",
+   "fingerprint": "355e232296d20e8a",
+   "same_as": "suap-060-trasferire-la-sede-dell-attivita#precedente ubicazione dell'esercizio",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dati sull'attività",
+   "fields": [
+    {
+     "id": "r1c2p2reg:chk",
+     "kind": "checkbox",
+     "label": "Acconciatore"
+    },
+    {
+     "id": "r1c3p3reg:chk",
+     "kind": "checkbox",
+     "label": "Estetista"
+    },
+    {
+     "id": "r3c2p7reg:txt",
+     "kind": "text",
+     "label": "prot./n.",
+     "context": "già avviata con la SCIA/DIA/autorizzazione",
+     "max": 10
+    },
+    {
+     "id": "r3c3p9reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r6c1p16reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r6c1p16reg:radio"
+    },
+    {
+     "id": "r6c2p17reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r6c2p17reg:radio"
+    }
+   ],
+   "fingerprint": "65fe773e0393316d",
+   "text": "Dati sull'attività Il/la sottoscritto/a SEGNALA che l'attività di: Acconciatore Estetista prot./n. del già avviata con la SCIA/DIA/autorizzazione sarà trasferita nel nuovo esercizio: Esercizio collocato in centro commerciale Si No",
+   "branches": [
+    {
+     "choice": "Acconciatore",
+     "id": "r1c2p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Estetista",
+     "id": "r1c3p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Si",
+     "id": "r6c1p16reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c1p20reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r6c2p17reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.8
+  },
+  {
+   "section": "Dichiarazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "i regolamenti di igiene e sanità, la conformità degli arredi e delle attrezzature a quanto previsto dalle normative di riferimento in ordine ai requisiti di sic",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "il regolamento comunale per la disciplina dell'attività di acconciatore e/o estetista",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "le norme sulla sicurezza sui luoghi di lavoro"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "le norme edilizie, urbanistiche e quelle relative alla destinazione d'uso"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "la normativa vigente in materia ambientale"
+    },
+    {
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "di impegnarsi a comunicare ogni variazione relativa a stati, fatti, condizioni e titolarità rispetto a quanto dichiarato"
+    },
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "di consentire i controlli nei locali da parte delle autorità competenti nel caso in cui l'esercizio dell'attività venga svolto presso la propria abitazione"
+    }
+   ],
+   "fingerprint": "723aa69c4defbc48",
+   "text": "Dichiarazioni Il/la sottoscritto/a, consapevole delle sanzioni penali previste dalla legge per le false dichiarazioni e attestazioni (art. 76 del DPR 445 del 2000 e Codice penale), sotto la propria responsabilità, dichiara di aver rispettato: i regolamenti di igiene e sanità, la conformità degli arredi e delle attrezzature a quanto previsto dalle normative di riferimento in ordine ai requisiti di sicurezza. il regolamento comunale per la disciplina dell'attività di acconciatore e/o estetista Il/la sottoscritto/a dichiara, inoltre, di aver rispettato: le norme sulla sicurezza sui luoghi di lavoro le norme edilizie, urbanistiche e quelle relative alla destinazione d'uso la normativa vigente in materia ambientale Il/la sottoscritto/a dichiara, inoltre: di impegnarsi a comunicare ogni variazione relativa a stati, fatti, condizioni e titolarità rispetto a quanto dichiarato di consentire i controlli nei locali da parte delle autorità competenti nel caso in cui l'esercizio dell'attività venga svolto presso la propria abitazione",
+   "branches": [
+    {
+     "choice": "i regolamenti di igiene e sanità, la conformità degli arredi e delle attrezzature a quanto previsto dalle normative di riferimento in ordine ai requisiti di sic",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "il regolamento comunale per la disciplina dell'attività di acconciatore e/o estetista",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "le norme sulla sicurezza sui luoghi di lavoro",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "le norme edilizie, urbanistiche e quelle relative alla destinazione d'uso",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "la normativa vigente in materia ambientale",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di impegnarsi a comunicare ogni variazione relativa a stati, fatti, condizioni e titolarità rispetto a quanto dichiarato",
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di consentire i controlli nei locali da parte delle autorità competenti nel caso in cui l'esercizio dell'attività venga svolto presso la propria abitazione",
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 6.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

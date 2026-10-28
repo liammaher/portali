@@ -1,0 +1,350 @@
+{
+ "crawled": "2026-10-28T18:32:14.069Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Domanda per prima classificazione / rinnovo o modifica di precedente classificazione (sector Strutture ricettive alberghiere (alberghi, motel, villaggi-albergo residenze turistico-alberghiere alberghi diffusi, condhotel e loro dipendenze))",
+ "seconds": 25.3,
+ "generated": {
+  "interventi": "Domanda per prima classificazione / rinnovo o modifica di classificazione di strutture ricettive alberghiere",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda per la classificazione di strutture ricettive alberghiere",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "Tipologia e denominazione della struttura ricettiva alberghiera",
+   "Dichiarazione relativa all'oggetto della domanda",
+   "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "Tipologia e denominazione della struttura ricettiva alberghiera",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "albergo",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "R.T.A. (Residenza turistico-alberghiera)",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "villaggio albergo",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "albergo diffuso",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio",
+     "label": "motel",
+     "group": "r6c1p6reg:radio"
+    },
+    {
+     "id": "r8c1p8reg:txt",
+     "kind": "text",
+     "label": "denominazione della struttura",
+     "max": 80
+    }
+   ],
+   "fingerprint": "56b5a3d3688a1450",
+   "text": "Tipologia e denominazione della struttura ricettiva alberghiera tipologia struttura: albergo R.T.A. (Residenza turistico-alberghiera) villaggio albergo albergo diffuso motel denominazione della struttura",
+   "branches": [
+    {
+     "choice": "albergo",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "R.T.A. (Residenza turistico-alberghiera)",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "villaggio albergo",
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "albergo diffuso",
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "motel",
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 4.6
+  },
+  {
+   "section": "Dichiarazione relativa all'oggetto della domanda",
+   "fields": [
+    {
+     "id": "r3c1p3reg:number",
+     "kind": "text",
+     "label": "pari a punti",
+     "max": 5
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "in lettere",
+     "max": 30
+    },
+    {
+     "id": "r5c1p9reg:radio:0_clone",
+     "kind": "radio",
+     "label": "scheda per la rilevazione del punteggio di classificazione per gli alberghi, motel, villaggi albergo, alberghi diffusi, dipendenze",
+     "group": "r5c1p9reg:radio"
+    },
+    {
+     "id": "r6c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "label": "scheda per la rilevazione del punteggio di classificazione per le residenze turistico-alberghiere",
+     "group": "r6c1p10reg:radio"
+    },
+    {
+     "id": "r8c1p12reg:radio:2_clone",
+     "kind": "radio",
+     "label": "di confermare la classificazione precedente effettuata",
+     "group": "r8c1p12reg:radio"
+    },
+    {
+     "id": "r10c1p14reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r10c2p16reg:number",
+     "kind": "text",
+     "label": "di n. stelle",
+     "max": 1
+    },
+    {
+     "id": "r11c1p19reg:radio:3_clone",
+     "kind": "radio",
+     "label": "di modificare, in seguito al mutamento dei requisiti, la classificazione precedente effettuata",
+     "group": "r11c1p19reg:radio"
+    },
+    {
+     "id": "r13c1p21reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r13c2p23reg:number",
+     "kind": "text",
+     "label": "da n. stelle",
+     "max": 1
+    },
+    {
+     "id": "r13c3p25reg:number",
+     "kind": "text",
+     "label": "a n. stelle",
+     "max": 1
+    },
+    {
+     "id": "r14c1p28reg:radio:4_clone",
+     "kind": "radio",
+     "label": "di attribuire alla struttura ricettiva di nuova apertura la classificazione",
+     "group": "r14c1p28reg:radio"
+    },
+    {
+     "id": "r16c1p30reg:number",
+     "kind": "text",
+     "label": "di n. stelle",
+     "max": 1
+    }
+   ],
+   "fingerprint": "19a3e3b3718ae854",
+   "text": "Dichiarazione relativa all'oggetto della domanda consapevole delle disposizioni della legge regionale n.16 del 2014 (commi n.50-70), della legge regionale n. 15 del 1984 e del regolamento 13 maggio n.2013 in materia di classificazione delle strutture ricettive alberghiere, in riferimento alla suddetta struttura ricettiva, sulla base del punteggio pari a punti in lettere riportato nella scheda allegata scheda per la rilevazione del punteggio di classificazione per gli alberghi, motel, villaggi albergo, alberghi diffusi, dipendenze scheda per la rilevazione del punteggio di classificazione per le residenze turistico-alberghiere dichiara di confermare la classificazione precedente effettuata in data di n. stelle di modificare, in seguito al mutamento dei requisiti, la classificazione precedente effettuata in data da n. stelle a n. stelle di attribuire alla struttura ricettiva di nuova apertura la classificazione di n. stelle",
+   "branches": [
+    {
+     "choice": "scheda per la rilevazione del punteggio di classificazione per gli alberghi, motel, villaggi albergo, alberghi diffusi, dipendenze",
+     "id": "r5c1p9reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:calendar_input",
+       "r10c1p14reg:calendar_input"
+      ],
+      [
+       "r16c1p30reg:number",
+       "r10c2p16reg:number"
+      ]
+     ]
+    },
+    {
+     "choice": "scheda per la rilevazione del punteggio di classificazione per le residenze turistico-alberghiere",
+     "id": "r6c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:calendar_input",
+       "r10c1p14reg:calendar_input"
+      ],
+      [
+       "r16c1p30reg:number",
+       "r10c2p16reg:number"
+      ]
+     ]
+    },
+    {
+     "choice": "di confermare la classificazione precedente effettuata",
+     "id": "r8c1p12reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:calendar_input",
+       "r10c1p14reg:calendar_input"
+      ],
+      [
+       "r16c1p30reg:number",
+       "r10c2p16reg:number"
+      ]
+     ]
+    },
+    {
+     "choice": "di modificare, in seguito al mutamento dei requisiti, la classificazione precedente effettuata",
+     "id": "r11c1p19reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:calendar_input",
+       "r10c1p14reg:calendar_input"
+      ],
+      [
+       "r16c1p30reg:number",
+       "r10c2p16reg:number"
+      ]
+     ]
+    },
+    {
+     "choice": "di attribuire alla struttura ricettiva di nuova apertura la classificazione",
+     "id": "r14c1p28reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:calendar_input",
+       "r10c1p14reg:calendar_input"
+      ],
+      [
+       "r16c1p30reg:number",
+       "r10c2p16reg:number"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.8
+  },
+  {
+   "section": "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "fingerprint": "6daa74c4b0cb428c",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.8
+  }
+ ]
+}

@@ -1,0 +1,224 @@
+{
+ "crawled": "2026-10-28T18:29:00.985Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni strutturali in attività di estetista (sector Acconciatore, barbiere, estetista, tatuatore e piercer)",
+ "seconds": 21.7,
+ "generated": {
+  "interventi": "Variazioni strutturali in attività di estetista",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per variazioni strutturali in attività di estetista",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione locale",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione della data di inizio dell'attività",
+   "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione dell'insegna dell'esercizio",
+   "dichiarazione relativa alla superficie dei locali da adibire all'attività, prima della variazione",
+   "dichiarazione relativa alla superficie dei locali da adibire all'attività, successivamente alla variazione",
+   "dichiarazione relativa alla variazione delle attrezzature",
+   "dichiarazione della superficie complessiva dell'esercizio in seguito alla variazione",
+   "modificazione del numero dei posti di lavoro",
+   "dichiarazione del responsabile tecnico",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si rende necessario presentare la valutazione di impatto acustico di attività commerciali e terziarie (Art.4, comma 1, lett. d) L.447/1995 - D.P.C.M. 14.11.1997)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "il Responsabile Tecnico è diverso dal titolare/legale rappresentante dell'impresa",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione locale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della data di inizio dell'attività",
+   "fingerprint": "f991f8b09879ba6a",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione della data di inizio dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "fingerprint": "6daa74c4b0cb428c",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione di titolarità autorizzazione/DIA/SCIA",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "fingerprint": "fa207f5414241787",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione di conformità alle norme in materia edilizia, urbanistica, igienico sanitaria e accessibilità",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "fingerprint": "072898a981cd1b8c",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del rispetto delle leggi e regolamenti vigenti in materia",
+   "fingerprint": "3c486f7fec11f48c",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione del rispetto delle leggi e regolamenti vigenti in materia",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione dell'insegna dell'esercizio",
+   "fingerprint": "aba1bd5fe83eb6c1",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione dell'insegna dell'esercizio",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alla superficie dei locali da adibire all'attività, prima della variazione",
+   "fingerprint": "f316d1d62db7694b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione relativa alla superficie dei locali da adibire all'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla superficie dei locali da adibire all'attività, successivamente alla variazione",
+   "fingerprint": "0cadac6c3a3cde2b",
+   "same_as": "suap-011-trasferire-la-sede-dell-attivita-di-tatuatore-pier#dichiarazione relativa alla superficie dei locali da adibire all'attività, successivamente alla variazione",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla variazione delle attrezzature",
+   "fingerprint": "6fb01d1ebfe00924",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione relativa alla variazione delle attrezzature",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della superficie complessiva dell'esercizio in seguito alla variazione",
+   "fingerprint": "534101c7313973db",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione della superficie complessiva dell'esercizio in seguito alla variazione",
+   "seconds": 0.7
+  },
+  {
+   "section": "modificazione del numero dei posti di lavoro",
+   "fingerprint": "fccca71f03f623ae",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#modificazione del numero dei posti di lavoro",
+   "seconds": 3
+  },
+  {
+   "section": "dichiarazione del responsabile tecnico",
+   "fingerprint": "3f96e197ccc5c661",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione del responsabile tecnico",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

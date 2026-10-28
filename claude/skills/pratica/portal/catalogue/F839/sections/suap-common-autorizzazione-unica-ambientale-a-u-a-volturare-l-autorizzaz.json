@@ -1,0 +1,530 @@
+{
+ "crawled": "2026-10-28T19:36:48.658Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Volturare l'Autorizzazione Unica Ambientale (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 41.2,
+ "generated": {
+  "interventi": "Volturare l'Autorizzazione Unica Ambientale",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda per la voltura dell'Autorizzazione Unica Ambientale",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "DATI DELL’IMPIANTO / STABILIMENTO / ATTIVITA’",
+   "Dati del referente AUA",
+   "DATI DELLA IMPRESA A CUI SI SUBENTRA",
+   "MOTIVAZIONE DELLA VOLTURA/AGGIORNAMENTO",
+   "DICHIARAZIONI",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "DATI DELL’IMPIANTO / STABILIMENTO / ATTIVITA’",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Denominazione dell’impianto/stabilimento/attività",
+     "max": 200
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "Descrizione attività principale",
+     "max": 300
+    }
+   ],
+   "fingerprint": "ae109fa9677e2373",
+   "text": "DATI DELL’IMPIANTO / STABILIMENTO / ATTIVITA’ Denominazione dell’impianto/stabilimento/attività Descrizione attività principale",
+   "branches": [],
+   "seconds": 1
+  },
+  {
+   "section": "Dati del referente AUA",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Sì",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r2c2p4reg:radio"
+    }
+   ],
+   "fingerprint": "b56e8a5960e180d6",
+   "text": "Dati del referente AUA Il referente AUA coincide con il richiedente? Sì No",
+   "branches": [
+    {
+     "choice": "Sì",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "No",
+     "id": "r2c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r4c1p7reg:txt",
+       "kind": "text",
+       "label": "Nome",
+       "max": 50
+      },
+      {
+       "id": "r4c2p9reg:txt",
+       "kind": "text",
+       "label": "Cognome",
+       "max": 50
+      },
+      {
+       "id": "r6c1p13reg:txt",
+       "kind": "text",
+       "label": "Codice Fiscale",
+       "max": 16
+      },
+      {
+       "id": "r8c1p17reg",
+       "kind": "select",
+       "label": "in qualità di:",
+       "options": [
+        "Altro previsto dalla vigente normativa",
+        "Amministratore",
+        "Associazione di categoria",
+        "Centro elaborazione dati",
+        "Commissario giudiziario",
+        "Consulente",
+        "Curatore fallimentare",
+        "Delegato",
+        "Legale rappresentante",
+        "Liquidatore",
+        "Notaio",
+        "Professionista incaricato",
+        "Socio",
+        "Studio associato",
+        "Titolare"
+       ]
+      },
+      {
+       "id": "r10c1p21reg:txt",
+       "kind": "text",
+       "label": "nato a",
+       "max": 9999
+      },
+      {
+       "id": "r10c2p23reg",
+       "kind": "select",
+       "label": "prov.",
+       "options": "112 options"
+      },
+      {
+       "id": "r10c3p25reg",
+       "kind": "select",
+       "label": "Stato",
+       "options": "251 options"
+      },
+      {
+       "id": "r10c4p27reg:calendar_input",
+       "kind": "date",
+       "label": "il"
+      },
+      {
+       "id": "r12c1p31reg:txt",
+       "kind": "text",
+       "label": "Residente in",
+       "max": 30
+      },
+      {
+       "id": "r12c2p33reg",
+       "kind": "select",
+       "label": "prov.",
+       "options": "112 options"
+      },
+      {
+       "id": "r12c3p35reg",
+       "kind": "select",
+       "label": "Stato",
+       "options": "251 options"
+      },
+      {
+       "id": "r14c1p39reg:txt",
+       "kind": "text",
+       "label": "Via, piazza ecc :",
+       "max": 50
+      },
+      {
+       "id": "r14c2p41reg:txt",
+       "kind": "text",
+       "label": "n°",
+       "max": 5
+      },
+      {
+       "id": "r14c3p43reg:txt",
+       "kind": "text",
+       "label": "CAP",
+       "max": 5
+      },
+      {
+       "id": "r16c1p47reg:txt",
+       "kind": "text",
+       "label": "PEC/posta elettronica",
+       "max": 100
+      },
+      {
+       "id": "r16c2p49reg:txt",
+       "kind": "text",
+       "label": "Telefono fisso/cellulare",
+       "max": 15
+      },
+      {
+       "id": "r18c1p53reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Allegare copia documento di riconoscimento del referente AUA, in corso di validità",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ]
+    }
+   ],
+   "seconds": 3.9
+  },
+  {
+   "section": "DATI DELLA IMPRESA A CUI SI SUBENTRA",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "la voltura",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "l’aggiornamento",
+     "group": "r2c2p3reg:radio"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "dell’Autorizzazione Unica Ambientale nell’attività di:",
+     "max": 200
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "prot./n.",
+     "max": 20
+    },
+    {
+     "id": "r7c2p11reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r9c1p15reg:txt",
+     "kind": "text",
+     "label": "Intestato a",
+     "max": 200
+    }
+   ],
+   "fingerprint": "bd681cf98de8f4c9",
+   "text": "DATI DELLA IMPRESA A CUI SI SUBENTRA Il/la sottoscritto/a COMUNICA: la voltura l’aggiornamento dell’Autorizzazione Unica Ambientale nell’attività di: adottata con autorizzazione prot./n. del Intestato a (indicare il nominativo del gestore dell’attività a cui è stata rilasciata l’AUA oggetto della comunicazione di voltura)",
+   "branches": [
+    {
+     "choice": "la voltura",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "l’aggiornamento",
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.4
+  },
+  {
+   "section": "MOTIVAZIONE DELLA VOLTURA/AGGIORNAMENTO",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "cambio di denominazione del soggetto titolare dell’A.U.A.",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "cessione d’azienda",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "donazione",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "fusione",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio",
+     "label": "scissione",
+     "group": "r6c1p6reg:radio"
+    },
+    {
+     "id": "r7c1p7reg:radio:5_clone",
+     "kind": "radio",
+     "label": "cambiamento di forma giuridica",
+     "group": "r7c1p7reg:radio"
+    },
+    {
+     "id": "r8c1p8reg:radio:6_clone",
+     "kind": "radio",
+     "label": "cessione o acquisizione di quote",
+     "group": "r8c1p8reg:radio"
+    },
+    {
+     "id": "r9c1p9reg:radio:7_clone",
+     "kind": "radio",
+     "label": "conferimento di ramo d’azienda",
+     "group": "r9c1p9reg:radio"
+    },
+    {
+     "id": "r10c1p10reg:radio:8_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r10c1p10reg:radio"
+    },
+    {
+     "id": "r12c1p13reg:txt",
+     "kind": "text",
+     "label": "in tal caso specificare",
+     "max": 100
+    },
+    {
+     "id": "r13c1p14reg:radio:9_clone",
+     "kind": "radio",
+     "label": "come risulta dall’atto di subingresso, che si allega, registrato al",
+     "group": "r13c1p14reg:radio"
+    },
+    {
+     "id": "r15c1p16reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "max": 20
+    },
+    {
+     "id": "r15c2p18reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r16c1p21reg:radio:10_clone",
+     "kind": "radio",
+     "label": "l’atto è in corso di registrazione",
+     "group": "r16c1p21reg:radio"
+    }
+   ],
+   "fingerprint": "c00f4cfc14627c30",
+   "text": "MOTIVAZIONE DELLA VOLTURA/AGGIORNAMENTO La variazione è intervenuta in forza di: cambio di denominazione del soggetto titolare dell’A.U.A. cessione d’azienda donazione fusione scissione cambiamento di forma giuridica cessione o acquisizione di quote conferimento di ramo d’azienda altro in tal caso specificare come risulta dall’atto di subingresso, che si allega, registrato al n. del l’atto è in corso di registrazione Si rammenta che a norma dell’art. 2556 c.c. i contratti di trasferimento di proprietà o gestione di un’azienda commerciale sono stipulati presso un notaio, in forma di atto pubblico o scrittura privata autenticata e registrata presso l’Agenzia delle Entrate.",
+   "branches": [
+    {
+     "choice": "cambio di denominazione del soggetto titolare dell’A.U.A.",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "cessione d’azienda",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "donazione",
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "fusione",
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "scissione",
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "cambiamento di forma giuridica",
+     "id": "r7c1p7reg:radio:5_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "cessione o acquisizione di quote",
+     "id": "r8c1p8reg:radio:6_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "conferimento di ramo d’azienda",
+     "id": "r9c1p9reg:radio:7_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro",
+     "id": "r10c1p10reg:radio:8_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "come risulta dall’atto di subingresso, che si allega, registrato al",
+     "id": "r13c1p14reg:radio:9_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "l’atto è in corso di registrazione",
+     "id": "r16c1p21reg:radio:10_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 16.6
+  },
+  {
+   "section": "DICHIARAZIONI",
+   "fields": [
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "che nulla è variato circa l’attività autorizzata con i provvedimenti in essere, nonché le tecnologie impiegate rispetto a quanto dichiarato nelle relazioni tecn"
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "di accettare tutti gli obblighi e le prescrizioni contenute nell’A.U.A. oggetto di voltura;"
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti"
+    }
+   ],
+   "fingerprint": "0e2cbae1cb7027d5",
+   "text": "DICHIARAZIONI Il/la sottoscritto/a, consapevole delle sanzioni penali previste dalla legge per le false dichiarazioni e attestazioni (art. 76 del DPR 445 del 2000 e Codice Penale), sotto la propria responsabilità DICHIARA: che nulla è variato circa l’attività autorizzata con i provvedimenti in essere, nonché le tecnologie impiegate rispetto a quanto dichiarato nelle relazioni tecniche e negli elaborati progettuali allegati all’istanza di autorizzazione dell’AUA o all’aggiornamento della stessa; di accettare tutti gli obblighi e le prescrizioni contenute nell’A.U.A. oggetto di voltura; che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti delle misure di prevenzione previste dal Codice delle leggi antimafia e delle misure di prevenzione, nonché nuove disposizioni in materia di documentazione antimafia”). Quali sono le cause di divieto, decadenza o sospensione previste dalla legge (D.Lgs. n. 159/2011)? - provvedimenti definitivi di applicazione delle misure di prevenzione personale (sorveglianza speciale di pubblica sicurezza oppure obbligo di soggiorno nel comune di residenza o di dimora abituale - art. 5 del D.Lgs 159/2011); - condanne con sentenza definitiva o confermata in appello per uno dei delitti consumati o tentati elencati nell’art. 51, comma 3-bis, del Codice di procedura penale (per esempio, associazione di tipo mafioso o associazione finalizzata al traffico di stupefacenti, ecc.). Attenzione: qualora dai controlli successivi il contenuto delle dichiarazioni risulti non corrispondente al vero, oltre alle sanzioni penali, è prevista la decadenza dai benefici ottenuti sulla base delle dichiarazioni stesse (art. 75 del DPR 445 del 2000).",
+   "branches": [
+    {
+     "choice": "di accettare tutti gli obblighi e le prescrizioni contenute nell’A.U.A. oggetto di voltura;",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 3.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.9
+  }
+ ]
+}

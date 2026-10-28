@@ -66,7 +66,8 @@ from pathlib import Path
 
 import yaml
 
-sys.path[:0] = [str(Path(__file__).resolve().parent.parent / "fill"), str(Path(__file__).resolve().parent.parent)]
+sys.path[:0] = [str(Path(__file__).resolve().parent.parent / "fill"), str(Path(__file__).resolve().parent.parent),
+                str(Path(__file__).resolve().parent)]
 sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
 import fill  # noqa: E402  (its vault client: the pilot over TCP, a real vault over its socket)
 import review  # noqa: E402  (the page the person reviews)
@@ -118,12 +119,32 @@ QUALITA = {"proprietario": "Proprietario", "comproprietario": "Comproprietario",
            "amministratore di condominio": "Amministratore di condominio"}
 
 
+def _albo_tipo(v):
+    """An ordine's name ("Ordine degli Architetti P.P.C.") as the SUE's list has it."""
+    v = v.lower()
+    for word, option in (("architett", "Architetto"), ("ingegner", "Ingegnere"), ("geometr", "Geometra"), ("perit", "Perito")):
+        if word in v:
+            return option
+    return "Altro"
+
+
 def _qualita(v):
     return QUALITA.get(v.strip().lower(), "Altro")
 
 
-FILTERS = {
+class Filters(dict):
+    """`is_<answer>` is true when the value is that answer, spaces as underscores
+    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`."""
+    def __missing__(self, name):
+        if not name.startswith("is_"):
+            raise KeyError(name)
+        return lambda v: "true" if re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_") == name[3:] else "false"
+
+
+FILTERS = Filters({
     "upper": str.upper,
+    "albo_tipo": _albo_tipo,
+    "sigla": lambda v: ".".join(v.strip().upper()) + "." if v.strip().isalpha() and len(v.strip()) <= 5 else v,
     "sesso": lambda v: {"F": "Femmina", "M": "Maschio"}[v.strip().upper()],
     "provincia_nome": lambda v: PROVINCE[v.strip().upper()],
     "qualita": _qualita,
@@ -141,7 +162,7 @@ FILTERS = {
     "empty": lambda v: "true" if not v else "false",
     "not": lambda v: "false" if truthy(v) else "true",
     "positive": lambda v: "true" if float(str(v or 0).replace(",", ".")) > 0 else "false",
-}
+})
 
 
 def truthy(v):
@@ -404,6 +425,18 @@ def check_answer(ask, v):
     return None
 
 
+def portal_changed(steps):
+    """A generated steps file whose pratica the last drift check (catalogue.py drift) found
+    changed on the portal: refused until it's crawled and generated again."""
+    m = re.match(r"gen\.py from (\S+) ", steps.get("generated", ""))
+    if not m:
+        return []
+    import catalogue  # noqa: E402 (portal/, on the path below)
+    diff = catalogue.drifted(m.group(1))
+    return [f"The portal changed this pratica since it was mapped ({'; '.join(diff)}): it needs a new crawl "
+            "(crawl.js) and steps file (gen.py) first."] if diff else []
+
+
 def preflight(steps, values):
     """Everything a run needs, settled before any browser opens: why this case isn't
     supported, the questions still to ask, the vault fields missing or expired, the files
@@ -419,6 +452,7 @@ def preflight(steps, values):
             report["missing"].append({"field": "*:ruolo.tipo", "why": str(e)})
             return report
     report["unsupported"], _ = supported(steps, values)
+    report["unsupported"] += portal_changed(steps)
     if report["unsupported"]:
         return report
     need, groups, lists = needed(steps, values), steps.get("groups", {}), {}

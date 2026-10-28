@@ -1,0 +1,741 @@
+{
+ "crawled": "2026-10-28T16:53:53.952Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni soggetti (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 47,
+ "generated": {
+  "interventi": "Variazioni soggetti in attività di somministrazione di alimenti e bevande (bar / ristorante / pizzeria / osteria etc.) in zona NON tutelata",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazioni soggetti in attività di somministrazione di alimenti e bevande",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "Dati catastali",
+   "normative comunali",
+   "dichiarazione relativa alle variazioni della società o dei soggetti",
+   "estremi del/i titolo/i autorizzatorio/i posseduto/i dall'impresa per l'esercizio dell'attività",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "La variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "La variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI",
+   "type": "CHK",
+   "adds": [
+    "Dichiarazione sul possesso dei requisiti di onorabilità e professionali"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "normative comunali",
+   "fingerprint": "0c25f486d179118b",
+   "same_as": "suap-060-subentrare-nell-esercizio-dell-attivita#normative comunali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alle variazioni della società o dei soggetti",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE"
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "con decorrenza dal"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "precedente",
+     "max": 100
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "nuova",
+     "max": 100
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "CESSIONE DI QUOTE"
+    },
+    {
+     "id": "r8c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "come da atto notarile del"
+    },
+    {
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA SEDE LEGALE"
+    },
+    {
+     "id": "r11c1p15reg:txt",
+     "kind": "text",
+     "label": "da via o...",
+     "max": 50
+    },
+    {
+     "id": "r11c2p17reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r11c3p19reg:number",
+     "kind": "text",
+     "label": "C.A.P.",
+     "max": 5
+    },
+    {
+     "id": "r13c1p21reg:txt",
+     "kind": "text",
+     "label": "a via o ...",
+     "max": 50
+    },
+    {
+     "id": "r13c2p23reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r13c3p25reg:number",
+     "kind": "text",
+     "label": "C.A.P.",
+     "max": 5
+    },
+    {
+     "id": "r14c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DEL LEGALE RAPPRESENTANTE (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti di onorabiiità\")"
+    },
+    {
+     "id": "r16c1p28reg:txt",
+     "kind": "text",
+     "label": "dal/ la sig./ ra cognome",
+     "max": 35
+    },
+    {
+     "id": "r16c2p30reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 35
+    },
+    {
+     "id": "r18c1p32reg:txt",
+     "kind": "text",
+     "label": "al/ la sig./ ra cognome",
+     "max": 35
+    },
+    {
+     "id": "r18c2p34reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 35
+    },
+    {
+     "id": "r19c1p35reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA PERSONA IN POSSESSO DEI REQUISITI PROFESSIONALI (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti professionali\")"
+    },
+    {
+     "id": "r20c1p36reg:radio:0_clone",
+     "kind": "radio",
+     "label": "responsabile tecnico",
+     "group": "r20c1p36reg:radio"
+    },
+    {
+     "id": "r20c2p37reg:radio:1_clone",
+     "kind": "radio",
+     "label": "collaboratore familiare",
+     "group": "r20c2p37reg:radio"
+    },
+    {
+     "id": "r20c3p38reg:radio:2_clone",
+     "kind": "radio",
+     "label": "preposto",
+     "group": "r20c3p38reg:radio"
+    },
+    {
+     "id": "r22c1p40reg:txt",
+     "kind": "text",
+     "label": "dal/ la sig./ ra cognome",
+     "max": 35
+    },
+    {
+     "id": "r22c2p42reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 35
+    },
+    {
+     "id": "r24c1p44reg:txt",
+     "kind": "text",
+     "label": "al/ la sig./ ra cognome",
+     "max": 35
+    },
+    {
+     "id": "r24c2p46reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 35
+    },
+    {
+     "id": "r25c1p47reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA COMPAGINE SOCIALE (entrata nuovi soci o amministratori, da indicare nella dichiarazione relativa ai soggetti ex art. 85 del D.L.vo 159/2011)"
+    }
+   ],
+   "fingerprint": "3ac0a53d7185b6d8",
+   "branches": [
+    {
+     "choice": "VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "CESSIONE DI QUOTE",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA SEDE LEGALE",
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DEL LEGALE RAPPRESENTANTE (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti di onorabiiità\")",
+     "id": "r14c1p26reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA PERSONA IN POSSESSO DEI REQUISITI PROFESSIONALI (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti professionali\")",
+     "id": "r19c1p35reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "responsabile tecnico",
+     "id": "r20c1p36reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "collaboratore familiare",
+     "id": "r20c2p37reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "preposto",
+     "id": "r20c3p38reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA COMPAGINE SOCIALE (entrata nuovi soci o amministratori, da indicare nella dichiarazione relativa ai soggetti ex art. 85 del D.L.vo 159/2011)",
+     "id": "r25c1p47reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r13c2p23reg:txt",
+       "r11c2p17reg:txt"
+      ],
+      [
+       "r13c3p25reg:number",
+       "r11c3p19reg:number"
+      ],
+      [
+       "r22c1p40reg:txt",
+       "r16c1p28reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r16c2p30reg:txt"
+      ],
+      [
+       "r24c1p44reg:txt",
+       "r18c1p32reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r18c2p34reg:txt"
+      ],
+      [
+       "r24c2p46reg:txt",
+       "r22c2p42reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 11.3
+  },
+  {
+   "section": "estremi del/i titolo/i autorizzatorio/i posseduto/i dall'impresa per l'esercizio dell'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "di essere in possesso del seguente titolo abilitativo per l'attività di:",
+     "max": 100
+    },
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "autorizzazione",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "comunicazione",
+     "group": "r3c2p4reg:radio"
+    },
+    {
+     "id": "r3c3p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "D.I.A.",
+     "group": "r3c3p5reg:radio"
+    },
+    {
+     "id": "r3c4p6reg:radio:3_clone",
+     "kind": "radio",
+     "label": "S.C.I.A.",
+     "group": "r3c4p6reg:radio"
+    },
+    {
+     "id": "r5c1p8reg:txt",
+     "kind": "text",
+     "label": "protocollo n°",
+     "max": 30
+    },
+    {
+     "id": "r5c2p10reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    }
+   ],
+   "fingerprint": "8e439ec419d8cc52",
+   "branches": [
+    {
+     "choice": "autorizzazione",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "di essere in possesso del seguente titolo abilitativo per l'attività di:",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "comunicazione",
+     "id": "r3c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "di essere in possesso del seguente titolo abilitativo per l'attività di:",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "D.I.A.",
+     "id": "r3c3p5reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "di essere in possesso del seguente titolo abilitativo per l'attività di:",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "S.C.I.A.",
+     "id": "r3c4p6reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "di essere in possesso del seguente titolo abilitativo per l'attività di:",
+      "adds": 14
+     }
+    }
+   ],
+   "seconds": 7.8
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità e professionali",
+   "skipped": "the person's declarations",
+   "scelta": "La variazione riguarda la persona in possesso dei REQUISITI PROFESSIONALI"
+  }
+ ]
+}

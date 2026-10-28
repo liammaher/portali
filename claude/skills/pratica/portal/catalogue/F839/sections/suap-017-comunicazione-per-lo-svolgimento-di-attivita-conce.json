@@ -1,0 +1,215 @@
+{
+ "crawled": "2026-10-28T18:01:47.451Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Comunicazione per lo svolgimento di attività concernenti prodotti audiovisivi (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 51.1,
+ "generated": {
+  "interventi": "Comunicazione per lo svolgimento di attività concernenti prodotti audiovisivi",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per lo svolgimento di attività concernenti prodotti audiovisivi",
+    "amministrazione": "Questura di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "sede dell'attività",
+   "dati catastali",
+   "dichiarazione relativa prodotti audiovisivi",
+   "altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.5
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.9
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.6
+  },
+  {
+   "section": "dichiarazione relativa prodotti audiovisivi",
+   "fields": [
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "produzione"
+    },
+    {
+     "id": "r3c2p5reg:chk",
+     "kind": "checkbox",
+     "label": "duplicazione"
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "riproduzione"
+    },
+    {
+     "id": "r4c2p7reg:chk",
+     "kind": "checkbox",
+     "label": "vendita"
+    },
+    {
+     "id": "r5c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "noleggio"
+    },
+    {
+     "id": "r5c2p9reg:chk",
+     "kind": "checkbox",
+     "label": "cessione"
+    },
+    {
+     "id": "r7c1p11reg:calendar_input",
+     "kind": "date",
+     "label": "a decorrere dal"
+    }
+   ],
+   "fingerprint": "2a449a0ee710454b",
+   "text": "dichiarazione relativa prodotti audiovisivi Il/la sottoscritto/a, come previsto dall'art. 75-bis del T.U.L.P.S., approvato con R.D. 773/1931, comunica l'inizio delle seguenti attività concernenti nastri, dischi, videocassette, musicassette o altro supporto contenente fonogrammi o videogrammi di opere cinematografiche o audiovisive o sequenze di immagini in movimento: (barrare le voci che interessano) produzione duplicazione riproduzione vendita noleggio cessione a decorrere dal nei locali ubicati all'indirizzo sopra indicato",
+   "branches": [
+    {
+     "choice": "produzione",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "duplicazione",
+     "id": "r3c2p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "riproduzione",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "vendita",
+     "id": "r4c2p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "noleggio",
+     "id": "r5c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "cessione",
+     "id": "r5c2p9reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 22.2
+  },
+  {
+   "section": "altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 2.5
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.5,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

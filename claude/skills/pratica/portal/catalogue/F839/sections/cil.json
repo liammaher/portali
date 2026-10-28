@@ -1,1925 +1,97 @@
 {
- "crawled": "2026-10-28T14:26:50.517Z",
- "by": "crawl.js depth 2",
- "pratica": "CIL (opere temporanee), scelta procura (draft PROVA NON INVIARE - gen cil)",
- "seconds": 175.7,
- "tried": 79,
+ "crawled": "2026-10-28T17:24:19.183Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria) › Comunicazione di Inizio Lavori per opere temporanee (C.I.L.) (sector Edilizia e pianificazione urbana)",
+ "seconds": 79.2,
+ "generated": {
+  "interventi": "Comunicazione Inizio Lavori (C.I.L.) per opere dirette a soddisfare obiettive esigenze contingenti e temporanee e ad essere immediatamente rimosse al cessare della necessità e, comunque, entro un termine non superiore a centottanta giorni",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione Inizio Lavori (art. 6, comma 1, lett. e-bis) del d.P.R. n. 380/2001 e n. 26 Tabella A, Sez. II del d.lgs n. 222/2016)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Localizzazione dell'intervento",
+   "Dati catastali",
+   "a) Titolarità dell'intervento",
+   "b) Opere su parti comuni o modifiche esterne",
+   "c) Comunicazione inizio lavori",
+   "d) Destinazione d'uso dell'immobile",
+   "e) Altre comunicazioni, segnalazioni e asseverazioni eventualmente necessarie alla realizzazione delle opere presentate contestualmente alla comunicazione di inizio lavori",
+   "f) Impresa esecutrice dei lavori",
+   "g) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
  "sections": [
   {
    "section": "Scheda anagrafica",
-   "fields": [
-    {
-     "id": "r1c1p1reg:radio:0_clone",
-     "kind": "radio",
-     "label": "DITTA/SOCIETA'/IMPRESA",
-     "group": "r1c1p1reg:radio",
-     "checked": true
-    },
-    {
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "label": "PERSONA (Privato)",
-     "group": "r1c2p2reg:radio"
-    },
-    {
-     "id": "r2c2p4reg:radio:2_clone",
-     "kind": "radio",
-     "label": "ISCRITTA ALLA CCIAA",
-     "group": "r2c2p4reg:radio"
-    },
-    {
-     "id": "r6c2p16reg:radio:3_clone",
-     "kind": "radio",
-     "label": "NON ANCORA ISCRITTA",
-     "group": "r6c2p16reg:radio"
-    },
-    {
-     "id": "r7c2p19reg:radio:4_clone",
-     "kind": "radio",
-     "label": "NON NECESSITA DI ISCRIZIONE AL RI DELLA CCIAA",
-     "group": "r7c2p19reg:radio"
-    },
-    {
-     "id": "r10c1p23reg:txt",
-     "kind": "text",
-     "label": "Nome"
-    },
-    {
-     "id": "r10c2p25reg:txt",
-     "kind": "text",
-     "label": "Cognome"
-    },
-    {
-     "id": "r10c3p27reg:txt",
-     "kind": "text",
-     "label": "Cod.Fiscale"
-    },
-    {
-     "id": "r12c1p29reg",
-     "kind": "select",
-     "label": "Sesso",
-     "options": [
-      "Femminile",
-      "Maschile"
-     ]
-    },
-    {
-     "id": "r12c2p31reg:calendar_input",
-     "kind": "date",
-     "label": "Data nascita"
-    },
-    {
-     "id": "r12c3p33reg",
-     "kind": "select",
-     "label": "Cittadinanza",
-     "options": "251 options",
-     "value": "ITALIA"
-    },
-    {
-     "id": "r15c1p39reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "249 options",
-     "value": "Italia"
-    },
-    {
-     "id": "r15c2p41reg",
-     "kind": "select",
-     "label": "Provincia",
-     "options": "115 options"
-    },
-    {
-     "id": "r17c1p45reg",
-     "kind": "select",
-     "label": "Comune",
-     "options": []
-    },
-    {
-     "id": "r19c1p50reg:chk",
-     "kind": "checkbox",
-     "label": "Se cittadino non UE"
-    },
-    {
-     "id": "r24c1p61reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "244 options",
-     "value": "Italia"
-    },
-    {
-     "id": "r24c2p63reg",
-     "kind": "select",
-     "label": "Provincia",
-     "options": "111 options"
-    },
-    {
-     "id": "r26c1p67reg",
-     "kind": "select",
-     "label": "Comune",
-     "options": []
-    },
-    {
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "label": "Toponimo (DUG)",
-     "options": [
-      "ALTRO",
-      "CORSO",
-      "LARGO",
-      "PIAZZA",
-      "VIA",
-      "VIALE"
-     ]
-    },
-    {
-     "id": "r31c1p79reg:txt",
-     "kind": "text",
-     "label": "Denominazione stradale"
-    },
-    {
-     "id": "r33c1p83reg:txt",
-     "kind": "text",
-     "label": "Numero civico"
-    },
-    {
-     "id": "r33c2p85reg:txt",
-     "kind": "text",
-     "label": "CAP"
-    },
-    {
-     "id": "r33c3p87reg:txt",
-     "kind": "text",
-     "label": "eMail/PEC"
-    },
-    {
-     "id": "r33c4p89reg:number",
-     "kind": "text",
-     "label": "Telefono fisso/cellulare"
-    },
-    {
-     "id": "r36c1p93reg",
-     "kind": "select",
-     "label": "Carica",
-     "options": "322 options"
-    },
-    {
-     "id": "r39c1p99reg:txt",
-     "kind": "text",
-     "label": "Denominazione (nome della ditta o azienda o ragione sociale)"
-    },
-    {
-     "id": "r41c1p103reg",
-     "kind": "select",
-     "label": "Forma giuridica",
-     "options": "72 options"
-    },
-    {
-     "id": "r41c2p105reg:txt",
-     "kind": "text",
-     "label": "Codice Fiscale"
-    },
-    {
-     "id": "r41c3p107reg:txt",
-     "kind": "text",
-     "label": "P.IVA"
-    },
-    {
-     "id": "r44c1p111reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "244 options",
-     "value": "Italia"
-    },
-    {
-     "id": "r44c2p113reg",
-     "kind": "select",
-     "label": "Provincia",
-     "options": "111 options"
-    },
-    {
-     "id": "r46c1p117reg",
-     "kind": "select",
-     "label": "Comune",
-     "options": []
-    },
-    {
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "label": "Toponimo (DUG)",
-     "options": [
-      "ALTRO",
-      "CORSO",
-      "LARGO",
-      "PIAZZA",
-      "VIA",
-      "VIALE"
-     ]
-    },
-    {
-     "id": "r51c1p129reg:txt",
-     "kind": "text",
-     "label": "Denominazione stradale"
-    },
-    {
-     "id": "r51c2p131reg:txt",
-     "kind": "text",
-     "label": "Numero civico"
-    },
-    {
-     "id": "r51c3p133reg:txt",
-     "kind": "text",
-     "label": "CAP"
-    },
-    {
-     "id": "r53c1p135reg:txt",
-     "kind": "text",
-     "label": "Telefono fisso/Cellulare"
-    },
-    {
-     "id": "r53c2p137reg:txt",
-     "kind": "text",
-     "label": "Fax"
-    },
-    {
-     "id": "r53c3p139reg:txt",
-     "kind": "text",
-     "label": "PEC"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "PERSONA (Privato)",
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "label": "In qualità di:",
-       "options": [
-        "Proprietario",
-        "Comproprietario",
-        "Usufruttuario",
-        "Amministratore di condominio",
-        "Legale rappresentante",
-        "Amministratore unico",
-        "Procuratore",
-        "Altro"
-       ]
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ],
-     "hides": [
-      "r2c2p4reg:radio:2_clone",
-      "r6c2p16reg:radio:3_clone",
-      "r7c2p19reg:radio:4_clone",
-      "r36c1p93reg",
-      "r39c1p99reg:txt",
-      "r41c1p103reg",
-      "r41c2p105reg:txt",
-      "r41c3p107reg:txt",
-      "r44c1p111reg",
-      "r44c2p113reg",
-      "r46c1p117reg",
-      "r49c1p123reg",
-      "r51c1p129reg:txt",
-      "r51c2p131reg:txt",
-      "r51c3p133reg:txt",
-      "r53c1p135reg:txt",
-      "r53c2p137reg:txt",
-      "r53c3p139reg:txt"
-     ],
-     "then": [
-      {
-       "choice": "In qualità di: = Proprietario",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Proprietario",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Comproprietario",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Comproprietario",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Usufruttuario",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Usufruttuario",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Amministratore di condominio",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Amministratore di condominio",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Legale rappresentante",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Legale rappresentante",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Amministratore unico",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Amministratore unico",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Procuratore",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Procuratore",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Altro",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Altro",
-       "reveals": [
-        {
-         "id": "r37c1p95reg:txt",
-         "kind": "text",
-         "label": "specificare:"
-        }
-       ],
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      }
-     ]
-    },
-    {
-     "choice": "ISCRITTA ALLA CCIAA",
-     "id": "r2c2p4reg:radio:2_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r8c1p16reg",
-       "kind": "select",
-       "label": "Camera di commercio di:",
-       "options": "106 options"
-      }
-     ],
-     "moved": [
-      [
-       "r41c2p105reg:txt",
-       "r4c1p7reg:txt"
-      ],
-      [
-       "r6c2p16reg:radio:3_clone",
-       "r9c2p24reg:radio:3_clone"
-      ],
-      [
-       "r7c2p19reg:radio:4_clone",
-       "r10c2p27reg:radio:4_clone"
-      ],
-      [
-       "r10c1p23reg:txt",
-       "r13c1p31reg:txt"
-      ],
-      [
-       "r10c2p25reg:txt",
-       "r13c2p33reg:txt"
-      ],
-      [
-       "r10c3p27reg:txt",
-       "r13c3p35reg:txt"
-      ],
-      [
-       "r12c1p29reg",
-       "r15c1p37reg"
-      ],
-      [
-       "r12c2p31reg:calendar_input",
-       "r15c2p39reg:calendar_input"
-      ],
-      [
-       "r12c3p33reg",
-       "r15c3p41reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r18c1p47reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r18c2p49reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r20c1p53reg"
-      ],
-      [
-       "r19c1p50reg:chk",
-       "r22c1p58reg:chk"
-      ],
-      [
-       "r44c1p111reg",
-       "r27c1p69reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r27c2p71reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r29c1p75reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r32c1p81reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r34c1p87reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r36c1p91reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r36c2p93reg:txt"
-      ],
-      [
-       "r33c3p87reg:txt",
-       "r36c3p95reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r36c4p97reg:number"
-      ],
-      [
-       "r36c1p93reg",
-       "r39c1p101reg"
-      ],
-      [
-       "r39c1p99reg:txt",
-       "r42c1p107reg:txt"
-      ],
-      [
-       "r41c1p103reg",
-       "r44c1p111reg"
-      ],
-      [
-       "r41c2p105reg:txt",
-       "r44c2p113reg:txt"
-      ],
-      [
-       "r41c3p107reg:txt",
-       "r44c3p115reg:txt"
-      ],
-      [
-       "r44c1p111reg",
-       "r47c1p119reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r47c2p121reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r49c1p125reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r52c1p131reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r54c1p137reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r54c2p139reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r54c3p141reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r56c1p143reg:txt"
-      ],
-      [
-       "r53c2p137reg:txt",
-       "r56c2p145reg:txt"
-      ],
-      [
-       "r53c3p139reg:txt",
-       "r56c3p147reg:txt"
-      ]
-     ]
-    },
-    {
-     "choice": "NON ANCORA ISCRITTA",
-     "id": "r6c2p16reg:radio:3_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "NON NECESSITA DI ISCRIZIONE AL RI DELLA CCIAA",
-     "id": "r7c2p19reg:radio:4_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Sesso = Femminile",
-     "id": "r12c1p29reg",
-     "kind": "select",
-     "option": "Femminile",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Sesso = Maschile",
-     "id": "r12c1p29reg",
-     "kind": "select",
-     "option": "Maschile",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Se cittadino non UE",
-     "id": "r19c1p50reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r21c1p53reg:txt",
-       "kind": "text",
-       "label": "estremi del documento di soggiorno"
-      },
-      {
-       "id": "r21c2p55reg:txt",
-       "kind": "text",
-       "label": "rilasciato da"
-      },
-      {
-       "id": "r23c1p59reg:calendar_input",
-       "kind": "date",
-       "label": "il"
-      },
-      {
-       "id": "r23c2p61reg:calendar_input",
-       "kind": "date",
-       "label": "scadenza"
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r26c2p69reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r28c1p73reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r31c1p79reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r33c1p85reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r35c1p89reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r35c2p91reg:txt"
-      ],
-      [
-       "r33c3p87reg:txt",
-       "r35c3p93reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r35c4p95reg:number"
-      ],
-      [
-       "r36c1p93reg",
-       "r38c1p99reg"
-      ],
-      [
-       "r39c1p99reg:txt",
-       "r41c1p105reg:txt"
-      ],
-      [
-       "r41c1p103reg",
-       "r43c1p109reg"
-      ],
-      [
-       "r41c2p105reg:txt",
-       "r43c2p111reg:txt"
-      ],
-      [
-       "r41c3p107reg:txt",
-       "r43c3p113reg:txt"
-      ],
-      [
-       "r44c1p111reg",
-       "r46c1p117reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r46c2p119reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r48c1p123reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r51c1p129reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r53c1p135reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r53c2p137reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r53c3p139reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r55c1p141reg:txt"
-      ],
-      [
-       "r53c2p137reg:txt",
-       "r55c2p143reg:txt"
-      ],
-      [
-       "r53c3p139reg:txt",
-       "r55c3p145reg:txt"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = ALTRO",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "ALTRO",
-     "reveals": [
-      {
-       "id": "r29c2p75reg",
-       "kind": "select",
-       "label": "da compilare obbligatoriamente nel caso si sia selezionato 'ALTRO' nel Toponimo-DUG",
-       "context": "Dettaglio DUG",
-       "options": "190 options"
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = CORSO",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "CORSO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = LARGO",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "LARGO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = PIAZZA",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "PIAZZA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIA",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "VIA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIALE",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "VIALE",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = ALTRO",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "ALTRO",
-     "reveals": [
-      {
-       "id": "r49c2p125reg",
-       "kind": "select",
-       "label": "da compilare obbligatoriamente nel caso si sia selezionato 'ALTRO' nel Toponimo-DUG",
-       "context": "Dettaglio DUG",
-       "options": "190 options"
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = CORSO",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "CORSO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = LARGO",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "LARGO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = PIAZZA",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "PIAZZA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIA",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "VIA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIALE",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "VIALE",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    }
-   ],
-   "seconds": 83.8
-  },
-  {
-   "section": "Qualifica e dati del procuratore",
-   "fields": [
-    {
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "label": "Qualifica del procuratore",
-     "options": [
-      "ALTRO PREVISTO DALLA NORMATIVA",
-      "ASSOCIAZIONE DI CATEGORIA",
-      "CENTRO ELABORAZIONE",
-      "CONSULENTE",
-      "NOTAIO",
-      "PROFESSIONISTA INCARICATO",
-      "STUDIO ASSOCIATO"
-     ]
-    },
-    {
-     "id": "r5c1p7reg:txt",
-     "kind": "text",
-     "label": "Nome",
-     "prefilled": true
-    },
-    {
-     "id": "r5c2p9reg:txt",
-     "kind": "text",
-     "label": "Cognome",
-     "prefilled": true
-    },
-    {
-     "id": "r5c3p11reg",
-     "kind": "select",
-     "label": "Sesso",
-     "options": [
-      "Femmina",
-      "Maschio"
-     ]
-    },
-    {
-     "id": "r5c4p13reg",
-     "kind": "select",
-     "label": "Cittadinanza",
-     "options": "251 options"
-    },
-    {
-     "id": "r7c1p15reg:txt",
-     "kind": "text",
-     "label": "Nato a"
-    },
-    {
-     "id": "r7c2p17reg:calendar_input",
-     "kind": "date",
-     "label": "il"
-    },
-    {
-     "id": "r9c1p19reg:radio:0_clone",
-     "kind": "radio",
-     "label": "in Italia",
-     "group": "r9c1p19reg:radio"
-    },
-    {
-     "id": "r9c2p21reg:txt",
-     "kind": "text",
-     "label": "Provincia",
-     "context": "in Italia"
-    },
-    {
-     "id": "r9c3p23reg:radio:1_clone",
-     "kind": "radio",
-     "label": "all'Estero",
-     "group": "r9c3p23reg:radio"
-    },
-    {
-     "id": "r9c4p25reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "250 options"
-    },
-    {
-     "id": "r11c1p27reg:txt",
-     "kind": "text",
-     "label": "Cod.Fiscale",
-     "prefilled": true
-    },
-    {
-     "id": "r14c1p32reg:txt",
-     "kind": "text",
-     "label": "Residente in"
-    },
-    {
-     "id": "r14c2p34reg:txt",
-     "kind": "text",
-     "label": "Provincia"
-    },
-    {
-     "id": "r14c3p36reg:txt",
-     "kind": "text",
-     "label": "CAP"
-    },
-    {
-     "id": "r16c1p40reg:txt",
-     "kind": "text",
-     "label": "Indirizzo"
-    },
-    {
-     "id": "r16c2p42reg:number",
-     "kind": "text",
-     "label": "Tel"
-    },
-    {
-     "id": "r16c3p44reg:txt",
-     "kind": "text",
-     "label": "Fax"
-    },
-    {
-     "id": "r18c1p46reg:txt",
-     "kind": "text",
-     "label": "eMail PEC"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "Qualifica del procuratore = ALTRO PREVISTO DALLA NORMATIVA",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "ALTRO PREVISTO DALLA NORMATIVA"
-    },
-    {
-     "choice": "Qualifica del procuratore = ASSOCIAZIONE DI CATEGORIA",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "ASSOCIAZIONE DI CATEGORIA"
-    },
-    {
-     "choice": "Qualifica del procuratore = CENTRO ELABORAZIONE",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "CENTRO ELABORAZIONE"
-    },
-    {
-     "choice": "Qualifica del procuratore = CONSULENTE",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "CONSULENTE"
-    },
-    {
-     "choice": "Qualifica del procuratore = NOTAIO",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "NOTAIO"
-    },
-    {
-     "choice": "Qualifica del procuratore = PROFESSIONISTA INCARICATO",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "PROFESSIONISTA INCARICATO"
-    },
-    {
-     "choice": "Qualifica del procuratore = STUDIO ASSOCIATO",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "STUDIO ASSOCIATO"
-    },
-    {
-     "choice": "Sesso = Femmina",
-     "id": "r5c3p11reg",
-     "kind": "select",
-     "option": "Femmina"
-    },
-    {
-     "choice": "Sesso = Maschio",
-     "id": "r5c3p11reg",
-     "kind": "select",
-     "option": "Maschio"
-    },
-    {
-     "choice": "in Italia",
-     "id": "r9c1p19reg:radio:0_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "all'Estero",
-     "id": "r9c3p23reg:radio:1_clone",
-     "kind": "radio"
-    }
-   ],
-   "seconds": 19
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
   },
   {
    "section": "Oggetto della pratica",
-   "fields": [
-    {
-     "id": "r2c1p2reg:txta",
-     "kind": "textarea",
-     "label": "300 Caratteri restanti",
-     "context": "descrizione sintetica"
-    }
-   ],
-   "branches": [],
-   "seconds": 1.2
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
   },
   {
    "section": "DOMICILIO DIGITALE",
-   "fields": [
-    {
-     "id": "r4c1p4reg:chk",
-     "kind": "checkbox",
-     "label": "il seguente domicilio digitale inserito in INAD (art.6 -quater, D.lgs lgs. n. 82/2005):"
-    },
-    {
-     "id": "r5c1p5reg:chk",
-     "kind": "checkbox",
-     "label": "il seguente domicilio digitale inserito in INI-PEC (art. 6-bis, D.lgs lgs. n. 82/2005) :"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "il seguente domicilio digitale inserito in INAD (art.6 -quater, D.lgs lgs. n. 82/2005):",
-     "id": "r4c1p4reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r6c1p6reg:txt",
-       "kind": "text",
-       "label": "il seguente domicilio digitale inserito in INAD (art.6 -quater, D.lgs lgs. n. 82/2005):"
-      }
-     ],
-     "moved": [
-      [
-       "r5c1p5reg:chk",
-       "r7c1p7reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "il seguente domicilio digitale inserito in INI-PEC (art. 6-bis, D.lgs lgs. n. 82/2005) :",
-     "id": "r5c1p5reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r7c1p7reg:txt",
-       "kind": "text",
-       "label": "il seguente domicilio digitale inserito in INI-PEC (art. 6-bis, D.lgs lgs. n. 82/2005) :"
-      }
-     ]
-    }
-   ],
-   "seconds": 2.9
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
   },
   {
    "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
-   "fields": [
-    {
-     "id": "r3c1p3reg:txt",
-     "kind": "text",
-     "label": "N.B. Inserire l'indirizzo della casella PEC a cui lo Sportello dovrà inviare la ricevuta e le altre comunicazioni relative alla pratica"
-    },
-    {
-     "id": "r4c1p4reg:chk",
-     "kind": "checkbox",
-     "label": "Si dichiara di essere consapevoli che nel caso non venga indicata una casella di posta elettronica certificata (PEC), non si avra' la certezza del buon esito de"
-    }
-   ],
-   "branches": [],
-   "seconds": 1
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
   },
   {
    "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
@@ -1931,142 +103,15 @@
   },
   {
    "section": "Localizzazione dell'intervento",
-   "fields": [
-    {
-     "id": "r2c1p2reg:txt",
-     "kind": "text",
-     "label": "Comune",
-     "prefilled": true
-    },
-    {
-     "id": "r2c2p4reg:txt",
-     "kind": "text",
-     "label": "Frazione"
-    },
-    {
-     "id": "r2c3p6reg:txt",
-     "kind": "text",
-     "label": "Prov.",
-     "prefilled": true
-    },
-    {
-     "id": "r2c4p8reg:txtws_input",
-     "kind": "lookup",
-     "label": "CAP"
-    },
-    {
-     "id": "r5c1p13reg:txtws_input",
-     "kind": "lookup",
-     "label": "Via, Viale, Piazza"
-    },
-    {
-     "id": "r5c2p15reg:txtws_input",
-     "kind": "lookup",
-     "label": "n° civico"
-    },
-    {
-     "id": "r7c1p19reg:txtws_input",
-     "kind": "lookup",
-     "label": "scala"
-    },
-    {
-     "id": "r7c2p21reg:txtws_input",
-     "kind": "lookup",
-     "label": "piano"
-    },
-    {
-     "id": "r7c3p23reg:txtws_input",
-     "kind": "lookup",
-     "label": "interno"
-    }
-   ],
-   "branches": [],
-   "seconds": 0.8
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
   },
   {
    "section": "Dati catastali",
-   "fields": [
-    {
-     "id": "r1c1p1reg:radio:0_clone",
-     "kind": "radio",
-     "label": "Nuovo Catasto Edilizio Urbano",
-     "group": "r1c1p1reg:radio",
-     "context": "NCEU"
-    },
-    {
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "label": "Nuovo Catasto Terreni",
-     "group": "r1c2p2reg:radio",
-     "context": "NCT"
-    },
-    {
-     "id": "r3c1p5reg:number",
-     "kind": "text",
-     "label": "foglio"
-    },
-    {
-     "id": "r3c2p7reg:txt",
-     "kind": "text",
-     "label": "particella/mappale"
-    },
-    {
-     "id": "r3c3p9reg:number",
-     "kind": "text",
-     "label": "subalterno"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "Nuovo Catasto Edilizio Urbano",
-     "id": "r1c1p1reg:radio:0_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r5c1p13reg:txt",
-       "kind": "text",
-       "label": "sezione Amministrativa (Fabbricati)"
-      },
-      {
-       "id": "r5c2p15reg:txt",
-       "kind": "text",
-       "label": "sezione Urbana (Fabbricati)"
-      },
-      {
-       "id": "r5c3p17reg:txt",
-       "kind": "text",
-       "label": "classe"
-      },
-      {
-       "id": "r8c1p23reg",
-       "kind": "select",
-       "label": "categoria",
-       "options": "52 options"
-      }
-     ],
-     "plus": {
-      "anchor": "Il valore è obbligatorio",
-      "adds": 16
-     }
-    },
-    {
-     "choice": "Nuovo Catasto Terreni",
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r6c1p17reg:txt",
-       "kind": "text",
-       "label": "sezione Censuaria (Terreni)"
-      }
-     ],
-     "plus": {
-      "anchor": "Nuovo Catasto Edilizio Urbano",
-      "adds": 10
-     }
-    }
-   ],
-   "seconds": 5.4
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
   },
   {
    "section": "a) Titolarità dell'intervento",
@@ -2096,6 +141,7 @@
      "group": "r6c1p7reg:radio"
     }
    ],
+   "fingerprint": "3e5d5f463d6964d8",
    "branches": [
     {
      "choice": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto = proprietario",
@@ -2130,7 +176,8 @@
       {
        "id": "r4c1p4reg:txt",
        "kind": "text",
-       "label": "specificare"
+       "label": "specificare",
+       "max": 100
       }
      ],
      "moved": [
@@ -2157,17 +204,20 @@
       {
        "id": "r10c1p11reg:txt",
        "kind": "text",
-       "label": "Cognome"
+       "label": "Cognome",
+       "max": 100
       },
       {
        "id": "r10c2p13reg:txt",
        "kind": "text",
-       "label": "Nome"
+       "label": "Nome",
+       "max": 9999
       },
       {
        "id": "r12c1p17reg:txt",
        "kind": "text",
-       "label": "C.F."
+       "label": "C.F.",
+       "max": 16
       },
       {
        "id": "r14c1p21reg:calendar_input",
@@ -2206,7 +256,8 @@
       {
        "id": "r18c1p37reg:txt",
        "kind": "text",
-       "label": "Comune italiano o Località estera"
+       "label": "Comune italiano o Località estera",
+       "max": 100
       },
       {
        "id": "r20c2p43reg",
@@ -2224,32 +275,38 @@
       {
        "id": "r22c1p49reg:txt",
        "kind": "text",
-       "label": "Comune italiano o Località estera"
+       "label": "Comune italiano o Località estera",
+       "max": 100
       },
       {
        "id": "r24c1p53reg:txt",
        "kind": "text",
-       "label": "Via, Piazza, ecc."
+       "label": "Via, Piazza, ecc.",
+       "max": 100
       },
       {
        "id": "r24c2p55reg:txt",
        "kind": "text",
-       "label": "N."
+       "label": "N.",
+       "max": 6
       },
       {
        "id": "r24c3p57reg:txt",
        "kind": "text",
-       "label": "C.A.P."
+       "label": "C.A.P.",
+       "max": 5
       },
       {
        "id": "r26c1p61reg:txt",
        "kind": "text",
-       "label": "PEC / posta elettronica"
+       "label": "PEC / posta elettronica",
+       "max": 100
       },
       {
        "id": "r26c2p63reg:txt",
        "kind": "text",
-       "label": "Telefono fisso / cellulare"
+       "label": "Telefono fisso / cellulare",
+       "max": 30
       },
       {
        "id": "r27c1p66reg:chk",
@@ -2259,17 +316,20 @@
       {
        "id": "r29c1p69reg:txt",
        "kind": "text",
-       "label": "in qualità di"
+       "label": "in qualità di",
+       "max": 100
       },
       {
        "id": "r31c1p73reg:txt",
        "kind": "text",
-       "label": "della ditta / società"
+       "label": "della ditta / società",
+       "max": 100
       },
       {
        "id": "r31c2p75reg:txt",
        "kind": "text",
-       "label": "con codice fiscale / p. IVA"
+       "label": "con codice fiscale / p. IVA",
+       "max": 16
       }
      ],
      "plus": {
@@ -2339,7 +399,7 @@
      ]
     }
    ],
-   "seconds": 22.1
+   "seconds": 14.8
   },
   {
    "section": "b) Opere su parti comuni o modifiche esterne",
@@ -2369,6 +429,7 @@
      "group": "r5c1p5reg:radio"
     }
    ],
+   "fingerprint": "a9ea4400694734ae",
    "branches": [
     {
      "choice": "non riguardano parti comuni",
@@ -2391,7 +452,7 @@
      "kind": "radio"
     }
    ],
-   "seconds": 5.8
+   "seconds": 7.6
   },
   {
    "section": "c) Comunicazione inizio lavori",
@@ -2412,6 +473,7 @@
      "label": "i lavori termineranno in data"
     }
    ],
+   "fingerprint": "13344d567ebc64f9",
    "branches": [
     {
      "choice": "COMUNICA L'INIZIO DEI LAVORI di opere dirette a soddisfare obiettive esigenze contingenti e temporanee e ad essere immediatamente rimosse al cessare della neces",
@@ -2422,7 +484,8 @@
        "id": "r9c1p13reg:txta",
        "kind": "textarea",
        "label": "500 Caratteri restanti",
-       "context": "le opere consistono in:"
+       "context": "le opere consistono in:",
+       "max": 500
       }
      ],
      "moved": [
@@ -2433,7 +496,7 @@
      ]
     }
    ],
-   "seconds": 2.2
+   "seconds": 2.8
   },
   {
    "section": "d) Destinazione d'uso dell'immobile",
@@ -2450,6 +513,7 @@
      ]
     }
    ],
+   "fingerprint": "167628390a2f0298",
    "branches": [
     {
      "choice": "L'intervento interessa l'immobile / l'area avente destinazione d'uso = residenziale",
@@ -2478,12 +542,13 @@
       {
        "id": "r4c1p4reg:txt",
        "kind": "text",
-       "label": "specificare"
+       "label": "specificare",
+       "max": 100
       }
      ]
     }
    ],
-   "seconds": 6
+   "seconds": 7.4
   },
   {
    "section": "e) Altre comunicazioni, segnalazioni e asseverazioni eventualmente necessarie alla realizzazione delle opere presentate contestualmente alla comunicazione di inizio lavori",
@@ -2491,24 +556,29 @@
     {
      "id": "r2c1p2reg:txt",
      "kind": "text",
-     "label": "Comunicazioni, segnalazioni etc."
+     "label": "Comunicazioni, segnalazioni etc.",
+     "max": 200
     },
     {
      "id": "r2c2p4reg:txt",
      "kind": "text",
-     "label": "Autorità competente"
+     "label": "Autorità competente",
+     "max": 200
     },
     {
      "id": "r4c1p6reg:txt",
      "kind": "text",
-     "label": "Comunicazioni, segnalazioni etc."
+     "label": "Comunicazioni, segnalazioni etc.",
+     "max": 200
     },
     {
      "id": "r4c2p8reg:txt",
      "kind": "text",
-     "label": "Autorità competente"
+     "label": "Autorità competente",
+     "max": 200
     }
    ],
+   "fingerprint": "26459da9b8d17830",
    "branches": [],
    "seconds": 0.6
   },
@@ -2528,6 +598,7 @@
      "group": "r2c1p2reg:radio"
     }
    ],
+   "fingerprint": "97409c375695705d",
    "branches": [
     {
      "choice": "in quanto opere di modesta entità che non interessano le specifiche normative di settore, i lavori saranno eseguiti in prima persona, senza alcun affidamento a ",
@@ -2542,12 +613,14 @@
       {
        "id": "r6c1p7reg:txt",
        "kind": "text",
-       "label": "Ragione sociale"
+       "label": "Ragione sociale",
+       "max": 100
       },
       {
        "id": "r6c2p9reg:txt",
        "kind": "text",
-       "label": "codice fiscale / p. IVA"
+       "label": "codice fiscale / p. IVA",
+       "max": 16
       },
       {
        "id": "r8c1p13reg",
@@ -2558,12 +631,14 @@
       {
        "id": "r8c2p15reg:txt",
        "kind": "text",
-       "label": "n."
+       "label": "n.",
+       "max": 20
       },
       {
        "id": "r10c1p19reg:txt",
        "kind": "text",
-       "label": "con sede in"
+       "label": "con sede in",
+       "max": 9999
       },
       {
        "id": "r10c2p21reg",
@@ -2581,37 +656,44 @@
       {
        "id": "r12c1p27reg:txt",
        "kind": "text",
-       "label": "Via, Piazza, ecc."
+       "label": "Via, Piazza, ecc.",
+       "max": 100
       },
       {
        "id": "r12c2p29reg:txt",
        "kind": "text",
-       "label": "N."
+       "label": "N.",
+       "max": 10
       },
       {
        "id": "r12c3p31reg:txt",
        "kind": "text",
-       "label": "C.A.P."
+       "label": "C.A.P.",
+       "max": 5
       },
       {
        "id": "r15c1p37reg:txt",
        "kind": "text",
-       "label": "Cognome"
+       "label": "Cognome",
+       "max": 50
       },
       {
        "id": "r15c2p39reg:txt",
        "kind": "text",
-       "label": "Nome"
+       "label": "Nome",
+       "max": 50
       },
       {
        "id": "r17c1p43reg:txt",
        "kind": "text",
-       "label": "codice fiscale"
+       "label": "codice fiscale",
+       "max": 16
       },
       {
        "id": "r19c1p47reg:txt",
        "kind": "text",
-       "label": "nato a"
+       "label": "nato a",
+       "max": 100
       },
       {
        "id": "r19c2p49reg",
@@ -2634,22 +716,26 @@
       {
        "id": "r23c1p57reg:number",
        "kind": "text",
-       "label": "Telefono"
+       "label": "Telefono",
+       "max": 16
       },
       {
        "id": "r23c2p59reg:number",
        "kind": "text",
-       "label": "fax"
+       "label": "fax",
+       "max": 16
       },
       {
        "id": "r23c3p61reg:number",
        "kind": "text",
-       "label": "cell."
+       "label": "cell.",
+       "max": 16
       },
       {
        "id": "r23c4p63reg:txt",
        "kind": "text",
-       "label": "posta elettronica"
+       "label": "posta elettronica",
+       "max": 100
       },
       {
        "id": "r25c1p68reg:chk",
@@ -2681,17 +767,20 @@
          "id": "r26c2p71reg:txt",
          "kind": "text",
          "label": "sede di",
-         "context": "Cassa edile"
+         "context": "Cassa edile",
+         "max": 100
         },
         {
          "id": "r28c1p75reg:txt",
          "kind": "text",
-         "label": "codice impresa n."
+         "label": "codice impresa n.",
+         "max": 20
         },
         {
          "id": "r28c2p77reg:txt",
          "kind": "text",
-         "label": "codice cassa n."
+         "label": "codice cassa n.",
+         "max": 20
         }
        ],
        "moved": [
@@ -2730,12 +819,14 @@
          "id": "r28c2p77reg:txt",
          "kind": "text",
          "label": "sede di",
-         "context": "INPS"
+         "context": "INPS",
+         "max": 100
         },
         {
          "id": "r30c1p81reg:txt",
          "kind": "text",
-         "label": "Matr./Pos. Contr. n."
+         "label": "Matr./Pos. Contr. n.",
+         "max": 20
         }
        ],
        "moved": [
@@ -2770,17 +861,20 @@
          "id": "r30c2p82reg:txt",
          "kind": "text",
          "label": "sede di",
-         "context": "INAIL"
+         "context": "INAIL",
+         "max": 100
         },
         {
          "id": "r32c1p86reg:txt",
          "kind": "text",
-         "label": "codice impresa n."
+         "label": "codice impresa n.",
+         "max": 20
         },
         {
          "id": "r32c2p88reg:txt",
          "kind": "text",
-         "label": "pos. assicurativa territoriale n."
+         "label": "pos. assicurativa territoriale n.",
+         "max": 20
         }
        ],
        "moved": [
@@ -2805,7 +899,7 @@
      ]
     }
    ],
-   "seconds": 10
+   "seconds": 11.2
   },
   {
    "section": "g) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
@@ -2856,6 +950,7 @@
      "group": "r11c1p26reg:radio"
     }
    ],
+   "fingerprint": "938fd1597eb7970e",
    "branches": [
     {
      "choice": "non ricade nell'ambito di applicazione delle norme in materia di salute e sicurezza nei luoghi di lavoro (d.lgs. n. 81/2008)",
@@ -2898,7 +993,7 @@
      "kind": "radio"
     }
    ],
-   "seconds": 9.6
+   "seconds": 12
   },
   {
    "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
@@ -2910,71 +1005,16 @@
   },
   {
    "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
-   "fields": [
-    {
-     "id": "r2c1p2reg:radio:0_clone",
-     "kind": "radio",
-     "label": "non sono dovuti oneri quali diritti o spese",
-     "group": "r2c1p2reg:radio"
-    },
-    {
-     "id": "r3c1p3reg:radio:1_clone",
-     "kind": "radio",
-     "label": "poiché non previsti dal tariffario",
-     "group": "r3c1p3reg:radio"
-    },
-    {
-     "id": "r3c2p4reg:radio:2_clone",
-     "kind": "radio",
-     "label": "poiché esentati",
-     "group": "r3c2p4reg:radio"
-    },
-    {
-     "id": "r5c1p8reg:radio:3_clone",
-     "kind": "radio",
-     "label": "sono dovuti oneri quali diritti o spese",
-     "group": "r5c1p8reg:radio"
-    },
-    {
-     "id": "r7c1p10reg:real",
-     "kind": "text",
-     "label": "per un totale di Euro"
-    },
-    {
-     "id": "r8c1p13reg:radio:4_clone",
-     "kind": "radio",
-     "label": "pagamento on line alla pagina successiva \"Pagamento oneri\"",
-     "group": "r8c1p13reg:radio"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "non sono dovuti oneri quali diritti o spese",
-     "id": "r2c1p2reg:radio:0_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "poiché non previsti dal tariffario",
-     "id": "r3c1p3reg:radio:1_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "poiché esentati",
-     "id": "r3c2p4reg:radio:2_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "sono dovuti oneri quali diritti o spese",
-     "id": "r5c1p8reg:radio:3_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "pagamento on line alla pagina successiva \"Pagamento oneri\"",
-     "id": "r8c1p13reg:radio:4_clone",
-     "kind": "radio"
-    }
-   ],
-   "seconds": 4.7
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.2
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.2,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
  ],
  "slots": {

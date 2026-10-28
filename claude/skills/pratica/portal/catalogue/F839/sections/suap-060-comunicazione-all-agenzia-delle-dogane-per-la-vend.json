@@ -1,0 +1,360 @@
+{
+ "crawled": "2026-10-28T16:52:03.792Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Comunicazione all'Agenzia delle Dogane per la vendita o somministrazione di prodotti alcolici (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 39.1,
+ "generated": {
+  "interventi": "Comunicazione per la vendita di alcolici",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per la vendita di alcolici (D. Lgs. n. 504/1995)",
+    "amministrazione": "Agenzia delle Dogane e dei Monopoli - UADM Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "Comunicazione per la vendita di alcolici",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "Comunicazione per la vendita di alcolici",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "Alcole etilico puro"
+    },
+    {
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "label": "Aromi alcolici"
+    },
+    {
+     "id": "r2c3p4reg:chk",
+     "kind": "checkbox",
+     "label": "Liquori ed acquaviti"
+    },
+    {
+     "id": "r3c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "Vino (tranquillo e/o spumante)"
+    },
+    {
+     "id": "r3c2p7reg:chk",
+     "kind": "checkbox",
+     "label": "Birra"
+    },
+    {
+     "id": "r3c3p8reg:chk",
+     "kind": "checkbox",
+     "label": "Prodotti alcolici intermedi (vermouth, vini aromatizzati, vini liquorosi, ecc.)"
+    },
+    {
+     "id": "r4c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "Altre bevande alcoliche"
+    },
+    {
+     "id": "r4c2p11reg:chk",
+     "kind": "checkbox",
+     "label": "Profumeria alcolica"
+    },
+    {
+     "id": "r4c3p12reg:chk",
+     "kind": "checkbox",
+     "label": "Altri prodotti alcolici"
+    },
+    {
+     "id": "r7c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "Di non aver riportato condanne per la fabbricazione clandestina di alcole etilico e di bevande alcoliche o per evasione dell'accisa sui medesimi prodotti"
+    },
+    {
+     "id": "r8c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "Di essere consapevole che l'avvio dell'attività potrà avvenire solo dopo presentazione all'Agenzia delle Dogane della presente Comunicazione"
+    },
+    {
+     "id": "r9c1p18reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Che la Comunicazione/SCIA/Istanza per l'esercizio dell'attività connessa alla vendita o somministrazione di alcolici è presentata contestualmente alla presente ",
+     "group": "r9c1p18reg:radio"
+    },
+    {
+     "id": "r10c1p19reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Che la presentazione della presente Comunicazione è successivo all'avvio dell'attività connessa alla vendita o somministrazione di alcolici",
+     "group": "r10c1p19reg:radio"
+    }
+   ],
+   "fingerprint": "d9bbfcca2a5eb707",
+   "branches": [
+    {
+     "choice": "Alcole etilico puro",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Aromi alcolici",
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Liquori ed acquaviti",
+     "id": "r2c3p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Vino (tranquillo e/o spumante)",
+     "id": "r3c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Birra",
+     "id": "r3c2p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Prodotti alcolici intermedi (vermouth, vini aromatizzati, vini liquorosi, ecc.)",
+     "id": "r3c3p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Altre bevande alcoliche",
+     "id": "r4c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Profumeria alcolica",
+     "id": "r4c2p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Altri prodotti alcolici",
+     "id": "r4c3p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Di non aver riportato condanne per la fabbricazione clandestina di alcole etilico e di bevande alcoliche o per evasione dell'accisa sui medesimi prodotti",
+     "id": "r7c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Che la Comunicazione/SCIA/Istanza per l'esercizio dell'attività connessa alla vendita o somministrazione di alcolici è presentata contestualmente alla presente ",
+     "id": "r9c1p18reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p20reg:txt",
+       "kind": "text",
+       "label": "codice ATECO e descrizione dell'attività svolta (1)",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p19reg:radio:1_clone",
+       "r12c1p21reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Che la presentazione della presente Comunicazione è successivo all'avvio dell'attività connessa alla vendita o somministrazione di alcolici",
+     "id": "r10c1p19reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p21reg:calendar_input",
+       "kind": "date",
+       "label": "con avvio dell'attività a partire dal"
+      },
+      {
+       "id": "r14c1p25reg",
+       "kind": "select",
+       "label": "Estremi del titolo posseduto",
+       "options": [
+        "Autorizzazione",
+        "Comunicazione",
+        "SCIA"
+       ]
+      },
+      {
+       "id": "r14c2p27reg:txt",
+       "kind": "text",
+       "label": "presentata/rilasciata al/dal Comune/SUAP di",
+       "max": 9999
+      },
+      {
+       "id": "r16c1p29reg:calendar_input",
+       "kind": "date",
+       "label": "in data"
+      },
+      {
+       "id": "r16c2p31reg:txt",
+       "kind": "text",
+       "label": "prot. N°",
+       "max": 9999
+      },
+      {
+       "id": "r18c1p35reg:txt",
+       "kind": "text",
+       "label": "codice ATECO e descrizione dell'attività svolta (1)",
+       "max": 70
+      }
+     ],
+     "then": [
+      {
+       "choice": "Estremi del titolo posseduto = Autorizzazione",
+       "id": "r14c1p25reg",
+       "kind": "select",
+       "option": "Autorizzazione"
+      },
+      {
+       "choice": "Estremi del titolo posseduto = Comunicazione",
+       "id": "r14c1p25reg",
+       "kind": "select",
+       "option": "Comunicazione"
+      },
+      {
+       "choice": "Estremi del titolo posseduto = SCIA",
+       "id": "r14c1p25reg",
+       "kind": "select",
+       "option": "SCIA"
+      }
+     ]
+    }
+   ],
+   "seconds": 17.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

@@ -1,0 +1,218 @@
+{
+ "crawled": "2026-10-28T17:57:24.088Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Ridurre il settore merceologico (sector Vicinato - settore merceologico Alimentare o Misto)",
+ "seconds": 38.1,
+ "generated": {
+  "interventi": "Riduzione del settore merceologico - Esercizio di vicinato Alimentare o misto",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per la riduzione del settore merceologico",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Aggiornamento della registrazione ai sensi dell'art. 6 del Regolamento (CE) 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "variazione del settore merceologico",
+   "dati relativi alla nuova tipologia di attività ai sensi dell'art.6, Reg. CE n. 852/2004",
+   "decorrenza delle modifiche",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  },
+  {
+   "option": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)",
+   "type": "CHK",
+   "adds": [
+    "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.5
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.3
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.3
+  },
+  {
+   "section": "variazione del settore merceologico",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "in relazione all’attività di (specificare la tipologia di attività: esercizio di vicinato, MSV, GSV, EMI etc.)",
+     "max": 9999
+    },
+    {
+     "id": "r5c2p7reg:txt",
+     "kind": "text",
+     "label": "prot./n.",
+     "context": "già avviata con la SCIA/DIA/autorizzazione",
+     "max": 10
+    },
+    {
+     "id": "r5c3p9reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r8c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    }
+   ],
+   "fingerprint": "253b0e245555d44a",
+   "text": "variazione del settore merceologico l/la sottoscritto/a COMUNICA la riduzione del settore merceologico in relazione all’attività di (specificare la tipologia di attività: esercizio di vicinato, MSV, GSV, EMI etc.) prot./n. del già avviata con la SCIA/DIA/autorizzazione sarà eliminato il settore: Alimentare Non alimentare",
+   "branches": [
+    {
+     "choice": "Alimentare",
+     "id": "r7c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r8c1p14reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 6.3
+  },
+  {
+   "section": "dati relativi alla nuova tipologia di attività ai sensi dell'art.6, Reg. CE n. 852/2004",
+   "fingerprint": "703b371bf5023ad1",
+   "same_as": "suap-060-presentare-l-aggiornamento-della-registrazione-imp-2#dati relativi alla nuova tipologia di attività ai sensi dell'art.6, Reg. CE n. 852/2004",
+   "seconds": 1.8
+  },
+  {
+   "section": "decorrenza delle modifiche",
+   "fingerprint": "08786ab34a134287",
+   "same_as": "suap-060-presentare-l-aggiornamento-della-registrazione-imp-2#decorrenza delle modifiche",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.2
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.4,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  },
+  {
+   "section": "DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "fingerprint": "b71ddd3af67a8d92",
+   "same_as": "suap-060-aprire-l-attivita#DICHIARAZIONE ESENZIONE PAGAMENTO ai sensi dell'art. 1 co.6 Dlgs 32/2021",
+   "seconds": 1.5,
+   "scelta": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+  }
+ ]
+}

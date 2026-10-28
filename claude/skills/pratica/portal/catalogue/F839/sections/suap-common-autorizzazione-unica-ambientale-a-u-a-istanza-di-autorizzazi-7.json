@@ -1,0 +1,379 @@
+{
+ "crawled": "2026-10-28T19:33:04.231Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › D) Autorizzazione di carattere generale alle emissioni in atmosfera di cui all'articolo 272 del Codice dell'ambiente (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 36.8,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "Regione Campania"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "D.1 Dichiarazioni e impegni del gestore (1)",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 0.8
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 0.9
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 0.8
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 0.8
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 0.6
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 0.9
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 1
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 1.2
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 1
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 0.7
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 0.6
+  },
+  {
+   "section": "D.1 Dichiarazioni e impegni del gestore (1)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "che la presente istanza concerne la/e casistica/e di interesse:"
+    },
+    {
+     "id": "r2c2p4reg:chk",
+     "kind": "checkbox",
+     "label": "installazione di un nuovo stabilimento;"
+    },
+    {
+     "id": "r3c2p7reg:chk",
+     "kind": "checkbox",
+     "label": "modifica sostanziale di uno stabilimento in esercizio"
+    },
+    {
+     "id": "r4c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "che lo stabilimento rientra nel campo di applicazione dell'articolo 272, commi 2 e 3 del Codice dell'ambiente e pertanto richiede di aderire all'autorizzazione "
+    },
+    {
+     "id": "r6c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "che l'insediamento ricade in zona classificata"
+    },
+    {
+     "id": "r8c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "che, sotto i profili urbanistico–edilizio ed igienico–sanitario l'immobile aziendale è compatibile con l'uso cui è destinato e rispetta tutte le condizioni prev"
+    },
+    {
+     "id": "r10c1p20reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è in esercizio",
+     "group": "r10c1p20reg:radio"
+    },
+    {
+     "id": "r10c2p21reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non è in esercizio",
+     "group": "r10c2p21reg:radio"
+    },
+    {
+     "id": "r12c1p25reg:radio:2_clone",
+     "kind": "radio",
+     "label": "NON UTILIZZA SOLVENTI;",
+     "group": "r12c1p25reg:radio"
+    },
+    {
+     "id": "r13c1p27reg:radio:3_clone",
+     "kind": "radio",
+     "label": "UTILIZZA SOLVENTI con CONSUMO INFERIORE alle soglie indicate nella predetta normativa, art. 275, p. II dell'allegato III alla Parte Quinta D. Lgs. 152/2006 e, p",
+     "group": "r13c1p27reg:radio"
+    },
+    {
+     "id": "r14c1p28reg:radio:4_clone",
+     "kind": "radio",
+     "label": "non UTILIZZA/EMETTE sostanze cancerogene, tossiche per la riproduzione o mutagene o sostanze di tossicità e cumulabilità particolarmente elevate, come individua",
+     "group": "r14c1p28reg:radio"
+    },
+    {
+     "id": "r15c1p29reg:chk",
+     "kind": "checkbox",
+     "label": "di impegnarsi a rispettare le prescrizioni contenute nel Decreto Dirigenziale 370 del 18 marzo 2014, ed integrato con Decreto Dirigenziale 591 del 16 aprile 201"
+    }
+   ],
+   "fingerprint": "544084774ce9e9da",
+   "text": "D.1 Dichiarazioni e impegni del gestore (1) che la presente istanza concerne la/e casistica/e di interesse: installazione di un nuovo stabilimento; modifica sostanziale di uno stabilimento in esercizio che lo stabilimento rientra nel campo di applicazione dell'articolo 272, commi 2 e 3 del Codice dell'ambiente e pertanto richiede di aderire all'autorizzazione di carattere generale prevista dalla normativa regionale per la/le seguente/i attività, di cui al/i disciplinare tecnico/i: che l'insediamento ricade in zona classificata che, sotto i profili urbanistico–edilizio ed igienico–sanitario l'immobile aziendale è compatibile con l'uso cui è destinato e rispetta tutte le condizioni previste dalle rispettive, vigenti normative di riferimento; che rientra nei parametri di “soglia massima” indicati nel/i disciplinare/i tecnico/i e che: è in esercizio non è in esercizio che nel proprio ciclo produttivo: NON UTILIZZA SOLVENTI; UTILIZZA SOLVENTI con CONSUMO INFERIORE alle soglie indicate nella predetta normativa, art. 275, p. II dell'allegato III alla Parte Quinta D. Lgs. 152/2006 e, pertanto, NON È TENUTA agli obblighi di cui al D. Lgs. 152/2006, art. 275; non UTILIZZA/EMETTE sostanze cancerogene, tossiche per la riproduzione o mutagene o sostanze di tossicità e cumulabilità particolarmente elevate, come individuate dalla parte II dell'allegato I alla parte V del D.lgs. 152/2006, o sostanze, preparati classificati dal D. Lgs. 52/1997, come cancerogeni, mutageni o tossici per la riproduzione, a causa del loro tenore di cov, e ai quali sono state assegnate etichette con le frasi di rischio r 45, r 46, r 49, r 60, r 61 e r68; di impegnarsi a rispettare le prescrizioni contenute nel Decreto Dirigenziale 370 del 18 marzo 2014, ed integrato con Decreto Dirigenziale 591 del 16 aprile 2014 e nello/negli specifico/i disciplinare/i tecnico/i (1) Ai sensi dell'art. 3, comma 3 del D.P.R. 59.2013 il gestore ha la facoltà di non avvalersi dell'AUA, ove l'impianto sia soggetto solo (…) ad autorizzazione generale alle emissioni in atmosfera.",
+   "branches": [
+    {
+     "choice": "che la presente istanza concerne la/e casistica/e di interesse:",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "installazione di un nuovo stabilimento;",
+     "id": "r2c2p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "modifica sostanziale di uno stabilimento in esercizio",
+     "id": "r3c2p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l'insediamento ricade in zona classificata",
+     "id": "r6c1p13reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c2p16reg:txt",
+       "kind": "text",
+       "label": "con il codice IT",
+       "context": "che l'insediamento ricade in zona classificata",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r6c1p13reg:chk",
+       "r7c1p14reg:chk"
+      ],
+      [
+       "r8c1p17reg:chk",
+       "r9c1p19reg:chk"
+      ],
+      [
+       "r10c1p20reg:radio:0_clone",
+       "r11c1p22reg:radio:0_clone"
+      ],
+      [
+       "r10c2p21reg:radio:1_clone",
+       "r11c2p23reg:radio:1_clone"
+      ],
+      [
+       "r12c1p25reg:radio:2_clone",
+       "r13c1p27reg:radio:2_clone"
+      ],
+      [
+       "r13c1p27reg:radio:3_clone",
+       "r14c1p29reg:radio:3_clone"
+      ],
+      [
+       "r14c1p28reg:radio:4_clone",
+       "r15c1p30reg:radio:4_clone"
+      ],
+      [
+       "r15c1p29reg:chk",
+       "r16c1p31reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "che, sotto i profili urbanistico–edilizio ed igienico–sanitario l'immobile aziendale è compatibile con l'uso cui è destinato e rispetta tutte le condizioni prev",
+     "id": "r8c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "è in esercizio",
+     "id": "r10c1p20reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "non è in esercizio",
+     "id": "r10c2p21reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "NON UTILIZZA SOLVENTI;",
+     "id": "r12c1p25reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "UTILIZZA SOLVENTI con CONSUMO INFERIORE alle soglie indicate nella predetta normativa, art. 275, p. II dell'allegato III alla Parte Quinta D. Lgs. 152/2006 e, p",
+     "id": "r13c1p27reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "non UTILIZZA/EMETTE sostanze cancerogene, tossiche per la riproduzione o mutagene o sostanze di tossicità e cumulabilità particolarmente elevate, come individua",
+     "id": "r14c1p28reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "di impegnarsi a rispettare le prescrizioni contenute nel Decreto Dirigenziale 370 del 18 marzo 2014, ed integrato con Decreto Dirigenziale 591 del 16 aprile 201",
+     "id": "r15c1p29reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r17c1p31reg:number",
+       "kind": "text",
+       "label": "n.",
+       "max": 30
+      }
+     ]
+    }
+   ],
+   "seconds": 14.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.9
+  }
+ ]
+}

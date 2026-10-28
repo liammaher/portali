@@ -1,0 +1,36 @@
+# Closing a bar or restaurant outside the protected zones (cessazione, with the Reg. 852/2004
+# update), as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-060-cessare-l-attivita.json), for the pizzeria rehearsal's
+# made-up ditta individuale.
+procedure: napoli/comune/cessazione-somministrazione
+title: "Cessazione di un bar o ristorante, SUAP Napoli (ditta individuale)"
+comune: F839
+sportello: suap
+crawl: suap-060-cessare-l-attivita
+subject: impresa
+operation: Cessare l'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Esercizio di somministrazione di alimenti e bevande in zone NON tutelate], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Cessare l'attività"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+asks:
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - cessazione {{business.denominazione}}"}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+  diritti_euro: {type: number, question: "The SUAP fees in euro", default: "0"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: the awareness box under the PEC, consapevolezza (artt. 46-47), informativa privacy, Napoli's rules (normative comunali), tasse comunali, art. 75 DPR 445/2000"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
+  - when: "{{business.rea|empty}}"
+    else: "So far only for a business not yet in the Registro delle imprese."

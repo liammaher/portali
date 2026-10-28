@@ -103,7 +103,16 @@
     win().location.href = "/fnsuap/cmd/home";
     await loaded;
     await idle();
-    const row = [...doc().querySelectorAll("tr")].find((t) => t.innerText.includes(report.draft));
+    // The list shows ten drafts a page.
+    let row;
+    for (let page = 0; page < 30; page++) {
+      row = [...doc().querySelectorAll("tr")].find((t) => t.innerText.includes(report.draft));
+      const next = doc().querySelector(".ui-paginator-next:not(.ui-state-disabled)");
+      if (row || !next) break;
+      next.click();
+      await sleep(300);
+      await idle();
+    }
     const apri = row && [...row.querySelectorAll("button")].find((b) => /apri/i.test(b.textContent));
     if (!apri) throw new Error(`no draft named ${report.draft}`);
     apri.click();
@@ -111,6 +120,8 @@
     const end = performance.now() + 90000;
     while (!(title() && !busy())) { if (performance.now() > end) throw new Error("the draft didn't open"); await sleep(200); }
     await idle();
+    // A reopened draft can start on its first screens again: the description it has, the access.
+    for (let n = 0; n < 2 && /assegna una descrizione|controlla l'accesso/.test(title()); n++) await go(() => button("Conferma").click());
     report.reopened++;
     return true;
   }
@@ -175,7 +186,10 @@
   // From the operations screen, with one operation selected: forward to the generated
   // pratica, noting each screen; then each option of Scelte eventuali alone (a Si
   // answered Si, a box ticked), noting the sections it adds or drops; then back.
-  async function follow(op, variants) {
+  // onPratica(pratica, variant) runs on each generated pratica's screen (crawl.js's batch reads
+  // its sections there); variant is null for the base pratica. `variants` is true, false, or a
+  // function of a scelta's label saying whether to try it.
+  async function follow(op, variants, onPratica) {
     const screens = [];
     const b = button("Conferma");
     await go(() => b.click());
@@ -183,10 +197,12 @@
     if (!title().includes("compilazione della domanda")) screens.push({ screen: title(), options: await screenOptions() });
     op.pratica = await forward(screens);
     op.screens = screens;
+    if (onPratica) await onPratica(op.pratica, null);
     const scelte = screens.find((s) => s.screen.includes("scelte eventuali"));
     if (variants && scelte && Array.isArray(scelte.options)) {
       op.variants = [];
-      for (const o of scelte.options.filter((x) => x.type === "CHK" || x.type === "SIN")) {
+      const wanted = (x) => typeof variants !== "function" || variants(x.label);
+      for (const o of scelte.options.filter((x) => (x.type === "CHK" || x.type === "SIN") && wanted(x))) {
         const v = { option: o.label, type: o.type };
         op.variants.push(v);
         try {
@@ -210,6 +226,7 @@
           v.adds = p.sections.filter((s) => !base.has(s));
           v.drops = op.pratica.sections.filter((s) => !p.sections.includes(s));
           if (JSON.stringify(p.adempimenti) !== JSON.stringify(op.pratica.adempimenti)) v.adempimenti = p.adempimenti;
+          if (onPratica) await onPratica(p, v);
           await back("scelte eventuali");
           if (o.type === "SIN") await answer(o.key, false);
           else await setSelected(o.key, false);
@@ -232,7 +249,6 @@
     await loaded;
     await idle();
     await reopen(true);
-    if (title().includes("controlla l'accesso")) await go(() => button("Conferma").click());
     // A reopened scratch draft lands where it was left: back to the sectors.
     await toScreen("scelta settore");
     if (!title().includes("scelta settore")) throw new Error(`expected Scelta settore, found ${title()}`);
@@ -290,5 +306,11 @@
       return report;
     },
     report: () => report,
+    // crawl.js's batch: these moves on a frame it shares, for the draft named `draft`.
+    driver(f, draft) {
+      frame = f;
+      if (!report || report.draft !== draft) report = { draft, sectors: [], done_ops: 0, reopened: 0 };
+      return { reopen, toScreen, title, tree, setSelected, follow, go, button };
+    },
   };
 })();

@@ -1,0 +1,293 @@
+{
+ "crawled": "2026-10-28T19:38:22.822Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Scarichi › Volturare l'autorizzazione allo scarico di acque reflue industriali e assimilate alle domestiche non recapitanti in rete fognaria (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 22.2,
+ "generated": {
+  "interventi": "Voltura dell'autorizzazione allo scarico di acque reflue industriali e assimilate alle domestiche non recapitanti in rete fognaria",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione allo scarico di acque reflue in corpo idrico superficiale o sul suolo",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa all'indirizzo dello stabilimento",
+   "dichiarazione del recapito dello scarico",
+   "dichiarazione relativa alla tipologia di acque reflue",
+   "dichiarazione relativa all'autorizzazione oggetto della domanda di voltura",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa all'indirizzo dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del recapito dello scarico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "corso d'acqua superficiale",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "nome del corpo idrico recettore",
+     "context": "corso d'acqua superficiale",
+     "max": 30
+    },
+    {
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "strato superficiale del suolo",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r3c2p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "sub-irrigazione",
+     "group": "r3c2p6reg:radio"
+    },
+    {
+     "id": "r4c1p7reg:radio:3_clone",
+     "kind": "radio",
+     "label": "fossato a perdere",
+     "group": "r4c1p7reg:radio"
+    },
+    {
+     "id": "r5c1p8reg:radio:4_clone",
+     "kind": "radio",
+     "label": "scolo",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r6c1p9reg:radio:5_clone",
+     "kind": "radio",
+     "label": "corpo superficiale con portata naturale stagionalmente nulla",
+     "group": "r6c1p9reg:radio"
+    },
+    {
+     "id": "r7c1p10reg:radio:6_clone",
+     "kind": "radio",
+     "label": "corpo superficiale con portata insignificante rispetto a quella dello scarico",
+     "group": "r7c1p10reg:radio"
+    }
+   ],
+   "fingerprint": "a3b3b1156ba5fff1",
+   "text": "dichiarazione del recapito dello scarico nome del corpo idrico recettore corso d'acqua superficiale strato superficiale del suolo sub-irrigazione fossato a perdere scolo corpo superficiale con portata naturale stagionalmente nulla corpo superficiale con portata insignificante rispetto a quella dello scarico",
+   "branches": [
+    {
+     "choice": "corso d'acqua superficiale",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "strato superficiale del suolo",
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "sub-irrigazione",
+     "id": "r3c2p6reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "fossato a perdere",
+     "id": "r4c1p7reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "scolo",
+     "id": "r5c1p8reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "corpo superficiale con portata naturale stagionalmente nulla",
+     "id": "r6c1p9reg:radio:5_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "corpo superficiale con portata insignificante rispetto a quella dello scarico",
+     "id": "r7c1p10reg:radio:6_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 5
+  },
+  {
+   "section": "dichiarazione relativa alla tipologia di acque reflue",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "derivanti dal processo produttivo"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "di raffreddamento"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "meteoriche di dilavamento di aree esterne"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "assimilate alle acque reflue domestiche"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r6c2p8reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "altro",
+     "max": 50
+    }
+   ],
+   "fingerprint": "df14d56d3282ecc9",
+   "text": "dichiarazione relativa alla tipologia di acque reflue derivanti dal processo produttivo di raffreddamento meteoriche di dilavamento di aree esterne assimilate alle acque reflue domestiche (specificare) altro",
+   "branches": [
+    {
+     "choice": "derivanti dal processo produttivo",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di raffreddamento",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "meteoriche di dilavamento di aree esterne",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "assimilate alle acque reflue domestiche",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.2
+  },
+  {
+   "section": "dichiarazione relativa all'autorizzazione oggetto della domanda di voltura",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "P.G. n.",
+     "max": 10
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    }
+   ],
+   "fingerprint": "b7a28ee616848240",
+   "text": "dichiarazione relativa all'autorizzazione oggetto della domanda di voltura P.G. n. del",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.8
+  }
+ ]
+}

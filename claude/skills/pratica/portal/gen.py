@@ -330,13 +330,31 @@ def generate(recipe, base=HERE):
     cat_dir = base / "catalogue" / recipe["comune"]
     catalogue = json.loads((cat_dir / f"{recipe['sportello']}-wizard.json").read_text())
     crawl = json.loads((cat_dir / "sections" / f"{recipe['crawl']}.json").read_text())
+    drift = cat_dir / "drift.json"
+    changed = json.loads(drift.read_text())["pratiche"].get(recipe["crawl"], {}).get("differences") if drift.exists() else None
+    if changed:
+        raise GenError(f"the portal changed {recipe['crawl']} since its crawl ({'; '.join(changed)}): crawl it again")
     dictionary = load_yaml(base / "dictionary" / f"{recipe.get('dictionary', 'fnsuap')}.yaml")
 
     if "operations" not in catalogue:
         # A catalogue of the wizard's tree only (the SUAP's so far): the pratica's sections are
         # the crawled draft's, in its order, and the recipe gives the wizard.
         op = {"label": recipe["operation"], "scelte": []}
-        names = [s["section"] for s in crawl["sections"]]
+        # A batch crawl (crawl.js batch) says which sections the base pratica has and which a
+        # scelta adds; the recipe's scelte pick those.
+        names = [s["section"] for s in crawl["sections"] if not s.get("scelta") or s["scelta"] in recipe.get("scelte", [])]
+        # A scelta the batch tried only once (its first pratica): its sections from there.
+        for sc in recipe.get("scelte", []):
+            if any(s.get("scelta") == sc for s in crawl["sections"]):
+                continue
+            for other in sorted((cat_dir / "sections").glob("*.json")):
+                found = [s for s in json.loads(other.read_text())["sections"] if s.get("scelta") == sc]
+                if found:
+                    crawl["sections"] += [{"section": s["section"], "same_as": f"{other.stem}#{s['section']}", "scelta": sc} for s in found]
+                    names += [s["section"] for s in found]
+                    break
+            else:
+                raise GenError(f"no crawl has tried the scelta {sc!r}")
         if "wizard" not in recipe:
             raise GenError("the catalogue has no pratica for this operation: the recipe needs `wizard`")
     else:
@@ -349,6 +367,16 @@ def generate(recipe, base=HERE):
             (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {op['label']}"))
         names = [n for i, n in zip(op["sections"], names) if i not in sc.get("drops", [])] + \
             [catalogue["sections"][i] for i in sc.get("adds", [])]
+    # A batch crawl names a section it had seen elsewhere (`same_as`: "pratica#section").
+    import catalogue as cat_py
+    others = {}
+    for i, s in enumerate(crawl["sections"]):
+        if s.get("same_as"):
+            try:
+                seen = cat_py.resolve(s["same_as"], others, cat_dir / "sections")
+            except (StopIteration, FileNotFoundError, ValueError):
+                raise GenError(f"{s['section']}: {s['same_as']} isn't in the catalogue")
+            crawl["sections"][i] = {**seen, "section": s["section"]}
     crawled = {norm(s["section"]): s for s in crawl["sections"]}
 
     problems, out_sections, asks_used = [], [], set()
@@ -433,15 +461,33 @@ def generate(recipe, base=HERE):
         asks_used.add(t)
     for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps([recipe.get("yours"), recipe.get("supports")])):
         asks_used.add(t)
+    # The dictionary's questions, the recipe's wording over them; a question only this pratica
+    # asks (one `supports` reads) is the recipe's alone.
     asks = {}
-    for k, v in dictionary["asks"].items():
+    for k, v in list(dictionary["asks"].items()) + [(k, {}) for k in recipe.get("asks", {}) if k not in dictionary["asks"]]:
         if k in asks_used:
             asks[k] = {**v, **recipe.get("asks", {}).get(k, {})}
-    missing = asks_used - set(asks)
+    missing = (asks_used - set(asks)) | {k for k, a in asks.items() if "type" not in a}
     if missing:
         raise GenError(f"asks with no definition in the dictionary: {sorted(missing)}")
+    # Yes/no questions asked as one checklist (run.py preflight's `groups`).
+    groups = {g: v for g, v in {**dictionary.get("groups", {}), **recipe.get("groups", {})}.items()
+              if any(a.get("group") == g for a in asks.values())}
 
-    wizard = recipe.get("wizard") or [
+    wizard = recipe.get("wizard")
+    if wizard and crawl.get("screens") is not None:
+        # The screens a batch crawl saw after the operations: a recipe's step for a screen
+        # this pratica doesn't show (a closure has no destinatario) is dropped.
+        seen = {norm(x["screen"]) for x in crawl["screens"]}
+        after = False
+        kept = []
+        for w in wizard:
+            if after and norm(w["screen"]) not in seen:
+                continue
+            after = after or norm(w["screen"]).startswith("scelta operazioni")
+            kept.append(w)
+        wizard = kept
+    wizard = wizard or [
         {"screen": "Assegna una descrizione alla pratica",
          "fill": {"css": 'input[placeholder^="Inserire la descrizione"]', "value": "{{ask.descrizione}}"}, "confirm": "CONFERMA"},
         {"screen": "Controlla l'accesso alla pratica", "confirm": "CONFERMA"},
@@ -456,7 +502,7 @@ def generate(recipe, base=HERE):
     return {
         "procedure": recipe["procedure"], "title": recipe["title"],
         "generated": f"gen.py from {recipe['crawl']} ({crawl.get('crawled', '?')[:10]}) and dictionary/{recipe.get('dictionary', 'fnsuap')}.yaml",
-        "yours": recipe["yours"], "asks": asks, "supports": recipe.get("supports", []),
+        "yours": recipe["yours"], **({"groups": groups} if groups else {}), "asks": asks, "supports": recipe.get("supports", []),
         "start": recipe.get("start", catalogue["start"]), "logged_in": recipe.get("logged_in", "https://suap.impresainungiorno.gov.it/fnsuap/"),
         "wizard": wizard, "sections": out_sections,
     }

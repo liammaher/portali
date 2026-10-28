@@ -1,0 +1,582 @@
+{
+ "crawled": "2026-10-28T19:35:55.865Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Autorizzazione Unica Ambientale - A.U.A. › Istanza di Autorizzazione Unica Ambientale › G) Comunicazioni relative alle operazioni di smaltimento e recupero di rifiuti di cui agli articoli 215 e 216 del Codice dell'ambiente › G2) Comunicazione in materia di rifiuti pericolosi (Artt. 215 e 216 D.Lgs 152/2006) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 52.8,
+ "generated": {
+  "interventi": "ISTANZA DI AUTORIZZAZIONE UNICA AMBIENTALE - AUA",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere Autorizzazione Unica Ambientale AUA (DPR 13/3/2013, n. 59)",
+    "amministrazione": "Provincia di Napoli"
+   },
+   {
+    "adempimento": "Istanza di Autorizzazione Unica Ambientale AUA",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione impianto",
+   "dati catastali impianto",
+   "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "1. DATI DEL GESTORE",
+   "2. Dati del referente AUA",
+   "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "4.2.2 Aspetti edilizio-urbanistici",
+   "4.3 Attività svolte",
+   "5. Istanza",
+   "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "6.2 - Certificazioni ambientali volontarie",
+   "6.3 - ulteriori dichiarazioni",
+   "G2.1 Dichiarazioni e impegni del soggetto che propone l'istanza",
+   "G2.2 REQUISITI SOGGETTIVI",
+   "G2.3  Informazioni sulle tipologie di rifiuti recuperati (1)",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1
+  },
+  {
+   "section": "dati catastali impianto",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "fingerprint": "14fa2c79f92949ab",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#dichiarazione relativa alla contestualità dei titoli abilitativi",
+   "seconds": 1
+  },
+  {
+   "section": "1. DATI DEL GESTORE",
+   "fingerprint": "7c14b46c3ca07980",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#1. DATI DEL GESTORE",
+   "seconds": 1
+  },
+  {
+   "section": "2. Dati del referente AUA",
+   "fingerprint": "f2415847d8ee49ae",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#2. Dati del referente AUA",
+   "seconds": 1
+  },
+  {
+   "section": "4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "fingerprint": "105f4f6d9f80a87a",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4. Dati dell'Impianto / Stabilimento / Attività [1]",
+   "seconds": 1
+  },
+  {
+   "section": "4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "fingerprint": "ff88f42a4e84ae33",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.1 Dati relativi a depositi o locali funzionali all’esercizio dell’attività in altri siti diversi dall’impianto/stabilimento/attività principale",
+   "seconds": 1
+  },
+  {
+   "section": "4.2.2 Aspetti edilizio-urbanistici",
+   "fingerprint": "33c424bff0d400f0",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.2.2 Aspetti edilizio-urbanistici",
+   "seconds": 1
+  },
+  {
+   "section": "4.3 Attività svolte",
+   "fingerprint": "c7750d9dc8019bdd",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#4.3 Attività svolte",
+   "seconds": 1
+  },
+  {
+   "section": "5. Istanza",
+   "fingerprint": "298b53fa4dbd3b61",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#5. Istanza",
+   "seconds": 1.1
+  },
+  {
+   "section": "6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "fingerprint": "d394f1e50302f0ce",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.1 - Titoli abilitativi in materia ambientale sostituiti dall'AUA",
+   "seconds": 0.9
+  },
+  {
+   "section": "6.2 - Certificazioni ambientali volontarie",
+   "fingerprint": "0c11f757870699d5",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.2 - Certificazioni ambientali volontarie",
+   "seconds": 0.8
+  },
+  {
+   "section": "6.3 - ulteriori dichiarazioni",
+   "fingerprint": "436c265a28bc95c7",
+   "same_as": "suap-common-autorizzazione-unica-ambientale-a-u-a-istanza-di-autorizzazi#6.3 - ulteriori dichiarazioni",
+   "seconds": 0.9
+  },
+  {
+   "section": "G2.1 Dichiarazioni e impegni del soggetto che propone l'istanza",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "di effettuare le operazioni di recupero indicate nella sezione G2.3 nel rispetto di tutte le prescrizioni contenute nel Codice dell'ambiente, delle norme tecnic"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che l'insediamento interessato dalla/e attività funzionali è quello di cui alla sezione 4 della parte generale;"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "che il responsabile tecnico dell'attività è:"
+    },
+    {
+     "id": "r6c1p7reg:radio:0_clone",
+     "kind": "radio",
+     "label": "il Gestore",
+     "group": "r6c1p7reg:radio"
+    },
+    {
+     "id": "r7c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "un soggetto diverso dal Gestore",
+     "group": "r7c1p8reg:radio"
+    },
+    {
+     "id": "r9c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "che l'area e l'impianto adibiti all'attività di recupero rifiuti di cui alla presente comunicazione sono localizzati e realizzati nel rispetto delle norme edili"
+    },
+    {
+     "id": "r10c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "di adempiere agli obblighi previsti dagli artt. 193 Trasporto dei rifiuti, 190 Registri di carico e scarico e 189 Catasto dei rifiuti del Codice dell'ambiente"
+    },
+    {
+     "id": "r11c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "che ha effettuato il versamento all'Amministrazione competente, e, per gli anni successivi, effettuerà il pagamento entro il 30 aprile, del diritto di iscrizion"
+    },
+    {
+     "id": "r12c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "di dimostrare, il possesso dei requisiti soggettivi di capacità tecnica e finanziaria ove richiesti dalla vigente normativa di settore per l'esercizio delle att"
+    },
+    {
+     "id": "r13c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "di essere consapevole, che per gli impianti che effettuano le operazioni di stoccaggio e recupero di pile e accumulatori, occorre tener presente di quanto dispo"
+    },
+    {
+     "id": "r14c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "che il suddetto impianto è realizzato nel rispetto delle norme del Codice dell'ambiente – parti III e V, e nel rispetto di tutte le altre disposizioni che regol"
+    },
+    {
+     "id": "r15c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "di essere consapevole che, l'inosservanza dei requisiti tecnici richiesti dalla normativa e dichiarati nella comunicazione di inizio attività, comporta l'applic"
+    },
+    {
+     "id": "r16c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "operare in conformità alle disposizioni vigenti relative al sistema informatico di controllo della tracciabilità dei ri fiuti, istituito ai sensi degli artt.188"
+    },
+    {
+     "id": "r17c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "che darà comunicazione in caso di variazione della denominazione della ditta, della sede legale, dell'assetto societario, ecc.;"
+    }
+   ],
+   "fingerprint": "3df7b39a952fa1c0",
+   "text": "G2.1 Dichiarazioni e impegni del soggetto che propone l'istanza G.2.1 DICHIARAZIONI E IMPEGNI DEL SOGGETTO CHE PROPONE L'ISTANZA Il soggetto proponente dell'istanza dichiara quanto segue: di effettuare le operazioni di recupero indicate nella sezione G2.3 nel rispetto di tutte le prescrizioni contenute nel Codice dell'ambiente, delle norme tecniche specifiche adottate con art. 8 del D.M. 12 giugno 2002, n. 161 e delle vigenti leggi sulla tutela della salute dell'uomo e dell'ambiente; che l'insediamento interessato dalla/e attività funzionali è quello di cui alla sezione 4 della parte generale; che il responsabile tecnico dell'attività è: il Gestore un soggetto diverso dal Gestore che l'area e l'impianto adibiti all'attività di recupero rifiuti di cui alla presente comunicazione sono localizzati e realizzati nel rispetto delle norme edilizie comunali, nel rispetto delle norme urbanistiche vigenti e in salvaguardia, nonché nel rispetto delle norme stabilite dagli strumenti di pianificazione sovraordinati (P.T.C.P., Piano Rifiuti, ecc…..); di adempiere agli obblighi previsti dagli artt. 193 Trasporto dei rifiuti, 190 Registri di carico e scarico e 189 Catasto dei rifiuti del Codice dell'ambiente che ha effettuato il versamento all'Amministrazione competente, e, per gli anni successivi, effettuerà il pagamento entro il 30 aprile, del diritto di iscrizione annuale per la tenuta dei registri e per i controlli periodici di competenza, di cui all'art. 214 comma 6 del Codice dell'ambiente, con le modalità stabilite dal D.M. Ambiente 350/1998; di dimostrare, il possesso dei requisiti soggettivi di capacità tecnica e finanziaria ove richiesti dalla vigente normativa di settore per l'esercizio delle attività oggetto di dichiarazione; di essere consapevole, che per gli impianti che effettuano le operazioni di stoccaggio e recupero di pile e accumulatori, occorre tener presente di quanto disposto dalla normativa di settore (D. Lgs. 20 novembre 2008, n. 188 “Attuazione della direttiva2006/66/CE concernente pile, accumulatori e relativi rifiuti e che abroga la direttiva 91/157/CEE”); che il suddetto impianto è realizzato nel rispetto delle norme del Codice dell'ambiente – parti III e V, e nel rispetto di tutte le altre disposizioni che regolano la costruzione di impianti industriali di essere consapevole che, l'inosservanza dei requisiti tecnici richiesti dalla normativa e dichiarati nella comunicazione di inizio attività, comporta l'applicazione delle sanzioni di cui all'art. 256 del l Codice dell'ambiente e di cui all'art. 21 della Legge n. 241/1990; operare in conformità alle disposizioni vigenti relative al sistema informatico di controllo della tracciabilità dei ri fiuti, istituito ai sensi degli artt.188-bis e 188-ter del Codice dell'ambiente che darà comunicazione in caso di variazione della denominazione della ditta, della sede legale, dell'assetto societario, ecc.;",
+   "branches": [
+    {
+     "choice": "di effettuare le operazioni di recupero indicate nella sezione G2.3 nel rispetto di tutte le prescrizioni contenute nel Codice dell'ambiente, delle norme tecnic",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l'insediamento interessato dalla/e attività funzionali è quello di cui alla sezione 4 della parte generale;",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che il responsabile tecnico dell'attività è:",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "il Gestore",
+     "id": "r6c1p7reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "un soggetto diverso dal Gestore",
+     "id": "r7c1p8reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che l'area e l'impianto adibiti all'attività di recupero rifiuti di cui alla presente comunicazione sono localizzati e realizzati nel rispetto delle norme edili",
+     "id": "r9c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di adempiere agli obblighi previsti dagli artt. 193 Trasporto dei rifiuti, 190 Registri di carico e scarico e 189 Catasto dei rifiuti del Codice dell'ambiente",
+     "id": "r10c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che ha effettuato il versamento all'Amministrazione competente, e, per gli anni successivi, effettuerà il pagamento entro il 30 aprile, del diritto di iscrizion",
+     "id": "r11c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di dimostrare, il possesso dei requisiti soggettivi di capacità tecnica e finanziaria ove richiesti dalla vigente normativa di settore per l'esercizio delle att",
+     "id": "r12c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che il suddetto impianto è realizzato nel rispetto delle norme del Codice dell'ambiente – parti III e V, e nel rispetto di tutte le altre disposizioni che regol",
+     "id": "r14c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "operare in conformità alle disposizioni vigenti relative al sistema informatico di controllo della tracciabilità dei ri fiuti, istituito ai sensi degli artt.188",
+     "id": "r16c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che darà comunicazione in caso di variazione della denominazione della ditta, della sede legale, dell'assetto societario, ecc.;",
+     "id": "r17c1p20reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 14.5
+  },
+  {
+   "section": "G2.2 REQUISITI SOGGETTIVI",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Nel caso di istanza presentata dal Referente AUA, si allega la dichiarazione di possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n. 161 rilasci",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Nel caso di istanza presentata dal Gestore, lo stesso dichiara di essere in possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n. 161, e nello sp",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che la stessa ditta non si trova in stato di fallimento, di liquidazione, di cessazione attività o di concordato preventivo e in qualsiasi situazione equivalent"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "di non aver riportato condanne con sentenza passata in giudicato, salvi gli effetti della riabilitazione e della sospensione della pena: 1. a pena detentiva per"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in regola con gli obblighi relativi al pagamento dei contributi previdenziali o assistenziali in favore dei lavoratori, secondo la legislazione italia"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "di non essere sottoposto alle misure di prevenzione e alle procedure di cui al D.Lgs 6 settembre 2011, n. 159;"
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "di non essersi reso colpevole di false dichiarazioni nel fornire le informazioni richieste;"
+    },
+    {
+     "id": "r9c1p9reg:radio:2_clone",
+     "kind": "radio",
+     "label": "- di essere proprietario dell'area interessata dallo svolgimento dell'attività",
+     "group": "r9c1p9reg:radio"
+    },
+    {
+     "id": "r10c1p10reg:radio:3_clone",
+     "kind": "radio",
+     "label": "- oppure di avere la piena disponibilità dell'area interessata allo svolgimento dell'attività per la durata minima...",
+     "group": "r10c1p10reg:radio"
+    },
+    {
+     "id": "r12c1p12reg:number",
+     "kind": "text",
+     "label": "di anni:",
+     "max": 3
+    },
+    {
+     "id": "r14c1p16reg:txt",
+     "kind": "text",
+     "label": "in base a (contratto di affitto, preliminare di acquisto, ecc...)",
+     "max": 100
+    },
+    {
+     "id": "r15c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "che la presente dichiarazione viene resa ai fini dell'applicazione della procedura semplificata di cui all'Art. 216 del Codice dell'ambiente"
+    }
+   ],
+   "fingerprint": "55b8125a407ddc4c",
+   "text": "G2.2 REQUISITI SOGGETTIVI G.2.2 REQUISITI SOGGETTIVI Nel caso di istanza presentata dal Referente AUA, si allega la dichiarazione di possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n. 161 rilasciata dal Gestore Nel caso di istanza presentata dal Gestore, lo stesso dichiara di essere in possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n. 161, e nello specifico: che la stessa ditta non si trova in stato di fallimento, di liquidazione, di cessazione attività o di concordato preventivo e in qualsiasi situazione equivalente secondo la legislazione straniera; di non aver riportato condanne con sentenza passata in giudicato, salvi gli effetti della riabilitazione e della sospensione della pena: 1. a pena detentiva per reati previsti dalle norme a tutela dell'ambiente; 2. alla reclusione per un tempo non inferiore ad un anno per un delitto contro la pubblica amministrazione, contro la fede pubblica, contro il patrimonio, contro l'ordine pubblico, contro l'economia pubblica, ovvero per un delitto in materia tributaria; 3. alla reclusione per un tempo non inferiore a due anni per un qualunque delitto non colposo; di essere in regola con gli obblighi relativi al pagamento dei contributi previdenziali o assistenziali in favore dei lavoratori, secondo la legislazione italiana o quella del Paese di residenza; di non essere sottoposto alle misure di prevenzione e alle procedure di cui al D.Lgs 6 settembre 2011, n. 159; di non essersi reso colpevole di false dichiarazioni nel fornire le informazioni richieste; - di essere proprietario dell'area interessata dallo svolgimento dell'attività - oppure di avere la piena disponibilità dell'area interessata allo svolgimento dell'attività per la durata minima... di anni: in base a (contratto di affitto, preliminare di acquisto, ecc...) che la presente dichiarazione viene resa ai fini dell'applicazione della procedura semplificata di cui all'Art. 216 del Codice dell'ambiente",
+   "branches": [
+    {
+     "choice": "Nel caso di istanza presentata dal Referente AUA, si allega la dichiarazione di possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n. 161 rilasci",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Nel caso di istanza presentata dal Gestore, lo stesso dichiara di essere in possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n. 161, e nello sp",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che la stessa ditta non si trova in stato di fallimento, di liquidazione, di cessazione attività o di concordato preventivo e in qualsiasi situazione equivalent",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non aver riportato condanne con sentenza passata in giudicato, salvi gli effetti della riabilitazione e della sospensione della pena: 1. a pena detentiva per",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere in regola con gli obblighi relativi al pagamento dei contributi previdenziali o assistenziali in favore dei lavoratori, secondo la legislazione italia",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non essere sottoposto alle misure di prevenzione e alle procedure di cui al D.Lgs 6 settembre 2011, n. 159;",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non essersi reso colpevole di false dichiarazioni nel fornire le informazioni richieste;",
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "- di essere proprietario dell'area interessata dallo svolgimento dell'attività",
+     "id": "r9c1p9reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "- oppure di avere la piena disponibilità dell'area interessata allo svolgimento dell'attività per la durata minima...",
+     "id": "r10c1p10reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che la presente dichiarazione viene resa ai fini dell'applicazione della procedura semplificata di cui all'Art. 216 del Codice dell'ambiente",
+     "id": "r15c1p17reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 11.6
+  },
+  {
+   "section": "G2.3  Informazioni sulle tipologie di rifiuti recuperati (1)",
+   "fields": [
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "1 TIPOLOGIA DI RIFIUTO",
+     "max": 100
+    },
+    {
+     "id": "r5c2p9reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "2 ATTIVITÀ DI RECUPERO",
+     "max": 100
+    },
+    {
+     "id": "r7c2p13reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "3 CODICI CER",
+     "max": 10
+    },
+    {
+     "id": "r9c2p17reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "4 PROVENIENZA",
+     "max": 100
+    },
+    {
+     "id": "r11c2p21reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "5 CARATTERISTICHE DEL RIFIUTO E VALORI LIMITE DELLE SOSTANZE PERICOLOSE",
+     "max": 100
+    },
+    {
+     "id": "r13c2p25reg:txt",
+     "kind": "text",
+     "label": "Solido pulverulento / solido non pulverulento / fangoso palabile / liquido / altro (specificare)",
+     "context": "6 STATO FISICO",
+     "max": 100
+    },
+    {
+     "id": "r15c2p29reg:txt",
+     "kind": "text",
+     "label": "tonnellate e metri cubi",
+     "context": "7 QUANTITÀ MASSIMA ANNUA RECUPERATA",
+     "max": 50
+    },
+    {
+     "id": "r17c2p33reg:txt",
+     "kind": "text",
+     "label": "tonnellate e metri cubi",
+     "context": "8 QUANTITÀ MASSIMA ISTANTANEA DI MESSA IN RISERVA (se previste operazioni codice R13)",
+     "max": 50
+    },
+    {
+     "id": "r19c2p37reg:real",
+     "kind": "text",
+     "label": "tonnellate/giorno",
+     "context": "9 POTENZIALITÀ GIORNALIERA DI RECUPERO",
+     "max": 13
+    },
+    {
+     "id": "r21c2p41reg:txt",
+     "kind": "text",
+     "label": "R./Descrizione",
+     "context": "10 CODICI E DESCRIZIONE DELLE OPERAZIONI DI RECUPERO",
+     "max": 100
+    },
+    {
+     "id": "r23c2p45reg:txt",
+     "kind": "text",
+     "label": "tonnellate",
+     "context": "11 QUANTITÀ ANNUA DI RIFIUTI AVVIATI AL RECUPERO",
+     "max": 10
+    },
+    {
+     "id": "r25c2p49reg:txt",
+     "kind": "text",
+     "label": "Tonnellate (in caso di nuovi impianti fornire stima previsionale)",
+     "context": "12 QUANTITÀ ANNUA DI PRODOTTO OTTENUTO DALLE OPERAZIONI DI RECUPERO",
+     "max": 50
+    },
+    {
+     "id": "r27c2p53reg:real",
+     "kind": "text",
+     "label": "% (in caso di nuovi impianti fornire stima previsionale)",
+     "context": "13 PERCENTUALE DI PRODOTTO RECUPERATO",
+     "max": 13
+    },
+    {
+     "id": "r29c2p59reg:txt",
+     "kind": "text",
+     "label": "Indicare le caratteristiche di cui all'Allegato 5 del D.M. 05 febbraio 1998.",
+     "context": "14 CARATTERISTICHE DELLA MESSA IN RISERVA",
+     "max": 100
+    },
+    {
+     "id": "r31c2p63reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "15 CARATTERISTICHE MERCEOLOGICHE DELLE MATERIE OTTENUTE E LORO DESTINAZIONE",
+     "max": 100
+    }
+   ],
+   "fingerprint": "63c121b07046c396",
+   "text": "G2.3 Informazioni sulle tipologie di rifiuti recuperati (1) RECUPERO DI MATERIA Specificare 1 TIPOLOGIA DI RIFIUTO Specificare 2 ATTIVITÀ DI RECUPERO Specificare 3 CODICI CER Specificare 4 PROVENIENZA Specificare 5 CARATTERISTICHE DEL RIFIUTO E VALORI LIMITE DELLE SOSTANZE PERICOLOSE Solido pulverulento / solido non pulverulento / fangoso palabile / liquido / altro (specificare) 6 STATO FISICO tonnellate e metri cubi 7 QUANTITÀ MASSIMA ANNUA RECUPERATA tonnellate e metri cubi 8 QUANTITÀ MASSIMA ISTANTANEA DI MESSA IN RISERVA (se previste operazioni codice R13) tonnellate/giorno 9 POTENZIALITÀ GIORNALIERA DI RECUPERO R./Descrizione 10 CODICI E DESCRIZIONE DELLE OPERAZIONI DI RECUPERO tonnellate 11 QUANTITÀ ANNUA DI RIFIUTI AVVIATI AL RECUPERO Tonnellate (in caso di nuovi impianti fornire stima previsionale) 12 QUANTITÀ ANNUA DI PRODOTTO OTTENUTO DALLE OPERAZIONI DI RECUPERO % (in caso di nuovi impianti fornire stima previsionale) 13 PERCENTUALE DI PRODOTTO RECUPERATO Indicare le caratteristiche di cui all'Allegato 5 del D.M. 05 febbraio 1998. 14 CARATTERISTICHE DELLA MESSA IN RISERVA specificare 15 CARATTERISTICHE MERCEOLOGICHE DELLE MATERIE OTTENUTE E LORO DESTINAZIONE (1) compilare la tabella per ciascuna tipologia di rifiuto e attività di recupero inserita nel quadro riassuntivo",
+   "branches": [],
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1
+  }
+ ]
+}
