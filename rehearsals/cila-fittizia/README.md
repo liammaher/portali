@@ -168,4 +168,7 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 
 ## Changes
 
-None yet.
+- 2026-10-28, before any mapping: no partner architect yet, so Liam writes the answer key
+  and does the human baseline, as "The answer key" and "The human baseline" allow. Every
+  accuracy and speed figure is marked "weaker key" / "weaker baseline" until a professional
+  redoes them.

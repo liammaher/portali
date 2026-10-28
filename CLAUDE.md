@@ -79,7 +79,8 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      with inpage.js, in a Playwright window (`run.py run`) or the Claude browser
                      pane (`run.py page`); reads every field back, then again on a fresh load of
                      the draft, attaches the files it names (the pane: 256 KB in all), never
-                     declares, pays or sends.
+                     declares, pays or sends. `run.py preflight` first: the steps file's
+                     `supports:` (cases it maps) and `asks:` (questions, asked in one message).
                      Both take a draft's values from one `pvault get` (`--values -`, Touch ID)
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
 ```
@@ -417,7 +418,7 @@ pilot's form from disk; the `sign` case needs a library whose layout has `signat
 CI runs `regress.py` against the library's main (`fill.yml`); the library runs it on its own changes.
 The portal runner has offline tests on a fake portal: `claude/skills/pratica/portal/bench/test_inpage.py`,
 run with the pratica venv's Python (`~/.cache/pratica-portal/venv`, Playwright's Chromium, headless; no
-network, vault or model).
+network, vault or model); `bench/test_preflight.py` tests pre-flight on the SCIA rehearsal's files.
 
 ```go
 // Pattern: create temp vault, run test

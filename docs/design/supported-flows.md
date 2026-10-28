@@ -14,13 +14,19 @@ save and again on a fresh load of the draft, and stops on anything it doesn't ex
 pieces are missing. Pieces 1 and 2 share a new section of the steps file, so they are built
 together; piece 3 comes after.
 
-Status: planned 2026-10-28, nothing built.
+Status (2026-10-28): pieces 1 and 2 built and retrofitted onto the SCIA (`run.py preflight`,
+`asks:` and `supports:` in `rehearsals/pizzeria-fittizia/portal-steps.yaml`, tests in
+`claude/skills/pratica/portal/bench/test_preflight.py`); the zona is still asked, not looked up.
+Piece 3 not built.
 
 ## 1. Pre-flight: everything settled before anything opens
 
 - **`asks:` in the steps file.** Each `{{ask.x}}` gets its question in plain words, a type
-  (date, number, yes/no, choice, text, file) and why it's needed. Today `answers.json` holds
-  bare keys and the wording lives only in `portal-map.yaml`'s prose.
+  (date, number, yes/no, choice, text, file) and why it's needed. Yes/no questions go in a
+  `groups:` checklist, each phrased as the exception, so one question covers them all and
+  "none" is the usual answer. Every question must be read by a field, a wizard screen or
+  `supports` (pre-flight refuses one that isn't), and a question only a skipped field
+  reads isn't asked: the SCIA asks one checklist and two short answers.
 - **`run.py preflight`**, before any browser opens, returns JSON:
   - `questions`: the asks not yet answered, in order, with their wording;
   - `missing`: vault fields the steps need that are empty or invalid (an expired document

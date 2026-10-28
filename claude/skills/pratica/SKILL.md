@@ -279,10 +279,33 @@ Find one for the entry with
 `grep -l "procedure: <entry id>" "$(cd ~/.claude/skills/pratica && pwd -P)"/../../../rehearsals/*/portal-steps.yaml`.
 When there is one, follow it instead of exploring the portal:
 
-1. **Values first.** Read every field the steps name (step 2's reading, one `pvault get` or
-   token for all of them) and ask its `{{ask.x}}` questions before opening the portal; apply
-   the filters `run.py` defines (`FILTERS`: dates gg/MM/aaaa, the street split into DUG and
-   name, carica and forma giuridica as the portal names them).
+1. **Pre-flight first, before anything opens.** `run.py preflight --steps <folder>/portal-steps.yaml
+   [--answers <answers.json>]` with the same values as step 2 (the `pvault get` piped in,
+   or `--vault-dir`) prints JSON and exits 0 only when `ready`:
+   - `unsupported`: this case isn't mapped (the steps file's `supports:`). Tell the user
+     the reason in one line and stop: don't open the portal, don't ask anything else.
+   - `questions`: only what this case needs (pre-flight leaves out a question no field of
+     this case reads, and one with a default). Ask all of them **in one short message**, in
+     that order, numbered, each `question` as written:
+     - a `checklist` is one question with its `items` as bullets ("tick any that apply, or
+       none"): the usual answer is "none". Write the reply as the list of the ticked items'
+       `key`s under the checklist's `key` (`[]` for none);
+     - an `only_if` question applies only when those items are ticked: put it under them
+       ("if so: …"), never as a question of its own;
+     - give `options` when there are some, and never explain `why` unless asked.
+
+     Write the other replies under each `key` (dates YYYY-MM-DD, files as paths) and run
+     pre-flight again; an `error` says why an answer didn't fit, so ask only that again. A
+     reply that makes the case unsupported ends it there, as above.
+   - `missing`: vault fields that are empty or expired. Ask for each in the same message,
+     or have the user fill them in the vault (`pvault set`, the onboarding page).
+   - `files`: each attachment, whether it exists, and `pane_ok` (all of them within the
+     pane's 256 KB): if not, use the Playwright window or leave the big ones to the user.
+   - `yours`: tell the user now what they'll do at the end, so nothing surprises them.
+
+   Only when it says `ready` go on: the user hears nothing more from you until the review
+   page, except the login. A steps file without `asks:` (an older one) fails pre-flight
+   with "no question in asks: for …": add them before using it.
 2. **Run it with one command** (run in the background: it waits for the login). With Touch
    ID on, the values come from one `pvault get` of the folder's `needs.json` scope (its
    patterns, without `pratiche.*`), piped in: one fingerprint, no token, nothing on disk:
