@@ -113,6 +113,13 @@ asks:
   mensa: {type: yes_no, group: attivita_852, item: "A canteen serving meals (ristorazione collettiva)"}
   manifestazioni: {type: yes_no, group: attivita_852, item: "Food service at fairs and events"}
   home_restaurant: {type: yes_no, group: attivita_852, item: "A home restaurant"}
+  attivita_cessata: {type: text, question: "The activity that closes, in a few words (100 characters)"}
+  titolo_attivita_protocollo: {type: text, question: "The protocol number of the SCIA (or licence) it started under"}
+  titolo_attivita_data: {type: date, question: "Its date"}
+  cessazione_data: {type: date, question: "The day it closes, if not the day of this communication", default: ""}
+  notifica_852_protocollo: {type: text, question: "The protocol number of its Reg. 852 food-safety notifica"}
+  notifica_852_data: {type: date, question: "Its date"}
+  cessazione_852_data: {type: date, question: "The day the food business stops"}
   fine_protocollo: {type: text, question: "Its protocol number", when: "{{ask.fine_presentata}}"}
   fine_data: {type: date, question: "Its protocol date", when: "{{ask.fine_presentata}}"}
   impianti: {type: yes_no, question: "Did the works touch the building's systems (impianti)?"}
@@ -1063,6 +1070,22 @@ sections:
   - section: normative comunali
     theirs: [Elenco Strade piano Zone Tutelate, Piano per la programmazione delle aperture]
     fields: []
+
+  # Closing a business (cessazione): which activity, the title it started under, from when;
+  # and the Reg. 852/2004 registration it ends.
+  - section: Oggetto della comunicazione
+    fields:
+      - {kind: text, label: la cessazione dell'attività di, value: "{{ask.attivita_cessata}}"}
+      - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: radio, label: Cessazione contestuale alla comunicazione, when: "{{ask.cessazione_data|empty}}"}
+      - {kind: radio, label: Cessazione con decorrenza, when: "{{ask.cessazione_data|empty|not}}"}
+      - {kind: date, label: dal, value: "{{ask.cessazione_data|date_it}}", when: "{{ask.cessazione_data|empty|not}}"}
+  - section: Cessazione dell'attività ai sensi dell'art. 6, Reg. CE n. 852/2004
+    fields:
+      - {kind: text, label: prot./n., value: "{{ask.notifica_852_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.notifica_852_data|date_it}}"}
+      - {kind: date, label: cesserà in data, value: "{{ask.cessazione_852_data|date_it}}"}
 
   # A bar or restaurant (somministrazione di alimenti e bevande): the sign, the season, what
   # kind of place, a shopping centre, the area where customers eat and drink. Drafted by

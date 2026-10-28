@@ -474,7 +474,20 @@ def generate(recipe, base=HERE):
     groups = {g: v for g, v in {**dictionary.get("groups", {}), **recipe.get("groups", {})}.items()
               if any(a.get("group") == g for a in asks.values())}
 
-    wizard = recipe.get("wizard") or [
+    wizard = recipe.get("wizard")
+    if wizard and crawl.get("screens") is not None:
+        # The screens a batch crawl saw after the operations: a recipe's step for a screen
+        # this pratica doesn't show (a closure has no destinatario) is dropped.
+        seen = {norm(x["screen"]) for x in crawl["screens"]}
+        after = False
+        kept = []
+        for w in wizard:
+            if after and norm(w["screen"]) not in seen:
+                continue
+            after = after or norm(w["screen"]).startswith("scelta operazioni")
+            kept.append(w)
+        wizard = kept
+    wizard = wizard or [
         {"screen": "Assegna una descrizione alla pratica",
          "fill": {"css": 'input[placeholder^="Inserire la descrizione"]', "value": "{{ask.descrizione}}"}, "confirm": "CONFERMA"},
         {"screen": "Controlla l'accesso alla pratica", "confirm": "CONFERMA"},
