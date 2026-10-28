@@ -376,8 +376,10 @@ by its label ("no" when the role isn't part of this pratica).
      run only, refused if the vault has the field. Note it in the playbook so the next
      run asks again rather than guessing.
    - "is answered": an `ask` row with no answer. Ask it, add it to `answers.json`.
-   - "refused the token" or "Keychain": give the token command again. "locked" or "no
-     vault server": the user runs `pvault unlock`.
+   - "refused the token": give the token command again. "nothing in Keychain service" right
+     after the user saved it: Claude Code's sandbox can't reach the Keychain, so run the same
+     command again outside it (`dangerouslyDisableSandbox`; the user approves); the same holds
+     for `run.py --vault-dir`. "locked" or "no vault server": the user runs `pvault unlock`.
    - A form, layout or box check failing means the Comune changed the form or the
      library is wrong: don't hand over that PDF. Fill by hand and list it for step 7.
 5. **Show it.** Look at `<out>/page-1.png` (and any other `page-<n>.png`) yourself first. Then send the user

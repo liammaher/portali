@@ -712,7 +712,8 @@ def keychain_token(service):
     got = subprocess.run(["/usr/bin/security", "find-generic-password", "-a", getpass.getuser(), "-s", service, "-w"],
                          capture_output=True, text=True, timeout=10)
     if got.returncode == 44:
-        sys.exit(f"nothing in Keychain service {service!r}: create the token with pvault create-service-token ... --keychain {service}")
+        sys.exit(f"nothing in Keychain service {service!r}: create the token with pvault create-service-token ... --keychain {service}"
+                 " (or, if it was just saved, this process can't reach the Keychain, as in a sandbox)")
     if got.returncode != 0:
         sys.exit(f"reading Keychain service {service!r} failed: {got.stderr.strip()}")
     return got.stdout.strip()
