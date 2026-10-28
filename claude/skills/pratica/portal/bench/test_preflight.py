@@ -164,6 +164,25 @@ def not_needed_here():
     assert q and q[0]["only_if"] == ["stagionale"], r["questions"]
 
 
+def proposals():
+    # A proposal the vault can fill is offered for confirmation, not asked; confirmed, it's
+    # an answer. One the vault can't fill falls back to the question.
+    steps = copy.deepcopy(STEPS)
+    steps["asks"]["insegna"]["propose"] = "{{business.denominazione}}"
+    no_sign = {k: v for k, v in ANSWERS.items() if k != "insegna"}
+    r = run.preflight(steps, values(steps=steps, answers=no_sign))
+    assert [p["key"] for p in r["proposals"]] == ["insegna"], r["proposals"]
+    assert r["proposals"][0]["proposal"] == FIELDS["business.denominazione"], r["proposals"]
+    assert "insegna" not in [q["key"] for q in r["questions"]] and not r["ready"], r
+    confirmed = no_sign | {"insegna": r["proposals"][0]["proposal"]}
+    assert run.preflight(steps, values(steps=steps, answers=confirmed))["ready"]
+    fields = {k: v for k, v in FIELDS.items() if k != "business.denominazione"}
+    r = run.preflight(steps, values(steps=steps, answers=no_sign, fields=fields))
+    assert "insegna" in [q["key"] for q in r["questions"]] and not r["proposals"], r
+    steps["asks"]["alcolici"]["propose"] = "false"
+    raises(lambda: run.preflight(steps, values(steps=steps)), "no propose")
+
+
 CASES = [
     ("the SCIA with its answers is ready", ready),
     ("no answers: one checklist, branch items first, then two questions, no defaults", all_questions),
@@ -180,6 +199,7 @@ CASES = [
     ("a checklist answers as a list or item by item, and a bad list is asked again", checklist_forms),
     ("a question no field reads is a steps-file error", unused_ask),
     ("a question this case doesn't need isn't asked; a conditional one says on what", not_needed_here),
+    ("a proposal is offered to confirm, used once confirmed, and asked when the vault can't fill it", proposals),
 ]
 
 

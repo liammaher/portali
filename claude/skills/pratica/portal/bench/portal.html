@@ -1,12 +1,17 @@
 <!doctype html>
 <html lang="it">
-<head><meta charset="utf-8"><title>Allega documenti (portale finto)</title></head>
+<head><meta charset="utf-8"><title>Pratica (portale finto)</title></head>
 <body>
-<!-- A fake portal screen for test_inpage.py: a dynaForm-style form whose upload boxes send a
-     file as soon as it's chosen, a Salva that stores on the server, and what was stored shown
-     again on every load. ?banner=1 puts a consent banner over everything. -->
-<h1>Allega documenti</h1>
+<!-- A fake portal for test_inpage.py: two sections in a dynaForm-style form, upload boxes
+     that send a file as soon as it's chosen, a Salva that stores every text box on the
+     server, and what was stored shown again on every load. ?banner=1 puts a consent banner
+     over everything; ?rename=1 renames the second section's label, as a portal update would. -->
+<nav>
+  <a class="linkmenu" href="#allega">Allega documenti</a>
+  <a class="linkmenu" href="#tecnici">Dati tecnici</a>
+</nav>
 <form id="form">
+  <h1 id="allega">Allega documenti</h1>
   <table>
     <tr><td><label class="labelDynaFormControl">Denominazione</label></td>
         <td><input type="text" id="form:r0c1:dynaForm:den_txt"></td></tr>
@@ -17,6 +22,11 @@
   </table>
   <h2>File caricati</h2>
   <ul id="uploaded"></ul>
+  <h1 id="tecnici">Dati tecnici</h1>
+  <table>
+    <tr><td><label class="labelDynaFormControl" id="impresa-label">Impresa esecutrice</label></td>
+        <td><input type="text" id="form:r4c1:dynaForm:impresa_txt"></td></tr>
+  </table>
   <button type="button" id="salva">Salva</button>
   <button type="button" id="invia">Firma e invio</button>
   <div id="saved"></div>
@@ -28,13 +38,17 @@
 </div>
 <script>
 if (location.search.includes("banner=1")) document.getElementById("consenso").hidden = false;
-const den = document.getElementById("form:r0c1:dynaForm:den_txt");
+if (location.search.includes("rename=1")) document.getElementById("impresa-label").textContent = "Ditta esecutrice";
+const texts = () => [...document.querySelectorAll("input[type=text]")];
 const list = (name) => {
   const li = document.createElement("li");
   li.textContent = name;
   document.getElementById("uploaded").append(li);
 };
-fetch("/state").then((r) => r.json()).then((st) => { den.value = st.den; st.files.forEach(list); });
+fetch("/state").then((r) => r.json()).then((st) => {
+  for (const t of texts()) t.value = st.fields[t.id] || "";
+  st.files.forEach(list);
+});
 for (const box of document.querySelectorAll("input[type=file]")) {
   box.addEventListener("change", () => {
     const f = box.files[0];
@@ -45,7 +59,8 @@ for (const box of document.querySelectorAll("input[type=file]")) {
   });
 }
 document.getElementById("salva").addEventListener("click", () => {
-  fetch("/save", { method: "POST", body: JSON.stringify({ den: den.value }) })
+  const fields = Object.fromEntries(texts().map((t) => [t.id, t.value]));
+  fetch("/save", { method: "POST", body: JSON.stringify({ fields }) })
     .then(() => { document.getElementById("saved").textContent = "Dati salvati"; });
 });
 document.getElementById("invia").addEventListener("click", () => fetch("/sent", { method: "POST" }));

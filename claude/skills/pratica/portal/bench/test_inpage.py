@@ -27,11 +27,14 @@ sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
 import run  # noqa: E402
 
 
+DEN, IMPRESA = "form:r0c1:dynaForm:den_txt", "form:r4c1:dynaForm:impresa_txt"
+
+
 class Portal:
     """What the fake portal stored. drop: it shows Denominazione after Salva but never stores it."""
 
     def reset(self, drop=False):
-        self.den, self.files, self.drop, self.sent = "", [], drop, False
+        self.fields, self.files, self.drop, self.sent = {}, [], drop, False
 
 
 PORTAL = Portal()
@@ -55,14 +58,16 @@ class Handler(BaseHTTPRequestHandler):
         elif path == "/portal.html":
             self.send((HERE / "portal.html").read_bytes(), "text/html; charset=utf-8")
         elif path == "/state":
-            self.send(json.dumps({"den": PORTAL.den, "files": [f["name"] for f in PORTAL.files]}).encode())
+            self.send(json.dumps({"fields": PORTAL.fields, "files": [f["name"] for f in PORTAL.files]}).encode())
         else:
             self.send_error(404)
 
     def do_POST(self):
         body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
-        if self.path == "/save" and not PORTAL.drop:
-            PORTAL.den = json.loads(body)["den"]
+        if self.path == "/save":
+            PORTAL.fields = json.loads(body)["fields"]
+            if PORTAL.drop:
+                PORTAL.fields.pop(DEN, None)
         elif self.path == "/upload":
             msg = BytesParser(policy=default).parsebytes(
                 b"Content-Type: " + self.headers["Content-Type"].encode() + b"\r\n\r\n" + body)
@@ -81,13 +86,15 @@ def steps(base, start="/portal.html", **over):
         {"id": "planimetria_input", "kind": "file", "label": "Planimetria quotata", "value": "{{ask.planimetria}}"},
         {"id": "ricevuta_input", "kind": "file", "label": "Ricevuta ASL", "value": "{{ask.ricevuta}}"},
     ]} | over
+    tecnici = {"section": "Dati tecnici", "fields": [
+        {"id": "impresa_txt", "kind": "text", "label": "Impresa esecutrice", "value": "{{ask.impresa}}"}]}
     return {"procedure": "test/allegati", "start": base + start, "logged_in": base + "/", "wizard": [],
-            "sections": [sec]}
+            "sections": [sec, tecnici]}
 
 
-def fill(browser, base, st, answers, files_limit=None):
+def fill(browser, base, st, answers, files_limit=None, resume=None):
     values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
-    install, run_js = run.page_scripts(st, values, files_limit)
+    install, run_js = run.page_scripts(st, values, files_limit, resume=resume)
     page = browser.new_page()
     try:
         page.goto(base + "/")
@@ -108,7 +115,7 @@ def main():
     ricevuta.write_bytes(b"finta ricevuta firmata\n")
     sha = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in (planimetria, ricevuta)}
     answers = {"den": "PIZZERIA FITTIZIA DI GENNARO FITTIZIO", "planimetria": str(planimetria),
-               "ricevuta": str(ricevuta)}
+               "ricevuta": str(ricevuta), "impresa": "EDIL FITTIZIA DI MARCO ESEMPIO"}
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     base = f"http://127.0.0.1:{server.server_port}"
@@ -136,7 +143,8 @@ def main():
             r = fill(browser, base, steps(base), answers)
             assert r["result"] == "filled", r.get("error")
             assert r.get("verify_seconds") is not None, "no fresh load of the draft"
-            assert PORTAL.den == answers["den"], f"stored {PORTAL.den!r}"
+            assert PORTAL.fields.get(DEN) == answers["den"], f"stored {PORTAL.fields}"
+            assert PORTAL.fields.get(IMPRESA) == answers["impresa"], f"stored {PORTAL.fields}"
             got = {f["name"]: f["sha256"] for f in PORTAL.files}
             assert got == sha, f"received {got}"
             assert {f["type"] for f in PORTAL.files} == {"application/pdf", "application/pkcs7-mime"}
@@ -164,6 +172,46 @@ def main():
             PORTAL.reset()
             stops(fill(browser, base, steps(base, save="Firma e invio"), answers), "refused to click")
         case("the person's Firma e invio is never clicked", theirs)
+
+
+        def recovered():
+            # The portal renamed a label: the run stops there and says so, keeping what the
+            # first section typed; a fix for that one field resumes it on the same draft,
+            # without redoing the first section, and the fresh load checks both.
+            PORTAL.reset()
+            st = steps(base, start="/portal.html?rename=1")
+            first = fill(browser, base, st, answers)
+            assert first["result"] == "stopped" and "expected the label Impresa esecutrice" in first["error"], first
+            at = first["at"]
+            assert (at["phase"], at["index"], at["field"]) == ("section", 1, 0), at
+            assert [k["section"] for k in first["kept"]] == [0], first.get("kept")
+            again = fill(browser, base, st, answers, resume=run.resumption(first))
+            assert again["result"] == "stopped" and again["at"]["index"] == 1, "resumed without the fix and got past"
+            fix = [{"section": 1, "field": 0, "set": {"label": "Ditta esecutrice"}}]
+            done = fill(browser, base, st, answers, resume=run.resumption(first, fix))
+            assert done["result"] == "filled", done.get("error")
+            assert done["verify_seconds"] is not None and done["resumed"], done
+            assert [s["section"] for s in done["sections"]] == ["Dati tecnici"], "redid a finished section"
+            assert PORTAL.fields.get(DEN) == answers["den"] and PORTAL.fields.get(IMPRESA) == answers["impresa"], \
+                PORTAL.fields
+            assert len(PORTAL.files) == 2, f"uploaded {len(PORTAL.files)} files, not 2"
+            assert not PORTAL.sent, "Firma e invio was clicked"
+            out = tmp / "drift"
+            out.mkdir()
+            run.drift(out, st, run.resumption(first, fix))
+            assert json.loads((out / "drift.json").read_text())["fixes"] == fix
+        case("a renamed label stops in place; a fix resumes the same draft, checked end to end", recovered)
+
+        def lost_before():
+            # A resume whose fresh load finds an earlier section's value gone still stops.
+            PORTAL.reset()
+            st = steps(base, start="/portal.html?rename=1")
+            first = fill(browser, base, st, answers)
+            PORTAL.fields.pop(DEN, None)
+            fix = [{"section": 1, "field": 0, "set": {"label": "Ditta esecutrice"}}]
+            done = fill(browser, base, st, answers, resume=run.resumption(first, fix))
+            stops(done, "fresh load of the draft: not kept")
+        case("after a resume, a value lost from an earlier section is still caught", lost_before)
 
         browser.close()
 

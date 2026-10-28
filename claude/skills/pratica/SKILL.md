@@ -292,7 +292,10 @@ When there is one, follow it instead of exploring the portal:
        `key`s under the checklist's `key` (`[]` for none);
      - an `only_if` question applies only when those items are ticked: put it under them
        ("if so: …"), never as a question of its own;
-     - give `options` when there are some, and never explain `why` unless asked.
+     - give `options` when there are some, and never explain `why` unless asked;
+     - `proposals` go in the same message as "I'll use: …", one line each, with the
+       `proposal` as written. "ok" confirms them all: write each one under its `key`. An
+       answer that changes one replaces it. Never use a proposal nobody confirmed.
 
      Write the other replies under each `key` (dates YYYY-MM-DD, files as paths) and run
      pre-flight again; an `error` says why an answer didn't fit, so ask only that again. A
@@ -329,9 +332,23 @@ When there is one, follow it instead of exploring the portal:
    check the draft, with step 5's list.
    No environment yet: `python3 -m venv ~/.cache/pratica-portal/venv`, then its `pip install
    pyyaml playwright` and `python -m playwright install chromium` (ask first).
-   If it stops, `error` says where and `<dir>/failure.png` shows it: finish that part by hand
-   (fill, Salva, read back and compare) and fix the steps file. By hand, the map's header has
-   the portal's mechanics (dropdown filters, lookups that need real key presses).
+   **If it stops, recover it without the user** (they hear nothing about the page):
+   1. `report.json`'s `error` says what differed and `at` exactly where (the wizard screen,
+      or the section and field); `<dir>/failure.png` shows it. Read that screen as text
+      (`read_page`, or the Playwright CLI's snapshot), next to the map's entry for it.
+   2. Work out the fix for that one field: its new `id` or `css`, or the `label` the page
+      now shows. Write `[{"section": i, "field": k, "set": {"label": "…"}}]` to a fix file.
+   3. Resume on the same draft: the same command with `--resume <dir>/report.json --fix
+      <fix file>` (and a new `--out`). It redoes only that section, then the rest, and the
+      fresh load at the end checks every section, the earlier ones included.
+      `<out>/drift.json` records the fix: fold it into the steps file and the map afterwards.
+   4. Ask the user only when the page wants a fact the vault and the answers don't hold
+      (a new required field): one plain question, then resume. Never fill a guess.
+   5. Budget: two fixes or about three minutes. Past that, stop, leave the draft saved, and
+      tell the user plainly what's left. A run that never resumes can't be reported as done.
+
+   By hand, the map's header has the portal's mechanics (dropdown filters, lookups that
+   need real key presses).
 
    In the built-in browser instead (the user is logged in there, or asks): `run.py page`
    (same arguments, `--out DIR`) writes `install.js` and `run.js`; run each on the portal's

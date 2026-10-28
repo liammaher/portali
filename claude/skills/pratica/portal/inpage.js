@@ -13,7 +13,8 @@
 // drop would (DataTransfer): the pane can't type a path into one, and a public page
 // can't fetch from localhost, so its bytes come in run.js (run.py says how big).
 //
-//   __pv.start(procedure, values)  starts a run, returns at once
+//   __pv.start(procedure, values[, resume])  starts a run, returns at once. resume picks a
+//                                  stopped run up: {url, from, kept, fixes} (run.py --resume)
 //   await __pv.wait(ms)            the run's report once it ends, or after ms
 //   __pv.open()                    loads the frame's page as the top page, for the person
 (() => {
@@ -151,7 +152,8 @@
     }
   }
 
-  async function wizard(step, value) {
+  async function wizard(step, value, wi) {
+    report.at = { phase: "wizard", index: wi, screen: step.screen };
     if (!norm(doc().body.innerText).includes(norm(step.screen))) fail(`expected the screen ${step.screen}`);
     if (step.fill) {
       const e = doc().querySelector(step.fill.css) || fail(`no field ${step.fill.css}`);
@@ -270,8 +272,9 @@
     return { label: f.label || f.id, want: f.typed, got, ok };
   }
 
-  async function section(sec, values) {
+  async function section(sec, values, si) {
     const t0 = performance.now();
+    report.at = { phase: "section", index: si, section: sec.section };
     if (steps.declarations.test(sec.section)) fail(`refused to open ${sec.section}: the person's declarations`);
     if (sec.open !== false) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
@@ -282,6 +285,8 @@
     for (const [i, f] of sec.fields.entries()) {
       const v = values[i];
       if (v === false) continue; // its `when` is false for this pratica
+      report.at.field = i;
+      report.at.label = f.label || f.id || f.css;
       let typed;
       if (f.kind === "radio" || f.kind === "checkbox") typed = await tick(f);
       else if (v === null || v === "") continue;
@@ -289,8 +294,10 @@
       else if (f.kind === "lookup") typed = await lookup(f, v);
       else if (f.kind === "file") typed = await attach(f, v);
       else typed = await text(f, v);
-      done.push({ ...f, typed });
+      done.push({ ...f, typed, field: i });
     }
+    delete report.at.field;
+    delete report.at.label;
     // An attachments screen may keep each file as it uploads, with no Salva (save: false).
     if (sec.save !== false) await act(() => press(button(sec.save || "Salva"), sec.save || "Salva"));
     const errs = errors();
@@ -298,7 +305,15 @@
     const bad = checks.filter((c) => !c.ok);
     report.sections.push({ section: sec.section, seconds: +((performance.now() - t0) / 1000).toFixed(1), errors: errs, bad });
     if (errs.length || bad.length) fail(`${sec.section}: portal errors ${JSON.stringify(errs)}, not kept ${JSON.stringify(bad)}`);
-    kept.push({ sec, done });
+    keep(si, done);
+  }
+
+  // What each finished section typed, in the report too: a run resumed after a stop hands
+  // it back, so the fresh load of the draft still checks every section, not only its own.
+  function keep(si, done) {
+    kept = kept.filter((k) => k.sec !== steps.sections[si]).concat([{ sec: steps.sections[si], done }]);
+    report.kept = (report.kept || []).filter((k) => k.section !== si)
+      .concat([{ section: si, fields: done.map((d) => [d.field, d.typed]) }]);
   }
 
   // Each read-back above saw its section right after its own Salva. A later section can
@@ -306,8 +321,12 @@
   // draft is loaded again from its address and every value read once more.
   async function verify() {
     const t0 = performance.now();
-    const url = doc().location.href;
-    await act(() => win().location.replace(url));
+    // Going to the same address plus a #section only scrolls, so drop that part; a route
+    // after # (#/…, #!…) is the page itself, so reload it instead.
+    const u = new (win().URL)(doc().location.href);
+    const route = /^#[!/]/.test(u.hash);
+    if (!route) u.hash = "";
+    await act(() => (route ? win().location.reload() : win().location.replace(u.href)));
     const bad = [];
     for (const { sec, done } of kept) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
@@ -319,23 +338,33 @@
     if (bad.length) fail(`fresh load of the draft: not kept ${JSON.stringify(bad)}`);
   }
 
-  async function run(values) {
+  async function run(values, resume) {
     const t0 = performance.now();
     const secs = () => +((performance.now() - t0) / 1000).toFixed(1);
     try {
       frame = document.createElement("iframe");
       frame.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:2147483647;background:#fff";
       const loaded = new Promise((r) => frame.addEventListener("load", r, { once: true }));
-      frame.src = steps.start;
+      // A resumed run opens the draft it stopped on; a new one starts a new pratica.
+      frame.src = resume.url || steps.start;
       document.body.append(frame);
       await loaded;
       await idle();
       if (!doc().location.href.startsWith(steps.logged_in)) fail("not logged in to the portal");
-      for (const [i, w] of steps.wizard.entries()) await wizard(w, values.wizard[i]);
+      const from = resume.from || {};
+      for (const k of resume.kept || []) {
+        keep(k.section, k.fields.map(([field, typed]) => ({ ...steps.sections[k.section].fields[field], typed, field })));
+      }
+      if (from.section === undefined) {
+        for (const [i, w] of steps.wizard.entries()) if (i >= (from.wizard || 0)) await wizard(w, values.wizard[i], i);
+      }
       report.wizard_seconds = secs();
-      for (const [i, s] of steps.sections.entries()) await section(s, values.sections[i]);
+      for (const [i, s] of steps.sections.entries()) {
+        if (i >= (from.section || 0)) await section(s, values.sections[i], i);
+      }
       await verify();
       report.result = "filled";
+      report.at = null;
     } catch (e) {
       report.result = "stopped";
       report.error = e instanceof StepError ? e.message : `${e.name}: ${e.message}`;
@@ -346,14 +375,17 @@
   }
 
   window.__pv = {
-    start(procedure, values) {
+    start(procedure, values, resume = {}) {
       const raw = localStorage.getItem("pv-steps:" + procedure) || fail(`no steps installed for ${procedure}`);
       steps = JSON.parse(raw);
       steps.forbidden = new RegExp(steps.forbidden, "i");
       steps.declarations = new RegExp(steps.declarations, "i");
-      report = { procedure, result: "running", sections: [] };
+      // A fix is what Claude found the page really has for one field (a moved id, a renamed
+      // label): this run uses it, and run.py writes it down for the steps file.
+      for (const x of resume.fixes || []) Object.assign(steps.sections[x.section].fields[x.field], x.set);
+      report = { procedure, result: "running", sections: [], at: null, resumed: !!resume.url };
       kept = [];
-      run(values);
+      run(values, resume);
       return "started";
     },
     async wait(ms = 25000) {
