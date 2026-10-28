@@ -203,6 +203,18 @@ asks:
   camere_doppie_bagno: {type: number, question: "Double rooms with a private bathroom", default: "0"}
   camere_doppie_senza: {type: number, question: "Double rooms without one", default: "0"}
 
+  subingresso_attivita: {type: text, question: "The activity taken over, in a few words (e.g. commercio di vicinato non alimentare)"}
+  cedente_titolo_protocollo: {type: text, question: "The protocol number of the SCIA (or licence) the previous owner ran it under"}
+  cedente_titolo_data: {type: date, question: "Its date"}
+  subingresso_data: {type: date, question: "The day the new owner takes over, if not the day of this communication", default: ""}
+  subingresso_causa: {type: choice, question: "How the business changes hands", options: [Compravendita, Affitto d'azienda, Donazione, Fusione, Fallimento, Successione, Altre cause]}
+  subingresso_causa_altro: {type: text, question: "What other cause"}
+  atto_registrato: {type: yes_no, question: "Is the notary's deed already registered with the Agenzia delle Entrate?"}
+  cedente_denominazione: {type: text, question: "The previous owner: name or business name"}
+  cedente_cf: {type: text, question: "Their codice fiscale or partita IVA"}
+  cedente_notifica_protocollo: {type: text, question: "The protocol number of their Reg. 852 food-safety notifica (or SCIA)"}
+  cedente_notifica_data: {type: date, question: "Its date"}
+
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
   superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
   superficie_attivita: {type: "number", question: "Superficie del locale adibita all'esercizio dell'attività: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_attivita"}
@@ -1298,6 +1310,45 @@ sections:
       - {kind: text, label: Totale posti letto (n.), nth: 2, value: "{{2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}", on_page: true}
       - {kind: text, label: TOTALE camere n., value: "{{ask.camere_singole_bagno+ask.camere_singole_senza+ask.camere_doppie_bagno+ask.camere_doppie_senza}}"}
       - {kind: text, label: TOTALE posti letto camere n., value: "{{ask.camere_singole_bagno+ask.camere_singole_senza+2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}"}
+
+  # Taking over a business (subingresso, mod_subingresso), the same four sections in every
+  # sector: the activity and the title it runs under, from when; why it changes hands and the
+  # deed (registered: one still being registered takes a signed copy, the person's); a new web
+  # address; and, for food, the previous holder's Reg. 852 notifica.
+  - section: dati dell'impresa a cui si subentra
+    aliases: [Dati della impresa a cui si subentra]
+    fields:
+      - {kind: text, label: "nell'attività di:", value: "{{ask.subingresso_attivita}}"}
+      - {kind: text, label: già avviata con la SCIA/DIA/autorizzazione prot./n, value: "{{ask.cedente_titolo_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.cedente_titolo_data|date_it}}"}
+      - {kind: radio, label: Avvio dell'attività contestuale, when: "{{ask.subingresso_data|empty}}"}
+      - {kind: radio, label: Avvio dell'attività con decorrenza, when: "{{ask.subingresso_data|empty|not}}"}
+      - {kind: date, label: dal, value: "{{ask.subingresso_data|date_it}}", when: "{{ask.subingresso_data|empty|not}}"}
+  - section: motivazioni del subingresso
+    # The deed being registered takes its signed copy (.p7m only): the person's upload.
+    leave: [Tipologie ammesse]
+    fields:
+      - {kind: radio, label: Compravendita, when: "{{ask.subingresso_causa|is_compravendita}}"}
+      - {kind: radio, label: Affitto d'azienda, when: "{{ask.subingresso_causa|is_affitto_d_azienda}}"}
+      - {kind: radio, label: Donazione, when: "{{ask.subingresso_causa|is_donazione}}"}
+      - {kind: radio, label: Fusione, when: "{{ask.subingresso_causa|is_fusione}}"}
+      - {kind: radio, label: Fallimento, when: "{{ask.subingresso_causa|is_fallimento}}"}
+      - {kind: radio, label: Successione, when: "{{ask.subingresso_causa|is_successione}}"}
+      - {kind: radio, label: Altre cause, when: "{{ask.subingresso_causa|is_altre_cause}}"}
+      - {kind: text, label: "specificare:", value: "{{ask.subingresso_causa_altro}}", when: "{{ask.subingresso_causa|is_altre_cause}}"}
+      - {kind: radio, label: con atto di registrazione, when: "{{ask.atto_registrato}}"}
+      - {kind: text, label: n., value: "{{ask.atto_registrazione_numero}}", when: "{{ask.atto_registrato}}"}
+      - {kind: date, label: del, value: "{{ask.atto_registrazione_data|date_it}}", when: "{{ask.atto_registrato}}"}
+      - {kind: radio, label: l'atto è in corso di registrazione, when: "{{ask.atto_registrato|not}}"}
+  - section: variazione della denominazione
+    leave: [indirizzo nuovo sito web]
+    fields: []
+  - section: notifica di subingresso ai sensi del Reg. CE n.852/2004
+    fields:
+      - {kind: text, label: Cognome e Nome oppure denominazione ditta, value: "{{ask.cedente_denominazione}}"}
+      - {kind: text, label: C. F./Partita IVA, value: "{{ask.cedente_cf}}"}
+      - {kind: text, label: di cui alla notifica/SCIA prot./n., value: "{{ask.cedente_notifica_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.cedente_notifica_data|date_it}}"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"

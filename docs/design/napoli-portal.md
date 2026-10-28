@@ -32,8 +32,9 @@ once by fingerprint (`catalogue/README.md`). SUE: all 27 pratiche crawled, 127 d
 sections, 88 in the dictionary (88% of uses), 20 pratiche complete; 7 generated and run
 (CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 160 pratiche
 crawled so far (the priority sectors; the batch continues, 1,028 trips in all), 236 distinct
-sections, 29 in the dictionary (71% of uses, counted under each title a section has); the
-openings of a hairdresser, a restaurant, a non-food shop, a bakery and rooms to let, and a
+sections, 33 in the dictionary (73% of uses, counted under each title a section has); the
+openings of a hairdresser, a restaurant, a non-food shop, a bakery and rooms to let, the
+takeover of a shop and of a restaurant (the subingresso's sections serve ten sectors), and a
 restaurant's closure, generated and run. A drift check
 reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
@@ -43,7 +44,8 @@ of 49 boxes right (33 before), and sections it marks `exact` held 17 of 18. Draf
 person to check, never used unchecked. The pratica's XML, which would name each box's schema
 field, exists only once a pratica is sent: the portal offers PDFs before (`rehearsals/cessazione-fittizia`).
 
-Next: finish the SUAP batch and import it; the dictionary in order of use; the SUE's last
+Next: finish the SUAP batch and import it; the business life cycle in the main sectors
+(suspension, changes of partners or structure, then alcohol, an outside sign, a company); the SUE's last
 seven pratiche with a professional (asseverazioni, landscape classifications).
 
 ## 2. The legal layer: which pratica, which choices, which answers

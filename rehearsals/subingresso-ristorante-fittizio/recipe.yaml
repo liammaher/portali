@@ -1,0 +1,48 @@
+# Taking over a bar or restaurant outside the protected zones (subingresso with the Reg.
+# 852/2004 update), as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-060-subentrare-nell-esercizio-dell-attivita.json), for the
+# pizzeria rehearsal's made-up ditta individuale (rehearsals/pizzeria-fittizia/fixture.json)
+# taking over an existing pizzeria.
+procedure: napoli/comune/subingresso-attivita-commerciale
+title: "Subingresso in un bar o ristorante con notifica sanitaria, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-060-subentrare-nell-esercizio-dell-attivita
+subject: impresa
+operation: Subentrare nell'esercizio dell'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+after: [Pagamento degli oneri, Gestione degli allegati]
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Esercizio di somministrazione di alimenti e bevande in zone NON tutelate], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Subentrare nell'esercizio dell'attività"], confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+groups:
+  extras:
+    question: "Does any of this apply to the business? Tick all that do, or none."
+asks:
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - subingresso {{business.denominazione}}"}
+  zona_tutelata:
+    group: extras
+    type: yes_no
+    item: "It's in the historic centre: the UNESCO area or its buffer zone"
+    why: "The protected zones have their own pratica, not mapped for a takeover yet."
+  diritti_euro: {type: number, question: "The SUAP fees in euro", default: "96", why: "The 2026 table's VCA column for a bar or restaurant outside the protected zones with the notifica sanitaria (S72)."}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, Napoli's rules (normative comunali), requisiti di onorabilità e professionali, art. 6 Reg. 852/2004, altre dichiarazioni, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen, and the ASL's own fee"
+  - "Sign and send (Firma e invio) within 90 days of the deed; keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
+  - when: "{{business.rea|empty}}"
+    else: "So far only for a business not yet in the Registro delle imprese."
+  - {when: "{{ask.zona_tutelata|not}}", else: "A takeover in the historic centre isn't supported yet."}
+  - {when: "{{ask.atto_registrato}}", else: "A deed still being registered isn't supported yet: the portal then takes its signed copy, which is yours to upload. File once it's registered."}
