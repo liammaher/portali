@@ -1,0 +1,27 @@
+# The CIL for temporary works (art. 6 c. 1 e-bis DPR 380/2001: removed within 180 days), as
+# gen.py writes its steps file. Never walked: crawl catalogue/F839/sections/cil.json, every
+# field from dictionary/fnsuap.yaml. The CILA rehearsal's people (rehearsals/cila-fittizia):
+# the architect with a procura, the tenant client, the owner company, one firm.
+procedure: napoli/comune/cil-opere-temporanee
+title: "CIL opere temporanee, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: cil
+operation: Comunicazione di Inizio Lavori per opere temporanee (C.I.L.)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+firms: [f1]
+after: [Pagamento degli oneri, Gestione degli allegati]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - CIL {{c:identity.last_name}}"}
+  data_inizio_lavori: {question: "When the works will start"}
+  dettaglio_intervento: {question: "What the temporary works are and when they'll be removed (500 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{ask.titolo}}"
+    in: [locatario]
+    else: "So far only a tenant with the owner's assent (a.2) is mapped."

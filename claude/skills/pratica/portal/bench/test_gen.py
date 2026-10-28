@@ -87,5 +87,54 @@ def _():
         gen.json.loads = real
 
 
+REH = ROOT / "rehearsals"
+
+
+def generated(name):
+    return gen.generate(gen.load_yaml(REH / name / "recipe.yaml"))
+
+
+def section(steps, start):
+    return next(s for s in steps["sections"] if s["section"].startswith(start))
+
+
+def field(sec, start):
+    return next(f for f in sec["fields"] if f.get("label", "").startswith(start))
+
+
+@case("a quadro is matched without its letter, and a tick is a radio or a checkbox as the page has it (CIL)")
+def _():
+    steps = generated("cil-fittizia")
+    g = section(steps, "g) Rispetto")  # the CILA's i)
+    assert field(g, "dichiara che l'entità presunta")["kind"] == "checkbox"  # a radio in the CILA
+    assert section(steps, "f) Impresa")["fields"][1]["anchor"] == "Ragione sociale"
+
+
+@case("two exclusive branches keep their own crawled ids (agibilità, fine lavori filed or not)")
+def _():
+    s = section(generated("agibilita-fittizia"), "dichiarazione sulla comunicazione")
+    assert field(s, "prot./n.")["id"] == "r4c1p6reg:txt"
+    assert "id" not in field(s, "che la presente segnalazione")  # after the other branch's rows: by label
+
+
+@case("a field below a conditional choice that shifts rows goes by label; one above keeps its id (SCIA impianti)")
+def _():
+    s = section(generated("scia-fittizia"), "Asseverazione SCIA - Sicurezza impianti")
+    assert field(s, "idrici e sanitari")["id"] == "r9c1p9reg:chk"
+    assert "id" not in field(s, "non è soggetto agli obblighi")
+
+
+@case("a slot that takes only signed files is the person's, never a plain copy (SCIA stato legittimo)")
+def _():
+    s = section(generated("scia-fittizia"), "Gestione degli allegati")
+    assert "Documentazione dimostrativa dello stato legittimo" in s["theirs"]
+    assert not any(f["label"].startswith("Documentazione dimostrativa") for f in s["fields"])
+
+
+@case("a question only a missing field reads isn't asked (SCIA has no firm-documents check)")
+def _():
+    assert "verificato_idoneita" not in generated("scia-fittizia")["asks"]
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

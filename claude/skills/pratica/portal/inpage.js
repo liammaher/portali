@@ -171,14 +171,42 @@
       await idle();
     }
     for (const leaf of [].concat(step.tree || [])) await tree(leaf);
+    // A Si/No question in the tree ("Le opere ricadono nell'ambito della Sanatoria ...?").
+    for (const [question, answer] of Object.entries(step.answers || {})) {
+      const q = [...doc().querySelectorAll('table[id$=":sinCond"]')]
+        .filter((t) => norm(t.closest("li, tr, div").innerText).includes(norm(question)));
+      if (q.length !== 1) fail(`${q.length} Si/No questions ${question}`);
+      const td = [...q[0].querySelectorAll("td")].find((c) => norm(c.innerText) === norm(answer)) || fail(`${question}: no ${answer}`);
+      press(td.querySelector(".ui-radiobutton-box") || td.querySelector("input"), `${question}: ${answer}`);
+      await idle();
+    }
+    // The page's text lists every screen in its menu, so a screen is told by its title: the
+    // same title after CONFERMA means the portal refused it.
+    const title = () => norm((doc().querySelector(".content-title") || {}).innerText);
+    const before = title();
     await act(() => press(button(step.confirm), step.confirm));
+    if (before && title() === before) {
+      const why = [...doc().querySelectorAll("span, div")].filter((e) => !e.children.length && e.offsetParent && /obbligatori|errore/i.test(e.textContent));
+      fail(`still on ${step.screen} after ${step.confirm}: ${why.map((e) => norm(e.textContent)).join("; ") || "no message"}`);
+    }
   }
 
   // form sections
 
+  // A street's suggestion list can open again after its pick and lie over the next boxes.
+  async function closeLists() {
+    const open = [...doc().querySelectorAll(".ui-autocomplete-panel")].filter((p) => p.offsetParent);
+    for (const p of open) {
+      const w = widgets().find((x) => x && x.panel && x.panel[0] === p);
+      if (w && w.hide) w.hide(); else p.style.display = "none";
+    }
+    if (open.length) await idle();
+  }
+
   async function text(f, value) {
     const e = el(f.id) || fail(`${f.id}: no field`);
     checkLabel(e, f.label);
+    await closeLists();
     onTop(e, f.label || f.id);
     const w = widgetOf(e);
     e.focus();
@@ -278,6 +306,9 @@
 
   function readBack(f) {
     if (f.spec) f = { ...f, id: resolve(f.spec).id }; // rows added since may have renumbered it
+    else if (f.id && f.label && !el(f.kind === "select" ? f.id + ":combo_input" : f.id)) {
+      f = { ...f, id: resolve({ kind: f.kind, label: f.label, nth: f.nth }).id }; // as when it was filled
+    }
     if (f.kind === "file") {
       // An upload widget empties its box once it has sent the file; its list names it.
       const got = norm(doc().body.innerText).includes(norm(f.typed)) ? f.typed : null;
@@ -311,9 +342,15 @@
     return [...doc().querySelectorAll('[id*="dynaForm:"]')].filter((e) => /^(INPUT|SELECT|TEXTAREA)$/.test(e.tagName) &&
       e.type !== "hidden" && !/combo_focus$|combo_filter$|editor_file_dropzone$/.test(e.id) && shown(e));
   }
+  // A box's validation message ("Il valore è obbligatorio", as its title and in its cell) is
+  // not its label.
+  const MESSAGE = /^(il valore e obbligatorio|deve essere selezionata)/;
   function labelled(e, label) {
     const texts = win().eval(`(${steps.label_js})`)(e);
     if (e.title) texts.unshift(e.title);
+    // Only the messages in front: an empty cell keeps its place, or the label of the box to
+    // the left would count as this box's.
+    while (texts.length && MESSAGE.test(norm(texts[0]))) texts.shift();
     return texts.slice(0, 3).some((t) => norm(t).startsWith(norm(label)));
   }
   function resolve(f) {
@@ -333,6 +370,8 @@
   async function addBlock(f) {
     const count = () => inputs().filter((e) => labelled(e, f.anchor)).length;
     const before = count();
+    // `block`: the block this "+" is for. A resumed draft may have it already.
+    if (f.block && before >= f.block) return `block ${f.block}`;
     const plus = [...doc().querySelectorAll('[id*="dynaForm"] button')].filter((b) => shown(b) && b.textContent.trim() === "+");
     if (!plus.length) fail(`no + to add a block of ${f.anchor}`);
     press(plus[plus.length - 1], `+ ${f.anchor}`);
@@ -370,6 +409,16 @@
       report.at.label = f.label || f.id || f.css;
       let typed;
       if (f.kind === "add") { await addBlock(f); continue; }
+      // An id a combination of choices moved (one the crawl didn't try together) is found
+      // again by its label, held to the same checks.
+      if (f.id && f.label && !el(f.kind === "select" ? f.id + ":combo_input" : f.id)) {
+        const { id, ...byLabel } = f;
+        f = byLabel;
+      }
+      if (!f.id && !f.css && f.if_present) {
+        // A box only some pratiche show: skipped where this one doesn't.
+        try { f = { ...resolve(f), spec: f }; } catch (e) { if (e instanceof StepError) continue; throw e; }
+      }
       f = f.id || f.css ? f : { ...resolve(f), spec: f };
       if (f.kind === "radio" || f.kind === "checkbox") typed = await tick(f);
       else if (v === null || v === "") continue;
@@ -434,6 +483,7 @@
       await loaded;
       await idle();
       if (!doc().location.href.startsWith(steps.logged_in)) fail("not logged in to the portal");
+      if (/\/cmd\/error/.test(doc().location.href)) fail("the draft's address has expired: open it again from Pratiche in bozza");
       const from = resume.from || {};
       for (const k of resume.kept || []) {
         keep(k.section, k.fields.map(([field, typed]) => {

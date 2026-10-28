@@ -19,6 +19,11 @@ every later row and position by the same amount; on the CILA's a) this gives the
 the hand walk found). Fields in a "+" block go by label (`anchor`, `block`): inpage.js finds
 them on the live page.
 
+Sections are matched without their quadro letter (the CIL's f) is the CILA's h)), and the
+first dictionary entry that fits the crawled section wins. A field under a `when` lives in
+its own branch of the section; a field outside it that such a choice moves goes by label.
+An attachments slot that takes only signed files (.p7m) is left to the person.
+
 It stops, writing nothing, on a section the dictionary doesn't have, a dictionary field
 the crawl doesn't show, or a field the section shows that no dictionary entry fills or
 leaves (`leave:`), so a pratica is generated whole or not at all. --check compares the
@@ -63,13 +68,19 @@ def shift(fid, dr, dp):
     return f"r{int(m[1]) + dr}c{m[2]}p{int(m[3]) + dp}reg{m[4]}" if m else fid
 
 
-def matches(f, kind, label):
+def matches(f, kind, label, inside=False):
     a, b = PAGE_KIND.get(f["kind"], f["kind"]), PAGE_KIND.get(kind, kind)
+    if b == "tick":  # the same choice is a radio in one pratica, a checkbox in another
+        b = a if a in ("radio", "checkbox") else b
     # A lookup box can be typed into as text (by id: inpage.js only looks lookups up by kind).
     if a != b and not (a == "lookup" and b == "text"):
         return False
     want = norm(label)
-    return any(norm(t).startswith(want) for t in (f.get("label"), f.get("context")) if t)
+    # `inside`: a long label inside the text, for a section where none starts with it (the
+    # same choice worded "che i lavori ..." in one pratica, "i lavori ..." in another);
+    # inpage.js checks an id's label the same way. Never first: "ricade" is inside "non ricade".
+    return any(norm(t).startswith(want) or inside and len(want) >= 15 and want in norm(t)
+               for t in (f.get("label"), f.get("context")) if t)
 
 
 def offset(node, before):
@@ -108,7 +119,9 @@ class Section:
         self.applied = []            # (point, dr, dp) of each choice, base coordinates
 
     def find(self, kind, label, nth=1):
-        hits = sorted((f for f in self.fields if matches(f, kind, label)), key=lambda f: pos(f["id"]) or (0, 0))
+        order = lambda f: pos(f["id"]) or (0, 0)
+        hits = sorted((f for f in self.fields if matches(f, kind, label)), key=order) or \
+            sorted((f for f in self.fields if matches(f, kind, label, inside=True)), key=order)
         return hits[nth - 1] if len(hits) >= nth else None, len(hits)
 
     def node(self, nodes, f, option):
@@ -171,13 +184,136 @@ def load_yaml(p):
     return yaml.safe_load(Path(p).read_text())
 
 
-def dictionary_entry(dictionary, name):
-    """The entry for a section, and the name it goes by in this pratica (an alias, maybe)."""
-    for e in dictionary["sections"]:
+QUADRO = re.compile(r"^[a-z]\d?\)\s*", re.I)
+
+
+def dictionary_entries(sections, name):
+    """The entries that may fill a section, in order, each with the name to open it by. Quadri
+    are matched without their letter: the CIL's f) is the CILA's h). The name is the entry's
+    when it starts the section's, else the section's own."""
+    bare, out = norm(QUADRO.sub("", name)), []
+    for e in sections:
         for n in [e["section"], *e.get("aliases", [])]:
-            if norm(name).startswith(norm(n)):
-                return e, n
-    return None, None
+            if bare.startswith(norm(QUADRO.sub("", n))):
+                out.append((e, n if norm(name).startswith(norm(n)) else name))
+                break
+    return out
+
+
+def fill(entry, as_name, c, recipe, name):
+    """One section from one dictionary entry: the steps, what doesn't fit, the asks it uses."""
+    problems, asks_used = [], set()
+    sec = Section(c)
+    out = {"section": as_name}
+    for k in ("open", "save", "go", "theirs"):
+        if k in entry:
+            out[k] = entry[k]
+    fields, filled = [], set()
+    dfields = list(entry.get("fields", []))
+    for i, role in enumerate(recipe.get("firms", entry.get("firms", [])) if "block" in entry else []):
+        # One block per firm, the second and later added with "+".
+        if i:
+            dfields.append({"kind": "add", "anchor": entry["block"][0]["label"], "block": i + 1})
+        for b in entry["block"]:
+            g = json.loads(json.dumps(b).replace("{{F:", "{{" + role + ":"))
+            dfields.append({**g, "anchor": entry["block"][0]["label"], "block": i + 1})
+    last_select = None
+    # A field under a `when` lives in its branch of the section (keyed by the condition's
+    # first term): "already filed" and "this counts as filing" each open their own rows,
+    # and only one is ever ticked, so neither shifts the other's ids.
+    branches, main, changed = {}, sec, {}
+    for d in dfields:
+        term = re.match(r"\s*(\{\{[^}]*\}\})", d.get("when", ""))
+        sec = main if not term else branches.setdefault(term[1], copy.deepcopy(main))
+        if d["kind"] == "add" or "anchor" in d:
+            if d.get("block") == 1 and d["kind"] != "add":
+                # The first repeat is on the page already: what it fills isn't left empty.
+                start = sec.find("text", d["anchor"])[0] or {}
+                after = [x for x in sec.fields if (pos(x["id"]) or (0, 0)) >= (pos(start.get("id", "")) or (0, 0))]
+                hits = sorted((x for x in after if matches(x, d["kind"], d["label"])), key=lambda x: pos(x["id"]) or (0, 0))
+                if len(hits) >= d.get("nth", 1):
+                    filled.add((hits[d.get("nth", 1) - 1]["id"], hits[d.get("nth", 1) - 1]["label"]))
+            sec.added = True
+            fields.append(dict(d))
+            continue
+        look = sec
+        if "via" in d:
+            # Opened only by one option of the dropdown before it: looked up in that state.
+            look = copy.deepcopy(sec)
+            if last_select is None:
+                problems.append(f"{name}: {d['label']!r} has `via` but no dropdown before it")
+                continue
+            look.choose(last_select, d["via"])
+        f, count = look.find(d["kind"], d["label"], d.get("nth", 1))
+        if f is None and d.get("on_page"):
+            # Shown only by a combination of choices the crawl didn't try: by label, found on
+            # the page (and skipped there too if it isn't, `if_present`).
+            fields.append({k: v for k, v in d.items() if k not in ("note", "on_page")})
+            continue
+        if f is None and d.get("if_present"):
+            continue  # a choice only some pratiche show
+        if f is None:
+            problems.append(f"{name}: no {d['kind']} labelled {d['label']!r}" +
+                            (f" (only {count})" if count else "") + " in the crawl")
+            continue
+        filled.add((f["id"], f["label"]))
+        g = {k: v for k, v in d.items() if k not in ("label", "nth", "note", "via", "if_present")}
+        if d["kind"] == "textarea":
+            g["kind"] = "text"
+        if d["kind"] == "tick":
+            g["kind"] = f["kind"]
+        if f["id"].endswith(":real") and g["kind"] == "text":
+            g["kind"] = "number"  # a decimal box shows 85 back as 85.00
+        if f.get("max"):
+            g["max"] = f["max"]  # run.py refuses a longer value before the run
+        # An unconditional field that a conditional choice before it moves has no one id:
+        # it goes by label, found on the page as the answers left it.
+        # So does any field outside a condition whose choice changed the section: its id
+        # depends on that answer.
+        twins = [] if term else [b.find(d["kind"], d["label"], d.get("nth", 1))[0] for b in branches.values()]
+        moved = any(t and t["id"] != f["id"] for t in twins) or any(
+            k != (term and term[1]) and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items())
+        filled.update((t["id"], t["label"]) for t in twins if t)
+        if not look.added and not moved:
+            g = {"id": f["id"], **g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}
+        else:
+            g = {**g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}
+        fields.append(g)
+        # A choice everyone makes happens in every branch too.
+        for st in [sec] if term else [main, *branches.values()]:
+            g2 = f if st is sec else st.find(d["kind"], d["label"], d.get("nth", 1))[0]
+            if g2 is None:
+                continue
+            ids = [x["id"] for x in st.fields]
+            if d["kind"] in ("radio", "checkbox", "tick"):
+                st.choose(g2)
+            elif d["kind"] == "select" and "{{" not in str(d.get("value", "")):
+                st.choose(g2, d.get("value"))
+            if term and [x["id"] for x in st.fields] != ids:
+                # From where the section changed: the first field that moved, else the end.
+                after = [pos(i) for i, j in zip(ids, [x["id"] for x in st.fields]) if i != j and pos(i)]
+                at = min(after) if after else (10 ** 6, 0)
+                changed[term[1]] = min(changed.get(term[1], at), at)
+        if d["kind"] == "select":
+            last_select = f
+    # What the section shows that the dictionary neither fills nor leaves, in any branch.
+    leave = [norm(x) for x in entry.get("leave", [])]
+    shown = {(f["id"], f["label"]): f for st in [main, *branches.values()] for f in st.fields}
+    for f in shown.values():
+        if (f["id"], f["label"]) in filled or f["kind"] in ("radio", "checkbox") and not entry.get("strict"):
+            continue
+        if any(norm(f.get("label")).startswith(x) or norm(f.get("context")).startswith(x) for x in leave):
+            continue
+        if f.get("value") or f.get("prefilled"):
+            continue  # prefilled by the portal
+        problems.append(f"{name}: {f['kind']} {f['label'][:60]!r} ({f['id']}) is in no dictionary entry")
+    out["fields"] = fields
+    if entry.get("note"):
+        out["note"] = entry["note"]
+    # The questions this section asks: those its emitted fields read (a field only some
+    # pratiche show doesn't bring its question along).
+    asks_used = set(re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(fields)))
+    return out, problems, asks_used
 
 
 def generate(recipe, base=HERE):
@@ -205,88 +341,29 @@ def generate(recipe, base=HERE):
             continue
         if DECLARATIONS.search(name):
             continue
-        entry, as_name = dictionary_entry(dictionary, name)
-        if not entry:
+        # The recipe's own entries first: a case only this pratica has.
+        candidates = dictionary_entries(recipe.get("sections", []) + dictionary["sections"], name)
+        if not candidates:
             problems.append(f"{name}: no dictionary entry")
             continue
-        if entry.get("omit"):
+        if candidates[0][0].get("omit"):
             continue
         c = crawled.get(norm(name)) or next((v for k, v in crawled.items() if k.startswith(norm(name)[:30])), None)
         if not c or c.get("error"):
             problems.append(f"{name}: not crawled" + (f" ({c['error']})" if c else ""))
             continue
-        sec = Section(c)
-        out = {"section": as_name}
-        for k in ("open", "save", "go", "theirs"):
-            if k in entry:
-                out[k] = entry[k]
-        fields, filled = [], set()
-        dfields = list(entry.get("fields", []))
-        for i, role in enumerate(entry.get("firms", [])):
-            # One block per firm, the second and later added with "+".
-            if i:
-                dfields.append({"kind": "add", "anchor": entry["block"][0]["label"]})
-            for b in entry["block"]:
-                g = json.loads(json.dumps(b).replace("{{F:", "{{" + role + ":"))
-                dfields.append({**g, "anchor": entry["block"][0]["label"], "block": i + 1})
-        last_select = None
-        for d in dfields:
-            for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(d)):
-                asks_used.add(t)
-            if d["kind"] == "add" or "anchor" in d:
-                if d.get("block") == 1 and d["kind"] != "add":
-                    # The first repeat is on the page already: what it fills isn't left empty.
-                    start = sec.find("text", d["anchor"])[0] or {}
-                    after = [x for x in sec.fields if (pos(x["id"]) or (0, 0)) >= (pos(start.get("id", "")) or (0, 0))]
-                    hits = sorted((x for x in after if matches(x, d["kind"], d["label"])), key=lambda x: pos(x["id"]) or (0, 0))
-                    if len(hits) >= d.get("nth", 1):
-                        filled.add(hits[d.get("nth", 1) - 1]["id"])
-                sec.added = True
-                fields.append(dict(d))
-                continue
-            look = sec
-            if "via" in d:
-                # Opened only by one option of the dropdown before it: looked up in that state.
-                look = copy.deepcopy(sec)
-                if last_select is None:
-                    problems.append(f"{name}: {d['label']!r} has `via` but no dropdown before it")
-                    continue
-                look.choose(last_select, d["via"])
-            f, count = look.find(d["kind"], d["label"], d.get("nth", 1))
-            if f is None:
-                problems.append(f"{name}: no {d['kind']} labelled {d['label']!r}" +
-                                (f" (only {count})" if count else "") + " in the crawl")
-                continue
-            filled.add(f["id"])
-            g = {k: v for k, v in d.items() if k not in ("label", "nth", "note", "via")}
-            if d["kind"] == "textarea":
-                g["kind"] = "text"
-            if not look.added:
-                g = {"id": f["id"], **g, "label": d["label"]}
-            else:
-                g = {**g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}
-            fields.append(g)
-            if d["kind"] in ("radio", "checkbox"):
-                sec.choose(f)
-            elif d["kind"] == "select" and "{{" not in str(d.get("value", "")):
-                sec.choose(f, d.get("value"))
-            if d["kind"] == "select":
-                last_select = f
-        # What the section shows that the dictionary neither fills nor leaves.
-        leave = [norm(x) for x in entry.get("leave", [])]
-        for f in sec.fields:
-            if f["id"] in filled or f["kind"] in ("radio", "checkbox") and not entry.get("strict"):
-                continue
-            if any(norm(f.get("label")).startswith(x) or norm(f.get("context")).startswith(x) for x in leave):
-                continue
-            if f["kind"] == "file" and f["id"] in filled:
-                continue
-            if f.get("value") or f.get("prefilled"):
-                continue  # prefilled by the portal
-            problems.append(f"{name}: {f['kind']} {f['label'][:60]!r} ({f['id']}) is in no dictionary entry")
-        out["fields"] = fields
-        if entry.get("note"):
-            out["note"] = entry["note"]
+        # The first entry that fits: the CILA's "Calcolo del contributo" is one radio, the
+        # SCIA's adds the rule that makes it free.
+        tried = []
+        for entry, as_name in candidates:
+            out, probs, used = fill(entry, as_name, c, recipe, name)
+            if not probs:
+                break
+            tried.append(probs)
+        else:
+            problems.extend(min(tried, key=len))  # the entry that came closest
+            continue
+        asks_used |= used
         out_sections.append(out)
 
     for name in recipe.get("after", []):
@@ -301,8 +378,13 @@ def generate(recipe, base=HERE):
         out = {k: v for k, v in entry.items() if k not in ("fields", "note")}
         fields = []
         for d in entry.get("fields", []) + recipe.get("attachments", {}).get(name, []):
-            if not any(norm(s["title"]).startswith(norm(d["label"])) for s in slots):
+            slot = next((s for s in slots if norm(s["title"]).startswith(norm(d["label"]))), None)
+            if not slot:
                 continue  # this pratica has no such slot
+            if slot.get("accepts") and all(t.endswith(".p7m") for t in slot["accepts"].split(";")):
+                # Signed files only: the person's to sign and attach, never a plain copy.
+                out["theirs"] = out.get("theirs", []) + [d["label"]]
+                continue
             fields.append(dict(d))
             for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(d)):
                 asks_used.add(t)
@@ -341,6 +423,7 @@ def generate(recipe, base=HERE):
     ]
     if recipe.get("scelte") is not None:
         wizard.append({"screen": "Scelte eventuali", **({"tree": recipe["scelte"][0]} if recipe["scelte"] else {}),
+                       **({"answers": recipe["si_no"]} if recipe.get("si_no") else {}),
                        "confirm": "CONFERMA"})
     return {
         "procedure": recipe["procedure"], "title": recipe["title"],
@@ -370,10 +453,12 @@ def check(gen, hand):
     the same order, with the same values. A generated field with a `when` that the hand file
     hasn't is a case it didn't walk: listed apart, not a difference."""
     diffs, extra = [], []
-    key = lambda f: f.get("id") or f"label {f.get('label')!r} {f.get('anchor', '')}{f.get('block', '')}/{f.get('nth', 1)}"
+    key = lambda f: f.get("id") or (f"add {f['anchor']}" if f["kind"] == "add" else
+                                     f"label {f.get('label')!r} {f.get('anchor', '')}{f.get('block', '')}/{f.get('nth', 1)}")
     hs = {norm(s["section"]): s for s in hand["sections"]}
     for s in gen["sections"]:
-        h = hs.pop(norm(s["section"]), None)
+        k = next((k for k in hs if k.startswith(norm(s["section"])) or norm(s["section"]).startswith(k)), None)
+        h = hs.pop(k, None)
         if not h:
             diffs.append(f"{s['section']}: not in the hand-written file")
             continue

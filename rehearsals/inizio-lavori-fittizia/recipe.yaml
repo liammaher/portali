@@ -1,0 +1,22 @@
+# The Comunicazione di inizio lavori after a permesso di costruire, as gen.py writes its steps
+# file. Never walked: crawl catalogue/F839/sections/inizio-lavori.json, every field from
+# dictionary/fnsuap.yaml. The CILA rehearsal's architect and client (rehearsals/cila-fittizia),
+# the client holding an invented permesso.
+procedure: napoli/comune/inizio-lavori-pdc
+title: "Comunicazione di inizio lavori (permesso di costruire), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: inizio-lavori
+operation: Comunicazione inizio lavori
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+after: [Pagamento degli oneri, Gestione degli allegati]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - inizio lavori {{c:identity.last_name}}"}
+  data_inizio_lavori: {question: "When the works start"}
+  titolo: {question: "The permit holder's title to the property (proprietario, locatario, ...)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), consapevolezza (artt. 46-47), informativa privacy, tasse comunali"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Sign and send (Firma e invio); keep the receipt"

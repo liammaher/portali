@@ -93,6 +93,7 @@
       // A radio's group: its name without the row ids, which shift.
       if (kind === "radio") f.group = (e.name || "").split("dynaForm:")[1] || e.name;
       if (labels[1] && labels[1] !== labels[0]) f.context = labels[1].slice(0, 120);
+      if (e.maxLength > 0 && e.maxLength < 100000) f.max = e.maxLength;
       if (kind === "select") {
         f.options = e.options.length > 40 ? `${e.options.length} options` : [...e.options].filter((o) => o.value).map((o) => o.text.trim());
         if (e.value) f.value = e.options[e.selectedIndex].text.trim();

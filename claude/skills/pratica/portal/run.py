@@ -145,7 +145,9 @@ FILTERS = {
 
 
 def truthy(v):
-    return str(v).strip().lower() in ("true", "1", "yes", "si", "sì")
+    """True for a yes; a `when` of several words ("{{ask.a|not}} {{ask.b}}") wants every one."""
+    words = str(v).strip().lower().split()
+    return bool(words) and all(w in ("true", "1", "yes", "si", "sì") for w in words)
 
 
 class StepError(Exception):
@@ -253,6 +255,8 @@ def plan(steps, values):
                 missing.append(f"{sec['section']}: {name} ({f['value']})")
             if f["kind"] == "file" and v and not Path(v).expanduser().is_file():
                 missing.append(f"{sec['section']}: {name}: no file {v}")
+            if f.get("max") and v and len(v) > f["max"]:
+                missing.append(f"{sec['section']}: {name}: {v!r} is longer than the portal takes ({f['max']})")
             out.append({"section": sec["section"], "id": f.get("id") or f.get("css"), "kind": f["kind"],
                         "label": f.get("label"), "value": v})
     if missing:
@@ -522,7 +526,7 @@ def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
                      | ({"save": s["save"]} if "save" in s else {})
                      | ({"theirs": s["theirs"]} if "theirs" in s else {})
                      | ({"go": s["go"]} if "go" in s else {})
-                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label", "anchor", "block", "nth", "describe") if k in f}
+                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label", "anchor", "block", "nth", "describe", "if_present") if k in f}
                                    for f in s["fields"]]}
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,

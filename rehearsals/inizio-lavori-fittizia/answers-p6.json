@@ -1,0 +1,18 @@
+{
+ "people": {
+  "c": "luca"
+ },
+ "descrizione": "PROVA NON INVIARE - inizio lavori P6 generato",
+ "titolo": "proprietario",
+ "oggetto": "Comunicazione di inizio lavori del permesso di costruire per ampliamento di un locale accessorio.",
+ "immobile_indirizzo": "VIA DOMENICO FONTANA",
+ "immobile_civico": "40",
+ "pdc_numero": "999/2026",
+ "pdc_data": "2026-09-15",
+ "pdc_protocollo": "PG/2026/0888888",
+ "pdc_anno": "2026",
+ "pdc_interventi": "ampliamento di un locale accessorio",
+ "data_inizio_lavori": "2026-11-16",
+ "diritti_euro": "0",
+ "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf"
+}

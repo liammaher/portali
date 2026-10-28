@@ -1,0 +1,40 @@
+# The SCIA edilizia for manutenzione straordinaria, as gen.py writes its steps file. Never
+# walked: crawl catalogue/F839/sections/scia.json (36 sections, 319 choices), every field
+# from dictionary/fnsuap.yaml. The CILA rehearsal's people (rehearsals/cila-fittizia): the
+# architect with a procura designs and presents, the tenant client, the owner company, two firms.
+procedure: napoli/comune/scia-edilizia
+title: "SCIA edilizia, manutenzione straordinaria, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: scia
+operation: Segnalazione Certificata di Inizio Attività Edilizia (S.C.I.A.)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+si_no: {"Le opere ricadono nell'ambito della Sanatoria": "No"}
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+after: [Pagamento degli oneri, Gestione degli allegati]
+attachments:
+  Gestione degli allegati:
+    - {kind: file, label: Allegati liberi, value: "{{ask.relazione_tecnica}}", describe: Relazione tecnica}
+asks:
+  descrizione: {default: "PROVA NON INVIARE - SCIA {{c:identity.last_name}}"}
+  data_inizio_lavori: {question: "When the works will start"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC, b) PER PRESA VISIONE, m) diritti di terzi, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "As progettista, check every asseverazione on this page: they are yours, signed with the pratica"
+  - "Name the direttore dei lavori before the works start"
+  - "On Allega documenti: the portal's procura signed by the client, the stato legittimo documents (signed files only), then everything signed digitally (.p7m)"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - {value: "{{ask.titolo}}", in: [locatario], else: "So far only a tenant with the owner's assent (a.2) is mapped."}
+  - {value: "{{ask.scia_manutenzione}}", in: ["true"], else: "Only manutenzione straordinaria without a change of use is mapped."}
+  - {value: "{{ask.strutture}}", in: ["false"], else: "Works on structures (seismic filing) aren't mapped yet."}
+  - {value: "{{ask.tutele}}", in: ["false"], else: "A protected property (landscape, heritage, ...) isn't mapped yet."}
+  - {value: "{{ask.acustica}}", in: ["false"], else: "Acoustic obligations aren't mapped yet."}
+  - {value: "{{ask.antincendio_soggetto}}", in: ["false"], else: "Fire-prevention obligations aren't mapped yet."}
+  - {value: "{{ask.amianto}}", in: ["false"], else: "Works on parts with asbestos aren't mapped yet."}
+  - {value: "{{ask.igienico_conforme}}", in: ["true"], else: "A hygiene derogation isn't mapped yet."}
+  - {value: "{{ask.barriere}}", in: ["false"], else: "The barriers rules (artt. 77-82) aren't mapped yet."}
+  - {value: "{{ask.rir_area}}", in: ["false"], else: "A property inside a major-hazard area isn't mapped yet."}
+  - {value: "{{ask.progetto_impianti}}", in: ["false"], else: "Systems needing a project aren't mapped yet."}
+  - {value: "{{ask.prestazione_energetica}}", in: ["false"], else: "Energy-performance filings aren't mapped yet."}

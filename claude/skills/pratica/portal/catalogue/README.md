@@ -13,8 +13,9 @@ catastale (`F839` is Napoli).
   sections it adds or drops. Sections are indices into `sections`.
 - `<comune>/sections/<pratica>.json`: an empty draft of one pratica crawled by `crawl.js`:
   each section's fields (id, kind, label), each choice tried with what it opens, hides and
-  shifts, and the attachments screen's slots (`slots`, read on the screen). `cila.json` and
-  `fine-lavori.json` so far. `gen.py` writes a steps file from one of these, the dictionary
+  shifts, and the attachments screen's slots (`slots`, read on the screen). The SUE's edilizia
+  family so far: `cila`, `cil`, `scia`, `inizio-lavori`, `fine-lavori`, `agibilita` (each
+  generated and run to its stop point on 2026-10-28, `rehearsals/*-fittizia`). `gen.py` writes a steps file from one of these, the dictionary
   (`../dictionary/fnsuap.yaml`) and a recipe (`rehearsals/*/recipe.yaml`).
 
 ## How it's made

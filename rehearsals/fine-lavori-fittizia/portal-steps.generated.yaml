@@ -68,8 +68,8 @@ sections:
   - {id: 'r12c2p31reg:calendar_input', kind: text, value: '{{c:identity.date_of_birth|date_it}}', label: Data nascita}
   - {id: r15c2p41reg, kind: select, value: '{{c:identity.birth_province}}', label: Provincia}
   - {id: r17c1p45reg, kind: select, value: '{{c:identity.birth_comune|upper}}', label: Comune}
-  - {id: r24c2p63reg, kind: select, value: '{{c:residenza.provincia}}', label: Provincia}
-  - {id: r26c1p67reg, kind: select, value: '{{c:residenza.comune|upper}}', label: Comune}
+  - {id: r24c2p63reg, kind: select, value: '{{c:residenza.provincia}}', label: Provincia, nth: 2}
+  - {id: r26c1p67reg, kind: select, value: '{{c:residenza.comune|upper}}', label: Comune, nth: 2}
   - {id: r29c1p73reg, kind: select, value: '{{c:residenza.indirizzo|dug}}', label: Toponimo (DUG)}
   - {id: 'r31c1p79reg:txt', kind: text, value: '{{c:residenza.indirizzo|street|upper}}', label: Denominazione stradale}
   - {id: 'r33c1p83reg:txt', kind: text, value: '{{c:residenza.civico}}', label: Numero civico}
@@ -91,7 +91,7 @@ sections:
   - {id: 'r9c2p21reg:txt', kind: text, value: '{{t:identity.birth_province}}', label: Provincia}
   - {id: 'r11c1p27reg:txt', kind: text, value: '{{t:identity.codice_fiscale}}', label: Cod.Fiscale}
   - {id: 'r14c1p32reg:txt', kind: text, value: '{{t:residenza.comune|upper}}', label: Residente in}
-  - {id: 'r14c2p34reg:txt', kind: text, value: '{{t:residenza.provincia}}', label: Provincia}
+  - {id: 'r14c2p34reg:txt', kind: text, value: '{{t:residenza.provincia}}', label: Provincia, nth: 2}
   - {id: 'r14c3p36reg:txt', kind: text, value: '{{t:residenza.cap}}', label: CAP}
   - {id: 'r16c1p40reg:txt', kind: text, value: '{{t:residenza.indirizzo|upper}} {{t:residenza.civico}}', label: Indirizzo}
   - {id: 'r16c2p42reg:number', kind: text, value: '{{t:identity.phone|phone_it}}', label: Tel}
@@ -126,8 +126,8 @@ sections:
   - {id: r15c3p27reg, kind: select, value: '{{r:identity.sex|sesso}}', label: Sesso}
   - {id: r17c3p35reg, kind: select, value: '{{r:identity.birth_province}}', label: Provincia}
   - {id: 'r19c1p39reg:txt', kind: text, value: '{{r:identity.birth_comune|upper}}', label: Comune italiano}
-  - {id: r21c3p47reg, kind: select, value: '{{r:residenza.provincia}}', label: Provincia}
-  - {id: 'r23c1p51reg:txt', kind: text, value: '{{r:residenza.comune|upper}}', label: Comune italiano}
+  - {id: r21c3p47reg, kind: select, value: '{{r:residenza.provincia}}', label: Provincia, nth: 2}
+  - {id: 'r23c1p51reg:txt', kind: text, value: '{{r:residenza.comune|upper}}', label: Comune italiano, nth: 2}
   - {id: 'r25c1p55reg:txt', kind: text, value: '{{r:residenza.indirizzo|upper}}', label: 'Via, Piazza'}
   - {id: 'r25c2p57reg:txt', kind: text, value: '{{r:residenza.civico}}', label: N.}
   - {id: 'r25c3p59reg:txt', kind: text, value: '{{r:residenza.cap}}', label: C.A.P.}
