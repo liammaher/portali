@@ -300,6 +300,21 @@ def pvault_command(vault_dir):
     return [f"VAULT_DIR={shlex.quote(full)}", "pvault"]
 
 
+def get_command(vault_dir, scope):
+    """The pvault get that reads a draft's fields with one Touch ID approval, for
+    run --values -; None past get's 10 patterns. get takes a person's field by
+    ID, but everyone's (*:) only as a whole category."""
+    args = []
+    for pattern in scope.split(","):
+        if pattern.startswith("*:") and not pattern.endswith(".*"):
+            pattern = pattern.rsplit(".", 1)[0] + ".*"
+        if pattern not in args:
+            args.append(pattern)
+    if len(args) > 10:
+        return None
+    return " ".join(pvault_command(vault_dir) + ["get"] + [shlex.quote(x) for x in args])
+
+
 def token_command(vault_dir, token):
     """The pvault command that saves this token where run --vault-dir reads it."""
     full = os.path.normpath(os.path.expanduser(vault_dir))
@@ -759,6 +774,35 @@ def credential_token(service):
         sys.exit(f"{service!r} in Credential Manager isn't a token pvault saved")
 
 
+class Given:
+    """A draft's values as `pvault get` printed them (one Touch ID approval, no
+    token): the fields it read, and the vault's own status and schema, which
+    need no token. The household is the people those fields name."""
+
+    def __init__(self, fields, socket_path):
+        self.fields = {k: v for k, v in fields.items() if v is not None}
+        self.vault = Vault("", socket_path=socket_path)
+
+    def call(self, method, path, body=None):
+        if method == "GET" and path in ("/vault/status", "/vault/schema"):
+            return self.vault.call(method, path)
+        if method == "GET" and path == "/vault/members":
+            slugs = sorted({k.split(":")[0] for k in self.fields if ":" in k})
+            return 200, {"members": [{"slug": s, "display_name": self.fields.get(f"{s}:identity.display_name", ""),
+                                      "ruolo": {k.split(".", 1)[1]: v for k, v in self.fields.items()
+                                                if k.startswith(f"{s}:ruolo.")}} for s in slugs]}
+        if method == "GET" and path.startswith("/vault/fields/"):
+            field = urllib.parse.unquote(path[len("/vault/fields/"):])
+            return (200, {"id": field, "value": self.fields[field]}) if field in self.fields else (404, {})
+        sys.exit(f"--values: a draft reads only what pvault get printed, not {method} {path}")
+
+    def values(self):
+        return dict(self.fields)
+
+    def why_missing(self, field_id):
+        return "is not among the fields pvault get printed (add its category to the get, or it isn't in the vault)"
+
+
 def connect(a):
     """The vault, and its tokens by name (prepare, track; a real vault has one
     token for both)."""
@@ -766,6 +810,9 @@ def connect(a):
         server = load(a.server)
         return {name: Vault(token, url=server["url"]) for name, token in server["tokens"].items()}
     sock = vault_socket(os.path.expanduser(a.vault_dir))
+    if getattr(a, "values", None):
+        given = sys.stdin.read() if a.values == "-" else open(a.values, encoding="utf-8").read()
+        return {"draft": Given(json.loads(given), sock)}
     token = os.environ.get("VAULT_TOKEN", "").strip() if not a.keychain else ""
     if not token:
         token = keychain_token(a.keychain or default_keychain(a.vault_dir))
@@ -1657,6 +1704,9 @@ def run(a):
         view["ruolo.tipo"] = human_role(held[0] if held else view["ruolo.tipo"].replace(",", ", "))
     if "business.qualita_dichiarante" in view:
         view["business.qualita_dichiarante"] = human_role(view["business.qualita_dichiarante"])
+    if isinstance(prepare, Given) and any("repeat" in r["map"] and not isinstance(r["map"]["repeat"], dict)
+                                          for r in form["fields"]):
+        sys.exit("this form has the stato di famiglia, which --values doesn't carry: use the token needs prints")
     rows = resolve(form, view, household if status == 200 else {}, answers, who)
     for r in rows:
         for m in r.get("missing", []):
@@ -2039,6 +2089,9 @@ def main():
     where.add_argument("--server", help="the synthetic vault's server.json")
     where.add_argument("--vault-dir", help="a real vault's folder, e.g. ~/.pvault")
     r.add_argument("--keychain", help="Keychain service holding the token (default: the one needs names)")
+    r.add_argument("--values", metavar="-",
+                   help="with --vault-dir and --draft: what needs' get command printed, piped in (- or a file), "
+                        "in place of a token")
     r.add_argument("--pdf", help="the form (default: downloaded from the entry's url into --out)")
     r.add_argument("--out", required=True)
     r.add_argument("--answers")
@@ -2091,6 +2144,8 @@ def main():
         # another there revokes it: so only the token it uses. track is the
         # synthetic vault's, for --reply.
         out["commands"] = {name: token_command(a.vault_dir, t) for name, t in out["tokens"].items() if name != "track"}
+        if a.draft and (get := get_command(a.vault_dir, out["tokens"]["draft"]["scope"])):
+            out["commands"]["get"] = get
         out["ask"] = asks(form, layout, parties)
         print(json.dumps(out, ensure_ascii=False, indent=2))
         return 0
@@ -2100,6 +2155,8 @@ def main():
         p.error("--reply plays the ente's answer on the synthetic vault (--server) only")
     if a.sign and a.draft:
         p.error("--sign files a request in the vault, which a --draft never writes")
+    if a.values and not (a.draft and a.vault_dir):
+        p.error("--values reads a draft's fields: give --draft and --vault-dir")
     return run(a)
 
 
