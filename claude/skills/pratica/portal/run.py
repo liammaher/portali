@@ -256,7 +256,14 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
         if cdp:
             ctx = pw.chromium.connect_over_cdp(cdp).contexts[0]
         else:
-            ctx = pw.chromium.launch_persistent_context(str(profile), headless=False, no_viewport=True)
+            try:
+                ctx = pw.chromium.launch_persistent_context(str(profile), headless=False, no_viewport=True)
+            except Exception as e:
+                if "already in use" not in str(e) and "existing browser session" not in str(e):
+                    raise
+                # A window an earlier run left open still has the profile, and with it the login.
+                raise StepError(f"another Chrome for Testing window is using {profile}: close it (⌘Q) and run "
+                                "again, or pass --profile with another folder (and log in there again)") from None
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         try:
             page.goto(steps["start"])
@@ -322,7 +329,10 @@ def main():
     try:
         answers = json.loads(a.answers.read_text())
         if a.values:
-            values = Values(answers, fields=json.loads(sys.stdin.read() if a.values == "-" else Path(a.values).read_text()))
+            given = sys.stdin.read() if a.values == "-" else Path(a.values).read_text()
+            if not given.strip():
+                raise StepError("no values: pvault get printed nothing (its error is above)")
+            values = Values(answers, fields=json.loads(given))
         else:
             vaults = fill.connect(argparse.Namespace(server=a.server, vault_dir=a.vault_dir, keychain=a.keychain))
             if a.server and a.token not in vaults:
