@@ -242,14 +242,18 @@ def _():
     assert e.get("theirs") and not e["fields"], e  # "Presa visione": the person's
 
 
-@case("draft.py leaves a box blank rather than pair it on kind alone (a previous address the form keeps as one line)")
+@case("draft.py pairs by order and type: the portal's address block on the form's one-line address, the previous site's side")
 def _():
     import draft
     crawl = gen.json.loads((HERE.parent / "catalogue/F839/sections/suap-060-trasferire-la-sede-dell-attivita.json").read_text())
     schema = gen.json.loads((HERE.parent / "schema/mod_somministrazione_zone_non_tutelate_trasferimento_v1.0.7-fields.json").read_text())
     e, asks, n, missed = draft.draft_section(next(x for x in crawl["sections"] if x["section"].startswith("precedente")), schema)
-    blank = [f["label"] for f in e["fields"] if f.get("note")]
-    assert "Via, Viale, Piazza" in blank and "Frazione" in blank, blank
+    own = [f["label"] for f in e["fields"] if f.get("note")]
+    assert "Frazione" in own and "Via, Viale, Piazza" not in own, own  # the address block: its Via is the line
+    leaf = lambda f: asks[gen.re.findall(r"ask\.(\w+)", f.get("value") or f["when"])[-1]]["schema"].rsplit("/", 1)[-1]
+    got = {f["label"]: leaf(f) for f in e["fields"] if not f.get("note")}
+    assert got["Via, Viale, Piazza"] == "indirizzo_da" and got["CAP"] == "cap_da", got  # "precedente": the _da side
+    assert got["Si"] == "centro_commerciale_si_da", got
 
 
 @case("the dictionary names each question once (YAML keeps the last of two quietly)")

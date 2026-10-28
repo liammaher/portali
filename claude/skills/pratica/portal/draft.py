@@ -239,6 +239,166 @@ def short(path):
     return re.sub(r"_check$", "", leaf)
 
 
+# The portal draws a section's boxes in the schema's order, so a box and a leaf pair by order
+# and type, not by their words: "mq" is the surface because it comes where the surface comes
+# and holds a number. Words only break ties.
+# The portal's own address block (Comune, Frazione, Prov., CAP, Via, n° civico, scala, piano,
+# interno) stands where the schema has one line for the address: its "Via" box is that line,
+# CAP and civico are theirs if the schema has them, the rest are the portal's own.
+ADDRESS_ROLE = [(r"^via\s*,|^via, viale|^in via", "street"), (r"^n.? ?civico|^numero civico", "civico"), (r"^cap$", "cap"),
+                (r"^comune$", "town"), (r"^prov", "province"), (r"^(frazione|scala|piano|interno|localita)", None)]
+LEAF_ROLE = [(r"indirizzo|toponimo|denominazione_stradale|(^|_)via(_|$)", "street"), (r"civico", "civico"), (r"(^|_)cap(_|$)", "cap"),
+             (r"(^|_)comune", "town"), (r"provincia", "province")]
+
+
+def address_role(b, block):
+    if not block:
+        return False
+    label = gen.norm(b.get("label", ""))
+    return next((role for rx, role in ADDRESS_ROLE if re.search(rx, label)), False)
+
+
+def leaf_role(leaf):
+    name = leaf["path"].rsplit("/", 1)[-1].lower()
+    return next((role for rx, role in LEAF_ROLE if re.search(rx, name)), None)
+
+
+def compat(b, leaf):
+    """How well a box's type fits a leaf's: None when it can't hold it."""
+    bk, lk = box_kind(b), leaf_kind(leaf)
+    if bk == "file":
+        return None
+    if bk == lk:
+        return 1.5 if bk == "text" else 2.0
+    if {bk, lk} == {"text", "number"} or (bk == "select" and lk == "text") or (bk == "text" and lk == "select"):
+        return 0.8
+    return None
+
+
+def align_ordered(bs, leaves, title):
+    """Boxes (by position) against leaves (in schema order), order kept: [(box, leaf or None)],
+    the boxes that are the portal's own (address parts, uploads, acknowledgements) and the
+    boxes a person should check."""
+    # bs is in page order with what a choice opens right after it (boxes()): a revealed box's
+    # position number comes from the page with that choice made, so sorting by it would mix them.
+    seen_paths = set()
+    leaves = [x for x in leaves if not (x["path"] in seen_paths or seen_paths.add(x["path"]))]  # an XSD choice repeats them
+    block = sum(1 for b in bs if address_role(b, True) is not False) >= 3
+    roles = [address_role(b, block) for b in bs]
+    precedente = bool(re.search(r"precedent|vecchi|attuale", gen.norm(title)))
+
+    def side(leaf):
+        name = leaf["path"].rsplit("/", 1)[-1]
+        if re.search(r"_da$", name):
+            return 1.0 if precedente else -0.5
+        if re.search(r"_a$", name):
+            return -1.0 if precedente else 0.5
+        return 0.0
+
+    def own(i):  # a box the alignment leaves alone: an upload, an acknowledgement, the address block
+        b = bs[i]
+        return box_kind(b) == "file" or roles[i] is not False or (b["kind"] == "checkbox" and DECLARATION.search(b.get("label", "")))
+
+    def pair(i, leaf):
+        b = bs[i]
+        if own(i):
+            return None
+        c = compat(b, leaf)
+        if c is None:
+            return None
+        shared = len(box_words(b) & leaf_words(leaf))
+        name = leaf["path"].rsplit("/", 1)[-1].lower()
+        yes_no = gen.norm(b.get("label", ""))
+        sino = 1.0 if yes_no in ("si", "no") and re.search(rf"(^|_){yes_no}(_|$)", name) else 0.0
+        return c + 0.4 * min(shared, 3) + side(leaf) + sino
+
+    n, m = len(bs), len(leaves)
+    NEG = float("-inf")
+    S = [[0.0] * (m + 1) for _ in range(n + 1)]
+    skip_box = lambda i: 0.0 if own(i) else -0.6
+    for i in range(1, n + 1):
+        S[i][0] = S[i - 1][0] + skip_box(i - 1)
+    # Leaves skipped between paired ones cost a little (a box takes the nearest fitting leaf);
+    # before the first and after the last they're free (a section is a slice of the group).
+    gap = lambda i: 0.0 if i in (0, n) else -0.05
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            p = pair(i - 1, leaves[j - 1])
+            S[i][j] = max(S[i - 1][j] + skip_box(i - 1), S[i][j - 1] + gap(i), S[i - 1][j - 1] + p if p is not None else NEG)
+    out, i, j = [], n, m
+    while i > 0:
+        p = pair(i - 1, leaves[j - 1]) if j > 0 else None
+        if j > 0 and S[i][j] == S[i][j - 1] + gap(i):
+            j -= 1  # a later leaf left for a box above: the nearest one wins
+        elif j > 0 and p is not None and S[i][j] == S[i - 1][j - 1] + p:
+            out.append((bs[i - 1], leaves[j - 1])); i, j = i - 1, j - 1
+        else:
+            out.append((bs[i - 1], None)); i -= 1
+    out.reverse()
+    # The address block by role, on the section's side (from/to): the portal orders its block
+    # its own way (CAP before Via), so order can't pair it.
+    used = {id(leaf) for _, leaf in out if leaf}
+    for k, (b, leaf) in enumerate(out):
+        role = roles[bs.index(b)]
+        if role:
+            cands = [x for x in leaves if leaf_role(x) == role and id(x) not in used]
+            if cands:
+                best = max(cands, key=lambda x: (side(x), -leaves.index(x)))
+                used.add(id(best))
+                out[k] = (b, best)
+    # Then the words repair what order can't see: the portal's own layout (Cognome before Nome,
+    # a two-column list) puts a few boxes out of the schema's order. A box whose label shares no
+    # word with its leaf takes a free leaf that does; a box takes a leaf that shares clearly more
+    # words than its own, swapping with the box holding it when both fit better.
+    name = lambda leaf: leaf["path"].rsplit("/", 1)[-1]
+    sc = lambda b, leaf: score(b, leaf) if leaf and compat(b, leaf) is not None else 0
+    for _ in range(2):
+        used = {name(leaf) for _, leaf in out if leaf}
+        for k, (b, leaf) in enumerate(out):
+            bw = box_words(b)
+            if roles[bs.index(b)] is not False or own(bs.index(b)) or not bw or (leaf and bw & leaf_words(leaf)):
+                continue
+            free = [y for y in leaves if name(y) not in used and bw & leaf_words(y) and compat(b, y) is not None]
+            if free:
+                y = max(free, key=lambda y: score(b, y))
+                used.discard(leaf and name(leaf)), used.add(name(y))
+                out[k] = (b, y)
+        for k in range(len(out)):
+            b, leaf = out[k]
+            if roles[bs.index(b)] is not False or own(bs.index(b)):
+                continue
+            holder = {name(l): i for i, (_, l) in enumerate(out) if l}
+            # The better leaves in turn: a free one is taken, a held one swapped when both boxes
+            # fit better ("Carne" fits a held deposito leaf best, and the free carne next).
+            for best in sorted(leaves, key=lambda y: -sc(b, y)):
+                if best is leaf or sc(b, best) < sc(b, leaf) + 1.15:
+                    break
+                h = holder.get(name(best))
+                if h is None:
+                    out[k] = (b, best)
+                    break
+                if sc(b, best) + sc(out[h][0], leaf) > sc(b, leaf) + sc(out[h][0], best) + 1:
+                    out[k], out[h] = (b, best), (out[h][0], leaf if leaf and sc(out[h][0], leaf) > 0.5 else None)
+                    break
+    # A section whose labels share no word with the leaves they took isn't from this group
+    # (Napoli's "normative comunali" against the 852 list): nothing paired, all for a person.
+    said = [(b, leaf) for b, leaf in out if leaf and len(box_words(b)) >= 2 and not roles[bs.index(b)]]
+    if said and sum(1 for b, leaf in said if box_words(b) & leaf_words(leaf)) * 2 < len(said):
+        out = [(b, None) for b, _ in out]
+    extras = {id(b) for b, leaf in out if leaf is None and own(bs.index(b))}
+    doubtful = []
+    for b, leaf in out:
+        if leaf is None:
+            if id(b) not in extras:
+                doubtful.append(b)
+            continue
+        c = compat(b, leaf) if not roles[bs.index(b)] else 2.0
+        meaningful = len(box_words(b)) >= 2
+        if c is not None and c < 1.5 or (meaningful and not box_words(b) & leaf_words(leaf)):
+            doubtful.append(b)  # a weak type fit, or a label that says something the leaf's name doesn't
+    return out, extras, doubtful
+
+
 def draft_section(section, schema):
     bs = boxes(section)
     RARITY.clear()
@@ -246,38 +406,7 @@ def draft_section(section, schema):
     for leaf in leaves:
         for w in leaf_words(leaf):
             RARITY[w] = RARITY.get(w, 0) + 1
-    pairs = align(bs, leaves)
-    # A box left with no leaf, or one it shares no word with, takes the best unused leaf of the
-    # forms that it does share one with, wherever it sits ("mq" is the surface, far down).
-    # A form can repeat a group under another name (the 852 notifica's avvio_attivita and
-    # avvio_attivita_section): a leaf's name taken is taken in both.
-    name = lambda leaf: leaf["path"].rsplit("/", 1)[-1]
-    used = {name(leaf) for _, leaf in pairs if leaf}
-    for k, (b, leaf) in enumerate(pairs):
-        bw = box_words(b)
-        if not bw or (leaf and bw & leaf_words(leaf)):
-            continue
-        near = [y for y in schema if y["path"].split("/", 1)[0] == group.split("/", 1)[0] and y.get("type") != "group"
-                and name(y) not in used and bw & leaf_words(y) and score(b, y) >= 2]  # within the section's form
-        if near:
-            y = max(near, key=lambda y: (score(b, y), y in leaves))
-            used.discard(leaf and name(leaf)), used.add(name(y))
-            pairs[k] = (b, y)
-    # Then a box takes a leaf that shares clearly more words with it than its own, when that
-    # leaf is free, or swaps with the box holding it when both fit better ("COMMERCIO AL
-    # DETTAGLIO" had taken commercio_ingrosso). Repeated labels score alike and stay in order.
-    sc = lambda b, leaf: score(b, leaf) if leaf else 0
-    for k in range(len(pairs)):
-        b, leaf = pairs[k]
-        holder = {name(l): i for i, (_, l) in enumerate(pairs) if l}
-        best = max(leaves, key=lambda y: sc(b, y), default=None)
-        if best is None or best is leaf or sc(b, best) < sc(b, leaf) + 1.4:
-            continue
-        h = holder.get(name(best))
-        if h is None:
-            pairs[k] = (b, best)
-        elif sc(b, best) + sc(pairs[h][0], leaf) > sc(b, leaf) + sc(pairs[h][0], best) + 1:
-            pairs[k], pairs[h] = (b, best), (pairs[h][0], leaf if leaf and sc(pairs[h][0], leaf) > 0.5 else None)
+    pairs, extras, doubtful = align_ordered(bs, leaves, section["section"])
     fields, asks, unmatched, theirs = [], {}, [], []
     # Radios go together when their leaves do (the portal names each radio apart):
     # centro_commerciale_si and _no under in_centro_commerciale.
@@ -334,6 +463,9 @@ def draft_section(section, schema):
             asks[key] = {"type": "file", "question": (b.get("context") or b["label"])[:120], "schema": None}
             fields.append(inherit({"kind": "file", "label": "Tipologie ammesse", "value": f"{{{{ask.{key}}}}}"}, b))
             continue
+        if leaf is None and id(b) in extras:
+            fields.append({"kind": b["kind"], "label": label, "note": "the portal's own box, not in the schema"})
+            continue
         if leaf is None:
             unmatched.append(b)
             fields.append({"kind": b["kind"], "label": label, "note": "no schema leaf aligned: a person writes this one"})
@@ -366,7 +498,11 @@ def draft_section(section, schema):
         value = f"{{{{ask.{name}{'|date_it' if k == 'date' else ''}}}}}"
         fields.append(counted(inherit({"kind": "textarea" if b["kind"] == "textarea" else ("date" if k == "date" else b["kind"] if b["kind"] in ("select", "lookup") else "text"),
                                        "label": label, "value": value}, b), b))
-    entry = {"section": section["section"], "schema": group, **({"theirs": theirs} if theirs else {}), "fields": fields}
+    # exact: every box paired by order with a leaf of its type (or the portal's own); else the
+    # boxes a person should look at.
+    check = [b.get("label", "")[:60] for b in doubtful]
+    entry = {"section": section["section"], "schema": group, "confidence": "check" if check else "exact",
+             **({"check": check} if check else {}), **({"theirs": theirs} if theirs else {}), "fields": fields}
     return entry, asks, len(bs), len(unmatched)
 
 
