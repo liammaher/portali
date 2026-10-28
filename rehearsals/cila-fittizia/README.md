@@ -201,6 +201,36 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 
 | Date | Persona | Browser | Wall time | Hands-on | Login → draft | Key diffs | Off-script | Result |
 |---|---|---|---|---|---|---|---|---|
+| 2026-10-28 | P6 | pane | not clocked | not clocked | 83.7 s (wizard 8.3, 18 sections 63, fresh load 12.3) | 1 (weakest key, seen before mapping) | not measured | Draft filled and verified; stop point not reached (see below) |
+
+### 2026-10-28, P6, first run from the steps file
+
+Not a scored test run: the clock from the architect's sentence, the questions message and
+the review page weren't part of it, and the steps file grew during the session (the walk,
+then `crawl.js` for i, the relazione and the diritti, then label lookup and "+" for the two
+firms). It answers the narrower question: does the runner fill the whole CILA on the real
+SUE from the vault and the answers, with no model call? Yes: draft "PROVA NON INVIARE -
+CILA P6 run 2", 18 sections and 152 fields, every one read back the same on a fresh load.
+
+Against `answer-key/p6.yaml` (scored by Claude, who wrote the key and saw it before
+mapping), on the sections filled:
+
+- **Same:** 4–18 (the client), 31–40 (the architect), 41–45 and 48 (title a.2, b.1, c.1 by
+  choosing no other procedure, d.2 with the date and the 333 € receipt), 51–60 and 62–63
+  (property and catasto), 65, 67–70, 74–78 (relazione: manutenzione straordinaria, the
+  description, no tolerances), 79–81 left blank, the soggetti coinvolti (titolare, firms).
+- **Different (1):** 66. The key chose g.1, "altri tecnici indicati in Soggetti coinvolti",
+  reasoning that Chiara is also direttore dei lavori; on the SUE the direttore dei lavori is
+  ticked in G1 and G2 is only for *other* technicians, of whom P6 has none, so the run left
+  G2 empty. The key is probably what's wrong, but it counts until Liam rules on it.
+- **Portal fields the key didn't foresee:** the owner's table (a.2: Giulia Esempio for
+  Immobiliare Fittizia), the procuratore's qualifica, the oggetto, the firms' legal
+  representatives and INPS/INAIL codes, the diritti's payment mode. The fixture gained the
+  data they need (Changes).
+- **Not reached, so the stop point isn't:** the Allegato A (`fill.py`), the plain-PDF
+  attachments on Allega documenti (owner's assent, IDs, drawings), and the portal's own
+  procura and CILA DSC summary (download, then back: the person signs the procura).
+
 
 ## Changes
 
@@ -220,6 +250,10 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 - 2026-10-28, first walk: the mapping session read `answer-key/p6.yaml` before mapping, against
   "The answer key" above. P6's key was already the weakest; every P6 accuracy figure now also
   says "key seen before mapping".
+- 2026-10-28, after the walk: the portal asks for the firms' legal representatives and
+  INPS/INAIL codes, the owner company's phone and its representative's residence, which
+  `fixture-p6.json` lacked; added (made up, valid checksums). The DURC's Cassa edile box is
+  left unticked (the vault has no field for it).
 - 2026-10-28, first walk, stopped in quadro h): the official schema of the CILA (InfoCamere's
   `mod_cila_v1.0.7.xsd`) holds 137 of the 152 portal fields walked (`schema/schema-vs-portal.md`).
   The next step tests building the portal map from the schema plus a crawler instead of walking

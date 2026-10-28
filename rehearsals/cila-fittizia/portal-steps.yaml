@@ -5,12 +5,57 @@
 # The SUE is the SUAP's front office (fnsuap, PrimeFaces), so the ids, widgets and filters
 # are the SCIA's (rehearsals/pizzeria-fittizia/portal-steps.yaml). The user is the
 # architect filing for a client with a procura: in the studio's business vault `t:` is the
-# architect (ruolo.tipo titolare) and `c:` the client (the person the run is for,
-# answers.json `cliente`). {{ask.x}} are pre-flight's answers. The declarations, the
-# payment and sending are not here: they are the person's.
+# architect (ruolo.tipo titolare); the other people of the job are roles named in
+# answers.json "people": c the client, o the owner company and r its legale rappresentante
+# (a non-exclusive title), f1 and f2 the firms. {{ask.x}} are pre-flight's answers.
+# Where a choice or a "+" adds rows the portal renumbers ids, so those fields are found by
+# label at run time (`label` + `anchor`/`block`/`nth`, inpage.js resolve), as crawl.js saw
+# them. The declarations, the payment and sending are not here: they are the person's.
 
 procedure: napoli/comune/cila-lavori-edilizi
 title: "CILA: lavori interni non strutturali, SUE Napoli (tecnico con procura)"
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), c) PER PRESA VISIONE, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the 151 € diritti (and the 333 € penalty if not yet paid) by bank transfer to the Comune; upload the diritti receipt on Pagamento oneri"
+  - "On Allega documenti: download the portal's procura and CILA DSC summary, have the client sign the procura, sign them digitally (.p7m) and attach them with the IDs and the drawings"
+  - "Sign and send (Firma e invio); keep the receipt"
+
+asks:
+  descrizione:
+    type: text
+    question: "A name for the draft in Pratiche in bozza"
+    default: "PROVA NON INVIARE - CILA {{c:identity.last_name}}"
+  titolo:
+    type: text
+    question: "The client's title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)"
+  oggetto:
+    type: text
+    question: "The works in one sentence (300 characters)"
+  immobile_indirizzo: {type: text, question: "The property's street, as the Comune names it (e.g. VIA DOMENICO FONTANA)"}
+  immobile_civico: {type: text, question: "Its civico"}
+  immobile_cap: {type: text, question: "Its CAP"}
+  immobile_scala: {type: text, question: "Scala", default: ""}
+  immobile_piano: {type: text, question: "Piano", default: ""}
+  immobile_interno: {type: text, question: "Interno", default: ""}
+  catasto_foglio: {type: text, question: "Catasto fabbricati: foglio"}
+  catasto_particella: {type: text, question: "particella"}
+  catasto_subalterno: {type: text, question: "subalterno"}
+  catasto_sezione: {type: text, question: "sezione urbana", default: ""}
+  catasto_categoria: {type: text, question: "categoria catastale (e.g. A/2)"}
+  destinazione_uso: {type: text, question: "Destinazione d'uso (residenziale, industriale, commerciale, altro)", default: residenziale}
+  data_inizio_lavori: {type: date, question: "When the works started (they're already under way: a late CILA, d.2)"}
+  ricevuta_sanzione: {type: file, question: "The 333 € penalty receipt (PDF)"}
+  dettaglio_intervento:
+    type: text
+    question: "The works for the relazione tecnica (500 characters)"
+  diritti_euro: {type: number, question: "The SUE fees in euro", default: "151"}
+
+# The cases this file maps; anything else stops at pre-flight with the reason.
+supports:
+  - value: "{{ask.titolo}}"
+    in: [locatario]
+    else: "So far only a tenant with the owner's assent (a.2) is mapped."
 
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
@@ -89,7 +134,10 @@ sections:
   - section: DOMICILIO DIGITALE
     fields: []
 
+  # The box under the PEC ("si dichiara di essere consapevoli ...") is required, and the
+  # person's: the run leaves it and its "required" to them.
   - section: DOMICILIO ELETTRONICO
+    theirs: ["r4c1p4reg:chk"]
     fields:
       - {id: "r3c1p3reg:txt", kind: text, label: casella PEC, value: "{{t:identity.pec}}"}
 
@@ -177,3 +225,93 @@ sections:
       - {id: "r16c1p44reg:number", kind: text, label: Telefono, value: "{{business.telefono|phone_it}}"}
       - {id: "r18c1p50reg:number", kind: text, label: cell., value: "{{t:identity.phone|phone_it}}"}
       - {id: "r18c2p52reg:txt", kind: text, label: posta elettronica certificata, value: "{{t:identity.pec}}"}
+
+  - section: G2) Altri tecnici incaricati
+    fields: []
+
+  # Two firms on site: the second firm's block comes from "+".
+  - section: h) Impresa esecutrice dei lavori
+    fields:
+      - {id: "r2c1p2reg:radio:1_clone", kind: radio, label: eseguiti dalla impresa}
+  # Firm 1: f1. Fields by label inside the 1st block that starts at "Ragione sociale".
+      - {kind: text, anchor: Ragione sociale, block: 1, label: Ragione sociale, value: "{{f1:business.denominazione}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: codice fiscale / p. IVA, value: "{{f1:business.partita_iva}}"}
+      - {kind: select, anchor: Ragione sociale, block: 1, label: Iscritta alla C.C.I.A.A. di, value: "{{f1:business.cciaa}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: n., nth: 1, value: "{{f1:business.rea|rea_num}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: con sede in, value: "{{f1:business.sede_legale_comune|upper}}"}
+      - {kind: select, anchor: Ragione sociale, block: 1, label: provincia, nth: 1, value: "{{f1:business.sede_legale_provincia}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: "Via, Piazza", value: "{{f1:business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: N., nth: 2, value: "{{f1:business.sede_legale_civico}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: C.A.P., value: "{{f1:business.sede_legale_cap}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: Cognome, value: "{{f1:identity.last_name}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: Nome, value: "{{f1:identity.first_name}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: codice fiscale, nth: 2, value: "{{f1:identity.codice_fiscale}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: nato a, value: "{{f1:identity.birth_comune|upper}}"}
+      - {kind: select, anchor: Ragione sociale, block: 1, label: provincia, nth: 2, value: "{{f1:identity.birth_province}}"}
+      - {kind: date, anchor: Ragione sociale, block: 1, label: nato il, value: "{{f1:identity.date_of_birth|date_it}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: cell., value: "{{f1:identity.phone|phone_it}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: posta elettronica, value: "{{f1:business.pec}}"}
+      # DURC: each box opens its own rows (and renumbers what follows).
+      - {kind: checkbox, anchor: Ragione sociale, block: 1, label: INPS}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: sede di, nth: 1, value: "{{f1:business.sede_legale_comune|upper}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: Matr./Pos. Contr., value: "{{f1:business.inps_matricola}}"}
+      - {kind: checkbox, anchor: Ragione sociale, block: 1, label: INAIL}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: sede di, nth: 2, value: "{{f1:business.inail_codice_sede}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: codice impresa, value: "{{f1:business.inail_codice_ditta}}"}
+      - {kind: text, anchor: Ragione sociale, block: 1, label: pos. assicurativa, value: "{{f1:business.inail_pat}}"}
+      - {kind: add, anchor: Ragione sociale}
+  # Firm 2: f2. Fields by label inside the 2nd block that starts at "Ragione sociale".
+      - {kind: text, anchor: Ragione sociale, block: 2, label: Ragione sociale, value: "{{f2:business.denominazione}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: codice fiscale / p. IVA, value: "{{f2:business.partita_iva}}"}
+      - {kind: select, anchor: Ragione sociale, block: 2, label: Iscritta alla C.C.I.A.A. di, value: "{{f2:business.cciaa}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: n., nth: 1, value: "{{f2:business.rea|rea_num}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: con sede in, value: "{{f2:business.sede_legale_comune|upper}}"}
+      - {kind: select, anchor: Ragione sociale, block: 2, label: provincia, nth: 1, value: "{{f2:business.sede_legale_provincia}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: "Via, Piazza", value: "{{f2:business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: N., nth: 2, value: "{{f2:business.sede_legale_civico}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: C.A.P., value: "{{f2:business.sede_legale_cap}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: Cognome, value: "{{f2:identity.last_name}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: Nome, value: "{{f2:identity.first_name}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: codice fiscale, nth: 2, value: "{{f2:identity.codice_fiscale}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: nato a, value: "{{f2:identity.birth_comune|upper}}"}
+      - {kind: select, anchor: Ragione sociale, block: 2, label: provincia, nth: 2, value: "{{f2:identity.birth_province}}"}
+      - {kind: date, anchor: Ragione sociale, block: 2, label: nato il, value: "{{f2:identity.date_of_birth|date_it}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: cell., value: "{{f2:identity.phone|phone_it}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: posta elettronica, value: "{{f2:business.pec}}"}
+      # DURC: each box opens its own rows (and renumbers what follows).
+      - {kind: checkbox, anchor: Ragione sociale, block: 2, label: INPS}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: sede di, nth: 1, value: "{{f2:business.sede_legale_comune|upper}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: Matr./Pos. Contr., value: "{{f2:business.inps_matricola}}"}
+      - {kind: checkbox, anchor: Ragione sociale, block: 2, label: INAIL}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: sede di, nth: 2, value: "{{f2:business.inail_codice_sede}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: codice impresa, value: "{{f2:business.inail_codice_ditta}}"}
+      - {kind: text, anchor: Ragione sociale, block: 2, label: pos. assicurativa, value: "{{f2:business.inail_pat}}"}
+
+  # Two firms, under 200 uomini-giorno: D.Lgs. 81 applies and the notifica preliminare,
+  # already sent, is attached (from crawl.js: no choice here renumbers).
+  - section: i) Rispetto degli obblighi
+    fields:
+      - {id: "r3c1p4reg:radio:1_clone", kind: radio, label: ricade nell'ambito di applicazione}
+      - {id: "r5c2p8reg:radio:2_clone", kind: radio, label: inferiore a 200 uomini-giorno}
+      - {id: "r9c2p18reg:radio:5_clone", kind: radio, label: soggetto all'invio della notifica}
+      - {id: "r10c2p21reg:chk", kind: checkbox, label: allega alla presente comunicazione la notifica}
+
+  # The progettista's relazione (her asseverazione and signature are the signed CILA).
+  - section: Relazione Tecnica di Asseverazione
+    fields:
+      - {id: "r4c1p4reg:txt", kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {id: "r4c2p6reg:txt", kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {id: "r6c1p8reg:txt", kind: text, label: Iscritto all'ordine, value: "{{t:albo.ordine}}"}
+      - {id: "r8c1p10reg:txt", kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {id: "r8c2p12reg:txt", kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {id: "r13c1p19reg:chk", kind: checkbox, label: interventi di manutenzione straordinaria}
+      - {id: "r24c1p30reg:txta", kind: text, value: "{{ask.dettaglio_intervento}}"}
+      - {id: "r27c3p35reg:radio:1_clone", kind: radio, label: "no"}
+
+  - section: Dichiarazione relativa ai diritti
+    fields:
+      - {id: "r5c1p8reg:radio:3_clone", kind: radio, label: sono dovuti oneri quali diritti o spese}
+      - {id: "r7c1p10reg:real", kind: number, label: per un totale di Euro, value: "{{ask.diritti_euro}}"}
+      # Required, and the only mode offered; it pays nothing (the SUE's payment page has no
+      # methods: the fees go by bank transfer and their receipt is uploaded there).
+      - {id: "r8c1p13reg:radio:4_clone", kind: radio, label: pagamento on line}

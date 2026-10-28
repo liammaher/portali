@@ -82,7 +82,11 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      declares, pays or sends. `run.py preflight` first: the steps file's
                      `supports:` (cases it maps) and `asks:` (questions, asked in one message, or
                      proposed to confirm). A stopped run resumes on its draft (`--resume`, `--fix`).
-                     Both take a draft's values from one `pvault get` (`--values -`, Touch ID)
+                     Both take a draft's values from one `pvault get` (`--values -`, Touch ID).
+                     Where a choice or "+" renumbers ids, fields are found by label
+                     (`label` + `anchor`/`block`/`nth`; `kind: add` presses "+"); the job's other
+                     people are roles in answers.json `people`. `crawl.js` maps a draft's
+                     sections, `wizard.js` a comune's whole wizard (`catalogue/<comune>/`)
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
 ```
 

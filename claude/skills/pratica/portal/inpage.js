@@ -88,8 +88,14 @@
     return b;
   }
 
-  const errors = () => [...doc().querySelectorAll(".ui-message-error, .ui-messages-error, .ui-growl-message-error")]
-    .filter((e) => e.getClientRects().length).map((e) => norm(e.textContent));
+  // ".error-message-text" is the portal's message under a field ("Il valore è obbligatorio").
+  // `theirs`: a section's fields the person fills (a statement in their name); the
+  // portal's "required" under one of them isn't the run's error.
+  const errors = (theirs = []) => [...doc().querySelectorAll(".ui-message-error, .ui-messages-error, .ui-growl-message-error, [id*=\"dynaForm\"] .error-message-text")]
+    .filter((e) => e.getClientRects().length && norm(e.textContent))
+    .filter((e) => { const box = e.closest("td") && e.closest("td").querySelector("input, select, textarea");
+      return !(box && theirs.some((id) => box.id.endsWith("dynaForm:" + id))); })
+    .map((e) => norm(e.textContent));
 
   function checkLabel(e, label) {
     if (!label) return;
@@ -212,7 +218,9 @@
       press(wrap && wrap.querySelector(".ui-radiobutton-box, .ui-chkbox-box") || e, f.label || f.id);
       await idle();
     }
-    if (!el(f.id).checked) fail(`${f.id}: didn't stay ticked`);
+    // A box that opens rows renumbers itself: find a label-named one again.
+    const now = el(f.id) || (f.spec && el(resolve(f.spec).id));
+    if (!now || !now.checked) fail(`${f.id}: didn't stay ticked`);
     return "checked";
   }
 
@@ -256,6 +264,7 @@
   }
 
   function readBack(f) {
+    if (f.spec) f = { ...f, id: resolve(f.spec).id }; // rows added since may have renumbered it
     if (f.kind === "file") {
       // An upload widget empties its box once it has sent the file; its list names it.
       const got = norm(doc().body.innerText).includes(norm(f.typed)) ? f.typed : null;
@@ -272,35 +281,90 @@
     return { label: f.label || f.id, want: f.typed, got, ok };
   }
 
+  // A field named by its label instead of an id: the portal numbers ids by row, so they
+  // shift when a choice or a "+" adds rows. `anchor` + `block` pick the block-th repeat of
+  // a group (the first field of each repeat carries the anchor label); `nth` the n-th field
+  // with that label inside it. Returns the id, as the steps file's `id` would be.
+  function shown(e) {
+    return !!(e.offsetParent || (e.closest(".ui-radiobutton, .ui-chkbox, .ui-selectonemenu") || {}).offsetParent);
+  }
+  function kindOf(e) {
+    if (e.tagName === "SELECT") return "select";
+    if (e.type === "radio" || e.type === "checkbox" || e.type === "file") return e.type === "checkbox" ? "checkbox" : e.type;
+    if (/txtws_input$/.test(e.id)) return "lookup";
+    return "text";
+  }
+  function inputs() {
+    return [...doc().querySelectorAll('[id*="dynaForm:"]')].filter((e) => /^(INPUT|SELECT|TEXTAREA)$/.test(e.tagName) &&
+      e.type !== "hidden" && !/combo_focus$|combo_filter$|editor_file_dropzone$/.test(e.id) && shown(e));
+  }
+  function labelled(e, label) {
+    const texts = win().eval(`(${steps.label_js})`)(e);
+    if (e.title) texts.unshift(e.title);
+    return texts.slice(0, 3).some((t) => norm(t).startsWith(norm(label)));
+  }
+  function resolve(f) {
+    if (f.id || f.css) return f;
+    let list = inputs();
+    if (f.anchor) {
+      const starts = list.map((e, i) => (labelled(e, f.anchor) ? i : -1)).filter((i) => i >= 0);
+      const b = (f.block || 1) - 1;
+      if (b >= starts.length) fail(`${f.label}: no block ${f.block} of ${f.anchor} (found ${starts.length})`);
+      list = list.slice(starts[b], starts[b + 1]);
+    }
+    const want = f.kind === "number" || f.kind === "date" ? "text" : f.kind;
+    const hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
+    const e = hits[(f.nth || 1) - 1] || fail(`${f.label}: ${hits.length} fields with this label${f.anchor ? ` in block ${f.block || 1}` : ""}`);
+    return { ...f, id: e.id.split("dynaForm:")[1].replace(/:combo_input$/, "") };
+  }
+  async function addBlock(f) {
+    const count = () => inputs().filter((e) => labelled(e, f.anchor)).length;
+    const before = count();
+    const plus = [...doc().querySelectorAll('[id*="dynaForm"] button')].filter((b) => shown(b) && b.textContent.trim() === "+");
+    if (!plus.length) fail(`no + to add a block of ${f.anchor}`);
+    press(plus[plus.length - 1], `+ ${f.anchor}`);
+    await idle();
+    if (count() !== before + 1) fail(`+ didn't add a block of ${f.anchor}`);
+    return `block ${before + 1}`;
+  }
+
+  // The open section has no link: a reopened draft shows the one it was left on.
+  const isOpen = (name) => {
+    const cur = doc().querySelector("li#corrente");
+    return !!cur && norm(cur.innerText).startsWith(norm(name));
+  };
+
   async function section(sec, values, si) {
     const t0 = performance.now();
     report.at = { phase: "section", index: si, section: sec.section };
     if (steps.declarations.test(sec.section)) fail(`refused to open ${sec.section}: the person's declarations`);
     if (sec.open !== false) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
-      if (!a) fail(`no section ${sec.section}`);
-      await act(() => press(a, sec.section));
+      if (a) await act(() => press(a, sec.section));
+      else if (!isOpen(sec.section)) fail(`no section ${sec.section}`);
     }
     const done = [];
-    for (const [i, f] of sec.fields.entries()) {
+    for (let [i, f] of sec.fields.entries()) {
       const v = values[i];
       if (v === false) continue; // its `when` is false for this pratica
       report.at.field = i;
       report.at.label = f.label || f.id || f.css;
       let typed;
+      if (f.kind === "add") { await addBlock(f); continue; }
+      f = f.id || f.css ? f : { ...resolve(f), spec: f };
       if (f.kind === "radio" || f.kind === "checkbox") typed = await tick(f);
       else if (v === null || v === "") continue;
       else if (f.kind === "select") typed = await select(f, v);
       else if (f.kind === "lookup") typed = await lookup(f, v);
       else if (f.kind === "file") typed = await attach(f, v);
       else typed = await text(f, v);
-      done.push({ ...f, typed, field: i });
+      done.push({ ...f, kind: f.kind === "date" ? "text" : f.kind, typed, field: i });
     }
     delete report.at.field;
     delete report.at.label;
     // An attachments screen may keep each file as it uploads, with no Salva (save: false).
     if (sec.save !== false) await act(() => press(button(sec.save || "Salva"), sec.save || "Salva"));
-    const errs = errors();
+    const errs = errors(sec.theirs);
     const checks = done.map(readBack);
     const bad = checks.filter((c) => !c.ok);
     report.sections.push({ section: sec.section, seconds: +((performance.now() - t0) / 1000).toFixed(1), errors: errs, bad });
@@ -331,7 +395,7 @@
     for (const { sec, done } of kept) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
       if (a) await act(() => press(a, sec.section));
-      else if (sec.open !== false) fail(`fresh load of the draft: no section ${sec.section}`);
+      else if (sec.open !== false && !isOpen(sec.section)) fail(`fresh load of the draft: no section ${sec.section}`);
       for (const c of done.map(readBack)) if (!c.ok) bad.push({ section: sec.section, ...c });
     }
     report.verify_seconds = +((performance.now() - t0) / 1000).toFixed(1);
@@ -353,7 +417,10 @@
       if (!doc().location.href.startsWith(steps.logged_in)) fail("not logged in to the portal");
       const from = resume.from || {};
       for (const k of resume.kept || []) {
-        keep(k.section, k.fields.map(([field, typed]) => ({ ...steps.sections[k.section].fields[field], typed, field })));
+        keep(k.section, k.fields.map(([field, typed]) => {
+          const def = steps.sections[k.section].fields[field];
+          return { ...def, typed, field, ...(def.id || def.css ? {} : { spec: def }) };
+        }));
       }
       if (from.section === undefined) {
         for (const [i, w] of steps.wizard.entries()) if (i >= (from.wizard || 0)) await wizard(w, values.wizard[i], i);
