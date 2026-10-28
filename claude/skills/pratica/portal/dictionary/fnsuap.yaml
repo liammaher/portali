@@ -20,6 +20,8 @@
 # Yes/no asks with a `group` are asked as one checklist (`item`), the answer the list of
 # items that apply.
 groups:
+  variazioni:
+    question: "What changed? Tick every line that applies."
   attivita_852:
     question: "What does the food business do? Tick every line that applies."
 
@@ -217,6 +219,19 @@ asks:
   cedente_cf: {type: text, question: "Their codice fiscale or partita IVA"}
   cedente_notifica_protocollo: {type: text, question: "The protocol number of their Reg. 852 food-safety notifica (or SCIA)"}
   cedente_notifica_data: {type: date, question: "Its date"}
+
+  attivita_esercitata: {type: text, question: "The activity the business runs, in a few words (100 characters)"}
+  titolo_attivita_tipo: {type: choice, question: "The kind of title it runs under", options: [SCIA, DIA, Comunicazione, Autorizzazione]}
+  var_denominazione: {type: yes_no, group: variazioni, item: "The business's name changed"}
+  var_sede_legale: {type: yes_no, group: variazioni, item: "The registered office (sede legale) moved"}
+  var_decorrenza: {type: date, question: "From when the new name applies"}
+  denominazione_precedente: {type: text, question: "The previous business name"}
+  sede_precedente_via: {type: text, question: "The previous registered office: street and number"}
+  sede_precedente_comune: {type: text, question: "Its comune"}
+  sede_precedente_cap: {type: text, question: "Its CAP"}
+  superficie_vendita_prima_mq: {type: number, question: "The sales area before the change, in m²"}
+  superficie_alimentare_prima_mq: {type: number, question: "Of that, m² for food before the change"}
+  superficie_non_alimentare_prima_mq: {type: number, question: "Of that, m² for non-food before the change"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
   superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
@@ -1369,6 +1384,75 @@ sections:
       - {kind: text, label: C. F./Partita IVA, value: "{{ask.cedente_cf}}"}
       - {kind: text, label: di cui alla notifica/SCIA prot./n., value: "{{ask.cedente_notifica_protocollo}}"}
       - {kind: date, label: del, value: "{{ask.cedente_notifica_data|date_it}}"}
+
+  # Changes to a business already running (variazioni): the title it runs under, shared by
+  # every sector's variation.
+  - section: estremi del/i titolo/i autorizzatorio/i posseduto/i
+    aliases: [Estremi del titolo/i abilitativo/i, estremi titolo abilitativo]
+    fields:
+      - {kind: text, label: "di essere in possesso del seguente titolo abilitativo per l'attività di:", value: "{{ask.attivita_esercitata}}"}
+      - {kind: radio, label: autorizzazione, when: "{{ask.titolo_attivita_tipo|is_autorizzazione}}"}
+      - {kind: radio, label: comunicazione, when: "{{ask.titolo_attivita_tipo|is_comunicazione}}"}
+      - {kind: radio, label: D.I.A., when: "{{ask.titolo_attivita_tipo|is_dia}}"}
+      - {kind: radio, label: S.C.I.A., when: "{{ask.titolo_attivita_tipo|is_scia}}"}
+      - {kind: text, label: protocollo n°, value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: data, value: "{{ask.titolo_attivita_data|date_it}}"}
+  # Shops' and hairdressers' version: the protocol, its date and the Comune that has it.
+  - section: estremi del/i titolo/i autorizzatorio/i posseduto/i
+    aliases: [Estremi del titolo/i abilitativo/i, estremi titolo abilitativo]
+    fields:
+      - {kind: text, label: AUTORIZZAZIONE/SCIA prot. n°, value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: text, label: rilasciata/presentata dal/al Comune/SUAP di, value: "{{locale.comune}}"}
+
+  # A new business name or a moved registered office, for a ditta individuale: the vault holds the
+  # new ones, the old ones are asked. Bars and restaurants show every box; the company changes
+  # (shares, legal representative, partners) and a new professional manager (who files a
+  # statement of their own) stay empty, and recipes refuse them.
+  - section: dichiarazione relativa alle variazioni della società o dei soggetti
+    leave: ["come da atto notarile del", "dal/ la sig./ ra cognome", "al/ la sig./ ra cognome", "nome"]
+    fields:
+      - {kind: checkbox, label: VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE, when: "{{ask.var_denominazione}}"}
+      - {kind: date, label: con decorrenza dal, value: "{{ask.var_decorrenza|date_it}}", when: "{{ask.var_denominazione}}"}
+      - {kind: text, label: precedente, value: "{{ask.denominazione_precedente}}", when: "{{ask.var_denominazione}}"}
+      - {kind: text, label: nuova, value: "{{business.denominazione}}", when: "{{ask.var_denominazione}}"}
+      - {kind: checkbox, label: VARIAZIONE DELLA SEDE LEGALE, when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: da via o..., value: "{{ask.sede_precedente_via}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: comune, value: "{{ask.sede_precedente_comune}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: C.A.P., value: "{{ask.sede_precedente_cap}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: a via o ..., value: "{{business.sede_legale_indirizzo}} {{business.sede_legale_civico}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: comune, nth: 2, value: "{{business.sede_legale_comune}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: C.A.P., nth: 2, value: "{{business.sede_legale_cap}}", when: "{{ask.var_sede_legale}}"}
+  # The hairdressers' version: each tick opens its boxes, and the new name and office aren't asked.
+  - section: variazioni della società o dei soggetti
+    fields:
+      - {kind: checkbox, label: VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE, when: "{{ask.var_denominazione}}"}
+      - {kind: date, label: con decorrenza dal, value: "{{ask.var_decorrenza|date_it}}", when: "{{ask.var_denominazione}}"}
+      - {kind: text, label: precedente, value: "{{ask.denominazione_precedente}}", when: "{{ask.var_denominazione}}"}
+      - {kind: checkbox, label: VARIAZIONE DELLA SEDE LEGALE, when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: da via o..., value: "{{ask.sede_precedente_via}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: comune, value: "{{ask.sede_precedente_comune}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: C.A.P., value: "{{ask.sede_precedente_cap}}", when: "{{ask.var_sede_legale}}"}
+
+  # A shop's structural change (variazioni strutturali): a bigger sales area in the sectors it
+  # already sells (adding, dropping or swapping sectors or special tables is refused by recipes).
+  - section: dati sull'entità delle variazioni
+    fields:
+      - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: checkbox, label: la superficie di vendita sarà}
+      - {kind: checkbox, label: ampliata}
+      - {kind: text, label: da mq, value: "{{ask.superficie_vendita_prima_mq}}"}
+      - {kind: text, label: a mq, value: "{{ask.superficie_vendita_mq}}"}
+      - {kind: checkbox, label: Alimentare, when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita da mq, value: "{{ask.superficie_alimentare_prima_mq}}", when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: text, label: a mq, nth: 2, value: "{{ask.superficie_alimentare_mq}}", when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: checkbox, label: Non alimentare, when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita da mq, nth: 2, value: "{{ask.superficie_non_alimentare_prima_mq}}", when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: a mq, nth: 3, value: "{{ask.superficie_non_alimentare_mq}}", when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: mq, value: "{{ask.superficie_vendita_mq}}"}
+    # The special tables (tobacco, pharmacy, fuel): the food shops' version shows their rows.
+    leave: [Generi di monopolio, Farmacie, Carburanti]
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"

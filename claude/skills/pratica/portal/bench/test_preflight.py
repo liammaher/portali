@@ -193,6 +193,21 @@ def sums():
     assert [r for r, _ in run.refs_in("{{ask.a+2*ask.b|positive}}")] == ["ask.a", "ask.b"]
 
 
+def too_long():
+    # A box's max is checked before the run: an answer is asked again, a vault value named.
+    steps = copy.deepcopy(STEPS)
+    asked = next(f for sec in steps["sections"] for f in sec["fields"]
+                 if str(f.get("value", "")).startswith("{{ask.") and "when" not in f and "|" not in f["value"])
+    vault = next(f for sec in steps["sections"] for f in sec["fields"]
+                 if str(f.get("value", "")).startswith("{{business.denominazione") and "when" not in f)
+    asked["max"], vault["max"] = 3, 3
+    r = run.preflight(steps, values(steps=steps))
+    key = asked["value"][6:].split("}")[0]
+    assert any(q["key"] == key and "at most 3" in q.get("error", "") for q in r["questions"]), r["questions"]
+    assert any("at most 3" in m["why"] for m in r["missing"]), r["missing"]
+    assert not r["ready"]
+
+
 CASES = [
     ("the SCIA with its answers is ready", ready),
     ("no answers: one checklist, branch items first, then two questions, no defaults", all_questions),
@@ -211,6 +226,7 @@ CASES = [
     ("a question this case doesn't need isn't asked; a conditional one says on what", not_needed_here),
     ("a proposal is offered to confirm, used once confirmed, and asked when the vault can't fill it", proposals),
     ("a sum of answers renders, needs every term, and each term is asked", sums),
+    ("a value longer than its box is asked again, or named in the vault, before the run", too_long),
 ]
 
 

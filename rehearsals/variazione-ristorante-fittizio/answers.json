@@ -1,0 +1,12 @@
+{
+ "variazioni": ["var_denominazione"],
+ "descrizione": "PROVA NON INVIARE - variazione ristorante generato",
+ "oggetto": "Variazione della denominazione della ditta che gestisce la pizzeria di viale Augusto 74.",
+ "var_decorrenza": "2026-11-01",
+ "denominazione_precedente": "Pizzeria Esempio di Gennaro Fittizio",
+ "titolo_attivita_tipo": "SCIA",
+ "attivita_esercitata": "somministrazione di alimenti e bevande (pizzeria)",
+ "titolo_attivita_protocollo": "PG/2026/0777777",
+ "titolo_attivita_data": "2026-03-02",
+ "diritti_euro": "0"
+}
