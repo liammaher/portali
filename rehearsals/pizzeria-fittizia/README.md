@@ -75,6 +75,9 @@ open at the person's steps. `tari` fills the Mod. 5 with `fill.py`, reads all 70
 opens it for review and prints the route: sign it, then send it with the ID copy and the
 planimetria from the business's PEC. Output: `~/.cache/pratica-rehearsal/pizzeria-fittizia/`.
 
+To try them as with a real business, from a fresh Claude session ("do the SCIA for Pizzeria
+Fittizia"), load the business into a real vault, `~/.pvault-fittizia`: `load.py` says how.
+
 ## How a walk runs
 
 1. Serve the business vault, as the pratica skill would read it, with a scoped token:
