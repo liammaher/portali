@@ -69,6 +69,7 @@ asks:
     default: permesso di costruire
   titolo_id_pratica: {type: text, question: "The title's pratica number on the SUAP/SUE (ID pratica)"}
   data_nomina: {type: date, question: "From when the new direttore dei lavori takes over"}
+  nomina_aggiunta: {type: yes_no, question: "Is the firm named alongside an earlier one (rather than the first named)?", default: "false"}
   proroga_giorni: {type: text, question: "How many days of extension are asked (e.g. 365)"}
   proroga_motivo: {type: text, question: "Why the extension is needed: the facts beyond the holder's control (500 characters)"}
   proroga_tipo_lavori: {type: text, question: "The works still to finish, in a few words (30 characters)"}
@@ -238,7 +239,7 @@ sections:
   # The property: no vault category holds it yet, so it comes from pre-flight's answers.
   - section: Localizzazione dell'intervento
     # The proroga's "sede dell'attività" is the same block: where the works are.
-    aliases: ["ubicazione dell'immobile", "dichiarazione relativa alla sede dell'attività"]
+    aliases: ["ubicazione dell'immobile", "dichiarazione relativa alla sede dell'attività", "dichiarazione ubicazione dell'intervento"]
     leave: [Frazione]
     fields:
       - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
@@ -486,6 +487,45 @@ sections:
       - {kind: date, label: la cui data di inizio lavori è prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
       - {kind: date, label: la cui data di fine lavori dovrebbe essere entro il, value: "{{ask.fine_termine|date_it}}", if_present: true}
       - {kind: date, label: ed è invece prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
+
+  # The firm named or changed on its own (nomina, cambio dell'impresa esecutrice): the first
+  # firm (`f1:`). The CILA's quadro h), with its blocks and DURC, is the entry above.
+  - section: Impresa esecutrice dei lavori
+    aliases: [nuova impresa esecutrice]
+    leave: [telefono fisso]
+    fields:
+      - {kind: text, label: denominazione dell'impresa, value: "{{f1:business.denominazione}}"}
+      - {kind: text, label: Codice Fiscale/Partita Iva, value: "{{f1:business.partita_iva}}"}
+      - {kind: text, label: con sede legale a, value: "{{f1:business.sede_legale_comune|upper}}"}
+      - {kind: text, label: Provincia, value: "{{f1:business.sede_legale_provincia}}"}
+      - {kind: text, label: CAP, value: "{{f1:business.sede_legale_cap}}"}
+      - {kind: text, label: "in via, viale, piazza", value: "{{f1:business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: n.civico, value: "{{f1:business.sede_legale_civico}}"}
+      - {kind: text, label: cell., value: "{{f1:identity.phone|phone_it}}"}
+      - {kind: text, label: PEC, value: "{{f1:business.pec}}"}
+      - {kind: text, label: iscritta alla Camera di Commercio di, value: "{{f1:business.cciaa|provincia_nome}}"}
+      - {kind: text, label: n. REA, value: "{{f1:business.rea|rea_num}}"}
+
+  - section: titolo edilizio posseduto
+    fields:
+      - {kind: text, label: tipologia titolo edilizio, value: "{{ask.titolo_tipo|upper}}"}
+      - {kind: text, label: n., value: "{{ask.pdc_numero}}"}
+      - {kind: text, label: anno, value: "{{ask.pdc_anno}}"}
+
+  - section: oggetto dell'istanza
+    fields:
+      - {kind: radio, label: prima nomina dell'impresa esecutrice, when: "{{ask.nomina_aggiunta|not}}"}
+      - {kind: radio, label: nomina in aggiunta alla precedente impresa, when: "{{ask.nomina_aggiunta}}"}
+
+  # Landscape pratiche: the tecnico is the architect who files with the procura; another
+  # tecnico (the other choice's boxes) isn't mapped.
+  - section: dati relativi al nome del tecnico
+    leave: [cognome, nome, codice fiscale, Stato, Provincia, Comune italiano, "Via, viale", Numero civico, C.A.P., Telefono, Fax, Cell., Posta elettronica]
+    fields:
+      - {kind: radio, label: è colui che presenta la pratica}
+      - {kind: text, label: ordine/collegio/albo, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: provincia (sigla), value: "{{t:albo.provincia}}"}
+      - {kind: text, label: numero iscrizione, value: "{{t:albo.numero}}"}
 
   # A new direttore dei lavori: the studio's architect (`t:`), her studio's address and her albo.
   - section: nomina nuovo direttore dei lavori
