@@ -231,7 +231,8 @@ sections:
 
   # The property: no vault category holds it yet, so it comes from pre-flight's answers.
   - section: Localizzazione dell'intervento
-    aliases: ["ubicazione dell'immobile"]
+    # The proroga's "sede dell'attività" is the same block: where the works are.
+    aliases: ["ubicazione dell'immobile", "dichiarazione relativa alla sede dell'attività"]
     leave: [Frazione]
     fields:
       - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
@@ -483,11 +484,10 @@ sections:
       - {kind: radio, label: "Il pagamento è dovuto e si intende assolvere l'obbligo tramite il circuito digitale pagoPA", when: "{{ask.bollo_marche|not}}"}
       - {kind: radio, label: "Due marche da €16,00 ciascuna", when: "{{ask.bollo_marche|not}}"}
       - {kind: radio, label: "Il pagamento è dovuto e si intende assolvere l'obbligo con marche da bollo", when: "{{ask.bollo_marche}}"}
+      # Ticked before the serial and date: it moves them down.
+      - {kind: radio, label: "Marca da €16,00 per l'autorizzazione", when: "{{ask.bollo_marche}}"}
       - {kind: text, label: numero seriale (1), value: "{{ask.bollo_seriale}}", when: "{{ask.bollo_marche}}"}
       - {kind: date, label: data, value: "{{ask.bollo_data|date_it}}", when: "{{ask.bollo_marche}}"}
-      - {kind: radio, label: "Marca da €16,00 per l'autorizzazione", when: "{{ask.bollo_marche}}"}
-      # The second marca's date: the crawl saw it only after both choices (not run yet).
-      - {kind: date, label: data, nth: 2, value: "{{ask.bollo_data|date_it}}", when: "{{ask.bollo_marche}}"}
 
   # Agibilità (SCA): the title the works ran under, the fine lavori, what the segnalazione is
   # for, and the direttore dei lavori's attestations (the architect: `t:`, the studio's address).
