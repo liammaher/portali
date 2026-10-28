@@ -155,5 +155,67 @@ def _():
     assert by[("Nome", 1)] == "{{ask.nome}}", by
 
 
+def batch_copy(tmp):
+    """A copy of the catalogue where a batch crawled the fine lavori again: every section it
+    had seen before named by reference (`same_as`), as crawl.js's batch writes them."""
+    import shutil
+    base = Path(tmp)
+    shutil.copytree(HERE.parent / "catalogue", base / "catalogue")
+    shutil.copytree(HERE.parent / "dictionary", base / "dictionary")
+    fine = gen.json.loads((base / "catalogue/F839/sections/fine-lavori.json").read_text())
+    for s in fine["sections"]:
+        if s.get("fields") is not None:
+            for k in [k for k in s if k != "section"]:
+                del s[k]
+            s["same_as"] = f"fine-lavori#{s['section']}"
+    (base / "catalogue/F839/sections/fine-batch.json").write_text(gen.json.dumps(fine))
+    return base
+
+
+@case("a section a batch crawl names by reference (same_as) generates as the section itself")
+def _():
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        base = batch_copy(tmp)
+        recipe = gen.load_yaml(FINE / "recipe.yaml")
+        want = gen.generate(recipe)
+        got = gen.generate(dict(recipe, crawl="fine-batch"), base=base)
+        want.pop("generated"), got.pop("generated")
+        assert got == want
+
+
+@case("a section's fingerprint is the one crawl.js computes in the page")
+def _():
+    import catalogue
+    scia = gen.json.loads((HERE.parent / "catalogue/F839/sections/scia.json").read_text())
+    fp = {s["section"]: catalogue.fingerprint(s["fields"]) for s in scia["sections"] if s.get("fields")}
+    # crawl.js's fingerprint() of the same fields, in the browser pane (2026-10-28)
+    assert fp["Scheda anagrafica"] == "c68cc6bd56afee34" and fp["Dati catastali"] == "5aaf2d3f32eecf5a", fp
+
+
+@case("a pratica the last drift check found changed is refused by gen.py and by pre-flight")
+def _():
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        base = batch_copy(tmp)
+        (base / "catalogue/F839/drift.json").write_text(gen.json.dumps(
+            {"pratiche": {"fine-lavori": {"checked": "2026-10-28", "differences": ["changed: Dati catastali"]}}}))
+        try:
+            gen.generate(gen.load_yaml(FINE / "recipe.yaml"), base=base)
+            raise AssertionError("generated")
+        except gen.GenError as e:
+            assert "changed: Dati catastali" in str(e), e
+        import catalogue
+        old = catalogue.CAT
+        catalogue.CAT = base / "catalogue/F839"
+        try:
+            import run
+            steps = gen.load_yaml(FINE / "portal-steps.generated.yaml")
+            assert "Dati catastali" in run.portal_changed(steps)[0]
+            assert run.portal_changed(gen.load_yaml(CILA / "portal-steps.yaml")) == []  # hand-written
+        finally:
+            catalogue.CAT = old
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

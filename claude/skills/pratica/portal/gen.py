@@ -330,6 +330,10 @@ def generate(recipe, base=HERE):
     cat_dir = base / "catalogue" / recipe["comune"]
     catalogue = json.loads((cat_dir / f"{recipe['sportello']}-wizard.json").read_text())
     crawl = json.loads((cat_dir / "sections" / f"{recipe['crawl']}.json").read_text())
+    drift = cat_dir / "drift.json"
+    changed = json.loads(drift.read_text())["pratiche"].get(recipe["crawl"], {}).get("differences") if drift.exists() else None
+    if changed:
+        raise GenError(f"the portal changed {recipe['crawl']} since its crawl ({'; '.join(changed)}): crawl it again")
     dictionary = load_yaml(base / "dictionary" / f"{recipe.get('dictionary', 'fnsuap')}.yaml")
 
     if "operations" not in catalogue:
@@ -349,6 +353,17 @@ def generate(recipe, base=HERE):
             (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {op['label']}"))
         names = [n for i, n in zip(op["sections"], names) if i not in sc.get("drops", [])] + \
             [catalogue["sections"][i] for i in sc.get("adds", [])]
+    # A batch crawl names a section it had seen elsewhere (`same_as`: "pratica#section").
+    others = {}
+    for i, s in enumerate(crawl["sections"]):
+        if s.get("same_as"):
+            other, _, title = s["same_as"].partition("#")
+            if other not in others:
+                others[other] = json.loads((cat_dir / "sections" / f"{other}.json").read_text())
+            seen = next((x for x in others[other]["sections"] if x["section"] == title), None)
+            if not seen:
+                raise GenError(f"{s['section']}: {s['same_as']} isn't in the catalogue")
+            crawl["sections"][i] = {**seen, "section": s["section"]}
     crawled = {norm(s["section"]): s for s in crawl["sections"]}
 
     problems, out_sections, asks_used = [], [], set()
