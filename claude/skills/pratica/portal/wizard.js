@@ -6,7 +6,7 @@
 // scelte), and steps back with "Pagina precedente". Never fills or saves a section, never
 // goes past the generated pratica. Like inpage.js it drives a frame over the page.
 //
-//   __wizard.start({draft, sectors: [names] | null, only: [operation labels] | null, limit, variants})
+//   __wizard.start({draft, sectors: [names] | null, only: [operation labels] | null, limit, variants, follow})
 //   await __wizard.wait(ms)                    the map so far, once done or after ms
 (() => {
   const channel = new MessageChannel(), waiting = [];
@@ -247,7 +247,8 @@
         await go(() => button("Conferma").click());
         if (!title().includes("scelta operazioni")) throw new Error(`expected Scelta operazioni, found ${title()}`);
         S.tree = tree().map(({ key, type, label, parent }) => ({ key, type, label, parent }));
-        let ops = leaves(S.tree);
+        // follow: false reads each sector's operations tree only, without generating pratiche.
+        let ops = opts.follow === false ? [] : leaves(S.tree);
         if (opts.only) ops = ops.filter((o) => opts.only.some((x) => norm(o.label).includes(norm(x))));
         for (const o of ops.slice(0, opts.limit || 1000)) {
           const op = { key: o.key, type: o.type, label: o.label };
