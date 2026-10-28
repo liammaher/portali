@@ -53,23 +53,18 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   (permesso di costruire, SCIA alternativa, the landscape ones) need the asseverazioni and the
   landscape classifications (DPR 31/2017's lists, the art. 136/142 vincoli): legal and
   technical choices more than mapping.
-- **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
-  B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
-  42 filled, 75% of section uses (65% before the shops, bakeries, lodgings, subingresso,
-  suspension, variations and the Dogane notice; the 71% said at
-  the first import counted a section under every title it has, though the dictionary finds it
-  by title: `count` now checks each title). The whole tree is 2,333 sector-and-operation
-  pairs plus 64 common operations, but only the sector's own operations (open, take over, move,
-  suspend, close: 710 pairs) differ by sector. The batch in the pane (`crawl:ops:suap3`, 1,028
-  trips) crawls those in every sector, every other operation once (69 of them) and each of
-  those again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns
-  into `same.json`: the same pratica, counted as a use of it, or one that differs and gets a
-  crawl of its own. Priority sectors first, then the common operations, then the other everyday
-  sectors, then the rare ones (military canteens, livestock, fuel stations, large stores, dance
-  halls and games, ...), then the checks. Each scelta is tried once (`variants: "new"`): the
-  same few (procura, other soci, the Terzo settore exemption) add the same sections everywhere,
-  and re-trying them cost 40% of the time for 1 new section in 19; `gen.py` takes a scelta's
-  sections from the pratica where it was tried.
+- **SUAP**: 278 pratiche crawled so far (the batch stands at about half of its 1,028 trips:
+  the priority sectors, the common operations, part of the other sectors); **477 distinct
+  sections**, 67 filled, 71% of section uses, counted under each title a section has. 107
+  pratiche are filled end to end, 75 more lack one or two sections. The six proven openings were
+  crawled again with each "interventi eventuali" tick (`-interventi`: alcohol, an outside sign,
+  acoustic papers), and the shops' changes section three deep. The whole tree is 2,333
+  sector-and-operation pairs plus 64 common operations, but only the sector's own operations
+  (open, take over, move, suspend, close: 710 pairs) differ by sector. The batch in the pane
+  (`crawl:ops:suap3`) crawls those in every sector, every other operation once and each of those
+  again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns into
+  `same.json`. Each scelta is tried once (`variants: "new"`); `gen.py` takes a scelta's sections
+  from the pratica where it was tried.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
 - Proven on the portal with made-up data, generated from a batch crawl: the openings of a

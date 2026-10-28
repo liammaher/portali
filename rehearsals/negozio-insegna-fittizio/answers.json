@@ -1,0 +1,17 @@
+{
+ "extras": [],
+ "descrizione": "PROVA NON INVIARE - negozio insegna generato",
+ "oggetto": "Apertura di un negozio di vicinato non alimentare (cartoleria) con insegna d'esercizio esterna, non luminosa.",
+ "superficie_vendita_mq": "40",
+ "superficie_non_alimentare_mq": "40",
+ "in_centro_commerciale": "false",
+ "diritti_euro": "200",
+ "insegna_titolo_tipo": "altro",
+ "insegna_descrizione": "insegna frontale sopra la vetrina",
+ "insegna_larghezza_m": "2",
+ "insegna_altezza_m": "0.5",
+ "insegna_superficie_mq": "1",
+ "insegna_luce": "Opaca",
+ "insegna_testo": "BOTTEGA FITTIZIA - cartoleria e regali",
+ "immobile_proprietario": "Immobiliare Esempio S.r.l."
+}

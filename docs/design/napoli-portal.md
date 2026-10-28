@@ -7,7 +7,7 @@ declarations, paying, signing and sending. `supported-flows.md` is the promise f
 pratica; this is what it takes for the whole platform, in five pieces.
 
 Status (2026-10-28): piece 1 built for the whole SUE and under way for the SUAP (batch crawl,
-fingerprints, drift check); 5 built; 3 and 4 partly; 2 not started as data. Vault PRs #87,
+fingerprints, drift check, interventi); 5 built; 3 and 4 partly; 2 not started as data. Vault PRs #87,
 #88, #89 and this branch; library PR #62.
 
 ## 1. The portal map: every box, and what goes in it
@@ -30,14 +30,16 @@ the pratiche. `claude/skills/pratica/portal/`:
 Where it stands (2026-10-28): `crawl.js` crawls in batches on one scratch draft, each section
 once by fingerprint (`catalogue/README.md`). SUE: all 27 pratiche crawled, 127 distinct
 sections, 88 in the dictionary (88% of uses), 20 pratiche complete; 7 generated and run
-(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 160 pratiche
-crawled so far (the priority sectors; the batch continues, 1,028 trips in all), 236 distinct
-sections, 42 in the dictionary (75% of uses, counted under each title a section has); the
-openings of a hairdresser, a restaurant, a non-food shop, a bakery and rooms to let, the
-takeover and the suspension of a shop and of a restaurant (the subingresso's sections serve
-ten sectors, the suspension's nine), a restaurant's new name, a shop's bigger sales area, a
-running restaurant's alcohol notice, and a
-restaurant's closure, generated and run. A drift check
+(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 278 pratiche
+crawled so far (about half of the batch's 1,028 trips), 477 distinct sections, 67 in the
+dictionary (71% of uses, counted under each title a section has), 107 pratiche filled end to end;
+the openings' "interventi eventuali" (alcohol, an outside sign) crawled; companies and businesses
+in the Registro delle imprese taken. Generated and run: the openings of a hairdresser, a
+restaurant, a non-food shop, a bakery and rooms to let, the takeover and the suspension of a
+shop and of a restaurant, a restaurant's new name, a shop's bigger sales area, a running
+restaurant's alcohol notice and a restaurant's closure; written and waiting for the portal: an
+opening with alcohol, one with an outside sign, a historic-centre authorization, a company's
+suspension and a shop's new name. A drift check
 reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
 `draft.py` pairs boxes with the national schema by order and type, since the portal draws a
@@ -46,10 +48,10 @@ of 49 boxes right (33 before), and sections it marks `exact` held 17 of 18. Draf
 person to check, never used unchecked. The pratica's XML, which would name each box's schema
 field, exists only once a pratica is sent: the portal offers PDFs before (`rehearsals/cessazione-fittizia`).
 
-Next: finish the SUAP batch and import it; the business life cycle in the main sectors
-(the shops' changes of name or office; the wizard's "interventi eventuali", which add
-alcohol, an outside sign or fire prevention to an opening, crawled; then a company); the SUE's last
-seven pratiche with a professional (asseverazioni, landscape classifications).
+Next: run the five waiting recipes; finish the SUAP batch and import it; the 75 pratiche one
+or two sections short, then outdoor seating (dehors); a company's other partners (their art. 85
+statements); the SUE's last seven pratiche with a professional (asseverazioni, landscape
+classifications).
 
 ## 2. The legal layer: which pratica, which choices, which answers
 

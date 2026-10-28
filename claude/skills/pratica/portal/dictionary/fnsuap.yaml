@@ -21,6 +21,8 @@
 # Yes/no asks with a `group` are asked as one checklist (`item`), the answer the list of
 # items that apply.
 groups:
+  audiovisivi:
+    question: "What will it do with films or music on discs or tapes? Tick every line that applies."
   alcolici:
     question: "Which alcoholic products will it sell? Tick every line that applies."
   variazioni:
@@ -252,6 +254,41 @@ asks:
   alcol_con_scia: {type: yes_no, question: "Is this filed together with the business's own SCIA (a new business), rather than for one already running?", default: "false"}
   alcol_avvio: {type: date, question: "From when it sells alcohol"}
   ateco_descrizione: {type: text, question: "The business's ATECO code and activity in a few words (70 characters, e.g. 56.10.11 Ristorazione con somministrazione)"}
+
+  insegna_titolo_tipo: {type: choice, question: "The business's title to the building the sign goes on", options: [proprietario, comproprietario, usufruttuario, altro]}
+  insegna_titolo_altro: {type: text, question: "Which title (e.g. locatario)", default: "locatario"}
+  insegna_descrizione: {type: text, question: "The sign in a few words (e.g. insegna frontale sopra la vetrina, 100 characters)"}
+  insegna_larghezza_m: {type: number, question: "The sign's width in metres"}
+  insegna_altezza_m: {type: number, question: "Its height in metres"}
+  insegna_superficie_mq: {type: number, question: "Its area in m² (width × height)"}
+  insegna_monofacciale: {type: yes_no, question: "Is it single-sided?", default: "true"}
+  insegna_luce: {type: choice, question: "Is it unlit, lit from inside (luminosa) or lit from outside (illuminata)?", options: [Opaca, Luminosa, Illuminata]}
+  insegna_testo: {type: text, question: "The text on the sign (300 characters)"}
+  immobile_proprietario: {type: text, question: "Who owns the building (name or company)"}
+
+  telemaco_user: {type: text, question: "The Telemaco user ID (8 characters) that will import this pratica into ComUnica"}
+  superficie_consumo_mq: {type: number, question: "The m² set aside for eating on the spot"}
+  av_produzione: {type: yes_no, group: audiovisivi, item: "Producing"}
+  av_duplicazione: {type: yes_no, group: audiovisivi, item: "Duplicating"}
+  av_riproduzione: {type: yes_no, group: audiovisivi, item: "Reproducing"}
+  av_vendita: {type: yes_no, group: audiovisivi, item: "Selling"}
+  av_noleggio: {type: yes_no, group: audiovisivi, item: "Renting out"}
+  av_cessione: {type: yes_no, group: audiovisivi, item: "Transferring otherwise"}
+  audiovisivi_dal: {type: date, question: "From when"}
+  locale_precedente_comune: {type: text, question: "The old premises: comune", default: "Napoli"}
+  locale_precedente_provincia: {type: text, question: "Its province (sigla)", default: "NA"}
+  locale_precedente_cap: {type: text, question: "Its CAP"}
+  locale_precedente_indirizzo: {type: text, question: "Its street, as the Comune names it (e.g. Via Foria)"}
+  locale_precedente_civico: {type: text, question: "Its civico"}
+  precedente_centro_commerciale: {type: yes_no, question: "Were the old premises in a shopping centre?", default: "false"}
+  precedente_centro_commerciale_nome: {type: text, question: "Its name"}
+
+  settore_eliminato: {type: choice, question: "Which sector the shop stops selling", options: [Alimentare, Non alimentare]}
+  temporary_dal: {type: date, question: "The temporary shop's first day"}
+  temporary_al: {type: date, question: "Its last day"}
+
+  superficie_somministrazione_prima_mq: {type: number, question: "The customer area before the change, in m²"}
+  titolo_attivita_comune: {type: text, question: "The comune the title was filed with", default: "Napoli"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
   superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
@@ -1133,7 +1170,7 @@ sections:
   - section: ubicazione dell'attività
     aliases: [ubicazione dello stabilimento, ubicazione dell'impianto produttivo, ubicazione impianto, "Ubicazione",
               indirizzo dell'attività, indirizzo dello stabilimento, sede dell'attività, dichiarazione ubicazione locale,
-              dichiarazione relativa alla sede dell'attività,
+              dichiarazione relativa alla sede dell'attività, "dichiarazione dell'ubicazione dell'",
               dichiarazione dell'ubicazione dell'esercizio, dichiarazione relativa all'indirizzo dello stabilimento,
               nuovo indirizzo dell'esercizio, nuovo indirizzo dell'ubicazione dell'esercizio]
     subject: impresa
@@ -1426,7 +1463,7 @@ sections:
       - {kind: date, label: data, value: "{{ask.titolo_attivita_data|date_it}}"}
   # Shops' and hairdressers' version: the protocol, its date and the Comune that has it.
   - section: estremi del/i titolo/i autorizzatorio/i posseduto/i
-    aliases: [Estremi del titolo/i abilitativo/i, estremi titolo abilitativo]
+    aliases: [Estremi del titolo/i abilitativo/i, estremi titolo abilitativo, Estremi del titolo abilitativo]
     fields:
       - {kind: text, label: AUTORIZZAZIONE/SCIA prot. n°, value: "{{ask.titolo_attivita_protocollo}}"}
       - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
@@ -1540,6 +1577,233 @@ sections:
       - {kind: date, label: in data, value: "{{ask.titolo_attivita_data|date_it}}", when: "{{ask.alcol_con_scia|not}}"}
       - {kind: text, label: prot. N°, value: "{{ask.titolo_attivita_protocollo}}", when: "{{ask.alcol_con_scia|not}}"}
       - {kind: text, label: codice ATECO e descrizione dell'attività svolta, value: "{{ask.ateco_descrizione}}", when: "{{ask.alcol_con_scia|not}}"}
+
+  # An outside sign (the wizard's "insegna esterna" tick: a SCIA per mezzi pubblicitari inside the
+  # pratica): the business's title to the building, the sign, protections, where it goes, and the
+  # person's own statements. Without exclusive title (the owner's data and assent) and on a
+  # protected building recipes refuse, as their own authorizations aren't mapped.
+  - section: TITOLARITA' DELL'INTERVENTO
+    fields:
+      - {kind: select, label: "Il/La Sottoscritto/a dichiara di avere titolo", value: "{{ask.insegna_titolo_tipo}}"}
+      - {kind: text, label: specificare, via: altro, value: "{{ask.insegna_titolo_altro}}", when: "{{ask.insegna_titolo_tipo|is_altro}}"}
+      - {kind: radio, label: avere titolarità esclusiva all'esecuzione dell'intervento}
+  - section: Caratteristiche del manufatto da installare
+    fields:
+      - {kind: select, label: Tipologia, value: "insegna d'esercizio"}
+      - {kind: text, label: numero progressivo del mezzo pubblicitario, value: "1"}
+      - {kind: text, label: precisare in caso di insegna di esercizio o altro, value: "{{ask.insegna_descrizione}}"}
+      - {kind: text, label: larghezza (mt), value: "{{ask.insegna_larghezza_m}}"}
+      - {kind: text, label: altezza (mt), value: "{{ask.insegna_altezza_m}}"}
+      - {kind: text, label: superficie (mq), value: "{{ask.insegna_superficie_mq}}"}
+      - {kind: radio, label: si, nth: 1, when: "{{ask.insegna_monofacciale}}"}
+      - {kind: radio, label: "no", nth: 1, when: "{{ask.insegna_monofacciale|not}}"}
+      - {kind: radio, label: si, nth: 2, when: "{{ask.insegna_monofacciale|not}}"}
+      - {kind: radio, label: "no", nth: 2, when: "{{ask.insegna_monofacciale}}"}
+      - {kind: radio, label: si, nth: 3, when: "{{ask.insegna_luce|is_opaca}}"}
+      - {kind: radio, label: "no", nth: 3, when: "{{ask.insegna_luce|is_opaca|not}}"}
+      - {kind: radio, label: si, nth: 4, when: "{{ask.insegna_luce|is_luminosa}}"}
+      - {kind: radio, label: "no", nth: 4, when: "{{ask.insegna_luce|is_luminosa|not}}"}
+      - {kind: radio, label: si, nth: 5, when: "{{ask.insegna_luce|is_illuminata}}"}
+      - {kind: radio, label: "no", nth: 5, when: "{{ask.insegna_luce|is_illuminata|not}}"}
+      - {kind: radio, label: "no", nth: 6}
+      - {kind: radio, label: "no", nth: 7}
+      - {kind: radio, label: "no", nth: 8}
+      - {kind: textarea, label: Caratteri restanti, value: "{{ask.insegna_testo}}"}
+  - section: dichiarazione relativa al vincolo ambientale
+    fields:
+      - {kind: radio, label: Non soggetta a tutela ambientale}
+  - section: dichiarazione relativa al vincolo monumentale
+    fields:
+      - {kind: radio, label: Non soggetta a tutela monumentale}
+  - section: DICHIARAZIONE RELATIVA alle opere in cemento armato
+    fields:
+      - {kind: radio, label: non prevede la realizzazione di opere di conglomerato}
+  - section: luogo dell'installazione
+    leave: [Coordinate GPS]
+    fields:
+      - {kind: select, label: Tipologia, value: "insegna d'esercizio"}
+      - {kind: text, label: Num. progressivo, value: "1"}
+      - {kind: text, label: Specificare (solo nel caso, value: "{{ask.insegna_descrizione}}"}
+      - {kind: radio, label: in area privata}
+      - {kind: checkbox, label: Sulla facciata del fabbricato / presso il locale}
+      - {kind: text, label: sito in Via/Piazza, value: "{{locale.indirizzo}}"}
+      - {kind: text, label: n°, nth: 2, value: "{{locale.civico}}"}  # "n°" reads "n": 1 is "Num. progressivo"
+      - {kind: radio, label: NCEU}
+      - {kind: text, label: foglio, value: "{{locale.catasto_foglio}}"}
+      - {kind: text, label: mappale, value: "{{locale.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{locale.catasto_subalterno}}"}
+      - {kind: text, label: di proprietà, value: "{{ask.immobile_proprietario}}"}
+  - section: ulteriori dichiarazioni (mezzi pubblicitari)
+    theirs: [il manufatto, è a conoscenza, è stato acquisito, l'impianto di illuminazione, ha la piena disponibilità, è stato autorizzato, di essere consapevole]
+    fields: []
+
+  # A pratica sent with ComUnica (the Registro delle imprese): the Telemaco user that imports it
+  # (a user ID, not a password); taking note of the size limits is the person's.
+  - section: dichiarazione della user Telemaco
+    theirs: [PER PRESA VISIONE]
+    fields:
+      - {kind: text, label: user Telemaco, value: "{{ask.telemaco_user}}"}
+
+  # A food shop's eating on the spot (no table service), and the area it takes.
+  - section: consumo immediato sul posto
+    fields:
+      - {kind: radio, label: non è prevista consumazione immediata sul posto, when: "{{ask.consumo_sul_posto|not}}"}
+      - {kind: radio, label: è prevista consumazione immediata sul posto, when: "{{ask.consumo_sul_posto}}"}
+      - {kind: text, label: La superficie minima per il consumo immediato, value: "{{ask.superficie_consumo_mq}}", when: "{{ask.consumo_sul_posto}}"}
+
+  # Selling or renting films and music on discs or tapes (art. 75-bis TULPS): which, from when.
+  - section: dichiarazione relativa prodotti audiovisivi
+    fields:
+      - {kind: checkbox, label: produzione, when: "{{ask.av_produzione}}"}
+      - {kind: checkbox, label: duplicazione, when: "{{ask.av_duplicazione}}"}
+      - {kind: checkbox, label: riproduzione, when: "{{ask.av_riproduzione}}"}
+      - {kind: checkbox, label: vendita, when: "{{ask.av_vendita}}"}
+      - {kind: checkbox, label: noleggio, when: "{{ask.av_noleggio}}"}
+      - {kind: checkbox, label: cessione, when: "{{ask.av_cessione}}"}
+      - {kind: date, label: a decorrere dal, value: "{{ask.audiovisivi_dal|date_it}}"}
+
+  # A move (trasferimento): the old premises (the new ones are `locale`). Its shopping-centre
+  # question as for the new one.
+  - section: precedente ubicazione dell'esercizio
+    leave: [Frazione]
+    fields:
+      - {kind: text, label: Comune, value: "{{ask.locale_precedente_comune}}"}
+      - {kind: text, label: Prov., value: "{{ask.locale_precedente_provincia}}"}
+      - {kind: text, label: CAP, value: "{{ask.locale_precedente_cap}}"}
+      - {kind: lookup, label: "Via, Viale, Piazza", value: "{{ask.locale_precedente_indirizzo}}"}
+      - {kind: text, label: n° civico, value: "{{ask.locale_precedente_civico}}"}
+      - {kind: text, label: scala, value: "", optional: true}
+      - {kind: text, label: piano, value: "", optional: true}
+      - {kind: text, label: interno, value: "", optional: true}
+      - {kind: radio, label: Si, when: "{{ask.precedente_centro_commerciale}}"}
+      - {kind: radio, label: "No", when: "{{ask.precedente_centro_commerciale|not}}"}
+      - {kind: text, label: denominazione, value: "{{ask.precedente_centro_commerciale_nome}}", when: "{{ask.precedente_centro_commerciale}}"}
+
+  # Reopening after a voluntary suspension (Reg. 852 registration): the whole establishment, by
+  # its registration number; single activity lines are refused by recipes.
+  - section: OGGETTO DELL'ISTANZA
+    fields:
+      - {kind: checkbox, label: la riattivazione delle attività dell'intero stabilimento}
+      - {kind: text, label: già registrato/riconosciuto con numero, value: "{{ask.notifica_852_protocollo}}"}
+
+  # The Reg. 852 registration's new registered office: the vault's.
+  - section: oggetto dell'istanza
+    fields:
+      - {kind: text, label: (nazione), value: "ITALIA"}
+      - {kind: text, label: (provincia), value: "{{business.sede_legale_provincia}}"}
+      - {kind: text, label: (comune), value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: text, label: alla via, value: "{{business.sede_legale_indirizzo}}"}
+      - {kind: text, label: n°, value: "{{business.sede_legale_civico}}"}
+
+  # A shop's smaller sales area (retail only) or a dropped sector.
+  - section: variazione superficie di vendita
+    leave: [superficie di vendita da mq, a mq]
+    fields:
+      - {kind: text, label: in relazione all’attività di, value: "{{ask.attivita_esercitata}}"}
+      - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: checkbox, label: Vendita al dettaglio}
+      - {kind: text, label: superficie di vendita da mq, value: "{{ask.superficie_vendita_prima_mq}}"}
+      - {kind: text, label: a mq, value: "{{ask.superficie_vendita_mq}}"}
+  - section: variazione del settore merceologico
+    fields:
+      - {kind: text, label: in relazione all’attività di, value: "{{ask.attivita_esercitata}}"}
+      - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: checkbox, label: Alimentare, when: "{{ask.settore_eliminato|is_alimentare}}"}
+      - {kind: checkbox, label: Non alimentare, when: "{{ask.settore_eliminato|is_non_alimentare}}"}
+
+  # A temporary shop: its dates, a shopping centre, the sales area per sector.
+  - section: Dati sull'esercizio di temporary shop
+    leave: [Merci ingombranti]
+    fields:
+      - {kind: date, label: dal, value: "{{ask.temporary_dal|date_it}}"}
+      - {kind: date, label: al, value: "{{ask.temporary_al|date_it}}"}
+      - {kind: radio, label: Si, when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: "No", when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: text, label: denominazione, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: checkbox, label: Alimentare, when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, value: "{{ask.superficie_alimentare_mq}}", when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: checkbox, label: Non alimentare, when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 2, value: "{{ask.superficie_non_alimentare_mq}}", when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: mq, value: "{{ask.superficie_vendita_mq}}"}
+
+  # The 852 list's variants: a food lab's (its lines without the heading) and a lab with a shop
+  # (the bakery and retail headings only). The first entry that fits is the pratica's.
+  - section: tipologia di attività ai sensi dell'art. 6
+    fields:
+      - {kind: checkbox, label: "Pane, pizza e altri prodotti da forno", when: "{{ask.forno}} {{ask.pane}}"}
+      - {kind: checkbox, label: Prodotti di pasticceria freschi e secchi, when: "{{ask.forno}} {{ask.pasticceria}}"}
+      - {kind: checkbox, label: Prodotti di gelateria, when: "{{ask.forno}} {{ask.gelateria}}"}
+      - {kind: checkbox, label: Cibi pronti in genere, when: "{{ask.forno}} {{ask.gastronomia}}"}
+      - {kind: checkbox, label: Pasta secca e/o fresca, when: "{{ask.forno}} {{ask.pasta}}"}
+  - section: tipologia di attività ai sensi dell'art. 6
+    fields:
+      - {kind: checkbox, label: "PRODOTTI DA FORNO E DI PASTICCERIA", when: "{{ask.forno}}"}
+      - {kind: checkbox, label: "Pane, pizza e altri prodotti da forno", when: "{{ask.forno}} {{ask.pane}}"}
+      - {kind: checkbox, label: Prodotti di pasticceria freschi e secchi, when: "{{ask.forno}} {{ask.pasticceria}}"}
+      - {kind: checkbox, label: Prodotti di gelateria, when: "{{ask.forno}} {{ask.gelateria}}"}
+      - {kind: checkbox, label: Cibi pronti in genere, when: "{{ask.forno}} {{ask.gastronomia}}"}
+      - {kind: checkbox, label: Pasta secca e/o fresca, when: "{{ask.forno}} {{ask.pasta}}"}
+      - {kind: checkbox, label: "COMMERCIO AL DETTAGLIO DI ALIMENTI E BEVANDE:", when: "{{ask.dettaglio_alimenti}}"}
+      - {kind: checkbox, label: In Esercizi di vicinato, when: "{{ask.dettaglio_alimenti}}"}
+
+  # A food business's changed activity (aggiornamento della registrazione, Reg. 852): its notifica,
+  # the new lines (the food-service, bakery and retail blocks), from when.
+  - section: dati relativi alla nuova tipologia di attività
+    fields:
+      - {kind: text, label: di cui alla notifica/SCIA prot./n., value: "{{ask.notifica_852_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.notifica_852_data|date_it}}"}
+      - {kind: checkbox, label: "PRODOTTI DA FORNO E DI PASTICCERIA", when: "{{ask.forno}}"}
+      - {kind: checkbox, label: "Pane, pizza e altri prodotti da forno", when: "{{ask.forno}} {{ask.pane}}"}
+      - {kind: checkbox, label: Prodotti di pasticceria freschi e secchi, when: "{{ask.forno}} {{ask.pasticceria}}"}
+      - {kind: checkbox, label: Prodotti di gelateria, when: "{{ask.forno}} {{ask.gelateria}}"}
+      - {kind: checkbox, label: Cibi pronti in genere, when: "{{ask.forno}} {{ask.gastronomia}}"}
+      - {kind: checkbox, label: Pasta secca e/o fresca, when: "{{ask.forno}} {{ask.pasta}}"}
+      - {kind: checkbox, label: "RISTORAZIONE:", when: "{{ask.ristorazione}}"}
+      - {kind: checkbox, label: Ristorazione pubblica con somministrazione diretta, when: "{{ask.ristorazione}} {{ask.ristorante}}"}
+      - {kind: checkbox, label: Bar e altri esercizi pubblici simili senza laboratorio, when: "{{ask.ristorazione}} {{ask.bar}}"}
+      - {kind: checkbox, label: Bar e altri esercizi pubblici simili con laboratorio, when: "{{ask.ristorazione}} {{ask.bar_laboratorio}}"}
+      - {kind: checkbox, label: "COMMERCIO AL DETTAGLIO DI ALIMENTI E BEVANDE:", when: "{{ask.dettaglio_alimenti}}"}
+      - {kind: checkbox, label: In Esercizi di vicinato, when: "{{ask.dettaglio_alimenti}}"}
+  - section: decorrenza delle modifiche
+    fields:
+      - {kind: radio, label: Avvio contestuale alla data di notifica, when: "{{ask.avvio_data|empty}}"}
+      - {kind: radio, label: Avvio con decorrenza, when: "{{ask.avvio_data|empty|not}}"}
+      - {kind: date, label: dal, value: "{{ask.avvio_data|date_it}}", when: "{{ask.avvio_data|empty|not}}"}
+
+  # A bar or restaurant's larger customer area (ampliamento).
+  - section: Ampliamento dell' esercizio di somministrazione
+    fields:
+      - {kind: text, label: già avviato con la SCIA/DIA/autorizzazione prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: text, label: da mq, value: "{{ask.superficie_somministrazione_prima_mq}}"}
+      - {kind: text, label: a mq, value: "{{ask.superficie_somministrazione_mq}}"}
+
+  # A shop's move (trasferimento): its title, then the new shop as at an opening (the shopping
+  # centre's types are refused by recipes, as there).
+  - section: Dati sull'esercizio di vicinato
+    leave: [Farmacie, Carburanti]
+    fields:
+      - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: text, label: presentata al Comune di, value: "{{ask.titolo_attivita_comune}}"}
+      - {kind: radio, label: Si, when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: "No", when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: text, label: denominazione, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: SI, nth: 2, when: "{{ask.in_ccn}}"}
+      - {kind: radio, label: "NO", nth: 2, when: "{{ask.in_ccn|not}}"}
+      - {kind: text, label: Delibera di riconoscimento n., value: "{{ask.ccn_delibera}}", when: "{{ask.in_ccn}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.ccn_delibera_data|date_it}}", when: "{{ask.in_ccn}}"}
+      - {kind: text, label: emanata da, value: "{{ask.ccn_delibera_ente}}", when: "{{ask.in_ccn}}"}
+      - {kind: radio, label: "NO", nth: 3, when: "{{ask.in_factory_outlet|not}}"}
+      - {kind: checkbox, label: Alimentare, when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, value: "{{ask.superficie_alimentare_mq}}", when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: checkbox, label: Non alimentare, when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 2, value: "{{ask.superficie_non_alimentare_mq}}", when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: mq, value: "{{ask.superficie_vendita_mq}}"}
+      - {kind: checkbox, label: Generi di monopolio, when: "{{ask.superficie_monopolio_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 3, value: "{{ask.superficie_monopolio_mq}}", when: "{{ask.superficie_monopolio_mq|positive}}"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"
