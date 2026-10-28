@@ -55,8 +55,8 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   technical choices more than mapping.
 - **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
   B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
-  41 filled, 74% of section uses (65% before the shops, bakeries, lodgings, subingresso,
-  suspension and variations; the 71% said at
+  42 filled, 75% of section uses (65% before the shops, bakeries, lodgings, subingresso,
+  suspension, variations and the Dogane notice; the 71% said at
   the first import counted a section under every title it has, though the dictionary finds it
   by title: `count` now checks each title). The whole tree is 2,333 sector-and-operation
   pairs plus 64 common operations, but only the sector's own operations (open, take over, move,
@@ -75,7 +75,7 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
 - Proven on the portal with made-up data, generated from a batch crawl: the openings of a
   restaurant, a non-food shop, a bakery and rooms to let, the takeover (subingresso) and the
   suspension of a shop and of a restaurant, a restaurant's new name, a shop's bigger sales area,
-  and a restaurant's closure (SUAP), the
+  a restaurant's alcohol notice, and a restaurant's closure (SUAP), the
   proroga di inizio lavori (SUE), besides the seven run before.
 
 ## Drift

@@ -20,6 +20,8 @@
 # Yes/no asks with a `group` are asked as one checklist (`item`), the answer the list of
 # items that apply.
 groups:
+  alcolici:
+    question: "Which alcoholic products will it sell? Tick every line that applies."
   variazioni:
     question: "What changed? Tick every line that applies."
   attivita_852:
@@ -232,6 +234,19 @@ asks:
   superficie_vendita_prima_mq: {type: number, question: "The sales area before the change, in m²"}
   superficie_alimentare_prima_mq: {type: number, question: "Of that, m² for food before the change"}
   superficie_non_alimentare_prima_mq: {type: number, question: "Of that, m² for non-food before the change"}
+
+  alcol_vino: {type: yes_no, group: alcolici, item: "Wine (still or sparkling)"}
+  alcol_birra: {type: yes_no, group: alcolici, item: "Beer"}
+  alcol_liquori: {type: yes_no, group: alcolici, item: "Spirits and liqueurs"}
+  alcol_intermedi: {type: yes_no, group: alcolici, item: "Vermouth, fortified and flavoured wines"}
+  alcol_altre_bevande: {type: yes_no, group: alcolici, item: "Other alcoholic drinks"}
+  alcol_puro: {type: yes_no, group: alcolici, item: "Pure ethyl alcohol"}
+  alcol_aromi: {type: yes_no, group: alcolici, item: "Alcoholic flavourings"}
+  alcol_profumeria: {type: yes_no, group: alcolici, item: "Alcohol-based perfumery"}
+  alcol_altri: {type: yes_no, group: alcolici, item: "Other alcoholic products"}
+  alcol_con_scia: {type: yes_no, question: "Is this filed together with the business's own SCIA (a new business), rather than for one already running?", default: "false"}
+  alcol_avvio: {type: date, question: "From when it sells alcohol"}
+  ateco_descrizione: {type: text, question: "The business's ATECO code and activity in a few words (70 characters, e.g. 56.10.11 Ristorazione con somministrazione)"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
   superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
@@ -1453,6 +1468,31 @@ sections:
       - {kind: text, label: mq, value: "{{ask.superficie_vendita_mq}}"}
     # The special tables (tobacco, pharmacy, fuel): the food shops' version shows their rows.
     leave: [Generi di monopolio, Farmacie, Carburanti]
+
+  # Selling alcohol (the Dogane notice, D.Lgs. 504/1995): which products, and either filed with
+  # the business's own SCIA or after it started (then that title). The two statements (no
+  # convictions; starting only once filed) are the person's.
+  - section: Comunicazione per la vendita di alcolici
+    theirs: [Di non aver riportato condanne, Di essere consapevole che l'avvio]
+    fields:
+      - {kind: checkbox, label: Alcole etilico puro, when: "{{ask.alcol_puro}}"}
+      - {kind: checkbox, label: Aromi alcolici, when: "{{ask.alcol_aromi}}"}
+      - {kind: checkbox, label: Liquori ed acquaviti, when: "{{ask.alcol_liquori}}"}
+      - {kind: checkbox, label: Vino (tranquillo e/o spumante), when: "{{ask.alcol_vino}}"}
+      - {kind: checkbox, label: Birra, when: "{{ask.alcol_birra}}"}
+      - {kind: checkbox, label: Prodotti alcolici intermedi, when: "{{ask.alcol_intermedi}}"}
+      - {kind: checkbox, label: Altre bevande alcoliche, when: "{{ask.alcol_altre_bevande}}"}
+      - {kind: checkbox, label: Profumeria alcolica, when: "{{ask.alcol_profumeria}}"}
+      - {kind: checkbox, label: Altri prodotti alcolici, when: "{{ask.alcol_altri}}"}
+      - {kind: radio, label: Che la Comunicazione/SCIA/Istanza per l'esercizio, when: "{{ask.alcol_con_scia}}"}
+      - {kind: text, label: codice ATECO e descrizione dell'attività svolta, value: "{{ask.ateco_descrizione}}", when: "{{ask.alcol_con_scia}}"}
+      - {kind: radio, label: Che la presentazione della presente Comunicazione è successivo, when: "{{ask.alcol_con_scia|not}}"}
+      - {kind: date, label: con avvio dell'attività a partire dal, value: "{{ask.alcol_avvio|date_it}}", when: "{{ask.alcol_con_scia|not}}"}
+      - {kind: select, label: Estremi del titolo posseduto, value: "{{ask.titolo_attivita_tipo}}", when: "{{ask.alcol_con_scia|not}}"}
+      - {kind: text, label: presentata/rilasciata al/dal Comune/SUAP di, value: "{{locale.comune}}", when: "{{ask.alcol_con_scia|not}}"}
+      - {kind: date, label: in data, value: "{{ask.titolo_attivita_data|date_it}}", when: "{{ask.alcol_con_scia|not}}"}
+      - {kind: text, label: prot. N°, value: "{{ask.titolo_attivita_protocollo}}", when: "{{ask.alcol_con_scia|not}}"}
+      - {kind: text, label: codice ATECO e descrizione dell'attività svolta, value: "{{ask.ateco_descrizione}}", when: "{{ask.alcol_con_scia|not}}"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"

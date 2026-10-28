@@ -1,0 +1,39 @@
+# A running bar or restaurant that starts selling alcohol (the Dogane notice, D.Lgs. 504/1995),
+# as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-060-comunicazione-all-agenzia-delle-dogane-per-la-vend.json), for
+# the pizzeria rehearsal's made-up ditta individuale (rehearsals/pizzeria-fittizia/fixture.json).
+procedure: napoli/comune/vendita-alcolici
+title: "Comunicazione all'Agenzia delle Dogane per la vendita o somministrazione di prodotti alcolici, bar o ristorante, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-060-comunicazione-all-agenzia-delle-dogane-per-la-vend
+subject: impresa
+operation: Comunicazione all'Agenzia delle Dogane per la vendita o somministrazione di prodotti alcolici
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+after: [Pagamento degli oneri, Gestione degli allegati]
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Esercizio di somministrazione di alimenti e bevande in zone NON tutelate], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Comunicazione all'Agenzia delle Dogane per la vendita o somministrazione di prodotti alcolici"], confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+asks:
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - alcolici {{business.denominazione}}"}
+  diritti_euro: {type: number, question: "The SUAP fees in euro (the 2026 table's line for the Dogane notice on its own: check it; 0 when none are due)"}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the statements yourself: no convictions for illegal alcohol production, and starting only once the notice is filed; then consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria, if due, with pagoPA on the payment screen"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
+  - when: "{{business.rea|empty}}"
+    else: "So far only for a business not yet in the Registro delle imprese."
+  - {when: "{{ask.alcol_con_scia|not}}", else: "Alcohol together with a new business's SCIA is filed inside its opening (a wizard choice not mapped yet), not as this notice."}
+  - {when: "{{ask.titolo_attivita_tipo|is_dia|not}}", else: "The portal's list of titles here has no DIA: say which it is, autorizzazione, comunicazione or SCIA."}
