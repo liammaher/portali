@@ -37,6 +37,12 @@ SUE_NAMES = {
 }
 
 
+def sportello(name):
+    """A crawl's sportello, by its name: the batch's start with it, the first ones are SUE's
+    but for the hairdresser's."""
+    return "suap" if name.startswith("suap") or name == "acconciatore" else "sue"
+
+
 def fingerprint(fields):
     basis = [[f["id"], f["kind"], f["label"], f.get("context") or "", f.get("max") or 0,
               f["options"] if isinstance(f.get("options"), list) else []]
@@ -133,7 +139,7 @@ def cmd_import(args):
         if private and re.search(private, json.dumps(r, ensure_ascii=False), re.I):
             sys.exit(f"{r['name']}: holds the login's name or CF, not imported")
         doc = {"crawled": r["crawled"], "by": "crawl.js batch, depth 2",
-               "pratica": f"{'SUAP' if r.get('sector') else 'SUE'}: {r['operation']}"
+               "pratica": f"{sportello(r['name']).upper()}: {r['operation']}"
                           + (f" (sector {r['sector']})" if r.get("sector") else ""),
                "seconds": r.get("seconds")}
         for k in ("refused", "pratica", "screens", "variants"):
@@ -151,13 +157,34 @@ def cmd_import(args):
     return out
 
 
-def cmd_count(_):
-    """Each distinct section (by fingerprint) and how many pratiche use it."""
-    uses, names, where = collections.Counter(), collections.defaultdict(set), {}
-    cache, pratiche = {}, collections.defaultdict(set)
+def covered(section, dictionary):
+    """Whether the dictionary fills every box of this crawled section (gen.py's own test),
+    for the person or for the business declaring."""
+    import gen
+    if DECLARATIONS.search(section["section"]):
+        return True
+    for subject in (None, "impresa"):
+        for entry, as_name in gen.dictionary_entries(dictionary["sections"], section["section"]):
+            if entry.get("subject", subject) != subject:
+                continue
+            if entry.get("omit"):
+                return True
+            _, problems, _ = gen.fill(entry, as_name, section, {"subject": subject} if subject else {}, section["section"])
+            if not problems:
+                return True
+    return False
+
+
+def cmd_count(args):
+    """Each distinct section (by fingerprint), how many pratiche use it, and whether the
+    dictionary fills it."""
+    import gen
+    dictionary = gen.load_yaml(HERE / "dictionary" / "fnsuap.yaml")
+    uses, names, where, cache = collections.Counter(), collections.defaultdict(set), {}, {}
+    pratiche = collections.defaultdict(set)
     for name, c in crawls().items():
         cache[name] = c
-        sportello = "suap" if c.get("pratica", "").startswith("SUAP") else "sue"
+        sp = sportello(name)
         for s in c["sections"]:
             if s.get("skipped") or s.get("error"):
                 continue
@@ -168,10 +195,24 @@ def cmd_count(_):
                 where.setdefault(fp, f"{name}#{s['section']}")
             uses[fp] += 1
             names[fp].add(s["section"])
-            pratiche[fp].add(f"{sportello}:{name}")
-    return [{"fingerprint": fp, "uses": n, "names": sorted(names[fp]), "crawl": where.get(fp),
-             "sportelli": sorted({p.split(":")[0] for p in pratiche[fp]})}
-            for fp, n in uses.most_common()]
+            pratiche[fp].add(sp)
+    rows = []
+    for fp, n in uses.most_common():
+        sec = resolve(where[fp], cache) if fp in where else None
+        rows.append({"fingerprint": fp, "uses": n, "names": sorted(names[fp]), "crawl": where.get(fp),
+                     "sportelli": sorted(pratiche[fp]), "covered": bool(sec) and covered(sec, dictionary)})
+    if not args.summary:
+        return rows
+    out = []
+    for sp in ("sue", "suap"):
+        r = [x for x in rows if sp in x["sportelli"]]
+        if not r:
+            continue
+        done = [x for x in r if x["covered"]]
+        out.append(f"{sp.upper()}: {len(r)} distinct sections, {len(done)} in the dictionary; "
+                   f"{sum(x['uses'] for x in done)} of {sum(x['uses'] for x in r)} uses "
+                   f"({100 * sum(x['uses'] for x in done) // max(1, sum(x['uses'] for x in r))}%)")
+    return out
 
 
 def stored_fingerprints(name, cache=None):
@@ -235,7 +276,8 @@ def main():
     sub.add_parser("known")
     p = sub.add_parser("import")
     p.add_argument("export")
-    sub.add_parser("count")
+    p = sub.add_parser("count")
+    p.add_argument("--summary", action="store_true")
     p = sub.add_parser("drift")
     p.add_argument("export")
     args = ap.parse_args()

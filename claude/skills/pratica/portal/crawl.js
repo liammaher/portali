@@ -284,12 +284,13 @@
     const byKey = new Map(tree.map((n) => [n.key, n]));
     return tree.filter((n) => {
       if (norm(n.label) !== labels[labels.length - 1]) return false;
-      let p = n.parent && byKey.get(n.parent);
-      for (let i = labels.length - 2; i >= 0; i--, p = p && p.parent && byKey.get(p.parent)) {
-        while (p && !p.label) p = p.parent && byKey.get(p.parent); // unlabelled wrappers
-        if (!p || !norm(p.label).startsWith(labels[i])) return false; // "EDILIZIA" for "EDILIZIA (Interventi …)"
+      // The path's other labels are ancestors in order, not necessarily each level: a path
+      // can skip one, and "EDILIZIA" stands for "EDILIZIA (Interventi …)".
+      let i = labels.length - 2;
+      for (let p = n.parent && byKey.get(n.parent); p && i >= 0; p = p.parent && byKey.get(p.parent)) {
+        if (p.label && norm(p.label).startsWith(labels[i])) i--;
       }
-      return true;
+      return i < 0;
     })[nth];
   }
   async function pick(nav, path, nth) {

@@ -29,6 +29,7 @@ from pathlib import Path
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import catalogue  # noqa: E402  (what the dictionary fills)
 import gen  # noqa: E402  (norm, the dictionary lookup)
 
 DECLARATION = re.compile(r"non sussistono nei propri confronti|consapevol|dichiara di essere", re.I)
@@ -291,12 +292,12 @@ def main():
     dictionary = gen.load_yaml(gen.HERE / "dictionary" / "fnsuap.yaml")
     entries, asks, report = [], {}, []
     for s in crawl["sections"]:
-        if s.get("skipped") or s.get("error") or gen.DECLARATIONS.search(s["section"]):
-            continue
+        if s.get("skipped") or s.get("error") or s.get("same_as") or gen.DECLARATIONS.search(s["section"]):
+            continue  # a batch's same_as section is drafted where it was crawled
         if a.section and not any(gen.norm(s["section"]).startswith(gen.norm(x)) for x in a.section):
             continue
-        if not a.section and gen.dictionary_entries(dictionary["sections"], s["section"]):
-            continue  # the dictionary has it
+        if not a.section and catalogue.covered(s, dictionary):
+            continue  # the dictionary fills it
         e, q, n, missed = draft_section(s, schema)
         entries.append(e)
         asks.update(q)

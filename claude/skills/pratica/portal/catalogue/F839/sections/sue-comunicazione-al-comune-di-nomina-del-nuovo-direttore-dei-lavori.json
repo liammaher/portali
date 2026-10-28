@@ -1,0 +1,494 @@
+{
+ "crawled": "2026-10-28T16:41:55.363Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.) › Comunicazione al Comune di nomina del nuovo direttore dei lavori (sector Edilizia e pianificazione urbana)",
+ "seconds": 28.3,
+ "generated": {
+  "interventi": "Comunicazione di nomina nuovo direttore dei lavori",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di nomina nuovo direttore dei lavori",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "nomina nuovo direttore dei lavori",
+   "titolo di legittimazione dell'intervento",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "nomina nuovo direttore dei lavori",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "via, viale, piazza",
+     "max": 50
+    },
+    {
+     "id": "r6c2p12reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 5
+    },
+    {
+     "id": "r8c1p14reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r8c2p16reg:txt",
+     "kind": "text",
+     "label": "Provincia (sigla)",
+     "max": 2
+    },
+    {
+     "id": "r10c1p18reg:txt",
+     "kind": "text",
+     "label": "telefono",
+     "max": 30
+    },
+    {
+     "id": "r10c2p20reg:txt",
+     "kind": "text",
+     "label": "fax",
+     "max": 30
+    },
+    {
+     "id": "r12c1p22reg",
+     "kind": "select",
+     "label": "ordine/collegio/albo",
+     "options": [
+      "Architetto",
+      "Geometra",
+      "Ingegnere",
+      "Perito",
+      "Altro"
+     ]
+    },
+    {
+     "id": "r12c2p24reg:txt",
+     "kind": "text",
+     "label": "Provincia (sigla)",
+     "max": 2
+    },
+    {
+     "id": "r12c3p26reg:number",
+     "kind": "text",
+     "label": "numero iscrizione",
+     "max": 5
+    },
+    {
+     "id": "r14c1p30reg:calendar_input",
+     "kind": "date",
+     "label": "a partire dalla data"
+    }
+   ],
+   "fingerprint": "8ed8e9b04d334662",
+   "branches": [
+    {
+     "choice": "ordine/collegio/albo = Architetto",
+     "id": "r12c1p22reg",
+     "kind": "select",
+     "option": "Architetto",
+     "moved": [
+      [
+       "r12c2p24reg:txt",
+       "r8c2p16reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ordine/collegio/albo = Geometra",
+     "id": "r12c1p22reg",
+     "kind": "select",
+     "option": "Geometra",
+     "moved": [
+      [
+       "r12c2p24reg:txt",
+       "r8c2p16reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ordine/collegio/albo = Ingegnere",
+     "id": "r12c1p22reg",
+     "kind": "select",
+     "option": "Ingegnere",
+     "moved": [
+      [
+       "r12c2p24reg:txt",
+       "r8c2p16reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ordine/collegio/albo = Perito",
+     "id": "r12c1p22reg",
+     "kind": "select",
+     "option": "Perito",
+     "moved": [
+      [
+       "r12c2p24reg:txt",
+       "r8c2p16reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ordine/collegio/albo = Altro",
+     "id": "r12c1p22reg",
+     "kind": "select",
+     "option": "Altro",
+     "moved": [
+      [
+       "r12c2p24reg:txt",
+       "r8c2p16reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.7
+  },
+  {
+   "section": "titolo di legittimazione dell'intervento",
+   "fields": [
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "permesso di costruire",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "ID pratica SUAP",
+     "context": "permesso di costruire",
+     "max": 30
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "label": "DIA",
+     "group": "r5c1p11reg:radio"
+    },
+    {
+     "id": "r5c2p13reg:txt",
+     "kind": "text",
+     "label": "ID pratica SUAP",
+     "context": "DIA",
+     "max": 30
+    },
+    {
+     "id": "r5c3p15reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c1p19reg:radio:2_clone",
+     "kind": "radio",
+     "label": "SCIA",
+     "group": "r7c1p19reg:radio"
+    },
+    {
+     "id": "r7c2p21reg:txt",
+     "kind": "text",
+     "label": "ID pratica SUAP",
+     "context": "SCIA",
+     "max": 30
+    },
+    {
+     "id": "r7c3p23reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r9c1p27reg:radio:3_clone",
+     "kind": "radio",
+     "label": "CILA",
+     "group": "r9c1p27reg:radio"
+    },
+    {
+     "id": "r9c2p29reg:txt",
+     "kind": "text",
+     "label": "ID pratica SUAP",
+     "context": "CILA",
+     "max": 30
+    },
+    {
+     "id": "r9c3p31reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r11c1p35reg:radio:4_clone",
+     "kind": "radio",
+     "label": "Variante",
+     "group": "r11c1p35reg:radio"
+    },
+    {
+     "id": "r11c2p37reg:txt",
+     "kind": "text",
+     "label": "ID pratica SUAP",
+     "context": "Variante",
+     "max": 30
+    },
+    {
+     "id": "r11c3p39reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    }
+   ],
+   "fingerprint": "a6ad99bbdd629f7f",
+   "branches": [
+    {
+     "choice": "permesso di costruire",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r11c3p39reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r5c3p15reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r7c3p23reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r9c3p31reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "DIA",
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r11c3p39reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r5c3p15reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r7c3p23reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r9c3p31reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "SCIA",
+     "id": "r7c1p19reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r11c3p39reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r5c3p15reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r7c3p23reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r9c3p31reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "CILA",
+     "id": "r9c1p27reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r11c3p39reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r5c3p15reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r7c3p23reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r9c3p31reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "Variante",
+     "id": "r11c1p35reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r11c3p39reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r5c3p15reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r7c3p23reg:calendar_input"
+      ],
+      [
+       "r11c3p39reg:calendar_input",
+       "r9c3p31reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.8,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

@@ -1,0 +1,259 @@
+{
+ "crawled": "2026-10-28T16:42:23.685Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.) › Comunicazione al Comune di nomina impresa esecutrice (sector Edilizia e pianificazione urbana)",
+ "seconds": 17.4,
+ "generated": {
+  "interventi": "Comunicazione di nomina impresa esecutrice",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di nomina impresa esecutrice",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Localizzazione dell'intervento",
+   "dati catastali",
+   "titolo edilizio posseduto",
+   "Impresa esecutrice dei lavori",
+   "oggetto dell'istanza",
+   "Dichiarazione in materia di rispetto sulle tasse comunali"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Localizzazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "titolo edilizio posseduto",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "tipologia titolo edilizio",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "max": 10
+    },
+    {
+     "id": "r2c3p6reg:number",
+     "kind": "text",
+     "label": "anno",
+     "max": 4
+    }
+   ],
+   "fingerprint": "6947e542cf24136a",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Impresa esecutrice dei lavori",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "denominazione dell'impresa",
+     "max": 30
+    },
+    {
+     "id": "r5c1p8reg:txt",
+     "kind": "text",
+     "label": "Codice Fiscale/Partita Iva",
+     "max": 30
+    },
+    {
+     "id": "r7c1p12reg:txt",
+     "kind": "text",
+     "label": "con sede legale a",
+     "max": 30
+    },
+    {
+     "id": "r7c2p14reg:txt",
+     "kind": "text",
+     "label": "Provincia",
+     "max": 2
+    },
+    {
+     "id": "r7c3p16reg:number",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r9c1p18reg:txt",
+     "kind": "text",
+     "label": "in via, viale, piazza",
+     "max": 30
+    },
+    {
+     "id": "r9c2p20reg:txt",
+     "kind": "text",
+     "label": "n.civico",
+     "max": 10
+    },
+    {
+     "id": "r11c1p24reg:number",
+     "kind": "text",
+     "label": "telefono fisso",
+     "max": 10
+    },
+    {
+     "id": "r11c2p26reg:number",
+     "kind": "text",
+     "label": "cell.",
+     "max": 10
+    },
+    {
+     "id": "r13c1p30reg:txt",
+     "kind": "text",
+     "label": "PEC",
+     "max": 50
+    },
+    {
+     "id": "r15c1p34reg:txt",
+     "kind": "text",
+     "label": "iscritta alla Camera di Commercio di",
+     "max": 50
+    },
+    {
+     "id": "r15c2p36reg:number",
+     "kind": "text",
+     "label": "n. REA",
+     "max": 20
+    }
+   ],
+   "fingerprint": "041486025377e7ad",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "oggetto dell'istanza",
+   "fields": [
+    {
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "prima nomina dell'impresa esecutrice",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "nomina in aggiunta alla precedente impresa (in caso cessazione precedente impresa utilizzare il modulo del cambio impresa)",
+     "group": "r3c1p5reg:radio"
+    }
+   ],
+   "fingerprint": "a283f2b91375ebde",
+   "branches": [
+    {
+     "choice": "prima nomina dell'impresa esecutrice",
+     "id": "r2c1p3reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "nomina in aggiunta alla precedente impresa (in caso cessazione precedente impresa utilizzare il modulo del cambio impresa)",
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.6,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

@@ -1,0 +1,480 @@
+{
+ "crawled": "2026-10-28T16:46:55.227Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Beni Paesaggistici › Domanda di parere per esonero dall’obbligo di autorizzazione paesaggistica (sector Edilizia e pianificazione urbana)",
+ "seconds": 32.9,
+ "generated": {
+  "interventi": "Domanda di parere per esonero dall’obbligo di autorizzazione paesaggistica",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda preventiva di pareri e/o atti di assenso",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Localizzazione dell'intervento",
+   "dati catastali",
+   "titolo del richiedente",
+   "dichiarazione della legittimita' dell'intervento",
+   "Interventi ed opere in aree vincolate esclusi dall'autorizzazione  paesaggistica",
+   "indicazione dell'Ente al quale è inviata la richiesta di parere preventivo",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Localizzazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "titolo del richiedente",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "proprietà",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "max": 100
+    }
+   ],
+   "fingerprint": "52e77284dc66f42a",
+   "branches": [
+    {
+     "choice": "proprietà",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione della legittimita' dell'intervento",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "il lotto è libero",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "esiste un precedente edilizio:",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "titolo (1)",
+     "max": 150
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "p.g. numero",
+     "max": 30
+    },
+    {
+     "id": "r4c3p8reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r6c1p11reg:radio:2_clone",
+     "kind": "radio",
+     "label": "lo stato di fatto è conforme allo stato legittimo, poichè nulla è mutato alla data odierna rispetto all'ultiimo titolo abilitativo",
+     "group": "r6c1p11reg:radio"
+    },
+    {
+     "id": "r8c1p13reg:radio:3_clone",
+     "kind": "radio",
+     "label": "lo stato di fatto non è conforme allo stato legittimo",
+     "group": "r8c1p13reg:radio"
+    },
+    {
+     "id": "r8c2p15reg:calendar_input",
+     "kind": "date",
+     "label": "le opere difformi sono state realizzate in data"
+    },
+    {
+     "id": "r10c1p17reg:radio:4_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r10c1p17reg:radio"
+    },
+    {
+     "id": "r10c2p19reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 100
+    },
+    {
+     "id": "r12c1p21reg:radio:5_clone",
+     "kind": "radio",
+     "label": "altra documentazione probatoria",
+     "group": "r12c1p21reg:radio"
+    },
+    {
+     "id": "r12c2p23reg:txta",
+     "kind": "textarea",
+     "label": "350 Caratteri restanti",
+     "context": "indicare la documentazione allegata alla presente",
+     "max": 350
+    },
+    {
+     "id": "r14c1p25reg:radio:6_clone",
+     "kind": "radio",
+     "label": "documentazione catastale di primo impianto",
+     "group": "r14c1p25reg:radio"
+    },
+    {
+     "id": "r14c2p27reg:txta",
+     "kind": "textarea",
+     "label": "350 Caratteri restanti",
+     "context": "indicare la documentazione allegata alla presente",
+     "max": 350
+    },
+    {
+     "id": "r15c1p28reg:radio:7_clone",
+     "kind": "radio",
+     "label": "non esiste altro titolo abilitativo",
+     "group": "r15c1p28reg:radio"
+    }
+   ],
+   "fingerprint": "e07eb7e66a06f7dd",
+   "branches": [
+    {
+     "choice": "il lotto è libero",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "esiste un precedente edilizio:",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "lo stato di fatto è conforme allo stato legittimo, poichè nulla è mutato alla data odierna rispetto all'ultiimo titolo abilitativo",
+     "id": "r6c1p11reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "lo stato di fatto non è conforme allo stato legittimo",
+     "id": "r8c1p13reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "altro",
+     "id": "r10c1p17reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "altra documentazione probatoria",
+     "id": "r12c1p21reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "documentazione catastale di primo impianto",
+     "id": "r14c1p25reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "non esiste altro titolo abilitativo",
+     "id": "r15c1p28reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p27reg:txta",
+       "r12c2p23reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "titolo (1)",
+      "adds": 6
+     }
+    }
+   ],
+   "seconds": 10
+  },
+  {
+   "section": "Interventi ed opere in aree vincolate esclusi dall'autorizzazione  paesaggistica",
+   "fields": [
+    {
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "label": "Indicare la casistica di esclusione dall'autorizzazione paesaggistica",
+     "options": [
+      "A.1. Opere interne che non alterano l'aspetto esteriore degli edifici, comunque denominate ai fini urbanistico-edilizi, anche ove comportanti mutamento della destinazione d'uso;",
+      "A.2. interventi sui prospetti o sulle coperture degli edifici, purche' eseguiti nel rispetto degli eventuali piani del colore vigenti nel comune e delle caratteristiche architettoniche, morfo-tipologiche, dei materiali e delle finiture esistenti, quali: rifacimento di intonaci, tinteggiature, rivestimenti esterni o manti di copertura; opere di manutenzione di balconi, terrazze o scale esterne; integrazione o sostituzione di vetrine e dispositivi di protezione delle attivita' economiche, di finiture esterne o manufatti quali infissi, cornici, parapetti, lattonerie, lucernari, comignoli e simili; interventi di coibentazione volti a migliorare l'efficienza energetica degli edifici che non comportino la realizzazione di elementi o manufatti emergenti dalla sagoma, ivi compresi quelli eseguiti sulle falde di copertura. Alle medesime condizioni non e' altresi' soggetta ad autorizzazione la realizzazione o la modifica di aperture esterne o di finestre a tetto, purche' tali interventi non interessino i beni vincolati ai sensi del Codice, art. 136, comma 1, lettere a), b) e c) limitatamente, per quest'ultima, agli immobili di interesse storico-architettonico o storico-testimoniale, ivi compresa l'edilizia rurale tradizionale, isolati o ricompresi nei centri o nuclei storici;",
+      "A.3. interventi che abbiano finalita' di consolidamento statico degli edifici, ivi compresi gli interventi che si rendano necessari per il miglioramento o l'adeguamento ai fini antisismici, purche' non comportanti modifiche alle caratteristiche morfotipologiche, ai materiali di finitura o di rivestimento, o alla volumetria e all'altezza dell'edificio;",
+      "A.4. interventi indispensabili per l'eliminazione di barriere architettoniche, quali la realizzazione di rampe esterne per il superamento di dislivelli non superiori a 60 cm, l'installazione di apparecchi servoscala esterni, nonche' la realizzazione, negli spazi pertinenziali interni non visibili dallo spazio pubblico, di ascensori esterni o di altri manufatti consimili;",
+      "A.5. installazioni di impianti tecnologici esterni a servizio di singoli edifici non soggette ad alcun titolo abilitativo edilizio, quali condizionatori e impianti di climatizzazione dotati di unita' esterna, caldaie, parabole, antenne, purche' effettuate su prospetti secondari, o in spazi pertinenziali interni, o in posizioni comunque non visibili dallo spazio pubblico, o purche' si tratti di impianti integrati nella configurazione esterna degli edifici, ed a condizione che tali installazioni non interessino i beni vincolati ai sensi del Codice, art. 136, comma 1, lettere a), b) e c) limitatamente, per quest'ultima, agli immobili di interesse storico-architettonico o storico-testimoniale, ivi compresa l'edilizia rurale tradizionale, isolati o ricompresi nei centri o nuclei storici;",
+      "A.6. installazione di pannelli solari (termici o fotovoltaici) a servizio di singoli edifici, laddove posti su coperture piane e in modo da non essere visibili dagli spazi pubblici esterni; installazione di pannelli solari (termici o fotovoltaici) a servizio di singoli edifici, purche' integrati nella configurazione delle coperture, o posti in aderenza ai tetti degli edifici con la stessa inclinazione e lo stesso orientamento della falda degli edifici, ai sensi dell'art. 7-bis del decreto legislativo 3 marzo 2011, n. 28, non ricadenti fra quelli di cui all'art. 136, comma 1, lettere b) e c), del decreto legislativo 22 gennaio 2004, n. 42;",
+      "A.7. installazione di micro generatori eolici con altezza complessiva non superiore a ml 1,50 e diametro non superiore a ml 1,00, qualora tali interventi non interessino i beni vincolati ai sensi del Codice, art. 136, comma 1, lettere a), b) e c) limitatamente, per quest'ultima, agli immobili di interesse storico-architettonico o storico-testimoniale, ivi compresa l'edilizia rurale tradizionale, isolati o ricompresi nei centri o nuclei storici;",
+      "A.8. interventi di adeguamento funzionale di cabine per impianti tecnologici a rete, ivi compresa la sostituzione delle cabine esistenti con manufatti analoghi per tipologia e dimensioni, nonche' interventi destinati all'installazione e allo sviluppo della rete di comunicazione elettronica ad alta velocita', ivi compresi gli incrementi di altezza non superiori a cm 50;",
+      "A.9. installazione di dispositivi di sicurezza anticaduta sulle coperture degli edifici;",
+      "A.10. opere di manutenzione e adeguamento degli spazi esterni, pubblici o privati, relative a manufatti esistenti, quali marciapiedi, banchine stradali, aiuole, componenti di arredo urbano, purche' eseguite nel rispetto delle caratteristiche morfo-tipologiche, dei materiali e delle finiture preesistenti, e dei caratteri tipici del contesto locale;",
+      "A.11. opere di urbanizzazione primaria previste in piani attuativi gia' valutati ai fini paesaggistici, ove oggetto di accordi di collaborazione tra il Ministero, le Regioni e gli Enti Locali o di specifica disciplina contenuta nel piano paesaggistico approvato ai sensi dell'art. 143 del codice;",
+      "A.12. interventi da eseguirsi nelle aree di pertinenza degli edifici non comportanti significative modifiche degli assetti planimetrici e vegetazionali, quali l'adeguamento di spazi pavimentati, la realizzazione di camminamenti, sistemazioni a verde e opere consimili che non incidano sulla morfologia del terreno, nonche', nelle medesime aree, la demolizione parziale o totale, senza ricostruzione, di volumi tecnici e manufatti accessori privi di valenza architettonica, storica o testimoniale, l'installazione di serre ad uso domestico con superficie non superiore a 20 mq, a condizione che tali interventi non interessino i beni di cui all'art. 136, comma 1, lettera b) del Codice;",
+      "A.13. interventi di manutenzione, sostituzione o adeguamento di cancelli, recinzioni, muri di cinta o di contenimento del terreno, inserimento di elementi antintrusione sui cancelli, le recinzioni e sui muri di cinta eseguiti nel rispetto delle caratteristiche morfotipologiche, dei materiali e delle finiture esistenti che non interessino i beni vincolati ai sensi del Codice, art. 136, comma 1, lettere a), b) e c) limitatamente, per quest'ultima, agli immobili di interesse storico-architettonico o storico-testimoniale, ivi compresa l'edilizia rurale tradizionale, isolati o ricompresi nei centri o nuclei storici;",
+      "A.14. sostituzione o messa a dimora di alberi e arbusti, singoli o in gruppi, in aree pubbliche o private, eseguita con esemplari adulti della stessa specie o di specie autoctone o comunque storicamente naturalizzate e tipiche dei luoghi, purche' tali interventi non interessino i beni di cui all'art. 136, comma 1, lettere a) e b) del Codice, ferma l'autorizzazione degli uffici competenti, ove prevista;",
+      "A.15. fatte salve le disposizioni di tutela dei beni archeologici nonche' le eventuali specifiche prescrizioni paesaggistiche relative alle aree di interesse archeologico di cui all'art. 142, comma 1, lettera m) del Codice, la realizzazione e manutenzione di interventi nel sottosuolo che non comportino la modifica permanente della morfologia del terreno e che non incidano sugli assetti vegetazionali, quali: volumi completamente interrati senza opere in soprasuolo; condotte forzate e reti irrigue, pozzi ed opere di presa e prelievo da falda senza manufatti emergenti in soprasuolo; impianti geotermici al servizio di singoli edifici; serbatoi, cisterne e manufatti consimili nel sottosuolo; tratti di canalizzazioni, tubazioni o cavi interrati per le reti di distribuzione locale di servizi di pubblico interesse o di fognatura senza realizzazione di nuovi manufatti emergenti in soprasuolo o dal piano di campagna; l'allaccio alle infrastrutture a rete. Nei casi sopraelencati e' consentita la realizzazione di pozzetti a raso emergenti dal suolo non oltre i 40 cm;",
+      "A.16. occupazione temporanea di suolo privato, pubblico o di uso pubblico mediante installazione di strutture o di manufatti semplicemente ancorati al suolo senza opere murarie o di fondazione, per manifestazioni, spettacoli, eventi o per esposizioni e vendita di merci, per il solo periodo di svolgimento della manifestazione, comunque non superiore a 120 giorni nell'anno solare;",
+      "A.17. installazioni esterne poste a corredo di attivita' economiche quali esercizi di somministrazione di alimenti e bevande, attivita' commerciali, turistico-ricettive, sportive o del tempo libero, costituite da elementi facilmente amovibili quali tende, pedane, paratie laterali frangivento, manufatti ornamentali, elementi ombreggianti o altre strutture leggere di copertura, e prive di parti in muratura o strutture stabilmente ancorate al suolo;",
+      "A.18. installazione di strutture di supporto al monitoraggio ambientale o a prospezioni geognostiche, con esclusione di quelle destinate ad attivita' di ricerca di idrocarburi;",
+      "A.19. nell'ambito degli interventi di cui all'art. 149, comma 1, lettera b) del Codice: interventi su impianti idraulici agrari privi di valenza storica o testimoniale; installazione di serre mobili stagionali sprovviste di strutture in muratura; palificazioni, pergolati, singoli manufatti amovibili, realizzati in legno per ricovero di attrezzi agricoli, con superficie coperta non superiore a cinque metri quadrati e semplicemente ancorati al suolo senza opere di fondazione o opere murarie; interventi di manutenzione strettamente pertinenti l'esercizio dell'attivita' ittica; interventi di manutenzione della viabilita' vicinale, poderale e forestale che non modifichino la struttura e le pavimentazioni dei tracciati; interventi di manutenzione e realizzazione di muretti a secco ed abbeveratoi funzionali alle attivita' agro-silvo-pastorali, eseguiti con materiali e tecniche tradizionali; installazione di pannelli amovibili realizzati in legno o altri materiali leggeri per informazione turistica o per attivita' didattico-ricreative; interventi di ripristino delle attivita' agricole e pastorali nelle aree rurali invase da formazioni di vegetazione arbustiva o arborea, previo accertamento del preesistente uso agricolo o pastorale, da parte delle autorita' competenti e ove tali aree risultino individuate dal piano paesaggistico regionale;",
+      "A.20. nell'ambito degli interventi di cui all'art. 149, comma 1, lettera c) del Codice: pratiche selvicolturali autorizzate in base alla normativa di settore; interventi di contenimento della vegetazione spontanea indispensabili per la manutenzione delle infrastrutture pubbliche esistenti pertinenti al bosco, quali elettrodotti, viabilita' pubblica, opere idrauliche; interventi di realizzazione o adeguamento della viabilita' forestale al servizio delle attivita' agrosilvopastorali e funzionali alla gestione e tutela del territorio, vietate al transito ordinario, con fondo non asfaltato e a carreggiata unica, previsti da piani o strumenti di gestione forestale approvati dalla Regione previo parere favorevole del Soprintendente per la parte inerente la realizzazione o adeguamento della viabilita' forestale;",
+      "A.21. realizzazione di monumenti, lapidi, edicole funerarie ed opere di arredo all'interno dei cimiteri;",
+      "A.22. installazione di tende parasole su terrazze, prospetti o in spazi pertinenziali ad uso privato;",
+      "A.23. installazione di insegne per esercizi commerciali o altre attivita' economiche, ove effettuata all'interno dello spazio vetrina o in altra collocazione consimile a cio' preordinata; sostituzione di insegne esistenti, gia' legittimamente installate, con insegne analoghe per dimensioni e collocazione. L'esenzione dall'autorizzazione non riguarda le insegne e i mezzi pubblicitari a messaggio o luminosita' variabile;",
+      "A.24. installazione o modifica di impianti delle reti di comunicazione elettronica o di impianti radioelettrici, di cui all'art. 6, comma 4, del decreto-legge 12 settembre 2014, n. 133, convertito, con modificazioni, dalla legge 11 novembre 2014, n. 164, nonche' smantellamento di reti elettriche aeree;",
+      "A.25. interventi di manutenzione degli alvei, delle sponde e degli argini dei corsi d'acqua, compresi gli interventi sulla vegetazione ripariale arborea e arbustiva, finalizzati a garantire il libero deflusso delle acque e che non comportino alterazioni permanenti della visione d'insieme della morfologia del corso d'acqua; interventi di manutenzione e ripristino funzionale dei sistemi di scolo e smaltimento delle acque e delle opere idrauliche in alveo;",
+      "A.26. interventi puntuali di ingegneria naturalistica diretti alla regimazione delle acque e/o alla conservazione del suolo che prevedano l'utilizzo di piante autoctone e pioniere, anche in combinazione con materiali inerti di origine locale o con materiali artificiali biodegradabili;",
+      "A.27. interventi di manutenzione o sostituzione, senza ampliamenti dimensionali, delle strutture amovibili esistenti situate nell'ambito di strutture ricettive all'aria aperta gia' munite di autorizzazione paesaggistica, eseguiti nel rispetto delle caratteristiche morfo-tipologiche, dei materiali e delle finiture esistenti;",
+      "A.28. smontaggio e rimontaggio periodico di strutture stagionali munite di autorizzazione paesaggistica;",
+      "A.29. interventi di fedele ricostruzione di edifici, manufatti e impianti tecnologici che in conseguenza di calamita' naturali o catastrofi risultino in tutto o in parte crollati o demoliti, o siano oggetto di ordinanza di demolizione per pericolo di crollo, purche' sia possibile accertarne la consistenza e configurazione legittimamente preesistente ed a condizione che l'intervento sia realizzato entro dieci anni dall'evento e sia conforme all'edificio o manufatto originario quanto a collocazione, ingombro planivolumetrico, configurazione degli esterni e finiture, fatte salve esclusivamente le innovazioni necessarie per l'adeguamento alla normativa antisismica e di sicurezza degli impianti tecnologici;",
+      "A.30. demolizioni e rimessioni in pristino dello stato dei luoghi conseguenti a provvedimenti repressivi di abusi;",
+      "A.31. opere ed interventi edilizi eseguiti in variante a progetti autorizzati ai fini paesaggistici che non eccedano il due per cento delle misure progettuali quanto ad altezza, distacchi, cubatura, superficie coperta o traslazioni dell'area di sedime."
+     ]
+    }
+   ],
+   "fingerprint": "779f848db9ddd512",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "indicazione dell'Ente al quale è inviata la richiesta di parere preventivo",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "indicare l'Ente a cui è indirizzata la richiesta",
+     "max": 100
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "con sede a",
+     "max": 60
+    },
+    {
+     "id": "r6c1p10reg:txta",
+     "kind": "textarea",
+     "label": "800 Caratteri restanti",
+     "context": "eventuali note aggiuntive",
+     "max": 800
+    },
+    {
+     "id": "r8c1p14reg:txt",
+     "kind": "text",
+     "label": "riportare la Pec dell'Ente a cui è indirizzata la richiesta",
+     "max": 200
+    },
+    {
+     "id": "r10c1p18reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+     "context": "allegare la relazione illustrativa dell'intervento oggetto della pratica in cui deve essere precisato: la tipologia di i",
+     "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+    }
+   ],
+   "fingerprint": "81cdf4ae3bdfb1e1",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa all'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.8
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.9,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

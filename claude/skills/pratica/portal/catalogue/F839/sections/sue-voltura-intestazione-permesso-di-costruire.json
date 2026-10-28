@@ -1,0 +1,555 @@
+{
+ "crawled": "2026-10-28T16:43:00.984Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.) › Voltura intestazione Permesso di costruire (sector Edilizia e pianificazione urbana)",
+ "seconds": 32.7,
+ "generated": {
+  "interventi": "Voltura intestazione del permesso di costruire",
+  "adempimenti": [
+   {
+    "adempimento": "Voltura del permesso di costruire",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "Numero del permesso di costruire e proprietario",
+   "Contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+   "dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare",
+   "dichiarazione relativa alla conoscenza dei soggetti che intervengono nella realizzazione dell'intervento",
+   "Contributo di Costruzione",
+   "Domicilio dei nuovi intestatari per comunicazioni o notifiche",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "ci sono cointestatari"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "ci sono cointestatari",
+   "type": "CHK",
+   "adds": [
+    "Informazioni su eventuali altri aventi titolo"
+   ],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "Numero del permesso di costruire e proprietario",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "di data"
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "cognome / ragione sociale",
+     "max": 30
+    },
+    {
+     "id": "r5c2p11reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r5c3p13reg:txt",
+     "kind": "text",
+     "label": "codice fiscale / P. IVA",
+     "max": 16
+    }
+   ],
+   "fingerprint": "d5a7ced7a7a7c4be",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "proprietà",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "comproprietà",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "altro titolo",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r5c2p7reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "altro titolo",
+     "max": 30
+    },
+    {
+     "id": "r8c1p10reg:txt",
+     "kind": "text",
+     "label": "(indicare atto idoneo al trasferimento del titolo edilizio)",
+     "max": 70
+    },
+    {
+     "id": "r8c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "stipulato / autenticato in data"
+    },
+    {
+     "id": "r10c1p14reg:txt",
+     "kind": "text",
+     "label": "dal Notaio dott.",
+     "max": 70
+    },
+    {
+     "id": "r10c2p16reg:txt",
+     "kind": "text",
+     "label": "di",
+     "max": 50
+    },
+    {
+     "id": "r12c1p18reg:txt",
+     "kind": "text",
+     "label": "rep. n°",
+     "max": 15
+    },
+    {
+     "id": "r12c2p20reg:txt",
+     "kind": "text",
+     "label": "rogito n°",
+     "max": 15
+    },
+    {
+     "id": "r14c1p24reg:txt",
+     "kind": "text",
+     "label": "registrato a",
+     "max": 50
+    },
+    {
+     "id": "r14c2p26reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r14c3p28reg:txt",
+     "kind": "text",
+     "label": "al n°",
+     "max": 15
+    },
+    {
+     "id": "r17c1p31reg:txta",
+     "kind": "textarea",
+     "label": "250 Caratteri restanti",
+     "context": "sommaria e sintetica categoria dell'intervento",
+     "max": 250
+    },
+    {
+     "id": "r19c1p33reg:txt",
+     "kind": "text",
+     "label": "ad uso",
+     "max": 30
+    },
+    {
+     "id": "r19c2p35reg:txt",
+     "kind": "text",
+     "label": "in zona di PRG",
+     "max": 30
+    },
+    {
+     "id": "r21c1p37reg:txt",
+     "kind": "text",
+     "label": "coordinate geografiche",
+     "max": 30
+    },
+    {
+     "id": "r21c2p39reg:txt",
+     "kind": "text",
+     "label": "latitudine",
+     "max": 30
+    },
+    {
+     "id": "r21c3p41reg:txt",
+     "kind": "text",
+     "label": "longitudine",
+     "max": 30
+    }
+   ],
+   "fingerprint": "ccce02694f7bbdb2",
+   "branches": [
+    {
+     "choice": "proprietà",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "coordinate geografiche",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "comproprietà",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "coordinate geografiche",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "altro titolo",
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "coordinate geografiche",
+      "adds": 6
+     }
+    }
+   ],
+   "seconds": 4.4
+  },
+  {
+   "section": "dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di aver preso visione del Permesso da volturare, dei relativi allegati e pareri degli enti preposti e pertanto di essere a conoscenza di tutte le prescrizioni e"
+    }
+   ],
+   "fingerprint": "923f0a595e17ec6b",
+   "branches": [
+    {
+     "choice": "di aver preso visione del Permesso da volturare, dei relativi allegati e pareri degli enti preposti e pertanto di essere a conoscenza di tutte le prescrizioni e",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione relativa alla conoscenza dei soggetti che intervengono nella realizzazione dell'intervento",
+   "fingerprint": "923f0a595e17ec6b",
+   "same_as": "sue-voltura-intestazione-permesso-di-costruire#dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare",
+   "seconds": 0.6
+  },
+  {
+   "section": "Contributo di Costruzione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di impegnarsi al versamento del Contributo di Costruzione residuo (nel caso di pagamento rateizzato)"
+    }
+   ],
+   "fingerprint": "1d3f396f286a63cc",
+   "branches": [
+    {
+     "choice": "di impegnarsi al versamento del Contributo di Costruzione residuo (nel caso di pagamento rateizzato)",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.4
+  },
+  {
+   "section": "Domicilio dei nuovi intestatari per comunicazioni o notifiche",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "via, viale, piazza",
+     "max": 50
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 10
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r4c3p10reg:txt",
+     "kind": "text",
+     "label": "prov",
+     "max": 3
+    },
+    {
+     "id": "r6c1p14reg:number",
+     "kind": "text",
+     "label": "tel",
+     "max": 20
+    },
+    {
+     "id": "r6c2p16reg:number",
+     "kind": "text",
+     "label": "fax",
+     "max": 20
+    }
+   ],
+   "fingerprint": "93ee53bc126d46cf",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  },
+  {
+   "section": "Informazioni su eventuali altri aventi titolo",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r4c1p6reg:calendar_input",
+     "kind": "date",
+     "label": "nato/a il"
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "a",
+     "max": 30
+    },
+    {
+     "id": "r4c3p10reg:txt",
+     "kind": "text",
+     "label": "prov",
+     "max": 10
+    },
+    {
+     "id": "r6c1p12reg:txt",
+     "kind": "text",
+     "label": "residente a",
+     "max": 30
+    },
+    {
+     "id": "r6c2p14reg:txt",
+     "kind": "text",
+     "label": "in via",
+     "max": 30
+    },
+    {
+     "id": "r6c3p16reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 30
+    },
+    {
+     "id": "r8c1p18reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r8c2p20reg:txt",
+     "kind": "text",
+     "label": "prov",
+     "max": 10
+    },
+    {
+     "id": "r10c1p24reg:txt",
+     "kind": "text",
+     "label": "cittadinanza",
+     "max": 30
+    },
+    {
+     "id": "r10c2p26reg:radio:0_clone",
+     "kind": "radio",
+     "label": "sesso: M",
+     "group": "r10c2p26reg:radio"
+    },
+    {
+     "id": "r10c3p28reg:radio:1_clone",
+     "kind": "radio",
+     "label": "sesso: F",
+     "group": "r10c3p28reg:radio"
+    },
+    {
+     "id": "r12c1p30reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    }
+   ],
+   "fingerprint": "a360bfc4d6101451",
+   "branches": [
+    {
+     "choice": "sesso: M",
+     "id": "r10c2p26reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p20reg:txt",
+       "r4c3p10reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "cognome",
+      "adds": 28
+     }
+    },
+    {
+     "choice": "sesso: F",
+     "id": "r10c3p28reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p20reg:txt",
+       "r4c3p10reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "cognome",
+      "adds": 28
+     }
+    }
+   ],
+   "seconds": 3.1,
+   "scelta": "ci sono cointestatari"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.9,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}
