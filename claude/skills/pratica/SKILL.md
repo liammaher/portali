@@ -42,6 +42,12 @@ most forms in one prompt. Before each command, say in chat what the prompt will 
 the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
 Filling a form with `fill.py` (step 4) takes the tokens it names: one read token for a draft.
 
+**Done before: one command.** When the procedure has a library layout (a PDF: `fill.py run`)
+or a steps file (a portal: `run.py run`), don't research or explore again: find them (step 0),
+read the values and ask the asks in one go (step 2), run the command (step 4), and hand over
+only the user's steps (step 5). A filled PDF takes seconds, a portal draft about a minute
+after the login.
+
 ## 0. Find the pratica, its playbook and its library entry
 
 1. `ls ~/.claude/skills/pratica/playbooks/` and read the one for this ente and
@@ -255,9 +261,10 @@ In order of preference:
    this repo. The user signs it: by hand, or through the vault's sign gate
    ([reference/signing.md](reference/signing.md)). With a layout in the library, use
    `fill.py` (below); otherwise the pdf skill.
-2. **Portal** in the built-in browser: log in ([reference/portal-login.md](reference/portal-login.md)), fill from vault values,
-   stop before the final submit, show a summary and let the user submit or approve
-   it explicitly.
+2. **Portal**: with a steps file, one command in a Playwright window (below); otherwise in
+   the built-in browser or with the Playwright CLI: log in ([reference/portal-login.md](reference/portal-login.md)),
+   fill from vault values, stop before the final submit, show a summary and let the user
+   submit or approve it explicitly.
 
 A portal channel's `use.ways` says which: `upload` takes the filled PDF (or other files), so
 fill it first; `web_form` is the portal's own form, so no PDF is filled for that route;
@@ -275,25 +282,39 @@ When there is one, follow it instead of exploring the portal:
    token for all of them) and ask its `{{ask.x}}` questions before opening the portal; apply
    the filters `run.py` defines (`FILTERS`: dates gg/MM/aaaa, the street split into DUG and
    name, carica and forma giuridica as the portal names them).
-2. **Run it in the built-in browser**: the user logs in there. Then `run.py page` (same
-   arguments as `run`, with `--out DIR`) writes `install.js` and `run.js`; run each on the
-   portal's page with one `javascript_tool` call (install once per browser profile; it stores
-   no personal data), and poll `await __pv.wait(40000)` until `result` is `filled` or
-   `stopped`. It walks the wizard and every section in under a minute, reading each field back
-   after Salva; `__pv.open()` then shows the draft as a normal page. If it stops, its `error`
-   says where: finish that part by hand (fill, Salva, read back and compare) and fix the
-   steps file. By hand, the map's header has the portal's mechanics (dropdown filters,
-   lookups that need real key presses).
+2. **Run it with one command** (run in the background: it waits for the login):
+   ```sh
+   ~/.cache/pratica-portal/venv/bin/python -I ~/.claude/skills/pratica/portal/run.py run \
+     --steps <folder>/portal-steps.yaml --answers <answers.json> --vault-dir ~/.pvault-<name> --out <dir>
+   ```
+   Say first that a separate window ("Chrome for Testing") opens and the user logs in there
+   with SPID; its profile (`~/.cache/pratica-portal/profile`) keeps the login while the
+   portal does. The token is the folder's `needs.json` scope, saved where fill.py looks
+   (`pvault --vault <name> create-service-token pratica-fill --scope '<scope>' --access append
+   --ttl 1h --keychain pvault-<name>-pratica-fill`); the answers are the `{{ask.x}}` replies as
+   JSON. It runs `inpage.js`: the wizard and every section in about a minute, each field read
+   back after Salva, then shows the draft and prints a line per section and a JSON result.
+   No environment yet: `python3 -m venv ~/.cache/pratica-portal/venv`, then its `pip install
+   pyyaml playwright` and `python -m playwright install chromium` (ask first).
+   If it stops, `error` says where and `<dir>/failure.png` shows it: finish that part by hand
+   (fill, Salva, read back and compare) and fix the steps file. By hand, the map's header has
+   the portal's mechanics (dropdown filters, lookups that need real key presses).
+
+   In the built-in browser instead (the user is logged in there, or asks): `run.py page`
+   (same arguments, `--out DIR`) writes `install.js` and `run.js`; run each on the portal's
+   page with one `javascript_tool` call (install once per browser profile; it stores no
+   personal data), poll `await __pv.wait(40000)` until `result` is `filled` or `stopped`, and
+   `__pv.open()` shows the draft.
 3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
    Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand. Stop at
    the attachments.
 4. **When the portal differs** (a screen, a label, a lookup with no single match), stop,
    correct the steps file and the map, and add the run to the README.
 
-`~/.claude/skills/pratica/portal/run.py run` does the same in a Chrome of its own, with no
-model and in a minute or two, reading values from a pilot vault server (`--server`). Use it
-only when the user agrees to log in in that window: say first that it is a separate Chrome
-with its own profile, which you see only through its report.
+**A portal with no steps file** is explored with the Playwright CLI (the `playwright-cli`
+skill: `playwright-cli open --headed --persistent <url>`, then `snapshot`, `click`, `fill`),
+which keeps page snapshots in files instead of the conversation. The walk ends in a
+`portal-map.yaml` and a `portal-steps.yaml`, so the next run is the one command above.
 
 ### Filling with fill.py
 
