@@ -2,7 +2,7 @@
 """Fill a portal pratica from the vault in a real browser, then hand it to the person.
 
   run.py plan --steps STEPS.yaml --answers A.json
-              (--server S.json --token NAME | --vault-dir DIR [--keychain SERVICE])
+              (--values - | --server S.json --token NAME | --vault-dir DIR [--keychain SERVICE])
       Resolves every value the steps need and prints what goes where. No browser.
 
   run.py page --steps STEPS.yaml --answers A.json VAULT --out DIR
@@ -16,11 +16,14 @@
       to log in, then runs inpage.js there, as in the pane: the wizard, each section filled,
       saved and read back. It stops before what is the person's: the declarations, the
       attachments, the payment, signing and sending, and shows the draft, left open for
-      them unless --close. Writes DIR/report.json (timings, what each section kept) and
-      DIR/failure.png when a step fails.
+      them unless --close. Writes DIR/report.json (timings, what each section kept),
+      DIR/review.html (the page the person reviews: what's left for them, the steps file's
+      `yours`, and every value) and DIR/failure.png when a step fails.
 
 STEPS.yaml is a portal's steps file (rehearsals/*/portal-steps.yaml). Values come from
-the vault, VAULT as for plan: --server is the pilot vault's JSON ("url" and "tokens") and a
+the vault, VAULT as for plan. --values - takes what `pvault get` printed for the steps'
+categories (`pvault get 'business.*' 'locale.*' '*:identity.*' ...`, piped in: one Touch ID
+approval, nothing on disk). --server is the pilot vault's JSON ("url" and "tokens") and a
 token's name in it; --vault-dir is a real vault, read over its socket with the token in
 $VAULT_TOKEN or the Keychain (--keychain, default fill.py's), as fill.py reads it. The
 token reads the categories the steps name. Asks come from A.json. --cdp attaches
@@ -42,9 +45,10 @@ from pathlib import Path
 
 import yaml
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "fill"))
+sys.path[:0] = [str(Path(__file__).resolve().parent.parent / "fill"), str(Path(__file__).resolve().parent.parent)]
 sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
 import fill  # noqa: E402  (its vault client: the pilot over TCP, a real vault over its socket)
+import review  # noqa: E402  (the page the person reviews)
 
 # Never clicked, whatever a steps file says: these are the person's taps.
 FORBIDDEN = re.compile(r"pago\s*pa|\binvia\b|\bpaga\b|procedi con il pagamento|firma", re.I)
@@ -106,8 +110,9 @@ class StepError(Exception):
 class Values:
     """The vault fields and answers a steps file refers to."""
 
-    def __init__(self, vault, answers):
-        self.vault = vault
+    def __init__(self, answers, vault=None, fields=None):
+        """From the vault with a token, or from fields already read (pvault get's JSON)."""
+        self.vault, self.fields = vault, fields
         self.answers = answers
         self.cache = {}
         self.titolare = self._titolare()
@@ -122,11 +127,14 @@ class Values:
 
     def category(self, cat):
         if cat not in self.cache:
-            self.cache[cat] = {r["id"]: r["value"] for r in self._get("/vault/fields/category/" + cat)}
+            if self.fields is not None:
+                self.cache[cat] = {k: v for k, v in self.fields.items() if k.startswith(cat + ".") and v is not None}
+            else:
+                self.cache[cat] = {r["id"]: r["value"] for r in self._get("/vault/fields/category/" + cat)}
         return self.cache[cat]
 
     def _titolare(self):
-        ids = [f["id"] for f in self._get("/vault/fields")]
+        ids = list(self.fields) if self.fields is not None else [f["id"] for f in self._get("/vault/fields")]
         slugs = sorted({i.split(":")[0] for i in ids if i.endswith(":ruolo.tipo")})
         found = [s for s in slugs if "titolare" in self.category(s + ":ruolo").get(s + ":ruolo.tipo", "")
                  or "legale_rappresentante" in self.category(s + ":ruolo").get(s + ":ruolo.tipo", "")]
@@ -238,12 +246,24 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
     from playwright.sync_api import sync_playwright
     install, run_js = page_scripts(steps, values)
     out.mkdir(parents=True, exist_ok=True)
+    # What the review page shows besides the run: each value, and the person's own steps.
+    shown = {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
+             "values": [{"section": v["section"], "label": v["label"] or v["id"],
+                         "value": v["value"] if v["value"] is not None else "chosen"}
+                        for v in plan(steps, values)]}
     report = {"procedure": steps["procedure"], "result": "stopped"}
     with sync_playwright() as pw:
         if cdp:
             ctx = pw.chromium.connect_over_cdp(cdp).contexts[0]
         else:
-            ctx = pw.chromium.launch_persistent_context(str(profile), headless=False, no_viewport=True)
+            try:
+                ctx = pw.chromium.launch_persistent_context(str(profile), headless=False, no_viewport=True)
+            except Exception as e:
+                if "already in use" not in str(e) and "existing browser session" not in str(e):
+                    raise
+                # A window an earlier run left open still has the profile, and with it the login.
+                raise StepError(f"another Chrome for Testing window is using {profile}: close it (⌘Q) and run "
+                                "again, or pass --profile with another folder (and log in there again)") from None
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         try:
             page.goto(steps["start"])
@@ -270,7 +290,10 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
         finally:
             if report["result"] != "filled" and not page.is_closed():
                 page.screenshot(path=str(out / "failure.png"), full_page=True)
+            report |= shown
             (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+            (out / "review.html").write_text(review.portal_review(report), encoding="utf-8")
+            print(f"review: {out / 'review.html'}", flush=True)
             print(json.dumps({k: report.get(k) for k in ("result", "error", "wizard_seconds", "total_seconds")}),
                   flush=True)
             if not close and not page.is_closed():
@@ -294,6 +317,7 @@ def main():
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--server", type=Path)
     src.add_argument("--vault-dir")
+    src.add_argument("--values", help="- or a file: pvault get's JSON of the fields the steps read")
     ap.add_argument("--token", default="prepare", help="--server: which of its tokens")
     ap.add_argument("--keychain", help="--vault-dir: the Keychain service of the token")
     ap.add_argument("--out", type=Path)
@@ -303,10 +327,17 @@ def main():
     a = ap.parse_args()
     steps = yaml.safe_load(a.steps.read_text())
     try:
-        vaults = fill.connect(argparse.Namespace(server=a.server, vault_dir=a.vault_dir, keychain=a.keychain))
-        if a.server and a.token not in vaults:
-            ap.error(f"{a.server} has no token {a.token!r}")
-        values = Values(vaults[a.token if a.server else "prepare"], json.loads(a.answers.read_text()))
+        answers = json.loads(a.answers.read_text())
+        if a.values:
+            given = sys.stdin.read() if a.values == "-" else Path(a.values).read_text()
+            if not given.strip():
+                raise StepError("no values: pvault get printed nothing (its error is above)")
+            values = Values(answers, fields=json.loads(given))
+        else:
+            vaults = fill.connect(argparse.Namespace(server=a.server, vault_dir=a.vault_dir, keychain=a.keychain))
+            if a.server and a.token not in vaults:
+                ap.error(f"{a.server} has no token {a.token!r}")
+            values = Values(answers, vault=vaults[a.token if a.server else "prepare"])
         if a.command == "plan":
             print(f"titolare: {values.titolare}")
             for p in plan(steps, values):

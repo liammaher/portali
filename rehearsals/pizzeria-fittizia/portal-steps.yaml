@@ -10,6 +10,14 @@
 # The declarations, the payment and sending are not here: they are the person's.
 
 procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+title: "SCIA: apertura di un bar o ristorante (somministrazione) con notifica sanitaria, SUAP Napoli"
+# The person's own steps once the draft is saved (portal-map.yaml, the taps): the review lists them.
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the seven declarations yourself: consapevolezza (artt. 46-47), informativa privacy, requisiti di onorabilità e professionali, altre dichiarazioni, art. 6 Reg. 852/2004, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen, and the ASL tariffa forfettaria"
+  - "Attach, signed with your firma digitale (.p7m): the planimetria quotata of the premises and the ASL tariff receipt"
+  - "Sign and send (Firma e invio); keep the receipt"
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 

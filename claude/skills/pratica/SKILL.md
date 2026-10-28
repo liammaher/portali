@@ -40,7 +40,8 @@ what a step needs and read it in one `get`: up to 10 field IDs or whole categori
 most forms in one prompt. Before each command, say in chat what the prompt will ask.
 "not approved" means the user said no or is away: don't retry, ask them. Fall back to
 the MCP tools and a narrow token (step 2) when Touch ID is off or the user asks for it.
-Filling a form with `fill.py` (step 4) takes the tokens it names: one read token for a draft.
+Filling, with `fill.py` or `run.py` (step 4), takes that same one `get` piped in
+(`--values -`) for a draft, so no token is needed; without Touch ID, the token they name.
 
 **Done before: one command.** When the procedure has a library layout (a PDF: `fill.py run`)
 or a steps file (a portal: `run.py run`), don't research or explore again: find them (step 0),
@@ -282,18 +283,24 @@ When there is one, follow it instead of exploring the portal:
    token for all of them) and ask its `{{ask.x}}` questions before opening the portal; apply
    the filters `run.py` defines (`FILTERS`: dates gg/MM/aaaa, the street split into DUG and
    name, carica and forma giuridica as the portal names them).
-2. **Run it with one command** (run in the background: it waits for the login):
+2. **Run it with one command** (run in the background: it waits for the login). With Touch
+   ID on, the values come from one `pvault get` of the folder's `needs.json` scope (its
+   patterns, without `pratiche.*`), piped in: one fingerprint, no token, nothing on disk:
    ```sh
-   ~/.cache/pratica-portal/venv/bin/python -I ~/.claude/skills/pratica/portal/run.py run \
-     --steps <folder>/portal-steps.yaml --answers <answers.json> --vault-dir ~/.pvault-<name> --out <dir>
+   pvault --vault <name> get 'business.*' 'locale.*' '*:identity.*' '*:residenza.*' '*:ruolo.*' \
+     | ~/.cache/pratica-portal/venv/bin/python -I ~/.claude/skills/pratica/portal/run.py run \
+       --steps <folder>/portal-steps.yaml --answers <answers.json> --values - --out <dir>
    ```
-   Say first that a separate window ("Chrome for Testing") opens and the user logs in there
-   with SPID; its profile (`~/.cache/pratica-portal/profile`) keeps the login while the
-   portal does. The token is the folder's `needs.json` scope, saved where fill.py looks
-   (`pvault --vault <name> create-service-token pratica-fill --scope '<scope>' --access append
-   --ttl 1h --keychain pvault-<name>-pratica-fill`); the answers are the `{{ask.x}}` replies as
-   JSON. It runs `inpage.js`: the wizard and every section in about a minute, each field read
-   back after Salva, then shows the draft and prints a line per section and a JSON result.
+   Say first what the fingerprint prompt will ask, and that a separate window ("Chrome for
+   Testing") opens where the user logs in with SPID; its profile
+   (`~/.cache/pratica-portal/profile`) keeps the login while the portal does. Touch ID off:
+   `--vault-dir ~/.pvault-<name>` in place of the get and `--values -`, with a token of that
+   scope saved where fill.py looks (`pvault --vault <name> create-service-token pratica-fill
+   --scope '<scope>' --access append --ttl 1h --keychain pvault-<name>-pratica-fill`, which the
+   user runs). The answers are the `{{ask.x}}` replies as JSON. It runs `inpage.js`: the wizard
+   and every section in about a minute, each field read back after Salva, then shows the draft,
+   prints a line per section and a JSON result, and writes `<dir>/review.html`: show it to the
+   user (SendUserFile, `display: render`) as the place to check the draft, with step 5's list.
    No environment yet: `python3 -m venv ~/.cache/pratica-portal/venv`, then its `pip install
    pyyaml playwright` and `python -m playwright install chromium` (ask first).
    If it stops, `error` says where and `<dir>/failure.png` shows it: finish that part by hand
@@ -350,25 +357,29 @@ by its label ("no" when the role isn't part of this pratica).
      --procedure <entry id> --form <form id> --draft [--for <slug>] [--party <ruolo>=<slug>]... \
      [--vault-dir ~/.pvault-<name>]
    ```
-   `commands.draft` is the one token command; `ask` lists the questions the vault can't
-   answer. In one message, give the user the command to run in their terminal, exactly as
-   printed (it asks for their password or Touch ID, saves a 1-hour read token in their
-   Keychain and revokes the last one; never run it yourself, never ask for the token), and
-   ask the `ask` questions (one with `when` only if the answer it names ticks one of its
-   `ticks`). Answers the playbook or this conversation already give don't need asking. This holds with Touch ID too: `fill.py` reads with that token, not `pvault get`.
+   `ask` lists the questions the vault can't answer: ask them in one message (one with `when`
+   only if the answer it names ticks one of its `ticks`); answers the playbook or this
+   conversation already give don't need asking. With Touch ID on, `commands.get` reads the
+   draft's fields with one fingerprint: you run it, piped into step 4's `run --values -`, and
+   no token is made (it prints nothing when the form needs more than get's 10 patterns). Touch
+   ID off, or a form with the stato di famiglia (`--values` refuses it): `commands.draft` is the
+   token command; give it to the user to run in their terminal, exactly as printed (it asks
+   for their password, saves a 1-hour read token in their Keychain and revokes the last one;
+   never run it yourself, never ask for the token).
 3. **Answers**: write them by label, in the output folder's `answers.json`:
    `{"answers": {"<label>": "<answer>"}}`. "no" or "nessuno" leaves a box empty. A row
    with `ticks` takes the user's answer as said (`si` ticks the box). A row with
    `rows_by_column` takes a list of rows, each `{"<column>": "<text>"}`, or "nessuno".
-4. **The draft**, once the user says the token is saved. The output folder is the user's
-   folder for the topic plus `bozza-automatica` (ask where that is if the playbook and
-   step 0 didn't find it):
+4. **The draft**, with the fingerprint or once the user says the token is saved. The output
+   folder is the user's folder for the topic plus `bozza-automatica` (ask where that is if the
+   playbook and step 0 didn't find it):
    ```sh
-   python3 -I ~/.claude/skills/pratica/fill/fill.py run --library "$lib" \
-     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft [--for <slug>] [--party ...] \
-     --answers "<out>/answers.json" --out "<out>"
+   <commands.get> | python3 -I ~/.claude/skills/pratica/fill/fill.py run --library "$lib" \
+     --procedure <entry id> --form <form id> --vault-dir ~/.pvault --draft --values - \
+     [--for <slug>] [--party ...] --answers "<out>/answers.json" --out "<out>"
    ```
-   (the same `--vault-dir`, `--for` and `--party` as `needs`). It prints each check and exits 1 if one failed;
+   (the same `--vault-dir`, `--for` and `--party` as `needs`; with the token, no get and no
+   `--values`). It prints each check and exits 1 if one failed;
    `<out>/report.json` has every row. A run takes a few seconds, so run it again after each fix.
    - "not in the vault": missing data, as in step 2. Ask, offer the `pvault set`, run again.
      When the answer is one the vault can't hold (someone with no codice fiscale: `N/E`),
@@ -376,14 +387,22 @@ by its label ("no" when the role isn't part of this pratica).
      run only, refused if the vault has the field. Note it in the playbook so the next
      run asks again rather than guessing.
    - "is answered": an `ask` row with no answer. Ask it, add it to `answers.json`.
-   - "refused the token" or "Keychain": give the token command again. "locked" or "no
-     vault server": the user runs `pvault unlock`.
+   - "refused the token": give the token command again. "nothing in Keychain service" right
+     after the user saved it: Claude Code's sandbox can't reach the Keychain, so run the same
+     command again outside it (`dangerouslyDisableSandbox`; the user approves); the same holds
+     for `run.py --vault-dir`. "locked" or "no vault server": the user runs `pvault unlock`.
    - A form, layout or box check failing means the Comune changed the form or the
      library is wrong: don't hand over that PDF. Fill by hand and list it for step 7.
-5. **Show it.** Look at `<out>/page-1.png` (and any other `page-<n>.png`) yourself first. Then send the user
-   `<out>/filled.pdf` (SendUserFile, `display: render`, where you have it; otherwise
-   `open "<out>/filled.pdf"`) with a short list of what came from where and anything
-   left blank on purpose. Compare it with any copy the user already filled (step 2).
+5. **Show it.** Look at `<out>/page-1.png` (and any other `page-<n>.png`) yourself first.
+   Then make the review page and send it (SendUserFile, `display: render`, where you have
+   it; otherwise `open` it): what's left for the user (the route's steps), where it goes,
+   every check, every value and the filled pages, in one file:
+   ```sh
+   python3 -I ~/.claude/skills/pratica/fill/fill.py route --library "$lib" --procedure <entry id> --json > "<out>/route.json"
+   python3 -I ~/.claude/skills/pratica/review.py "<out>" --route "<out>/route.json"
+   ```
+   Send `<out>/filled.pdf` with it, and say in two lines what's left for them. Compare it
+   with any copy the user already filled (step 2).
 
 The draft is the check before the record: when the user is happy with it, open the
 pratica (step 3). Run it again without `--draft`, using the command `needs` prints without

@@ -77,7 +77,9 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      (one per service); pilot/ has the pilot forms. A real vault only over its socket
   pratica/portal/    run.py: fills a portal pratica from a steps file (rehearsals/*/portal-steps.yaml)
                      with inpage.js, in a Playwright window (`run.py run`) or the Claude browser
-                     pane (`run.py page`); reads every field back, never declares, pays or sends
+                     pane (`run.py page`); reads every field back, never declares, pays or sends.
+                     Both take a draft's values from one `pvault get` (`--values -`, Touch ID)
+  pratica/review.py  the page the person reviews: what's left for them, the checks, every value
 ```
 
 ## Security Model

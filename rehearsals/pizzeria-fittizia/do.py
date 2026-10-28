@@ -9,10 +9,11 @@
 
   do.py tari
       The TARI Mod. 5 (iscrizione non domestica): the form filled from the vault and read
-      back, opened for review, and the route printed: who signs, where it goes, what to
-      attach. Signing and sending are the person's.
+      back, and a review page with the route: who signs, where it goes, what to attach.
+      Signing and sending are the person's.
 
-Each starts the made-up business vault (fixture.json, as `go test` serves it), reads what
+Both write review.html in their output folder: what's left for the person, what was
+checked, every value. Each starts the made-up business vault (fixture.json, as `go test` serves it), reads what
 the pratica needs, and stops the vault before the person's steps. Output goes to
 ~/.cache/pratica-rehearsal/pizzeria-fittizia/<pratica>/. The library is
 $PRATICHE_NAPOLI_DIR (for tari). Nothing is ever sent.
@@ -92,11 +93,12 @@ def tari(work, out):
         run = subprocess.run(fill + ["run", *source, "--form", "mod-5", "--for", "gennaro", "--server", str(server),
                                      "--answers", str(SKILL / "fill" / "pilot" / "mod5-answers.json"),
                                      "--out", str(out)])
-        route = subprocess.run(fill + ["route", *source, "--server", str(server)])
+        route = subprocess.run(fill + ["route", *source, "--server", str(server), "--json"],
+                               capture_output=True, text=True)
     finally:
         stop(work, harness)
-    if run.returncode == 0 and (out / "filled.pdf").exists():
-        subprocess.run(["open", str(out / "filled.pdf")])
+    (out / "route.json").write_text(route.stdout)
+    subprocess.run([sys.executable, "-I", str(SKILL / "review.py"), str(out), "--route", str(out / "route.json")])
     return run.returncode or route.returncode
 
 
