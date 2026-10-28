@@ -192,7 +192,7 @@ def cmd_count(args):
     import gen
     dictionary = gen.load_yaml(HERE / "dictionary" / "fnsuap.yaml")
     uses, names, where, cache = collections.Counter(), collections.defaultdict(set), {}, {}
-    pratiche = collections.defaultdict(set)
+    pratiche, by = collections.defaultdict(set), collections.defaultdict(collections.Counter)
     for name, c in crawls().items():
         cache[name] = c
         sp = sportello(name)
@@ -205,12 +205,13 @@ def cmd_count(args):
                 fp = s.get("fingerprint") or fingerprint(s["fields"])
                 where.setdefault(fp, f"{name}#{s['section']}")
             uses[fp] += 1
+            by[fp][sp] += 1
             names[fp].add(s["section"])
             pratiche[fp].add(sp)
     rows = []
     for fp, n in uses.most_common():
         sec = resolve(where[fp], cache) if fp in where else None
-        rows.append({"fingerprint": fp, "uses": n, "names": sorted(names[fp]), "crawl": where.get(fp),
+        rows.append({"fingerprint": fp, "uses": n, "by": dict(by[fp]), "names": sorted(names[fp]), "crawl": where.get(fp),
                      "sportelli": sorted(pratiche[fp]), "covered": bool(sec) and covered(sec, dictionary)})
     if not args.summary:
         return rows
@@ -220,9 +221,10 @@ def cmd_count(args):
         if not r:
             continue
         done = [x for x in r if x["covered"]]
-        out.append(f"{sp.upper()}: {len(r)} distinct sections, {len(done)} in the dictionary; "
-                   f"{sum(x['uses'] for x in done)} of {sum(x['uses'] for x in r)} uses "
-                   f"({100 * sum(x['uses'] for x in done) // max(1, sum(x['uses'] for x in r))}%)")
+        u = lambda xs: sum(x["by"][sp] for x in xs)
+        n = len({p for p, c in crawls().items() if sportello(p) == sp})
+        out.append(f"{sp.upper()}: {n} pratiche, {len(r)} distinct sections, {len(done)} in the dictionary; "
+                   f"{u(done)} of {u(r)} uses ({100 * u(done) // max(1, u(r))}%)")
     return out
 
 

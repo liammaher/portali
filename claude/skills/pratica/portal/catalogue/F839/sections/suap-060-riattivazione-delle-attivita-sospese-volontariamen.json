@@ -1,0 +1,230 @@
+{
+ "crawled": "2026-10-28T17:01:32.951Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Sicurezza alimentare e sanità pubblica veterinaria (GISA) › Comunicazione per linee d'attività inerenti la sicurezza alimentare e la sanità pubblica veterinaria non ricompresi negli accordi Stato-Regioni › Riattivazione delle attività sospese volontariamente (procedura n. 4) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 23.7,
+ "generated": {
+  "interventi": "Comunicazione di riattivazione delle attività sospese Volontariamente",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di riattivazione delle attività sospese Volontariamente",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dello stabilimento",
+   "dati catastali",
+   "OGGETTO DELL'ISTANZA",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "la notifica riguarda uno stabilimento SENZA sede fissa"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "la notifica riguarda uno stabilimento SENZA sede fissa",
+   "type": "CHK",
+   "adds": [],
+   "drops": [
+    "indirizzo dello stabilimento",
+    "dati catastali"
+   ]
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "OGGETTO DELL'ISTANZA",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "la riattivazione delle seguenti linee d'attività già sospese volontariamente"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "la riattivazione delle attività dell'intero stabilimento già sospese volontariamente"
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "la riattivazione delle attività dell'impresa"
+    }
+   ],
+   "fingerprint": "998275b1602e715a",
+   "branches": [
+    {
+     "choice": "la riattivazione delle seguenti linee d'attività già sospese volontariamente",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r4c1p4reg:txt",
+       "kind": "text",
+       "label": "relativamente allo stabilimento già registrato/riconosciuto con numero",
+       "max": 9999
+      },
+      {
+       "id": "r7c1p7reg:txt",
+       "kind": "text",
+       "label": "INDICARE DI SEGUITO LE LINEE D'ATTIVITÀ RIATTIVATE",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r3c1p3reg:chk",
+       "r9c1p10reg:chk"
+      ],
+      [
+       "r5c1p6reg:chk",
+       "r11c1p13reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "INDICARE DI SEGUITO LE LINEE D'ATTIVITÀ RIATTIVATE",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "la riattivazione delle attività dell'intero stabilimento già sospese volontariamente",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r5c1p5reg:txt",
+       "kind": "text",
+       "label": "già registrato/riconosciuto con numero",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p6reg:chk",
+       "r6c1p8reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "la riattivazione delle attività dell'impresa",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c1p8reg:txt",
+       "kind": "text",
+       "label": "già registrata/riconosciuta con numero",
+       "max": 9999
+      }
+     ]
+    }
+   ],
+   "seconds": 3.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.9,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

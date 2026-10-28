@@ -1,0 +1,572 @@
+{
+ "crawled": "2026-10-28T17:03:01.856Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Sicurezza alimentare e sanità pubblica veterinaria (GISA) › Riconoscimento per linee d'attività inerenti la sicurezza alimentare e la sanità pubblica veterinaria non ricompresi negli accordi Stato-Regioni › Richiesta di approvazione progetto per riconoscimento di uno stabilimento A SEDE FISSA (procedura n. 7) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 32.9,
+ "generated": {
+  "interventi": "Richiesta di approvazione progetto per rilascio riconoscimento",
+  "adempimenti": [
+   {
+    "adempimento": "Richiedere l'approvazione del progetto per rilascio riconoscimento",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dello stabilimento",
+   "dati catastali",
+   "dichiarazione per approvazione progetto per rilascio riconoscimento",
+   "ulteriori dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione per approvazione progetto per rilascio riconoscimento",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "riconoscimento ai sensi del Reg CE",
+     "max": 9999
+    },
+    {
+     "id": "r4c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "ALLEVAMENTI",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "REGISTRATI",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "RICONOSCIUTI",
+     "group": "r6c1p6reg:radio"
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo ''DOCUMENTI DA ALLEGARE'', trovate il/i codici dei documenti obbligatori da a"
+    },
+    {
+     "id": "r14c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo \"SCHEDA SUPPLEMENTARE N.\", vi è indicato l'eventuale numero di scheda supplem"
+    },
+    {
+     "id": "r32c1p34reg:chk",
+     "kind": "checkbox",
+     "label": "che il procedimento si svolga mediante l'indizione della:"
+    },
+    {
+     "id": "r33c2p36reg:radio:3_clone",
+     "kind": "radio",
+     "label": "conferenza dei servizi decisoria in forma semplificata e in modalità asincrona",
+     "group": "r33c2p36reg:radio"
+    },
+    {
+     "id": "r34c2p39reg:radio:4_clone",
+     "kind": "radio",
+     "label": "conferenza dei servizi decisoria in forma simultanea e in modalità sincrona",
+     "group": "r34c2p39reg:radio"
+    },
+    {
+     "id": "r36c2p44reg:txt",
+     "kind": "text",
+     "label": "per i seguenti motivi:",
+     "max": 9999
+    }
+   ],
+   "fingerprint": "f8c835eef5494cca",
+   "branches": [
+    {
+     "choice": "ALLEVAMENTI",
+     "id": "r4c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r13c1p13reg:txt",
+       "kind": "text",
+       "label": "Macroarea",
+       "max": 100
+      },
+      {
+       "id": "r15c1p17reg:txt",
+       "kind": "text",
+       "label": "Aggregazione",
+       "max": 100
+      },
+      {
+       "id": "r17c1p21reg:txt",
+       "kind": "text",
+       "label": "Linee d'attività",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p5reg:radio:1_clone",
+       "r9c1p9reg:radio:1_clone"
+      ],
+      [
+       "r6c1p6reg:radio:2_clone",
+       "r10c1p10reg:radio:2_clone"
+      ],
+      [
+       "r8c1p8reg:chk",
+       "r19c1p26reg:chk"
+      ],
+      [
+       "r14c1p14reg:chk",
+       "r25c1p32reg:chk"
+      ],
+      [
+       "r32c1p34reg:chk",
+       "r43c1p52reg:chk"
+      ],
+      [
+       "r33c2p36reg:radio:3_clone",
+       "r44c2p54reg:radio:3_clone"
+      ],
+      [
+       "r34c2p39reg:radio:4_clone",
+       "r45c2p57reg:radio:4_clone"
+      ],
+      [
+       "r36c2p44reg:txt",
+       "r47c2p62reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "REGISTRATI",
+     "id": "r5c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r13c1p13reg:txt",
+       "kind": "text",
+       "label": "Macroarea",
+       "max": 100
+      },
+      {
+       "id": "r15c1p17reg:txt",
+       "kind": "text",
+       "label": "Aggregazione",
+       "max": 100
+      },
+      {
+       "id": "r17c1p21reg:txt",
+       "kind": "text",
+       "label": "Linee d'attività",
+       "max": 100
+      },
+      {
+       "id": "r19c1p25reg:txt",
+       "kind": "text",
+       "label": "Codice univoco",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r6c1p6reg:radio:2_clone",
+       "r10c1p10reg:radio:2_clone"
+      ],
+      [
+       "r8c1p8reg:chk",
+       "r21c1p30reg:chk"
+      ],
+      [
+       "r14c1p14reg:chk",
+       "r27c1p36reg:chk"
+      ],
+      [
+       "r32c1p34reg:chk",
+       "r45c1p56reg:chk"
+      ],
+      [
+       "r33c2p36reg:radio:3_clone",
+       "r46c2p58reg:radio:3_clone"
+      ],
+      [
+       "r34c2p39reg:radio:4_clone",
+       "r47c2p61reg:radio:4_clone"
+      ],
+      [
+       "r36c2p44reg:txt",
+       "r49c2p66reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "RICONOSCIUTI",
+     "id": "r6c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r13c1p13reg:txt",
+       "kind": "text",
+       "label": "Macroarea",
+       "max": 100
+      },
+      {
+       "id": "r15c1p17reg:txt",
+       "kind": "text",
+       "label": "Aggregazione",
+       "max": 100
+      },
+      {
+       "id": "r17c1p21reg:txt",
+       "kind": "text",
+       "label": "Linee d'attività",
+       "max": 100
+      },
+      {
+       "id": "r19c1p25reg:txt",
+       "kind": "text",
+       "label": "Codice univoco",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p8reg:chk",
+       "r21c1p30reg:chk"
+      ],
+      [
+       "r14c1p14reg:chk",
+       "r27c1p36reg:chk"
+      ],
+      [
+       "r32c1p34reg:chk",
+       "r45c1p56reg:chk"
+      ],
+      [
+       "r33c2p36reg:radio:3_clone",
+       "r46c2p58reg:radio:3_clone"
+      ],
+      [
+       "r34c2p39reg:radio:4_clone",
+       "r47c2p61reg:radio:4_clone"
+      ],
+      [
+       "r36c2p44reg:txt",
+       "r49c2p66reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Macroarea",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo ''DOCUMENTI DA ALLEGARE'', trovate il/i codici dei documenti obbligatori da a",
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r12c1p12reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Documenti da allegare",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r14c1p14reg:chk",
+       "r15c1p16reg:chk"
+      ],
+      [
+       "r32c1p34reg:chk",
+       "r33c1p36reg:chk"
+      ],
+      [
+       "r33c2p36reg:radio:3_clone",
+       "r34c2p38reg:radio:3_clone"
+      ],
+      [
+       "r34c2p39reg:radio:4_clone",
+       "r35c2p41reg:radio:4_clone"
+      ],
+      [
+       "r36c2p44reg:txt",
+       "r37c2p46reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Nella stessa riga della master list corrispondente alla vostra attività, nel campo \"SCHEDA SUPPLEMENTARE N.\", vi è indicato l'eventuale numero di scheda supplem",
+     "id": "r14c1p14reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r24c1p24reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Caricare SCHEDA SUPPLEMENTARE necessaria",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      },
+      {
+       "id": "r30c1p33reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Allegare l'eventuale form di autocertificazione previsto dalla scheda supplementare",
+       "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r32c1p34reg:chk",
+       "r34c1p38reg:chk"
+      ],
+      [
+       "r33c2p36reg:radio:3_clone",
+       "r35c2p40reg:radio:3_clone"
+      ],
+      [
+       "r34c2p39reg:radio:4_clone",
+       "r36c2p43reg:radio:4_clone"
+      ],
+      [
+       "r36c2p44reg:txt",
+       "r38c2p48reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "che il procedimento si svolga mediante l'indizione della:",
+     "id": "r32c1p34reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "conferenza dei servizi decisoria in forma semplificata e in modalità asincrona",
+     "id": "r33c2p36reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "conferenza dei servizi decisoria in forma simultanea e in modalità sincrona",
+     "id": "r34c2p39reg:radio:4_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 10
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "rispettare l'obbligo di comunicare ogni successiva modifica significativa a quanto sopra descritto ivi compresa la cessazione dell'attività"
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "che l'eventuale affido di un reparto dello stabilimento ad un'altra impresa, non è opponibile alle Autorità di controllo in quanto è un contratto che produce ef"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "che le attività non possono essere iniziate fino all'ottenimento dell'atto di riconoscimento"
+    },
+    {
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "degli obblighi previsti dal D.Lgs 194/08 sui diritti sanitari"
+    },
+    {
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "dell'eventualità che per le linee d'attività svolte nello stabilimento, la master list preveda l'obbligo di compilare schede supplementari."
+    },
+    {
+     "id": "r9c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "che eventuali variazioni delle informazioni riportate nelle schede supplementari devono obbligatoriamente essere comunicate all'ASL via pec oppure in via autono"
+    },
+    {
+     "id": "r10c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "che il mancato aggiornamento delle schede supplementari alla presente notifica è considerata una non conformità da cui può scaturire la contestazione di sanzion"
+    },
+    {
+     "id": "r11c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "Il sottoscritto dichiara inoltre di essere informato ai sensi e per gli effetti di cui all'art. 13 del D.L.vo 196/03 che i dati personali raccolti, anche con st"
+    }
+   ],
+   "fingerprint": "f28e6dc8dd87cd6d",
+   "branches": [
+    {
+     "choice": "rispettare l'obbligo di comunicare ogni successiva modifica significativa a quanto sopra descritto ivi compresa la cessazione dell'attività",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l'eventuale affido di un reparto dello stabilimento ad un'altra impresa, non è opponibile alle Autorità di controllo in quanto è un contratto che produce ef",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che le attività non possono essere iniziate fino all'ottenimento dell'atto di riconoscimento",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "degli obblighi previsti dal D.Lgs 194/08 sui diritti sanitari",
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "dell'eventualità che per le linee d'attività svolte nello stabilimento, la master list preveda l'obbligo di compilare schede supplementari.",
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che eventuali variazioni delle informazioni riportate nelle schede supplementari devono obbligatoriamente essere comunicate all'ASL via pec oppure in via autono",
+     "id": "r9c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che il mancato aggiornamento delle schede supplementari alla presente notifica è considerata una non conformità da cui può scaturire la contestazione di sanzion",
+     "id": "r10c1p11reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.9,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

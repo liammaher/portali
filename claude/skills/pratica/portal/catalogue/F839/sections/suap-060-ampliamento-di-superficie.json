@@ -1,0 +1,213 @@
+{
+ "crawled": "2026-10-28T16:53:11.200Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Ampliamento di superficie (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 23.9,
+ "generated": {
+  "interventi": "Ampliamento dell'esercizio di somministrazione di alimenti e bevande (in zone NON tutelate)",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per ampliamento dell'esercizio di somministrazione di alimenti e bevande",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "Dati catastali",
+   "Ampliamento dell' esercizio di somministrazione di alimenti e bevande",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di modifica della tipologia di attività (presenta contestualmente la NOTIFICA ai fini dell'aggiornamento della registrazione sanitaria)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.9
+  },
+  {
+   "section": "Ampliamento dell' esercizio di somministrazione di alimenti e bevande",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "già avviata con la SCIA/DIA/autorizzazione prot./n.",
+     "max": 10
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c2p15reg:real",
+     "kind": "text",
+     "label": "da mq",
+     "context": "Superficie di somministrazione",
+     "max": 7
+    },
+    {
+     "id": "r7c3p17reg:real",
+     "kind": "text",
+     "label": "a mq",
+     "context": "Superficie di somministrazione",
+     "max": 7
+    }
+   ],
+   "fingerprint": "f724b9aac787a0db",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

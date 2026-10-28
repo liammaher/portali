@@ -45,6 +45,20 @@ catalogo <sportello>" (Liam deletes it afterwards):
 
 Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
+## Where it stands (2026-10-28, `catalogue.py count --summary`)
+
+- **SUE**: all 27 pratiche crawled; **127 distinct sections**, 88 filled by the dictionary,
+  88% of section uses. 20 of the 27 pratiche have every section filled; the other seven
+  (permesso di costruire, SCIA alternativa, the landscape ones) need the asseverazioni and the
+  landscape classifications (DPR 31/2017's lists, the art. 136/142 vincoli): legal and
+  technical choices more than mapping.
+- **SUAP**: 39 of the 361 operations queued (restaurants in and outside the protected zones,
+  the first two priority sectors); **58 distinct sections** so far, 18 filled, 84% of uses. The
+  batch goes on in the pane (`crawl:ops:suap`: 11 priority sectors, then the 64 common
+  operations), about 45 s a pratica.
+- Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening
+  (SUAP) and the proroga di inizio lavori (SUE), besides the seven run before.
+
 ## Drift
 
 A section's fingerprint is a hash of what it shows before any choice: ids, kinds, labels,

@@ -1052,6 +1052,18 @@ sections:
       - {kind: text, label: sezione Urbana, value: "{{locale.catasto_sezione}}", optional: true}
       - {kind: select, label: categoria, value: "{{locale.catasto_categoria|categoria}}"}
 
+  # The fee exemption a Terzo settore body claims (a scelta of its own): the acknowledgement is
+  # theirs, and the scelta is refused until a recipe maps it.
+  - section: DICHIARAZIONE ESENZIONE PAGAMENTO
+    theirs: [Presa visione]
+    fields: []
+
+  # Napoli's own rules for the business (the protected-zones street list, the openings plan):
+  # boxes the person ticks having read them.
+  - section: normative comunali
+    theirs: [Elenco Strade piano Zone Tutelate, Piano per la programmazione delle aperture]
+    fields: []
+
   # A bar or restaurant (somministrazione di alimenti e bevande): the sign, the season, what
   # kind of place, a shopping centre, the area where customers eat and drink. Drafted by
   # draft.py from mod_somministrazione_zone_non_tutelate_apertura, checked against the

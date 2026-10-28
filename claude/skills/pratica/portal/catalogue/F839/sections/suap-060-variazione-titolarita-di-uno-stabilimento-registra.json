@@ -1,0 +1,357 @@
+{
+ "crawled": "2026-10-28T17:00:32.476Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Sicurezza alimentare e sanità pubblica veterinaria (GISA) › Comunicazione per linee d'attività inerenti la sicurezza alimentare e la sanità pubblica veterinaria non ricompresi negli accordi Stato-Regioni › Variazione titolarità di uno stabilimento registrato/riconosciuto (procedura n. 2) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 37.1,
+ "generated": {
+  "interventi": "Comunicazione variazione titolarità di uno stabilimento registrato/riconosciuto",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione variazione titolarità di uno stabilimento registrato/riconosciuto",
+    "amministrazione": "ASL Napoli 1 Centro"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dello stabilimento",
+   "dati catastali",
+   "oggetto della notifica",
+   "ulteriori dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "la notifica riguarda uno stabilimento SENZA sede fissa"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "la notifica riguarda uno stabilimento SENZA sede fissa",
+   "type": "CHK",
+   "adds": [],
+   "drops": [
+    "indirizzo dello stabilimento",
+    "dati catastali"
+   ]
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dello stabilimento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "oggetto della notifica",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Il/la sottoscritto/a NOTIFICA la variazione a proprio favore della titolarità dello stabilimento già condotto dall'impresa",
+     "max": 100
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "la cui P.I. è",
+     "max": 11
+    },
+    {
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "cessione definitiva dello stabilimento per atto tra vivi"
+    },
+    {
+     "id": "r7c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "per fitto d'azienda o di ramo d'azienda (NB: intero stabilimento quindi NO affido di reparto)"
+    },
+    {
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "per atto giudiziale"
+    },
+    {
+     "id": "r9c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "per trasformazione di società"
+    },
+    {
+     "id": "r10c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "mortis causa"
+    },
+    {
+     "id": "r11c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "per fusione di società"
+    },
+    {
+     "id": "r12c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "per fusione di società per incorporazione"
+    },
+    {
+     "id": "r13c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "per mantenimento per una SNC della stessa ragione sociale anche nel caso in cui in essa è presente un socio receduto o defunto ex art. 2292 C.C."
+    }
+   ],
+   "fingerprint": "2b733ea3449fff11",
+   "branches": [
+    {
+     "choice": "cessione definitiva dello stabilimento per atto tra vivi",
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "per fitto d'azienda o di ramo d'azienda (NB: intero stabilimento quindi NO affido di reparto)",
+     "id": "r7c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "per atto giudiziale",
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "per trasformazione di società",
+     "id": "r9c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "mortis causa",
+     "id": "r10c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "per fusione di società",
+     "id": "r11c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "per fusione di società per incorporazione",
+     "id": "r12c1p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "per mantenimento per una SNC della stessa ragione sociale anche nel caso in cui in essa è presente un socio receduto o defunto ex art. 2292 C.C.",
+     "id": "r13c1p22reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 7.1
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "sono state rispettate le disposizioni generali stabilite dalla legislazione vigente in materia di sicurezza alimentare e sanità pubblica veterinaria"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "sono state rispettate le disposizioni specifiche stabilite dalla legislazione vigente relative alle linee d'attività svolte nello stabilimento"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dal D.Lgs. 06/09/2011, n. 159. (Autocertificazione Antimafia"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "rispettare l'obbligo di comunicare ogni successiva modifica significativa a quanto sopra descritto ivi compresa la cessazione dell'attività"
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "che la presente comunicazione non comprende né sostituisce altri eventuali adempimenti di legge e/o altre autocertificazioni previste ai fini dell'avvio dell'at"
+    },
+    {
+     "id": "r9c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "che l'eventuale affido di un reparto dello stabilimento ad un'altra impresa, non è opponibile alle Autorità di controllo in quanto è un contratto che produce ef"
+    },
+    {
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "degli obblighi previsti dal D.Lgs 194/08 sui diritti sanitari"
+    },
+    {
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "dell'eventualità che per le linee d'attività svolte nello stabilimento, la master list preveda l'obbligo di compilare schede supplementari alla presente notific"
+    },
+    {
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "che eventuali variazioni delle informazioni riportate nelle schede supplementari devono obbligatoriamente essere comunicate all'ASL via pec oppure in via autono"
+    },
+    {
+     "id": "r13c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "che il mancato aggiornamento delle schede supplementari alla presente notifica è considerata una non conformità da cui può scaturire la contestazione di sanzion"
+    },
+    {
+     "id": "r14c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "Il sottoscritto dichiara inoltre di essere informato ai sensi e per gli effetti di cui all'art. 13 del D.L.vo 196/03 che i dati personali raccolti, anche con st"
+    }
+   ],
+   "fingerprint": "218486b986ffb652",
+   "branches": [
+    {
+     "choice": "sono state rispettate le disposizioni generali stabilite dalla legislazione vigente in materia di sicurezza alimentare e sanità pubblica veterinaria",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "sono state rispettate le disposizioni specifiche stabilite dalla legislazione vigente relative alle linee d'attività svolte nello stabilimento",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che non sussistono nei propri confronti le cause di divieto, di decadenza o di sospensione previste dal D.Lgs. 06/09/2011, n. 159. (Autocertificazione Antimafia",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "rispettare l'obbligo di comunicare ogni successiva modifica significativa a quanto sopra descritto ivi compresa la cessazione dell'attività",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che la presente comunicazione non comprende né sostituisce altri eventuali adempimenti di legge e/o altre autocertificazioni previste ai fini dell'avvio dell'at",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l'eventuale affido di un reparto dello stabilimento ad un'altra impresa, non è opponibile alle Autorità di controllo in quanto è un contratto che produce ef",
+     "id": "r9c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "degli obblighi previsti dal D.Lgs 194/08 sui diritti sanitari",
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "dell'eventualità che per le linee d'attività svolte nello stabilimento, la master list preveda l'obbligo di compilare schede supplementari alla presente notific",
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che eventuali variazioni delle informazioni riportate nelle schede supplementari devono obbligatoriamente essere comunicate all'ASL via pec oppure in via autono",
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che il mancato aggiornamento delle schede supplementari alla presente notifica è considerata una non conformità da cui può scaturire la contestazione di sanzion",
+     "id": "r13c1p15reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 9.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.6,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}
