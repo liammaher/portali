@@ -89,7 +89,9 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      sections, `wizard.js` a comune's whole wizard (`catalogue/<comune>/`).
                      gen.py writes a steps file from a crawl, `dictionary/fnsuap.yaml` (each
                      section's fields by label, shared by every pratica) and a recipe
-                     (rehearsals/*/recipe.yaml); it writes nothing if a field is unaccounted for
+                     (rehearsals/*/recipe.yaml); it writes nothing if a field is unaccounted for.
+                     draft.py drafts dictionary entries for a new section from the national
+                     schema (`schema/`, InfoCamere's forms flattened), for a person to check
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
 ```
 

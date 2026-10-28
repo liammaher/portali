@@ -136,5 +136,24 @@ def _():
     assert "verificato_idoneita" not in generated("scia-fittizia")["asks"]
 
 
+@case("draft.py drafts the hairdresser's own sections from the national schema, every box with its meaning")
+def _():
+    import draft
+    crawl = gen.json.loads((HERE.parent / "catalogue/F839/sections/acconciatore.json").read_text())
+    schema = gen.json.loads((HERE.parent / "schema/mod_acconciatori_estetisti_apertura_v1.0.7-fields.json").read_text())
+    sec = lambda name: next(x for x in crawl["sections"] if x["section"].startswith(name))
+    e, asks, n, missed = draft.draft_section(sec("Dati sull"), schema)
+    got = [f.get("value") or f.get("when") for f in e["fields"]]
+    assert missed == 0 and got[:2] == ["{{ask.superficie_complessiva}}", "{{ask.superficie_attivita}}"], got
+    assert "{{ask.congiunta_denominazione}}" in got and "{{ask.data_protocollo|date_it}}" in got, got
+    e, asks, n, missed = draft.draft_section(sec("Dichiarazione sul possesso dei requisiti antimafia"), schema)
+    assert e.get("theirs") and not e["fields"], e  # a declaration is the person's
+    e, asks, n, missed = draft.draft_section(sec("Dichiarazione sul possesso dei requisiti professionali"), schema)
+    by = {(f["label"][:12], f.get("nth", 1)): f.get("value") for f in e["fields"] if f.get("value")}
+    assert by[("rilasciata d", 1)] == "{{ask.ente_abilitazione_professionale}}", by
+    assert by[("rilasciata d", 2)] == "{{ask.ente_qualifica_professionale}}", by
+    assert by[("Nome", 1)] == "{{ask.nome}}", by
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

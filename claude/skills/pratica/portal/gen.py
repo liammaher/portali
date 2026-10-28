@@ -137,6 +137,13 @@ class Section:
         if n is None:
             n = self.node(self.branches, {**f, "id": f.get("base_id", f["id"])}, option)
         if n is None:
+            # A choice another one opened, deeper in the crawl than the state reached.
+            def every(nodes):
+                for x in nodes:
+                    yield x
+                    yield from every(x.get("then", []))
+            n = self.node(list(every(self.branches)), {**f, "id": f.get("base_id", f["id"])}, option)
+        if n is None:
             return
         reveals = [dict(x) for x in n.get("reveals", []) if x["kind"] != "message"]
         hides = set(n.get("hides", []))
@@ -299,8 +306,11 @@ def fill(entry, as_name, c, recipe, name):
     # What the section shows that the dictionary neither fills nor leaves, in any branch.
     leave = [norm(x) for x in entry.get("leave", [])]
     shown = {(f["id"], f["label"]): f for st in [main, *branches.values()] for f in st.fields}
+    # The same box, shifted in another branch's view, is the one filled.
+    same = lambda g: (g["kind"], norm(g["label"]), norm(g.get("context")))
+    filled_as = {same(g) for g in shown.values() if (g["id"], g["label"]) in filled}
     for f in shown.values():
-        if (f["id"], f["label"]) in filled or f["kind"] in ("radio", "checkbox") and not entry.get("strict"):
+        if (f["id"], f["label"]) in filled or same(f) in filled_as or f["kind"] in ("radio", "checkbox") and not entry.get("strict"):
             continue
         if any(norm(f.get("label")).startswith(x) or norm(f.get("context")).startswith(x) for x in leave):
             continue
@@ -322,11 +332,19 @@ def generate(recipe, base=HERE):
     crawl = json.loads((cat_dir / "sections" / f"{recipe['crawl']}.json").read_text())
     dictionary = load_yaml(base / "dictionary" / f"{recipe.get('dictionary', 'fnsuap')}.yaml")
 
-    op = next((o for o in catalogue["operations"] if o["label"] == recipe["operation"]), None)
-    if not op:
-        raise GenError(f"no operation {recipe['operation']!r} in the catalogue")
-    names = [catalogue["sections"][i] for i in op["sections"]]
-    for s in recipe.get("scelte", []):
+    if "operations" not in catalogue:
+        # A catalogue of the wizard's tree only (the SUAP's so far): the pratica's sections are
+        # the crawled draft's, in its order, and the recipe gives the wizard.
+        op = {"label": recipe["operation"], "scelte": []}
+        names = [s["section"] for s in crawl["sections"]]
+        if "wizard" not in recipe:
+            raise GenError("the catalogue has no pratica for this operation: the recipe needs `wizard`")
+    else:
+        op = next((o for o in catalogue["operations"] if o["label"] == recipe["operation"]), None)
+        if not op:
+            raise GenError(f"no operation {recipe['operation']!r} in the catalogue")
+        names = [catalogue["sections"][i] for i in op["sections"]]
+    for s in recipe.get("scelte", []) if "operations" in catalogue else []:
         sc = next((x for x in op.get("scelte", []) if x["option"] == s), None) or \
             (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {op['label']}"))
         names = [n for i, n in zip(op["sections"], names) if i not in sc.get("drops", [])] + \
@@ -342,7 +360,11 @@ def generate(recipe, base=HERE):
         if DECLARATIONS.search(name):
             continue
         # The recipe's own entries first: a case only this pratica has.
-        candidates = dictionary_entries(recipe.get("sections", []) + dictionary["sections"], name)
+        # An entry for one subject (`subject: impresa`, the business itself declaring) serves only
+        # recipes for that subject; one without serves all.
+        candidates = [(e, n) for e, n in dictionary_entries(recipe.get("sections", []) + dictionary["sections"], name)
+                      if e.get("subject", recipe.get("subject")) == recipe.get("subject")]
+        candidates.sort(key=lambda en: "subject" not in en[0])  # the subject's own first
         if not candidates:
             problems.append(f"{name}: no dictionary entry")
             continue
@@ -389,6 +411,12 @@ def generate(recipe, base=HERE):
             for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(d)):
                 asks_used.add(t)
         if slots is not None:
+            # Every slot that takes only signed files is the person's, named or not.
+            for s in slots:
+                if s.get("accepts") and all(t.endswith(".p7m") for t in s["accepts"].split(";")):
+                    title = s["title"][:60]
+                    if not any(norm(title).startswith(norm(t)) or norm(t).startswith(norm(title)) for t in out.get("theirs", [])):
+                        out["theirs"] = out.get("theirs", []) + [title]
             for s in slots:
                 hit = any(norm(s["title"]).startswith(norm(d["label"])) for d in fields)
                 theirs = any(norm(s["title"]).startswith(norm(t)) for t in entry.get("theirs", []))
@@ -413,7 +441,7 @@ def generate(recipe, base=HERE):
     if missing:
         raise GenError(f"asks with no definition in the dictionary: {sorted(missing)}")
 
-    wizard = [
+    wizard = recipe.get("wizard") or [
         {"screen": "Assegna una descrizione alla pratica",
          "fill": {"css": 'input[placeholder^="Inserire la descrizione"]', "value": "{{ask.descrizione}}"}, "confirm": "CONFERMA"},
         {"screen": "Controlla l'accesso alla pratica", "confirm": "CONFERMA"},
@@ -421,7 +449,7 @@ def generate(recipe, base=HERE):
         {"screen": "Scelta operazioni", "tree": op["label"], "confirm": "CONFERMA"},
         {"screen": "Scelta del destinatario della pratica", "confirm": "CONFERMA"},
     ]
-    if recipe.get("scelte") is not None:
+    if recipe.get("scelte") is not None and "wizard" not in recipe:
         wizard.append({"screen": "Scelte eventuali", **({"tree": recipe["scelte"][0]} if recipe["scelte"] else {}),
                        **({"answers": recipe["si_no"]} if recipe.get("si_no") else {}),
                        "confirm": "CONFERMA"})
@@ -429,7 +457,7 @@ def generate(recipe, base=HERE):
         "procedure": recipe["procedure"], "title": recipe["title"],
         "generated": f"gen.py from {recipe['crawl']} ({crawl.get('crawled', '?')[:10]}) and dictionary/{recipe.get('dictionary', 'fnsuap')}.yaml",
         "yours": recipe["yours"], "asks": asks, "supports": recipe.get("supports", []),
-        "start": catalogue["start"], "logged_in": recipe.get("logged_in", "https://suap.impresainungiorno.gov.it/fnsuap/"),
+        "start": recipe.get("start", catalogue["start"]), "logged_in": recipe.get("logged_in", "https://suap.impresainungiorno.gov.it/fnsuap/"),
         "wizard": wizard, "sections": out_sections,
     }
 

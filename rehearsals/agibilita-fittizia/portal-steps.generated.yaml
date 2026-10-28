@@ -280,6 +280,8 @@ sections:
   theirs:
   - Procura speciale
   - Quadro riepilogativo della documentazione
+  - Attestazione in merito all'apposizione dell'etichetta di "ed
+  - copia attestazione versamento oneri, diritti e spese
   fields:
   - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}'}
   - {kind: file, label: Copia dei documenti d'identità del/i titolare/i, value: '{{ask.documento_identita_cliente}}'}

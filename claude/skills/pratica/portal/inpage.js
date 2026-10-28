@@ -132,11 +132,14 @@
 
   // wizard
 
-  async function tree(leaf) {
+  async function tree(item) {
+    // A name, or {leaf, nth} for a name the tree has under several parents (Napoli's SUAP
+    // lists "Acconciatore, barbiere, ..." twice).
+    const { leaf, nth } = typeof item === "string" ? { leaf: item, nth: 0 } : item;
     const node = () => {
       const s = [...doc().querySelectorAll(".ui-tree .tree-content > span")].filter((x) => x.textContent.trim() === leaf);
-      if (s.length !== 1) fail(`tree: ${s.length} nodes named ${leaf}`);
-      return s[0];
+      if (nth ? s.length < nth : s.length !== 1) fail(`tree: ${s.length} nodes named ${leaf}`);
+      return s[nth ? nth - 1 : 0];
     };
     // Open its ancestors, outermost first, then select it.
     const keys = [];

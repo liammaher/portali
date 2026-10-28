@@ -105,6 +105,36 @@ asks:
   stato_legittimo_doc: {type: file, question: "The documents proving the stato legittimo (the building's titles, PDF)"}
   dichiarazione_conformita: {type: file, question: "The installers' dichiarazioni di conformità of the systems touched (PDF)", when: "{{ask.impianti}}"}
 
+  # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
+  superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
+  superficie_attivita: {type: "number", question: "Superficie del locale adibita all'esercizio dell'attività: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_attivita"}
+  in_centro_commerciale: {type: "yes_no", question: "In centro commerciale? (yes: Si)", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_si"}
+  centro_commerciale_denominazione: {type: "text", question: "denominazione", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_denominazione"}
+  attivita_esercita: {type: "yes_no", question: "Attivita esercita? (yes: Unica o prevalente)", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/unica_check"}
+  congiunta_denominazione: {type: "text", question: "Svolta congiuntamente all'attività: di", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/congiunta_denominazione"}
+  nr_protocollo: {type: "text", question: "Già avviato con la SCIA: prot./n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/nr_protocollo"}
+  data_protocollo: {type: "date", question: "del", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/data_protocollo"}
+  responsabile_tecnico: {type: "yes_no", question: "di essere Responsabile tecnico?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_check"}
+  abilitazione_professionale: {type: "yes_no", question: "di essere in possesso dell'abilitazione professionale?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/abilitazione_professionale_check"}
+  ente_abilitazione_professionale: {type: "text", question: "rilasciata da", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/ente_abilitazione_professionale"}
+  data_abilitazione_professionale: {type: "date", question: "in data", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/data_abilitazione_professionale"}
+  atto_abilitazione_professionale: {type: "text", question: "con atto n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/atto_abilitazione_professionale"}
+  qualifica_professionale: {type: "yes_no", question: "di essere in possesso di qualifica di acconciatore o di parrucchiere, per uomo o per donna, prevista?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/qualifica_professionale_check"}
+  ente_qualifica_professionale: {type: "text", question: "rilasciata da", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/ente_qualifica_professionale"}
+  data_qualifica_professionale: {type: "date", question: "in data", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/data_qualifica_professionale"}
+  atto_qualifica_professionale: {type: "text", question: "con atto n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/atto_qualifica_professionale"}
+  qualifica_professionale_estero: {type: "yes_no", question: "di avere conseguito la qualificazione professionale all'estero e di averne ottenuto il riconosciment?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/qualifica_professionale_estero_check"}
+  atto_qualifica_estero_professionale: {type: "text", question: "con decreto n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/atto_qualifica_estero_professionale"}
+  data_qualifica_estero_professionale: {type: "date", question: "in data", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/data_qualifica_estero_professionale"}
+  altro: {type: "yes_no", question: "altro?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/altro_check"}
+  altro_testo: {type: "text", question: "altro: (specificare)", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/altro"}
+  multi_responsabili_tecnici: {type: "yes_no", question: "che il/i Responsabile/i tecnico/i è/sono:?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/multi_responsabili_tecnici_check"}
+  cognome: {type: "text", question: "Cognome", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_blocco/cognome"}
+  nome: {type: "text", question: "Nome", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_blocco/nome"}
+  tipo_qualita_responsabile_tecnico: {type: "choice", question: "in qualità di", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_blocco/tipo_qualita_responsabile_tecnico", options: ["Titolare", "Socio partecipante al lavoro", "Familiare coadiuvante", "Dipendente"]}
+  essere_responsabile_qualifica_professionale: {type: "yes_no", question: "che possiede/ono l'abilitazione professionale prevista, come dichiarato in Allegato B.?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/essere_responsabile_qualifica_professionale_check"}
+  allegato_dichiarazione_sul_possesso_dei_requisiti: {type: "file", question: "Caricare l'ALLEGATO B compilato + Copia documento di Identità in corso di validità"}
+
 sections:
   # The dichiarante is the client (the titolare), as a private person. The draft opens on it.
   - section: Scheda anagrafica
@@ -637,6 +667,124 @@ sections:
       - {kind: text, label: che il titolo e/o comunicazione, value: "{{ask.titolo_edilizio}}"}
       - {kind: text, label: prot./n., value: "{{ask.titolo_protocollo}}"}
       - {kind: date, label: del, value: "{{ask.titolo_data|date_it}}"}
+
+  # The business itself declaring (a SUAP pratica: the ditta and its titolare `t:`, its
+  # premises `locale`), from the pizzeria walk (rehearsals/pizzeria-fittizia). A recipe with
+  # `subject: impresa` takes these before the ones above.
+  - section: Scheda anagrafica
+    subject: impresa
+    open: false
+    fields:
+      - {kind: radio, label: "DITTA/SOCIETA'/IMPRESA"}
+      - {kind: radio, label: NON ANCORA ISCRITTA, when: "{{business.rea|empty}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Cod.Fiscale, value: "{{t:identity.codice_fiscale}}"}
+      - {kind: select, label: Sesso, value: "{{t:identity.sex}}"}
+      - {kind: text, label: Data nascita, value: "{{t:identity.date_of_birth|date_it}}"}
+      - {kind: select, label: Provincia, value: "{{t:identity.birth_province}}"}
+      - {kind: select, label: Comune, value: "{{t:identity.birth_comune|upper}}"}
+      - {kind: select, label: Provincia, nth: 2, value: "{{t:residenza.provincia}}"}
+      - {kind: select, label: Comune, nth: 2, value: "{{t:residenza.comune|upper}}"}
+      - {kind: select, label: Toponimo (DUG), value: "{{t:residenza.indirizzo|dug}}"}
+      - {kind: text, label: Denominazione stradale, value: "{{t:residenza.indirizzo|street|upper}}"}
+      - {kind: text, label: Numero civico, value: "{{t:residenza.civico}}"}
+      - {kind: text, label: CAP, value: "{{t:residenza.cap}}"}
+      - {kind: text, label: eMail/PEC, value: "{{t:identity.email}}"}
+      - {kind: text, label: Telefono fisso/cellulare, value: "{{t:identity.phone|phone_it}}"}
+      - {kind: select, label: Carica, value: "{{t:ruolo.tipo|carica}}"}
+      # Forma giuridica first: choosing it re-renders the block and can empty Denominazione.
+      - {kind: select, label: Forma giuridica, value: "{{business.forma_giuridica|forma}}"}
+      - {kind: text, label: "Denominazione (nome della ditta", value: "{{business.denominazione}}"}
+      - {kind: text, label: Codice Fiscale, value: "{{business.codice_fiscale}}"}
+      - {kind: text, label: P.IVA, value: "{{business.partita_iva}}"}
+      - {kind: select, label: Provincia, nth: 3, value: "{{business.sede_legale_provincia}}"}
+      - {kind: select, label: Comune, nth: 3, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: select, label: Toponimo (DUG), nth: 2, value: "{{business.sede_legale_indirizzo|dug}}"}
+      - {kind: text, label: Denominazione stradale, nth: 2, value: "{{business.sede_legale_indirizzo|street|upper}}"}
+      - {kind: text, label: Numero civico, nth: 2, value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: CAP, nth: 2, value: "{{business.sede_legale_cap}}"}
+      - {kind: text, label: Telefono fisso/Cellulare, nth: 2, value: "{{business.telefono|phone_it}}"}
+      - {kind: text, label: PEC, value: "{{business.pec}}"}
+    leave: [Fax]
+
+  - section: DOMICILIO DIGITALE
+    subject: impresa
+    fields:
+      - {kind: checkbox, label: il seguente domicilio digitale inserito in INI-PEC}
+      - {kind: text, label: il seguente domicilio digitale inserito in INI-PEC, value: "{{business.pec}}"}
+
+  - section: DOMICILIO ELETTRONICO
+    subject: impresa
+    theirs: [Si dichiara di essere consapevoli]
+    fields:
+      - {kind: text, label: "N.B. Inserire l'indirizzo della casella PEC", value: "{{business.pec}}"}
+
+  - section: ubicazione dell'attività
+    subject: impresa
+    leave: [Frazione]
+    fields:
+      - {kind: text, label: CAP, value: "{{locale.cap}}"}
+      - {kind: lookup, label: "Via, Viale, Piazza", value: "{{locale.indirizzo}}"}
+      - {kind: text, label: n° civico, value: "{{locale.civico}}"}
+      - {kind: text, label: scala, value: "{{locale.scala}}", optional: true}
+      - {kind: text, label: piano, value: "{{locale.piano}}", optional: true}
+      - {kind: text, label: interno, value: "{{locale.interno}}", optional: true}
+
+  - section: Dati catastali
+    subject: impresa
+    leave: [sezione Amministrativa, classe]
+    fields:
+      - {kind: radio, label: Nuovo Catasto Edilizio Urbano}
+      - {kind: text, label: foglio, value: "{{locale.catasto_foglio}}"}
+      - {kind: text, label: particella/mappale, value: "{{locale.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{locale.catasto_subalterno}}"}
+      - {kind: text, label: sezione Urbana, value: "{{locale.catasto_sezione}}", optional: true}
+      - {kind: select, label: categoria, value: "{{locale.catasto_categoria|categoria}}"}
+
+  # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
+  - section: "Dati sull'attività"
+    schema: modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura
+    fields:
+      - {kind: "text", label: "mq", value: "{{ask.superficie_complessiva}}"}
+      - {kind: "text", label: "mq", value: "{{ask.superficie_attivita}}", nth: 2}
+      - {kind: "tick", label: "Si", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: "tick", label: "No", when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: "text", label: "denominazione", value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: "tick", label: "Unica o prevalente", when: "{{ask.attivita_esercita}}"}
+      - {kind: "tick", label: "Svolta congiuntamente all'attività", when: "{{ask.attivita_esercita|not}}"}
+      - {kind: "text", label: "di", value: "{{ask.congiunta_denominazione}}", when: "{{ask.attivita_esercita|not}}"}
+      - {kind: "text", label: "prot./n.", value: "{{ask.nr_protocollo}}", when: "{{ask.attivita_esercita|not}}"}
+      - {kind: "date", label: "del", value: "{{ask.data_protocollo|date_it}}", when: "{{ask.attivita_esercita|not}}"}
+
+  - section: "Dichiarazione sul possesso dei requisiti antimafia"
+    schema: modulo_acconciatori_estetisti_apertura/scheda_anagrafica
+    theirs: ["che non sussistono nei propri confronti le cause di"]
+    fields: []
+
+  - section: "Dichiarazione sul possesso dei requisiti professionali (attività di acconciatore)"
+    schema: modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura
+    fields:
+      - {kind: "tick", label: "di essere Responsabile tecnico", when: "{{ask.responsabile_tecnico}}"}
+      - {kind: "tick", label: "di essere in possesso dell'abilitazione professionale", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "text", label: "rilasciata da", value: "{{ask.ente_abilitazione_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "date", label: "in data", value: "{{ask.data_abilitazione_professionale|date_it}}", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "text", label: "con atto n.", value: "{{ask.atto_abilitazione_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "tick", label: "di essere in possesso di qualifica di acconciatore o di", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}"}
+      - {kind: "text", label: "rilasciata da", value: "{{ask.ente_qualifica_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}", nth: 2}
+      - {kind: "date", label: "in data", value: "{{ask.data_qualifica_professionale|date_it}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}", nth: 2}
+      - {kind: "text", label: "con atto n.", value: "{{ask.atto_qualifica_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}", nth: 2}
+      - {kind: "tick", label: "di avere conseguito la qualificazione professionale", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}"}
+      - {kind: "text", label: "con decreto n.", value: "{{ask.atto_qualifica_estero_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}"}
+      - {kind: "date", label: "in data", value: "{{ask.data_qualifica_estero_professionale|date_it}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}", nth: 3}
+      - {kind: "tick", label: "altro", when: "{{ask.responsabile_tecnico}} {{ask.altro}}"}
+      - {kind: "text", label: "(specificare)", value: "{{ask.altro_testo}}", when: "{{ask.responsabile_tecnico}} {{ask.altro}}"}
+      - {kind: "tick", label: "che il/i Responsabile/i tecnico/i è/sono:", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "text", label: "Cognome", value: "{{ask.cognome}}", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "text", label: "Nome", value: "{{ask.nome}}", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "select", label: "in qualità di", value: "{{ask.tipo_qualita_responsabile_tecnico}}", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "tick", label: "che possiede/ono l'abilitazione professionale prevista,", when: "{{ask.multi_responsabili_tecnici}} {{ask.essere_responsabile_qualifica_professionale}}"}
+      - {kind: "file", label: "Tipologie ammesse", value: "{{ask.allegato_dichiarazione_sul_possesso_dei_requisiti}}", when: "{{ask.multi_responsabili_tecnici}} {{ask.essere_responsabile_qualifica_professionale}}"}
 
 # The screens after the form, reached with their button. The attachments go by slot title; a
 # slot the pratica's crawl doesn't list is left out, a required one nothing fills stops gen.py.

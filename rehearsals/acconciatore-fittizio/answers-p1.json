@@ -1,0 +1,19 @@
+{
+ "descrizione": "PROVA NON INVIARE - acconciatore generato",
+ "oggetto": "Apertura di un'attività di acconciatore in Via Alessandro Scarlatti 100, Napoli.",
+ "superficie_complessiva": "48",
+ "superficie_attivita": "40",
+ "in_centro_commerciale": "false",
+ "attivita_esercita": "true",
+ "responsabile_tecnico": "true",
+ "abilitazione_professionale": "true",
+ "ente_abilitazione_professionale": "Regione Campania (inventato)",
+ "data_abilitazione_professionale": "2015-06-30",
+ "atto_abilitazione_professionale": "9999",
+ "qualifica_professionale": "false",
+ "qualifica_professionale_estero": "false",
+ "altro": "false",
+ "multi_responsabili_tecnici": "false",
+ "diritti_euro": "0",
+ "essere_responsabile_qualifica_professionale": "false"
+}

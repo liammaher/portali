@@ -1,0 +1,39 @@
+# The SUAP's opening of a hairdresser's (acconciatore), as gen.py writes its steps file. The
+# first SUAP pratica generated: crawl catalogue/F839/sections/acconciatore.json; its three own
+# sections drafted from the national schema by draft.py (mod_acconciatori_estetisti_apertura)
+# and used as drafted; the business's shared sections from the pizzeria walk. The business
+# itself declares (`subject: impresa`): a made-up ditta individuale and its titolare.
+procedure: napoli/comune/acconciatore-apertura
+title: "Apertura di un'attività di acconciatore, SUAP Napoli (ditta individuale)"
+comune: F839
+sportello: suap
+crawl: acconciatore
+subject: impresa
+operation: Aprire l'attività di acconciatore
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  # The sector sits twice in Napoli's tree; both lead to the same pratica.
+  - {screen: Scelta settore attività, tree: [{leaf: "Acconciatore, barbiere, estetista, tatuatore e piercer", nth: 1}], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Aprire l'attività di acconciatore"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+after: [Pagamento degli oneri, Gestione degli allegati]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - acconciatore {{business.denominazione}}"}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: the awareness box under the PEC, the antimafia declaration, consapevolezza (artt. 46-47), informativa privacy, altre dichiarazioni, tasse comunali, art. 75 DPR 445/2000"
+  - "On Allega documenti: the planimetria quotata and the relazione descrittiva of the premises, signed digitally (.p7m)"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
+  - when: "{{business.rea|empty}}"
+    else: "So far only for a business not yet in the Registro delle imprese."
