@@ -73,6 +73,19 @@ asks:
   paes_protocollo: {type: text, question: "The landscape authorization's P.G. (protocollo) number"}
   paes_data: {type: date, question: "Its date"}
   paes_scadenza: {type: date, question: "The date it was to stop being valid"}
+  precedente_cognome: {type: text, question: "The permit's holder until now: surname, or the company's name"}
+  precedente_nome: {type: text, question: "Their first name (none for a company)", default: ""}
+  precedente_cf: {type: text, question: "Their codice fiscale or partita IVA"}
+  atto_tipo: {type: text, question: "The deed that passed the property (e.g. atto di compravendita)"}
+  atto_data: {type: date, question: "Its date"}
+  atto_notaio: {type: text, question: "The notary's name"}
+  atto_notaio_sede: {type: text, question: "The notary's town"}
+  atto_repertorio: {type: text, question: "Repertorio number"}
+  atto_raccolta: {type: text, question: "Raccolta (rogito) number"}
+  atto_registrato_a: {type: text, question: "Where it was registered (Agenzia delle Entrate office)"}
+  atto_registrazione_data: {type: date, question: "Registration date"}
+  atto_registrazione_numero: {type: text, question: "Registration number"}
+  zona_prg: {type: text, question: "The property's zone in the PRG (e.g. zona B)"}
   proroga_giorni: {type: text, question: "How many days of extension are asked (e.g. 365)"}
   proroga_motivo: {type: text, question: "Why the extension is needed: the facts beyond the holder's control (500 characters)"}
   proroga_tipo_lavori: {type: text, question: "The works still to finish, in a few words (30 characters)"}
@@ -562,6 +575,55 @@ sections:
       - {kind: text, label: intestato a, value: "{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}"}
       - {kind: date, label: la cui data di scadenza dell'efficacia dovrebbe essere il, value: "{{ask.paes_scadenza|date_it}}"}
       - {kind: date, label: ed è invece prevista per il, value: "{{ask.proroga_data_prevista|date_it}}"}
+
+  # Voltura of a permesso di costruire to a new holder (the client, `c:`): the permit and its
+  # holder until now, the deed that passed the property, the property, where the new holder
+  # takes notices. Their acknowledgements, and their promise to pay what's left of the
+  # contributo, are theirs.
+  - section: Numero del permesso di costruire e proprietario
+    fields:
+      - {kind: text, label: numero, value: "{{ask.pdc_numero}}"}
+      - {kind: date, label: di data, value: "{{ask.pdc_data|date_it}}"}
+      - {kind: text, label: cognome / ragione sociale, value: "{{ask.precedente_cognome}}"}
+      - {kind: text, label: nome, value: "{{ask.precedente_nome}}", optional: true}
+      - {kind: text, label: codice fiscale / P. IVA, value: "{{ask.precedente_cf}}"}
+  - section: Contenuti dell'intervento (titolo del richiedente
+    leave: [coordinate geografiche, latitudine, longitudine]
+    fields:
+      - {kind: radio, label: proprietà, when: "{{ask.titolo|is_proprietario}}"}
+      - {kind: radio, label: comproprietà, when: "{{ask.titolo|is_comproprietario}}"}
+      - {kind: radio, label: altro titolo, when: "{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}}"}
+      - {kind: text, label: (specificare), value: "{{ask.titolo}}", when: "{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}}"}
+      - {kind: text, label: (indicare atto idoneo al trasferimento del titolo edilizio), value: "{{ask.atto_tipo}}"}
+      - {kind: date, label: stipulato / autenticato in data, value: "{{ask.atto_data|date_it}}"}
+      - {kind: text, label: dal Notaio dott., value: "{{ask.atto_notaio}}"}
+      - {kind: text, label: di, value: "{{ask.atto_notaio_sede}}"}
+      - {kind: text, label: rep. n°, value: "{{ask.atto_repertorio}}"}
+      - {kind: text, label: rogito n°, value: "{{ask.atto_raccolta}}"}
+      - {kind: text, label: registrato a, value: "{{ask.atto_registrato_a}}"}
+      - {kind: date, label: in data, value: "{{ask.atto_registrazione_data|date_it}}"}
+      - {kind: text, label: al n°, value: "{{ask.atto_registrazione_numero}}"}
+      - {kind: textarea, label: sommaria e sintetica, value: "{{ask.pdc_interventi}}"}
+      - {kind: text, label: ad uso, value: "{{ask.destinazione_uso}}"}
+      - {kind: text, label: in zona di PRG, value: "{{ask.zona_prg}}"}
+  - section: dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare
+    theirs: [di aver preso visione]
+    fields: []
+  - section: dichiarazione relativa alla conoscenza dei soggetti che intervengono
+    theirs: [di aver preso visione]
+    fields: []
+  - section: Contributo di Costruzione
+    theirs: [di impegnarsi al versamento del Contributo di Costruzione residuo]
+    fields: []
+  - section: Domicilio dei nuovi intestatari per comunicazioni o notifiche
+    leave: [fax]
+    fields:
+      - {kind: text, label: comune, value: "{{c:residenza.comune|upper}}"}
+      - {kind: text, label: "via, viale, piazza", value: "{{c:residenza.indirizzo|upper}}"}
+      - {kind: text, label: numero civico, value: "{{c:residenza.civico}}"}
+      - {kind: text, label: CAP, value: "{{c:residenza.cap}}"}
+      - {kind: text, label: prov, value: "{{c:residenza.provincia}}"}
+      - {kind: text, label: tel, value: "{{c:identity.phone|phone_it}}"}
 
   # A new direttore dei lavori: the studio's architect (`t:`), her studio's address and her albo.
   - section: nomina nuovo direttore dei lavori
