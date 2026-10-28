@@ -184,13 +184,16 @@ def _():
         assert got == want
 
 
-@case("a section's fingerprint is the one crawl.js computes in the page")
+@case("a section's fingerprint is the one crawl.js computed in the page, for every crawled section")
 def _():
     import catalogue
-    scia = gen.json.loads((HERE.parent / "catalogue/F839/sections/scia.json").read_text())
-    fp = {s["section"]: catalogue.fingerprint(s["fields"]) for s in scia["sections"] if s.get("fields")}
-    # crawl.js's fingerprint() of the same fields, in the browser pane (2026-10-28)
-    assert fp["Scheda anagrafica"] == "c68cc6bd56afee34" and fp["Dati catastali"] == "5aaf2d3f32eecf5a", fp
+    n = 0
+    for name, c in catalogue.crawls().items():
+        for s in c["sections"]:
+            if s.get("fields") is not None and s.get("fingerprint"):
+                assert catalogue.fingerprint(s["fields"]) == s["fingerprint"], (name, s["section"])
+                n += 1
+    assert n > 100, n
 
 
 @case("a pratica the last drift check found changed is refused by gen.py and by pre-flight")

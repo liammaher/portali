@@ -1,1925 +1,127 @@
 {
- "crawled": "2026-10-28T14:38:37.516Z",
- "by": "crawl.js depth 2",
- "pratica": "SCIA edilizia, scelta procura (draft PROVA NON INVIARE - gen scia)",
- "seconds": 764.2,
- "tried": 319,
+ "crawled": "2026-10-28T17:27:42.079Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria) › Segnalazione Certificata di Inizio Attività Edilizia (S.C.I.A.) (sector Edilizia e pianificazione urbana)",
+ "seconds": 207.4,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività Edilizia",
+  "adempimenti": [
+   {
+    "adempimento": "Segnalazione Certificata Inizio Attività (art. 22 , d.P.R. 6 giugno 2001, n. 380 - art. 19, 19-bis l. 7 agosto 1990, n. 241 – artt. 5, 6 e 7, d.P.R. 7 settembre 2010, n. 160)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Localizzazione dell'intervento",
+   "Dati catastali",
+   "a) Titolarità dell'intervento",
+   "b) Presentazione della SCIA/SCIA Unica/SCIA Condizionata",
+   "c) Qualificazione dell'intervento",
+   "d) Destinazione d'uso dell'immobile",
+   "e) Opere su parti comuni o modifiche esterne",
+   "f) Regolarità urbanistica e precedenti edilizi",
+   "g) Calcolo del contributo di costruzione",
+   "h1) Tecnici incaricati",
+   "H2) Altri tecnici incaricati",
+   "i) Impresa esecutrice dei lavori",
+   "l) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+   "m) Diritti di terzi",
+   "Note",
+   "Asseverazione SCIA - Tipologia di intervento, descrizione opere",
+   "Asseverazione SCIA - Stato legittimo, Dichiarazione di tolleranze, Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione",
+   "Asseverazione SCIA - Dati immobile, strumentazione urbanistica, barriere architettoniche",
+   "Asseverazione SCIA - Sicurezza impianti, consumi energetici",
+   "Asseverazione SCIA - Inquinamento acustico, materiali di risulta, prevenzione incendi",
+   "Asseverazione SCIA - Amianto, conformità igienico sanitaria, Sismica",
+   "Asseverazione SCIA - Tutela Storico Ambientale",
+   "Asseverazione SCIA - Tutela Ecologica",
+   "Asseverazione SCIA - Altri Vincoli di Tutela Ecologica",
+   "Asseverazione SCIA - Tutela Funzionale",
+   "Asseverazione SCIA - NOTE",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "SIN",
+     "label": "Le opere ricadono nell'ambito della Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione?"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "Le opere ricadono nell'ambito della Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione?",
+   "type": "SIN",
+   "adds": [
+    "SANATORIA e regolarizzazioni per interventi già realizzati e in corso di esecuzione"
+   ],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
  "sections": [
   {
    "section": "Scheda anagrafica",
-   "fields": [
-    {
-     "id": "r1c1p1reg:radio:0_clone",
-     "kind": "radio",
-     "label": "DITTA/SOCIETA'/IMPRESA",
-     "group": "r1c1p1reg:radio",
-     "checked": true
-    },
-    {
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "label": "PERSONA (Privato)",
-     "group": "r1c2p2reg:radio"
-    },
-    {
-     "id": "r2c2p4reg:radio:2_clone",
-     "kind": "radio",
-     "label": "ISCRITTA ALLA CCIAA",
-     "group": "r2c2p4reg:radio"
-    },
-    {
-     "id": "r6c2p16reg:radio:3_clone",
-     "kind": "radio",
-     "label": "NON ANCORA ISCRITTA",
-     "group": "r6c2p16reg:radio"
-    },
-    {
-     "id": "r7c2p19reg:radio:4_clone",
-     "kind": "radio",
-     "label": "NON NECESSITA DI ISCRIZIONE AL RI DELLA CCIAA",
-     "group": "r7c2p19reg:radio"
-    },
-    {
-     "id": "r10c1p23reg:txt",
-     "kind": "text",
-     "label": "Nome"
-    },
-    {
-     "id": "r10c2p25reg:txt",
-     "kind": "text",
-     "label": "Cognome"
-    },
-    {
-     "id": "r10c3p27reg:txt",
-     "kind": "text",
-     "label": "Cod.Fiscale"
-    },
-    {
-     "id": "r12c1p29reg",
-     "kind": "select",
-     "label": "Sesso",
-     "options": [
-      "Femminile",
-      "Maschile"
-     ]
-    },
-    {
-     "id": "r12c2p31reg:calendar_input",
-     "kind": "date",
-     "label": "Data nascita"
-    },
-    {
-     "id": "r12c3p33reg",
-     "kind": "select",
-     "label": "Cittadinanza",
-     "options": "251 options",
-     "value": "ITALIA"
-    },
-    {
-     "id": "r15c1p39reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "249 options",
-     "value": "Italia"
-    },
-    {
-     "id": "r15c2p41reg",
-     "kind": "select",
-     "label": "Provincia",
-     "options": "115 options"
-    },
-    {
-     "id": "r17c1p45reg",
-     "kind": "select",
-     "label": "Comune",
-     "options": []
-    },
-    {
-     "id": "r19c1p50reg:chk",
-     "kind": "checkbox",
-     "label": "Se cittadino non UE"
-    },
-    {
-     "id": "r24c1p61reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "244 options",
-     "value": "Italia"
-    },
-    {
-     "id": "r24c2p63reg",
-     "kind": "select",
-     "label": "Provincia",
-     "options": "111 options"
-    },
-    {
-     "id": "r26c1p67reg",
-     "kind": "select",
-     "label": "Comune",
-     "options": []
-    },
-    {
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "label": "Toponimo (DUG)",
-     "options": [
-      "ALTRO",
-      "CORSO",
-      "LARGO",
-      "PIAZZA",
-      "VIA",
-      "VIALE"
-     ]
-    },
-    {
-     "id": "r31c1p79reg:txt",
-     "kind": "text",
-     "label": "Denominazione stradale"
-    },
-    {
-     "id": "r33c1p83reg:txt",
-     "kind": "text",
-     "label": "Numero civico"
-    },
-    {
-     "id": "r33c2p85reg:txt",
-     "kind": "text",
-     "label": "CAP"
-    },
-    {
-     "id": "r33c3p87reg:txt",
-     "kind": "text",
-     "label": "eMail/PEC"
-    },
-    {
-     "id": "r33c4p89reg:number",
-     "kind": "text",
-     "label": "Telefono fisso/cellulare"
-    },
-    {
-     "id": "r36c1p93reg",
-     "kind": "select",
-     "label": "Carica",
-     "options": "322 options"
-    },
-    {
-     "id": "r39c1p99reg:txt",
-     "kind": "text",
-     "label": "Denominazione (nome della ditta o azienda o ragione sociale)"
-    },
-    {
-     "id": "r41c1p103reg",
-     "kind": "select",
-     "label": "Forma giuridica",
-     "options": "72 options"
-    },
-    {
-     "id": "r41c2p105reg:txt",
-     "kind": "text",
-     "label": "Codice Fiscale"
-    },
-    {
-     "id": "r41c3p107reg:txt",
-     "kind": "text",
-     "label": "P.IVA"
-    },
-    {
-     "id": "r44c1p111reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "244 options",
-     "value": "Italia"
-    },
-    {
-     "id": "r44c2p113reg",
-     "kind": "select",
-     "label": "Provincia",
-     "options": "111 options"
-    },
-    {
-     "id": "r46c1p117reg",
-     "kind": "select",
-     "label": "Comune",
-     "options": []
-    },
-    {
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "label": "Toponimo (DUG)",
-     "options": [
-      "ALTRO",
-      "CORSO",
-      "LARGO",
-      "PIAZZA",
-      "VIA",
-      "VIALE"
-     ]
-    },
-    {
-     "id": "r51c1p129reg:txt",
-     "kind": "text",
-     "label": "Denominazione stradale"
-    },
-    {
-     "id": "r51c2p131reg:txt",
-     "kind": "text",
-     "label": "Numero civico"
-    },
-    {
-     "id": "r51c3p133reg:txt",
-     "kind": "text",
-     "label": "CAP"
-    },
-    {
-     "id": "r53c1p135reg:txt",
-     "kind": "text",
-     "label": "Telefono fisso/Cellulare"
-    },
-    {
-     "id": "r53c2p137reg:txt",
-     "kind": "text",
-     "label": "Fax"
-    },
-    {
-     "id": "r53c3p139reg:txt",
-     "kind": "text",
-     "label": "PEC"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "PERSONA (Privato)",
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "label": "In qualità di:",
-       "options": [
-        "Proprietario",
-        "Comproprietario",
-        "Usufruttuario",
-        "Amministratore di condominio",
-        "Legale rappresentante",
-        "Amministratore unico",
-        "Procuratore",
-        "Altro"
-       ]
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ],
-     "hides": [
-      "r2c2p4reg:radio:2_clone",
-      "r6c2p16reg:radio:3_clone",
-      "r7c2p19reg:radio:4_clone",
-      "r36c1p93reg",
-      "r39c1p99reg:txt",
-      "r41c1p103reg",
-      "r41c2p105reg:txt",
-      "r41c3p107reg:txt",
-      "r44c1p111reg",
-      "r44c2p113reg",
-      "r46c1p117reg",
-      "r49c1p123reg",
-      "r51c1p129reg:txt",
-      "r51c2p131reg:txt",
-      "r51c3p133reg:txt",
-      "r53c1p135reg:txt",
-      "r53c2p137reg:txt",
-      "r53c3p139reg:txt"
-     ],
-     "then": [
-      {
-       "choice": "In qualità di: = Proprietario",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Proprietario",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Comproprietario",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Comproprietario",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Usufruttuario",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Usufruttuario",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Amministratore di condominio",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Amministratore di condominio",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Legale rappresentante",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Legale rappresentante",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Amministratore unico",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Amministratore unico",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Procuratore",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Procuratore",
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      },
-      {
-       "choice": "In qualità di: = Altro",
-       "id": "r35c1p91reg",
-       "kind": "select",
-       "option": "Altro",
-       "reveals": [
-        {
-         "id": "r37c1p95reg:txt",
-         "kind": "text",
-         "label": "specificare:"
-        }
-       ],
-       "moved": [
-        [
-         "r24c1p61reg",
-         "r15c1p39reg"
-        ],
-        [
-         "r24c2p63reg",
-         "r15c2p41reg"
-        ],
-        [
-         "r26c1p67reg",
-         "r17c1p45reg"
-        ]
-       ]
-      }
-     ]
-    },
-    {
-     "choice": "ISCRITTA ALLA CCIAA",
-     "id": "r2c2p4reg:radio:2_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r8c1p16reg",
-       "kind": "select",
-       "label": "Camera di commercio di:",
-       "options": "106 options"
-      }
-     ],
-     "moved": [
-      [
-       "r41c2p105reg:txt",
-       "r4c1p7reg:txt"
-      ],
-      [
-       "r6c2p16reg:radio:3_clone",
-       "r9c2p24reg:radio:3_clone"
-      ],
-      [
-       "r7c2p19reg:radio:4_clone",
-       "r10c2p27reg:radio:4_clone"
-      ],
-      [
-       "r10c1p23reg:txt",
-       "r13c1p31reg:txt"
-      ],
-      [
-       "r10c2p25reg:txt",
-       "r13c2p33reg:txt"
-      ],
-      [
-       "r10c3p27reg:txt",
-       "r13c3p35reg:txt"
-      ],
-      [
-       "r12c1p29reg",
-       "r15c1p37reg"
-      ],
-      [
-       "r12c2p31reg:calendar_input",
-       "r15c2p39reg:calendar_input"
-      ],
-      [
-       "r12c3p33reg",
-       "r15c3p41reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r18c1p47reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r18c2p49reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r20c1p53reg"
-      ],
-      [
-       "r19c1p50reg:chk",
-       "r22c1p58reg:chk"
-      ],
-      [
-       "r44c1p111reg",
-       "r27c1p69reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r27c2p71reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r29c1p75reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r32c1p81reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r34c1p87reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r36c1p91reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r36c2p93reg:txt"
-      ],
-      [
-       "r33c3p87reg:txt",
-       "r36c3p95reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r36c4p97reg:number"
-      ],
-      [
-       "r36c1p93reg",
-       "r39c1p101reg"
-      ],
-      [
-       "r39c1p99reg:txt",
-       "r42c1p107reg:txt"
-      ],
-      [
-       "r41c1p103reg",
-       "r44c1p111reg"
-      ],
-      [
-       "r41c2p105reg:txt",
-       "r44c2p113reg:txt"
-      ],
-      [
-       "r41c3p107reg:txt",
-       "r44c3p115reg:txt"
-      ],
-      [
-       "r44c1p111reg",
-       "r47c1p119reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r47c2p121reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r49c1p125reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r52c1p131reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r54c1p137reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r54c2p139reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r54c3p141reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r56c1p143reg:txt"
-      ],
-      [
-       "r53c2p137reg:txt",
-       "r56c2p145reg:txt"
-      ],
-      [
-       "r53c3p139reg:txt",
-       "r56c3p147reg:txt"
-      ]
-     ]
-    },
-    {
-     "choice": "NON ANCORA ISCRITTA",
-     "id": "r6c2p16reg:radio:3_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "NON NECESSITA DI ISCRIZIONE AL RI DELLA CCIAA",
-     "id": "r7c2p19reg:radio:4_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Sesso = Femminile",
-     "id": "r12c1p29reg",
-     "kind": "select",
-     "option": "Femminile",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Sesso = Maschile",
-     "id": "r12c1p29reg",
-     "kind": "select",
-     "option": "Maschile",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Se cittadino non UE",
-     "id": "r19c1p50reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r21c1p53reg:txt",
-       "kind": "text",
-       "label": "estremi del documento di soggiorno"
-      },
-      {
-       "id": "r21c2p55reg:txt",
-       "kind": "text",
-       "label": "rilasciato da"
-      },
-      {
-       "id": "r23c1p59reg:calendar_input",
-       "kind": "date",
-       "label": "il"
-      },
-      {
-       "id": "r23c2p61reg:calendar_input",
-       "kind": "date",
-       "label": "scadenza"
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r26c2p69reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r28c1p73reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r31c1p79reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r33c1p85reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r35c1p89reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r35c2p91reg:txt"
-      ],
-      [
-       "r33c3p87reg:txt",
-       "r35c3p93reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r35c4p95reg:number"
-      ],
-      [
-       "r36c1p93reg",
-       "r38c1p99reg"
-      ],
-      [
-       "r39c1p99reg:txt",
-       "r41c1p105reg:txt"
-      ],
-      [
-       "r41c1p103reg",
-       "r43c1p109reg"
-      ],
-      [
-       "r41c2p105reg:txt",
-       "r43c2p111reg:txt"
-      ],
-      [
-       "r41c3p107reg:txt",
-       "r43c3p113reg:txt"
-      ],
-      [
-       "r44c1p111reg",
-       "r46c1p117reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r46c2p119reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r48c1p123reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r51c1p129reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r53c1p135reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r53c2p137reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r53c3p139reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r55c1p141reg:txt"
-      ],
-      [
-       "r53c2p137reg:txt",
-       "r55c2p143reg:txt"
-      ],
-      [
-       "r53c3p139reg:txt",
-       "r55c3p145reg:txt"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = ALTRO",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "ALTRO",
-     "reveals": [
-      {
-       "id": "r29c2p75reg",
-       "kind": "select",
-       "label": "da compilare obbligatoriamente nel caso si sia selezionato 'ALTRO' nel Toponimo-DUG",
-       "context": "Dettaglio DUG",
-       "options": "190 options"
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = CORSO",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "CORSO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = LARGO",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "LARGO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = PIAZZA",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "PIAZZA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIA",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "VIA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIALE",
-     "id": "r29c1p73reg",
-     "kind": "select",
-     "option": "VIALE",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = ALTRO",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "ALTRO",
-     "reveals": [
-      {
-       "id": "r49c2p125reg",
-       "kind": "select",
-       "label": "da compilare obbligatoriamente nel caso si sia selezionato 'ALTRO' nel Toponimo-DUG",
-       "context": "Dettaglio DUG",
-       "options": "190 options"
-      }
-     ],
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = CORSO",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "CORSO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = LARGO",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "LARGO",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = PIAZZA",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "PIAZZA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIA",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "VIA",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    },
-    {
-     "choice": "Toponimo (DUG) = VIALE",
-     "id": "r49c1p123reg",
-     "kind": "select",
-     "option": "VIALE",
-     "moved": [
-      [
-       "r44c1p111reg",
-       "r15c1p39reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r15c2p41reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r17c1p45reg"
-      ],
-      [
-       "r44c1p111reg",
-       "r24c1p61reg"
-      ],
-      [
-       "r44c2p113reg",
-       "r24c2p63reg"
-      ],
-      [
-       "r46c1p117reg",
-       "r26c1p67reg"
-      ],
-      [
-       "r49c1p123reg",
-       "r29c1p73reg"
-      ],
-      [
-       "r51c1p129reg:txt",
-       "r31c1p79reg:txt"
-      ],
-      [
-       "r51c2p131reg:txt",
-       "r33c1p83reg:txt"
-      ],
-      [
-       "r51c3p133reg:txt",
-       "r33c2p85reg:txt"
-      ],
-      [
-       "r53c1p135reg:txt",
-       "r33c4p89reg:number"
-      ]
-     ]
-    }
-   ],
-   "seconds": 99.2
-  },
-  {
-   "section": "Qualifica e dati del procuratore",
-   "fields": [
-    {
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "label": "Qualifica del procuratore",
-     "options": [
-      "ALTRO PREVISTO DALLA NORMATIVA",
-      "ASSOCIAZIONE DI CATEGORIA",
-      "CENTRO ELABORAZIONE",
-      "CONSULENTE",
-      "NOTAIO",
-      "PROFESSIONISTA INCARICATO",
-      "STUDIO ASSOCIATO"
-     ]
-    },
-    {
-     "id": "r5c1p7reg:txt",
-     "kind": "text",
-     "label": "Nome",
-     "prefilled": true
-    },
-    {
-     "id": "r5c2p9reg:txt",
-     "kind": "text",
-     "label": "Cognome",
-     "prefilled": true
-    },
-    {
-     "id": "r5c3p11reg",
-     "kind": "select",
-     "label": "Sesso",
-     "options": [
-      "Femmina",
-      "Maschio"
-     ]
-    },
-    {
-     "id": "r5c4p13reg",
-     "kind": "select",
-     "label": "Cittadinanza",
-     "options": "251 options"
-    },
-    {
-     "id": "r7c1p15reg:txt",
-     "kind": "text",
-     "label": "Nato a"
-    },
-    {
-     "id": "r7c2p17reg:calendar_input",
-     "kind": "date",
-     "label": "il"
-    },
-    {
-     "id": "r9c1p19reg:radio:0_clone",
-     "kind": "radio",
-     "label": "in Italia",
-     "group": "r9c1p19reg:radio"
-    },
-    {
-     "id": "r9c2p21reg:txt",
-     "kind": "text",
-     "label": "Provincia",
-     "context": "in Italia"
-    },
-    {
-     "id": "r9c3p23reg:radio:1_clone",
-     "kind": "radio",
-     "label": "all'Estero",
-     "group": "r9c3p23reg:radio"
-    },
-    {
-     "id": "r9c4p25reg",
-     "kind": "select",
-     "label": "Stato",
-     "options": "250 options"
-    },
-    {
-     "id": "r11c1p27reg:txt",
-     "kind": "text",
-     "label": "Cod.Fiscale",
-     "prefilled": true
-    },
-    {
-     "id": "r14c1p32reg:txt",
-     "kind": "text",
-     "label": "Residente in"
-    },
-    {
-     "id": "r14c2p34reg:txt",
-     "kind": "text",
-     "label": "Provincia"
-    },
-    {
-     "id": "r14c3p36reg:txt",
-     "kind": "text",
-     "label": "CAP"
-    },
-    {
-     "id": "r16c1p40reg:txt",
-     "kind": "text",
-     "label": "Indirizzo"
-    },
-    {
-     "id": "r16c2p42reg:number",
-     "kind": "text",
-     "label": "Tel"
-    },
-    {
-     "id": "r16c3p44reg:txt",
-     "kind": "text",
-     "label": "Fax"
-    },
-    {
-     "id": "r18c1p46reg:txt",
-     "kind": "text",
-     "label": "eMail PEC"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "Qualifica del procuratore = ALTRO PREVISTO DALLA NORMATIVA",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "ALTRO PREVISTO DALLA NORMATIVA"
-    },
-    {
-     "choice": "Qualifica del procuratore = ASSOCIAZIONE DI CATEGORIA",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "ASSOCIAZIONE DI CATEGORIA"
-    },
-    {
-     "choice": "Qualifica del procuratore = CENTRO ELABORAZIONE",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "CENTRO ELABORAZIONE"
-    },
-    {
-     "choice": "Qualifica del procuratore = CONSULENTE",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "CONSULENTE"
-    },
-    {
-     "choice": "Qualifica del procuratore = NOTAIO",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "NOTAIO"
-    },
-    {
-     "choice": "Qualifica del procuratore = PROFESSIONISTA INCARICATO",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "PROFESSIONISTA INCARICATO"
-    },
-    {
-     "choice": "Qualifica del procuratore = STUDIO ASSOCIATO",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "STUDIO ASSOCIATO"
-    },
-    {
-     "choice": "Sesso = Femmina",
-     "id": "r5c3p11reg",
-     "kind": "select",
-     "option": "Femmina"
-    },
-    {
-     "choice": "Sesso = Maschio",
-     "id": "r5c3p11reg",
-     "kind": "select",
-     "option": "Maschio"
-    },
-    {
-     "choice": "in Italia",
-     "id": "r9c1p19reg:radio:0_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "all'Estero",
-     "id": "r9c3p23reg:radio:1_clone",
-     "kind": "radio"
-    }
-   ],
-   "seconds": 26.4
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
   },
   {
    "section": "Oggetto della pratica",
-   "fields": [
-    {
-     "id": "r2c1p2reg:txta",
-     "kind": "textarea",
-     "label": "300 Caratteri restanti",
-     "context": "descrizione sintetica"
-    }
-   ],
-   "branches": [],
-   "seconds": 0.9
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
   },
   {
    "section": "DOMICILIO DIGITALE",
-   "fields": [
-    {
-     "id": "r4c1p4reg:chk",
-     "kind": "checkbox",
-     "label": "il seguente domicilio digitale inserito in INAD (art.6 -quater, D.lgs lgs. n. 82/2005):"
-    },
-    {
-     "id": "r5c1p5reg:chk",
-     "kind": "checkbox",
-     "label": "il seguente domicilio digitale inserito in INI-PEC (art. 6-bis, D.lgs lgs. n. 82/2005) :"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "il seguente domicilio digitale inserito in INAD (art.6 -quater, D.lgs lgs. n. 82/2005):",
-     "id": "r4c1p4reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r6c1p6reg:txt",
-       "kind": "text",
-       "label": "il seguente domicilio digitale inserito in INAD (art.6 -quater, D.lgs lgs. n. 82/2005):"
-      }
-     ],
-     "moved": [
-      [
-       "r5c1p5reg:chk",
-       "r7c1p7reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "il seguente domicilio digitale inserito in INI-PEC (art. 6-bis, D.lgs lgs. n. 82/2005) :",
-     "id": "r5c1p5reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r7c1p7reg:txt",
-       "kind": "text",
-       "label": "il seguente domicilio digitale inserito in INI-PEC (art. 6-bis, D.lgs lgs. n. 82/2005) :"
-      }
-     ]
-    }
-   ],
-   "seconds": 5.8
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
   },
   {
    "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
-   "fields": [
-    {
-     "id": "r3c1p3reg:txt",
-     "kind": "text",
-     "label": "N.B. Inserire l'indirizzo della casella PEC a cui lo Sportello dovrà inviare la ricevuta e le altre comunicazioni relative alla pratica"
-    },
-    {
-     "id": "r4c1p4reg:chk",
-     "kind": "checkbox",
-     "label": "Si dichiara di essere consapevoli che nel caso non venga indicata una casella di posta elettronica certificata (PEC), non si avra' la certezza del buon esito de"
-    }
-   ],
-   "branches": [],
-   "seconds": 1.8
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
   },
   {
    "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
@@ -1931,415 +133,21 @@
   },
   {
    "section": "Localizzazione dell'intervento",
-   "fields": [
-    {
-     "id": "r2c1p2reg:txt",
-     "kind": "text",
-     "label": "Comune",
-     "prefilled": true
-    },
-    {
-     "id": "r2c2p4reg:txt",
-     "kind": "text",
-     "label": "Frazione"
-    },
-    {
-     "id": "r2c3p6reg:txt",
-     "kind": "text",
-     "label": "Prov.",
-     "prefilled": true
-    },
-    {
-     "id": "r2c4p8reg:txtws_input",
-     "kind": "lookup",
-     "label": "CAP"
-    },
-    {
-     "id": "r5c1p13reg:txtws_input",
-     "kind": "lookup",
-     "label": "Via, Viale, Piazza"
-    },
-    {
-     "id": "r5c2p15reg:txtws_input",
-     "kind": "lookup",
-     "label": "n° civico"
-    },
-    {
-     "id": "r7c1p19reg:txtws_input",
-     "kind": "lookup",
-     "label": "scala"
-    },
-    {
-     "id": "r7c2p21reg:txtws_input",
-     "kind": "lookup",
-     "label": "piano"
-    },
-    {
-     "id": "r7c3p23reg:txtws_input",
-     "kind": "lookup",
-     "label": "interno"
-    }
-   ],
-   "branches": [],
-   "seconds": 1.7
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
   },
   {
    "section": "Dati catastali",
-   "fields": [
-    {
-     "id": "r1c1p1reg:radio:0_clone",
-     "kind": "radio",
-     "label": "Nuovo Catasto Edilizio Urbano",
-     "group": "r1c1p1reg:radio",
-     "context": "NCEU"
-    },
-    {
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "label": "Nuovo Catasto Terreni",
-     "group": "r1c2p2reg:radio",
-     "context": "NCT"
-    },
-    {
-     "id": "r3c1p5reg:number",
-     "kind": "text",
-     "label": "foglio"
-    },
-    {
-     "id": "r3c2p7reg:txt",
-     "kind": "text",
-     "label": "particella/mappale"
-    },
-    {
-     "id": "r3c3p9reg:number",
-     "kind": "text",
-     "label": "subalterno"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "Nuovo Catasto Edilizio Urbano",
-     "id": "r1c1p1reg:radio:0_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r5c1p13reg:txt",
-       "kind": "text",
-       "label": "sezione Amministrativa (Fabbricati)"
-      },
-      {
-       "id": "r5c2p15reg:txt",
-       "kind": "text",
-       "label": "sezione Urbana (Fabbricati)"
-      },
-      {
-       "id": "r5c3p17reg:txt",
-       "kind": "text",
-       "label": "classe"
-      },
-      {
-       "id": "r8c1p23reg",
-       "kind": "select",
-       "label": "categoria",
-       "options": "52 options"
-      }
-     ],
-     "plus": {
-      "anchor": "Il valore è obbligatorio",
-      "adds": 16
-     }
-    },
-    {
-     "choice": "Nuovo Catasto Terreni",
-     "id": "r1c2p2reg:radio:1_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r6c1p17reg:txt",
-       "kind": "text",
-       "label": "sezione Censuaria (Terreni)"
-      }
-     ],
-     "plus": {
-      "anchor": "Nuovo Catasto Edilizio Urbano",
-      "adds": 10
-     }
-    }
-   ],
-   "seconds": 10.3
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
   },
   {
    "section": "a) Titolarità dell'intervento",
-   "fields": [
-    {
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "label": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto",
-     "options": [
-      "proprietario",
-      "comproprietario",
-      "usufruttuario",
-      "amministratore di condominio",
-      "altro"
-     ]
-    },
-    {
-     "id": "r5c1p6reg:radio:0_clone",
-     "kind": "radio",
-     "label": "avere titolarità esclusiva all'esecuzione dell'intervento",
-     "group": "r5c1p6reg:radio"
-    },
-    {
-     "id": "r6c1p7reg:radio:1_clone",
-     "kind": "radio",
-     "label": "non avere titolarità esclusiva all'esecuzione dell'intervento, ma di disporre comunque della dichiarazione di assenso dei terzi titolari di altri diritti reali ",
-     "group": "r6c1p7reg:radio"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto = proprietario",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "proprietario"
-    },
-    {
-     "choice": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto = comproprietario",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "comproprietario"
-    },
-    {
-     "choice": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto = usufruttuario",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "usufruttuario"
-    },
-    {
-     "choice": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto = amministratore di condominio",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "amministratore di condominio"
-    },
-    {
-     "choice": "Il richiedente dichiara di avere titolo alla presentazione di questa pratica edilizia in quanto = altro",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "altro",
-     "reveals": [
-      {
-       "id": "r4c1p4reg:txt",
-       "kind": "text",
-       "label": "specificare"
-      }
-     ],
-     "moved": [
-      [
-       "r5c1p6reg:radio:0_clone",
-       "r6c1p8reg:radio:0_clone"
-      ],
-      [
-       "r6c1p7reg:radio:1_clone",
-       "r7c1p9reg:radio:1_clone"
-      ]
-     ]
-    },
-    {
-     "choice": "avere titolarità esclusiva all'esecuzione dell'intervento",
-     "id": "r5c1p6reg:radio:0_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "non avere titolarità esclusiva all'esecuzione dell'intervento, ma di disporre comunque della dichiarazione di assenso dei terzi titolari di altri diritti reali ",
-     "id": "r6c1p7reg:radio:1_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r10c1p11reg:txt",
-       "kind": "text",
-       "label": "Cognome"
-      },
-      {
-       "id": "r10c2p13reg:txt",
-       "kind": "text",
-       "label": "Nome"
-      },
-      {
-       "id": "r12c1p17reg:txt",
-       "kind": "text",
-       "label": "C.F."
-      },
-      {
-       "id": "r14c1p21reg:calendar_input",
-       "kind": "date",
-       "label": "Data di nascita"
-      },
-      {
-       "id": "r14c2p23reg",
-       "kind": "select",
-       "label": "Cittadinanza",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r14c3p25reg",
-       "kind": "select",
-       "label": "Sesso",
-       "options": [
-        "Femmina",
-        "Maschio"
-       ]
-      },
-      {
-       "id": "r16c2p31reg",
-       "kind": "select",
-       "label": "Stato",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r16c3p33reg",
-       "kind": "select",
-       "label": "Provincia",
-       "options": "112 options"
-      },
-      {
-       "id": "r18c1p37reg:txt",
-       "kind": "text",
-       "label": "Comune italiano o Località estera"
-      },
-      {
-       "id": "r20c2p43reg",
-       "kind": "select",
-       "label": "Stato",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r20c3p45reg",
-       "kind": "select",
-       "label": "Provincia",
-       "options": "112 options"
-      },
-      {
-       "id": "r22c1p49reg:txt",
-       "kind": "text",
-       "label": "Comune italiano o Località estera"
-      },
-      {
-       "id": "r24c1p53reg:txt",
-       "kind": "text",
-       "label": "Via, Piazza, ecc."
-      },
-      {
-       "id": "r24c2p55reg:txt",
-       "kind": "text",
-       "label": "N."
-      },
-      {
-       "id": "r24c3p57reg:txt",
-       "kind": "text",
-       "label": "C.A.P."
-      },
-      {
-       "id": "r26c1p61reg:txt",
-       "kind": "text",
-       "label": "PEC / posta elettronica"
-      },
-      {
-       "id": "r26c2p63reg:txt",
-       "kind": "text",
-       "label": "Telefono fisso / cellulare"
-      },
-      {
-       "id": "r27c1p66reg:chk",
-       "kind": "checkbox",
-       "label": "Da compilare solo nel caso in cui il titolare sia una ditta o società:"
-      },
-      {
-       "id": "r29c1p69reg:txt",
-       "kind": "text",
-       "label": "in qualità di"
-      },
-      {
-       "id": "r31c1p73reg:txt",
-       "kind": "text",
-       "label": "della ditta / società"
-      },
-      {
-       "id": "r31c2p75reg:txt",
-       "kind": "text",
-       "label": "con codice fiscale / p. IVA"
-      }
-     ],
-     "plus": {
-      "anchor": "Cognome",
-      "adds": 42
-     },
-     "then": [
-      {
-       "choice": "Sesso = Femmina",
-       "id": "r14c3p25reg",
-       "kind": "select",
-       "option": "Femmina",
-       "moved": [
-        [
-         "r20c2p43reg",
-         "r16c2p31reg"
-        ],
-        [
-         "r20c3p45reg",
-         "r16c3p33reg"
-        ],
-        [
-         "r22c1p49reg:txt",
-         "r18c1p37reg:txt"
-        ]
-       ]
-      },
-      {
-       "choice": "Sesso = Maschio",
-       "id": "r14c3p25reg",
-       "kind": "select",
-       "option": "Maschio",
-       "moved": [
-        [
-         "r20c2p43reg",
-         "r16c2p31reg"
-        ],
-        [
-         "r20c3p45reg",
-         "r16c3p33reg"
-        ],
-        [
-         "r22c1p49reg:txt",
-         "r18c1p37reg:txt"
-        ]
-       ]
-      },
-      {
-       "choice": "Da compilare solo nel caso in cui il titolare sia una ditta o società:",
-       "id": "r27c1p66reg:chk",
-       "kind": "checkbox",
-       "moved": [
-        [
-         "r20c2p43reg",
-         "r16c2p31reg"
-        ],
-        [
-         "r20c3p45reg",
-         "r16c3p33reg"
-        ],
-        [
-         "r22c1p49reg:txt",
-         "r18c1p37reg:txt"
-        ]
-       ]
-      }
-     ]
-    }
-   ],
-   "seconds": 24.4
+   "fingerprint": "3e5d5f463d6964d8",
+   "same_as": "cil#a) Titolarità dell'intervento",
+   "seconds": 0.6
   },
   {
    "section": "b) Presentazione della SCIA/SCIA Unica/SCIA Condizionata",
@@ -2355,8 +163,9 @@
      "label": "PER PRESA VISIONE"
     }
    ],
+   "fingerprint": "2d296ce3956dc559",
    "branches": [],
-   "seconds": 1
+   "seconds": 0.6
   },
   {
    "section": "c) Qualificazione dell'intervento",
@@ -2410,6 +219,7 @@
      "group": "r11c1p16reg:radio"
     }
    ],
+   "fingerprint": "efad12f73389bb59",
    "branches": [
     {
      "choice": "intervento di manutenzione straordinaria di cui all’articolo 3, comma 1, lettera b) del d.P.R. n. 380/2001, che riguardino le parti strutturali dell’edificio o ",
@@ -2656,7 +466,8 @@
       {
        "id": "r7c1p7reg:txt",
        "kind": "text",
-       "label": "permesso di costruire n."
+       "label": "permesso di costruire n.",
+       "max": 20
       },
       {
        "id": "r7c2p9reg:calendar_input",
@@ -2691,7 +502,8 @@
       {
        "id": "r9c1p12reg:txt",
        "kind": "text",
-       "label": "SCIA n."
+       "label": "SCIA n.",
+       "max": 9999
       },
       {
        "id": "r9c2p14reg:calendar_input",
@@ -2850,109 +662,19 @@
      ]
     }
    ],
-   "seconds": 64.9
+   "seconds": 25.5
   },
   {
    "section": "d) Destinazione d'uso dell'immobile",
-   "fields": [
-    {
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "label": "L'intervento interessa l'immobile / l'area avente destinazione d'uso",
-     "options": [
-      "residenziale",
-      "industriale",
-      "commerciale",
-      "altro"
-     ]
-    }
-   ],
-   "branches": [
-    {
-     "choice": "L'intervento interessa l'immobile / l'area avente destinazione d'uso = residenziale",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "residenziale"
-    },
-    {
-     "choice": "L'intervento interessa l'immobile / l'area avente destinazione d'uso = industriale",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "industriale"
-    },
-    {
-     "choice": "L'intervento interessa l'immobile / l'area avente destinazione d'uso = commerciale",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "commerciale"
-    },
-    {
-     "choice": "L'intervento interessa l'immobile / l'area avente destinazione d'uso = altro",
-     "id": "r2c1p2reg",
-     "kind": "select",
-     "option": "altro",
-     "reveals": [
-      {
-       "id": "r4c1p4reg:txt",
-       "kind": "text",
-       "label": "specificare"
-      }
-     ]
-    }
-   ],
-   "seconds": 5.8
+   "fingerprint": "167628390a2f0298",
+   "same_as": "cil#d) Destinazione d'uso dell'immobile",
+   "seconds": 0.6
   },
   {
    "section": "e) Opere su parti comuni o modifiche esterne",
-   "fields": [
-    {
-     "id": "r2c1p2reg:radio:0_clone",
-     "kind": "radio",
-     "label": "non riguardano parti comuni",
-     "group": "r2c1p2reg:radio"
-    },
-    {
-     "id": "r3c1p3reg:radio:1_clone",
-     "kind": "radio",
-     "label": "riguardano le parti comuni di un fabbricato condominiale (1)",
-     "group": "r3c1p3reg:radio"
-    },
-    {
-     "id": "r4c1p4reg:radio:2_clone",
-     "kind": "radio",
-     "label": "riguardano parti comuni di un fabbricato con più proprietà, non costituito in condominio, e dichiara che l'intervento è stato approvato dai comproprietari delle",
-     "group": "r4c1p4reg:radio"
-    },
-    {
-     "id": "r5c1p5reg:radio:3_clone",
-     "kind": "radio",
-     "label": "riguardano parti dell'edificio di proprietà comune ma non necessitano di assenso perché, secondo l'art. 1102 c.c., apportano, a spese del titolare, le modificaz",
-     "group": "r5c1p5reg:radio"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "non riguardano parti comuni",
-     "id": "r2c1p2reg:radio:0_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "riguardano le parti comuni di un fabbricato condominiale (1)",
-     "id": "r3c1p3reg:radio:1_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "riguardano parti comuni di un fabbricato con più proprietà, non costituito in condominio, e dichiara che l'intervento è stato approvato dai comproprietari delle",
-     "id": "r4c1p4reg:radio:2_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "riguardano parti dell'edificio di proprietà comune ma non necessitano di assenso perché, secondo l'art. 1102 c.c., apportano, a spese del titolare, le modificaz",
-     "id": "r5c1p5reg:radio:3_clone",
-     "kind": "radio"
-    }
-   ],
-   "seconds": 9.1
+   "fingerprint": "a9ea4400694734ae",
+   "same_as": "cil#b) Opere su parti comuni o modifiche esterne",
+   "seconds": 0.6
   },
   {
    "section": "f) Regolarità urbanistica e precedenti edilizi",
@@ -2972,7 +694,8 @@
      "id": "r3c2p5reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "titolo unico (SUAP)"
+     "context": "titolo unico (SUAP)",
+     "max": 8
     },
     {
      "id": "r3c3p7reg:calendar_input",
@@ -2988,7 +711,8 @@
      "id": "r5c2p11reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "permesso di costruire / licenza edil. / concessione edilizia"
+     "context": "permesso di costruire / licenza edil. / concessione edilizia",
+     "max": 8
     },
     {
      "id": "r5c3p13reg:calendar_input",
@@ -3004,7 +728,8 @@
      "id": "r7c2p17reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "autorizzazione edilizia"
+     "context": "autorizzazione edilizia",
+     "max": 8
     },
     {
      "id": "r7c3p19reg:calendar_input",
@@ -3020,7 +745,8 @@
      "id": "r9c2p23reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "comunicazione edilizia (art. 26 l. n. 47/1985)"
+     "context": "comunicazione edilizia (art. 26 l. n. 47/1985)",
+     "max": 8
     },
     {
      "id": "r9c3p25reg:calendar_input",
@@ -3036,7 +762,8 @@
      "id": "r11c2p29reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "denuncia di inizio attività"
+     "context": "denuncia di inizio attività",
+     "max": 8
     },
     {
      "id": "r11c3p31reg:calendar_input",
@@ -3052,7 +779,8 @@
      "id": "r13c2p35reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "DIA/SCIA alternativa al permesso di costruire"
+     "context": "DIA/SCIA alternativa al permesso di costruire",
+     "max": 9999
     },
     {
      "id": "r13c3p37reg:calendar_input",
@@ -3068,7 +796,8 @@
      "id": "r15c2p41reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "segnalazione certificata di inizio attività"
+     "context": "segnalazione certificata di inizio attività",
+     "max": 8
     },
     {
      "id": "r15c3p43reg:calendar_input",
@@ -3084,7 +813,8 @@
      "id": "r17c2p47reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "comunicazione edilizia libera"
+     "context": "comunicazione edilizia libera",
+     "max": 8
     },
     {
      "id": "r17c3p49reg:calendar_input",
@@ -3105,7 +835,8 @@
      "id": "r20c2p54reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "condono edilizio"
+     "context": "condono edilizio",
+     "max": 9999
     },
     {
      "id": "r20c3p56reg:calendar_input",
@@ -3121,7 +852,8 @@
      "id": "r22c2p60reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "permesso di costruire in sanatoria di cui agli artt. 36 o 36-bis del d.P.R. n. 380/2001"
+     "context": "permesso di costruire in sanatoria di cui agli artt. 36 o 36-bis del d.P.R. n. 380/2001",
+     "max": 9999
     },
     {
      "id": "r22c3p62reg:calendar_input",
@@ -3137,7 +869,8 @@
      "id": "r24c2p66reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "SCIA in sanatoria di cui all’art. 36-bis d.P.R. n. 380/2001"
+     "context": "SCIA in sanatoria di cui all’art. 36-bis d.P.R. n. 380/2001",
+     "max": 9999
     },
     {
      "id": "r24c3p68reg:calendar_input",
@@ -3153,7 +886,8 @@
      "id": "r26c2p72reg:txt",
      "kind": "text",
      "label": "n.",
-     "context": "SCIA in sanatoria per variante in corso d’opera realizzata costituente parziale difformità dal titolo rilasciato prima d"
+     "context": "SCIA in sanatoria per variante in corso d’opera realizzata costituente parziale difformità dal titolo rilasciato prima d",
+     "max": 9999
     },
     {
      "id": "r26c3p74reg:calendar_input",
@@ -3168,12 +902,14 @@
     {
      "id": "r29c1p78reg:txt",
      "kind": "text",
-     "label": "specificare"
+     "label": "specificare",
+     "max": 9999
     },
     {
      "id": "r29c2p80reg:txt",
      "kind": "text",
-     "label": "n."
+     "label": "n.",
+     "max": 9999
     },
     {
      "id": "r29c3p82reg:calendar_input",
@@ -3194,7 +930,8 @@
     {
      "id": "r33c2p89reg:txt",
      "kind": "text",
-     "label": "n."
+     "label": "n.",
+     "max": 8
     },
     {
      "id": "r33c3p91reg:calendar_input",
@@ -3220,7 +957,8 @@
     {
      "id": "r42c2p106reg:txt",
      "kind": "text",
-     "label": "n."
+     "label": "n.",
+     "max": 9999
     },
     {
      "id": "r42c3p108reg:calendar_input",
@@ -3253,7 +991,8 @@
     {
      "id": "r52c1p122reg:real",
      "kind": "text",
-     "label": "di Euro"
+     "label": "di Euro",
+     "max": 11
     },
     {
      "id": "r52c2p124reg:calendar_input",
@@ -3263,7 +1002,8 @@
     {
      "id": "r54c1p128reg:txt",
      "kind": "text",
-     "label": "Prot. n."
+     "label": "Prot. n.",
+     "max": 9999
     },
     {
      "id": "r54c2p130reg:calendar_input",
@@ -3284,7 +1024,8 @@
     {
      "id": "r58c1p136reg:txt",
      "kind": "text",
-     "label": "Prot. n."
+     "label": "Prot. n.",
+     "max": 9999
     },
     {
      "id": "r58c2p138reg:calendar_input",
@@ -3299,7 +1040,8 @@
     {
      "id": "r61c1p143reg:txt",
      "kind": "text",
-     "label": "atto di registrazione n."
+     "label": "atto di registrazione n.",
+     "max": 9999
     },
     {
      "id": "r61c2p145reg:calendar_input",
@@ -3319,6 +1061,7 @@
      "group": "r64c1p148reg:radio"
     }
    ],
+   "fingerprint": "00d7988585f52837",
    "branches": [
     {
      "choice": "che l’immobile/U.I. è stato oggetto del/i seguente/i titolo/i o pratica/che edilizia/e ¹",
@@ -5869,7 +3612,7 @@
      ]
     }
    ],
-   "seconds": 50.4
+   "seconds": 23
   },
   {
    "section": "g) Calcolo del contributo di costruzione",
@@ -5883,7 +3626,8 @@
     {
      "id": "r3c1p3reg:txt",
      "kind": "text",
-     "label": "ai sensi della seguente normativa"
+     "label": "ai sensi della seguente normativa",
+     "max": 150
     },
     {
      "id": "r4c1p6reg:radio:1_clone",
@@ -5904,6 +3648,7 @@
      "group": "r6c2p11reg:radio"
     }
    ],
+   "fingerprint": "e307f3c15dac28df",
    "branches": [
     {
      "choice": "l'intervento da realizzare è a titolo gratuito",
@@ -5974,7 +3719,7 @@
      "kind": "radio"
     }
    ],
-   "seconds": 13.6
+   "seconds": 7.4
   },
   {
    "section": "h1) Tecnici incaricati",
@@ -6000,6 +3745,7 @@
      "label": "Progettista delle opere strutturali"
     }
    ],
+   "fingerprint": "cbe6e63b6534a4f7",
    "branches": [
     {
      "choice": "di aver incaricato, in qualità di direttore/i dei lavori, i soggetti indicati nella sezione DIRETTORE/I LAVORI",
@@ -6092,17 +3838,20 @@
         {
          "id": "r19c1p46reg:txt",
          "kind": "text",
-         "label": "Cognome"
+         "label": "Cognome",
+         "max": 100
         },
         {
          "id": "r19c2p48reg:txt",
          "kind": "text",
-         "label": "Nome"
+         "label": "Nome",
+         "max": 9999
         },
         {
          "id": "r21c1p52reg:txt",
          "kind": "text",
-         "label": "C.F."
+         "label": "C.F.",
+         "max": 16
         },
         {
          "id": "r23c1p56reg:calendar_input",
@@ -6141,7 +3890,8 @@
         {
          "id": "r27c1p72reg:txt",
          "kind": "text",
-         "label": "Comune italiano o Località estera"
+         "label": "Comune italiano o Località estera",
+         "max": 100
         },
         {
          "id": "r29c2p78reg",
@@ -6159,22 +3909,26 @@
         {
          "id": "r31c1p84reg:txt",
          "kind": "text",
-         "label": "Comune italiano o Località estera"
+         "label": "Comune italiano o Località estera",
+         "max": 100
         },
         {
          "id": "r33c1p88reg:txt",
          "kind": "text",
-         "label": "Via, Piazza, ecc."
+         "label": "Via, Piazza, ecc.",
+         "max": 100
         },
         {
          "id": "r33c2p90reg:txt",
          "kind": "text",
-         "label": "N."
+         "label": "N.",
+         "max": 6
         },
         {
          "id": "r33c3p92reg:txt",
          "kind": "text",
-         "label": "C.A.P."
+         "label": "C.A.P.",
+         "max": 5
         },
         {
          "id": "r35c2p98reg",
@@ -6192,57 +3946,68 @@
         {
          "id": "r37c1p104reg:txt",
          "kind": "text",
-         "label": "Comune italiano o Località estera"
+         "label": "Comune italiano o Località estera",
+         "max": 100
         },
         {
          "id": "r39c1p108reg:txt",
          "kind": "text",
-         "label": "Via, Piazza, ecc."
+         "label": "Via, Piazza, ecc.",
+         "max": 100
         },
         {
          "id": "r39c2p110reg:txt",
          "kind": "text",
-         "label": "N."
+         "label": "N.",
+         "max": 10
         },
         {
          "id": "r39c3p112reg:txt",
          "kind": "text",
-         "label": "C.A.P."
+         "label": "C.A.P.",
+         "max": 5
         },
         {
          "id": "r41c1p116reg:txt",
          "kind": "text",
-         "label": "Iscritto all'ordine/collegio"
+         "label": "Iscritto all'ordine/collegio",
+         "max": 100
         },
         {
          "id": "r41c2p118reg:txt",
          "kind": "text",
-         "label": "di"
+         "label": "di",
+         "max": 100
         },
         {
          "id": "r41c3p120reg:txt",
          "kind": "text",
-         "label": "al n."
+         "label": "al n.",
+         "max": 10
         },
         {
          "id": "r43c1p124reg:number",
          "kind": "text",
-         "label": "Telefono"
+         "label": "Telefono",
+         "max": 15
         },
         {
          "id": "r43c2p126reg:number",
          "kind": "text",
-         "label": "fax"
+         "label": "fax",
+         "max": 15
         },
         {
          "id": "r45c1p130reg:number",
          "kind": "text",
-         "label": "cell."
+         "label": "cell.",
+         "max": 15
         },
         {
          "id": "r45c2p132reg:txt",
          "kind": "text",
-         "label": "posta elettronica certificata"
+         "label": "posta elettronica certificata",
+         "max": 100
         }
        ]
       },
@@ -6267,57 +4032,68 @@
         {
          "id": "r21c1p54reg:txt",
          "kind": "text",
-         "label": "Comune italiano o Località estera"
+         "label": "Comune italiano o Località estera",
+         "max": 100
         },
         {
          "id": "r23c1p58reg:txt",
          "kind": "text",
-         "label": "Via, Piazza, ecc."
+         "label": "Via, Piazza, ecc.",
+         "max": 100
         },
         {
          "id": "r23c2p60reg:txt",
          "kind": "text",
-         "label": "N."
+         "label": "N.",
+         "max": 10
         },
         {
          "id": "r23c3p62reg:txt",
          "kind": "text",
-         "label": "C.A.P."
+         "label": "C.A.P.",
+         "max": 5
         },
         {
          "id": "r25c1p66reg:txt",
          "kind": "text",
-         "label": "Iscritto all'ordine/collegio"
+         "label": "Iscritto all'ordine/collegio",
+         "max": 100
         },
         {
          "id": "r25c2p68reg:txt",
          "kind": "text",
-         "label": "di"
+         "label": "di",
+         "max": 100
         },
         {
          "id": "r25c3p70reg:txt",
          "kind": "text",
-         "label": "al n."
+         "label": "al n.",
+         "max": 10
         },
         {
          "id": "r27c1p74reg:number",
          "kind": "text",
-         "label": "Telefono"
+         "label": "Telefono",
+         "max": 15
         },
         {
          "id": "r27c2p76reg:number",
          "kind": "text",
-         "label": "fax"
+         "label": "fax",
+         "max": 15
         },
         {
          "id": "r29c1p80reg:number",
          "kind": "text",
-         "label": "cell."
+         "label": "cell.",
+         "max": 15
         },
         {
          "id": "r29c2p82reg:txt",
          "kind": "text",
-         "label": "posta elettronica certificata"
+         "label": "posta elettronica certificata",
+         "max": 100
         }
        ]
       }
@@ -6331,17 +4107,20 @@
       {
        "id": "r21c1p50reg:txt",
        "kind": "text",
-       "label": "Cognome"
+       "label": "Cognome",
+       "max": 100
       },
       {
        "id": "r21c2p52reg:txt",
        "kind": "text",
-       "label": "Nome"
+       "label": "Nome",
+       "max": 9999
       },
       {
        "id": "r23c1p56reg:txt",
        "kind": "text",
-       "label": "C.F."
+       "label": "C.F.",
+       "max": 16
       },
       {
        "id": "r25c1p60reg:calendar_input",
@@ -6380,7 +4159,8 @@
       {
        "id": "r29c1p76reg:txt",
        "kind": "text",
-       "label": "Comune italiano o Località estera"
+       "label": "Comune italiano o Località estera",
+       "max": 100
       },
       {
        "id": "r31c2p82reg",
@@ -6398,22 +4178,26 @@
       {
        "id": "r33c1p88reg:txt",
        "kind": "text",
-       "label": "Comune italiano o Località estera"
+       "label": "Comune italiano o Località estera",
+       "max": 100
       },
       {
        "id": "r35c1p92reg:txt",
        "kind": "text",
-       "label": "Via, Piazza, ecc."
+       "label": "Via, Piazza, ecc.",
+       "max": 100
       },
       {
        "id": "r35c2p94reg:txt",
        "kind": "text",
-       "label": "N."
+       "label": "N.",
+       "max": 6
       },
       {
        "id": "r35c3p96reg:txt",
        "kind": "text",
-       "label": "C.A.P."
+       "label": "C.A.P.",
+       "max": 5
       },
       {
        "id": "r37c2p102reg",
@@ -6431,57 +4215,68 @@
       {
        "id": "r39c1p108reg:txt",
        "kind": "text",
-       "label": "Comune italiano o Località estera"
+       "label": "Comune italiano o Località estera",
+       "max": 100
       },
       {
        "id": "r41c1p112reg:txt",
        "kind": "text",
-       "label": "Via, Piazza, ecc."
+       "label": "Via, Piazza, ecc.",
+       "max": 100
       },
       {
        "id": "r41c2p114reg:txt",
        "kind": "text",
-       "label": "N."
+       "label": "N.",
+       "max": 10
       },
       {
        "id": "r41c3p116reg:txt",
        "kind": "text",
-       "label": "C.A.P."
+       "label": "C.A.P.",
+       "max": 5
       },
       {
        "id": "r43c1p120reg:txt",
        "kind": "text",
-       "label": "Iscritto all'ordine/collegio"
+       "label": "Iscritto all'ordine/collegio",
+       "max": 100
       },
       {
        "id": "r43c2p122reg:txt",
        "kind": "text",
-       "label": "di"
+       "label": "di",
+       "max": 100
       },
       {
        "id": "r43c3p124reg:txt",
        "kind": "text",
-       "label": "al n."
+       "label": "al n.",
+       "max": 10
       },
       {
        "id": "r45c1p128reg:number",
        "kind": "text",
-       "label": "Telefono"
+       "label": "Telefono",
+       "max": 15
       },
       {
        "id": "r45c2p130reg:number",
        "kind": "text",
-       "label": "fax"
+       "label": "fax",
+       "max": 15
       },
       {
        "id": "r47c1p134reg:number",
        "kind": "text",
-       "label": "cell."
+       "label": "cell.",
+       "max": 15
       },
       {
        "id": "r47c2p136reg:txt",
        "kind": "text",
-       "label": "posta elettronica certificata"
+       "label": "posta elettronica certificata",
+       "max": 100
       }
      ],
      "then": [
@@ -6576,645 +4371,13 @@
      ]
     }
    ],
-   "seconds": 31.4
+   "seconds": 13.3
   },
   {
    "section": "H2) Altri tecnici incaricati",
-   "fields": [
-    {
-     "id": "r2c1p3reg:chk",
-     "kind": "checkbox",
-     "label": "che gli altri tecnici incaricati saranno individuati prima dell'inizio dei lavori"
-    },
-    {
-     "id": "r3c1p5reg:chk",
-     "kind": "checkbox",
-     "label": "di aver incaricato in qualità di altri tecnici, i soggetti indicati nella sezione seguente"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "che gli altri tecnici incaricati saranno individuati prima dell'inizio dei lavori",
-     "id": "r2c1p3reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "di aver incaricato in qualità di altri tecnici, i soggetti indicati nella sezione seguente",
-     "id": "r3c1p5reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r6c1p9reg:txt",
-       "kind": "text",
-       "label": "Incaricato della"
-      },
-      {
-       "id": "r9c1p15reg:txt",
-       "kind": "text",
-       "label": "Cognome"
-      },
-      {
-       "id": "r9c2p17reg:txt",
-       "kind": "text",
-       "label": "Nome"
-      },
-      {
-       "id": "r11c1p21reg:txt",
-       "kind": "text",
-       "label": "C.F."
-      },
-      {
-       "id": "r13c1p25reg:calendar_input",
-       "kind": "date",
-       "label": "Data di nascita"
-      },
-      {
-       "id": "r13c2p27reg",
-       "kind": "select",
-       "label": "Cittadinanza",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r13c3p29reg",
-       "kind": "select",
-       "label": "Sesso",
-       "options": [
-        "Femmina",
-        "Maschio"
-       ]
-      },
-      {
-       "id": "r15c2p35reg",
-       "kind": "select",
-       "label": "Stato",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r15c3p37reg",
-       "kind": "select",
-       "label": "Provincia",
-       "options": "112 options"
-      },
-      {
-       "id": "r17c1p41reg:txt",
-       "kind": "text",
-       "label": "Comune italiano o Località estera"
-      },
-      {
-       "id": "r19c2p47reg",
-       "kind": "select",
-       "label": "Stato",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r19c3p49reg",
-       "kind": "select",
-       "label": "Provincia",
-       "options": "112 options"
-      },
-      {
-       "id": "r21c1p53reg:txt",
-       "kind": "text",
-       "label": "Comune italiano o Località estera"
-      },
-      {
-       "id": "r23c1p57reg:txt",
-       "kind": "text",
-       "label": "Via, Piazza, ecc."
-      },
-      {
-       "id": "r23c2p59reg:txt",
-       "kind": "text",
-       "label": "N."
-      },
-      {
-       "id": "r23c3p61reg:txt",
-       "kind": "text",
-       "label": "C.A.P."
-      },
-      {
-       "id": "r25c2p67reg",
-       "kind": "select",
-       "label": "Stato",
-       "options": "251 options",
-       "value": "ITALIA"
-      },
-      {
-       "id": "r25c3p69reg",
-       "kind": "select",
-       "label": "Provincia",
-       "options": "112 options"
-      },
-      {
-       "id": "r27c1p73reg:txt",
-       "kind": "text",
-       "label": "Comune italiano o Località estera"
-      },
-      {
-       "id": "r29c1p77reg:txt",
-       "kind": "text",
-       "label": "Via, Piazza, ecc."
-      },
-      {
-       "id": "r29c2p79reg:txt",
-       "kind": "text",
-       "label": "N."
-      },
-      {
-       "id": "r29c3p81reg:txt",
-       "kind": "text",
-       "label": "C.A.P."
-      },
-      {
-       "id": "r30c2p85reg:radio:0_clone",
-       "kind": "radio",
-       "label": "si",
-       "group": "r30c2p85reg:radio"
-      },
-      {
-       "id": "r30c3p86reg:radio:1_clone",
-       "kind": "radio",
-       "label": "no",
-       "group": "r30c3p86reg:radio"
-      },
-      {
-       "id": "r32c2p93reg:radio:2_clone",
-       "kind": "radio",
-       "label": "si",
-       "group": "r32c2p93reg:radio"
-      },
-      {
-       "id": "r32c3p94reg:radio:3_clone",
-       "kind": "radio",
-       "label": "no",
-       "group": "r32c3p94reg:radio"
-      },
-      {
-       "id": "r35c1p99reg:txt",
-       "kind": "text",
-       "label": "Estremi dell'abilitazione (se per lo svolgimento dell'attività oggetto dell'incarico è richiesta una specifica autorizzazione iscrizione in albi e registri)"
-      },
-      {
-       "id": "r37c1p103reg:number",
-       "kind": "text",
-       "label": "Telefono"
-      },
-      {
-       "id": "r37c2p105reg:number",
-       "kind": "text",
-       "label": "fax"
-      },
-      {
-       "id": "r37c3p107reg:number",
-       "kind": "text",
-       "label": "cell."
-      },
-      {
-       "id": "r37c4p109reg:txt",
-       "kind": "text",
-       "label": "posta elettronica certificata"
-      }
-     ],
-     "plus": {
-      "anchor": "Incaricato della",
-      "adds": 62
-     },
-     "then": [
-      {
-       "choice": "Sesso = Femmina",
-       "id": "r13c3p29reg",
-       "kind": "select",
-       "option": "Femmina",
-       "moved": [
-        [
-         "r25c2p67reg",
-         "r15c2p35reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r15c3p37reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r17c1p41reg:txt"
-        ],
-        [
-         "r25c2p67reg",
-         "r19c2p47reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r19c3p49reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r21c1p53reg:txt"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r23c1p57reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r23c2p59reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r23c3p61reg:txt"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r30c2p85reg:radio:0_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r30c3p86reg:radio:1_clone"
-        ]
-       ]
-      },
-      {
-       "choice": "Sesso = Maschio",
-       "id": "r13c3p29reg",
-       "kind": "select",
-       "option": "Maschio",
-       "moved": [
-        [
-         "r25c2p67reg",
-         "r15c2p35reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r15c3p37reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r17c1p41reg:txt"
-        ],
-        [
-         "r25c2p67reg",
-         "r19c2p47reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r19c3p49reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r21c1p53reg:txt"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r23c1p57reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r23c2p59reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r23c3p61reg:txt"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r30c2p85reg:radio:0_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r30c3p86reg:radio:1_clone"
-        ]
-       ]
-      },
-      {
-       "choice": "si",
-       "id": "r30c2p85reg:radio:0_clone",
-       "kind": "radio",
-       "reveals": [
-        {
-         "id": "r32c1p89reg:txt",
-         "kind": "text",
-         "label": "Iscritto all'ordine/collegio"
-        },
-        {
-         "id": "r32c2p91reg:txt",
-         "kind": "text",
-         "label": "di"
-        },
-        {
-         "id": "r32c3p93reg:txt",
-         "kind": "text",
-         "label": "al n."
-        }
-       ],
-       "moved": [
-        [
-         "r25c2p67reg",
-         "r15c2p35reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r15c3p37reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r17c1p41reg:txt"
-        ],
-        [
-         "r25c2p67reg",
-         "r19c2p47reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r19c3p49reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r21c1p53reg:txt"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r23c1p57reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r23c2p59reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r23c3p61reg:txt"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r30c2p85reg:radio:0_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r30c3p86reg:radio:1_clone"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r33c2p97reg:radio:2_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r33c3p98reg:radio:3_clone"
-        ],
-        [
-         "r35c1p99reg:txt",
-         "r36c1p103reg:txt"
-        ],
-        [
-         "r37c1p103reg:number",
-         "r38c1p107reg:number"
-        ],
-        [
-         "r37c2p105reg:number",
-         "r38c2p109reg:number"
-        ],
-        [
-         "r37c3p107reg:number",
-         "r38c3p111reg:number"
-        ],
-        [
-         "r37c4p109reg:txt",
-         "r38c4p113reg:txt"
-        ]
-       ]
-      },
-      {
-       "choice": "no",
-       "id": "r30c3p86reg:radio:1_clone",
-       "kind": "radio",
-       "moved": [
-        [
-         "r25c2p67reg",
-         "r15c2p35reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r15c3p37reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r17c1p41reg:txt"
-        ],
-        [
-         "r25c2p67reg",
-         "r19c2p47reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r19c3p49reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r21c1p53reg:txt"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r23c1p57reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r23c2p59reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r23c3p61reg:txt"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r30c2p85reg:radio:0_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r30c3p86reg:radio:1_clone"
-        ]
-       ]
-      },
-      {
-       "choice": "si",
-       "id": "r32c2p93reg:radio:2_clone",
-       "kind": "radio",
-       "reveals": [
-        {
-         "id": "r35c1p99reg:txt",
-         "kind": "text",
-         "label": "Ragione sociale"
-        },
-        {
-         "id": "r35c2p101reg:txt",
-         "kind": "text",
-         "label": "codice fiscale / p. IVA"
-        },
-        {
-         "id": "r37c1p105reg",
-         "kind": "select",
-         "label": "Iscritta alla C.C.I.A.A. di",
-         "options": "112 options"
-        },
-        {
-         "id": "r39c1p111reg:txt",
-         "kind": "text",
-         "label": "con sede in"
-        }
-       ],
-       "moved": [
-        [
-         "r25c2p67reg",
-         "r15c2p35reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r15c3p37reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r17c1p41reg:txt"
-        ],
-        [
-         "r25c2p67reg",
-         "r19c2p47reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r19c3p49reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r21c1p53reg:txt"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r23c1p57reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r23c2p59reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r23c3p61reg:txt"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r30c2p85reg:radio:0_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r30c3p86reg:radio:1_clone"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r37c2p107reg:txt"
-        ],
-        [
-         "r25c3p69reg",
-         "r39c2p113reg"
-        ],
-        [
-         "r25c2p67reg",
-         "r39c3p115reg"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r41c1p119reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r41c2p121reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r41c3p123reg:txt"
-        ],
-        [
-         "r9c1p15reg:txt",
-         "r44c1p129reg:txt"
-        ],
-        [
-         "r9c2p17reg:txt",
-         "r44c2p131reg:txt"
-        ],
-        [
-         "r35c1p99reg:txt",
-         "r46c1p135reg:txt"
-        ],
-        [
-         "r37c1p103reg:number",
-         "r48c1p139reg:number"
-        ],
-        [
-         "r37c2p105reg:number",
-         "r48c2p141reg:number"
-        ],
-        [
-         "r37c3p107reg:number",
-         "r48c3p143reg:number"
-        ],
-        [
-         "r37c4p109reg:txt",
-         "r48c4p145reg:txt"
-        ]
-       ]
-      },
-      {
-       "choice": "no",
-       "id": "r32c3p94reg:radio:3_clone",
-       "kind": "radio",
-       "moved": [
-        [
-         "r25c2p67reg",
-         "r15c2p35reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r15c3p37reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r17c1p41reg:txt"
-        ],
-        [
-         "r25c2p67reg",
-         "r19c2p47reg"
-        ],
-        [
-         "r25c3p69reg",
-         "r19c3p49reg"
-        ],
-        [
-         "r27c1p73reg:txt",
-         "r21c1p53reg:txt"
-        ],
-        [
-         "r29c1p77reg:txt",
-         "r23c1p57reg:txt"
-        ],
-        [
-         "r29c2p79reg:txt",
-         "r23c2p59reg:txt"
-        ],
-        [
-         "r29c3p81reg:txt",
-         "r23c3p61reg:txt"
-        ],
-        [
-         "r32c2p93reg:radio:2_clone",
-         "r30c2p85reg:radio:0_clone"
-        ],
-        [
-         "r32c3p94reg:radio:3_clone",
-         "r30c3p86reg:radio:1_clone"
-        ]
-       ]
-      }
-     ]
-    }
-   ],
-   "seconds": 28.5
+   "fingerprint": "124292a24c7f627e",
+   "same_as": "cila#G2) Altri tecnici incaricati",
+   "seconds": 0.6
   },
   {
    "section": "i) Impresa esecutrice dei lavori",
@@ -7238,6 +4401,7 @@
      "group": "r3c1p3reg:radio"
     }
    ],
+   "fingerprint": "334a1e7c12e87178",
    "branches": [
     {
      "choice": "l'impresa esecutrice/imprese esecutrici dei lavori sarà/saranno individuata/e prima dell'inizio dei lavori",
@@ -7257,12 +4421,14 @@
       {
        "id": "r7c1p7reg:txt",
        "kind": "text",
-       "label": "Ragione sociale"
+       "label": "Ragione sociale",
+       "max": 100
       },
       {
        "id": "r7c2p9reg:txt",
        "kind": "text",
-       "label": "codice fiscale / p. IVA"
+       "label": "codice fiscale / p. IVA",
+       "max": 16
       },
       {
        "id": "r9c1p13reg",
@@ -7273,12 +4439,14 @@
       {
        "id": "r9c2p15reg:txt",
        "kind": "text",
-       "label": "n."
+       "label": "n.",
+       "max": 20
       },
       {
        "id": "r11c1p19reg:txt",
        "kind": "text",
-       "label": "con sede in"
+       "label": "con sede in",
+       "max": 9999
       },
       {
        "id": "r11c2p21reg",
@@ -7296,37 +4464,44 @@
       {
        "id": "r13c1p27reg:txt",
        "kind": "text",
-       "label": "Via, Piazza, ecc."
+       "label": "Via, Piazza, ecc.",
+       "max": 100
       },
       {
        "id": "r13c2p29reg:txt",
        "kind": "text",
-       "label": "N."
+       "label": "N.",
+       "max": 10
       },
       {
        "id": "r13c3p31reg:txt",
        "kind": "text",
-       "label": "C.A.P."
+       "label": "C.A.P.",
+       "max": 5
       },
       {
        "id": "r16c1p37reg:txt",
        "kind": "text",
-       "label": "Cognome"
+       "label": "Cognome",
+       "max": 50
       },
       {
        "id": "r16c2p39reg:txt",
        "kind": "text",
-       "label": "Nome"
+       "label": "Nome",
+       "max": 50
       },
       {
        "id": "r18c1p43reg:txt",
        "kind": "text",
-       "label": "codice fiscale"
+       "label": "codice fiscale",
+       "max": 16
       },
       {
        "id": "r20c1p47reg:txt",
        "kind": "text",
-       "label": "nato a"
+       "label": "nato a",
+       "max": 100
       },
       {
        "id": "r20c2p49reg",
@@ -7349,22 +4524,26 @@
       {
        "id": "r24c1p57reg:number",
        "kind": "text",
-       "label": "Telefono"
+       "label": "Telefono",
+       "max": 16
       },
       {
        "id": "r24c2p59reg:number",
        "kind": "text",
-       "label": "fax"
+       "label": "fax",
+       "max": 16
       },
       {
        "id": "r24c3p61reg:number",
        "kind": "text",
-       "label": "cell."
+       "label": "cell.",
+       "max": 16
       },
       {
        "id": "r24c4p63reg:txt",
        "kind": "text",
-       "label": "posta elettronica"
+       "label": "posta elettronica",
+       "max": 100
       },
       {
        "id": "r26c1p68reg:chk",
@@ -7396,17 +4575,20 @@
          "id": "r27c2p71reg:txt",
          "kind": "text",
          "label": "sede di",
-         "context": "Cassa edile"
+         "context": "Cassa edile",
+         "max": 100
         },
         {
          "id": "r29c1p75reg:txt",
          "kind": "text",
-         "label": "codice impresa n."
+         "label": "codice impresa n.",
+         "max": 20
         },
         {
          "id": "r29c2p77reg:txt",
          "kind": "text",
-         "label": "codice cassa n."
+         "label": "codice cassa n.",
+         "max": 20
         }
        ],
        "moved": [
@@ -7445,12 +4627,14 @@
          "id": "r29c2p77reg:txt",
          "kind": "text",
          "label": "sede di",
-         "context": "INPS"
+         "context": "INPS",
+         "max": 100
         },
         {
          "id": "r31c1p81reg:txt",
          "kind": "text",
-         "label": "Matr./Pos. Contr. n."
+         "label": "Matr./Pos. Contr. n.",
+         "max": 20
         }
        ],
        "moved": [
@@ -7485,17 +4669,20 @@
          "id": "r31c2p82reg:txt",
          "kind": "text",
          "label": "sede di",
-         "context": "INAIL"
+         "context": "INAIL",
+         "max": 100
         },
         {
          "id": "r33c1p86reg:txt",
          "kind": "text",
-         "label": "codice impresa n."
+         "label": "codice impresa n.",
+         "max": 20
         },
         {
          "id": "r33c2p88reg:txt",
          "kind": "text",
-         "label": "pos. assicurativa territoriale n."
+         "label": "pos. assicurativa territoriale n.",
+         "max": 20
         }
        ],
        "moved": [
@@ -7520,7 +4707,7 @@
      ]
     }
    ],
-   "seconds": 21.1
+   "seconds": 8.7
   },
   {
    "section": "l) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
@@ -7568,6 +4755,7 @@
      "group": "r11c1p23reg:radio"
     }
    ],
+   "fingerprint": "543cd39f9d75191d",
    "branches": [
     {
      "choice": "non ricade nell'ambito di applicazione delle norme in materia di salute e sicurezza nei luoghi di lavoro (d.lgs. n. 81/2008)",
@@ -7605,7 +4793,7 @@
      "kind": "radio"
     }
    ],
-   "seconds": 12.4
+   "seconds": 5.3
   },
   {
    "section": "m) Diritti di terzi",
@@ -7616,21 +4804,15 @@
      "label": "dichiara di essere consapevole che la presente segnalazione non può comportare limitazione dei diritti dei terzi, fermo restando quanto previsto dall'articolo 1"
     }
    ],
+   "fingerprint": "6dcffcfdce6f75ea",
    "branches": [],
-   "seconds": 0.7
+   "seconds": 0.6
   },
   {
    "section": "Note",
-   "fields": [
-    {
-     "id": "r2c1p2reg:txta",
-     "kind": "textarea",
-     "label": "5000 Caratteri restanti",
-     "context": "Note:"
-    }
-   ],
-   "branches": [],
-   "seconds": 1.9
+   "fingerprint": "e84721ea696ebe15",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Note",
+   "seconds": 0.6
   },
   {
    "section": "Asseverazione SCIA - Tipologia di intervento, descrizione opere",
@@ -7638,27 +4820,32 @@
     {
      "id": "r4c1p4reg:txt",
      "kind": "text",
-     "label": "Cognome"
+     "label": "Cognome",
+     "max": 9999
     },
     {
      "id": "r4c2p6reg:txt",
      "kind": "text",
-     "label": "Nome"
+     "label": "Nome",
+     "max": 9999
     },
     {
      "id": "r6c1p8reg:txt",
      "kind": "text",
-     "label": "Iscritto all'ordine / collegio"
+     "label": "Iscritto all'ordine / collegio",
+     "max": 9999
     },
     {
      "id": "r8c1p10reg:txt",
      "kind": "text",
-     "label": "di"
+     "label": "di",
+     "max": 9999
     },
     {
      "id": "r8c2p12reg:txt",
      "kind": "text",
-     "label": "al n."
+     "label": "al n.",
+     "max": 20
     },
     {
      "id": "r12c1p18reg:chk",
@@ -7674,9 +4861,11 @@
      "id": "r15c1p21reg:txta",
      "kind": "textarea",
      "label": "500 Caratteri restanti",
-     "context": "e che l’intervento sopra indicato o da sanare consiste in:"
+     "context": "e che l’intervento sopra indicato o da sanare consiste in:",
+     "max": 500
     }
    ],
+   "fingerprint": "c51bc113fab1176d",
    "branches": [
     {
      "choice": "che le opere in progetto sono subordinate a Segnalazione Certificata di Inizio Attività in quanto rientrano nella seguente tipologia di intervento:",
@@ -7953,7 +5142,7 @@
      "kind": "checkbox"
     }
    ],
-   "seconds": 24
+   "seconds": 9.3
   },
   {
    "section": "Asseverazione SCIA - Stato legittimo, Dichiarazione di tolleranze, Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione",
@@ -7995,6 +5184,7 @@
      "group": "r7c3p14reg:radio"
     }
    ],
+   "fingerprint": "adf0f783fad89f7b",
    "branches": [
     {
      "choice": "si",
@@ -8643,7 +5833,8 @@
         {
          "id": "r18c1p28reg:txt",
          "kind": "text",
-         "label": "in euro"
+         "label": "in euro",
+         "max": 9999
         }
        ],
        "moved": [
@@ -8778,7 +5969,8 @@
         {
          "id": "r22c1p35reg:txt",
          "kind": "text",
-         "label": "presentata con prot."
+         "label": "presentata con prot.",
+         "max": 9999
         },
         {
          "id": "r22c2p37reg:calendar_input",
@@ -8858,703 +6050,13 @@
      ]
     }
    ],
-   "seconds": 48.6
+   "seconds": 20.4
   },
   {
    "section": "Asseverazione SCIA - Dati immobile, strumentazione urbanistica, barriere architettoniche",
-   "fields": [
-    {
-     "id": "r5c2p7reg:real",
-     "kind": "text",
-     "label": "Mq",
-     "context": "Superficie"
-    },
-    {
-     "id": "r7c2p13reg:real",
-     "kind": "text",
-     "label": "Mc",
-     "context": "Volumetria"
-    },
-    {
-     "id": "r9c2p19reg:number",
-     "kind": "text",
-     "label": "N.",
-     "context": "Numero dei piani"
-    },
-    {
-     "id": "r12c1p24reg:chk",
-     "kind": "checkbox",
-     "label": "PUC"
-    },
-    {
-     "id": "r13c1p25reg:chk",
-     "kind": "checkbox",
-     "label": "PUA"
-    },
-    {
-     "id": "r14c1p26reg:chk",
-     "kind": "checkbox",
-     "label": "PRG"
-    },
-    {
-     "id": "r15c1p27reg:chk",
-     "kind": "checkbox",
-     "label": "PIANO PARTICOLAREGGIATO"
-    },
-    {
-     "id": "r16c1p28reg:chk",
-     "kind": "checkbox",
-     "label": "PIANO DI RECUPERO"
-    },
-    {
-     "id": "r17c1p29reg:chk",
-     "kind": "checkbox",
-     "label": "P.I.P."
-    },
-    {
-     "id": "r18c1p30reg:chk",
-     "kind": "checkbox",
-     "label": "P.E.E.P."
-    },
-    {
-     "id": "r19c1p31reg:chk",
-     "kind": "checkbox",
-     "label": "ALTRO"
-    },
-    {
-     "id": "r22c1p34reg:chk",
-     "kind": "checkbox",
-     "label": "non è soggetto alle prescrizioni degli articoli 77 e seguenti del d.P.R. n. 380/2001 e del d.m. n. 236/1989 o della corrispondente normativa regionale"
-    },
-    {
-     "id": "r23c1p35reg:chk",
-     "kind": "checkbox",
-     "label": "interessa un edificio privato aperto al pubblico e che le opere previste sono conformi all'articolo 82 del d.P.R. n. 380/2001 o della corrispondente normativa r"
-    },
-    {
-     "id": "r24c1p36reg:chk",
-     "kind": "checkbox",
-     "label": "è soggetto alle prescrizioni degli articoli 77 e seguenti del d.P.R. n. 380/2001 e del d.m. n. 236/1989 o della corrispondente normativa regionale e, come da re"
-    },
-    {
-     "id": "r25c1p37reg:chk",
-     "kind": "checkbox",
-     "label": "accessibilità"
-    },
-    {
-     "id": "r25c2p38reg:chk",
-     "kind": "checkbox",
-     "label": "visitabilità"
-    },
-    {
-     "id": "r25c3p39reg:chk",
-     "kind": "checkbox",
-     "label": "adattabilità"
-    },
-    {
-     "id": "r26c1p40reg:chk",
-     "kind": "checkbox",
-     "label": "pur essendo soggetto alle prescrizioni degli articoli 77 e seguenti del d.P.R. n. 380/2001 e del d.m. n. 236/1989 o della corrispondente normativa regionale, no"
-    },
-    {
-     "id": "r27c1p41reg:chk",
-     "kind": "checkbox",
-     "label": "presenta contestualmente alla SCIA condizionata, la documentazione per la richiesta di deroga come meglio descritto nella relazione tecnica allegata e schemi di"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "PUC",
-     "id": "r12c1p24reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r14c1p26reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r14c2p28reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r13c1p25reg:chk",
-       "r15c1p29reg:chk"
-      ],
-      [
-       "r14c1p26reg:chk",
-       "r16c1p30reg:chk"
-      ],
-      [
-       "r15c1p27reg:chk",
-       "r17c1p31reg:chk"
-      ],
-      [
-       "r16c1p28reg:chk",
-       "r18c1p32reg:chk"
-      ],
-      [
-       "r17c1p29reg:chk",
-       "r19c1p33reg:chk"
-      ],
-      [
-       "r18c1p30reg:chk",
-       "r20c1p34reg:chk"
-      ],
-      [
-       "r19c1p31reg:chk",
-       "r21c1p35reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r24c1p38reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r25c1p39reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r27c2p42reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r27c3p43reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r28c1p44reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r29c1p45reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "PUA",
-     "id": "r13c1p25reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r15c1p27reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r15c2p29reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r14c1p26reg:chk",
-       "r16c1p30reg:chk"
-      ],
-      [
-       "r15c1p27reg:chk",
-       "r17c1p31reg:chk"
-      ],
-      [
-       "r16c1p28reg:chk",
-       "r18c1p32reg:chk"
-      ],
-      [
-       "r17c1p29reg:chk",
-       "r19c1p33reg:chk"
-      ],
-      [
-       "r18c1p30reg:chk",
-       "r20c1p34reg:chk"
-      ],
-      [
-       "r19c1p31reg:chk",
-       "r21c1p35reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r24c1p38reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r25c1p39reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r27c2p42reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r27c3p43reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r28c1p44reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r29c1p45reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "PRG",
-     "id": "r14c1p26reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r16c1p28reg:txt",
-       "kind": "text",
-       "label": "Specificare"
-      },
-      {
-       "id": "r18c1p30reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r18c2p32reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r15c1p27reg:chk",
-       "r19c1p33reg:chk"
-      ],
-      [
-       "r16c1p28reg:chk",
-       "r20c1p34reg:chk"
-      ],
-      [
-       "r17c1p29reg:chk",
-       "r21c1p35reg:chk"
-      ],
-      [
-       "r18c1p30reg:chk",
-       "r22c1p36reg:chk"
-      ],
-      [
-       "r19c1p31reg:chk",
-       "r23c1p37reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r28c1p42reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r29c1p43reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r29c2p44reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r29c3p45reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r30c1p46reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r31c1p47reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "PIANO PARTICOLAREGGIATO",
-     "id": "r15c1p27reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r17c1p29reg:txt",
-       "kind": "text",
-       "label": "Specificare"
-      },
-      {
-       "id": "r19c1p31reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r19c2p33reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r16c1p28reg:chk",
-       "r20c1p34reg:chk"
-      ],
-      [
-       "r17c1p29reg:chk",
-       "r21c1p35reg:chk"
-      ],
-      [
-       "r18c1p30reg:chk",
-       "r22c1p36reg:chk"
-      ],
-      [
-       "r19c1p31reg:chk",
-       "r23c1p37reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r28c1p42reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r29c1p43reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r29c2p44reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r29c3p45reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r30c1p46reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r31c1p47reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "PIANO DI RECUPERO",
-     "id": "r16c1p28reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r18c1p30reg:txt",
-       "kind": "text",
-       "label": "Specificare"
-      },
-      {
-       "id": "r20c1p32reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r20c2p34reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r17c1p29reg:chk",
-       "r21c1p35reg:chk"
-      ],
-      [
-       "r18c1p30reg:chk",
-       "r22c1p36reg:chk"
-      ],
-      [
-       "r19c1p31reg:chk",
-       "r23c1p37reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r28c1p42reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r29c1p43reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r29c2p44reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r29c3p45reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r30c1p46reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r31c1p47reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "P.I.P.",
-     "id": "r17c1p29reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r19c1p31reg:txt",
-       "kind": "text",
-       "label": "Specificare"
-      },
-      {
-       "id": "r21c1p33reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r21c2p35reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r18c1p30reg:chk",
-       "r22c1p36reg:chk"
-      ],
-      [
-       "r19c1p31reg:chk",
-       "r23c1p37reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r28c1p42reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r29c1p43reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r29c2p44reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r29c3p45reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r30c1p46reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r31c1p47reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "P.E.E.P.",
-     "id": "r18c1p30reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r20c1p32reg:txt",
-       "kind": "text",
-       "label": "Specificare"
-      },
-      {
-       "id": "r22c1p34reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r22c2p36reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r19c1p31reg:chk",
-       "r23c1p37reg:chk"
-      ],
-      [
-       "r22c1p34reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r28c1p42reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r29c1p43reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r29c2p44reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r29c3p45reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r30c1p46reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r31c1p47reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "ALTRO",
-     "id": "r19c1p31reg:chk",
-     "kind": "checkbox",
-     "reveals": [
-      {
-       "id": "r21c1p33reg:txt",
-       "kind": "text",
-       "label": "Specificare"
-      },
-      {
-       "id": "r23c1p35reg:txt",
-       "kind": "text",
-       "label": "Zona"
-      },
-      {
-       "id": "r23c2p37reg:txt",
-       "kind": "text",
-       "label": "Art."
-      }
-     ],
-     "moved": [
-      [
-       "r22c1p34reg:chk",
-       "r26c1p40reg:chk"
-      ],
-      [
-       "r23c1p35reg:chk",
-       "r27c1p41reg:chk"
-      ],
-      [
-       "r24c1p36reg:chk",
-       "r28c1p42reg:chk"
-      ],
-      [
-       "r25c1p37reg:chk",
-       "r29c1p43reg:chk"
-      ],
-      [
-       "r25c2p38reg:chk",
-       "r29c2p44reg:chk"
-      ],
-      [
-       "r25c3p39reg:chk",
-       "r29c3p45reg:chk"
-      ],
-      [
-       "r26c1p40reg:chk",
-       "r30c1p46reg:chk"
-      ],
-      [
-       "r27c1p41reg:chk",
-       "r31c1p47reg:chk"
-      ]
-     ]
-    },
-    {
-     "choice": "non è soggetto alle prescrizioni degli articoli 77 e seguenti del d.P.R. n. 380/2001 e del d.m. n. 236/1989 o della corrispondente normativa regionale",
-     "id": "r22c1p34reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "interessa un edificio privato aperto al pubblico e che le opere previste sono conformi all'articolo 82 del d.P.R. n. 380/2001 o della corrispondente normativa r",
-     "id": "r23c1p35reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "è soggetto alle prescrizioni degli articoli 77 e seguenti del d.P.R. n. 380/2001 e del d.m. n. 236/1989 o della corrispondente normativa regionale e, come da re",
-     "id": "r24c1p36reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "accessibilità",
-     "id": "r25c1p37reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "visitabilità",
-     "id": "r25c2p38reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "adattabilità",
-     "id": "r25c3p39reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "pur essendo soggetto alle prescrizioni degli articoli 77 e seguenti del d.P.R. n. 380/2001 e del d.m. n. 236/1989 o della corrispondente normativa regionale, no",
-     "id": "r26c1p40reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "presenta contestualmente alla SCIA condizionata, la documentazione per la richiesta di deroga come meglio descritto nella relazione tecnica allegata e schemi di",
-     "id": "r27c1p41reg:chk",
-     "kind": "checkbox"
-    }
-   ],
-   "seconds": 33.1
+   "fingerprint": "455d3194ba676ac0",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Asseverazione SCIA Alternativa -  Dati immobile, strumentazione urbanistica, barriere architettoniche",
+   "seconds": 0.7
   },
   {
    "section": "Asseverazione SCIA - Sicurezza impianti, consumi energetici",
@@ -9707,6 +6209,7 @@
      "group": "r35c1p36reg:radio"
     }
    ],
+   "fingerprint": "eabee6f40f7bc514",
    "branches": [
     {
      "choice": "Non comporta l'installazione, la trasformazione o l'ampliamento di impianti tecnologici",
@@ -9914,997 +6417,19 @@
      "kind": "radio"
     }
    ],
-   "seconds": 48.2
+   "seconds": 19.5
   },
   {
    "section": "Asseverazione SCIA - Inquinamento acustico, materiali di risulta, prevenzione incendi",
-   "fields": [
-    {
-     "id": "r4c1p4reg:radio:0_clone",
-     "kind": "radio",
-     "label": "Non rientra nell'ambito di applicazione dell'articolo 8 della l. n. 447/1995",
-     "group": "r4c1p4reg:radio"
-    },
-    {
-     "id": "r5c1p5reg:radio:1_clone",
-     "kind": "radio",
-     "label": "Rientra nell'ambito di applicazione dell'articolo 8 della l. n. 447/1995, integrato con i contenuti dell'articolo 4 del d.P.R. n. 227/2011 e SI ALLEGA:",
-     "group": "r5c1p5reg:radio"
-    },
-    {
-     "id": "r6c1p6reg:chk",
-     "kind": "checkbox",
-     "label": "documentazione di impatto acustico (art. 8, commi 2 e 4, l. n. 447/1995)"
-    },
-    {
-     "id": "r7c1p7reg:chk",
-     "kind": "checkbox",
-     "label": "valutazione previsionale di clima acustico (art. 8, comma 3, l. n. 447/1995)"
-    },
-    {
-     "id": "r8c1p8reg:chk",
-     "kind": "checkbox",
-     "label": "dichiarazione sostitutiva dell'atto di notorietà, a firma del titolare, relativa al rispetto dei limiti stabiliti dal documento di classificazione acustica del "
-    },
-    {
-     "id": "r9c1p9reg:chk",
-     "kind": "checkbox",
-     "label": "la documentazione di previsione di impatto acusticocon l'indicazione delle misure previste per ridurre o eliminare le emissioni sonore, nel caso in cui i valori"
-    },
-    {
-     "id": "r10c1p10reg:radio:2_clone",
-     "kind": "radio",
-     "label": "non rientra nell'ambito dell'applicazione del d.P.C.M. 5 dicembre 1997",
-     "group": "r10c1p10reg:radio"
-    },
-    {
-     "id": "r11c1p11reg:radio:3_clone",
-     "kind": "radio",
-     "label": "rientra nell'ambito dell'applicazione del d.P.C.M. 5 dicembre 1997",
-     "group": "r11c1p11reg:radio"
-    },
-    {
-     "id": "r14c1p14reg:chk",
-     "kind": "checkbox",
-     "label": "non sono soggette alla normativa vigente relativa ai materiali da scavo"
-    },
-    {
-     "id": "r15c1p15reg:chk",
-     "kind": "checkbox",
-     "label": "le opere comportano la produzione di materiali da scavo considerati come sottoprodotti sulla base della normativa vigente"
-    },
-    {
-     "id": "r16c1p16reg:radio:4_clone",
-     "kind": "radio",
-     "label": "le opere comportano la produzione di materiali da scavo per un volume inferiore o uguale a quello previsto dalla normativa vigente ovvero (pur superando tale so",
-     "group": "r16c1p16reg:radio"
-    },
-    {
-     "id": "r17c1p17reg:radio:5_clone",
-     "kind": "radio",
-     "label": "le opere comportano la produzione di materiali da scavo per un volume inferiore o uguale a 6000 mc e sono soggette a VIA o AIA, e pertanto, ai sensi dell'art. 1",
-     "group": "r17c1p17reg:radio"
-    },
-    {
-     "id": "r18c2p19reg:chk",
-     "kind": "checkbox",
-     "label": "si comunicano gli estremi del provvedimento di VIA o AIA, comprensivo dell'assenso al Piano di Utilizzo dei materiali da scavo,"
-    },
-    {
-     "id": "r20c2p24reg:txt",
-     "kind": "text",
-     "label": "rilasciato da:"
-    },
-    {
-     "id": "r22c2p30reg:txt",
-     "kind": "text",
-     "label": "con prot."
-    },
-    {
-     "id": "r22c3p32reg:calendar_input",
-     "kind": "date",
-     "label": "in data"
-    },
-    {
-     "id": "r23c1p35reg:chk",
-     "kind": "checkbox",
-     "label": "comportano la produzione di materiali da scavo che saranno riutilizzati nello stesso luogo di produzione"
-    },
-    {
-     "id": "r24c1p36reg:chk",
-     "kind": "checkbox",
-     "label": "riguardano interventi di demolizione di edifici o altri manufatti preesistenti e producono rifiuti la cui gestione è disciplinata ai sensi della normativa vigen"
-    },
-    {
-     "id": "r25c1p37reg:chk",
-     "kind": "checkbox",
-     "label": "comportano la produzione di materiali da scavo che saranno gestiti dall'interessato come rifiuti"
-    },
-    {
-     "id": "r28c1p40reg:radio:6_clone",
-     "kind": "radio",
-     "label": "non è soggetto alle norme di prevenzione incendi",
-     "group": "r28c1p40reg:radio"
-    },
-    {
-     "id": "r29c1p41reg:radio:7_clone",
-     "kind": "radio",
-     "label": "è soggetto alle norme tecniche di prevenzione incendi e le stesse sono rispettate nel progetto",
-     "group": "r29c1p41reg:radio"
-    },
-    {
-     "id": "r30c1p42reg:radio:8_clone",
-     "kind": "radio",
-     "label": "presenta caratteristiche tali da non consentire l'integrale osservanza delle regole tecniche di prevenzione incendi",
-     "group": "r30c1p42reg:radio"
-    },
-    {
-     "id": "r31c1p43reg:chk",
-     "kind": "checkbox",
-     "label": "si allega documentazione necessaria all'ottenimento della deroga"
-    },
-    {
-     "id": "r33c1p45reg:radio:9_clone",
-     "kind": "radio",
-     "label": "non è soggetto alla valutazione del progetto da parte del Comando Provinciale dei Vigili del Fuoco ai sensi del d.P.R. n. 151/2011",
-     "group": "r33c1p45reg:radio"
-    },
-    {
-     "id": "r34c1p46reg:radio:10_clone",
-     "kind": "radio",
-     "label": "è soggetto alla valutazione del progetto da parte del Comando Provinciale dei Vigili del Fuoco, ai sensi dell'articolo 3 del d.P.R. n. 151/2011",
-     "group": "r34c1p46reg:radio"
-    },
-    {
-     "id": "r35c1p47reg:chk",
-     "kind": "checkbox",
-     "label": "si allega la documentazione necessaria alla valutazione del progetto"
-    },
-    {
-     "id": "r36c1p48reg:radio:11_clone",
-     "kind": "radio",
-     "label": "costituisce variante e il sottoscritto assevera che le modifiche non costituiscono variazione dei requisiti di sicurezza antincendio già approvati con parere de",
-     "group": "r36c1p48reg:radio"
-    },
-    {
-     "id": "r38c1p50reg:txt",
-     "kind": "text",
-     "label": "rilasciato con prot."
-    },
-    {
-     "id": "r38c2p52reg:calendar_input",
-     "kind": "date",
-     "label": "In data"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "Non rientra nell'ambito di applicazione dell'articolo 8 della l. n. 447/1995",
-     "id": "r4c1p4reg:radio:0_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "Rientra nell'ambito di applicazione dell'articolo 8 della l. n. 447/1995, integrato con i contenuti dell'articolo 4 del d.P.R. n. 227/2011 e SI ALLEGA:",
-     "id": "r5c1p5reg:radio:1_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "documentazione di impatto acustico (art. 8, commi 2 e 4, l. n. 447/1995)",
-     "id": "r6c1p6reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "valutazione previsionale di clima acustico (art. 8, comma 3, l. n. 447/1995)",
-     "id": "r7c1p7reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "dichiarazione sostitutiva dell'atto di notorietà, a firma del titolare, relativa al rispetto dei limiti stabiliti dal documento di classificazione acustica del ",
-     "id": "r8c1p8reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "la documentazione di previsione di impatto acusticocon l'indicazione delle misure previste per ridurre o eliminare le emissioni sonore, nel caso in cui i valori",
-     "id": "r9c1p9reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "non rientra nell'ambito dell'applicazione del d.P.C.M. 5 dicembre 1997",
-     "id": "r10c1p10reg:radio:2_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "rientra nell'ambito dell'applicazione del d.P.C.M. 5 dicembre 1997",
-     "id": "r11c1p11reg:radio:3_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "non sono soggette alla normativa vigente relativa ai materiali da scavo",
-     "id": "r14c1p14reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "le opere comportano la produzione di materiali da scavo considerati come sottoprodotti sulla base della normativa vigente",
-     "id": "r15c1p15reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "le opere comportano la produzione di materiali da scavo per un volume inferiore o uguale a quello previsto dalla normativa vigente ovvero (pur superando tale so",
-     "id": "r16c1p16reg:radio:4_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "le opere comportano la produzione di materiali da scavo per un volume inferiore o uguale a 6000 mc e sono soggette a VIA o AIA, e pertanto, ai sensi dell'art. 1",
-     "id": "r17c1p17reg:radio:5_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "si comunicano gli estremi del provvedimento di VIA o AIA, comprensivo dell'assenso al Piano di Utilizzo dei materiali da scavo,",
-     "id": "r18c2p19reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "comportano la produzione di materiali da scavo che saranno riutilizzati nello stesso luogo di produzione",
-     "id": "r23c1p35reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "riguardano interventi di demolizione di edifici o altri manufatti preesistenti e producono rifiuti la cui gestione è disciplinata ai sensi della normativa vigen",
-     "id": "r24c1p36reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "comportano la produzione di materiali da scavo che saranno gestiti dall'interessato come rifiuti",
-     "id": "r25c1p37reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "non è soggetto alle norme di prevenzione incendi",
-     "id": "r28c1p40reg:radio:6_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "è soggetto alle norme tecniche di prevenzione incendi e le stesse sono rispettate nel progetto",
-     "id": "r29c1p41reg:radio:7_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "presenta caratteristiche tali da non consentire l'integrale osservanza delle regole tecniche di prevenzione incendi",
-     "id": "r30c1p42reg:radio:8_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "si allega documentazione necessaria all'ottenimento della deroga",
-     "id": "r31c1p43reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "non è soggetto alla valutazione del progetto da parte del Comando Provinciale dei Vigili del Fuoco ai sensi del d.P.R. n. 151/2011",
-     "id": "r33c1p45reg:radio:9_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "è soggetto alla valutazione del progetto da parte del Comando Provinciale dei Vigili del Fuoco, ai sensi dell'articolo 3 del d.P.R. n. 151/2011",
-     "id": "r34c1p46reg:radio:10_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "si allega la documentazione necessaria alla valutazione del progetto",
-     "id": "r35c1p47reg:chk",
-     "kind": "checkbox",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    },
-    {
-     "choice": "costituisce variante e il sottoscritto assevera che le modifiche non costituiscono variazione dei requisiti di sicurezza antincendio già approvati con parere de",
-     "id": "r36c1p48reg:radio:11_clone",
-     "kind": "radio",
-     "moved": [
-      [
-       "r17c1p17reg:radio:5_clone",
-       "r16c1p16reg:radio:4_clone"
-      ],
-      [
-       "r38c2p52reg:calendar_input",
-       "r22c3p32reg:calendar_input"
-      ]
-     ]
-    }
-   ],
-   "seconds": 47.4
+   "fingerprint": "afb4e293ac108424",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Asseverazione SCIA alternativa - Inquinamento acustico, materiali di risulta, prevenzione incendi",
+   "seconds": 0.6
   },
   {
    "section": "Asseverazione SCIA - Amianto, conformità igienico sanitaria, Sismica",
-   "fields": [
-    {
-     "id": "r4c1p4reg:radio:0_clone",
-     "kind": "radio",
-     "label": "non interessano parti di edifici con presenza di fibre di amianto",
-     "group": "r4c1p4reg:radio"
-    },
-    {
-     "id": "r5c1p5reg:radio:1_clone",
-     "kind": "radio",
-     "label": "interessano parti di edifici con presenza di fibre di amianto e che è stato predisposto, ai sensi dei commi 2 e 5 dell'articolo 256 del d.lgs. n. 81/2008, il Pi",
-     "group": "r5c1p5reg:radio"
-    },
-    {
-     "id": "r6c1p6reg:chk",
-     "kind": "checkbox",
-     "label": "in allegato alla presente relazione di asseverazione"
-    },
-    {
-     "id": "r9c1p9reg:radio:2_clone",
-     "kind": "radio",
-     "label": "è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe previste",
-     "group": "r9c1p9reg:radio"
-    },
-    {
-     "id": "r10c1p10reg:radio:3_clone",
-     "kind": "radio",
-     "label": "non è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe previste",
-     "group": "r10c1p10reg:radio"
-    },
-    {
-     "id": "r11c1p11reg:chk",
-     "kind": "checkbox",
-     "label": "Si allega documentazione per la richiesta di deroga"
-    },
-    {
-     "id": "r12c1p12reg:radio:4_clone",
-     "kind": "radio",
-     "label": "è conforme ai requisiti igienico-sanitari previsti dalla normativa vigente e ricade nelle ipotesi di cui all’articolo 24, comma 5-bis DPR 380/2001 trattandosi d",
-     "group": "r12c1p12reg:radio"
-    },
-    {
-     "id": "r15c1p15reg:radio:5_clone",
-     "kind": "radio",
-     "label": "non prevede la realizzazione di opere di conglomerato cementizio armato, normale e precompresso ed a struttura metallica",
-     "group": "r15c1p15reg:radio"
-    },
-    {
-     "id": "r16c1p16reg:radio:6_clone",
-     "kind": "radio",
-     "label": "prevede la realizzazione di opere di conglomerato cementizio armato, normale e precompresso ed a struttura metallica",
-     "group": "r16c1p16reg:radio"
-    },
-    {
-     "id": "r17c1p17reg:chk",
-     "kind": "checkbox",
-     "label": "si allega la denuncia di cui all'articolo 65 del d.P.R. n. 380/2001"
-    },
-    {
-     "id": "r19c1p19reg:radio:7_clone",
-     "kind": "radio",
-     "label": "non prevede opere da denunciare o autorizzare ai sensi degli articoli 93 e 94 del d.P.R. n. 380/2001 o della corrispondente normativa regionale",
-     "group": "r19c1p19reg:radio"
-    },
-    {
-     "id": "r20c1p20reg:radio:8_clone",
-     "kind": "radio",
-     "label": "costituisce una variante non sostanziale riguardante parti strutturali (art. 12 del Regolamento 4/2010) relativa ad un progetto esecutivo delle strutture preced",
-     "group": "r20c1p20reg:radio"
-    },
-    {
-     "id": "r22c1p22reg:txt",
-     "kind": "text",
-     "label": "con prot."
-    },
-    {
-     "id": "r22c2p24reg:calendar_input",
-     "kind": "date",
-     "label": "in data"
-    },
-    {
-     "id": "r23c1p25reg:radio:9_clone",
-     "kind": "radio",
-     "label": "prevede opere in zona sismica da denunciare ai sensi dell'articolo 93 del d.P.R. n. 380/2001 o della corrispondente normativa regionale (L.R. n.9/1983, Regolame",
-     "group": "r23c1p25reg:radio"
-    },
-    {
-     "id": "r24c1p26reg:chk",
-     "kind": "checkbox",
-     "label": "Si allega documentazione relativa alla denuncia dei lavori in zona sismica"
-    },
-    {
-     "id": "r25c1p27reg:radio:10_clone",
-     "kind": "radio",
-     "label": "prevede opere strutturali soggette ad autorizzazione sismica ai sensi dell'articolo 94 del d.P.R. n. 380/2001 o della corrispondente normativa regionale (L.R. n",
-     "group": "r25c1p27reg:radio"
-    },
-    {
-     "id": "r26c1p28reg:chk",
-     "kind": "checkbox",
-     "label": "Si allega la documentazione necessaria per il rilascio dell'autorizzazione sismica"
-    }
-   ],
-   "branches": [
-    {
-     "choice": "non interessano parti di edifici con presenza di fibre di amianto",
-     "id": "r4c1p4reg:radio:0_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "interessano parti di edifici con presenza di fibre di amianto e che è stato predisposto, ai sensi dei commi 2 e 5 dell'articolo 256 del d.lgs. n. 81/2008, il Pi",
-     "id": "r5c1p5reg:radio:1_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "in allegato alla presente relazione di asseverazione",
-     "id": "r6c1p6reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe previste",
-     "id": "r9c1p9reg:radio:2_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "non è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe previste",
-     "id": "r10c1p10reg:radio:3_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "Si allega documentazione per la richiesta di deroga",
-     "id": "r11c1p11reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "è conforme ai requisiti igienico-sanitari previsti dalla normativa vigente e ricade nelle ipotesi di cui all’articolo 24, comma 5-bis DPR 380/2001 trattandosi d",
-     "id": "r12c1p12reg:radio:4_clone",
-     "kind": "radio",
-     "reveals": [
-      {
-       "id": "r13c1p13reg:chk",
-       "kind": "checkbox",
-       "label": "locali con un’altezza minima interna inferiore a 2,70 metri ma uguale o superiore a 2,40 metri (art. 24, comma 5-bis, lett a) DPR 380/2001);"
-      },
-      {
-       "id": "r14c1p14reg:chk",
-       "kind": "checkbox",
-       "label": "alloggio monostanza per una persona con una superficie minima, inclusi i servizi, inferiore a 28 metri quadrati ma uguale o superiore a 20 metri quadrati (art. "
-      },
-      {
-       "id": "r15c1p15reg:chk",
-       "kind": "checkbox",
-       "label": "alloggio monostanza per due persone con una superficie minima, inclusi i servizi, inferiore a 38 metri quadrati ma uguale o superiore a 28 metri quadrati (art. "
-      }
-     ],
-     "moved": [
-      [
-       "r15c1p15reg:radio:5_clone",
-       "r18c1p18reg:radio:5_clone"
-      ],
-      [
-       "r16c1p16reg:radio:6_clone",
-       "r19c1p19reg:radio:6_clone"
-      ],
-      [
-       "r17c1p17reg:chk",
-       "r20c1p20reg:chk"
-      ],
-      [
-       "r19c1p19reg:radio:7_clone",
-       "r22c1p22reg:radio:7_clone"
-      ],
-      [
-       "r20c1p20reg:radio:8_clone",
-       "r23c1p23reg:radio:8_clone"
-      ],
-      [
-       "r22c1p22reg:txt",
-       "r25c1p25reg:txt"
-      ],
-      [
-       "r22c2p24reg:calendar_input",
-       "r25c2p27reg:calendar_input"
-      ],
-      [
-       "r23c1p25reg:radio:9_clone",
-       "r26c1p28reg:radio:9_clone"
-      ],
-      [
-       "r24c1p26reg:chk",
-       "r27c1p29reg:chk"
-      ],
-      [
-       "r25c1p27reg:radio:10_clone",
-       "r28c1p30reg:radio:10_clone"
-      ],
-      [
-       "r26c1p28reg:chk",
-       "r29c1p31reg:chk"
-      ]
-     ],
-     "then": [
-      {
-       "choice": "locali con un’altezza minima interna inferiore a 2,70 metri ma uguale o superiore a 2,40 metri (art. 24, comma 5-bis, lett a) DPR 380/2001);",
-       "id": "r13c1p13reg:chk",
-       "kind": "checkbox",
-       "reveals": [
-        {
-         "id": "r14c1p14reg:chk",
-         "kind": "checkbox",
-         "label": "che soddisfano il requisito dell’adattabilità, in relazione alle specifiche funzionali e dimensionali, previsto dal regolamento di cui al decreto del Ministro d"
-        },
-        {
-         "id": "r15c1p15reg:chk",
-         "kind": "checkbox",
-         "label": "i locali sono situati in edifici sottoposti ad interventi di recupero edilizio e di miglioramento delle caratteristiche igienico sanitarie (art. 24, comma 5-ter"
-        },
-        {
-         "id": "r16c1p16reg:chk",
-         "kind": "checkbox",
-         "label": "è contestualmente presentato nell’ambito degli elaborati grafici allegati un progetto di ristrutturazione con soluzioni alternative atte a garantire, in relazio"
-        }
-       ],
-       "moved": [
-        [
-         "r14c1p14reg:chk",
-         "r17c1p17reg:chk"
-        ],
-        [
-         "r15c1p15reg:chk",
-         "r18c1p18reg:chk"
-        ],
-        [
-         "r18c1p18reg:radio:5_clone",
-         "r21c1p21reg:radio:5_clone"
-        ],
-        [
-         "r19c1p19reg:radio:6_clone",
-         "r22c1p22reg:radio:6_clone"
-        ],
-        [
-         "r20c1p20reg:chk",
-         "r23c1p23reg:chk"
-        ],
-        [
-         "r22c1p22reg:radio:7_clone",
-         "r25c1p25reg:radio:7_clone"
-        ],
-        [
-         "r23c1p23reg:radio:8_clone",
-         "r26c1p26reg:radio:8_clone"
-        ],
-        [
-         "r25c1p25reg:txt",
-         "r28c1p28reg:txt"
-        ],
-        [
-         "r25c2p27reg:calendar_input",
-         "r28c2p30reg:calendar_input"
-        ],
-        [
-         "r26c1p28reg:radio:9_clone",
-         "r29c1p31reg:radio:9_clone"
-        ],
-        [
-         "r27c1p29reg:chk",
-         "r30c1p32reg:chk"
-        ],
-        [
-         "r28c1p30reg:radio:10_clone",
-         "r31c1p33reg:radio:10_clone"
-        ],
-        [
-         "r29c1p31reg:chk",
-         "r32c1p34reg:chk"
-        ]
-       ]
-      },
-      {
-       "choice": "alloggio monostanza per una persona con una superficie minima, inclusi i servizi, inferiore a 28 metri quadrati ma uguale o superiore a 20 metri quadrati (art. ",
-       "id": "r14c1p14reg:chk",
-       "kind": "checkbox",
-       "reveals": [
-        {
-         "id": "r15c1p15reg:chk",
-         "kind": "checkbox",
-         "label": "che soddisfano il requisito dell’adattabilità, in relazione alle specifiche funzionali e dimensionali, previsto dal regolamento di cui al decreto del Ministro d"
-        },
-        {
-         "id": "r16c1p16reg:chk",
-         "kind": "checkbox",
-         "label": "i locali sono situati in edifici sottoposti ad interventi di recupero edilizio e di miglioramento delle caratteristiche igienico sanitarie (art. 24, comma 5-ter"
-        },
-        {
-         "id": "r17c1p17reg:chk",
-         "kind": "checkbox",
-         "label": "è contestualmente presentato nell’ambito degli elaborati grafici allegati un progetto di ristrutturazione con soluzioni alternative atte a garantire, in relazio"
-        }
-       ],
-       "moved": [
-        [
-         "r15c1p15reg:chk",
-         "r18c1p18reg:chk"
-        ],
-        [
-         "r18c1p18reg:radio:5_clone",
-         "r21c1p21reg:radio:5_clone"
-        ],
-        [
-         "r19c1p19reg:radio:6_clone",
-         "r22c1p22reg:radio:6_clone"
-        ],
-        [
-         "r20c1p20reg:chk",
-         "r23c1p23reg:chk"
-        ],
-        [
-         "r22c1p22reg:radio:7_clone",
-         "r25c1p25reg:radio:7_clone"
-        ],
-        [
-         "r23c1p23reg:radio:8_clone",
-         "r26c1p26reg:radio:8_clone"
-        ],
-        [
-         "r25c1p25reg:txt",
-         "r28c1p28reg:txt"
-        ],
-        [
-         "r25c2p27reg:calendar_input",
-         "r28c2p30reg:calendar_input"
-        ],
-        [
-         "r26c1p28reg:radio:9_clone",
-         "r29c1p31reg:radio:9_clone"
-        ],
-        [
-         "r27c1p29reg:chk",
-         "r30c1p32reg:chk"
-        ],
-        [
-         "r28c1p30reg:radio:10_clone",
-         "r31c1p33reg:radio:10_clone"
-        ],
-        [
-         "r29c1p31reg:chk",
-         "r32c1p34reg:chk"
-        ]
-       ]
-      },
-      {
-       "choice": "alloggio monostanza per due persone con una superficie minima, inclusi i servizi, inferiore a 38 metri quadrati ma uguale o superiore a 28 metri quadrati (art. ",
-       "id": "r15c1p15reg:chk",
-       "kind": "checkbox",
-       "reveals": [
-        {
-         "id": "r16c1p16reg:chk",
-         "kind": "checkbox",
-         "label": "che soddisfano il requisito dell’adattabilità, in relazione alle specifiche funzionali e dimensionali, previsto dal regolamento di cui al decreto del Ministro d"
-        },
-        {
-         "id": "r17c1p17reg:chk",
-         "kind": "checkbox",
-         "label": "i locali sono situati in edifici sottoposti ad interventi di recupero edilizio e di miglioramento delle caratteristiche igienico sanitarie (art. 24, comma 5-ter"
-        },
-        {
-         "id": "r18c1p18reg:chk",
-         "kind": "checkbox",
-         "label": "è contestualmente presentato nell’ambito degli elaborati grafici allegati un progetto di ristrutturazione con soluzioni alternative atte a garantire, in relazio"
-        }
-       ],
-       "moved": [
-        [
-         "r18c1p18reg:radio:5_clone",
-         "r21c1p21reg:radio:5_clone"
-        ],
-        [
-         "r19c1p19reg:radio:6_clone",
-         "r22c1p22reg:radio:6_clone"
-        ],
-        [
-         "r20c1p20reg:chk",
-         "r23c1p23reg:chk"
-        ],
-        [
-         "r22c1p22reg:radio:7_clone",
-         "r25c1p25reg:radio:7_clone"
-        ],
-        [
-         "r23c1p23reg:radio:8_clone",
-         "r26c1p26reg:radio:8_clone"
-        ],
-        [
-         "r25c1p25reg:txt",
-         "r28c1p28reg:txt"
-        ],
-        [
-         "r25c2p27reg:calendar_input",
-         "r28c2p30reg:calendar_input"
-        ],
-        [
-         "r26c1p28reg:radio:9_clone",
-         "r29c1p31reg:radio:9_clone"
-        ],
-        [
-         "r27c1p29reg:chk",
-         "r30c1p32reg:chk"
-        ],
-        [
-         "r28c1p30reg:radio:10_clone",
-         "r31c1p33reg:radio:10_clone"
-        ],
-        [
-         "r29c1p31reg:chk",
-         "r32c1p34reg:chk"
-        ]
-       ]
-      }
-     ]
-    },
-    {
-     "choice": "non prevede la realizzazione di opere di conglomerato cementizio armato, normale e precompresso ed a struttura metallica",
-     "id": "r15c1p15reg:radio:5_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "prevede la realizzazione di opere di conglomerato cementizio armato, normale e precompresso ed a struttura metallica",
-     "id": "r16c1p16reg:radio:6_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "si allega la denuncia di cui all'articolo 65 del d.P.R. n. 380/2001",
-     "id": "r17c1p17reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "non prevede opere da denunciare o autorizzare ai sensi degli articoli 93 e 94 del d.P.R. n. 380/2001 o della corrispondente normativa regionale",
-     "id": "r19c1p19reg:radio:7_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "costituisce una variante non sostanziale riguardante parti strutturali (art. 12 del Regolamento 4/2010) relativa ad un progetto esecutivo delle strutture preced",
-     "id": "r20c1p20reg:radio:8_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "prevede opere in zona sismica da denunciare ai sensi dell'articolo 93 del d.P.R. n. 380/2001 o della corrispondente normativa regionale (L.R. n.9/1983, Regolame",
-     "id": "r23c1p25reg:radio:9_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "Si allega documentazione relativa alla denuncia dei lavori in zona sismica",
-     "id": "r24c1p26reg:chk",
-     "kind": "checkbox"
-    },
-    {
-     "choice": "prevede opere strutturali soggette ad autorizzazione sismica ai sensi dell'articolo 94 del d.P.R. n. 380/2001 o della corrispondente normativa regionale (L.R. n",
-     "id": "r25c1p27reg:radio:10_clone",
-     "kind": "radio"
-    }
-   ],
-   "seconds": 41.8
+   "fingerprint": "f5f2a3105610e9cc",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Asseverazione SCIA Alternativa - Amianto, conformità igienico sanitaria, Sismica",
+   "seconds": 0.6
   },
   {
    "section": "Asseverazione SCIA - Tutela Storico Ambientale",
@@ -11001,6 +6526,7 @@
      "label": "Si allega la documentazione necessaria ai fini del rilascio del parere/nulla osta"
     }
    ],
+   "fingerprint": "33ad07aa693f5192",
    "branches": [
     {
      "choice": "NON ricade in zona sottoposta a tutela",
@@ -11157,7 +6683,7 @@
      ]
     }
    ],
-   "seconds": 26.8
+   "seconds": 10.3
   },
   {
    "section": "Asseverazione SCIA - Tutela Ecologica",
@@ -11243,6 +6769,7 @@
      "label": "Si allega la documentazione necessaria per la richiesta di deroga"
     }
    ],
+   "fingerprint": "6ccd3315fa68296d",
    "branches": [
     {
      "choice": "non è sottoposta a tutela",
@@ -11425,7 +6952,7 @@
      ]
     }
    ],
-   "seconds": 29.4
+   "seconds": 9.2
   },
   {
    "section": "Asseverazione SCIA - Altri Vincoli di Tutela Ecologica",
@@ -11493,6 +7020,7 @@
      "label": "si allega la documentazione necessaria ai fini del rilascio dei relativi atti di assenso"
     }
    ],
+   "fingerprint": "968ac46e0d8571ad",
    "branches": [
     {
      "choice": "nel comune NON è presente un'attività a rischio d'incidente rilevante",
@@ -11622,7 +7150,8 @@
       {
        "id": "r16c1p16reg:txt",
        "kind": "text",
-       "label": "Specificare:"
+       "label": "Specificare:",
+       "max": 9999
       }
      ],
      "moved": [
@@ -11675,7 +7204,7 @@
      ]
     }
    ],
-   "seconds": 20.5
+   "seconds": 8.5
   },
   {
    "section": "Asseverazione SCIA - Tutela Funzionale",
@@ -11726,6 +7255,7 @@
      "label": "si allega la documentazione necessaria ai fini del rilascio dei relativi atti di assenso"
     }
    ],
+   "fingerprint": "60daf62dbca96826",
    "branches": [
     {
      "choice": "stradale (d.m. n. 1404/1968, d.P.R. n. 495/92)",
@@ -11735,7 +7265,8 @@
       {
        "id": "r6c1p6reg:txt",
        "kind": "text",
-       "label": "Specificare:"
+       "label": "Specificare:",
+       "max": 9999
       }
      ],
      "moved": [
@@ -11806,7 +7337,8 @@
       {
        "id": "r12c1p12reg:txt",
        "kind": "text",
-       "label": "Specificare:"
+       "label": "Specificare:",
+       "max": 9999
       }
      ],
      "moved": [
@@ -11831,20 +7363,13 @@
      "kind": "checkbox"
     }
    ],
-   "seconds": 20.7
+   "seconds": 7.4
   },
   {
    "section": "Asseverazione SCIA - NOTE",
-   "fields": [
-    {
-     "id": "r2c1p2reg:txta",
-     "kind": "textarea",
-     "label": "500 Caratteri restanti",
-     "context": "Note:"
-    }
-   ],
-   "branches": [],
-   "seconds": 1.4
+   "fingerprint": "b6ac34d6d6cc314e",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Asseverazione SCIA Alternativa -  NOTE",
+   "seconds": 0.7
   },
   {
    "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
@@ -11856,71 +7381,416 @@
   },
   {
    "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "SANATORIA e regolarizzazioni per interventi già realizzati e in corso di esecuzione",
    "fields": [
     {
-     "id": "r2c1p2reg:radio:0_clone",
-     "kind": "radio",
-     "label": "non sono dovuti oneri quali diritti o spese",
-     "group": "r2c1p2reg:radio"
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "intervento soggetto a SCIA in corso di esecuzione, con pagamento di sanzione (d.P.R. n. 380/2001, articolo 37, comma 5), e pertanto:"
     },
     {
-     "id": "r3c1p3reg:radio:1_clone",
-     "kind": "radio",
-     "label": "poiché non previsti dal tariffario",
-     "group": "r3c1p3reg:radio"
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "sanatoria di intervento soggetto a SCIA, in assenza della SCIA stessa o in difformità da essa, che risulta conforme alla disciplina urbanistica e edilizia vigen"
     },
     {
-     "id": "r3c2p4reg:radio:2_clone",
-     "kind": "radio",
-     "label": "poiché esentati",
-     "group": "r3c2p4reg:radio"
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "sanatoria di intervento soggetto a SCIA, in assenza della SCIA o in difformità da essa, che risulta conforme alla disciplina urbanistica vigente al momento dell"
     },
     {
-     "id": "r5c1p8reg:radio:3_clone",
-     "kind": "radio",
-     "label": "sono dovuti oneri quali diritti o spese",
-     "group": "r5c1p8reg:radio"
-    },
-    {
-     "id": "r7c1p10reg:real",
-     "kind": "text",
-     "label": "per un totale di Euro"
-    },
-    {
-     "id": "r8c1p13reg:radio:4_clone",
-     "kind": "radio",
-     "label": "pagamento on line alla pagina successiva \"Pagamento oneri\"",
-     "group": "r8c1p13reg:radio"
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "regolarizzazione di interventi realizzati come variante in corso d'opera che costituiscono parziali difformità dal titolo rilasciato prima della data di entrata"
     }
    ],
+   "fingerprint": "d3a4f89cc9eb6536",
    "branches": [
     {
-     "choice": "non sono dovuti oneri quali diritti o spese",
-     "id": "r2c1p2reg:radio:0_clone",
-     "kind": "radio"
+     "choice": "intervento soggetto a SCIA in corso di esecuzione, con pagamento di sanzione (d.P.R. n. 380/2001, articolo 37, comma 5), e pertanto:",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r3c1p3reg:radio:0_clone",
+       "kind": "radio",
+       "label": "si forniscono gli estremi del pagamento di € 516,00",
+       "group": "r3c1p3reg:radio"
+      },
+      {
+       "id": "r5c1p7reg:radio:1_clone",
+       "kind": "radio",
+       "label": "si allega la ricevuta del pagamento di € 516,00",
+       "group": "r5c1p7reg:radio"
+      }
+     ],
+     "moved": [
+      [
+       "r3c1p3reg:chk",
+       "r6c1p8reg:chk"
+      ],
+      [
+       "r5c1p6reg:chk",
+       "r8c1p11reg:chk"
+      ],
+      [
+       "r7c1p9reg:chk",
+       "r10c1p14reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "si forniscono gli estremi del pagamento di € 516,00",
+       "id": "r3c1p3reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r5c1p5reg:txt",
+         "kind": "text",
+         "label": "si forniscono gli estremi del pagamento di € 516,00",
+         "max": 9999
+        },
+        {
+         "id": "r5c2p7reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r5c1p7reg:radio:1_clone",
+         "r6c1p10reg:radio:1_clone"
+        ],
+        [
+         "r6c1p8reg:chk",
+         "r7c1p11reg:chk"
+        ],
+        [
+         "r8c1p11reg:chk",
+         "r9c1p14reg:chk"
+        ],
+        [
+         "r10c1p14reg:chk",
+         "r11c1p17reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "si allega la ricevuta del pagamento di € 516,00",
+       "id": "r5c1p7reg:radio:1_clone",
+       "kind": "radio"
+      }
+     ]
     },
     {
-     "choice": "poiché non previsti dal tariffario",
-     "id": "r3c1p3reg:radio:1_clone",
-     "kind": "radio"
+     "choice": "sanatoria di intervento soggetto a SCIA, in assenza della SCIA stessa o in difformità da essa, che risulta conforme alla disciplina urbanistica e edilizia vigen",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r5c1p5reg:calendar_input",
+       "kind": "date",
+       "label": "realizzato in data"
+      },
+      {
+       "id": "r7c1p9reg:radio:0_clone",
+       "kind": "radio",
+       "label": "si forniscono gli estremi del pagamento",
+       "group": "r7c1p9reg:radio"
+      },
+      {
+       "id": "r9c1p13reg:radio:1_clone",
+       "kind": "radio",
+       "label": "si allega la ricevuta del pagamento",
+       "group": "r9c1p13reg:radio"
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p6reg:chk",
+       "r11c1p16reg:chk"
+      ],
+      [
+       "r7c1p9reg:chk",
+       "r13c1p19reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "si forniscono gli estremi del pagamento",
+       "id": "r7c1p9reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r9c1p11reg:txt",
+         "kind": "text",
+         "label": "di Euro",
+         "max": 9999
+        },
+        {
+         "id": "r9c2p13reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r9c1p13reg:radio:1_clone",
+         "r10c1p16reg:radio:1_clone"
+        ],
+        [
+         "r11c1p16reg:chk",
+         "r12c1p19reg:chk"
+        ],
+        [
+         "r13c1p19reg:chk",
+         "r14c1p22reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "si allega la ricevuta del pagamento",
+       "id": "r9c1p13reg:radio:1_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r10c2p16reg:real",
+         "kind": "text",
+         "label": "di euro",
+         "context": "si allega la ricevuta del pagamento",
+         "max": 13
+        }
+       ],
+       "moved": [
+        [
+         "r9c1p13reg:radio:1_clone",
+         "r10c1p14reg:radio:1_clone"
+        ],
+        [
+         "r11c1p16reg:chk",
+         "r13c1p19reg:chk"
+        ],
+        [
+         "r13c1p19reg:chk",
+         "r15c1p22reg:chk"
+        ]
+       ]
+      }
+     ]
     },
     {
-     "choice": "poiché esentati",
-     "id": "r3c2p4reg:radio:2_clone",
-     "kind": "radio"
+     "choice": "sanatoria di intervento soggetto a SCIA, in assenza della SCIA o in difformità da essa, che risulta conforme alla disciplina urbanistica vigente al momento dell",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c1p8reg:calendar_input",
+       "kind": "date",
+       "label": "realizzato in data"
+      },
+      {
+       "id": "r9c1p12reg:radio:0_clone",
+       "kind": "radio",
+       "label": "si forniscono gli estremi del pagamento",
+       "group": "r9c1p12reg:radio"
+      },
+      {
+       "id": "r11c1p16reg:radio:1_clone",
+       "kind": "radio",
+       "label": "si allega la ricevuta del pagamento",
+       "group": "r11c1p16reg:radio"
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p9reg:chk",
+       "r15c1p21reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "si forniscono gli estremi del pagamento",
+       "id": "r9c1p12reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r11c1p14reg:txt",
+         "kind": "text",
+         "label": "di Euro",
+         "max": 9999
+        },
+        {
+         "id": "r11c2p16reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r11c1p16reg:radio:1_clone",
+         "r12c1p19reg:radio:1_clone"
+        ],
+        [
+         "r15c1p21reg:chk",
+         "r16c1p24reg:chk"
+        ]
+       ]
+      },
+      {
+       "choice": "si allega la ricevuta del pagamento",
+       "id": "r11c1p16reg:radio:1_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r12c2p19reg:real",
+         "kind": "text",
+         "label": "di euro",
+         "context": "si allega la ricevuta del pagamento",
+         "max": 13
+        }
+       ],
+       "moved": [
+        [
+         "r11c1p16reg:radio:1_clone",
+         "r12c1p17reg:radio:1_clone"
+        ],
+        [
+         "r15c1p21reg:chk",
+         "r17c1p24reg:chk"
+        ]
+       ]
+      }
+     ]
     },
     {
-     "choice": "sono dovuti oneri quali diritti o spese",
-     "id": "r5c1p8reg:radio:3_clone",
-     "kind": "radio"
-    },
-    {
-     "choice": "pagamento on line alla pagina successiva \"Pagamento oneri\"",
-     "id": "r8c1p13reg:radio:4_clone",
-     "kind": "radio"
+     "choice": "regolarizzazione di interventi realizzati come variante in corso d'opera che costituiscono parziali difformità dal titolo rilasciato prima della data di entrata",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r8c1p10reg:radio:0_clone",
+       "kind": "radio",
+       "label": "si indicano gli estremi del titolo edilizio variato",
+       "group": "r8c1p10reg:radio"
+      },
+      {
+       "id": "r10c1p14reg:radio:1_clone",
+       "kind": "radio",
+       "label": "si allega altra documentazione di cui all'articolo 9-bis, comma 1-bis, quarto periodo nei casi in cui sussista un principio di prova del titolo abilitativo vari",
+       "group": "r10c1p14reg:radio"
+      },
+      {
+       "id": "r12c1p16reg:radio:2_clone",
+       "kind": "radio",
+       "label": "si forniscono gli estremi di versamento",
+       "group": "r12c1p16reg:radio"
+      },
+      {
+       "id": "r14c1p20reg:radio:3_clone",
+       "kind": "radio",
+       "label": "si allega la ricevuta di versamento",
+       "group": "r14c1p20reg:radio"
+      }
+     ],
+     "then": [
+      {
+       "choice": "si indicano gli estremi del titolo edilizio variato",
+       "id": "r8c1p10reg:radio:0_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r10c1p12reg:txt",
+         "kind": "text",
+         "label": "n.",
+         "max": 9999
+        },
+        {
+         "id": "r10c2p14reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r10c1p14reg:radio:1_clone",
+         "r11c1p17reg:radio:1_clone"
+        ],
+        [
+         "r12c1p16reg:radio:2_clone",
+         "r13c1p19reg:radio:2_clone"
+        ],
+        [
+         "r14c1p20reg:radio:3_clone",
+         "r15c1p23reg:radio:3_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "si allega altra documentazione di cui all'articolo 9-bis, comma 1-bis, quarto periodo nei casi in cui sussista un principio di prova del titolo abilitativo vari",
+       "id": "r10c1p14reg:radio:1_clone",
+       "kind": "radio"
+      },
+      {
+       "choice": "si forniscono gli estremi di versamento",
+       "id": "r12c1p16reg:radio:2_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r14c1p18reg:txt",
+         "kind": "text",
+         "label": "di Euro",
+         "max": 9999
+        },
+        {
+         "id": "r14c2p20reg:calendar_input",
+         "kind": "date",
+         "label": "del"
+        }
+       ],
+       "moved": [
+        [
+         "r14c1p20reg:radio:3_clone",
+         "r15c1p23reg:radio:3_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "si allega la ricevuta di versamento",
+       "id": "r14c1p20reg:radio:3_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r15c2p23reg:real",
+         "kind": "text",
+         "label": "di euro",
+         "context": "si allega la ricevuta di versamento",
+         "max": 13
+        }
+       ],
+       "moved": [
+        [
+         "r14c1p20reg:radio:3_clone",
+         "r15c1p21reg:radio:3_clone"
+        ]
+       ]
+      }
+     ]
     }
    ],
-   "seconds": 10
+   "seconds": 13.9,
+   "scelta": "Le opere ricadono nell'ambito della Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione?"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.8,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
  ],
  "slots": {
