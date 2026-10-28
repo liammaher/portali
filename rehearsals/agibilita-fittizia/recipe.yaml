@@ -1,0 +1,35 @@
+# The Segnalazione Certificata per l'Agibilità after the CILA rehearsal's works, as gen.py writes
+# its steps file. Never walked: crawl catalogue/F839/sections/agibilita.json, every field from
+# dictionary/fnsuap.yaml. The architect is the direttore dei lavori and attests; the client is
+# the tenant of the CILA (rehearsals/cila-fittizia).
+procedure: napoli/comune/agibilita
+title: "Segnalazione certificata per l'agibilità, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: agibilita
+operation: Segnalazione Certificata per l'Agibilità
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+after: [Pagamento degli oneri, Gestione degli allegati]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - agibilità {{c:identity.last_name}}"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "As direttore dei lavori, check every attestation on this page: they are yours, signed with the pratica"
+  - "Attestazione tecnica - Agibilità: the portal requires one of the art. 24 c. 5-bis/5-ter or 5-quater boxes; tick the one that applies (if none does, ask the SUE)"
+  - "On Allega documenti: the portal's procura signed by the client, then everything signed digitally (.p7m)"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{ask.titolo}}"
+    in: [locatario]
+    else: "So far only a tenant with the owner's assent (a.2) is mapped."
+  - value: "{{ask.strutture}}"
+    in: ["false"]
+    else: "Works on the structure (collaudo statico) aren't mapped yet."
+  - value: "{{ask.antincendio_variazione}}"
+    in: ["false"]
+    else: "Works that change fire safety aren't mapped yet."
+  - value: "{{ask.civici_variazione}}"
+    in: ["false"]
+    else: "A change of house numbers isn't mapped yet."

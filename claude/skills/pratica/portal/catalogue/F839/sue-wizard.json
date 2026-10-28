@@ -1,0 +1,1444 @@
+{
+ "comune": "F839",
+ "name": "Napoli",
+ "sportello": "SUE",
+ "start": "https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E",
+ "crawled": "2026-10-28",
+ "by": "claude/skills/pratica/portal/wizard.js on the scratch draft 'PROVA NON INVIARE - catalogo SUE', 376 s",
+ "note": "Each operation alone. Base pratica: the preselected destinatario (SUE DEL COMUNE DI NAPOLI, the only one), every Si/No (SIN) answered No, no box (CHK) ticked. Then each scelta alone: `adds`/`drops` are the sections it adds to or drops from the base. Sections are indices into `sections`.",
+ "sector": "Edilizia e pianificazione urbana",
+ "sections": [
+  "Scheda anagrafica",
+  "Oggetto della pratica",
+  "DOMICILIO DIGITALE",
+  "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+  "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+  "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+  "Localizzazione dell'intervento",
+  "Dati catastali",
+  "a) Titolarità dell'intervento",
+  "b) Opere su parti comuni o modifiche esterne",
+  "c) Comunicazione inizio lavori",
+  "d) Destinazione d'uso dell'immobile",
+  "e) Altre comunicazioni, segnalazioni e asseverazioni eventualmente necessarie alla realizzazione delle opere presentate contestualmente alla comunicazione di inizio lavori",
+  "f) Impresa esecutrice dei lavori",
+  "g) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+  "Dichiarazione in materia di rispetto sulle tasse comunali",
+  "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+  "Dichiarazione relativa ai diritti di segreteria/istruttori",
+  "Qualifica e dati del procuratore",
+  "c) Presentazione della comunicazione di inizio dei lavori asseverata",
+  "d) Qualificazione dell'intervento",
+  "e) Destinazione d'uso",
+  "f) Calcolo del contributo di costruzione",
+  "G1) Tecnici incaricati",
+  "G2) Altri tecnici incaricati",
+  "h) Impresa esecutrice dei lavori",
+  "i) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+  "Relazione Tecnica di Asseverazione C.I.L.A.",
+  "b) Presentazione della SCIA/SCIA Unica/SCIA Condizionata",
+  "c) Qualificazione dell'intervento",
+  "e) Opere su parti comuni o modifiche esterne",
+  "f) Regolarità urbanistica e precedenti edilizi",
+  "g) Calcolo del contributo di costruzione",
+  "h1) Tecnici incaricati",
+  "H2) Altri tecnici incaricati",
+  "i) Impresa esecutrice dei lavori",
+  "l) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+  "m) Diritti di terzi",
+  "Note",
+  "Asseverazione SCIA - Tipologia di intervento, descrizione opere",
+  "Asseverazione SCIA - Stato legittimo, Dichiarazione di tolleranze, Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione",
+  "Asseverazione SCIA - Dati immobile, strumentazione urbanistica, barriere architettoniche",
+  "Asseverazione SCIA - Sicurezza impianti, consumi energetici",
+  "Asseverazione SCIA - Inquinamento acustico, materiali di risulta, prevenzione incendi",
+  "Asseverazione SCIA - Amianto, conformità igienico sanitaria, Sismica",
+  "Asseverazione SCIA - Tutela Storico Ambientale",
+  "Asseverazione SCIA - Tutela Ecologica",
+  "Asseverazione SCIA - Altri Vincoli di Tutela Ecologica",
+  "Asseverazione SCIA - Tutela Funzionale",
+  "Asseverazione SCIA - NOTE",
+  "SANATORIA e regolarizzazioni per interventi già realizzati e in corso di esecuzione",
+  "b) Presentazione della SCIA Alternativa al Permesso di Costruire/SCIA Unica/SCIA Condizionata",
+  "Asseverazione SCIA Alternativa - Dati progettista e descrizione opere",
+  "Asseverazione SCIA Alternativa - stato legittimo, dichiarazione tolleranze",
+  "Asseverazione SCIA Alternativa -  Dati immobile, strumentazione urbanistica, barriere architettoniche",
+  "Asseverazione SCIA Alternativa -  Sicurezza impianti, Consumi energetici",
+  "Asseverazione SCIA alternativa - Inquinamento acustico, materiali di risulta, prevenzione incendi",
+  "Asseverazione SCIA Alternativa - Amianto, conformità igienico sanitaria, Sismica",
+  "Asseverazione SCIA Alternativa -  Qualità terreni, opere di urbanizzazione, Scarichi",
+  "Asseverazione SCIA Alternativa - Tutela Storico Ambientale",
+  "Asseverazione SCIA Alternativa - Tutela Ecologica",
+  "Asseverazione SCIA Alternativa - Altri Vincoli di Tutela Ecologica",
+  "Asseverazione SCIA Alternativa -  TUTELA FUNZIONALE",
+  "Asseverazione SCIA Alternativa -  NOTE",
+  "a) Qualificazione pratica dell'intervento",
+  "b) Titolarità dell'intervento",
+  "c) Destinazione d'uso dell'immobile",
+  "d) Opere su parti comuni o modifiche esterne",
+  "e) Regolarità urbanistica e precedenti edilizi",
+  "g1) Tecnici incaricati",
+  "g2) Altri tecnici incaricati",
+  "j) Diritti di terzi",
+  "Asseverazione PdC - Dati progettista e descrizione opere",
+  "Asseverazione PdC -  stato legittimo, dichiarazione tolleranze, sanatoria",
+  "Asseverazione PdC - Dati immobile, strumentazione urbanistica, barriere architettoniche",
+  "Asseverazione PdC - sicurezza impianti e consumi energetici",
+  "Asseverazione PdC - inquinamento acustico, materiali di risulta, prevenzione incendi",
+  "Asseverazione PdC - amianto, conformità igienico sanitaria, sismica",
+  "Asseverazione PdC - qualità terreni, opere di urbanizzazione, scarichi",
+  "Asseverazione PdC - tutela storico ambientale",
+  "Asseverazione PdC - tutela ecologica ambientale",
+  "Asseverazione PdC - aree a rischio e altri vincoli di tutela ecologica",
+  "Asseverazione PdC - tutela funzionale",
+  "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+  "SANATORIA",
+  "ubicazione dell'attività",
+  "dati catastali",
+  "nomina nuovo direttore dei lavori",
+  "titolo di legittimazione dell'intervento",
+  "titolo edilizio posseduto",
+  "Impresa esecutrice dei lavori",
+  "oggetto dell'istanza",
+  "nuova impresa esecutrice",
+  "Numero del permesso di costruire e proprietario",
+  "Contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+  "dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare",
+  "dichiarazione relativa alla conoscenza dei soggetti che intervengono nella realizzazione dell'intervento",
+  "Contributo di Costruzione",
+  "Domicilio dei nuovi intestatari per comunicazioni o notifiche",
+  "Informazioni su eventuali altri aventi titolo",
+  "dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+  "dichiarazione relativa agli estremi della CILA / SCIA / DIA e proprietario",
+  "dichiarazione relativa al Contributo di Costruzione",
+  "dichiarazione relativa al domicilio dei nuovi intestatari per comunicazioni o notifiche",
+  "dichiarazione della tipologia di attività svolta",
+  "dichiarazione relativa all'impegno nel rispettare prescrizioni e condizioni relative al titolo abilitativo",
+  "dichiarazione relativa alla presa visione della CILA / SCIA / DIA, dei relativi allegati e pareri degli enti preposti",
+  "dichiarazione relativa ai diritti di segreteria/istruttori",
+  "dichiarazione relativa ad eventuali altri aventi titolo",
+  "dichiarazione riferimenti permesso di costruire",
+  "dichiarazione relativa alla comunicazione di inizio lavori",
+  "dichiarazione dell'intestatario del permesso di costruire",
+  "dichiarazione dell'ubicazione dei lavori",
+  "dichiarazione relativa alla sede dell'attività",
+  "dichiarazione delle motivazioni della richiesta di proroga",
+  "dichiarazione periodo di proroga",
+  "dichiarazione dell'immobile oggetto della domanda, riferimenti titolo edilizio e data prevista dell'inizio lavori",
+  "ubicazione dell'immobile",
+  "Titolarità dell'intervento",
+  "comunicazione di fine lavori",
+  "richiesta della proroga di ultimazione dei lavori",
+  "dichiarazione dell'immobile oggetto della domanda, riferimenti titolo edilizio e data prevista della fine lavori",
+  "riferimenti titolo edilizio e data prevista della fine lavori",
+  "Ubicazione dell'attività",
+  "Riferimenti titolo edilizio e data prevista dell'inizio lavori",
+  "Altre dichiarazioni",
+  "Tipologia lavori",
+  "Riferimenti titolo edilizio e/o paesaggistico e data prevista della fine dei lavori",
+  "destinazione d'uso dell'immobile",
+  "titolo legittimante l'intervento",
+  "dichiarazione sulla comunicazione di fine lavori",
+  "Presentazione della segnalazione certificata per l'agibilità",
+  "Attestazione tecnica - Dati del Direttore Lavori/Professionista Abilitato",
+  "Attestazione tecnica - Agibilità",
+  "Attestazione tecnica - Sicurezza degli impianti",
+  "Attestazione tecnica - Sicurezza statica e  sismica,  Prestazione energetica",
+  "Attestazione tecnica - Barriere architettoniche, Catasto, Toponomastica",
+  "Attestazione tecnica - Prevenzione Incendi, ascensori/montacarichi",
+  "localizzazione dell'intervento",
+  "dichiarazione ubicazione dell'intervento",
+  "dati relativi al nome del tecnico",
+  "Qualificazione dell'intervento",
+  "Ambito dell'intervento",
+  "Qualificazione dell'intervento di rinnovo",
+  "dichiarazione relativa alla descrizione delle opere",
+  "dichiarazione relativa ai dati identificativi del/dei professionista/i incaricato/i",
+  "dichiarazione riferita all'art. 181 del D.Lgs. 42/2004",
+  "dichiarazione relativa alla datazione dell'abuso",
+  "PERIODO DI PROROGA",
+  "RIFERIMENTI AUTORIZZAZIONE PAESAGGISTICA E DATA SCADENZA EFFICACIA",
+  "titolo del richiedente",
+  "dichiarazione della legittimita' dell'intervento",
+  "Interventi ed opere in aree vincolate esclusi dall'autorizzazione  paesaggistica",
+  "indicazione dell'Ente al quale è inviata la richiesta di parere preventivo",
+  "dichiarazione relativa all'imposta di bollo"
+ ],
+ "operations": [
+  {
+   "key": "0_0_0_0_0",
+   "type": "RAD",
+   "group": "EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria)",
+   "label": "Comunicazione di Inizio Lavori per opere temporanee (C.I.L.)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione Inizio Lavori (art. 6, comma 1, lett. e-bis) del d.P.R. n. 380/2001 e n. 26 Tabella A, Sez. II del d.lgs n. 222/2016)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_0_0_1",
+   "type": "RAD",
+   "group": "EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria)",
+   "label": "Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione Inizio Lavori Asseverata (art. 6-bis, d.P.R. 6 giugno 2001, n. 380)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    15,
+    16,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_0_0_2",
+   "type": "RAD",
+   "group": "EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria)",
+   "label": "Segnalazione Certificata di Inizio Attività Edilizia (S.C.I.A.)",
+   "adempimenti": [
+    {
+     "adempimento": "Segnalazione Certificata Inizio Attività (art. 22 , d.P.R. 6 giugno 2001, n. 380 - art. 19, 19-bis l. 7 agosto 1990, n. 241 – artt. 5, 6 e 7, d.P.R. 7 settembre 2010, n. 160)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    28,
+    29,
+    11,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    15,
+    16,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "SIN",
+     "option": "Le opere ricadono nell'ambito della Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione?",
+     "adds": [
+      50
+     ]
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_0_0_3",
+   "type": "RAD",
+   "group": "EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria)",
+   "label": "Segnalazione Certificata Inizio Attività alternativa al Permesso di Costruire (S.C.I.A. alternativa P.d.C.)",
+   "adempimenti": [
+    {
+     "adempimento": "Segnalazione Certificata Inizio Attività alternativa al Permesso di Costruire (art. 23, d.P.R. 6 giugno 2001, n. 380 – art. 7, d.P.R. 7 settembre 2010, n. 160)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    51,
+    29,
+    11,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    15,
+    16,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_0_0_4",
+   "type": "RAD",
+   "group": "EDILIZIA › Eseguire interventi edilizi (anche varianti a precedenti titoli o in sanatoria)",
+   "label": "Permesso di Costruire (P.d.C) - Art.10 D.P.R. 380/2001",
+   "adempimenti": [
+    {
+     "adempimento": "Richiesta di Permesso di Costruire (art. 20, d.P.R. 6 giugno 2001, n. 380 – artt. 7, d.P.R. 7 settembre 2010, n. 160)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    64,
+    65,
+    66,
+    67,
+    68,
+    22,
+    69,
+    70,
+    25,
+    26,
+    71,
+    38,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    15,
+    16,
+    17,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "SIN",
+     "option": "Le opere ricadono nell'ambito della Sanatoria ?",
+     "adds": [
+      84
+     ]
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_0",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione al Comune di nomina del nuovo direttore dei lavori",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione di nomina nuovo direttore dei lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    85,
+    86,
+    87,
+    88,
+    15,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_1",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione al Comune di nomina impresa esecutrice",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione di nomina impresa esecutrice",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    86,
+    89,
+    90,
+    91,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_2",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione al Comune di cambio dell'impresa esecutrice (da utilizzare in caso di cessazione della precedente impresa)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione di cambio impresa esecutrice",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    85,
+    86,
+    89,
+    92,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    },
+    {
+     "type": "CHK",
+     "option": "Se l'intervento ricade nell'ambito di applicazione del d.lgs. n.81/2008 e la notifica E' STATA già trasmessa (ai sensi dell'art. 99 del d.lgs. n.81/2008)"
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_3",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Voltura intestazione Permesso di costruire",
+   "adempimenti": [
+    {
+     "adempimento": "Voltura del permesso di costruire",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    85,
+    86,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    15,
+    17,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "ci sono cointestatari",
+     "adds": [
+      99
+     ]
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_4",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Cambio intestazione CIA / SCIA / DIA",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione per cambio intestazione C.I.L.A. / S.C.I.A. / D.I.A.",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    85,
+    86,
+    100,
+    101,
+    102,
+    103,
+    104,
+    95,
+    96,
+    105,
+    106,
+    15,
+    107
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "è stato incaricato un nuovo Direttore dei Lavori"
+    },
+    {
+     "type": "CHK",
+     "option": "i lavori sono stati affidati ad una nuova ditta esecutrice"
+    },
+    {
+     "type": "CHK",
+     "option": "ci sono cointestatari",
+     "adds": [
+      108
+     ]
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_5",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione inizio lavori",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione inizio lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    109,
+    110,
+    111,
+    112,
+    15,
+    107
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_6",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Proroga inizio lavori",
+   "adempimenti": [
+    {
+     "adempimento": "Provvedimento di proroga del termine di inizio lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    113,
+    114,
+    115,
+    116,
+    15,
+    107,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_7",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione di fine lavori",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione fine lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    117,
+    118,
+    119,
+    15,
+    16,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_8",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Proroga fine lavori",
+   "adempimenti": [
+    {
+     "adempimento": "Provvedimento di proroga del termine di ultimazione lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    113,
+    114,
+    115,
+    120,
+    121,
+    15,
+    107,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_9",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Proroga del termine di ultimazione lavori (art. 10 septies, Legge 51/2022)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione di proroga del termine di ultimazione lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    85,
+    86,
+    114,
+    115,
+    120,
+    122,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_10",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione integrativa proroga straordinaria trenta mesi inizio lavori (art. 10 septies, Legge 51/2022)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione integrativa di proroga del termine di inizio lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    123,
+    7,
+    124,
+    125,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "in assenza di titolarità esclusiva all'esecuzione dell'intervento edilizio, si dispone della dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori"
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_11",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Comunicazione integrativa proroga straordinaria trenta mesi ultimazione lavori (art. 10 septies, Legge 51/2022)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione integrativa di proroga del termine di ultimazione lavori",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    123,
+    7,
+    126,
+    127,
+    125,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "in assenza di titolarità esclusiva all'esecuzione dell'intervento edilizio, si dispone della dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori"
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_0_1_0_12",
+   "type": "RAD",
+   "group": "EDILIZIA › Altri adempimenti edilizi (inizio e fine lavori, agibilità, notifica preliminare, etc.)",
+   "label": "Segnalazione Certificata per l'Agibilità",
+   "adempimenti": [
+    {
+     "adempimento": "Segnalazione Certificata per l'agibilità (art. 24, d.P.R. 6 giugno 2001, n. 380, art. 19 legge 7 agosto 1990, n.241)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    117,
+    7,
+    128,
+    118,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    15,
+    16,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_1_0",
+   "type": "CHK",
+   "group": "EDILIZIA › Terre e rocce da scavo",
+   "label": "Trasmissione del Piano di utilizzo delle terre e rocce da scavo ai sensi dell'art. 9 del DPR n. 120/2017 (da trasmettere almeno novanta giorni prima dell'inizio dei lavori e, in ogni caso, prima della conclusione dell'eventuale procedimento di VIA o AIA)",
+   "adempimenti": [
+    {
+     "adempimento": "Trasmissione del piano di utilizzo delle terre e rocce da scavo ai sensi dell'art. 9 del DPR n.120/2017",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    },
+    {
+     "adempimento": "Trasmissione del piano di utilizzo delle terre e rocce da scavo ai sensi dell'art. 9 del DPR n.120/2017",
+     "amministrazione": "ARPA Campania Dipartimento Provinciale di Napoli"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    138,
+    86,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_1_1",
+   "type": "CHK",
+   "group": "EDILIZIA › Terre e rocce da scavo",
+   "label": "Dichiarazione di utilizzo del materiale di scavo fuori del sito di produzione ai sensi dell'art. 21 del DPR n.120/2017 (da trasmettere almeno 15 giorni prima dell'inizio dei lavori di scavo)",
+   "adempimenti": [
+    {
+     "adempimento": "Dichiarazione di utilizzo del materiale di scavo fuori del sito di produzione ai sensi dell'art. 21 del DPR n.120/2017",
+     "amministrazione": "ARPA Campania Dipartimento Provinciale di Napoli"
+    },
+    {
+     "adempimento": "Dichiarazione di utilizzo del materiale di scavo fuori del sito di produzione ai sensi dell'art. 21 del DPR n.120/2017",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    138,
+    86,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_1_2",
+   "type": "CHK",
+   "group": "EDILIZIA › Terre e rocce da scavo",
+   "label": "Dichiarazione di avvenuto utilizzo (D.A.U.) ai sensi dell'art. 7 del DPR n. 120/2017",
+   "adempimenti": [
+    {
+     "adempimento": "Dichiarazione di avvenuto utilizzo delle terre e rocce da scavo in conformità al piano di utilizzo o alla dichiarazione di cui all'articolo 21 del DPR n. 120/2017",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    },
+    {
+     "adempimento": "Dichiarazione di avvenuto utilizzo delle terre e rocce da scavo in conformità al piano di utilizzo o alla dichiarazione di cui all'articolo 21 del DPR n. 120/2017",
+     "amministrazione": "ARPA Campania Dipartimento Provinciale di Napoli"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    138,
+    86,
+    15
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_2_0_0_0_0",
+   "type": "RAD",
+   "group": "EDILIZIA › Beni Paesaggistici",
+   "label": "Autorizzazione paesaggistica ordinaria (art.146 del D.Lgs 42/2004 - Comune)",
+   "adempimenti": [
+    {
+     "adempimento": "Autorizzazione Paesaggistica ordinaria ex art. 146 D.Lgs. 42/2004 (Ente Comune)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    139,
+    86,
+    140,
+    100,
+    15,
+    107,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_2_0_0_0_1",
+   "type": "RAD",
+   "group": "EDILIZIA › Beni Paesaggistici",
+   "label": "Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)",
+   "adempimenti": [
+    {
+     "adempimento": "Autorizzazione Paesaggistica Semplificata ex DPR 31/2017 (Ente Comune)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    139,
+    86,
+    140,
+    141,
+    142,
+    15,
+    107,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_2_0_0_0_2",
+   "type": "RAD",
+   "group": "EDILIZIA › Beni Paesaggistici",
+   "label": "Rinnovo Autorizzazione Paesaggistica Semplificata  (DPR 31/2017 - Comune)",
+   "adempimenti": [
+    {
+     "adempimento": "Autorizzazione Paesaggistica Semplificata ex DPR 31/2017 (Ente Comune)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    139,
+    86,
+    143,
+    140,
+    15,
+    107,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_2_0_0_0_3",
+   "type": "RAD",
+   "group": "EDILIZIA › Beni Paesaggistici",
+   "label": "Accertamento di compatibilità paesaggistica (artt. 167-181 D.Lgs. 42/2004 - Comune)",
+   "adempimenti": [
+    {
+     "adempimento": "Accertamento di compatibilità paesaggistica ai sensi artt. 167 - 181 DLgs 42/2004 (Ente Comune)",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    139,
+    86,
+    144,
+    145,
+    146,
+    147,
+    100,
+    15,
+    107,
+    83
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_2_0_0_0_4",
+   "type": "RAD",
+   "group": "EDILIZIA › Beni Paesaggistici",
+   "label": "Proroga autorizzazione paesaggistica (art. 10 septies, Legge 51/2022 - Comune)",
+   "adempimenti": [
+    {
+     "adempimento": "Comunicazione di proroga dell'efficacia dell'autorizzazione paesaggistica ai sensi dell' art. 10 septies, Legge 51/2022",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    85,
+    86,
+    148,
+    149,
+    120,
+    125,
+    15,
+    17
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "in assenza di titolarità esclusiva all'esecuzione dell'intervento edilizio, si dispone della dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori"
+    },
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "0_2_1",
+   "type": "CHK",
+   "group": "EDILIZIA › Beni Paesaggistici",
+   "label": "Domanda di parere per esonero dall’obbligo di autorizzazione paesaggistica",
+   "adempimenti": [
+    {
+     "adempimento": "Domanda preventiva di pareri e/o atti di assenso",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+    }
+   ],
+   "sections": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    86,
+    150,
+    151,
+    152,
+    153,
+    15,
+    107,
+    154
+   ],
+   "scelte": [
+    {
+     "type": "CHK",
+     "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "adds": [
+      18
+     ]
+    }
+   ]
+  }
+ ],
+ "section_use": {
+  "Scheda anagrafica": 27,
+  "Oggetto della pratica": 27,
+  "DOMICILIO DIGITALE": 27,
+  "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)": 27,
+  "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000": 27,
+  "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)": 27,
+  "Dichiarazione in materia di rispetto sulle tasse comunali": 27,
+  "dati catastali": 15,
+  "Dichiarazione relativa ai diritti di segreteria/istruttori": 10,
+  "dichiarazione relativa ai diritti di segreteria/istruttori": 9,
+  "Dati catastali": 8,
+  "Dichiarazione relativa all'assolvimento dell'imposta di bollo": 8,
+  "Localizzazione dell'intervento": 7,
+  "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000": 7,
+  "ubicazione dell'attività": 6,
+  "a) Titolarità dell'intervento": 4,
+  "dichiarazione ubicazione dell'intervento": 4,
+  "d) Destinazione d'uso dell'immobile": 3,
+  "Note": 3,
+  "dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)": 3,
+  "dichiarazione delle motivazioni della richiesta di proroga": 3,
+  "dichiarazione periodo di proroga": 3,
+  "richiesta della proroga di ultimazione dei lavori": 3,
+  "Altre dichiarazioni": 3,
+  "localizzazione dell'intervento": 3,
+  "dati relativi al nome del tecnico": 3,
+  "b) Opere su parti comuni o modifiche esterne": 2,
+  "f) Calcolo del contributo di costruzione": 2,
+  "h) Impresa esecutrice dei lavori": 2,
+  "i) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro": 2,
+  "c) Qualificazione dell'intervento": 2,
+  "e) Opere su parti comuni o modifiche esterne": 2,
+  "f) Regolarità urbanistica e precedenti edilizi": 2,
+  "g) Calcolo del contributo di costruzione": 2,
+  "h1) Tecnici incaricati": 2,
+  "H2) Altri tecnici incaricati": 2,
+  "i) Impresa esecutrice dei lavori": 2,
+  "l) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro": 2,
+  "m) Diritti di terzi": 2,
+  "titolo edilizio posseduto": 2,
+  "dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare": 2,
+  "dichiarazione relativa alla conoscenza dei soggetti che intervengono nella realizzazione dell'intervento": 2,
+  "dichiarazione relativa alla sede dell'attività": 2,
+  "ubicazione dell'immobile": 2,
+  "Titolarità dell'intervento": 2,
+  "Ubicazione dell'attività": 2,
+  "c) Comunicazione inizio lavori": 1,
+  "e) Altre comunicazioni, segnalazioni e asseverazioni eventualmente necessarie alla realizzazione delle opere presentate contestualmente alla comunicazione di inizio lavori": 1,
+  "f) Impresa esecutrice dei lavori": 1,
+  "g) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro": 1,
+  "c) Presentazione della comunicazione di inizio dei lavori asseverata": 1,
+  "d) Qualificazione dell'intervento": 1,
+  "e) Destinazione d'uso": 1,
+  "G1) Tecnici incaricati": 1,
+  "G2) Altri tecnici incaricati": 1,
+  "Relazione Tecnica di Asseverazione C.I.L.A.": 1,
+  "b) Presentazione della SCIA/SCIA Unica/SCIA Condizionata": 1,
+  "Asseverazione SCIA - Tipologia di intervento, descrizione opere": 1,
+  "Asseverazione SCIA - Stato legittimo, Dichiarazione di tolleranze, Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione": 1,
+  "Asseverazione SCIA - Dati immobile, strumentazione urbanistica, barriere architettoniche": 1,
+  "Asseverazione SCIA - Sicurezza impianti, consumi energetici": 1,
+  "Asseverazione SCIA - Inquinamento acustico, materiali di risulta, prevenzione incendi": 1,
+  "Asseverazione SCIA - Amianto, conformità igienico sanitaria, Sismica": 1,
+  "Asseverazione SCIA - Tutela Storico Ambientale": 1,
+  "Asseverazione SCIA - Tutela Ecologica": 1,
+  "Asseverazione SCIA - Altri Vincoli di Tutela Ecologica": 1,
+  "Asseverazione SCIA - Tutela Funzionale": 1,
+  "Asseverazione SCIA - NOTE": 1,
+  "b) Presentazione della SCIA Alternativa al Permesso di Costruire/SCIA Unica/SCIA Condizionata": 1,
+  "Asseverazione SCIA Alternativa - Dati progettista e descrizione opere": 1,
+  "Asseverazione SCIA Alternativa - stato legittimo, dichiarazione tolleranze": 1,
+  "Asseverazione SCIA Alternativa -  Dati immobile, strumentazione urbanistica, barriere architettoniche": 1,
+  "Asseverazione SCIA Alternativa -  Sicurezza impianti, Consumi energetici": 1,
+  "Asseverazione SCIA alternativa - Inquinamento acustico, materiali di risulta, prevenzione incendi": 1,
+  "Asseverazione SCIA Alternativa - Amianto, conformità igienico sanitaria, Sismica": 1,
+  "Asseverazione SCIA Alternativa -  Qualità terreni, opere di urbanizzazione, Scarichi": 1,
+  "Asseverazione SCIA Alternativa - Tutela Storico Ambientale": 1,
+  "Asseverazione SCIA Alternativa - Tutela Ecologica": 1,
+  "Asseverazione SCIA Alternativa - Altri Vincoli di Tutela Ecologica": 1,
+  "Asseverazione SCIA Alternativa -  TUTELA FUNZIONALE": 1,
+  "Asseverazione SCIA Alternativa -  NOTE": 1,
+  "a) Qualificazione pratica dell'intervento": 1,
+  "b) Titolarità dell'intervento": 1,
+  "c) Destinazione d'uso dell'immobile": 1,
+  "d) Opere su parti comuni o modifiche esterne": 1,
+  "e) Regolarità urbanistica e precedenti edilizi": 1,
+  "g1) Tecnici incaricati": 1,
+  "g2) Altri tecnici incaricati": 1,
+  "j) Diritti di terzi": 1,
+  "Asseverazione PdC - Dati progettista e descrizione opere": 1,
+  "Asseverazione PdC -  stato legittimo, dichiarazione tolleranze, sanatoria": 1,
+  "Asseverazione PdC - Dati immobile, strumentazione urbanistica, barriere architettoniche": 1,
+  "Asseverazione PdC - sicurezza impianti e consumi energetici": 1,
+  "Asseverazione PdC - inquinamento acustico, materiali di risulta, prevenzione incendi": 1,
+  "Asseverazione PdC - amianto, conformità igienico sanitaria, sismica": 1,
+  "Asseverazione PdC - qualità terreni, opere di urbanizzazione, scarichi": 1,
+  "Asseverazione PdC - tutela storico ambientale": 1,
+  "Asseverazione PdC - tutela ecologica ambientale": 1,
+  "Asseverazione PdC - aree a rischio e altri vincoli di tutela ecologica": 1,
+  "Asseverazione PdC - tutela funzionale": 1,
+  "nomina nuovo direttore dei lavori": 1,
+  "titolo di legittimazione dell'intervento": 1,
+  "Impresa esecutrice dei lavori": 1,
+  "oggetto dell'istanza": 1,
+  "nuova impresa esecutrice": 1,
+  "Numero del permesso di costruire e proprietario": 1,
+  "Contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)": 1,
+  "Contributo di Costruzione": 1,
+  "Domicilio dei nuovi intestatari per comunicazioni o notifiche": 1,
+  "dichiarazione relativa agli estremi della CILA / SCIA / DIA e proprietario": 1,
+  "dichiarazione relativa al Contributo di Costruzione": 1,
+  "dichiarazione relativa al domicilio dei nuovi intestatari per comunicazioni o notifiche": 1,
+  "dichiarazione della tipologia di attività svolta": 1,
+  "dichiarazione relativa all'impegno nel rispettare prescrizioni e condizioni relative al titolo abilitativo": 1,
+  "dichiarazione relativa alla presa visione della CILA / SCIA / DIA, dei relativi allegati e pareri degli enti preposti": 1,
+  "dichiarazione riferimenti permesso di costruire": 1,
+  "dichiarazione relativa alla comunicazione di inizio lavori": 1,
+  "dichiarazione dell'intestatario del permesso di costruire": 1,
+  "dichiarazione dell'ubicazione dei lavori": 1,
+  "dichiarazione dell'immobile oggetto della domanda, riferimenti titolo edilizio e data prevista dell'inizio lavori": 1,
+  "comunicazione di fine lavori": 1,
+  "dichiarazione dell'immobile oggetto della domanda, riferimenti titolo edilizio e data prevista della fine lavori": 1,
+  "riferimenti titolo edilizio e data prevista della fine lavori": 1,
+  "Riferimenti titolo edilizio e data prevista dell'inizio lavori": 1,
+  "Tipologia lavori": 1,
+  "Riferimenti titolo edilizio e/o paesaggistico e data prevista della fine dei lavori": 1,
+  "destinazione d'uso dell'immobile": 1,
+  "titolo legittimante l'intervento": 1,
+  "dichiarazione sulla comunicazione di fine lavori": 1,
+  "Presentazione della segnalazione certificata per l'agibilità": 1,
+  "Attestazione tecnica - Dati del Direttore Lavori/Professionista Abilitato": 1,
+  "Attestazione tecnica - Agibilità": 1,
+  "Attestazione tecnica - Sicurezza degli impianti": 1,
+  "Attestazione tecnica - Sicurezza statica e  sismica,  Prestazione energetica": 1,
+  "Attestazione tecnica - Barriere architettoniche, Catasto, Toponomastica": 1,
+  "Attestazione tecnica - Prevenzione Incendi, ascensori/montacarichi": 1,
+  "Qualificazione dell'intervento": 1,
+  "Ambito dell'intervento": 1,
+  "Qualificazione dell'intervento di rinnovo": 1,
+  "dichiarazione relativa alla descrizione delle opere": 1,
+  "dichiarazione relativa ai dati identificativi del/dei professionista/i incaricato/i": 1,
+  "dichiarazione riferita all'art. 181 del D.Lgs. 42/2004": 1,
+  "dichiarazione relativa alla datazione dell'abuso": 1,
+  "PERIODO DI PROROGA": 1,
+  "RIFERIMENTI AUTORIZZAZIONE PAESAGGISTICA E DATA SCADENZA EFFICACIA": 1,
+  "titolo del richiedente": 1,
+  "dichiarazione della legittimita' dell'intervento": 1,
+  "Interventi ed opere in aree vincolate esclusi dall'autorizzazione  paesaggistica": 1,
+  "indicazione dell'Ente al quale è inviata la richiesta di parere preventivo": 1,
+  "dichiarazione relativa all'imposta di bollo": 1
+ }
+}

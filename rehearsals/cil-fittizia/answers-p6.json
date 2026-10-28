@@ -1,0 +1,33 @@
+{
+ "people": {
+  "c": "luca",
+  "o": "immobiliare",
+  "r": "giulia",
+  "f1": "edil"
+ },
+ "descrizione": "PROVA NON INVIARE - CIL P6 generato",
+ "titolo": "locatario",
+ "oggetto": "Installazione temporanea di una pedana e copertura leggera smontabile sul terrazzo dell'appartamento, per 90 giorni, rimossa a fine periodo.",
+ "immobile_indirizzo": "VIA DOMENICO FONTANA",
+ "immobile_civico": "40",
+ "immobile_cap": "80128",
+ "immobile_scala": "B",
+ "immobile_piano": "3",
+ "immobile_interno": "7",
+ "catasto_foglio": "12",
+ "catasto_particella": "345",
+ "catasto_subalterno": "7",
+ "catasto_sezione": "AVV",
+ "catasto_categoria": "A/2",
+ "data_inizio_lavori": "2026-11-09",
+ "data_fine_prevista": "2027-02-06",
+ "dettaglio_intervento": "Pedana in legno e copertura leggera in tela su struttura smontabile in alluminio, appoggiate senza ancoraggi sul terrazzo, per esigenze temporanee; rimozione integrale entro il 06/02/2027 con ripristino dello stato dei luoghi.",
+ "destinazione_uso": "residenziale",
+ "dlgs81": "true",
+ "sotto_200": "true",
+ "verificato_idoneita": "true",
+ "notifica_dovuta": "false",
+ "diritti_euro": "0",
+ "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
+ "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf"
+}

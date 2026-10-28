@@ -120,6 +120,40 @@
     ["impianti:business.sede_legale_civico", "15"],
     ["impianti:business.sede_legale_cap", "80125"],
     ["impianti:business.sede_legale_comune", "Napoli"],
-    ["impianti:business.sede_legale_provincia", "NA"]
+    ["impianti:business.sede_legale_provincia", "NA"],
+
+    ["giulia:residenza.comune", "Napoli"],
+    ["giulia:residenza.provincia", "NA"],
+    ["giulia:residenza.indirizzo", "Via Toledo"],
+    ["giulia:residenza.civico", "256"],
+    ["giulia:residenza.cap", "80134"],
+
+    ["immobiliare:business.telefono", "+39 081 000 0103"],
+
+    ["edil:identity.first_name", "Marco"],
+    ["edil:identity.last_name", "Esempio"],
+    ["edil:identity.sex", "M"],
+    ["edil:identity.codice_fiscale", "SMPMRC78D09F839U"],
+    ["edil:identity.date_of_birth", "1978-04-09"],
+    ["edil:identity.birth_comune", "Napoli"],
+    ["edil:identity.birth_province", "NA"],
+    ["edil:identity.phone", "+39 333 000 0104"],
+    ["edil:business.inps_matricola", "5109990001"],
+    ["edil:business.inail_codice_ditta", "19999001"],
+    ["edil:business.inail_pat", "99990011"],
+    ["edil:business.inail_codice_sede", "NAPOLI"],
+
+    ["impianti:identity.first_name", "Roberto"],
+    ["impianti:identity.last_name", "Fittizio"],
+    ["impianti:identity.sex", "M"],
+    ["impianti:identity.codice_fiscale", "FTTRRT80E12F839Q"],
+    ["impianti:identity.date_of_birth", "1980-05-12"],
+    ["impianti:identity.birth_comune", "Napoli"],
+    ["impianti:identity.birth_province", "NA"],
+    ["impianti:identity.phone", "+39 333 000 0105"],
+    ["impianti:business.inps_matricola", "5109990002"],
+    ["impianti:business.inail_codice_ditta", "19999002"],
+    ["impianti:business.inail_pat", "99990022"],
+    ["impianti:business.inail_codice_sede", "NAPOLI"]
   ]
 }

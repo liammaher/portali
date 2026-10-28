@@ -156,6 +156,41 @@ walk must settle and record here:
 - **Validation of fake data:** codice fiscale, catasto foglio and particella, albo number.
 - **The front office:** whether the SUE modules use the same widgets as the SUAP's.
 
+## What the first walk settled (2026-10-28)
+
+`portal-map.yaml` has every screen up to the attachments; `schema/schema-vs-portal.md` the
+official schema against it.
+
+- **Who may log in:** anyone with SPID. Liam (not an architect) walked it all. The procuratore's
+  section opens with the logged-in name and CF but takes another person's (a made-up architect)
+  without complaint. The test needs no partner at the keyboard to map; whether the SUE checks
+  the signer at sending is past the stop point.
+- **Fake data:** made-up codici fiscali, P.IVA and albo number save with no warning. A made-up
+  catasto reference saves with "Attenzione! Dati catastali sconosciuti" on each field, and an
+  address once showed "Indirizzo sconosciuto": orange warnings, values kept, draft not blocked.
+  Whether they block sending isn't known (never sent). Every fake-data run will show them.
+- **The late CILA:** online, in quadro d: "intervento in corso di esecuzione (art. 6-bis c. 5)",
+  the start date, and an upload box in the quadro for the 333 € receipt (plain PDF accepted).
+  The works-done case (d.3, 1000 €) is online too, against the paper Mod.CILA's "procedura
+  cartacea". No pagoPA on the SUE ("Non sono presenti metodi di pagamento"): fees are paid
+  outside the portal and the receipts uploaded.
+- **Same widgets as the SUAP:** yes, the same front office (fnsuap, PrimeFaces): the Scheda
+  anagrafica, Ubicazione, Dati catastali and Diritti have the SCIA's ids, and the runner's tree,
+  dropdown, lookup and upload all worked. New: ids renumber when a choice adds rows (a's
+  "altro", h's DURC boxes), and a required field is marked by `.error-message-text`, which the
+  runner doesn't read yet.
+- **The stop point is reachable and is:** Allega documenti, after Pagamento oneri. Required: the
+  portal's own procura (download, sign, back as `.p7m` only), the identity documents of the
+  titolare and of who gives the procura (plain PDF), the portal's own "Quadro riepilogativo
+  CILA DSC" (download, back as PDF), the elaborati grafici. Everything else has no slot of its own
+  but Allegati liberi.
+- **Drafts:** reopened from "Pratiche in bozza" with every value kept. An old draft address
+  (`execution=eXsY`) gives the portal's error page once the flow has moved on, so
+  `run.py --resume` must reopen from the list, not from report.json's url.
+- **Mapping by program:** `crawl.js` mapped i), the relazione tecnica and the diritti (and
+  re-mapped b, d, a, h) in about a minute, trying each choice and undoing it with Annulla; every
+  branch it found is in the official schema.
+
 ## Lines we don't cross
 
 As in `rehearsals/pizzeria-fittizia/README.md`: never send, never pay or create a pagoPA
@@ -166,6 +201,77 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 
 | Date | Persona | Browser | Wall time | Hands-on | Login → draft | Key diffs | Off-script | Result |
 |---|---|---|---|---|---|---|---|---|
+| 2026-10-28 | P6 | pane | not clocked | not clocked | 83.7 s (wizard 8.3, 18 sections 63, fresh load 12.3) | 1 (weakest key, seen before mapping) | not measured | Draft filled and verified; stop point not reached (see below) |
+| 2026-10-28 | P6 | pane | not clocked | not clocked | 101.9 s to Allega documenti (wizard 9, 18 sections ~71, fresh load 15.4, payment 2.2, 6 attachments 6.4) | 1 (as above) | not measured | Stop point reached except what is the person's (see below) |
+| 2026-10-28 | P6 | pane | not clocked | not clocked | ~129 s to Allega documenti in two legs (wizard 10, 5 sections ~26, stop, resume: 13 sections ~64, fresh load 15.9, payment 2.5, 6 attachments 8.8) | 1 (as above) | not measured | From the **generated** steps file: same fields, all kept (see below) |
+
+### 2026-10-28, P6, first run from the steps file
+
+Not a scored test run: the clock from the architect's sentence, the questions message and
+the review page weren't part of it, and the steps file grew during the session (the walk,
+then `crawl.js` for i, the relazione and the diritti, then label lookup and "+" for the two
+firms). It answers the narrower question: does the runner fill the whole CILA on the real
+SUE from the vault and the answers, with no model call? Yes: draft "PROVA NON INVIARE -
+CILA P6 run 2", 18 sections and 152 fields, every one read back the same on a fresh load.
+
+Against `answer-key/p6.yaml` (scored by Claude, who wrote the key and saw it before
+mapping), on the sections filled:
+
+- **Same:** 4–18 (the client), 31–40 (the architect), 41–45 and 48 (title a.2, b.1, c.1 by
+  choosing no other procedure, d.2 with the date and the 333 € receipt), 51–60 and 62–63
+  (property and catasto), 65, 67–70, 74–78 (relazione: manutenzione straordinaria, the
+  description, no tolerances), 79–81 left blank, the soggetti coinvolti (titolare, firms).
+- **Different (1):** 66. The key chose g.1, "altri tecnici indicati in Soggetti coinvolti",
+  reasoning that Chiara is also direttore dei lavori; on the SUE the direttore dei lavori is
+  ticked in G1 and G2 is only for *other* technicians, of whom P6 has none, so the run left
+  G2 empty. The key is probably what's wrong, but it counts until Liam rules on it.
+- **Portal fields the key didn't foresee:** the owner's table (a.2: Giulia Esempio for
+  Immobiliare Fittizia), the procuratore's qualifica, the oggetto, the firms' legal
+  representatives and INPS/INAIL codes, the diritti's payment mode. The fixture gained the
+  data they need (Changes).
+- **Not reached, so the stop point isn't:** the Allegato A (`fill.py`), the plain-PDF
+  attachments on Allega documenti (owner's assent, IDs, drawings), and the portal's own
+  procura and CILA DSC summary (download, then back: the person signs the procura).
+
+### 2026-10-28, P6 run 3: to the stop point
+
+Draft "PROVA NON INVIARE - CILA P6 run 3", one run, no stop: the form as above, then
+Pagamento oneri (no method on the SUE) and Allega documenti, where the runner put six
+FAC-SIMILE PDFs in their slots by title (the client's ID twice, the owner's assent, the
+notifica preliminare, the drawings, the relazione in Allegati liberi with its required
+description) and Salva kept them all. Left, as the stop point says, to the person:
+
+- **The procura:** the portal builds it from the draft (`/fnsuap/template.do?id=A_PRC5x11`,
+  41 KB PDF, iText); fetched in the page's memory, it's the client's to sign and the
+  architect's to sign digitally, back as `.p7m` only.
+- **The Quadro riepilogativo (CILA DSC):** not built from the draft but the national blank
+  checklist of attachments (`template.do?id=D3664`, PDFCreator, no form fields); required.
+  Ticking it needs a `fill.py` layout (not written yet); then it's signed.
+- **The Allegato A:** `fill.py` filled it for Luca from the synthetic P6 vault, all 15 values
+  read back in their boxes. Two findings: the library's rule that only a titolare or legale
+  rappresentante declares in a business vault refuses a client declaring in their own name
+  (Liam's to decide; the library's tests hold the rule on purpose), and without `fontTools`
+  PyMuPDF can't subset the embedded Arial Unicode, so the one-page PDF is 15 MB, over the
+  portal's 9.77 MB (install fontTools, or fall back to a built-in font: the second needs the
+  "nothing written outside a box" check to recognise it).
+- The fee receipt (`.p7m`), the Modello DP, the declarations, signing and sending.
+
+### 2026-10-28, P6 run 4: from the generated steps file
+
+`portal-steps.generated.yaml` is no longer written by hand: `claude/skills/pratica/portal/gen.py`
+wrote it from `recipe.yaml` (the operation, the scelta, the person's steps, `supports`), the
+crawl of an empty CILA draft (`catalogue/F839/sections/cila.json`, 282 s, every section, every
+choice tried) and the shared field dictionary (`dictionary/fnsuap.yaml`). `gen.py --check
+portal-steps.yaml` finds it the same as the hand walk, field for field: every id, including the
+21 of a) where two choices (title "altro", non-exclusive title) shift each other's rows, which
+the crawl tried apart and `gen.py` adds up by their offsets. It adds one case the walk didn't
+cover: diritti not due (0 €), from the amount.
+
+Draft "PROVA NON INVIARE - CILA P6 generato": all 158 values (152 fields, 6 attachments) filled,
+saved and read back again on a fresh load, nothing typed by hand. One stop, in Localizzazione:
+the street's suggestion list was still open over "scala" (a timing the earlier runs didn't
+hit). inpage.js now waits for the list to close (or closes it) after picking a street; the run
+resumed on the same draft from that section.
 
 ## Changes
 
@@ -182,3 +288,14 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
   and does the human baseline, as "The answer key" and "The human baseline" allow. Every
   accuracy and speed figure is marked "weaker key" / "weaker baseline" until a professional
   redoes them.
+- 2026-10-28, first walk: the mapping session read `answer-key/p6.yaml` before mapping, against
+  "The answer key" above. P6's key was already the weakest; every P6 accuracy figure now also
+  says "key seen before mapping".
+- 2026-10-28, after the walk: the portal asks for the firms' legal representatives and
+  INPS/INAIL codes, the owner company's phone and its representative's residence, which
+  `fixture-p6.json` lacked; added (made up, valid checksums). The DURC's Cassa edile box is
+  left unticked (the vault has no field for it).
+- 2026-10-28, first walk, stopped in quadro h): the official schema of the CILA (InfoCamere's
+  `mod_cila_v1.0.7.xsd`) holds 137 of the 152 portal fields walked (`schema/schema-vs-portal.md`).
+  The next step tests building the portal map from the schema plus a crawler instead of walking
+  each screen by hand.

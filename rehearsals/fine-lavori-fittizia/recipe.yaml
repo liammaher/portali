@@ -1,0 +1,28 @@
+# The Comunicazione di fine lavori as gen.py writes its steps file (portal-steps.generated.yaml),
+# for the works the CILA rehearsal (rehearsals/cila-fittizia) filed: the same studio, client,
+# owner and firms. Never walked by hand: its sections come from the crawl of an empty draft
+# (catalogue/F839/sections/fine-lavori.json) and every field from dictionary/fnsuap.yaml.
+procedure: napoli/comune/fine-lavori
+title: "Comunicazione di fine lavori, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: fine-lavori
+operation: Comunicazione di fine lavori
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+after: [Pagamento degli oneri, Gestione degli allegati]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - fine lavori {{c:identity.last_name}}"}
+  oggetto: {question: "The pratica in one sentence (300 characters), e.g. the end of the works of the CILA"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{ask.titolo}}"
+    in: [locatario]
+    else: "So far only a tenant with the owner's assent (a.2) is mapped."
+  - value: "{{ask.fine_completa}}"
+    in: ["true"]
+    else: "Works finished in part need a planimetria of the finished part, not mapped yet."

@@ -1,0 +1,359 @@
+# Portal map: the CILA for internal, non-structural works (P6, dossier-p6.md) on
+# impresainungiorno's Sportello Unico Edilizia of Napoli (codice catastale F839,
+# tipoSportello=E).
+#
+# Walked for the first time on 2026-10-28 with Liam's SPID (not an architect), screen by
+# screen, written as each was done. Level stays L0 until a walk reaches the send button with
+# nothing to fix. Library entry: napoli/comune/cila-lavori-edilizi.
+#
+# fill: vault field IDs in the studio's business vault (`chiara` the titolare and
+# progettista, `luca` the client, `immobiliare` the owner, `edil` and `impianti` the firms).
+# ask: something no vault field holds. tap: what only the person does: login, declare, sign,
+# pay, send. A rehearsal never pays or sends, and Claude never ticks a declaration.
+
+procedure: napoli/comune/cila-lavori-edilizi
+channel: impresainungiorno – SUE del Comune di Napoli
+level: L0
+last_walked: 2026-10-28
+
+screens:
+  - screen: Sportello SUE di Napoli
+    url: https://www.impresainungiorno.gov.it/route/suap?codComune=F839&locale=IT&tipoSportello=E
+    choose: COMPILA UNA PRATICA
+    seen: 2026-10-28
+    notes: >-
+      The SUAP's start page with tipoSportello=E. The link opens a new tab, which the pane
+      blocks; go straight to https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E.
+      The page announces checks on the procura speciale since 7 April 2025: the portal
+      generates the procura from the Scheda anagrafica, the procuratore's section and the
+      Domicilio elettronico, and removes an attached procura when those change.
+
+  - screen: Login (iasu.infocamere.it)
+    tap: login
+    seen: 2026-10-28
+    notes: >-
+      SPID (natural person or professional), CIE, EIDAS, TELEMACO, CNS. With Sielte ID a
+      consent screen (Autorizza) follows the login: the person's tap too.
+
+  - screen: Assegna una descrizione alla pratica
+    seen: 2026-10-28
+    choose: COMPILA NUOVA PRATICA (or IMPORTA DATI DA PRATICA PRECEDENTE)
+    fill:
+      descrizione: "3–60 characters, only for the user's desk; the rehearsal uses PROVA NON INVIARE - CILA P6 Fittizio"
+    notes: Same screen as the SUAP's. Liam's SPID (not an architect) was let in.
+
+  - screen: Controlla l'accesso alla pratica
+    seen: 2026-10-28
+    choose: CONFERMA without adding anyone
+    notes: Same as the SUAP's; the creator is the person logged in (profile "Creatore Pratica").
+
+  - screen: Scelta settore attività
+    seen: 2026-10-28
+    choose: Edilizia e pianificazione urbana (the only node; the tree shows it selected
+      already, CONFERMA moves on)
+
+  - screen: Scelta operazioni
+    seen: 2026-10-28
+    choose: >-
+      EDILIZIA → Eseguire interventi edilizi (anche varianti a precedenti titoli o in
+      sanatoria) → Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)
+    notes: >-
+      The same PrimeFaces tree as the SUAP's (the runner's `tree` works: the GRP nodes open
+      with their parent). The operations under one group are alternatives (radio). Next to
+      the CILA: CIL, SCIA, SCIA alternativa al PdC, PdC. "Altri adempimenti edilizi" holds
+      nomina direttore lavori / impresa esecutrice, inizio e fine lavori, proroghe, SCA
+      agibilità; then Terre e rocce da scavo (checkboxes) and Beni paesaggistici
+      (autorizzazione paesaggistica ordinaria/semplificata, accertamento di compatibilità).
+      There is no separate operation for the late CILA (art. 6-bis c. 5) nor for the
+      notifica preliminare: both have to be inside the CILA's own modules.
+
+  - screen: Scelta del destinatario della pratica
+    seen: 2026-10-28
+    choose: SUE DEL COMUNE DI NAPOLI (the only option, preselected)
+    notes: No "Scelta interventi eventuali" screen for the CILA (the SUAP's SCIA had one).
+
+  - screen: Scelte eventuali
+    seen: 2026-10-28
+    choose: IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE
+    notes: >-
+      The only option, a checkbox. Ticked when the architect files for the client with a
+      procura (every persona here); it adds the procuratore's section, from which the portal
+      generates the procura. A scripted click on the node toggles it (checked both ways).
+
+  - screen: Compilazione della domanda telematica
+    seen: 2026-10-28
+    notes: >-
+      Generated from the choices: "Comunicazione Inizio Lavori Asseverata (art. 6-bis, d.P.R.
+      380/2001)", Amministrazione competente UFFICI COMUNE DI NAPOLI - SUE. The Scheda
+      anagrafica is open on the page; 22 more sections are `a.linkmenu` links, each saved
+      on its own (Salva reloads the page), as on the SUAP: Qualifica e dati del procuratore,
+      Oggetto della pratica, Domicilio digitale, Domicilio elettronico, [consapevolezza
+      artt. 46-47], [informativa privacy], Localizzazione dell'intervento, Dati catastali,
+      a) Titolarità, b) Parti comuni o modifiche esterne, c) Presentazione della CILA,
+      d) Qualificazione dell'intervento, e) Destinazione d'uso, f) Contributo di
+      costruzione, G1) Tecnici incaricati, G2) Altri tecnici, h) Impresa esecutrice,
+      i) Salute e sicurezza, Relazione tecnica di asseverazione, [tasse comunali], [art. 75
+      DPR 445/2000], Diritti di segreteria. In brackets: the dichiarante's declarations.
+      The sections follow the Mod.CILA's quadri (a–i) and its Relazione.
+
+  - screen: Scheda anagrafica
+    seen: 2026-10-28
+    choose: PERSONA (Privato) for a private titolare (DITTA/SOCIETA'/IMPRESA is preselected)
+    fill:
+      nome, cognome, codice fiscale: luca:identity.first_name, last_name, codice_fiscale
+      sesso: luca:identity.sex (Maschile/Femminile; values M/F)
+      data nascita: luca:identity.date_of_birth (gg/MM/aaaa)
+      cittadinanza, stato di nascita, stato di residenza: ITALIA / Italia preselected
+      luogo di nascita: luca:identity.birth_province, birth_comune (dropdowns, values NA / NAPOLI)
+      residenza: luca:residenza.provincia, comune; DUG + denominazione from residenza.indirizzo; civico, cap
+      email/PEC, telefono: luca:identity.email, phone (digits, no +39)
+    ask:
+      in qualità di: >-
+        Proprietario, Comproprietario, Usufruttuario, Amministratore di condominio, Legale
+        rappresentante, Amministratore unico, Procuratore, Altro (then "specificare"). A
+        tenant has no item of its own: Altro, specificare "Locatario".
+    notes: >-
+      The SUAP's Scheda anagrafica with the same ids (r10c1p23reg ... r33c4p89reg); with
+      PERSONA the company block is gone and "In qualità di" (r35c1p91reg) appears in place of
+      the Registro Imprese's Carica. Saved with a made-up client (valid CF checksum) without
+      complaint: not prefilled from SPID, not checked against who is logged in.
+
+  - screen: Qualifica e dati del procuratore
+    seen: 2026-10-28
+    choose: "Qualifica del procuratore: PROFESSIONISTA INCARICATO (also: altro previsto dalla normativa, associazione di categoria, centro elaborazione, consulente, notaio, studio associato)"
+    fill:
+      nome, cognome: chiara:identity.first_name, last_name
+      sesso: chiara:identity.sex (Femmina/Maschio; values F/M)
+      cittadinanza: ITALIA (from chiara:identity.citizenship)
+      nato a (text), il: chiara:identity.birth_comune (upper), date_of_birth (gg/MM/aaaa)
+      in Italia (radio), provincia (text): chiara:identity.birth_province
+      codice fiscale: chiara:identity.codice_fiscale
+      residente in, provincia, CAP (texts): chiara:residenza.comune, provincia, cap
+      indirizzo (one text): chiara:residenza.indirizzo + civico
+      tel: chiara:identity.phone (digits)
+      eMail PEC: chiara:identity.pec
+    notes: >-
+      Opens prefilled with the logged-in person's name and codice fiscale from SPID, all
+      editable. Saved with a different, made-up procuratore (Chiara) without complaint, so
+      Liam (not an architect) can walk it and the procuratore isn't tied to the login.
+      Plain text boxes here for birthplace and residence, not the dropdowns of the Scheda.
+      This, the Scheda and the Domicilio elettronico are what the portal's own procura is
+      generated from (start page notice): change one after attaching the procura and the
+      portal removes it. A section's state is its li's class: EMPTY, PARTIAL, COMPLETE
+      (green), and the open one has no a.linkmenu.
+
+  - screen: Oggetto della pratica
+    seen: 2026-10-28
+    ask:
+      descrizione sintetica: >-
+        300 characters, a textarea. The works in one sentence (Mod.CILA has no such field;
+        the portal's own). The rehearsal: "Manutenzione straordinaria non strutturale in
+        appartamento: demolizione e ricostruzione di due tramezzi interni con nuova
+        distribuzione di cucina e bagno, nuovo bagno, rifacimento degli impianti idrico ed
+        elettrico."
+
+  - screen: Domicilio digitale
+    seen: 2026-10-28
+    choose: >-
+      INAD (a person's) or INI-PEC (a business's or a professional's) domicilio digitale,
+      two checkboxes. Neither for a client with no PEC (Luca): saved empty, it turns green.
+    fill:
+      indirizzo: the client's PEC when there is one (luca has none)
+
+  - screen: Domicilio elettronico (domicilio digitale speciale)
+    seen: 2026-10-28
+    fill:
+      PEC for the receipt and every message about the pratica: chiara:identity.pec (the procuratore's)
+    notes: >-
+      Below it a checkbox "Si dichiara di essere consapevoli che nel caso non venga indicata
+      una casella PEC ..." : a statement for when no PEC is given, left unticked; the section
+      then shows PARTIAL (orange), not COMPLETE. Whether sending needs it ticked even with a
+      PEC is for the attachments screen to show. The SCIA rehearsal saved only the PEC too.
+
+  - screen: Localizzazione dell'intervento
+    seen: 2026-10-28
+    fill:
+      CAP: the property's CAP (80128)
+      via: the property's street, a lookup on the Comune's stradario (VIA DOMENICO FONTANA)
+      civico: the property's civico (40)
+      scala, piano, interno: B, 3, 7 (three boxes, unlike the SUAP's one interno)
+    notes: >-
+      The SUAP's Ubicazione with the same ids; comune and provincia prefilled. The civico is
+      a lookup too (txtws, an autocomplete), but its list stays empty for every street
+      tried (Via Domenico Fontana, Via Toledo), so it's typed. After one save the street
+      showed "Attenzione! Indirizzo sconosciuto." (orange, a warning, not an error: the
+      section turned green); re-picking the street and saving again cleared it. Typing in
+      the pane doesn't open the street's suggestions (no real keyup); the runner calls the
+      widget's search, which does.
+
+  - screen: Dati catastali
+    seen: 2026-10-28
+    choose: NCEU (Nuovo Catasto Edilizio Urbano) for a flat; NCT is land
+    fill:
+      foglio, particella, subalterno: 12, 345, 7 (the dossier's, made up)
+      sezione urbana: AVV
+      categoria: A/2 → "A02 Abitazioni di tipo civile" (the |categoria filter)
+    notes: >-
+      The SUAP's Dati catastali with the same ids; + adds another unit. Saved with the
+      made-up foglio/particella, then each field showed "Attenzione! Dati catastali
+      sconosciuti" (orange): the SUE checks the catasto and warns, but keeps the values and
+      doesn't block the draft. Whether it blocks sending isn't known (we never send). A run
+      with fake data will always show this warning; a real property shouldn't.
+
+  - screen: a) Titolarità dell'intervento
+    seen: 2026-10-28
+    ask:
+      titolo: "proprietario, comproprietario, usufruttuario, amministratore di condominio, altro (+ specificare: locatario)"
+    choose:
+      - avere titolarità esclusiva (a.1), or
+      - non avere titolarità esclusiva, ma disporre della dichiarazione di assenso dei terzi titolari (a.2): a tenant
+    fill when a.2, "Soggetti coinvolti – TITOLARI" (the terzi titolari who gave assent; + adds one):
+      cognome, nome, C.F., data di nascita, sesso: giulia:identity.* (the owner company's legale rappresentante)
+      luogo di nascita: "provincia (dropdown) + comune (text): giulia:identity.birth_province, birth_comune"
+      residenza: provincia (dropdown) + comune, via, n., CAP (texts)
+      PEC / posta elettronica: immobiliare:business.pec
+      telefono: 'required ("Il valore è obbligatorio")'
+      ditta o società (checkbox), in qualità di, della ditta/società, CF/P.IVA: legale rappresentante, immobiliare:business.denominazione, partita_iva
+    notes: >-
+      Choosing "altro" adds the specificare row and renumbers every id below it (r5c1p6reg
+      becomes r6c1p8reg): the steps file holds the ids as they are after the choice. Sesso
+      here is Femmina/Maschio with values 1/2 (elsewhere F/M). Gaps: the vault has no
+      residenza for Giulia (the walk used the company's sede legale, Via Toledo 256) and no
+      phone for her or the company (the walk used a made-up 081 000 0103); pre-flight must
+      list both as missing. The required-field message is an `.error-message-text` under
+      the field, which the runner's error check doesn't read yet, and the save still
+      reloads as if it worked. The answer key didn't foresee this table.
+
+  - screen: b) Opere su parti comuni o modifiche esterne
+    seen: 2026-10-28
+    choose: >-
+      one of four radios: non riguardano parti comuni (b.1); parti comuni di un condominio;
+      parti comuni di un fabbricato non in condominio, approvato dai comproprietari; parti
+      comuni che non necessitano di assenso (art. 1102 c.c.)
+    ask: 'whether the works touch common parts (P6: no)'
+
+  - screen: c) Presentazione della comunicazione di inizio dei lavori asseverata
+    seen: 2026-10-28
+    tap: declare
+    notes: >-
+      Only the dichiarante's "è consapevole che ..." with a PER PRESA VISIONE checkbox:
+      theirs, never ticked here. The Mod.CILA's c.1/c.2 (other communications or assents)
+      isn't asked here: the portal takes them as procedures picked in the wizard, so
+      picking none is c.1.
+
+  - screen: d) Qualificazione dell'intervento
+    seen: 2026-10-28
+    choose: >-
+      d.1 intervento da eseguire; d.2 intervento in corso di esecuzione (art. 6-bis c. 5),
+      ricevuta di € 333,00; d.3 intervento realizzato, ricevuta di € 1000,00. All three
+      online (the paper Mod.CILA calls d.3 "procedura cartacea"; on the SUE it's here).
+    fill when d.2:
+      intervento iniziato in data: 'the start date (calendar, gg/MM/aaaa): 19/10/2026'
+      ricevuta di versamento di € 333,00: a file box in the section (xml, dwf, svg, jpg,
+      pdf, each also .p7m; max 9.77 MB): a plain PDF is accepted
+    notes: >-
+      The late CILA is handled right here, not by another procedure: the 333 € penalty is
+      paid beforehand (outside the portal: how is the library's open question) and its
+      receipt uploaded in quadro d. The runner's attach (DataTransfer on
+      r7c1p9reg:upload1_input) uploaded a FAC-SIMILE receipt in the pane; the portal lists
+      it with Rimuovi and its size, and keeps it after Salva. d.1 (works not started) would
+      ask for the start date instead; not walked.
+
+  - screen: e) Destinazione d'uso
+    seen: 2026-10-28
+    choose: "residenziale (also industriale, commerciale, altro): the property's destinazione d'uso"
+
+  - screen: f) Calcolo del contributo di costruzione
+    seen: 2026-10-28
+    choose: >-
+      a titolo gratuito (f.1); a titolo oneroso (manutenzione straordinaria with more urban
+      load and floor area), then the receipt or payment before the works: not walked
+
+  - screen: G1) Tecnici incaricati
+    seen: 2026-10-28
+    choose:
+      - "PROGETTISTA DELLE OPERE ARCHITETTONICHE: colui che presenta la pratica (titolare dell'intervento o procuratore), or non è colui che presenta la pratica (tecnico incaricato)"
+      - incaricato anche come direttore dei lavori delle opere architettoniche (checkbox; another one when the DL is someone else)
+    fill:
+      studio in: provincia (dropdown) from business.sede_legale_provincia; comune, via, N., CAP (texts) from business.sede_legale_*
+      iscritto all'ordine/collegio, di, al n.: chiara:albo.ordine, albo.provincia (as NAPOLI), albo.numero
+      telefono: 'business.telefono (digits); cell.: chiara:identity.phone (digits)'
+      posta elettronica certificata: chiara:identity.pec
+    notes: >-
+      With "colui che presenta la pratica" the progettista's name and CF come from the
+      procuratore's section: none asked here. The made-up albo number (9999) saved with no
+      warning: no registry check of the albo at draft time.
+
+  # From here on mapped by crawl.js (claude/skills/pratica/portal/crawl.js) on 2026-10-28,
+  # not by hand: each choice tried and undone with Annulla, nothing saved. i), the relazione
+  # and the diritti in 30 s; b), d), i), a), h) again in 35 s.
+
+  - screen: h) Impresa esecutrice dei lavori (crawled)
+    seen: 2026-10-28
+    choose: lavori in prima persona (modest works, no firms) | eseguiti dalle imprese indicate
+    fill when imprese, per firm (+ adds one):
+      firm: ragione sociale, CF/P.IVA, CCIAA di (dropdown) + n., sede (comune text, provincia, stato), via, N., CAP
+      legale rappresentante: cognome, nome, CF, nato a (text) + provincia + stato, nato il
+      contacts: telefono, fax, cell., posta elettronica
+      DURC: >-
+        each a checkbox opening its own boxes. Cassa edile (sede, codice impresa, codice
+        cassa), INPS (sede, matricola/posizione contributiva), INAIL (sede, codice impresa,
+        posizione assicurativa territoriale)
+    notes: >-
+      Each DURC checkbox adds rows and renumbers what follows. The vault holds the firms but
+      not their representatives' birth data nor the Cassa edile/INPS/INAIL codes.
+
+  - screen: i) Rispetto degli obblighi in materia di salute e sicurezza (crawled)
+    seen: 2026-10-28
+    choose:
+      - non ricade nel d.lgs. 81/2008 | ricade, e pertanto | ricade, ma si riserva di presentare le dichiarazioni prima dell'inizio lavori
+      - when ricade: cantiere sotto 200 uomini-giorno senza rischi particolari | pari o sopra 200 o con rischi dell'allegato XI
+      - when ricade: non soggetto a notifica | soggetto a notifica, e pertanto "allega alla presente comunicazione la notifica" (checkbox)
+    notes: 'The same options as the schema''s obblighi_salute_sicurezza. P6: ricade, sotto 200, soggetto a notifica, allegata.'
+
+  - screen: Relazione tecnica di asseverazione C.I.L.A. (crawled)
+    seen: 2026-10-28
+    fill:
+      progettista: cognome, nome, iscritto all'ordine/collegio, di, al n. (texts, here again)
+    choose:
+      - "tipo di intervento (checkboxes): manutenzione straordinaria (art. 3 c. 1 b); restauro e risanamento conservativo; barriere architettoniche; ricerca nel sottosuolo; movimenti di terra; serre mobili stagionali; pertinenze minori; altri interventi (+ specificare)"
+      - "tolleranze costruttive: si | no. Si opens art. 34-bis c. 1 e 1-ter (2%–6% by floor area), c. 1-bis, c. 2, c. 2-bis, art. 34-ter c. 4, and zona sismica bassa | media/alta (rilevanza strutturale si/no)"
+    ask:
+      dettaglio dell'intervento: textarea, 500 characters
+      altre comunicazioni, atti di assenso, note: 'two rows each of comunicazione + autorità and of tipo di atto + autorità; note: textarea 500'
+    notes: >-
+      The progettista's asseverazione, date and signature aren't boxes here: they are the
+      signed CILA. The tolerance list is the schema's dichiarazioni_tolleranze one for one.
+
+  - screen: Dichiarazione relativa ai diritti di segreteria/istruttori (crawled)
+    seen: 2026-10-28
+    choose: >-
+      non sono dovuti (non previsti dal tariffario | esentati) | sono dovuti, per un totale di
+      Euro (number), pagamento on line alla pagina successiva
+    notes: The SUAP's section, same ids. For the CILA, 151 €.
+
+  - screen: Pagamento degli oneri connessi alla pratica
+    seen: 2026-10-28
+    notes: >-
+      "Non sono presenti metodi di pagamento per la pratica corrente": no pagoPA for the
+      Napoli SUE. Fees are paid outside the portal (the library: bonifico on the Comune's
+      IBAN) and receipts uploaded here: "Richiesta marca da bollo" (pdf) and "Ricevute
+      pagamenti elettronici" (pdf or .p7m). PROSEGUI moves on with sections still empty.
+
+  - screen: Allega documenti
+    seen: 2026-10-28
+    upload:
+      - "Procura speciale: REQUIRED, .p7m only; 'Scarica il documento' gives the portal's own procura (/fnsuap/template.do?id=A_PRC5x11), built from the Scheda anagrafica, the procuratore and the Domicilio elettronico"
+      - "Copia del documento di identità del/i titolare/i e/o del tecnico: optional, pdf ok"
+      - "Fotocopia del documento di identità di chi conferisce la procura: REQUIRED, pdf ok"
+      - "Dichiarazione di assenso dei terzi titolari: optional (even with a.2), pdf ok"
+      - "Copia dei documenti d'identità dei titolari, comproprietari: REQUIRED, pdf ok"
+      - "Copia attestazione versamento oneri, diritti e spese: optional here, .p7m only"
+      - "Quadro riepilogativo della documentazione già disponibile e allegata (CILA DSC): REQUIRED; 'Scarica il documento' gives the portal's form (template.do?id=D3664), then upload it back, pdf ok"
+      - "Elaborati grafici dello stato di fatto e progetto: REQUIRED, pdf ok"
+      - "Documentazione per altre comunicazioni; per atti di assenso; Allegati liberi: optional, pdf ok"
+    notes: >-
+      Max 9.77 MB per file, 572 MB per pratica. The runner's upload put the FAC-SIMILE
+      assent in its slot and Salva kept it. No slot of its own for the notifica preliminare,
+      the relazione, the photos, the Allegato A or the Modello DP: Allegati liberi. Not
+      clicked yet: the two "Scarica il documento" (downloads), PROSEGUI to Firma.

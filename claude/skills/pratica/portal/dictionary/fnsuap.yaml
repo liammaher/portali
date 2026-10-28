@@ -1,0 +1,813 @@
+# What goes in each field of the impresainungiorno front office (fnsuap: the SUAP and the SUE),
+# by section and label, for gen.py. A section here serves every pratica that has it: the CILA,
+# the SCIA and the fine lavori share the Scheda anagrafica, the procuratore, the domicilio and
+# the diritti. Ids are not here: they come from each pratica's crawl (catalogue/<comune>/sections).
+#
+# A field: kind and label (the start of one of its first texts on the page: its own cell, the
+# row above, the cell to its left, as inpage.js reads them), `nth` when several share the label,
+# the value (vault fields by role, {{ask.x}} for pre-flight's questions) and `when`. A radio or a
+# checkbox listed is ticked, and what it opens is found in the crawl. `via: <option>` is a field
+# a templated dropdown opens only on that option (its `when` says when). `leave:` names what the
+# section shows that stays empty; `omit:` a section that is the person's alone. `kind: tick`
+# is a radio in one pratica and a checkbox in another; `if_present` a field only some pratiche
+# show; `on_page` one the crawl can't see (shown by two choices together), found by label on
+# the page; `anchor`/`block` a field inside the block that starts at another field.
+#
+# Roles (answers.json "people"): no prefix and `t:` are the studio's own (the business and its
+# titolare, the architect), `c:` the client, `o:` the owner company, `r:` its legale
+# rappresentante, `f1:`/`f2:` the firms.
+
+asks:
+  descrizione:
+    type: text
+    question: "A name for the draft in Pratiche in bozza"
+    default: "PROVA NON INVIARE - {{c:identity.last_name}}"
+  titolo:
+    type: text
+    question: "The client's title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)"
+  oggetto:
+    type: text
+    question: "The works in one sentence (300 characters)"
+  immobile_indirizzo: {type: text, question: "The property's street, as the Comune names it (e.g. VIA DOMENICO FONTANA)"}
+  immobile_civico: {type: text, question: "Its civico"}
+  immobile_cap: {type: text, question: "Its CAP"}
+  immobile_scala: {type: text, question: "Scala", default: ""}
+  immobile_piano: {type: text, question: "Piano", default: ""}
+  immobile_interno: {type: text, question: "Interno", default: ""}
+  catasto_foglio: {type: text, question: "Catasto fabbricati: foglio"}
+  catasto_particella: {type: text, question: "particella"}
+  catasto_subalterno: {type: text, question: "subalterno"}
+  catasto_sezione: {type: text, question: "sezione urbana", default: ""}
+  catasto_categoria: {type: text, question: "categoria catastale (e.g. A/2)"}
+  destinazione_uso: {type: text, question: "Destinazione d'uso (residenziale, industriale, commerciale, altro)", default: residenziale}
+  data_inizio_lavori: {type: date, question: "When the works started (they're already under way: a late CILA, d.2)"}
+  ricevuta_sanzione: {type: file, question: "The 333 € penalty receipt (PDF)"}
+  dettaglio_intervento:
+    type: text
+    question: "The works for the relazione tecnica (500 characters)"
+  dlgs81: {type: yes_no, question: "Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?", default: "true"}
+  sotto_200: {type: yes_no, question: "Is the site under 200 uomini-giorno?", default: "true"}
+  notifica_dovuta: {type: yes_no, question: "Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?"}
+  verificato_idoneita: {type: yes_no, question: "Has the client checked the firms' documents (DURC and technical suitability, art. 90 c. 9 D.Lgs. 81/2008)?"}
+  data_fine_prevista: {type: date, question: "When the works will end (temporary works: within 180 days)"}
+  pdc_numero: {type: text, question: "The permesso di costruire's number"}
+  pdc_data: {type: date, question: "Its issue date"}
+  pdc_protocollo: {type: text, question: "Its protocollo generale number"}
+  pdc_anno: {type: text, question: "Its protocollo generale year"}
+  pdc_interventi: {type: text, question: "What it permits, in a few words (per interventi di ...)"}
+  fine_presentata: {type: yes_no, question: "Was the comunicazione di fine lavori already filed?"}
+  fine_protocollo: {type: text, question: "Its protocol number", when: "{{ask.fine_presentata}}"}
+  fine_data: {type: date, question: "Its protocol date", when: "{{ask.fine_presentata}}"}
+  impianti: {type: yes_no, question: "Did the works touch the building's systems (impianti)?"}
+  impianto_elettrico: {type: yes_no, question: "The electrical system (with its dichiarazione di conformità)?", when: "{{ask.impianti}}"}
+  impianto_idrico: {type: yes_no, question: "Water and sanitary systems?", when: "{{ask.impianti}}"}
+  impianto_termico: {type: yes_no, question: "Heating or air conditioning?", when: "{{ask.impianti}}"}
+  impianto_gas: {type: yes_no, question: "Gas?", when: "{{ask.impianti}}"}
+  strutture: {type: yes_no, question: "Did the works touch the building's structure?"}
+  prestazione_energetica: {type: yes_no, question: "Are the works subject to the minimum energy-performance requirements?"}
+  barriere: {type: yes_no, question: "Is the building private and subject to the barriers rules (artt. 77-82 DPR 380/2001)?"}
+  catasto_variazione: {type: yes_no, question: "Did the works change the catasto registration (a DOCFA was filed)?"}
+  docfa_protocollo: {type: text, question: "The DOCFA's protocol number", when: "{{ask.catasto_variazione}}"}
+  docfa_data: {type: date, question: "The DOCFA's date", when: "{{ask.catasto_variazione}}"}
+  civici_variazione: {type: yes_no, question: "Did the works change the house numbers (numerazione civica)?", default: "false"}
+  antincendio_variazione: {type: yes_no, question: "Did the works change the building's fire-safety conditions?", default: "false"}
+  scia_manutenzione: {type: yes_no, question: "Is it manutenzione straordinaria (art. 3 c. 1 a) DPR 380/2001), with no change of use?"}
+  contributo_normativa: {type: text, question: "Why the works are free of the contributo di costruzione (the rule, e.g. art. 17 c. 3 DPR 380/2001)"}
+  precedente_numero: {type: text, question: "The building's own title (licenza / concessione / permesso di costruire): its number"}
+  precedente_data: {type: date, question: "Its date"}
+  superficie_mq: {type: number, question: "The unit's surface in m²"}
+  volume_mc: {type: number, question: "Its volume in m³"}
+  piani_n: {type: number, question: "The building's number of storeys"}
+  prg_specificare: {type: text, question: "The town plan in force", default: "Variante generale al PRG"}
+  prg_zona: {type: text, question: "The PRG zone of the property"}
+  prg_articolo: {type: text, question: "The article of the PRG's rules for that zone"}
+  progetto_impianti: {type: yes_no, question: "Do the systems need a project (DM 37/2008 art. 5)?"}
+  demolizioni: {type: yes_no, question: "Do the works demolish anything (partitions, finishes) and produce waste?"}
+  acustica: {type: yes_no, question: "Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?", default: "false"}
+  antincendio_soggetto: {type: yes_no, question: "Is the building subject to fire-prevention rules?", default: "false"}
+  amianto: {type: yes_no, question: "Do the works touch parts with asbestos?", default: "false"}
+  igienico_conforme: {type: yes_no, question: "Does the unit meet the hygiene and health requirements (no derogation)?", default: "true"}
+  tutele: {type: yes_no, question: "Is the property under any protection (landscape, heritage, archaeology, hydro-geology, parks, VINCA, cemetery band, roads, rail, power lines...)?", default: "false"}
+  rir_comune: {type: yes_no, question: "Is there a major-hazard (RIR) plant in the comune with a mapped 'area di danno'?"}
+  rir_area: {type: yes_no, question: "Is the property inside that area di danno?", default: "false"}
+  diritti_euro: {type: number, question: "The SUE's diritti for this pratica in euro (0 when none are due)"}
+  data_fine_lavori: {type: date, question: "When the works ended"}
+  fine_completa: {type: yes_no, question: "Were the works finished completely (not in part)?", default: "true"}
+  titolo_edilizio: {type: text, question: "The title the works were done under (e.g. C.I.L.A.)"}
+  titolo_protocollo: {type: text, question: "Its protocol number"}
+  titolo_data: {type: date, question: "Its protocol date"}
+  documento_identita_cliente: {type: file, question: "The client's identity document (PDF)"}
+  assenso_proprietario: {type: file, question: "The owner's signed assent to the works (PDF)"}
+  notifica_preliminare: {type: file, question: "The notifica preliminare already sent (PDF)"}
+  elaborati_grafici: {type: file, question: "The drawings: stato di fatto, progetto, comparativo (PDF)"}
+  relazione_tecnica: {type: file, question: "The relazione tecnica (PDF)"}
+  documentazione_fotografica: {type: file, question: "Photos of the state of the premises (PDF)"}
+  stato_legittimo_doc: {type: file, question: "The documents proving the stato legittimo (the building's titles, PDF)"}
+  dichiarazione_conformita: {type: file, question: "The installers' dichiarazioni di conformità of the systems touched (PDF)", when: "{{ask.impianti}}"}
+
+  # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
+  superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
+  superficie_attivita: {type: "number", question: "Superficie del locale adibita all'esercizio dell'attività: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_attivita"}
+  in_centro_commerciale: {type: "yes_no", question: "In centro commerciale? (yes: Si)", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_si"}
+  centro_commerciale_denominazione: {type: "text", question: "denominazione", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_denominazione"}
+  attivita_esercita: {type: "yes_no", question: "Attivita esercita? (yes: Unica o prevalente)", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/unica_check"}
+  congiunta_denominazione: {type: "text", question: "Svolta congiuntamente all'attività: di", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/congiunta_denominazione"}
+  nr_protocollo: {type: "text", question: "Già avviato con la SCIA: prot./n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/nr_protocollo"}
+  data_protocollo: {type: "date", question: "del", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/attivita_esercita/[attivita_esercita_ctype]/data_protocollo"}
+  responsabile_tecnico: {type: "yes_no", question: "di essere Responsabile tecnico?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_check"}
+  abilitazione_professionale: {type: "yes_no", question: "di essere in possesso dell'abilitazione professionale?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/abilitazione_professionale_check"}
+  ente_abilitazione_professionale: {type: "text", question: "rilasciata da", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/ente_abilitazione_professionale"}
+  data_abilitazione_professionale: {type: "date", question: "in data", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/data_abilitazione_professionale"}
+  atto_abilitazione_professionale: {type: "text", question: "con atto n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/atto_abilitazione_professionale"}
+  qualifica_professionale: {type: "yes_no", question: "di essere in possesso di qualifica di acconciatore o di parrucchiere, per uomo o per donna, prevista?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/qualifica_professionale_check"}
+  ente_qualifica_professionale: {type: "text", question: "rilasciata da", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/ente_qualifica_professionale"}
+  data_qualifica_professionale: {type: "date", question: "in data", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/data_qualifica_professionale"}
+  atto_qualifica_professionale: {type: "text", question: "con atto n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/atto_qualifica_professionale"}
+  qualifica_professionale_estero: {type: "yes_no", question: "di avere conseguito la qualificazione professionale all'estero e di averne ottenuto il riconosciment?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/qualifica_professionale_estero_check"}
+  atto_qualifica_estero_professionale: {type: "text", question: "con decreto n.", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/atto_qualifica_estero_professionale"}
+  data_qualifica_estero_professionale: {type: "date", question: "in data", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/data_qualifica_estero_professionale"}
+  altro: {type: "yes_no", question: "altro?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/altro_check"}
+  altro_testo: {type: "text", question: "altro: (specificare)", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/altro"}
+  multi_responsabili_tecnici: {type: "yes_no", question: "che il/i Responsabile/i tecnico/i è/sono:?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/multi_responsabili_tecnici_check"}
+  cognome: {type: "text", question: "Cognome", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_blocco/cognome"}
+  nome: {type: "text", question: "Nome", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_blocco/nome"}
+  tipo_qualita_responsabile_tecnico: {type: "choice", question: "in qualità di", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/responsabile_tecnico_blocco/tipo_qualita_responsabile_tecnico", options: ["Titolare", "Socio partecipante al lavoro", "Familiare coadiuvante", "Dipendente"]}
+  essere_responsabile_qualifica_professionale: {type: "yes_no", question: "che possiede/ono l'abilitazione professionale prevista, come dichiarato in Allegato B.?", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/essere_responsabile_qualifica_professionale_check"}
+  allegato_dichiarazione_sul_possesso_dei_requisiti: {type: "file", question: "Caricare l'ALLEGATO B compilato + Copia documento di Identità in corso di validità"}
+
+sections:
+  # The dichiarante is the client (the titolare), as a private person. The draft opens on it.
+  - section: Scheda anagrafica
+    open: false
+    fields:
+      - {kind: radio, label: PERSONA (Privato)}
+      - {kind: text, label: Nome, value: "{{c:identity.first_name}}"}
+      - {kind: text, label: Cognome, value: "{{c:identity.last_name}}"}
+      - {kind: text, label: Cod.Fiscale, value: "{{c:identity.codice_fiscale}}"}
+      - {kind: select, label: Sesso, value: "{{c:identity.sex}}"}
+      - {kind: text, label: Data nascita, value: "{{c:identity.date_of_birth|date_it}}"}
+      - {kind: select, label: Provincia, value: "{{c:identity.birth_province}}"}
+      - {kind: select, label: Comune, value: "{{c:identity.birth_comune|upper}}"}
+      - {kind: select, label: Provincia, nth: 2, value: "{{c:residenza.provincia}}"}
+      - {kind: select, label: Comune, nth: 2, value: "{{c:residenza.comune|upper}}"}
+      - {kind: select, label: Toponimo (DUG), value: "{{c:residenza.indirizzo|dug}}"}
+      - {kind: text, label: Denominazione stradale, value: "{{c:residenza.indirizzo|street|upper}}"}
+      - {kind: text, label: Numero civico, value: "{{c:residenza.civico}}"}
+      - {kind: text, label: CAP, value: "{{c:residenza.cap}}"}
+      - {kind: text, label: eMail/PEC, value: "{{c:identity.email}}"}
+      - {kind: text, label: Telefono fisso/cellulare, value: "{{c:identity.phone|phone_it}}"}
+      # In qualità di: Proprietario, Comproprietario, Usufruttuario, Amministratore di
+      # condominio, Legale rappresentante, Amministratore unico, Procuratore, Altro (+ specificare).
+      - {kind: select, label: "In qualità di", value: "{{ask.titolo|qualita}}"}
+      - {kind: text, label: specificare, via: Altro, value: "{{ask.titolo|qualita_altro}}", when: "{{ask.titolo|qualita_is_altro}}"}
+
+  # The architect, from the studio vault's titolare. Prefilled with the SPID login's name and
+  # CF, overwritten here.
+  - section: Qualifica e dati del procuratore
+    leave: [Fax, Stato]
+    fields:
+      - {kind: select, label: Qualifica del procuratore, value: PROFESSIONISTA INCARICATO}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: select, label: Sesso, value: "{{t:identity.sex}}"}
+      - {kind: select, label: Cittadinanza, value: ITALIA}
+      - {kind: text, label: Nato a, value: "{{t:identity.birth_comune|upper}}"}
+      - {kind: text, label: il, value: "{{t:identity.date_of_birth|date_it}}"}
+      - {kind: radio, label: in Italia}
+      - {kind: text, label: Provincia, value: "{{t:identity.birth_province}}"}
+      - {kind: text, label: Cod.Fiscale, value: "{{t:identity.codice_fiscale}}"}
+      - {kind: text, label: Residente in, value: "{{t:residenza.comune|upper}}"}
+      - {kind: text, label: Provincia, nth: 2, value: "{{t:residenza.provincia}}"}
+      - {kind: text, label: CAP, value: "{{t:residenza.cap}}"}
+      - {kind: text, label: Indirizzo, value: "{{t:residenza.indirizzo|upper}} {{t:residenza.civico}}"}
+      - {kind: text, label: Tel, value: "{{t:identity.phone|phone_it}}"}
+      - {kind: text, label: eMail PEC, value: "{{t:identity.pec}}"}
+
+  - section: Oggetto della pratica
+    fields:
+      - {kind: text, label: descrizione sintetica, value: "{{ask.oggetto}}"}
+
+  # The client's own domicilio digitale: saved empty when they have no PEC. A client with a
+  # PEC (INAD, its address box) isn't mapped yet.
+  - section: DOMICILIO DIGITALE
+    fields: []
+
+  # The box under the PEC ("si dichiara di essere consapevoli ...") is required, and the
+  # person's: the run leaves it and its "required" to them.
+  - section: DOMICILIO ELETTRONICO
+    theirs: [Si dichiara di essere consapevoli]
+    fields:
+      - {kind: text, label: "N.B. Inserire l'indirizzo della casella PEC", value: "{{t:identity.pec}}"}
+
+  # The property: no vault category holds it yet, so it comes from pre-flight's answers.
+  - section: Localizzazione dell'intervento
+    aliases: ["ubicazione dell'immobile"]
+    leave: [Frazione]
+    fields:
+      - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
+      - {kind: lookup, label: "Via, Viale, Piazza", value: "{{ask.immobile_indirizzo}}"}
+      - {kind: text, label: n° civico, value: "{{ask.immobile_civico}}"}
+      - {kind: text, label: scala, value: "{{ask.immobile_scala}}", optional: true}
+      - {kind: text, label: piano, value: "{{ask.immobile_piano}}", optional: true}
+      - {kind: text, label: interno, value: "{{ask.immobile_interno}}", optional: true}
+
+  - section: Dati catastali
+    leave: [sezione Amministrativa, classe]
+    fields:
+      - {kind: radio, label: Nuovo Catasto Edilizio Urbano}
+      - {kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
+      - {kind: text, label: particella/mappale, value: "{{ask.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
+      - {kind: text, label: sezione Urbana, value: "{{ask.catasto_sezione}}", optional: true}
+      - {kind: select, label: categoria, value: "{{ask.catasto_categoria|categoria}}"}
+
+  # A tenant: "altro" + locatario, and the non-exclusive title, which opens the owner's row
+  # (the terzo titolare who gave assent): `o:` the owner company, `r:` its legale rappresentante.
+  - section: a) Titolarità dell'intervento
+    aliases: ["Titolarità dell'intervento"]
+    fields:
+      - {kind: select, label: "Il richiedente dichiara di avere titolo", value: altro}
+      - {kind: text, label: specificare, value: locatario}
+      - {kind: radio, label: non avere titolarità esclusiva}
+      - {kind: text, label: Cognome, value: "{{r:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{r:identity.first_name}}"}
+      - {kind: text, label: C.F., value: "{{r:identity.codice_fiscale}}"}
+      - {kind: date, label: Data di nascita, value: "{{r:identity.date_of_birth|date_it}}"}
+      - {kind: select, label: Sesso, value: "{{r:identity.sex|sesso}}"}
+      - {kind: select, label: Provincia, value: "{{r:identity.birth_province}}"}
+      - {kind: text, label: Comune italiano, value: "{{r:identity.birth_comune|upper}}"}
+      - {kind: select, label: Provincia, nth: 2, value: "{{r:residenza.provincia}}"}
+      - {kind: text, label: Comune italiano, nth: 2, value: "{{r:residenza.comune|upper}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{r:residenza.indirizzo|upper}}"}
+      - {kind: text, label: "N.", value: "{{r:residenza.civico}}"}
+      - {kind: text, label: C.A.P., value: "{{r:residenza.cap}}"}
+      - {kind: text, label: PEC / posta elettronica, value: "{{o:business.pec}}"}
+      - {kind: text, label: Telefono, value: "{{o:business.telefono|phone_it}}"}
+      - {kind: checkbox, label: Da compilare solo nel caso in cui il titolare sia}
+      - {kind: text, label: in qualità di, value: legale rappresentante}
+      - {kind: text, label: della ditta / società, value: "{{o:business.denominazione}}"}
+      - {kind: text, label: con codice fiscale / p. IVA, value: "{{o:business.partita_iva}}"}
+
+  - section: b) Opere su parti comuni
+    fields:
+      - {kind: radio, label: non riguardano parti comuni}
+
+  # Only the dichiarante's PER PRESA VISIONE.
+  - section: c) Presentazione della comunicazione
+    omit: the dichiarante's PER PRESA VISIONE
+
+  # Works already started (d.2): the date and the 333 € receipt, uploaded here.
+  - section: d) Qualificazione dell'intervento
+    fields:
+      - {kind: radio, label: intervento in corso di esecuzione}
+      - {kind: date, label: intervento iniziato in data, value: "{{ask.data_inizio_lavori|date_it}}"}
+      - {kind: file, label: "Tipologie ammesse", value: "{{ask.ricevuta_sanzione}}"}
+
+  - section: e) Destinazione d'uso
+    fields:
+      - {kind: select, label: "L'intervento interessa l'immobile", value: "{{ask.destinazione_uso}}"}
+
+  - section: f) Calcolo del contributo
+    fields:
+      - {kind: radio, label: l'intervento da realizzare è a titolo gratuito}
+
+  # The architect presents the pratica and is progettista and direttore dei lavori: her name
+  # comes from the procuratore's section.
+  - section: G1) Tecnici incaricati
+    leave: [fax]
+    fields:
+      - {kind: radio, label: titolare dell'intervento o procuratore}
+      - {kind: checkbox, label: incaricato anche come direttore dei lavori}
+      - {kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
+      - {kind: text, label: Comune italiano, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: "N.", value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: C.A.P., value: "{{business.sede_legale_cap}}"}
+      - {kind: text, label: Iscritto all'ordine/collegio, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: text, label: Telefono, value: "{{business.telefono|phone_it}}"}
+      - {kind: text, label: cell., value: "{{t:identity.phone|phone_it}}"}
+      - {kind: text, label: posta elettronica certificata, value: "{{t:identity.pec}}"}
+
+  - section: G2) Altri tecnici incaricati
+    fields: []
+
+  # Two firms on site: the second firm's block comes from "+". Fields by label inside the
+  # block-th repeat that starts at "Ragione sociale".
+  - section: h) Impresa esecutrice dei lavori
+    leave: [Telefono, fax]
+    firms: [f1, f2]
+    fields:
+      - {kind: radio, label: lavori sono/saranno eseguiti dall, if_present: true}
+      - {kind: radio, label: i lavori sono eseguiti/sono stati eseguiti, if_present: true}
+    block:
+      - {kind: text, label: Ragione sociale, value: "{{F:business.denominazione}}"}
+      - {kind: text, label: codice fiscale / p. IVA, value: "{{F:business.partita_iva}}"}
+      - {kind: select, label: Iscritta alla C.C.I.A.A. di, value: "{{F:business.cciaa}}"}
+      - {kind: text, label: n., nth: 1, value: "{{F:business.rea|rea_num}}"}
+      - {kind: text, label: con sede in, value: "{{F:business.sede_legale_comune|upper}}"}
+      - {kind: select, label: provincia, nth: 1, value: "{{F:business.sede_legale_provincia}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{F:business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: N., nth: 2, value: "{{F:business.sede_legale_civico}}"}
+      - {kind: text, label: C.A.P., value: "{{F:business.sede_legale_cap}}"}
+      - {kind: text, label: Cognome, value: "{{F:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{F:identity.first_name}}"}
+      - {kind: text, label: codice fiscale, nth: 2, value: "{{F:identity.codice_fiscale}}"}
+      - {kind: text, label: nato a, value: "{{F:identity.birth_comune|upper}}"}
+      - {kind: select, label: provincia, nth: 2, value: "{{F:identity.birth_province}}"}
+      - {kind: date, label: nato il, value: "{{F:identity.date_of_birth|date_it}}"}
+      - {kind: text, label: cell., value: "{{F:identity.phone|phone_it}}"}
+      - {kind: text, label: posta elettronica, value: "{{F:business.pec}}"}
+      # DURC: each box opens its own rows (and renumbers what follows).
+      - {kind: checkbox, label: INPS}
+      - {kind: text, label: sede di, nth: 1, value: "{{F:business.sede_legale_comune|upper}}"}
+      - {kind: text, label: Matr./Pos. Contr., value: "{{F:business.inps_matricola}}"}
+      - {kind: checkbox, label: INAIL}
+      - {kind: text, label: sede di, nth: 2, value: "{{F:business.inail_codice_sede}}"}
+      - {kind: text, label: codice impresa, value: "{{F:business.inail_codice_ditta}}"}
+      - {kind: text, label: pos. assicurativa, value: "{{F:business.inail_pat}}"}
+
+  # Site safety. A choice is a radio in one pratica and a checkbox in another (`tick`); the
+  # check of the firms' documents shows only in some (`if_present`).
+  - section: i) Rispetto degli obblighi
+    fields:
+      - {kind: tick, label: non ricade nell'ambito di applicazione delle norme, when: "{{ask.dlgs81|not}}"}
+      - {kind: tick, label: ricade nell'ambito di applicazione delle norme, when: "{{ask.dlgs81}}"}
+      - {kind: tick, label: dichiara che l'entità presunta del cantiere è inferiore, when: "{{ask.sotto_200}}"}
+      - {kind: tick, label: dichiara che l'entità presunta del cantiere è pari o superiore, if_present: true, when: "{{ask.sotto_200|not}}"}
+      - {kind: tick, label: dichiara di aver verificato la documentazione, if_present: true, when: "{{ask.verificato_idoneita}}"}
+      - {kind: tick, label: dichiara che l'intervento non è soggetto all'invio, when: "{{ask.notifica_dovuta|not}}"}
+      - {kind: tick, label: dichiara che l'intervento è soggetto all'invio, when: "{{ask.notifica_dovuta}}"}
+      - {kind: tick, label: allega alla presente comunicazione la notifica, if_present: true, when: "{{ask.notifica_dovuta}}"}
+      - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, on_page: true, when: "{{ask.notifica_dovuta}}"}
+
+  # The progettista's relazione (her asseverazione and signature are the signed CILA).
+  - section: Relazione Tecnica di Asseverazione
+    leave: [specificare il tipo di intervento, Comunicazioni, Autorità competente, Tipologia di atto, Note]
+    fields:
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Iscritto all'ordine, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: checkbox, label: interventi di manutenzione straordinaria}
+      - {kind: textarea, label: e che consistono in, value: "{{ask.dettaglio_intervento}}"}
+      - {kind: radio, label: "no"}
+
+  # The fees, when the Comune's tariff has them. "pagamento on line" is required with them and
+  # the only mode offered; it pays nothing (the SUE's payment page has no methods: the fees go
+  # by bank transfer and their receipt is uploaded there).
+  - section: Dichiarazione relativa ai diritti
+    fields:
+      - {kind: radio, label: non sono dovuti oneri, when: "{{ask.diritti_euro|positive|not}}"}
+      - {kind: radio, label: poiché non previsti dal tariffario, when: "{{ask.diritti_euro|positive|not}}"}
+      - {kind: radio, label: sono dovuti oneri quali diritti o spese, when: "{{ask.diritti_euro|positive}}"}
+      - {kind: number, label: per un totale di Euro, value: "{{ask.diritti_euro}}", when: "{{ask.diritti_euro|positive}}"}
+      - {kind: radio, label: pagamento on line, when: "{{ask.diritti_euro|positive}}"}
+
+  # CIL (opere temporanee): the communication, the dates, what the works are.
+  - section: Comunicazione inizio lavori
+    fields:
+      - {kind: tick, label: COMUNICA L'INIZIO DEI LAVORI}
+      - {kind: date, label: i lavori avranno inizio in data, value: "{{ask.data_inizio_lavori|date_it}}"}
+      - {kind: date, label: i lavori termineranno in data, value: "{{ask.data_fine_prevista|date_it}}"}
+      - {kind: textarea, label: le opere consistono in, value: "{{ask.dettaglio_intervento}}"}
+
+  # Other permits filed with it: none mapped, left empty.
+  - section: Altre comunicazioni, segnalazioni e asseverazioni
+    leave: [Comunicazioni, Autorità competente]
+    fields: []
+
+  # Inizio lavori after a permesso di costruire: the permit, the date, its holder (the client),
+  # where the works are.
+  - section: dichiarazione riferimenti permesso di costruire
+    fields:
+      - {kind: text, label: numero permesso, value: "{{ask.pdc_numero}}"}
+      - {kind: date, label: data rilascio, value: "{{ask.pdc_data|date_it}}"}
+      - {kind: text, label: numero protocollo generale, value: "{{ask.pdc_protocollo}}"}
+      - {kind: text, label: anno protocollo generale, value: "{{ask.pdc_anno}}"}
+      - {kind: text, label: per interventi di, value: "{{ask.pdc_interventi}}"}
+
+  - section: dichiarazione relativa alla comunicazione di inizio lavori
+    fields:
+      - {kind: date, label: in data, value: "{{ask.data_inizio_lavori|date_it}}"}
+
+  - section: dichiarazione dell'intestatario del permesso di costruire
+    fields:
+      - {kind: text, label: intestatario, value: "{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}"}
+      - {kind: text, label: in qualità di, value: "{{ask.titolo}}"}
+      - {kind: text, label: residente in, value: "{{c:residenza.comune|upper}}"}
+      - {kind: text, label: CAP, value: "{{c:residenza.cap}}"}
+      - {kind: text, label: via, value: "{{c:residenza.indirizzo|upper}}"}
+      - {kind: text, label: numero civico, value: "{{c:residenza.civico}}"}
+
+  # The SUE is the Comune di Napoli's: the comune is always Napoli.
+  - section: dichiarazione dell'ubicazione dei lavori
+    fields:
+      - {kind: text, label: comune, value: NAPOLI}
+      - {kind: text, label: "via, viale, piazza", value: "{{ask.immobile_indirizzo}}"}
+      - {kind: text, label: numero civico, value: "{{ask.immobile_civico}}"}
+
+  # Agibilità (SCA): the title the works ran under, the fine lavori, what the segnalazione is
+  # for, and the direttore dei lavori's attestations (the architect: `t:`, the studio's address).
+  - section: titolo legittimante l'intervento
+    fields:
+      - {kind: text, label: che il titolo e/o la comunicazione, value: "{{ask.titolo_edilizio}}"}
+      - {kind: text, label: prot./n., value: "{{ask.titolo_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_data|date_it}}"}
+
+  - section: dichiarazione sulla comunicazione di fine lavori
+    fields:
+      - {kind: radio, label: che la comunicazione di fine lavori è stata già presentata, when: "{{ask.fine_presentata}}"}
+      - {kind: text, label: prot./n., if_present: true, value: "{{ask.fine_protocollo}}", when: "{{ask.fine_presentata}}"}
+      - {kind: date, label: del, if_present: true, value: "{{ask.fine_data|date_it}}", when: "{{ask.fine_presentata}}"}
+      - {kind: radio, label: che la presente segnalazione vale come comunicazione di fine lavori, when: "{{ask.fine_presentata|not}}"}
+      - {kind: date, label: e a tal fine attesta che gli stessi sono stati ultimati in data, value: "{{ask.data_fine_lavori|date_it}}", when: "{{ask.fine_presentata|not}}"}
+      - {kind: radio, label: completamente, when: "{{ask.fine_presentata|not}} {{ask.fine_completa}}"}
+      - {kind: radio, label: in forma parziale, when: "{{ask.fine_presentata|not}} {{ask.fine_completa|not}}"}
+
+  - section: Presentazione della segnalazione certificata per l'agibilità
+    fields:
+      - {kind: radio, label: l'agibilità relativa all'immobile oggetto dell'intervento edilizio}
+      - {kind: checkbox, label: SEZIONE B}
+      - {kind: checkbox, label: le comunicazioni o segnalazioni di cui alla SEZIONE C}
+
+  - section: Attestazione tecnica - Dati del Direttore Lavori
+    leave: [fax]
+    fields:
+      - {kind: radio, label: Direttore dei Lavori}
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: C.F., value: "{{t:identity.codice_fiscale}}"}
+      - {kind: date, label: Data di nascita, value: "{{t:identity.date_of_birth|date_it}}"}
+      - {kind: select, label: Sesso, value: "{{t:identity.sex|sesso}}"}
+      - {kind: select, label: Provincia, value: "{{t:identity.birth_province}}"}
+      - {kind: text, label: Comune italiano, value: "{{t:identity.birth_comune|upper}}"}
+      - {kind: select, label: Provincia, nth: 2, value: "{{t:residenza.provincia}}"}
+      - {kind: text, label: Comune italiano, nth: 2, value: "{{t:residenza.comune|upper}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{t:residenza.indirizzo|upper}}"}
+      - {kind: text, label: "N.", value: "{{t:residenza.civico}}"}
+      - {kind: text, label: C.A.P., value: "{{t:residenza.cap}}"}
+      - {kind: select, label: Provincia, nth: 3, value: "{{business.sede_legale_provincia}}"}
+      - {kind: text, label: Comune italiano, nth: 3, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: text, label: "Via, Piazza", nth: 2, value: "{{business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: "N.", nth: 2, value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: C.A.P., nth: 2, value: "{{business.sede_legale_cap}}"}
+      - {kind: text, label: Iscritto all'ordine/collegio, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: text, label: Telefono, value: "{{business.telefono|phone_it}}"}
+      - {kind: text, label: cell., value: "{{t:identity.phone|phone_it}}"}
+      - {kind: text, label: posta elettronica certificata, value: "{{t:identity.pec}}"}
+
+  # The portal marks the art. 24 c. 5-bis/5-ter and 5-quater boxes (small or low units, special
+  # hygiene rules) as required although they are exceptions: whether one applies is the
+  # direttore dei lavori's attestation, left to them.
+  - section: Attestazione tecnica - Agibilità
+    theirs: [nei casi di cui all’articolo 24]
+    fields:
+      - {kind: radio, label: L'agibilità relativa all'immobile oggetto dell'intervento edilizio}
+
+  - section: Attestazione tecnica - Sicurezza degli impianti
+    fields:
+      - {kind: radio, label: NON HA interessato gli impianti, when: "{{ask.impianti|not}}"}
+      - {kind: radio, label: HA interessato i seguenti impianti, when: "{{ask.impianti}}"}
+      # Each system ticked opens its rows (the crawl tried no two choices together): found on the
+      # page inside the block that starts at its box.
+      - {kind: checkbox, label: "Impianti di produzione, trasformazione, trasporto, distribuzione", when: "{{ask.impianto_elettrico}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti di produzione, trasformazione, trasporto, distribuzione", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_elettrico}}"}
+      - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti di produzione, trasformazione, trasporto, distribuzione", block: 1, when: "{{ask.impianto_elettrico}}"}
+      - {kind: checkbox, label: "Impianti di riscaldamento, climatizzazione", when: "{{ask.impianto_termico}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti di riscaldamento, climatizzazione", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_termico}}"}
+      - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti di riscaldamento, climatizzazione", block: 1, when: "{{ask.impianto_termico}}"}
+      - {kind: checkbox, label: "Impianti idrici e sanitari", when: "{{ask.impianto_idrico}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti idrici e sanitari", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_idrico}}"}
+      - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti idrici e sanitari", block: 1, when: "{{ask.impianto_idrico}}"}
+      - {kind: checkbox, label: "Impianti per la distribuzione e l’utilizzazione di gas", when: "{{ask.impianto_gas}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti per la distribuzione e l’utilizzazione di gas", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_gas}}"}
+      - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti per la distribuzione e l’utilizzazione di gas", block: 1, when: "{{ask.impianto_gas}}"}
+
+  - section: Attestazione tecnica - Sicurezza statica
+    fields:
+      - {kind: radio, label: non ha interessato le strutture dell'edificio, when: "{{ask.strutture|not}}"}
+      - {kind: radio, label: non è soggetto all'osservanza dei requisiti minimi di prestazione energetica, when: "{{ask.prestazione_energetica|not}}"}
+      - {kind: radio, label: è soggetto all'osservanza dei requisiti minimi di prestazione energetica, when: "{{ask.prestazione_energetica}}"}
+    leave: [reperibile presso, con prot./n., del]
+
+  - section: Attestazione tecnica - Barriere architettoniche, Catasto, Toponomastica
+    leave: [prot./n., del]
+    fields:
+      - {kind: radio, label: non è soggetto alle prescrizioni sull'abbattimento delle barriere, when: "{{ask.barriere|not}}"}
+      - {kind: radio, label: interessa un edificio privato ed è soggetto alle prescrizioni, when: "{{ask.barriere}}"}
+      - {kind: radio, label: NON comporta variazione dell'iscrizione catastale, when: "{{ask.catasto_variazione|not}}"}
+      - {kind: radio, label: comporta variazione dell'iscrizione catastale, when: "{{ask.catasto_variazione}}"}
+      - {kind: text, label: prot./n., value: "{{ask.docfa_protocollo}}", when: "{{ask.catasto_variazione}}"}
+      - {kind: date, label: del, value: "{{ask.docfa_data|date_it}}", when: "{{ask.catasto_variazione}}"}
+      - {kind: radio, label: non comporta variazione di numerazione civica}
+
+  - section: Attestazione tecnica - Prevenzione Incendi
+    leave: [prot./n., del]
+    fields:
+      - {kind: radio, label: non hanno comportato variazioni alle condizioni di sicurezza antincendio}
+
+  # SCIA edilizia: the quadri the CILA hasn't, then the progettista's asseverazioni. The plain
+  # case only: manutenzione straordinaria, the building's own title, no protection, no works on
+  # structures, fire or acoustics (the recipe's `supports` refuses the rest).
+  - section: Presentazione della SCIA
+    theirs: [PER PRESA VISIONE]
+    fields:
+      - {kind: date, label: "Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio", value: "{{ask.data_inizio_lavori|date_it}}"}
+
+  - section: Qualificazione dell'intervento
+    fields:
+      - {kind: radio, label: intervento di manutenzione straordinaria, when: "{{ask.scia_manutenzione}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_manutenzione}}"}
+
+  - section: Regolarità urbanistica e precedenti edilizi
+    leave: [n., del, specificare, di Euro, a titolo di sanzione, Prot. n., atto di registrazione, in data]
+    fields:
+      - {kind: radio, label: che l’immobile/U.I. è stato oggetto del/i seguente/i titolo/i}
+      - {kind: checkbox, label: permesso di costruire / licenza edil.}
+      - {kind: text, label: permesso di costruire / licenza edil., value: "{{ask.precedente_numero}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.precedente_data|date_it}}"}
+      - {kind: radio, label: pienamente conforme alla documentazione dello stato legittimo}
+
+  - section: Calcolo del contributo di costruzione
+    fields:
+      - {kind: radio, label: l'intervento da realizzare è a titolo gratuito}
+      - {kind: text, label: ai sensi della seguente normativa, value: "{{ask.contributo_normativa}}"}
+
+  # The architect designs the works and presents the pratica; the direttore dei lavori is named
+  # before the works start (the crawl doesn't reach the fields of "di aver incaricato").
+  - section: Tecnici incaricati
+    aliases: [h1) Tecnici incaricati]
+    fields:
+      - {kind: checkbox, label: che il/i direttore/i dei lavori sarà/saranno individuati}
+      - {kind: checkbox, label: Progettista delle opere architettoniche}
+      - {kind: radio, label: titolare dell'intervento o procuratore}
+      - {kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
+      - {kind: text, label: Comune italiano, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: "N.", value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: C.A.P., value: "{{business.sede_legale_cap}}"}
+      - {kind: text, label: Iscritto all'ordine/collegio, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: text, label: Telefono, value: "{{business.telefono|phone_it}}"}
+      - {kind: text, label: cell., value: "{{t:identity.phone|phone_it}}"}
+      - {kind: text, label: posta elettronica certificata, value: "{{t:identity.pec}}"}
+    leave: [fax]
+
+  - section: Diritti di terzi
+    theirs: [dichiara di essere consapevole]
+    fields: []
+
+  - section: Note
+    leave: [Note]
+    fields: []
+
+  - section: Asseverazione SCIA - Tipologia di intervento
+    fields:
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Iscritto all'ordine, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: checkbox, label: che le opere in progetto sono subordinate a Segnalazione}
+      - {kind: checkbox, label: intervento di manutenzione straordinaria, when: "{{ask.scia_manutenzione}}"}
+      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_manutenzione}}"}
+      - {kind: textarea, label: e che l’intervento sopra indicato, value: "{{ask.dettaglio_intervento}}"}
+
+  # Three Si/No questions: the state is the legitimate one (from the titles), no tolerances,
+  # no sanatoria.
+  - section: Asseverazione SCIA - Stato legittimo
+    fields:
+      - {kind: radio, label: si}
+      - {kind: checkbox, label: corrisponde allo stato legittimo come risultante}
+      - {kind: checkbox, label: dal/i titolo/i o dalla/e pratica/che edilizia/e}
+      - {kind: radio, label: "no", nth: 2}
+      - {kind: radio, label: "no", nth: 3}
+
+  - section: Asseverazione SCIA - Dati immobile
+    fields:
+      - {kind: text, label: Mq, value: "{{ask.superficie_mq}}"}
+      - {kind: text, label: Mc, value: "{{ask.volume_mc}}"}
+      - {kind: text, label: Numero dei piani, value: "{{ask.piani_n}}"}
+      - {kind: checkbox, label: PRG}
+      - {kind: text, label: Specificare, value: "{{ask.prg_specificare}}"}
+      - {kind: text, label: Zona, value: "{{ask.prg_zona}}"}
+      - {kind: text, label: Art., value: "{{ask.prg_articolo}}"}
+      - {kind: checkbox, label: non è soggetto alle prescrizioni degli articoli 77, when: "{{ask.barriere|not}}"}
+
+  - section: Asseverazione SCIA - Sicurezza impianti
+    fields:
+      - {kind: radio, label: Non comporta l'installazione, when: "{{ask.impianti|not}}"}
+      - {kind: radio, label: "Comporta l'installazione, la trasformazione", when: "{{ask.impianti}}"}
+      - {kind: checkbox, label: "di produzione, trasformazione, trasporto", when: "{{ask.impianto_elettrico}}"}
+      - {kind: checkbox, label: "di riscaldamento, di climatizzazione", when: "{{ask.impianto_termico}}"}
+      - {kind: checkbox, label: idrici e sanitari, when: "{{ask.impianto_idrico}}"}
+      - {kind: checkbox, label: per la distribuzione e l'utilizzazione di gas, when: "{{ask.impianto_gas}}"}
+      - {kind: radio, label: non è soggetto agli obblighi di presentazione del progetto, when: "{{ask.progetto_impianti|not}}"}
+      - {kind: radio, label: è soggetto agli obblighi di presentazione del progetto, when: "{{ask.progetto_impianti}}"}
+      - {kind: radio, label: non è soggetto al deposito del progetto e della relazione tecnica, when: "{{ask.prestazione_energetica|not}}"}
+      - {kind: radio, label: non è soggetto all'applicazione del d.lgs. n. 28/2011}
+      - {kind: radio, label: L'intervento non ricade in alcuno dei casi sopra elencati}
+
+  - section: Asseverazione SCIA - Inquinamento acustico
+    leave: ["rilasciato da:", con prot., in data, rilasciato con prot., In data]
+    fields:
+      - {kind: radio, label: Non rientra nell'ambito di applicazione dell'articolo 8, when: "{{ask.acustica|not}}"}
+      - {kind: radio, label: non rientra nell'ambito dell'applicazione del d.P.C.M., when: "{{ask.acustica|not}}"}
+      - {kind: checkbox, label: non sono soggette alla normativa vigente relativa ai materiali da scavo}
+      - {kind: checkbox, label: riguardano interventi di demolizione, when: "{{ask.demolizioni}}"}
+      - {kind: radio, label: non è soggetto alle norme di prevenzione incendi, when: "{{ask.antincendio_soggetto|not}}"}
+      - {kind: radio, label: non è soggetto alla valutazione del progetto da parte del Comando, when: "{{ask.antincendio_soggetto|not}}"}
+
+  - section: Asseverazione SCIA - Amianto
+    leave: [con prot., in data]
+    fields:
+      - {kind: radio, label: non interessano parti di edifici con presenza di fibre di amianto, when: "{{ask.amianto|not}}"}
+      - {kind: radio, label: è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe, when: "{{ask.igienico_conforme}}"}
+      - {kind: radio, label: non prevede la realizzazione di opere di conglomerato cementizio, when: "{{ask.strutture|not}}"}
+      - {kind: radio, label: non prevede opere da denunciare o autorizzare, when: "{{ask.strutture|not}}"}
+
+  - section: Asseverazione SCIA - Tutela Storico Ambientale
+    fields:
+      - {kind: radio, label: NON ricade in zona sottoposta a tutela, when: "{{ask.tutele|not}}"}
+      - {kind: radio, label: non è sottoposto a tutela, when: "{{ask.tutele|not}}"}
+      - {kind: radio, label: non ricade in area tutelata, when: "{{ask.tutele|not}}"}
+
+  - section: Asseverazione SCIA - Tutela Ecologica
+    fields:
+      - {kind: radio, label: non è sottoposta a tutela, when: "{{ask.tutele|not}}"}
+      - {kind: radio, label: non è sottoposta a tutela, nth: 2, when: "{{ask.tutele|not}}"}
+      - {kind: radio, label: non è soggetto a Valutazione d'incidenza, when: "{{ask.tutele|not}}"}
+      - {kind: radio, label: l'intervento non ricade nella fascia di rispetto, when: "{{ask.tutele|not}}"}
+
+  - section: Asseverazione SCIA - Altri Vincoli
+    fields:
+      - {kind: radio, label: nel comune NON è presente, when: "{{ask.rir_comune|not}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” è individuata", when: "{{ask.rir_comune}}"}
+      - {kind: radio, label: l'intervento NON ricade nell'area di danno, when: "{{ask.rir_comune}} {{ask.rir_area|not}}"}
+
+  - section: Asseverazione SCIA - Tutela Funzionale
+    fields: []
+
+  - section: Asseverazione SCIA - NOTE
+    leave: [Note]
+    fields: []
+
+  # Fine lavori: the date, whole or in part, and the title the works were done under.
+  - section: comunicazione di fine lavori
+    fields:
+      - {kind: date, label: che in data, value: "{{ask.data_fine_lavori|date_it}}"}
+      - {kind: radio, label: completamente, when: "{{ask.fine_completa}}"}
+      - {kind: radio, label: in forma parziale, when: "{{ask.fine_completa|not}}"}
+      - {kind: text, label: che il titolo e/o comunicazione, value: "{{ask.titolo_edilizio}}"}
+      - {kind: text, label: prot./n., value: "{{ask.titolo_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_data|date_it}}"}
+
+  # The business itself declaring (a SUAP pratica: the ditta and its titolare `t:`, its
+  # premises `locale`), from the pizzeria walk (rehearsals/pizzeria-fittizia). A recipe with
+  # `subject: impresa` takes these before the ones above.
+  - section: Scheda anagrafica
+    subject: impresa
+    open: false
+    fields:
+      - {kind: radio, label: "DITTA/SOCIETA'/IMPRESA"}
+      - {kind: radio, label: NON ANCORA ISCRITTA, when: "{{business.rea|empty}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Cod.Fiscale, value: "{{t:identity.codice_fiscale}}"}
+      - {kind: select, label: Sesso, value: "{{t:identity.sex}}"}
+      - {kind: text, label: Data nascita, value: "{{t:identity.date_of_birth|date_it}}"}
+      - {kind: select, label: Provincia, value: "{{t:identity.birth_province}}"}
+      - {kind: select, label: Comune, value: "{{t:identity.birth_comune|upper}}"}
+      - {kind: select, label: Provincia, nth: 2, value: "{{t:residenza.provincia}}"}
+      - {kind: select, label: Comune, nth: 2, value: "{{t:residenza.comune|upper}}"}
+      - {kind: select, label: Toponimo (DUG), value: "{{t:residenza.indirizzo|dug}}"}
+      - {kind: text, label: Denominazione stradale, value: "{{t:residenza.indirizzo|street|upper}}"}
+      - {kind: text, label: Numero civico, value: "{{t:residenza.civico}}"}
+      - {kind: text, label: CAP, value: "{{t:residenza.cap}}"}
+      - {kind: text, label: eMail/PEC, value: "{{t:identity.email}}"}
+      - {kind: text, label: Telefono fisso/cellulare, value: "{{t:identity.phone|phone_it}}"}
+      - {kind: select, label: Carica, value: "{{t:ruolo.tipo|carica}}"}
+      # Forma giuridica first: choosing it re-renders the block and can empty Denominazione.
+      - {kind: select, label: Forma giuridica, value: "{{business.forma_giuridica|forma}}"}
+      - {kind: text, label: "Denominazione (nome della ditta", value: "{{business.denominazione}}"}
+      - {kind: text, label: Codice Fiscale, value: "{{business.codice_fiscale}}"}
+      - {kind: text, label: P.IVA, value: "{{business.partita_iva}}"}
+      - {kind: select, label: Provincia, nth: 3, value: "{{business.sede_legale_provincia}}"}
+      - {kind: select, label: Comune, nth: 3, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: select, label: Toponimo (DUG), nth: 2, value: "{{business.sede_legale_indirizzo|dug}}"}
+      - {kind: text, label: Denominazione stradale, nth: 2, value: "{{business.sede_legale_indirizzo|street|upper}}"}
+      - {kind: text, label: Numero civico, nth: 2, value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: CAP, nth: 2, value: "{{business.sede_legale_cap}}"}
+      - {kind: text, label: Telefono fisso/Cellulare, nth: 2, value: "{{business.telefono|phone_it}}"}
+      - {kind: text, label: PEC, value: "{{business.pec}}"}
+    leave: [Fax]
+
+  - section: DOMICILIO DIGITALE
+    subject: impresa
+    fields:
+      - {kind: checkbox, label: il seguente domicilio digitale inserito in INI-PEC}
+      - {kind: text, label: il seguente domicilio digitale inserito in INI-PEC, value: "{{business.pec}}"}
+
+  - section: DOMICILIO ELETTRONICO
+    subject: impresa
+    theirs: [Si dichiara di essere consapevoli]
+    fields:
+      - {kind: text, label: "N.B. Inserire l'indirizzo della casella PEC", value: "{{business.pec}}"}
+
+  - section: ubicazione dell'attività
+    subject: impresa
+    leave: [Frazione]
+    fields:
+      - {kind: text, label: CAP, value: "{{locale.cap}}"}
+      - {kind: lookup, label: "Via, Viale, Piazza", value: "{{locale.indirizzo}}"}
+      - {kind: text, label: n° civico, value: "{{locale.civico}}"}
+      - {kind: text, label: scala, value: "{{locale.scala}}", optional: true}
+      - {kind: text, label: piano, value: "{{locale.piano}}", optional: true}
+      - {kind: text, label: interno, value: "{{locale.interno}}", optional: true}
+
+  - section: Dati catastali
+    subject: impresa
+    leave: [sezione Amministrativa, classe]
+    fields:
+      - {kind: radio, label: Nuovo Catasto Edilizio Urbano}
+      - {kind: text, label: foglio, value: "{{locale.catasto_foglio}}"}
+      - {kind: text, label: particella/mappale, value: "{{locale.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{locale.catasto_subalterno}}"}
+      - {kind: text, label: sezione Urbana, value: "{{locale.catasto_sezione}}", optional: true}
+      - {kind: select, label: categoria, value: "{{locale.catasto_categoria|categoria}}"}
+
+  # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
+  - section: "Dati sull'attività"
+    schema: modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura
+    fields:
+      - {kind: "text", label: "mq", value: "{{ask.superficie_complessiva}}"}
+      - {kind: "text", label: "mq", value: "{{ask.superficie_attivita}}", nth: 2}
+      - {kind: "tick", label: "Si", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: "tick", label: "No", when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: "text", label: "denominazione", value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: "tick", label: "Unica o prevalente", when: "{{ask.attivita_esercita}}"}
+      - {kind: "tick", label: "Svolta congiuntamente all'attività", when: "{{ask.attivita_esercita|not}}"}
+      - {kind: "text", label: "di", value: "{{ask.congiunta_denominazione}}", when: "{{ask.attivita_esercita|not}}"}
+      - {kind: "text", label: "prot./n.", value: "{{ask.nr_protocollo}}", when: "{{ask.attivita_esercita|not}}"}
+      - {kind: "date", label: "del", value: "{{ask.data_protocollo|date_it}}", when: "{{ask.attivita_esercita|not}}"}
+
+  - section: "Dichiarazione sul possesso dei requisiti antimafia"
+    schema: modulo_acconciatori_estetisti_apertura/scheda_anagrafica
+    theirs: ["che non sussistono nei propri confronti le cause di"]
+    fields: []
+
+  - section: "Dichiarazione sul possesso dei requisiti professionali (attività di acconciatore)"
+    schema: modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura
+    fields:
+      - {kind: "tick", label: "di essere Responsabile tecnico", when: "{{ask.responsabile_tecnico}}"}
+      - {kind: "tick", label: "di essere in possesso dell'abilitazione professionale", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "text", label: "rilasciata da", value: "{{ask.ente_abilitazione_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "date", label: "in data", value: "{{ask.data_abilitazione_professionale|date_it}}", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "text", label: "con atto n.", value: "{{ask.atto_abilitazione_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}"}
+      - {kind: "tick", label: "di essere in possesso di qualifica di acconciatore o di", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}"}
+      - {kind: "text", label: "rilasciata da", value: "{{ask.ente_qualifica_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}", nth: 2}
+      - {kind: "date", label: "in data", value: "{{ask.data_qualifica_professionale|date_it}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}", nth: 2}
+      - {kind: "text", label: "con atto n.", value: "{{ask.atto_qualifica_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}", nth: 2}
+      - {kind: "tick", label: "di avere conseguito la qualificazione professionale", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}"}
+      - {kind: "text", label: "con decreto n.", value: "{{ask.atto_qualifica_estero_professionale}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}"}
+      - {kind: "date", label: "in data", value: "{{ask.data_qualifica_estero_professionale|date_it}}", when: "{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}", nth: 3}
+      - {kind: "tick", label: "altro", when: "{{ask.responsabile_tecnico}} {{ask.altro}}"}
+      - {kind: "text", label: "(specificare)", value: "{{ask.altro_testo}}", when: "{{ask.responsabile_tecnico}} {{ask.altro}}"}
+      - {kind: "tick", label: "che il/i Responsabile/i tecnico/i è/sono:", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "text", label: "Cognome", value: "{{ask.cognome}}", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "text", label: "Nome", value: "{{ask.nome}}", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "select", label: "in qualità di", value: "{{ask.tipo_qualita_responsabile_tecnico}}", when: "{{ask.multi_responsabili_tecnici}}"}
+      - {kind: "tick", label: "che possiede/ono l'abilitazione professionale prevista,", when: "{{ask.multi_responsabili_tecnici}} {{ask.essere_responsabile_qualifica_professionale}}"}
+      - {kind: "file", label: "Tipologie ammesse", value: "{{ask.allegato_dichiarazione_sul_possesso_dei_requisiti}}", when: "{{ask.multi_responsabili_tecnici}} {{ask.essere_responsabile_qualifica_professionale}}"}
+
+# The screens after the form, reached with their button. The attachments go by slot title; a
+# slot the pratica's crawl doesn't list is left out, a required one nothing fills stops gen.py.
+after:
+  - section: Pagamento degli oneri
+    go: Prosegui
+    save: false
+    fields: []
+
+  # What a pratica adds of its own (the CILA's relazione tecnica in Allegati liberi) is in its
+  # recipe's `attachments`. Not here, the person's: the portal's procura (download, the client signs, then .p7m), the
+  # Quadro riepilogativo (the national checklist, to complete and sign), the fee receipt
+  # (.p7m), the Allegato A and the Modello DP (signed).
+  - section: Gestione degli allegati
+    go: Prosegui
+    theirs: [Procura speciale, Quadro riepilogativo della documentazione]
+    fields:
+      - {kind: file, label: "Fotocopia di un documento di identita' del soggetto che conferisce", value: "{{ask.documento_identita_cliente}}"}
+      - {kind: file, label: "Copia dei documenti d'identità del/i titolare/i", value: "{{ask.documento_identita_cliente}}"}
+      - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: "{{ask.assenso_proprietario}}"}
+      - {kind: file, label: Notifica preliminare, value: "{{ask.notifica_preliminare}}"}
+      - {kind: file, label: Elaborati grafici dello stato di fatto e progetto, value: "{{ask.elaborati_grafici}}"}
+      - {kind: file, label: "Elaborati grafici dello stato di fatto, di progetto e comparativi", value: "{{ask.elaborati_grafici}}"}
+      - {kind: file, label: Documentazione fotografica dello stato di fatto, value: "{{ask.documentazione_fotografica}}"}
+      - {kind: file, label: Documentazione dimostrativa dello stato legittimo, value: "{{ask.stato_legittimo_doc}}"}
+      - {kind: file, label: Dichiarazione di conformità degli impianti, value: "{{ask.dichiarazione_conformita}}", when: "{{ask.impianti}}"}

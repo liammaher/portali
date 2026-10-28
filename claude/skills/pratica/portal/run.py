@@ -108,8 +108,29 @@ def _split_street(v):
     return "ALTRO", v
 
 
+# The province names the portal's free-text boxes want ("Iscritto all'ordine di ..."): the
+# ones a run has needed so far; another stops the run (a KeyError) instead of guessing.
+PROVINCE = {"NA": "NAPOLI", "CE": "CASERTA", "SA": "SALERNO", "AV": "AVELLINO", "BN": "BENEVENTO",
+            "RM": "ROMA", "MI": "MILANO", "TO": "TORINO"}
+# The Scheda anagrafica's "In qualità di" for the title the person holds (a tenant is
+# "Altro" + "Locatario").
+QUALITA = {"proprietario": "Proprietario", "comproprietario": "Comproprietario", "usufruttuario": "Usufruttuario",
+           "amministratore di condominio": "Amministratore di condominio"}
+
+
+def _qualita(v):
+    return QUALITA.get(v.strip().lower(), "Altro")
+
+
 FILTERS = {
     "upper": str.upper,
+    "sesso": lambda v: {"F": "Femmina", "M": "Maschio"}[v.strip().upper()],
+    "provincia_nome": lambda v: PROVINCE[v.strip().upper()],
+    "qualita": _qualita,
+    "qualita_is_altro": lambda v: "true" if _qualita(v) == "Altro" else "false",
+    "qualita_altro": lambda v: v.strip().capitalize(),
+    "filled": lambda v: "true" if v else "false",
+    "rea_num": lambda v: v.split("-")[-1].strip(),
     "date_it": lambda v: "/".join(reversed(v.split("-"))),
     "phone_it": lambda v: re.sub(r"^\+39|\s", "", v),
     "dug": lambda v: _split_street(v)[0],
@@ -119,11 +140,14 @@ FILTERS = {
     "categoria": lambda v: re.sub(r"^([A-F])/?(\d)$", r"\g<1>0\2", v.replace(" ", "").upper()),
     "empty": lambda v: "true" if not v else "false",
     "not": lambda v: "false" if truthy(v) else "true",
+    "positive": lambda v: "true" if float(str(v or 0).replace(",", ".")) > 0 else "false",
 }
 
 
 def truthy(v):
-    return str(v).strip().lower() in ("true", "1", "yes", "si", "sì")
+    """True for a yes; a `when` of several words ("{{ask.a|not}} {{ask.b}}") wants every one."""
+    words = str(v).strip().lower().split()
+    return bool(words) and all(w in ("true", "1", "yes", "si", "sì") for w in words)
 
 
 class StepError(Exception):
@@ -192,6 +216,10 @@ class Values:
             return None if v is None else str(v).lower() if isinstance(v, bool) else str(v)
         if ref.startswith("t:"):
             ref = self.titolare + ":" + ref[2:]
+        # A role of this pratica (answers.json "people": {"c": "luca", ...}) names a person.
+        role, sep, rest = ref.partition(":")
+        if sep and role in (self.answers.get("people") or {}):
+            ref = self.answers["people"][role] + ":" + rest
         cat = ref.rsplit(".", 1)[0]
         return self.category(cat).get(ref)
 
@@ -227,6 +255,8 @@ def plan(steps, values):
                 missing.append(f"{sec['section']}: {name} ({f['value']})")
             if f["kind"] == "file" and v and not Path(v).expanduser().is_file():
                 missing.append(f"{sec['section']}: {name}: no file {v}")
+            if f.get("max") and v and len(v) > f["max"]:
+                missing.append(f"{sec['section']}: {name}: {v!r} is longer than the portal takes ({f['max']})")
             out.append({"section": sec["section"], "id": f.get("id") or f.get("css"), "kind": f["kind"],
                         "label": f.get("label"), "value": v})
     if missing:
@@ -494,7 +524,10 @@ def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
             {"fill": {"css": w["fill"]["css"]}} if "fill" in w else {}) for w in steps["wizard"]],
         "sections": [{"section": s["section"], "open": s.get("open", True)}
                      | ({"save": s["save"]} if "save" in s else {})
-                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label") if k in f} for f in s["fields"]]}
+                     | ({"theirs": s["theirs"]} if "theirs" in s else {})
+                     | ({"go": s["go"]} if "go" in s else {})
+                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label", "anchor", "block", "nth", "describe", "if_present") if k in f}
+                                   for f in s["fields"]]}
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,
         "dug": sorted(DUG), "label_js": LABEL_JS,

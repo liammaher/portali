@@ -1,0 +1,29 @@
+# The CILA as gen.py writes its steps file (portal-steps.generated.yaml): which operation and
+# scelte, the crawl of a draft of it, and what only this pratica says. Every field comes from
+# claude/skills/pratica/portal/dictionary/fnsuap.yaml.
+procedure: napoli/comune/cila-lavori-edilizi
+title: "CILA: lavori interni non strutturali, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: cila
+operation: Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+# The portal lists the procuratore's section last; the run fills the dichiarante first.
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+after: [Pagamento degli oneri, Gestione degli allegati]
+attachments:
+  Gestione degli allegati:
+    - {kind: file, label: Allegati liberi, value: "{{ask.relazione_tecnica}}", describe: Relazione tecnica}
+asks:
+  descrizione: {default: "PROVA NON INVIARE - CILA {{c:identity.last_name}}"}
+  diritti_euro: {default: "151"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), c) PER PRESA VISIONE, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the 151 € diritti (and the 333 € penalty if not yet paid) by bank transfer to the Comune; upload the diritti receipt on Pagamento oneri"
+  - "On Allega documenti: download the portal's procura and CILA DSC summary, have the client sign the procura, sign them digitally (.p7m) and attach them with the IDs and the drawings"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{ask.titolo}}"
+    in: [locatario]
+    else: "So far only a tenant with the owner's assent (a.2) is mapped."
