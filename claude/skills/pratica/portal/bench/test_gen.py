@@ -217,5 +217,37 @@ def _():
             catalogue.CAT = old
 
 
+@case("draft.py drafts a restaurant's opening from two national forms (its SCIA and the Reg. 852 notifica)")
+def _():
+    import draft
+    crawl = gen.json.loads((HERE.parent / "catalogue/F839/sections/suap-060-aprire-l-attivita.json").read_text())
+    schema = [x for f in ("mod_somministrazione_zone_non_tutelate_apertura", "mod_notifica_sanitaria")
+              for x in gen.json.loads((HERE.parent / f"schema/{f}_v1.0.7-fields.json").read_text())]
+    sec = lambda name: next(x for x in crawl["sections"] if x["section"].startswith(name))
+    leaf = lambda asks, v: asks[gen.re.findall(r"ask\.(\w+)", v)[-1]]["schema"].rsplit("/", 1)[-1]
+    e, asks, n, missed = draft.draft_section(sec("Dati dell'esercizio"), schema)
+    got = {f["label"]: leaf(asks, f.get("value") or f["when"]) for f in e["fields"]}
+    assert got["mq"] == "superficie" and got["Tipologia di esercizio"] == "tipologia_esercizio", got  # not the form's own word
+    assert got["dal (gg/mm)"] == "da_stagionale", got
+    e, asks, n, missed = draft.draft_section(sec("tipologia di attivit"), schema)
+    assert e["schema"].endswith("avvio_attivita_section"), e["schema"]  # the second form's group
+    got = lambda start: next(leaf(asks, f["when"]) for f in e["fields"] if f["label"].startswith(start))
+    assert got("COMMERCIO AL DETTAGLIO") == "commercio_dettaglio"
+    assert got("Carne, prodotti") == "carne"  # the rare word, not "prodotti"
+    assert got("Ristorazione pubblica con") == "ristorazione_pubblica"
+    e, asks, n, missed = draft.draft_section(sec("DICHIARAZIONE ESENZIONE"), schema)
+    assert e.get("theirs") and not e["fields"], e  # "Presa visione": the person's
+
+
+@case("draft.py leaves a box blank rather than pair it on kind alone (a previous address the form keeps as one line)")
+def _():
+    import draft
+    crawl = gen.json.loads((HERE.parent / "catalogue/F839/sections/suap-060-trasferire-la-sede-dell-attivita.json").read_text())
+    schema = gen.json.loads((HERE.parent / "schema/mod_somministrazione_zone_non_tutelate_trasferimento_v1.0.7-fields.json").read_text())
+    e, asks, n, missed = draft.draft_section(next(x for x in crawl["sections"] if x["section"].startswith("precedente")), schema)
+    blank = [f["label"] for f in e["fields"] if f.get("note")]
+    assert "Via, Viale, Piazza" in blank and "Frazione" in blank, blank
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

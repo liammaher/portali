@@ -1,0 +1,2476 @@
+[
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": "modulo_notifica_sanitaria#choice0",
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": "modulo_notifica_sanitaria#choice0",
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifica_attivita",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": "modulo_notifica_sanitaria#choice0",
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione_attivita",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": "modulo_notifica_sanitaria#choice0",
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/cognome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/nome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/codice_fiscale_op",
+  "type": "codice_fiscale_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/in_sede",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione#choice7",
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/non_sede",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione#choice7",
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/comune_sede",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/provincia_sede",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/localita",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/cap_sede",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/stato_sede",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/via_sede",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/nCivico_sede",
+  "type": "nonNegativeInteger",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/telefono",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/fax",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/cellulare",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/identificazione/altro_domicilio",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/produzione_primaria",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Produzione primaria"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/caccia",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/pesca",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/raccolta_molluschi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vendita_diretta_latte",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vendita_diretta_uova",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vendita_diretta_miele",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/raccolta_funghi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/raccolta_vegetali_spontanei",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/coltivazioni_permanenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/coltivazioni_non_permanenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vegetali",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Vegetali – produzione, trasformazione e confezionamento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/conserve",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vegetali_congelati",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_pronti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/ortofrutticoli_precotti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vegetali_secchi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/bevande_frutta",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/olio",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/grassi_vegetali",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vini",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alcolici",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/sidro",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/birra",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/molitura",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/lavorazione_riso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/altre_lavorazioni",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/amidi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/zucchero",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/caffe",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/te",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/vegetal_home_food",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Prodotti da forno e di pasticceria, gelati e piatti pronti – Produzione, trasformazione e congelamento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/pasta",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_forno",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_pasticceria",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_gelateria",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/pastigliaggi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/cibi_pronti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/home_food_prodotti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/altri_alimenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Altri alimenti - produzione e trasformazione"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/bibite",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/ghiaccio",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/sale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/sale_iodato",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/immisione_alimenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Immissione in commercio di alimenti a proprio nome/marchio"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/integratori_alimentari",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_addizionati",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_medici",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_medici_lattanti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/formule_lattanti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_infanzia",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_no_glutine",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_sostitutivi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/altri_alimenti_immessi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/alimenti_origine_animale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Alimenti di origine animale –registrazione per produzione, trasformazione e confezionamento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_animali_pesca",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/avicoli",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/carne",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_pesca",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_apiario",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/prodotti_latteari",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/raccoglitore_uova",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/home_food_alimenti_origine_animale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/ristorazione",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Ristorazione"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/produzione_pasti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/somministrazione_pasti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/ristorazione_pubblica",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/bar_no_lab",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/bar_lab",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/ristorazione_pubblica_temporanea",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/home_restaurant",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/commercio_ingrosso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Commercio all'ingrosso di alimenti e bevande"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/cash_carry",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/intermediari",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/commercio_ingrosso_deposito",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/commercio_dettaglio",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Commercio al dettaglio di alimenti e bevande"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/esercizio_vicinato",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/media_struttura",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/grande_struttura",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/per_corrispondenza",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/commercio_ambulante",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Commercio Ambulante"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/fisso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/itinerante",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/distributori",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Distributori"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/automatici_alimenti_confezionati",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/latte_crudo",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/acqua_potabile",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/deposito_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Deposito alimenti e bevande conto terzi, non soggetti a riconoscimento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/regime_temperatura_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/no_regime_temperatura_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/piattaforma",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Piattaforma di distribuzione alimenti"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/deposito_funzionale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Deposito alimenti e bevande funzionalmente (ma non materialmente) annesso ad esercizi di vendita fissi o ad attività di commercio ambulante"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/regime_temperatura_funzionale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/no_regime_temperatura_funzionale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/trasporto_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Trasporto alimenti e bevande conto terz"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/cisterna_temperatura_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/cisterna_temperatura_non_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/regime_temperatura_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/regime_temperatura_non_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/tipologia_attivita/altro",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/inizio_attivita/avvio_contestuale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/inizio_attivita/avvio_decorrenza/avvio_decorrenza_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/inizio_attivita/avvio_decorrenza/data_decorrenza",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/inizio_attivita/termine_attivita/termine_attivita_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/inizio_attivita/termine_attivita/data_termine",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/avvio_attivita_section/altre_dichiarazioni",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/cognome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/nome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/codice_fiscale_op",
+  "type": "codice_fiscale_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/denominazione",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/cf_pIva",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/nr_scia_protocollo",
+  "type": "nonNegativeInteger",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/subingresso/data_scia_protocollo",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/inizio_attivita/avvio_contestuale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/inizio_attivita/avvio_decorrenza/avvio_decorrenza_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/inizio_attivita/avvio_decorrenza/data_decorrenza",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/inizio_attivita/termine_attivita/termine_attivita_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/inizio_attivita/termine_attivita/data_termine",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/subingresso_section/altre_dichiarazioni",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/dati_tipologia_attivita/cognome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/dati_tipologia_attivita/nome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/dati_tipologia_attivita/codice_fiscale_op",
+  "type": "codice_fiscale_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/dati_tipologia_attivita/nr_scia_protocollo",
+  "type": "nonNegativeInteger",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/dati_tipologia_attivita/data_scia_protocollo",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/produzione_primaria",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Produzione primaria"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/caccia",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/pesca",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/raccolta_molluschi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vendita_diretta_latte",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vendita_diretta_uova",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vendita_diretta_miele",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/raccolta_funghi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/raccolta_vegetali_spontanei",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/coltivazioni_permanenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/coltivazioni_non_permanenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vegetali",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Vegetali – produzione, trasformazione e confezionamento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/conserve",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vegetali_congelati",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_pronti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/ortofrutticoli_precotti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vegetali_secchi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/bevande_frutta",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/olio",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/grassi_vegetali",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vini",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alcolici",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/sidro",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/birra",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/molitura",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/lavorazione_riso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/altre_lavorazioni",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/amidi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/zucchero",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/caffe",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/te",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/vegetal_home_food",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Prodotti da forno e di pasticceria, gelati e piatti pronti – Produzione, trasformazione e congelamento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/pasta",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_forno",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_pasticceria",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_gelateria",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/pastigliaggi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/cibi_pronti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/home_food_prodotti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/altri_alimenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Altri alimenti - produzione e trasformazione"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/bibite",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/ghiaccio",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/sale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/sale_iodato",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/immisione_alimenti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Immissione in commercio di alimenti a proprio nome/marchio"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/integratori_alimentari",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_addizionati",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_medici",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_medici_lattanti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/formule_lattanti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_infanzia",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_no_glutine",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_sostitutivi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/altri_alimenti_immessi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/alimenti_origine_animale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Alimenti di origine animale –registrazione per produzione, trasformazione e confezionamento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_animali_pesca",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/avicoli",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/carne",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_pesca",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_apiario",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/prodotti_latteari",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/raccoglitore_uova",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/home_food_alimenti_origine_animale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/ristorazione",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Ristorazione"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/produzione_pasti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/somministrazione_pasti",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/ristorazione_pubblica",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/bar_no_lab",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/bar_lab",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/ristorazione_pubblica_temporanea",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/home_restaurant",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/commercio_ingrosso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Commercio all'ingrosso di alimenti e bevande"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/cash_carry",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/intermediari",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/commercio_ingrosso_deposito",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/commercio_dettaglio",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Commercio al dettaglio di alimenti e bevande"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/esercizio_vicinato",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/media_struttura",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/grande_struttura",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/per_corrispondenza",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/commercio_ambulante",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Commercio Ambulante"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/fisso",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/itinerante",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/distributori",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Distributori"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/automatici_alimenti_confezionati",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/latte_crudo",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/acqua_potabile",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/deposito_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Deposito alimenti e bevande conto terzi, non soggetti a riconoscimento"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/regime_temperatura_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/no_regime_temperatura_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/piattaforma",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Piattaforma di distribuzione alimenti"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/deposito_funzionale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Deposito alimenti e bevande funzionalmente (ma non materialmente) annesso ad esercizi di vendita fissi o ad attività di commercio ambulante"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/regime_temperatura_funzionale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/no_regime_temperatura_funzionale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/trasporto_conto_terzi",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": "Trasporto alimenti e bevande conto terz"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/cisterna_temperatura_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/cisterna_temperatura_non_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/regime_temperatura_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/regime_temperatura_non_controllata",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/tipologia_attivita/altro",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/avvio_contestuale",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/avvio_decorrenza_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/data_decorrenza",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/modifiche_section/altre_dichiarazioni",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/cognome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/nome_op",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/codice_fiscale_op",
+  "type": "codice_fiscale_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/nr_scia_protocollo",
+  "type": "nonNegativeInteger",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/data_scia_protocollo",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/sede_in",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/provincia_sede",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/comune_sede",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/cap_sede",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": false,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/stato_sede",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/via_sede",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/nCivico_sede",
+  "type": "nonNegativeInteger",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/termine_attivita/termine_attivita_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/termine_attivita/data_decorrenza_termine",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/sospensione_attivita/sospensione_attivita_check",
+  "type": "boolean",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/sospensione_attivita/data_inizio_sospensione",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/cessazione_sospensione/sospensione_attivita/data_fine_sospensione",
+  "type": "ggmmaaaa_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy",
+  "type": "group",
+  "repeat": false,
+  "optional": false,
+  "choice": null,
+  "note": "informativa privacy"
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/comune",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": false,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/indirizzo",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/email_pec",
+  "type": "email_stype",
+  "options": [],
+  "repeat": false,
+  "optional": false,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/responsabile_trattamento",
+  "type": "string",
+  "options": [],
+  "repeat": false,
+  "optional": false,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/comune_richieste",
+  "type": "CodeType",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/mail",
+  "type": "email_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ },
+ {
+  "path": "modulo_notifica_sanitaria/informativa_privacy/mail_responsabile",
+  "type": "email_stype",
+  "options": [],
+  "repeat": false,
+  "optional": true,
+  "choice": null,
+  "note": null
+ }
+]

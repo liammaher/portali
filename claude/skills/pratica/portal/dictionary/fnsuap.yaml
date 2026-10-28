@@ -56,6 +56,15 @@ asks:
   pdc_anno: {type: text, question: "Its protocollo generale year"}
   pdc_interventi: {type: text, question: "What it permits, in a few words (per interventi di ...)"}
   fine_presentata: {type: yes_no, question: "Was the comunicazione di fine lavori already filed?"}
+  titolo_dia: {type: yes_no, question: "Is the works' title a DIA (rather than a permesso di costruire)?", default: "false"}
+  proroga_giorni: {type: text, question: "How many days of extension are asked (e.g. 365)"}
+  proroga_motivo: {type: text, question: "Why the extension is needed: the facts beyond the holder's control (500 characters)"}
+  proroga_tipo_lavori: {type: text, question: "The works still to finish, in a few words (30 characters)"}
+  proroga_data_prevista: {type: date, question: "The new date the works are now expected to start (or end)"}
+  fine_termine: {type: date, question: "The date the permit said the works must end by"}
+  bollo_marche: {type: yes_no, question: "Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?", default: "false"}
+  bollo_seriale: {type: text, question: "The marca da bollo's serial number (14 digits)"}
+  bollo_data: {type: date, question: "The marca da bollo's date"}
   fine_protocollo: {type: text, question: "Its protocol number", when: "{{ask.fine_presentata}}"}
   fine_data: {type: date, question: "Its protocol date", when: "{{ask.fine_presentata}}"}
   impianti: {type: yes_no, question: "Did the works touch the building's systems (impianti)?"}
@@ -408,6 +417,56 @@ sections:
       - {kind: text, label: comune, value: NAPOLI}
       - {kind: text, label: "via, viale, piazza", value: "{{ask.immobile_indirizzo}}"}
       - {kind: text, label: numero civico, value: "{{ask.immobile_civico}}"}
+
+  # Proroga dei termini di inizio o di fine lavori (art. 15 c. 2 DPR 380/2001): the property,
+  # the permit (a permesso di costruire, or a DIA by its P.G. number), its catasto and holder,
+  # the dates, the days asked and why.
+  - section: dichiarazione dell'immobile oggetto della domanda
+    leave: [Località, N.Put]
+    fields:
+      - {kind: text, label: "via , viale, piazza", value: "{{ask.immobile_indirizzo}}"}
+      - {kind: text, label: numero civico, value: "{{ask.immobile_civico}}"}
+      - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
+      - {kind: radio, label: di cui al Permesso di costruire, when: "{{ask.titolo_dia|not}}"}
+      - {kind: text, label: P.G. numero, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_dia|not}}"}
+      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_dia|not}}"}
+      - {kind: radio, label: di cui alla DIA, when: "{{ask.titolo_dia}}"}
+      - {kind: text, label: P.G. numero, nth: 2, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_dia}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_dia}}"}
+      - {kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
+      - {kind: text, label: mappale, value: "{{ask.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
+      - {kind: text, label: per (specificare l'oggetto dell'intervento), value: "{{ask.pdc_interventi}}"}
+      - {kind: text, label: intestato a, value: "{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}"}
+      - {kind: date, label: la cui data di inizio lavori è prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
+      - {kind: date, label: la cui data di fine lavori dovrebbe essere entro il, value: "{{ask.fine_termine|date_it}}", if_present: true}
+      - {kind: date, label: ed è invece prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
+
+  - section: dichiarazione periodo di proroga
+    fields:
+      - {kind: text, label: "giorni di proroga richiesti", value: "{{ask.proroga_giorni}}"}
+
+  - section: dichiarazione delle motivazioni della richiesta di proroga
+    fields:
+      - {kind: text, label: specificare, value: "{{ask.proroga_motivo}}"}
+
+  - section: richiesta della proroga di ultimazione dei lavori
+    fields:
+      - {kind: text, label: tipo lavori, value: "{{ask.proroga_tipo_lavori}}"}
+
+  # Imposta di bollo, 16 € on the application and 16 € on the provvedimento the Comune issues:
+  # paid on pagoPA (the payment is the person's, after sending) or with marche whose serial
+  # numbers go here (that route isn't run yet). Exemptions are a case of their own: not mapped.
+  - section: Dichiarazione relativa all'assolvimento dell'imposta di bollo
+    fields:
+      - {kind: radio, label: "Il pagamento è dovuto e si intende assolvere l'obbligo tramite il circuito digitale pagoPA", when: "{{ask.bollo_marche|not}}"}
+      - {kind: radio, label: "Due marche da €16,00 ciascuna", when: "{{ask.bollo_marche|not}}"}
+      - {kind: radio, label: "Il pagamento è dovuto e si intende assolvere l'obbligo con marche da bollo", when: "{{ask.bollo_marche}}"}
+      - {kind: text, label: numero seriale (1), value: "{{ask.bollo_seriale}}", when: "{{ask.bollo_marche}}"}
+      - {kind: date, label: data, value: "{{ask.bollo_data|date_it}}", when: "{{ask.bollo_marche}}"}
+      - {kind: radio, label: "Marca da €16,00 per l'autorizzazione", when: "{{ask.bollo_marche}}"}
+      # The second marca's date: the crawl saw it only after both choices (not run yet).
+      - {kind: date, label: data, nth: 2, value: "{{ask.bollo_data|date_it}}", when: "{{ask.bollo_marche}}"}
 
   # Agibilità (SCA): the title the works ran under, the fine lavori, what the segnalazione is
   # for, and the direttore dei lavori's attestations (the architect: `t:`, the studio's address).

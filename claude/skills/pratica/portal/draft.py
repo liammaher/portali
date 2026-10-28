@@ -3,7 +3,10 @@
 national schema of the same form (InfoCamere's Moduli PA, flattened by
 rehearsals/cila-fittizia/schema/flatten.py).
 
-  draft.py CRAWL.json SCHEMA-FIELDS.json [--section NAME ...] [--out DRAFT.yaml]
+  draft.py CRAWL.json SCHEMA-FIELDS.json [SCHEMA-FIELDS.json ...] [--section NAME ...] [--out DRAFT.yaml]
+
+A SUAP pratica can join several forms (a restaurant's SCIA and the Reg. 852 notifica): give
+them all, and each section takes the form group that fits it best.
 
 The portal builds its sections from the schema's entities, in the schema's order, so the
 crawled boxes (in page order, each choice followed by what it opens) and the schema's leaves
@@ -32,9 +35,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import catalogue  # noqa: E402  (what the dictionary fills)
 import gen  # noqa: E402  (norm, the dictionary lookup)
 
-DECLARATION = re.compile(r"non sussistono nei propri confronti|consapevol|dichiara di essere", re.I)
+# Statements in the person's name, never ticked for them; the second half is crawl.js's PERSONAL.
+DECLARATION = re.compile(r"non sussistono nei propri confronti|consapevol|dichiara di essere|"
+                         r"presa visione|privacy|autorizz|sottoscritt", re.I)
 STOP = {"di", "del", "della", "dei", "il", "la", "le", "lo", "e", "o", "a", "in", "per", "con", "che", "n", "nr",
-        "check", "si", "no", "ctype", "stype", "voc", "blocco"}
+        "check", "si", "no", "ctype", "stype", "voc", "blocco", "al", "allo", "alla", "ai", "agli", "alle", "dal",
+        "dalla", "nel", "nella", "ed", "od", "un", "uno", "una", "gli", "sul", "sulla", "presso", "ecc", "all",
+        "gg", "mm", "aa", "aaaa"}
 ALIASES = {"mq": "superficie", "prot": "protocollo", "n.": "numero", "cap": "cap", "civico": "civico",
            "rilasciata": "ente", "atto": "atto", "decreto": "atto"}
 
@@ -62,6 +69,10 @@ def leaf_kind(f):
     if f.get("options") or t.endswith("_voc") or t == "codetype":
         return "select"
     return "text"
+
+
+COUNTER = re.compile(r"^\d+ Caratteri restanti$", re.I)
+RARITY = {}  # word → how many leaves of the section's group have it (draft_section sets it)
 
 
 def box_kind(b):
@@ -120,14 +131,42 @@ def boxes(section):
     return out
 
 
+def box_words(b):
+    """A box's words: its label's, and its context's when the label alone says little ("mq",
+    "del"); a full label of its own isn't mixed with the cell beside it."""
+    label = "" if COUNTER.match(b.get("label", "")) else b.get("label", "")
+    own = words(label)
+    return own if len(own - {w[:6] for w in own if len(w) > 6} - {w for w in own if len(w) <= 6 and any(o != w and o.startswith(w) for o in own)}) >= 3 \
+        else own | words(b.get("context", ""))
+
+
+def leaf_words(leaf):
+    """A leaf's words, without the form's own name: every leaf of the restaurant's form would
+    share "somministrazione" with a box about the surface of somministrazione."""
+    name = leaf["path"].rsplit("/", 1)[-1]
+    return words(name + " " + (leaf.get("note") or "")) - words(leaf["path"].split("/", 1)[0])
+
+
 def score(b, leaf):
     bk, lk = box_kind(b), leaf_kind(leaf)
     if bk == "file":
         return -1
     kind = 1.0 if bk == lk or (bk == "text" and lk in ("text", "number")) or (bk == "number" and lk == "text") else -0.5
     name = leaf["path"].rsplit("/", 1)[-1]
-    shared = words(" ".join([b.get("label", ""), b.get("context", "")])) & words(name + " " + (leaf.get("note") or ""))
-    return kind + 1.5 * len(shared)
+    shared = box_words(b) & leaf_words(leaf)
+    # A word's prefix counts once with it; a word many leaves share counts less ("prodotti" is
+    # in a dozen of the 852 list's, "carne" in one).
+    shared = {w for w in shared if not any(o != w and o.startswith(w) for o in shared)}
+    # A prefix alone ("dettag" of dettaglianti and dettaglio) is half a match.
+    full = box_words(b) & leaf_words(leaf)
+    half = lambda w: 0.5 if len(w) == 6 and not any(o != w and o.startswith(w) for o in full) else 1.0
+    return kind + sum(1.5 * half(w) * min(1.0, 2 / RARITY.get(w, 1)) for w in shared)
+
+
+def kin(b, leaf):
+    """Whether a box and a leaf may pair: a word in common, or a box whose label says nothing
+    of its own ("del", "n.", a bare tick) placed by its neighbours."""
+    return bool(box_words(b) & leaf_words(leaf)) or len(words(b.get("label", ""))) <= 1
 
 
 def align(bs, leaves, gap=-0.3):
@@ -148,7 +187,7 @@ def align(bs, leaves, gap=-0.3):
         if S[i][j] == S[i][j - 1] + gap * 0.2:
             j -= 1
         elif S[i][j] == S[i - 1][j - 1] + score(bs[i - 1], leaves[j - 1]):
-            out.append((bs[i - 1], leaves[j - 1] if score(bs[i - 1], leaves[j - 1]) > 0.5 else None))
+            out.append((bs[i - 1], leaves[j - 1] if score(bs[i - 1], leaves[j - 1]) > 0.5 and kin(bs[i - 1], leaves[j - 1]) else None))
             i, j = i - 1, j - 1
         else:
             out.append((bs[i - 1], None))
@@ -170,14 +209,28 @@ def align(bs, leaves, gap=-0.3):
     return out
 
 
-def best_group(bs, schema):
-    """The schema group (second level of the form) whose leaves best fit the section."""
+# Groups the portal fills in sections of its own (the Scheda anagrafica, the attachments
+# screen): another section takes one only when its title names it.
+SHARED_GROUPS = {"scheda_anagrafica", "tabellaAllegati"}
+
+
+def best_group(bs, schema, title=""):
+    """The schema group (second level of the form) whose leaves best fit the section, with
+    the section's title as a hint ("notifica di subingresso" is the notifica's subingresso)."""
     groups = {}
     for f in schema:
         parts = f["path"].split("/")
         if len(parts) > 2 and f["type"] != "group":
             groups.setdefault("/".join(parts[:2]), []).append(f)
-    best = max(groups.items(), key=lambda kv: sum(max([score(b, l) for l in kv[1]] or [0]) for b in bs))
+    tw = words(title)
+
+    def fit(kv):
+        form, group = kv[0].split("/", 1)
+        named = tw & (words(group) - words(form) | words(form))
+        if group in SHARED_GROUPS and not tw & words(group):
+            return -1e9
+        return sum(max([score(b, l) for l in kv[1]] or [0]) for b in bs) + 3 * len(named)
+    best = max(groups.items(), key=fit)
     return best[0], best[1]
 
 
@@ -188,8 +241,43 @@ def short(path):
 
 def draft_section(section, schema):
     bs = boxes(section)
-    group, leaves = best_group(bs, schema)
+    RARITY.clear()
+    group, leaves = best_group(bs, schema, section["section"])
+    for leaf in leaves:
+        for w in leaf_words(leaf):
+            RARITY[w] = RARITY.get(w, 0) + 1
     pairs = align(bs, leaves)
+    # A box left with no leaf, or one it shares no word with, takes the best unused leaf of the
+    # forms that it does share one with, wherever it sits ("mq" is the surface, far down).
+    # A form can repeat a group under another name (the 852 notifica's avvio_attivita and
+    # avvio_attivita_section): a leaf's name taken is taken in both.
+    name = lambda leaf: leaf["path"].rsplit("/", 1)[-1]
+    used = {name(leaf) for _, leaf in pairs if leaf}
+    for k, (b, leaf) in enumerate(pairs):
+        bw = box_words(b)
+        if not bw or (leaf and bw & leaf_words(leaf)):
+            continue
+        near = [y for y in schema if y["path"].split("/", 1)[0] == group.split("/", 1)[0] and y.get("type") != "group"
+                and name(y) not in used and bw & leaf_words(y) and score(b, y) >= 2]  # within the section's form
+        if near:
+            y = max(near, key=lambda y: (score(b, y), y in leaves))
+            used.discard(leaf and name(leaf)), used.add(name(y))
+            pairs[k] = (b, y)
+    # Then a box takes a leaf that shares clearly more words with it than its own, when that
+    # leaf is free, or swaps with the box holding it when both fit better ("COMMERCIO AL
+    # DETTAGLIO" had taken commercio_ingrosso). Repeated labels score alike and stay in order.
+    sc = lambda b, leaf: score(b, leaf) if leaf else 0
+    for k in range(len(pairs)):
+        b, leaf = pairs[k]
+        holder = {name(l): i for i, (_, l) in enumerate(pairs) if l}
+        best = max(leaves, key=lambda y: sc(b, y), default=None)
+        if best is None or best is leaf or sc(b, best) < sc(b, leaf) + 1.4:
+            continue
+        h = holder.get(name(best))
+        if h is None:
+            pairs[k] = (b, best)
+        elif sc(b, best) + sc(pairs[h][0], leaf) > sc(b, leaf) + sc(pairs[h][0], best) + 1:
+            pairs[k], pairs[h] = (b, best), (pairs[h][0], leaf if leaf and sc(pairs[h][0], leaf) > 0.5 else None)
     fields, asks, unmatched, theirs = [], {}, [], []
     # Radios go together when their leaves do (the portal names each radio apart):
     # centro_commerciale_si and _no under in_centro_commerciale.
@@ -235,6 +323,8 @@ def draft_section(section, schema):
 
     for b, leaf in pairs:
         label = b["label"] if len(b["label"]) < 70 else b["label"][:60].rsplit(" ", 1)[0]
+        if COUNTER.match(label) and b.get("context"):
+            label = b["context"][:60]  # a textarea's "500 Caratteri restanti" (gen.py reads context too)
         if b["kind"] == "checkbox" and DECLARATION.search(b["label"]):
             theirs.append(label)  # a statement in the person's name: never ticked for them
             continue
@@ -280,15 +370,29 @@ def draft_section(section, schema):
     return entry, asks, len(bs), len(unmatched)
 
 
+def keep_apart(entry, asks, taken):
+    """An entry whose question names another section already uses for another schema leaf
+    ("da_stagionale" for the season's start and for bread): renamed, with its fields."""
+    text, out = json.dumps(entry, ensure_ascii=False), {}
+    for k, a in asks.items():
+        new = k
+        while new in taken and taken[new].get("schema") != a.get("schema"):
+            new = f"{k}_{int(new.rsplit('_', 1)[-1]) + 1 if new != k and new.rsplit('_', 1)[-1].isdigit() else 2}"
+        if new != k:
+            text = re.sub(r"\{\{ask\." + re.escape(k) + r"(?=[|}])", "{{ask." + new, text)
+        out[new] = a
+    return json.loads(text), out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("crawl", type=Path)
-    ap.add_argument("schema", type=Path)
+    ap.add_argument("schema", type=Path, nargs="+")
     ap.add_argument("--section", action="append", default=[])
     ap.add_argument("--out", type=Path)
     a = ap.parse_args()
     crawl = json.loads(a.crawl.read_text())
-    schema = json.loads(a.schema.read_text())
+    schema = [leaf for p in a.schema for leaf in json.loads(p.read_text())]
     dictionary = gen.load_yaml(gen.HERE / "dictionary" / "fnsuap.yaml")
     entries, asks, report = [], {}, []
     for s in crawl["sections"]:
@@ -299,6 +403,7 @@ def main():
         if not a.section and catalogue.covered(s, dictionary):
             continue  # the dictionary fills it
         e, q, n, missed = draft_section(s, schema)
+        e, q = keep_apart(e, q, asks)
         entries.append(e)
         asks.update(q)
         report.append(f"{s['section'][:60]}: {n} boxes, {n - missed} drafted from {e['schema'].split('/')[-1]}, {missed} for a person")
