@@ -329,6 +329,7 @@
     const variants = opts.variants === "new" ? (label) => !seen.has(norm(label)) : !!opts.variants;
     let sector = null;
     for (const op of opts.ops) {
+      if (report.stop) { report.stopped = "stopped"; break; } // __crawl.stop(): between pratiche
       // An op can be a check of its own (`check`), of the pratica it should match (`like`): the
       // same operation in another sector, crawled there.
       const check = !!(opts.check || op.check);
@@ -368,6 +369,8 @@
         if (loggedOut()) { report.stopped = "logged out: log in, then batch() again"; break; }
         sector = null;
       }
+      // A section that failed (its frame gone, the portal busy) makes the pratica one to redo.
+      if (!r.error && r.sections.some((x) => x.error)) r.error = `sections failed: ${r.sections.filter((x) => x.error).map((x) => x.section).join("; ").slice(0, 200)}`;
       r.seconds = +((performance.now() - o0) / 1000).toFixed(1);
       localStorage.setItem((check ? "crawl:check:" : "crawl:op:") + op.name, JSON.stringify(r));
       if (!check) localStorage.setItem("crawl:known", JSON.stringify(known));
@@ -402,6 +405,9 @@
   window.__crawl = {
     slots: () => { frame = frame || document.querySelector("iframe"); return slots(); },
     report: () => report,
+    // Ends a batch after the pratica under way (await __crawl.wait() for it): before another
+    // script drives the portal, so two never drive one draft through wizard.js's shared frame.
+    stop() { if (report) report.stop = true; },
     batch(opts = {}) {
       report = { started: new Date().toISOString(), batch: true, done_ops: 0, skipped: 0, errors: [], done: false };
       batch(opts).catch((e) => { report.error = String(e.message || e); report.done = true; });
