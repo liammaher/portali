@@ -242,6 +242,10 @@
     if (hits.length !== 1) fail(`${f.id}: ${value} matches ${JSON.stringify(hits)} among ${items.length}`);
     press(lis[items.indexOf(hits[0])], `${f.id}: ${hits[0]}`);
     await idle();
+    // The list can stay open a moment over the next boxes: wait for it, else close it.
+    const panel = el(f.id.replace(/_input$/, "_panel"));
+    for (const end = performance.now() + 3000; performance.now() < end && panel.offsetParent;) await sleep(50);
+    if (panel.offsetParent) { widgetOf(e).hide(); await idle(); }
     return hits[0];
   }
 

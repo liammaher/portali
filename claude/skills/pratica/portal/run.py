@@ -140,6 +140,7 @@ FILTERS = {
     "categoria": lambda v: re.sub(r"^([A-F])/?(\d)$", r"\g<1>0\2", v.replace(" ", "").upper()),
     "empty": lambda v: "true" if not v else "false",
     "not": lambda v: "false" if truthy(v) else "true",
+    "positive": lambda v: "true" if float(str(v or 0).replace(",", ".")) > 0 else "false",
 }
 
 

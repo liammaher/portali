@@ -5,8 +5,11 @@
 // sends. Like inpage.js it drives the portal in a same-origin frame over the page, so the
 // portal's reloads don't end it.
 //
-//   __crawl.start({sections: [names] | null, depth: 2})  starts, returns at once
+//   __crawl.start({url, sections: [names] | null, depth: 2})  starts, returns at once
 //   await __crawl.wait(ms)                               the map so far, once done or after ms
+//   __crawl.slots()                                      the attachments screen's slots
+//
+// A choice's node says what it reveals, hides and moves (old id → new id); gen.py reads them.
 (() => {
   const DECLARATIONS = /consapevolezza|informativa sulla privacy|requisiti di o|altre dichiarazioni|dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75/i;
   // A checkbox never ticked, even for a moment: an acknowledgement in the person's name.
@@ -36,12 +39,25 @@
     frame.addEventListener("load", onload);
     fn();
     await sleep(150);
-    for (let q = 0; q < 5;) { q = busy() ? 0 : q + 1; await sleep(60); }
+    for (let q = 0; q < 5;) {
+      // "Proseguire senza salvare?" after a section left half undone: the one dialog answered,
+      // since the crawler saves nothing anyway.
+      const dialog = [...doc().querySelectorAll(".ui-dialog")].find((x) => x.offsetParent || getComputedStyle(x).display !== "none");
+      if (dialog && /non sono state salvate[\s\S]*proseguire senza salvare/i.test(dialog.innerText) && !dialog.dataset.pvAnswered) {
+        const ok = [...dialog.querySelectorAll("button")].find((b) => norm(b.textContent) === "conferma");
+        if (ok) { dialog.dataset.pvAnswered = "1"; ok.click(); q = 0; }
+      }
+      q = busy() ? 0 : q + 1; await sleep(60);
+    }
     frame.removeEventListener("load", onload);
     return loads;
   }
 
-  const widgetOf = (e) => Object.values((win().PrimeFaces || {}).widgets || {}).find((w) => w && w.input && w.input[0] === e);
+  // By the element, else by the id: a section just reloaded can hold the old widget's entry.
+  const widgetOf = (e) => {
+    const ws = Object.values((win().PrimeFaces || {}).widgets || {});
+    return ws.find((w) => w && w.input && w.input[0] === e) || ws.find((w) => w && w.id === e.id.replace(/_input$/, ""));
+  };
   function labelOf(el) {
     const texts = [];
     const t = el.closest("[title]"); if (t && t !== el) texts.push(t.title);
@@ -53,7 +69,7 @@
       }
       for (let c = td.previousElementSibling; c; c = c.previousElementSibling) if (c.innerText.trim()) { texts.push(c.innerText); break; }
     }
-    return texts.map((s) => s.replace(/\s+/g, " ").trim()).filter((s) => s && !/^Selezionare un valore/.test(s) && s !== "ui-button");
+    return texts.map((s) => s.replace(/\s+/g, " ").trim()).filter((s) => s && !/^Selezionare un valore/.test(s) && !/^(ui-button|true|false)$/.test(s));
   }
   function kindOf(e) {
     if (e.tagName === "SELECT") return "select";
@@ -74,11 +90,13 @@
       if (!shown) continue;
       const kind = kindOf(e), labels = labelOf(e);
       const f = { id: e.id.split("dynaForm:")[1].replace(/:combo_input$/, ""), kind, label: (labels[0] || "").slice(0, 160) };
+      // A radio's group: its name without the row ids, which shift.
+      if (kind === "radio") f.group = (e.name || "").split("dynaForm:")[1] || e.name;
       if (labels[1] && labels[1] !== labels[0]) f.context = labels[1].slice(0, 120);
       if (kind === "select") {
         f.options = e.options.length > 40 ? `${e.options.length} options` : [...e.options].filter((o) => o.value).map((o) => o.text.trim());
         if (e.value) f.value = e.options[e.selectedIndex].text.trim();
-      } else if (kind === "radio" || kind === "checkbox") { if (e.checked) f.checked = true; } else if (e.value && kind !== "file") f.value = e.value;
+      } else if (kind === "radio" || kind === "checkbox") { if (e.checked) f.checked = true; } else if (e.value && kind !== "file") f.prefilled = true; // never its text: the login's name and CF
       if (kind === "file") { const t = e.closest("td"); f.accepts = ((t && t.innerText.match(/Tipologie ammesse:[^\n]*/)) || [""])[0]; }
       out.push(f);
     }
@@ -105,7 +123,9 @@
   const el = (id) => doc().querySelector(`[id$="dynaForm:${id}"]`);
   async function apply(c) {
     if (c.kind === "select") {
-      const sel = el(c.id + ":combo_input"), w = widgetOf(sel);
+      const sel = el(c.id + ":combo_input");
+      let w = widgetOf(sel);
+      if (!w) { await idle(); await sleep(300); w = widgetOf(sel); }
       if (!w) throw new Error(`no widget for ${c.id}`);
       if (!w.items) { w.callHandleMethod(null, null); await idle(); }
       const i = [...sel.options].findIndex((o) => o.text.trim() === c.option);
@@ -128,11 +148,16 @@
     const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(name)));
     if (!a) return false; // already open, or not in this pratica
     await act(() => a.click());
+    // Scheda anagrafica reloads the whole page, which act() can't see starting.
+    for (let end = performance.now() + 10000; performance.now() < end && !norm(current()).startsWith(norm(name).slice(0, 20));) await sleep(200);
+    await idle();
     return true;
   }
+  // The open section's title: li#corrente also holds the section's form.
   const current = () => {
     const li = doc().querySelector("li#corrente");
-    return li ? li.innerText.trim() : "";
+    const h = li && (li.querySelector(".headerDynaFormControl") || li.querySelector("a, span"));
+    return h ? h.innerText.trim() : li ? li.innerText.trim().split("\n")[0] : "";
   };
 
   // What applying `path` (a list of choices, in order) shows beyond `before`.
@@ -143,11 +168,27 @@
     const reveals = now.filter((f) => !seen.has(key(f)));
     const keep = new Map(before.map((f) => [key(f), f.id]));
     const moved = now.filter((f) => keep.has(key(f)) && keep.get(key(f)) !== f.id).map((f) => [keep.get(key(f)), f.id]);
+    // What the choice hides: fields of `before` with no counterpart now (counted per key).
+    const left = new Map();
+    for (const f of now) left.set(key(f), (left.get(key(f)) || 0) + 1);
+    const hides = before.filter((f) => { const n = left.get(key(f)) || 0; left.set(key(f), n - 1); return n <= 0 && f.kind !== "message"; }).map((f) => f.id);
     const last = path[path.length - 1];
     const node = { choice: last.option ? `${last.label} = ${last.option}` : last.label, id: last.id, kind: last.kind };
     if (last.option) node.option = last.option;
     if (reveals.length) node.reveals = reveals;
     if (moved.length) node.moved = moved;
+    if (hides.length) node.hides = hides;
+    // A "+" open in this state repeats a block: press it once, note what it adds.
+    if (depth > 1) {
+      const plus = [...doc().querySelectorAll('[id*="dynaForm"] button')].filter((b) => b.offsetParent && b.textContent.trim() === "+");
+      if (plus.length) {
+        await act(() => plus[plus.length - 1].click());
+        const after = snap();
+        const had = new Set(now.map(key));
+        const adds = after.filter((f) => !had.has(key(f)) || after.filter((g) => key(g) === key(f)).length > now.filter((g) => key(g) === key(f)).length);
+        node.plus = { anchor: (adds.find((f) => f.kind !== "message") || {}).label, adds: adds.length };
+      }
+    }
     out.push(node);
     report.tried++;
     await undo();
@@ -165,14 +206,16 @@
 
   async function crawl(opts) {
     const t0 = performance.now();
+    if (frame) frame.remove();
     frame = document.createElement("iframe");
     frame.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:2147483647;background:#fff";
     const loaded = new Promise((r) => frame.addEventListener("load", r, { once: true }));
-    frame.src = location.href;
+    frame.src = opts.url || location.href;
     document.body.append(frame);
     await loaded;
     await idle();
-    const names = opts.sections || [...doc().querySelectorAll("a.linkmenu")].map((a) => a.textContent.trim());
+    // The open section has no link of its own: it goes first.
+    const names = opts.sections || [current(), ...[...doc().querySelectorAll("a.linkmenu")].map((a) => a.textContent.trim())].filter(Boolean);
     for (const name of names) {
       const s0 = performance.now();
       const sec = { section: name };
@@ -194,10 +237,32 @@
     }
     report.seconds = +((performance.now() - t0) / 1000).toFixed(1);
     report.done = true;
-    frame.remove();
+  }
+
+  // The attachments screen (Allega documenti): each slot's title, the types it takes, and
+  // whether the portal marks it required.
+  function slots() {
+    return [...doc().querySelectorAll('input[type=file]')].map((e) => {
+      let row = e.closest("tr");
+      for (let k = 0; k < 6 && row && !row.querySelector("td"); k++) row = row.parentElement.closest("tr");
+      // The title is the row above, or, for a document the portal makes, the one above its
+      // "Scarica il documento" link.
+      let title = "", portal = false;
+      for (let r = row && row.previousElementSibling; r; r = r.previousElementSibling) {
+        const t = r.innerText.replace(/\s+/g, " ").trim();
+        if (/^Scarica il documento$/.test(t)) { portal = true; continue; }
+        if (t) { title = t; break; }
+      }
+      const cell = e.closest("td");
+      return { id: e.id.split("dynaForm:")[1], title: title.slice(0, 160),
+        accepts: ((cell && cell.innerText.match(/Tipologie ammesse:\s*([^\n]*)/)) || [])[1] || "",
+        required: !!(row && /obbligatori/i.test(row.innerText)), portal_document: portal };
+    });
   }
 
   window.__crawl = {
+    slots: () => { frame = frame || document.querySelector("iframe"); return slots(); },
+    report: () => report,
     start(opts = {}) {
       report = { started: new Date().toISOString(), sections: [], tried: 0, done: false };
       crawl(opts).catch((e) => { report.error = String(e.message || e); report.done = true; });

@@ -203,6 +203,7 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 |---|---|---|---|---|---|---|---|---|
 | 2026-10-28 | P6 | pane | not clocked | not clocked | 83.7 s (wizard 8.3, 18 sections 63, fresh load 12.3) | 1 (weakest key, seen before mapping) | not measured | Draft filled and verified; stop point not reached (see below) |
 | 2026-10-28 | P6 | pane | not clocked | not clocked | 101.9 s to Allega documenti (wizard 9, 18 sections ~71, fresh load 15.4, payment 2.2, 6 attachments 6.4) | 1 (as above) | not measured | Stop point reached except what is the person's (see below) |
+| 2026-10-28 | P6 | pane | not clocked | not clocked | ~129 s to Allega documenti in two legs (wizard 10, 5 sections ~26, stop, resume: 13 sections ~64, fresh load 15.9, payment 2.5, 6 attachments 8.8) | 1 (as above) | not measured | From the **generated** steps file: same fields, all kept (see below) |
 
 ### 2026-10-28, P6, first run from the steps file
 
@@ -255,6 +256,22 @@ description) and Salva kept them all. Left, as the stop point says, to the perso
   "nothing written outside a box" check to recognise it).
 - The fee receipt (`.p7m`), the Modello DP, the declarations, signing and sending.
 
+### 2026-10-28, P6 run 4: from the generated steps file
+
+`portal-steps.generated.yaml` is no longer written by hand: `claude/skills/pratica/portal/gen.py`
+wrote it from `recipe.yaml` (the operation, the scelta, the person's steps, `supports`), the
+crawl of an empty CILA draft (`catalogue/F839/sections/cila.json`, 282 s, every section, every
+choice tried) and the shared field dictionary (`dictionary/fnsuap.yaml`). `gen.py --check
+portal-steps.yaml` finds it the same as the hand walk, field for field: every id, including the
+21 of a) where two choices (title "altro", non-exclusive title) shift each other's rows, which
+the crawl tried apart and `gen.py` adds up by their offsets. It adds one case the walk didn't
+cover: diritti not due (0 €), from the amount.
+
+Draft "PROVA NON INVIARE - CILA P6 generato": all 158 values (152 fields, 6 attachments) filled,
+saved and read back again on a fresh load, nothing typed by hand. One stop, in Localizzazione:
+the street's suggestion list was still open over "scala" (a timing the earlier runs didn't
+hit). inpage.js now waits for the list to close (or closes it) after picking a street; the run
+resumed on the same draft from that section.
 
 ## Changes
 
