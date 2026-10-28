@@ -340,7 +340,9 @@ def generate(recipe, base=HERE):
         # A catalogue of the wizard's tree only (the SUAP's so far): the pratica's sections are
         # the crawled draft's, in its order, and the recipe gives the wizard.
         op = {"label": recipe["operation"], "scelte": []}
-        names = [s["section"] for s in crawl["sections"]]
+        # A batch crawl (crawl.js batch) says which sections the base pratica has and which a
+        # scelta adds; the recipe's scelte pick those.
+        names = [s["section"] for s in crawl["sections"] if not s.get("scelta") or s["scelta"] in recipe.get("scelte", [])]
         if "wizard" not in recipe:
             raise GenError("the catalogue has no pratica for this operation: the recipe needs `wizard`")
     else:
@@ -448,13 +450,18 @@ def generate(recipe, base=HERE):
         asks_used.add(t)
     for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps([recipe.get("yours"), recipe.get("supports")])):
         asks_used.add(t)
+    # The dictionary's questions, the recipe's wording over them; a question only this pratica
+    # asks (one `supports` reads) is the recipe's alone.
     asks = {}
-    for k, v in dictionary["asks"].items():
+    for k, v in list(dictionary["asks"].items()) + [(k, {}) for k in recipe.get("asks", {}) if k not in dictionary["asks"]]:
         if k in asks_used:
             asks[k] = {**v, **recipe.get("asks", {}).get(k, {})}
-    missing = asks_used - set(asks)
+    missing = (asks_used - set(asks)) | {k for k, a in asks.items() if "type" not in a}
     if missing:
         raise GenError(f"asks with no definition in the dictionary: {sorted(missing)}")
+    # Yes/no questions asked as one checklist (run.py preflight's `groups`).
+    groups = {g: v for g, v in {**dictionary.get("groups", {}), **recipe.get("groups", {})}.items()
+              if any(a.get("group") == g for a in asks.values())}
 
     wizard = recipe.get("wizard") or [
         {"screen": "Assegna una descrizione alla pratica",
@@ -471,7 +478,7 @@ def generate(recipe, base=HERE):
     return {
         "procedure": recipe["procedure"], "title": recipe["title"],
         "generated": f"gen.py from {recipe['crawl']} ({crawl.get('crawled', '?')[:10]}) and dictionary/{recipe.get('dictionary', 'fnsuap')}.yaml",
-        "yours": recipe["yours"], "asks": asks, "supports": recipe.get("supports", []),
+        "yours": recipe["yours"], **({"groups": groups} if groups else {}), "asks": asks, "supports": recipe.get("supports", []),
         "start": recipe.get("start", catalogue["start"]), "logged_in": recipe.get("logged_in", "https://suap.impresainungiorno.gov.it/fnsuap/"),
         "wizard": wizard, "sections": out_sections,
     }

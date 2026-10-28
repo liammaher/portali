@@ -17,6 +17,12 @@
 # titolare, the architect), `c:` the client, `o:` the owner company, `r:` its legale
 # rappresentante, `f1:`/`f2:` the firms.
 
+# Yes/no asks with a `group` are asked as one checklist (`item`), the answer the list of
+# items that apply.
+groups:
+  attivita_852:
+    question: "What does the food business do? Tick every line that applies."
+
 asks:
   descrizione:
     type: text
@@ -65,6 +71,21 @@ asks:
   bollo_marche: {type: yes_no, question: "Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?", default: "false"}
   bollo_seriale: {type: text, question: "The marca da bollo's serial number (14 digits)"}
   bollo_data: {type: date, question: "The marca da bollo's date"}
+  insegna: {type: text, question: "What name goes on the sign?"}
+  stagionale: {type: yes_no, question: "Will it open only for part of the year (a season)?", default: "false"}
+  stagione_dal: {type: text, question: "The season's first day (gg/mm)"}
+  stagione_al: {type: text, question: "The season's last day (gg/mm)"}
+  superficie_somministrazione_mq: {type: number, question: "How many m² is the area where customers eat and drink? (not the whole premises)"}
+  avvio_data: {type: date, question: "The day the food business starts, if not the day of the notifica", default: ""}
+  termine_data: {type: date, question: "The day it ends, for a temporary one", default: ""}
+  ristorazione: {type: yes_no, group: attivita_852, item: "Food service: a bar, a restaurant, a canteen, catering"}
+  ristorante: {type: yes_no, group: attivita_852, item: "A restaurant, pizzeria or trattoria (ristorazione pubblica)"}
+  bar: {type: yes_no, group: attivita_852, item: "A bar without its own kitchen or lab"}
+  bar_laboratorio: {type: yes_no, group: attivita_852, item: "A bar with its own kitchen or lab"}
+  pasti_collettiva: {type: yes_no, group: attivita_852, item: "Meals made for canteens or catering (produzione pasti pronti)"}
+  mensa: {type: yes_no, group: attivita_852, item: "A canteen serving meals (ristorazione collettiva)"}
+  manifestazioni: {type: yes_no, group: attivita_852, item: "Food service at fairs and events"}
+  home_restaurant: {type: yes_no, group: attivita_852, item: "A home restaurant"}
   fine_protocollo: {type: text, question: "Its protocol number", when: "{{ask.fine_presentata}}"}
   fine_data: {type: date, question: "Its protocol date", when: "{{ask.fine_presentata}}"}
   impianti: {type: yes_no, question: "Did the works touch the building's systems (impianti)?"}
@@ -800,6 +821,47 @@ sections:
       - {kind: text, label: subalterno, value: "{{locale.catasto_subalterno}}"}
       - {kind: text, label: sezione Urbana, value: "{{locale.catasto_sezione}}", optional: true}
       - {kind: select, label: categoria, value: "{{locale.catasto_categoria|categoria}}"}
+
+  # A bar or restaurant (somministrazione di alimenti e bevande): the sign, the season, what
+  # kind of place, a shopping centre, the area where customers eat and drink. Drafted by
+  # draft.py from mod_somministrazione_zone_non_tutelate_apertura, checked against the
+  # pizzeria walk (rehearsals/pizzeria-fittizia).
+  - section: Dati dell'esercizio di somministrazione
+    fields:
+      - {kind: text, label: Denominazione insegna, value: "{{ask.insegna}}"}
+      - {kind: radio, label: Permanente, when: "{{ask.stagionale|not}}"}
+      - {kind: radio, label: Stagionale, when: "{{ask.stagionale}}"}
+      - {kind: text, label: dal (gg/mm), value: "{{ask.stagione_dal}}", when: "{{ask.stagionale}}"}
+      - {kind: text, label: al (gg/mm), value: "{{ask.stagione_al}}", when: "{{ask.stagionale}}"}
+      - {kind: textarea, label: Tipologia di esercizio, value: "{{business.descrizione_attivita}}"}
+      - {kind: radio, label: Si, when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: "No", when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: text, label: denominazione, nth: 2, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: text, label: Superficie di somministrazione, value: "{{ask.superficie_somministrazione_mq}}"}
+
+  # The Reg. 852/2004 notifica (mod_notifica_sanitaria): when the activity starts, and if it
+  # ends on a date (a temporary one).
+  - section: notifica avvio e inizio attività
+    aliases: [inizio dell'attività]
+    fields:
+      - {kind: radio, label: Avvio contestuale alla data di notifica, when: "{{ask.avvio_data|empty}}"}
+      - {kind: radio, label: Avvio con decorrenza, when: "{{ask.avvio_data|empty|not}}"}
+      - {kind: date, label: dal, value: "{{ask.avvio_data|date_it}}", when: "{{ask.avvio_data|empty|not}}"}
+      - {kind: checkbox, label: Termine dell'attività, when: "{{ask.termine_data|empty|not}}"}
+      - {kind: date, label: in data, value: "{{ask.termine_data|date_it}}", when: "{{ask.termine_data|empty|not}}"}
+
+  # What the food business does, in the notifica's master list: only the food-service block
+  # so far (a bar, a restaurant); a heading opens its lines. The other blocks stay unticked.
+  - section: tipologia di attività ai sensi dell'art. 6
+    fields:
+      - {kind: checkbox, label: "RISTORAZIONE:", when: "{{ask.ristorazione}}"}
+      - {kind: checkbox, label: Produzione pasti pronti per ristorazione collettiva, when: "{{ask.ristorazione}} {{ask.pasti_collettiva}}"}
+      - {kind: checkbox, label: Somministrazione pasti in ristorazione collettiva, when: "{{ask.ristorazione}} {{ask.mensa}}"}
+      - {kind: checkbox, label: Ristorazione pubblica con somministrazione diretta, when: "{{ask.ristorazione}} {{ask.ristorante}}"}
+      - {kind: checkbox, label: Bar e altri esercizi pubblici simili senza laboratorio, when: "{{ask.ristorazione}} {{ask.bar}}"}
+      - {kind: checkbox, label: Bar e altri esercizi pubblici simili con laboratorio, when: "{{ask.ristorazione}} {{ask.bar_laboratorio}}"}
+      - {kind: checkbox, label: Ristorazione pubblica in ambito di manifestazioni, when: "{{ask.ristorazione}} {{ask.manifestazioni}}"}
+      - {kind: checkbox, label: Home restaurant, when: "{{ask.ristorazione}} {{ask.home_restaurant}}"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"

@@ -354,7 +354,9 @@
     // Only the messages in front: an empty cell keeps its place, or the label of the box to
     // the left would count as this box's.
     while (texts.length && MESSAGE.test(norm(texts[0]))) texts.shift();
-    return texts.slice(0, 3).some((t) => norm(t).startsWith(norm(label)));
+    // A text said twice (the title "mq" and its cell "mq") counts once, so the third is the
+    // label beside it ("Superficie di somministrazione").
+    return texts.filter((t, i) => !t || texts.indexOf(t) === i).slice(0, 3).some((t) => norm(t).startsWith(norm(label)));
   }
   function resolve(f) {
     if (f.id || f.css) return f;

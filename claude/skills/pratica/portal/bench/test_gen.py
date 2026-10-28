@@ -249,5 +249,18 @@ def _():
     assert "Via, Viale, Piazza" in blank and "Frazione" in blank, blank
 
 
+@case("the dictionary names each question once (YAML keeps the last of two quietly)")
+def _():
+    seen = []
+
+    class Strict(gen.yaml.SafeLoader):
+        def construct_mapping(self, node, deep=False):
+            keys = [self.construct_object(k, deep=deep) for k, _ in node.value]
+            seen.extend(k for k in set(keys) if keys.count(k) > 1)
+            return super().construct_mapping(node, deep)
+    gen.yaml.load((HERE.parent / "dictionary/fnsuap.yaml").read_text(), Loader=Strict)
+    assert not seen, seen
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)
