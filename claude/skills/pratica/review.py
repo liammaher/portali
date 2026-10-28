@@ -112,6 +112,9 @@ def portal_review(report):
                not s["errors"] and not s["bad"]) for s in report.get("sections", [])]
     if report.get("wizard_seconds") is not None:
         checks.insert(0, (f"Wizard: every screen confirmed ({report['wizard_seconds']} s)", True))
+    if report.get("verify_seconds") is not None:
+        checks.append((f"Draft loaded again from the portal: every value still there ({report['verify_seconds']} s)"
+                       if ok else "Draft loaded again from the portal: a value didn't stay (see Stopped)", ok))
     if report.get("error"):
         checks.append((f"Stopped: {report['error']}", False))
     groups = {}

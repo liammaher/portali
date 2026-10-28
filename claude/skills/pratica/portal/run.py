@@ -14,8 +14,9 @@
               [--cdp URL | --profile DIR] [--close]
       Opens the portal in a Playwright window (its own Chromium) and waits for the person
       to log in, then runs inpage.js there, as in the pane: the wizard, each section filled,
-      saved and read back. It stops before what is the person's: the declarations, the
-      attachments, the payment, signing and sending, and shows the draft, left open for
+      saved and read back, then the draft loaded again and every value read once more. It
+      stops before what is the person's: the declarations, the attachments the steps file
+      doesn't name, the payment, signing and sending, and shows the draft, left open for
       them unless --close. Writes DIR/report.json (timings, what each section kept),
       DIR/review.html (the page the person reviews: what's left for them, the steps file's
       `yours`, and every value) and DIR/failure.png when a step fails.
@@ -32,13 +33,20 @@ browser Playwright launched; otherwise Chromium starts with its own profile (--p
 default ~/.cache/pratica-portal/profile), never the person's own, so a login there
 lasts as long as the portal keeps it.
 
+A `kind: file` field attaches a file: its value is a path (usually an {{ask.x}}), and
+its bytes travel in run.js. With `page` they pass through the conversation, so all of a
+run's files together may be at most 256 KB (PAGE_FILES_LIMIT); `run` evaluates run.js
+itself and takes any size.
+
 No model is called during a run. A step that doesn't match what the steps file expects
 (a label, a lookup with no single answer, a value the portal didn't keep) stops the run:
 that is the point where Claude looks at the page and fixes the steps file.
 """
 
 import argparse
+import base64
 import json
+import mimetypes
 import re
 import sys
 from pathlib import Path
@@ -58,6 +66,10 @@ DECLARATIONS = re.compile(
     r"dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75", re.I)
 
 DUG = {"VIA", "VIALE", "PIAZZA", "CORSO", "LARGO"}
+# run.js for the pane is one tool call's text: a receipt or a small scan, not a planimetria.
+# Larger files need another route into the page (docs/north-star.md, open question 7).
+PAGE_FILES_LIMIT = 256 * 1024
+FILE_TYPES = {".p7m": "application/pkcs7-mime", ".pdf": "application/pdf"}
 CARICA = {"titolare": "TITOLARE", "legale_rappresentante": "LEGALE RAPPRESENTANTE"}
 FORMA = {
     "ditta_individuale": "IMPRESA INDIVIDUALE",
@@ -178,35 +190,59 @@ def plan(steps, values):
             if "when" in f and not truthy(values.render(f["when"]) or ""):
                 continue
             v = values.render(f["value"]) if "value" in f else None
+            name = f.get("label") or f.get("id") or f.get("css")
             if "value" in f and v is None and not f.get("optional"):
-                missing.append(f"{sec['section']}: {f.get('label', f['id'])} ({f['value']})")
-            out.append({"section": sec["section"], "id": f["id"], "kind": f["kind"],
+                missing.append(f"{sec['section']}: {name} ({f['value']})")
+            if f["kind"] == "file" and v and not Path(v).expanduser().is_file():
+                missing.append(f"{sec['section']}: {name}: no file {v}")
+            out.append({"section": sec["section"], "id": f.get("id") or f.get("css"), "kind": f["kind"],
                         "label": f.get("label"), "value": v})
     if missing:
         raise StepError("missing values:\n  " + "\n  ".join(missing))
     return out
 
 
-def page_scripts(steps, values):
+def attachment(path):
+    """A file as run.js carries it to inpage.js."""
+    p = Path(path).expanduser()
+    kind = FILE_TYPES.get(p.suffix.lower()) or mimetypes.guess_type(p.name)[0] or "application/octet-stream"
+    return {"name": p.name, "type": kind, "b64": base64.b64encode(p.read_bytes()).decode()}
+
+
+def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT):
     """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
     plan(steps, values)  # stops on a missing required value
     skeleton = {
         "start": steps["start"], "logged_in": steps["logged_in"],
         "wizard": [{k: v for k, v in w.items() if k != "fill"} | (
             {"fill": {"css": w["fill"]["css"]}} if "fill" in w else {}) for w in steps["wizard"]],
-        "sections": [{"section": s["section"], "open": s.get("open", True),
-                      "fields": [{k: f[k] for k in ("id", "kind", "label") if k in f} for f in s["fields"]]}
+        "sections": [{"section": s["section"], "open": s.get("open", True)}
+                     | ({"save": s["save"]} if "save" in s else {})
+                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label") if k in f} for f in s["fields"]]}
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,
         "dug": sorted(DUG), "label_js": LABEL_JS,
     }
-    # One entry per field: false when its `when` is false, true for a tick, else the value.
+
+    def value(f):
+        """False when its `when` is false, true for a tick, a file's bytes, else the value."""
+        if "when" in f and not truthy(values.render(f["when"]) or ""):
+            return False
+        if "value" not in f:
+            return True
+        v = values.render(f["value"])
+        return attachment(v) if f["kind"] == "file" and v else v
+
     vals = {
         "wizard": [values.render(w["fill"]["value"]) if "fill" in w else None for w in steps["wizard"]],
-        "sections": [[False if "when" in f and not truthy(values.render(f["when"]) or "")
-                      else True if "value" not in f else values.render(f["value"])
-                      for f in s["fields"]] for s in steps["sections"]],
+        "sections": [[value(f) for f in s["fields"]] for s in steps["sections"]],
     }
+    if files_limit is not None:
+        files = [v for s in vals["sections"] for v in s if isinstance(v, dict)]
+        size = sum(len(f["b64"]) * 3 // 4 for f in files)
+        if size > files_limit:
+            raise StepError(f"the attachments come to {size // 1024} KB, more than the {files_limit // 1024} KB "
+                            "run.js can carry in the pane: use `run` (a Playwright window) or attach them by hand")
     proc = steps["procedure"]
     runner = Path(__file__).with_name("inpage.js").read_text()
     # A function's source is its text, so neither part needs escaping into a string.
@@ -242,14 +278,18 @@ LABEL_JS = """(el) => {
 
 def run(steps, values, out, cdp=None, profile=None, close=False):
     """inpage.js in a Playwright window: the runner the Claude browser pane uses, without
-    the pane's 45 s call limit and slowed timers."""
+    the pane's 45 s call limit and slowed timers. A window behind others keeps full speed
+    with no call of ours: Playwright turns on focus emulation for each page it drives
+    (--cdp too) and launches Chromium with background throttling off."""
     from playwright.sync_api import sync_playwright
-    install, run_js = page_scripts(steps, values)
+    # page.evaluate runs run.js here, not through the conversation, so files of any size.
+    install, run_js = page_scripts(steps, values, files_limit=None)
     out.mkdir(parents=True, exist_ok=True)
     # What the review page shows besides the run: each value, and the person's own steps.
     shown = {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
              "values": [{"section": v["section"], "label": v["label"] or v["id"],
-                         "value": v["value"] if v["value"] is not None else "chosen"}
+                         "value": "chosen" if v["value"] is None
+                         else "attached: " + Path(v["value"]).name if v["kind"] == "file" else v["value"]}
                         for v in plan(steps, values)]}
     report = {"procedure": steps["procedure"], "result": "stopped"}
     with sync_playwright() as pw:
@@ -283,6 +323,9 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
                     print(f"  {sec['section']}: {sec['seconds']} s", flush=True)
                 sections_shown = len(report["sections"])
                 if report["result"] != "running":
+                    if report.get("verify_seconds") is not None:
+                        print(f"  fresh load of the draft, every value read again: {report['verify_seconds']} s",
+                              flush=True)
                     break
         except Exception as e:
             report["result"] = "stopped"
@@ -299,7 +342,7 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
             if not close and not page.is_closed():
                 if report["result"] == "filled":
                     page.evaluate("__pv.open()")
-                print("Left open for you: tick the declarations, attach, sign and pay yourself. "
+                print("Left open for you: tick the declarations, attach what's left, sign and pay yourself. "
                       "Close the window when done.", flush=True)
                 page.wait_for_event("close", timeout=0)
             try:
