@@ -283,4 +283,7 @@ or AI-provider credits, as the plan already lists.
 - [`reports/`](../reports/): the strategy reports this comes from (three personas, the synthesis, the
   MVP checklist, the sensitivity ranking, the research on recurring obligations).
 - [pratiche-napoli](https://github.com/liammaher/pratiche-napoli): the library.
+- [`design/supported-flows.md`](design/supported-flows.md): what a supported pratica promises (one
+  message of questions, a login, a finished draft) and the plan to get there: pre-flight, branch
+  coverage, self-recovery.
 - The earlier plan (25 Oct) is Liam's local plan file; it points here for what has changed.
