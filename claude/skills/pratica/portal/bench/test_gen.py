@@ -273,5 +273,29 @@ def _():
     assert run.FILTERS["albo_tipo"]("Ordine degli Architetti P.P.C.") == "Architetto"
 
 
+@case("an operation checked in another sector is that pratica when every fingerprint matches, else one to crawl")
+def _():
+    import tempfile, catalogue
+    with tempfile.TemporaryDirectory() as tmp:
+        base = batch_copy(tmp)
+        old = (catalogue.CAT, catalogue.SECTIONS, catalogue.SAME)
+        catalogue.CAT = base / "catalogue/F839"
+        catalogue.SECTIONS, catalogue.SAME = catalogue.CAT / "sections", catalogue.CAT / "same.json"
+        try:
+            fps = catalogue.stored_fingerprints("fine-lavori")
+            check = lambda name, change: {"name": name, "like": "fine-lavori", "crawled": "2026-10-28T00:00:00Z", "sections":
+                [{"section": k, "fingerprint": ("0" * 16 if k == change else v)} for k, v in fps.items()]}
+            export = base / "export.json"
+            export.write_text(gen.json.dumps({"crawl:check:suap-001-x": check("suap-001-x", None),
+                                              "crawl:check:suap-002-x": check("suap-002-x", "Oggetto della pratica")}))
+            out = catalogue.cmd_drift(type("a", (), {"export": str(export)}))
+            same = gen.json.loads(catalogue.SAME.read_text())
+            assert same["same"] == {"suap-001-x": "fine-lavori"}, out
+            assert same["different"]["suap-002-x"]["differences"] == ["changed: Oggetto della pratica"], out
+            assert not (catalogue.CAT / "drift.json").exists() or "suap-001-x" not in (catalogue.CAT / "drift.json").read_text()
+        finally:
+            catalogue.CAT, catalogue.SECTIONS, catalogue.SAME = old
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

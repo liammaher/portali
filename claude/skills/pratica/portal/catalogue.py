@@ -6,6 +6,7 @@
     catalogue.py import EXPORT.json                        a batch's results into sections/
     catalogue.py count                                     distinct sections and their uses
     catalogue.py drift EXPORT.json                         a check batch against the stored crawls
+                                                           (an op with `like`: against that pratica, into same.json)
 
 A section's fingerprint is what it shows before any choice (ids, kinds, labels, lengths,
 short lists), hashed as crawl.js does: the same fingerprint is the same section, whatever
@@ -24,6 +25,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 CAT = HERE / "catalogue" / "F839"
 SECTIONS = CAT / "sections"
+# Operations a check found to be another sector's pratica, unchanged ({"same": {name: like}}),
+# and those that differ and need a crawl of their own ("different").
+SAME = CAT / "same.json"
 DECLARATIONS = re.compile(r"consapevolezza|informativa sulla privacy|requisiti di o|altre dichiarazioni|"
                           r"dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75", re.I)
 # The SUE's pratiche crawled one by one before the batch, by the names recipes use.
@@ -193,8 +197,10 @@ def cmd_count(args):
     dictionary = gen.load_yaml(HERE / "dictionary" / "fnsuap.yaml")
     uses, names, where, cache = collections.Counter(), collections.defaultdict(set), {}, {}
     pratiche, by = collections.defaultdict(set), collections.defaultdict(collections.Counter)
-    for name, c in crawls().items():
-        cache[name] = c
+    stored = crawls()
+    alias = json.loads(SAME.read_text())["same"] if SAME.exists() else {}
+    for name, c in list(stored.items()) + [(n, stored[l]) for n, l in alias.items() if l in stored]:
+        cache.setdefault(name, c)
         sp = sportello(name)
         for s in c["sections"]:
             if s.get("skipped") or s.get("error"):
@@ -222,7 +228,7 @@ def cmd_count(args):
             continue
         done = [x for x in r if x["covered"]]
         u = lambda xs: sum(x["by"][sp] for x in xs)
-        n = len({p for p, c in crawls().items() if sportello(p) == sp})
+        n = len({p for p in list(stored) + list(alias) if sportello(p) == sp})
         out.append(f"{sp.upper()}: {n} pratiche, {len(r)} distinct sections, {len(done)} in the dictionary; "
                    f"{u(done)} of {u(r)} uses ({100 * u(done) // max(1, u(r))}%)")
     return out
@@ -248,25 +254,33 @@ def cmd_drift(args):
     data = json.loads(Path(args.export).read_text())
     path = CAT / "drift.json"
     drift = json.loads(path.read_text()) if path.exists() else {"pratiche": {}}
+    same = json.loads(SAME.read_text()) if SAME.exists() else {"same": {}, "different": {}}
     out, cache = [], {}
     for key, r in sorted(data.items()):
         if not key.startswith("crawl:check:"):
             continue
         r = r if isinstance(r, dict) else json.loads(r)
-        name = r["name"]
+        name, like = r["name"], r.get("like")
         if r.get("error"):
             out.append(f"{name}: not checked ({r['error']})")
             continue
-        if not (SECTIONS / f"{name}.json").exists():
-            out.append(f"{name}: no stored crawl to compare")
+        if not (SECTIONS / f"{like or name}.json").exists():
+            out.append(f"{name}: no stored crawl of {like or name} to compare")
             continue
-        old = stored_fingerprints(name, cache)
+        old = stored_fingerprints(like or name, cache)
         now = {s["section"]: s.get("fingerprint") for s in r["sections"] if not s.get("skipped") and not s.get("error")}
         diff = sorted(f"gone: {n}" for n in old if n not in now) + sorted(f"new: {n}" for n in now if n not in old)
         diff += sorted(f"changed: {n}" for n in now if n in old and now[n] != old[n])
+        if like:
+            # The same operation in another sector: the same pratica, or one to crawl itself.
+            same["same" if not diff else "different"][name] = like if not diff else {"like": like, "differences": diff}
+            (same["different" if not diff else "same"]).pop(name, None)
+            out.append(f"{name}: " + (f"same pratica as {like}" if not diff else f"differs from {like}, crawl it: " + "; ".join(diff)))
+            continue
         drift["pratiche"][name] = {"checked": r["crawled"][:10], "differences": diff}
         out.append(f"{name}: " + ("same as the stored crawl" if not diff else "; ".join(diff)))
     path.write_text(json.dumps(drift, ensure_ascii=False, indent=1) + "\n")
+    SAME.write_text(json.dumps(same, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     return out
 
 

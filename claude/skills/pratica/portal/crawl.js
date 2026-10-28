@@ -6,8 +6,9 @@
 // portal's reloads don't end it.
 //
 //   __crawl.start({url, sections: [names] | null, depth: 2})  starts, returns at once
-//   __crawl.batch({draft, ops: [{name, sector, path}], variants, check})  many pratiche on one draft;
-//                                                        `check`: fingerprints only (catalogue.py drift)
+//   __crawl.batch({draft, ops: [{name, sector, path, check, like}], variants, check})  many pratiche on
+//       one draft; `check`: fingerprints only (catalogue.py drift), for the batch or one op (`like`:
+//       the crawled pratica it should match)
 //   await __crawl.wait(ms)                               the map so far, once done or after ms
 //   __crawl.slots()                                      the attachments screen's slots
 //
@@ -219,6 +220,18 @@
     return [...new Uint8Array(h)].slice(0, 8).map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
+  // The section's own words (its intro, notes, the text around its boxes), which say what a
+  // box means ("l'ubicazione dell'attività o intervento ..."). Never a box's content: inputs,
+  // dropdowns and the selected labels (the login's name and CF) are taken out first.
+  function words() {
+    const li = doc().querySelector("li#corrente");
+    if (!li) return "";
+    const c = li.cloneNode(true);
+    c.querySelectorAll("input, select, option, textarea, button, script, style, .ui-selectonemenu-label, " +
+      ".ui-helper-hidden-accessible, .ui-autocomplete-panel, .ui-selectonemenu-panel").forEach((e) => e.remove());
+    return c.textContent.replace(/\s+/g, " ").trim().slice(0, 3000);
+  }
+
   // One section: open it, read it, try its choices. `known` (fingerprint → "pratica#section")
   // skips one already crawled elsewhere; a new one is added to it as `where`.
   async function section(name, opts, known, where) {
@@ -236,6 +249,7 @@
         sec.same_as = known[sec.fingerprint];
         delete sec.fields;
       } else {
+        sec.text = words();
         sec.branches = [];
         const cs = choices(sec.fields);
         for (const c of cs.slice(0, opts.limit || 30)) await explore([c], sec.fields, opts.depth || 2, sec.branches);
@@ -310,10 +324,14 @@
     const known = JSON.parse(localStorage.getItem("crawl:known") || "{}");
     let sector = null;
     for (const op of opts.ops) {
-      const stored = JSON.parse(localStorage.getItem((opts.check ? "crawl:check:" : "crawl:op:") + op.name) || "null");
+      // An op can be a check of its own (`check`), of the pratica it should match (`like`): the
+      // same operation in another sector, crawled there.
+      const check = !!(opts.check || op.check);
+      const stored = JSON.parse(localStorage.getItem((check ? "crawl:check:" : "crawl:op:") + op.name) || "null");
       if (stored && !stored.error) { report.skipped++; continue; }
       const o0 = performance.now();
       const r = { name: op.name, sector: op.sector, operation: op.path, crawled: new Date().toISOString(), sections: [] };
+      if (op.like) r.like = op.like;
       report.current = op.name;
       try {
         if (op.sector) {
@@ -329,7 +347,7 @@
         const w = { label: op.path };
         await nav.follow(w, !!opts.variants, async (p, v) => {
           for (const name of v ? v.adds : p.sections) {
-            const sec = await section(name, opts, known, op.name);
+            const sec = await section(name, { ...opts, check }, known, op.name);
             if (v) sec.scelta = v.option;
             r.sections.push(sec);
             report.tried = (report.tried || 0) + 1;
@@ -344,8 +362,8 @@
         sector = null;
       }
       r.seconds = +((performance.now() - o0) / 1000).toFixed(1);
-      localStorage.setItem((opts.check ? "crawl:check:" : "crawl:op:") + op.name, JSON.stringify(r));
-      if (!opts.check) localStorage.setItem("crawl:known", JSON.stringify(known));
+      localStorage.setItem((check ? "crawl:check:" : "crawl:op:") + op.name, JSON.stringify(r));
+      if (!check) localStorage.setItem("crawl:known", JSON.stringify(known));
       report.done_ops++;
       if (r.error) report.errors.push(`${op.name}: ${r.error}`);
     }

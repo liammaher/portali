@@ -52,10 +52,17 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   (permesso di costruire, SCIA alternativa, the landscape ones) need the asseverazioni and the
   landscape classifications (DPR 31/2017's lists, the art. 136/142 vincoli): legal and
   technical choices more than mapping.
-- **SUAP**: 39 of the 361 operations queued (restaurants in and outside the protected zones,
-  the first two priority sectors); **58 distinct sections** so far, 18 filled, 84% of uses. The
-  batch goes on in the pane (`crawl:ops:suap`: 11 priority sectors, then the 64 common
-  operations), about 45 s a pratica.
+- **SUAP**: 39 pratiche crawled so far (restaurants in and outside the protected zones); **58
+  distinct sections**, 18 filled, 84% of uses. The whole tree is 2,333 sector-and-operation
+  pairs plus 64 common operations, but only the sector's own operations (open, take over, move,
+  suspend, close: 710 pairs) differ by sector. The batch in the pane (`crawl:ops:suap2`, 1,028
+  trips) crawls those in every sector, every other operation once (69 of them) and each of
+  those again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns
+  into `same.json`: the same pratica, counted as a use of it, or one that differs and gets a
+  crawl of its own. Priority sectors first (bars and restaurants, shops, B&B, hairdressers,
+  bakeries), then the common operations, then the rest. About 45 s a pratica.
+- Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
+  content), which say what a box means, for the drafter and for whoever checks a draft.
 - Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening
   (SUAP) and the proroga di inizio lavori (SUE), besides the seven run before.
 
