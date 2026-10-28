@@ -3,9 +3,10 @@
 
   run.py preflight --steps STEPS.yaml [--answers A.json] VAULT
       Before anything opens: prints JSON with why this case isn't supported (the steps
-      file's `supports:`), the questions still to ask (its `asks:`, branch questions
-      first), the vault fields missing or expired, the files to attach and whether they
-      fit the pane, and the person's own steps. Exits 0 when `ready`, 3 when not.
+      file's `supports:`), the answers it proposes for the person to confirm (an ask's
+      `propose:`), the questions still to ask (its `asks:`, branch questions first), the
+      vault fields missing or expired, the files to attach and whether they fit the pane,
+      and the person's own steps. Exits 0 when `ready`, 3 when not.
 
   run.py plan --steps STEPS.yaml --answers A.json
               (--values - | --server S.json --token NAME | --vault-dir DIR [--keychain SERVICE])
@@ -26,6 +27,11 @@
       them unless --close. Writes DIR/report.json (timings, what each section kept),
       DIR/review.html (the page the person reviews: what's left for them, the steps file's
       `yours`, and every value) and DIR/failure.png when a step fails.
+
+A run that stops says where (report.json `at`: the wizard screen, or the section and
+field). `page` or `run` with --resume REPORT picks it up on the same draft, from that
+section, with --fix FIX for what the page really has there; DIR/drift.json records the
+fixes, and the fresh load at the end still checks every section.
 
 STEPS.yaml is a portal's steps file (rehearsals/*/portal-steps.yaml). Values come from
 the vault, VAULT as for plan. --values - takes what `pvault get` printed for the steps'
@@ -274,9 +280,9 @@ def check_asks(steps):
         raise StepError(f"steps file: no field reads asks.{', asks.'.join(unused)}: drop it")
     for k, a in asks.items():
         if "group" in a:
-            if a["group"] not in groups or a.get("type") != "yes_no" or not a.get("item"):
+            if a["group"] not in groups or a.get("type") != "yes_no" or not a.get("item") or "propose" in a:
                 raise StepError(f"steps file: asks.{k} is in a group, so it needs type yes_no, an item, "
-                                "and its group in groups:")
+                                "its group in groups:, and no propose (the checklist's \"none\" is the proposal)")
         elif a.get("type") not in ASK_TYPES or not a.get("question") or (a["type"] == "choice" and not a.get("options")):
             raise StepError(f"steps file: asks.{k} needs a question and a type ({', '.join(sorted(ASK_TYPES))}), "
                             "and options for a choice")
@@ -374,7 +380,8 @@ def preflight(steps, values):
     to attach, and the person's own steps. ready: nothing is left before the run."""
     order = check_asks(steps)
     asks = steps.get("asks", {})
-    report = {"ready": False, "unsupported": [], "questions": [], "missing": [], "files": [], "yours": []}
+    report = {"ready": False, "unsupported": [], "proposals": [], "questions": [], "missing": [], "files": [],
+              "yours": []}
     if any(r.startswith("t:") for _, t, _ in templates(steps) for r, _ in refs_in(t)):
         try:
             values.titolare
@@ -391,10 +398,18 @@ def preflight(steps, values):
         a, v = asks[k], values.raw(k)
         if v is None and "default" in a:
             continue
+        hangs = {"only_if": sorted(need[k])} if need[k] else {}
+        if v is None and "propose" in a:
+            # What the rules or the vault say it should be: the person confirms it, or says
+            # otherwise, instead of answering from scratch. Never used until confirmed.
+            proposal = values.render(a["propose"])
+            if proposal is not None and not check_answer(a, proposal):
+                report["proposals"].append({"key": k, "question": a["question"], "proposal": proposal}
+                                           | {x: a[x] for x in ("why",) if x in a} | hangs)
+                continue
         why = "not answered" if v is None else check_answer(a, v)
         if not why:
             continue
-        hangs = {"only_if": sorted(need[k])} if need[k] else {}
         if "group" in a:
             g = a["group"]
             if g not in lists:
@@ -447,7 +462,7 @@ def preflight(steps, values):
                                         "bytes": p.stat().st_size if p and p.is_file() else None})
     report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"]) <= PAGE_FILES_LIMIT
     report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
-    report["ready"] = not (report["questions"] or report["missing"]
+    report["ready"] = not (report["questions"] or report["proposals"] or report["missing"]
                            or any(not x["exists"] for x in report["files"] if x["path"]))
     return report
 
@@ -459,7 +474,17 @@ def attachment(path):
     return {"name": p.name, "type": kind, "b64": base64.b64encode(p.read_bytes()).decode()}
 
 
-def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT):
+def resumption(report, fixes=None):
+    """How run.js picks up a stopped run: the draft it stopped on, the section it stopped
+    in (redone, with any fixes), and what the earlier sections typed, for the fresh load."""
+    at = report.get("at") or {}
+    if not report.get("url") or not at:
+        raise StepError("this report has no place to resume from")
+    return {"url": report["url"], "from": {("section" if at.get("phase") == "section" else "wizard"): at["index"]},
+            "kept": report.get("kept", []), "fixes": fixes or []}
+
+
+def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
     """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
     require_supported(steps, values)
     plan(steps, values)  # stops on a missing required value
@@ -502,7 +527,8 @@ def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT):
                f"{json.dumps(skeleton, ensure_ascii=False, separators=(',', ':'))}));\n"
                "'installed'\n")
     run_js = ("if (!window.__pv) (0, eval)(localStorage.getItem('pv-runner'));\n"
-              f"__pv.start({json.dumps(proc)}, {json.dumps(vals, ensure_ascii=False, separators=(',', ':'))})\n")
+              f"__pv.start({json.dumps(proc)}, {json.dumps(vals, ensure_ascii=False, separators=(',', ':'))}"
+              + (f", {json.dumps(resume, ensure_ascii=False, separators=(',', ':'))}" if resume else "") + ")\n")
     return install, run_js
 
 
@@ -527,15 +553,23 @@ LABEL_JS = """(el) => {
 }"""
 
 
-def run(steps, values, out, cdp=None, profile=None, close=False):
+def drift(out, steps, resume):
+    """What a recovered run changed, for the steps file and the map: never silent."""
+    if resume and resume["fixes"]:
+        (out / "drift.json").write_text(json.dumps({"procedure": steps["procedure"], "fixes": resume["fixes"],
+                                                    "draft": resume["url"]}, indent=2, ensure_ascii=False))
+
+
+def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
     """inpage.js in a Playwright window: the runner the Claude browser pane uses, without
     the pane's 45 s call limit and slowed timers. A window behind others keeps full speed
     with no call of ours: Playwright turns on focus emulation for each page it drives
     (--cdp too) and launches Chromium with background throttling off."""
     from playwright.sync_api import sync_playwright
     # page.evaluate runs run.js here, not through the conversation, so files of any size.
-    install, run_js = page_scripts(steps, values, files_limit=None)
+    install, run_js = page_scripts(steps, values, files_limit=None, resume=resume)
     out.mkdir(parents=True, exist_ok=True)
+    drift(out, steps, resume)
     # What the review page shows besides the run: each value, and the person's own steps.
     shown = {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
              "values": [{"section": v["section"], "label": v["label"] or v["id"],
@@ -557,7 +591,7 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
                                 "again, or pass --profile with another folder (and log in there again)") from None
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         try:
-            page.goto(steps["start"])
+            page.goto(steps["logged_in"] if resume else steps["start"])  # a resume mustn't start a new pratica
             if not page.url.startswith(steps["logged_in"]):
                 print("Log in with SPID in the Playwright window; the run starts when you're in.", flush=True)
                 page.wait_for_url(lambda u: u.startswith(steps["logged_in"]), timeout=15 * 60 * 1000)
@@ -618,6 +652,8 @@ def main():
     ap.add_argument("--cdp")
     ap.add_argument("--profile", type=Path, default=Path.home() / ".cache/pratica-portal/profile")
     ap.add_argument("--close", action="store_true")
+    ap.add_argument("--resume", type=Path, help="page/run: a stopped run's report.json, to pick it up where it stopped")
+    ap.add_argument("--fix", type=Path, help="with --resume: JSON list of {section, field, set: {id|label|css}}")
     a = ap.parse_args()
     steps = yaml.safe_load(a.steps.read_text())
     try:
@@ -633,6 +669,10 @@ def main():
             if a.server and a.token not in vaults:
                 ap.error(f"{a.server} has no token {a.token!r}")
             values = Values(answers, vault=vaults[a.token if a.server else "prepare"], asks=asks)
+        resume = resumption(json.loads(a.resume.read_text()), json.loads(a.fix.read_text()) if a.fix else None) \
+            if a.resume else None
+        if a.fix and not a.resume:
+            ap.error("--fix needs --resume")
         if a.command == "preflight":
             report = preflight(steps, values)
             print(json.dumps(report, indent=2, ensure_ascii=False))
@@ -647,12 +687,13 @@ def main():
             ap.error(f"{a.command} needs --out")
         if a.command == "page":
             a.out.mkdir(parents=True, exist_ok=True)
-            install, run_js = page_scripts(steps, values)
+            install, run_js = page_scripts(steps, values, resume=resume)
+            drift(a.out, steps, resume)
             (a.out / "install.js").write_text(install)
             (a.out / "run.js").write_text(run_js)
             print(f"{a.out / 'install.js'} ({len(install)} bytes), {a.out / 'run.js'} ({len(run_js)} bytes)")
             return 0
-        return run(steps, values, a.out, a.cdp, a.profile, a.close)
+        return run(steps, values, a.out, a.cdp, a.profile, a.close, resume)
     except StepError as e:
         print(f"stopped: {e}", file=sys.stderr)
         return 1

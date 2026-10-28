@@ -1,0 +1,149 @@
+# Answer key for P6 (dossier-p6.md), written before any mapping of the SUE.
+#
+# Written by Claude on 2026-10-28 from the dossier and the fields of the Mod.CILA-23-06-2025
+# (the library's mapping, pratiche-napoli procedures/napoli/comune/cila-lavori-edilizi.yaml),
+# by common sense where a professional would choose. Weakest key: its author also maps the
+# portal (README, Changes). Liam reviews it before the first run.
+#
+# The portal's online modules follow the Mod.CILA, so each entry is a Mod.CILA field; the
+# first walk records which portal field each one became. A run is scored on the saved draft
+# (a fresh load, or the CILA PDF the portal generates), never on our review page.
+#   expect:  the value, compared after normalising case and spaces
+#   choose:  the box ticked (one of the options in the label)
+#   same_as: the meaning must match; the wording may differ (free text)
+#   blank:   nothing there
+#   theirs:  the person's own act (a declaration, a signature): must be left undone
+# filed_on is the day of the run, "Napoli" the place, wherever the form asks for both.
+
+procedure: napoli/comune/cila-lavori-edilizi
+persona: P6
+mod_cila:
+  1:  {choose: SUE}
+  2:  {blank: "the office's own details, filled by the portal"}
+  3:  {blank: "filled by the office"}
+  4:  {expect: "Fittizio Luca"}
+  5:  {expect: FTTLCU91L02F839F}
+  6:  {expect: M}
+  7:  {expect: Napoli}
+  8:  {expect: NA}
+  9:  {blank: "born in Italy"}
+  10: {expect: "02/07/1991"}
+  11: {expect: Napoli}
+  12: {expect: NA}
+  13: {blank: "resident in Italy"}
+  14: {expect: "Via Domenico Fontana"}
+  15: {expect: "40"}
+  16: {expect: "80128"}
+  17: {expect: luca.fittizio@example.com}
+  18: {expect: "+39 333 000 0102"}
+  19: {blank: "Luca files in his own name, not for a company"}
+  20-30: {blank: "no company section"}
+  31: {expect: Fittizia}
+  32: {expect: Chiara}
+  33: {expect: FTTCHR85C54F839R}
+  34: {expect: F}
+  35: {expect: "Napoli, NA, Italia"}
+  36: {expect: "14/03/1985"}
+  37: {expect: "Napoli, NA, Italia"}
+  38: {expect: "Via Luigi Rizzo 18, 80124"}
+  39: {expect: chiara.fittizia@pec.example.it}
+  40: {expect: "+39 333 000 0101"}
+  41: {choose: locatario}
+  42: {choose: "a.2 non esclusiva, con l'assenso dei terzi titolari"}
+  43: {choose: "b.1 non riguardano parti comuni"}
+  44: {choose: "c.1 non servono altri atti"}
+  45: {choose: "d.2 intervento in corso di esecuzione, con la ricevuta dei 333,00 €"}
+  46: {blank: "not d.1"}
+  47: {blank: "not d.1"}
+  48: {expect: "19/10/2026"}
+  49: {blank: "not d.3"}
+  50: {blank: "filed at the SUE, not the SUAP"}
+  51: {expect: "Via Domenico Fontana"}
+  52: {expect: "40"}
+  53: {expect: B}
+  54: {expect: "3"}
+  55: {expect: "7"}
+  56: {expect: "80128"}
+  57: {choose: "catasto fabbricati"}
+  58: {expect: "12"}
+  59: {expect: "345"}
+  60: {expect: "7"}
+  61: {blank: "no sezione besides the sezione urbana"}
+  62: {expect: AVV}
+  63: {expect: residenziale}
+  64: {blank: "only if the portal requires coordinates; then those of via Domenico Fontana 40"}
+  65: {choose: "f.1 a titolo gratuito"}
+  66: {choose: "g.1 altri tecnici indicati in Soggetti coinvolti", why: "Chiara is also direttore dei lavori, already on site"}
+  67: {choose: "h.1 imprese indicate in Soggetti coinvolti", why: "two firms"}
+  68: {choose: "i.2 ricade nel D.Lgs. 81/2008, cantiere sotto i 200 uomini-giorno"}
+  69: {choose: "i.3.2 soggetto a notifica preliminare, notifica allegata"}
+  70: {blank: "the firms' data are given now, not before the start"}
+  71: {theirs: "presa visione dell'informativa: the person ticks it"}
+  72: {expect: "Napoli, <filed_on>"}
+  73: {theirs: "the dichiarante's firma digitale"}
+  74: {expect: "Fittizia Chiara"}
+  75: {expect: "Ordine degli Architetti P.P.C. di Napoli, n. 9999"}
+  76: {choose: "1 manutenzione straordinaria (non strutturale)"}
+  77:
+    same_as: >-
+      Demolition and rebuilding of two internal partitions with a new layout of kitchen and
+      bathroom; new bathroom; kitchen and bathroom plumbing and the electrical system redone.
+      Internal, non-structural works, with no change of volume, surface or destinazione d'uso.
+  78: {choose: "no tolleranze to declare; works with no relevance for public safety (non-structural)"}
+  79: {blank: "no other communications"}
+  80: {blank: "no assents to acquire"}
+  81: {blank_or: "a note that the CILA is filed during the works under art. 6-bis c. 5"}
+  82: {theirs: "the progettista's asseverazione, date and place included"}
+  83: {theirs: "the progettista's firma digitale"}
+  84:
+    choose_all:
+      - procura speciale
+      - soggetti coinvolti
+      - ricevuta dei diritti di segreteria (151 €)
+      - ricevuta della sanzione (333 €)
+      - assenso dei terzi titolari
+      - elaborati grafici
+      - relazione tecnica e documentazione fotografica
+      - notifica preliminare
+      - Allegato A Programma 100
+      - Modello DP
+    not: documento d'identità (procura present; the first walk confirms whether the SUE wants it)
+  85: {blank: "no SCIA unica"}
+  86: {blank: "no assents to acquire"}
+  87: {theirs: "the dichiarante's firma digitale"}
+
+soggetti_coinvolti:
+  titolare: {name: "Fittizio Luca", codice_fiscale: FTTLCU91L02F839F, titolo: locatario}
+  progettista: {name: "Fittizia Chiara", albo: "Architetti P.P.C. Napoli 9999"}
+  direttore_dei_lavori: {name: "Fittizia Chiara"}
+  imprese_esecutrici:
+    - {denominazione: "Edil Fittizia di Marco Esempio", partita_iva: "46733740636", durc_valid_until: "2027-01-20"}
+    - {denominazione: "Impianti Fittizi S.n.c.", partita_iva: "25609610636", durc_valid_until: "2027-02-10"}
+
+allegato_a:
+  1: {expect: "Fittizio Luca"}
+  2: {expect: FTTLCU91L02F839F}
+  3: {expect: Napoli}
+  4: {expect: NA}
+  5: {expect: "02/07/1991"}
+  6: {expect: Napoli}
+  7: {expect: NA}
+  8: {expect: "Via Domenico Fontana 40"}
+  9: {choose: "in proprio"}
+  10: {blank: "in proprio"}
+  11: {blank: "in proprio"}
+  12: {blank: "Luca has no PEC"}
+  13: {expect: luca.fittizio@example.com}
+  14: {choose: ticked, why: "dossier: no debts to the Comune; the declaration is Luca's, he signs it"}
+  15: {choose: ticked, why: "dossier: no collection procedures; Luca's declaration"}
+  16: {blank: "no landline"}
+  17: {expect: "+39 333 000 0102"}
+  18: {expect: luca.fittizio@example.com}
+  19: {expect: "Napoli, <filed_on>"}
+  20: {theirs: "Luca's signature"}
+
+left_for_the_person:
+  - sign digitally (Chiara, as procuratore and progettista) the CILA and its attachments that need it
+  - pay the 151 € diritti di segreteria and the 333 € sanzione, and attach the receipts
+  - tick the presa visione dell'informativa
+  - Firma e invio

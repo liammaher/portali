@@ -17,7 +17,9 @@ together; piece 3 comes after.
 Status (2026-10-28): pieces 1 and 2 built and retrofitted onto the SCIA (`run.py preflight`,
 `asks:` and `supports:` in `rehearsals/pizzeria-fittizia/portal-steps.yaml`, tests in
 `claude/skills/pratica/portal/bench/test_preflight.py`); the zona is still asked, not looked up.
-Piece 3 not built.
+Piece 3: resume and in-run fixes built (`--resume`, `--fix`, `drift.json`, the report's `at`),
+and the recovery steps in the pratica skill; proposals added to pre-flight (an ask's `propose:`).
+Not yet tried on a real portal.
 
 ## 1. Pre-flight: everything settled before anything opens
 

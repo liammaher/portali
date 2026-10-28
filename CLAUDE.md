@@ -80,7 +80,8 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      pane (`run.py page`); reads every field back, then again on a fresh load of
                      the draft, attaches the files it names (the pane: 256 KB in all), never
                      declares, pays or sends. `run.py preflight` first: the steps file's
-                     `supports:` (cases it maps) and `asks:` (questions, asked in one message).
+                     `supports:` (cases it maps) and `asks:` (questions, asked in one message, or
+                     proposed to confirm). A stopped run resumes on its draft (`--resume`, `--fix`).
                      Both take a draft's values from one `pvault get` (`--values -`, Touch ID)
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
 ```

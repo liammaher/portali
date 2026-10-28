@@ -60,6 +60,7 @@ are clients of the same studio: architetto Chiara Fittizia, Studio Fittizio, Nap
 | P3 | Luca Fittizio, a tenant, with the landlord's written assent | Non-exclusive title (a.2) and the assenso dei terzi attachment | Draft at the stop point |
 | P4 | Anna and Paolo Fittizi, co-owners | Two titolari in "Soggetti coinvolti" | Draft at the stop point |
 | P5 | A flat in a listed building in the centro storico (zona A, bene culturale) | A branch we don't support: Soprintendenza assent, the zona A attestation | **Refused at pre-flight** with a plain reason; the portal never opens |
+| P6 | **The hard case** (`dossier-p6.md`): Luca Fittizio, a tenant, renovating a flat in the Arenella owned by Immobiliare Fittizia S.r.l.; works already started (a late CILA, d.2, with the reduced penalty); two firms on site, so the notifica preliminare | Every complication at once: non-exclusive title with the owner company's assent, works in progress, two impresa esecutrici, D.Lgs. 81 | Draft at the stop point, or refused at pre-flight if the first walk shows the late CILA can't be done online |
 
 The fixtures (`fixture-p1.json` … `fixture-p5.json`, the studio's vault plus that client) and
 the FAC-SIMILE attachments are written before the answer key and given unchanged to everyone.
@@ -116,7 +117,7 @@ measure the full stop point.
 
 ## Pass bar
 
-Per supported persona (P1–P4):
+Per supported persona (P1–P4, and P6 if supported):
 
 1. **Accuracy:** zero differences from the answer key, fields, choices and attachments.
 2. **Speed:** wall time at most half the human baseline's; hands-on time at most a quarter
@@ -168,6 +169,15 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 
 ## Changes
 
+- 2026-10-28, before any mapping: added P6, the hard case, to put the flow under the most
+  strain one CILA can carry. It goes first: `fixture-p6.json` (loaded through every vault
+  rule with `TestPraticaPilotVault`), `dossier-p6.md` (what the key, the baseline and the run
+  all start from) and `needs.json` (the run's read scope).
+- 2026-10-28, before any mapping: Liam asked Claude to write P6's answer key
+  (`answer-key/p6.yaml`) by common sense. Its author also maps the portal, so it is the
+  weakest key: committed before the first walk, reviewed by Liam, and every P6 accuracy
+  figure marked "weakest key". Writing it added four assumptions to the dossier (site size,
+  Luca's tax standing, no PEC, the penalty receipt).
 - 2026-10-28, before any mapping: no partner architect yet, so Liam writes the answer key
   and does the human baseline, as "The answer key" and "The human baseline" allow. Every
   accuracy and speed figure is marked "weaker key" / "weaker baseline" until a professional
