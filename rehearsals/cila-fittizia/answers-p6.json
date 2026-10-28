@@ -1,5 +1,11 @@
 {
-  "people": {"c": "luca", "o": "immobiliare", "r": "giulia", "f1": "edil", "f2": "impianti"},
+  "people": {
+    "c": "luca",
+    "o": "immobiliare",
+    "r": "giulia",
+    "f1": "edil",
+    "f2": "impianti"
+  },
   "descrizione": "PROVA NON INVIARE - CILA P6 run",
   "titolo": "locatario",
   "oggetto": "Manutenzione straordinaria non strutturale in appartamento: demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno, nuovo bagno, rifacimento degli impianti idrico ed elettrico.",
@@ -16,5 +22,10 @@
   "catasto_categoria": "A/2",
   "data_inizio_lavori": "2026-10-19",
   "ricevuta_sanzione": "rehearsals/cila-fittizia/files/ricevuta-sanzione.pdf",
-  "dettaglio_intervento": "Demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno; nuovo bagno; rifacimento degli impianti idrico ed elettrico della cucina e del bagno. Opere interne non strutturali, senza modifiche di volume, superficie o destinazione d'uso."
+  "dettaglio_intervento": "Demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno; nuovo bagno; rifacimento degli impianti idrico ed elettrico della cucina e del bagno. Opere interne non strutturali, senza modifiche di volume, superficie o destinazione d'uso.",
+  "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
+  "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
+  "notifica_preliminare": "rehearsals/cila-fittizia/files/notifica-preliminare.pdf",
+  "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
+  "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf"
 }

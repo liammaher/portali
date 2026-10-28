@@ -520,7 +520,8 @@ def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
         "sections": [{"section": s["section"], "open": s.get("open", True)}
                      | ({"save": s["save"]} if "save" in s else {})
                      | ({"theirs": s["theirs"]} if "theirs" in s else {})
-                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label", "anchor", "block", "nth") if k in f}
+                     | ({"go": s["go"]} if "go" in s else {})
+                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label", "anchor", "block", "nth", "describe") if k in f}
                                    for f in s["fields"]]}
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,

@@ -202,6 +202,7 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
 | Date | Persona | Browser | Wall time | Hands-on | Login → draft | Key diffs | Off-script | Result |
 |---|---|---|---|---|---|---|---|---|
 | 2026-10-28 | P6 | pane | not clocked | not clocked | 83.7 s (wizard 8.3, 18 sections 63, fresh load 12.3) | 1 (weakest key, seen before mapping) | not measured | Draft filled and verified; stop point not reached (see below) |
+| 2026-10-28 | P6 | pane | not clocked | not clocked | 101.9 s to Allega documenti (wizard 9, 18 sections ~71, fresh load 15.4, payment 2.2, 6 attachments 6.4) | 1 (as above) | not measured | Stop point reached except what is the person's (see below) |
 
 ### 2026-10-28, P6, first run from the steps file
 
@@ -230,6 +231,29 @@ mapping), on the sections filled:
 - **Not reached, so the stop point isn't:** the Allegato A (`fill.py`), the plain-PDF
   attachments on Allega documenti (owner's assent, IDs, drawings), and the portal's own
   procura and CILA DSC summary (download, then back: the person signs the procura).
+
+### 2026-10-28, P6 run 3: to the stop point
+
+Draft "PROVA NON INVIARE - CILA P6 run 3", one run, no stop: the form as above, then
+Pagamento oneri (no method on the SUE) and Allega documenti, where the runner put six
+FAC-SIMILE PDFs in their slots by title (the client's ID twice, the owner's assent, the
+notifica preliminare, the drawings, the relazione in Allegati liberi with its required
+description) and Salva kept them all. Left, as the stop point says, to the person:
+
+- **The procura:** the portal builds it from the draft (`/fnsuap/template.do?id=A_PRC5x11`,
+  41 KB PDF, iText); fetched in the page's memory, it's the client's to sign and the
+  architect's to sign digitally, back as `.p7m` only.
+- **The Quadro riepilogativo (CILA DSC):** not built from the draft but the national blank
+  checklist of attachments (`template.do?id=D3664`, PDFCreator, no form fields); required.
+  Ticking it needs a `fill.py` layout (not written yet); then it's signed.
+- **The Allegato A:** `fill.py` filled it for Luca from the synthetic P6 vault, all 15 values
+  read back in their boxes. Two findings: the library's rule that only a titolare or legale
+  rappresentante declares in a business vault refuses a client declaring in their own name
+  (Liam's to decide; the library's tests hold the rule on purpose), and without `fontTools`
+  PyMuPDF can't subset the embedded Arial Unicode, so the one-page PDF is 15 MB, over the
+  portal's 9.77 MB (install fontTools, or fall back to a built-in font: the second needs the
+  "nothing written outside a box" check to recognise it).
+- The fee receipt (`.p7m`), the Modello DP, the declarations, signing and sending.
 
 
 ## Changes

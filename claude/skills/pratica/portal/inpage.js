@@ -94,7 +94,8 @@
   const errors = (theirs = []) => [...doc().querySelectorAll(".ui-message-error, .ui-messages-error, .ui-growl-message-error, [id*=\"dynaForm\"] .error-message-text")]
     .filter((e) => e.getClientRects().length && norm(e.textContent))
     .filter((e) => { const box = e.closest("td") && e.closest("td").querySelector("input, select, textarea");
-      return !(box && theirs.some((id) => box.id.endsWith("dynaForm:" + id))); })
+      return !(box && theirs.some((t) => box.id.endsWith("dynaForm:" + t) ||
+        win().eval(`(${steps.label_js})`)(box).some((x) => norm(x).includes(norm(t))))); })
     .map((e) => norm(e.textContent));
 
   function checkLabel(e, label) {
@@ -260,6 +261,14 @@
     // the file. A portal that names it only after Salva costs these 10 s once.
     for (const end = performance.now() + 10000; performance.now() < end &&
       !norm(doc().body.innerText).includes(norm(v.name));) await sleep(100);
+    // Some slots ("Allegati liberi") want a description next to the uploaded file: a box
+    // with no id of its own in the slot's cell.
+    if (f.describe) {
+      const box = [...(el(f.id) || e).closest("td").querySelectorAll("input[type=text], textarea")].find((x) => !/dropzone/.test(x.id));
+      if (!box) fail(`${f.label}: no description box`);
+      box.focus(); box.value = f.describe; fire(box); box.blur();
+      await idle();
+    }
     return v.name;
   }
 
@@ -338,7 +347,13 @@
     const t0 = performance.now();
     report.at = { phase: "section", index: si, section: sec.section };
     if (steps.declarations.test(sec.section)) fail(`refused to open ${sec.section}: the person's declarations`);
-    if (sec.open !== false) {
+    if (sec.go) {
+      // A screen after the form (Pagamento oneri, Allega documenti): reached with its button,
+      // unless a resumed draft is already on it.
+      const here = () => norm((doc().querySelector(".content-title") || {}).innerText).includes(norm(sec.section));
+      if (!here()) await act(() => press(button(sec.go), sec.go));
+      if (!here()) fail(`expected the screen ${sec.section}`);
+    } else if (sec.open !== false) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
       if (a) await act(() => press(a, sec.section));
       else if (!isOpen(sec.section)) fail(`no section ${sec.section}`);
@@ -392,7 +407,7 @@
     if (!route) u.hash = "";
     await act(() => (route ? win().location.reload() : win().location.replace(u.href)));
     const bad = [];
-    for (const { sec, done } of kept) {
+    for (const { sec, done } of kept.filter((k) => !k.sec.go)) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
       if (a) await act(() => press(a, sec.section));
       else if (sec.open !== false && !isOpen(sec.section)) fail(`fresh load of the draft: no section ${sec.section}`);
@@ -427,9 +442,12 @@
       }
       report.wizard_seconds = secs();
       for (const [i, s] of steps.sections.entries()) {
-        if (i >= (from.section || 0)) await section(s, values.sections[i], i);
+        if (!s.go && i >= (from.section || 0)) await section(s, values.sections[i], i);
       }
-      await verify();
+      if (steps.sections.some((s, i) => !s.go && i >= (from.section || 0)) || !steps.sections.some((s) => s.go)) await verify();
+      for (const [i, s] of steps.sections.entries()) {
+        if (s.go && i >= (from.section || 0)) await section(s, values.sections[i], i);
+      }
       report.result = "filled";
       report.at = null;
     } catch (e) {

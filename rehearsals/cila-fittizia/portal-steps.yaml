@@ -50,6 +50,11 @@ asks:
     type: text
     question: "The works for the relazione tecnica (500 characters)"
   diritti_euro: {type: number, question: "The SUE fees in euro", default: "151"}
+  documento_identita_cliente: {type: file, question: "The client's identity document (PDF)"}
+  assenso_proprietario: {type: file, question: "The owner's signed assent to the works (PDF)"}
+  notifica_preliminare: {type: file, question: "The notifica preliminare already sent (PDF)"}
+  elaborati_grafici: {type: file, question: "The drawings: stato di fatto, progetto, comparativo (PDF)"}
+  relazione_tecnica: {type: file, question: "The relazione tecnica (PDF)"}
 
 # The cases this file maps; anything else stops at pre-flight with the reason.
 supports:
@@ -315,3 +320,25 @@ sections:
       # Required, and the only mode offered; it pays nothing (the SUE's payment page has no
       # methods: the fees go by bank transfer and their receipt is uploaded there).
       - {id: "r8c1p13reg:radio:4_clone", kind: radio, label: pagamento on line}
+
+  # After the form: the payment screen (no method on the SUE: the person pays by bank
+  # transfer and uploads the receipt there) and the attachments, each slot found by its title.
+  # Not here, the person's: the portal's procura (download, the client signs, then .p7m), the
+  # Quadro riepilogativo (the national checklist, to complete and sign), the fee receipt
+  # (.p7m), the Allegato A and the Modello DP (signed).
+  - section: Pagamento degli oneri
+    go: Prosegui
+    save: false
+    fields: []
+
+  - section: Gestione degli allegati
+    go: Prosegui
+    # Required, and the person's: signed by them (.p7m), or completed and signed.
+    theirs: [Procura speciale, Quadro riepilogativo della documentazione]
+    fields:
+      - {kind: file, label: "Fotocopia di un documento di identita' del soggetto che conferisce", value: "{{ask.documento_identita_cliente}}"}
+      - {kind: file, label: "Copia dei documenti d'identità del/i titolare/i", value: "{{ask.documento_identita_cliente}}"}
+      - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: "{{ask.assenso_proprietario}}"}
+      - {kind: file, label: Notifica preliminare, value: "{{ask.notifica_preliminare}}"}
+      - {kind: file, label: Elaborati grafici dello stato di fatto e progetto, value: "{{ask.elaborati_grafici}}"}
+      - {kind: file, label: Allegati liberi, value: "{{ask.relazione_tecnica}}", describe: Relazione tecnica}
