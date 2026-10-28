@@ -1,0 +1,171 @@
+# Test: is a pre-mapped CILA faster and more accurate than an architect?
+
+A pre-registered test, written on 2026-10-28 before any mapping. Everything below (the
+question, the personas, the clock, the pass bar) is fixed now so the result can't be bent
+afterwards; a change to this file after the first run is recorded in "Changes" with its
+reason. The product's promise is in `docs/design/supported-flows.md`: one message of
+questions, a login, a finished draft.
+
+## The question
+
+For a supported CILA, from the architect's sentence to the review page, is our system
+**faster than an architect doing it by hand**, with **zero differences from an independent
+answer key**, and with no message to the architect other than the allowed ones?
+
+The SCIA rehearsal (`rehearsals/pizzeria-fittizia/`) already showed that a mapped run fills
+fast and exactly as intended. This test asks what that one didn't: whether what we intend is
+right (the key), whether it's faster for the person (the clock and the baseline), and whether
+it holds across cases and over time (the personas and the repeat).
+
+## The pratica
+
+The CILA for internal, non-structural works, filed on impresainungiorno's Sportello Unico
+Edilizia of Napoli (library: `napoli/comune/cila-lavori-edilizi`, L1, current for the 6 July
+2026 switch). The online modules follow the Mod.CILA-23-06-2025: 87 fields, of which 21 come
+from the vault, 2 are built from vault fields, 19 stay blank by design and 42 are answers,
+most of them the architect's professional choices. Alongside: the Allegato A Programma 100,
+which `fill.py` fills from its layout, and up to 14 attachments.
+
+**Who the user is.** The architect, not the property owner: she files with a procura
+speciale from her client. Her studio is a business vault (`~/.pvault-studio-fittizio`): she
+is its titolare (with `albo.*`), each client is a person with `ruolo.tipo: cliente` and a
+`procura`. The vault has no category for a client's property (address, catasto, destinazione
+d'uso), so those come in as answers; that cost is measured, not hidden (see "Metrics").
+
+## The stop point ("the review step")
+
+The run ends when all of this holds:
+
+- the draft is saved on the SUE with every factual section saved and read back;
+- the Allegato A is filled and checked by `fill.py`;
+- every attachment that needs no signature is uploaded (in the Playwright window; in the
+  pane, files over 256 KB are listed as the architect's step, see "Two browsers");
+- the fresh load of the draft found every value still there;
+- the review page is open, listing what's left: sign the procura, the Allegato A and the
+  Modello DP digitally and attach the `.p7m` files, pay the 151 € diritti and attach the
+  receipt, then sign and send the CILA.
+
+Nothing after that point is part of the test, and none of it is ever done here.
+
+## Personas
+
+Fictitious people and properties. Every codice fiscale and partita IVA passes its checksum,
+and we choose them so they're unlikely to belong to anyone; no real person's data. All five
+are clients of the same studio: architetto Chiara Fittizia, Studio Fittizio, Napoli.
+
+| | Persona | What it exercises | Expected |
+|---|---|---|---|
+| P1 | Maria Fittizia, sole owner of a flat in Fuorigrotta (not zona A, no vincolo); moves a partition and redoes the bathroom; starts on a given date; one impresa esecutrice; D.Lgs. 81 applies, no notifica preliminare | The core path | Draft at the stop point |
+| P2 | Bar Fittizio s.r.l., works in its own premises in the Arenella (the company is the titolare, its legale rappresentante signs) | A company as titolare, `business.*` data, "in qualità di" | Draft at the stop point |
+| P3 | Luca Fittizio, a tenant, with the landlord's written assent | Non-exclusive title (a.2) and the assenso dei terzi attachment | Draft at the stop point |
+| P4 | Anna and Paolo Fittizi, co-owners | Two titolari in "Soggetti coinvolti" | Draft at the stop point |
+| P5 | A flat in a listed building in the centro storico (zona A, bene culturale) | A branch we don't support: Soprintendenza assent, the zona A attestation | **Refused at pre-flight** with a plain reason; the portal never opens |
+
+The fixtures (`fixture-p1.json` … `fixture-p5.json`, the studio's vault plus that client) and
+the FAC-SIMILE attachments are written before the answer key and given unchanged to everyone.
+
+## The answer key
+
+- **Who writes it:** an architect or geometra who files CILAs in Napoli, from each persona's
+  dossier and the official Mod.CILA only, never seeing our map or steps file. If no partner
+  is available in time, Liam writes it from the dossier, the Mod.CILA and its notes, and the
+  result says "weaker key" next to every accuracy figure.
+- **What it holds** (`answer-key/p1.yaml` …): for each portal field and choice its expected
+  value; the attachments expected; the steps left to the person.
+- **When:** committed before the first mapping walk (the git history shows the order). The
+  person mapping doesn't read it until the run is scored.
+- **How a run is scored:** a person compares the saved draft with the key, field by field,
+  on a fresh load of the draft (or on the CILA PDF the portal generates, if it shows one
+  before signing), not on our review page, since our checks compare with our own plan.
+
+## The human baseline
+
+- **Who:** the same architect if possible, otherwise another professional who files CILAs.
+  A baseline by Liam (not a professional) is recorded but marked as weaker.
+- **What they get:** P1's and P2's dossiers, the same FAC-SIMILE files, logged out, at the
+  portal's start page.
+- **What's timed:** from opening the dossier to the same stop point, screen-recorded. Their
+  draft is scored against the same key, and their mistakes counted.
+
+## The clock
+
+- **Start:** the architect's sentence in a fresh Claude session set up as a user's would be
+  (the desktop app, the skills, the studio's vault), e.g. "file the CILA for Maria Fittizia,
+  via … 12: she's moving a partition and redoing the bathroom".
+- **Stop:** the review page is shown, with the stop point reached.
+- **Timestamps recorded:** the sentence; the questions shown; the answers given; the login
+  prompt; login done; the runner starting; the draft saved; the fresh load done; the review
+  shown.
+- **Two times:** wall time (sentence to review page) and the architect's hands-on time
+  (answering, Touch ID, logging in).
+
+## Allowed messages
+
+Only these may reach the architect; anything else is off-script and counted:
+
+1. one message of questions from pre-flight (a second only if an answer opens a branch);
+2. the Touch ID prompt and the login prompt;
+3. the review page with what's left.
+
+## Two browsers
+
+The primary run is in the Claude browser pane, the product's browser. Attachments over
+256 KB are then the architect's step there (`docs/north-star.md`, open question 7), which is
+a known limit, not a failure. A second run of P1 in the Playwright window uploads them, to
+measure the full stop point.
+
+## Pass bar
+
+Per supported persona (P1–P4):
+
+1. **Accuracy:** zero differences from the answer key, fields, choices and attachments.
+2. **Speed:** wall time at most half the human baseline's; hands-on time at most a quarter
+   of it; login to saved draft under 3 minutes in the window, under 4 in the pane.
+3. **No off-script messages.**
+
+And overall:
+
+4. **P5** is refused at pre-flight, the portal never opened.
+5. **Repeat:** P1 again seven days later, with no change to the steps file, passes 1–3.
+
+Any persona failing 1 fails the test. A run is repeated, not failed, when the portal or SPID
+is down. When a registry rejects fake data (catasto, albo number, P.IVA), that's the limit
+of fake data: the fixture is fixed once per persona, the reason recorded here, and the run
+repeated; a second rejection on the same persona counts as a fail.
+
+## Metrics, beyond pass or fail
+
+- Questions asked per persona, and how many a client-property category in the vault would
+  remove (`ask.*` items that are property facts).
+- Model calls between login and saved draft (expected: none, unless a recovery ran).
+- Recoveries: how many, on which screen, and the time they took.
+- Our own checks against the key: any field our checks passed but the key marks wrong is a
+  mapping error and is listed separately, the most important finding this test can make.
+
+## Before the first run
+
+From `docs/design/supported-flows.md`: pre-flight and branch coverage built, so the
+questions come in one message and P5 can be refused. Then the first walk maps the SUE
+screens (`portal-map.yaml`, `portal-steps.yaml`, written screen by screen). Things the first
+walk must settle and record here:
+
+- **Who may log in.** The SUE service is for professionals. If the portal requires the
+  logged-in SPID to be the progettista, Liam can't walk it alone and the test needs the
+  partner architect at the keyboard for each login.
+- **Validation of fake data:** codice fiscale, catasto foglio and particella, albo number.
+- **The front office:** whether the SUE modules use the same widgets as the SUAP's.
+
+## Lines we don't cross
+
+As in `rehearsals/pizzeria-fittizia/README.md`: never send, never pay or create a pagoPA
+position, never tick a declaration or sign in anyone's name, drafts marked "PROVA NON
+INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on every attachment.
+
+## Runs
+
+| Date | Persona | Browser | Wall time | Hands-on | Login → draft | Key diffs | Off-script | Result |
+|---|---|---|---|---|---|---|---|---|
+
+## Changes
+
+None yet.

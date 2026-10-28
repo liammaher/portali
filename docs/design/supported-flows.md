@@ -80,6 +80,9 @@ For the browser pane first, the product's browser, where Claude has its tools.
 2. Resume in `inpage.js`, the recovery steps in the skill, the drift report. Medium.
 3. GEIS (the imposta di soggiorno), built to this standard from its first walk.
 
+The test of the whole promise, against an architect and an independent answer key, is
+pre-registered in [`rehearsals/cila-fittizia/README.md`](../../rehearsals/cila-fittizia/README.md).
+
 ## Not covered
 
 Pre-flight can't check that the person's SPID works until they log in, or that the portal
