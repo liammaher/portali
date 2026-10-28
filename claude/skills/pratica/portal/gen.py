@@ -217,6 +217,12 @@ def fill(entry, as_name, c, recipe, name):
             out[k] = entry[k]
     fields, filled = [], set()
     dfields = list(entry.get("fields", []))
+    # `branches`: conditions of a choice made first that renumbers every box below it (a
+    # registered business or not): each box without a `when` once per branch, with its ids.
+    if entry.get("branches"):
+        dfields = [g for d in dfields for g in ([d] if "when" in d else
+                   [{**d, "when": w} for w in entry["branches"]])]
+    branch_terms = {re.match(r"\s*(\{\{[^}]*\}\})", w)[1] for w in entry.get("branches", [])}
     for i, role in enumerate(recipe.get("firms", entry.get("firms", [])) if "block" in entry else []):
         # One block per firm, the second and later added with "+".
         if i:
@@ -278,8 +284,11 @@ def fill(entry, as_name, c, recipe, name):
         # So does any field outside a condition whose choice changed the section: its id
         # depends on that answer.
         twins = [] if term else [b.find(d["kind"], d["label"], d.get("nth", 1))[0] for b in branches.values()]
+        # The entry's `branches` exclude each other: one's renumbering isn't the other's.
+        exclusive = term and term[1] in branch_terms
         moved = any(t and t["id"] != f["id"] for t in twins) or any(
-            k != (term and term[1]) and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items())
+            k != (term and term[1]) and not (exclusive and k in branch_terms)
+            and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items())
         filled.update((t["id"], t["label"]) for t in twins if t)
         if not look.added and not moved:
             g = {"id": f["id"], **g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}

@@ -1,0 +1,553 @@
+{
+ "crawled": "2026-10-28T20:31:39.096Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Iniziare l'attività di vendita di prodotti agricoli ricavati per coltura e/o allevamento dalla propria azienda da parte di produttori agricoli (sector Vendita di prodotti agricoli da parte di produttori agricoli)",
+ "seconds": 56.4,
+ "generated": {
+  "interventi": "Nuova apertura esercizio di vendita esercitata da produttori agricoli in forma itinerante oppure in esercizi commerciali non di proprietà oppure tramite commercio elettronico",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per apertura di esercizio di vendita esercitata da produttori agricoli in forma itinerante oppure in esercizi commerciali non di proprietà oppure tramite commercio elettronico",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione della data di inizio dell'attività",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione requisiti morali per la vendita da parte di produttori agricoli",
+   "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "dichiarazione relativa alla superficie del fondo",
+   "dichiarazione relativa alla provenienza dei prodotti messi in vendita",
+   "dichiarazione dei prodotti di coltura o di allevamento venduti",
+   "dichiarazione della disponibilità del locale",
+   "dichiarazione relativa all'ammontare dei ricavi derivanti dalla vendita dei prodotti",
+   "dichiarazione di rispetto dei vincoli di programmazione del Comune",
+   "dichiarazione della modalità di vendità dei prodotti",
+   "dichiarazione di conformità alle vigenti norme in materia edilizia, urbanistica, igienico-sanitaria",
+   "dichiarazione relativa alla Prevenzione Incendi",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "presenta contestualmente la domanda di assegnazione di posteggio"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "il dichiarante rappresenta una società"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "il dichiarante rappresenta una società",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione del numero dei soci"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "fingerprint": "94f9e919eed08517",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della data di inizio dell'attività",
+   "fingerprint": "f991f8b09879ba6a",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione della data di inizio dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione requisiti morali per la vendita da parte di produttori agricoli",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "PER PRESA VISIONE"
+    }
+   ],
+   "fingerprint": "d8d780979870d194",
+   "text": "dichiarazione requisiti morali per la vendita da parte di produttori agricoli non possono esercitare l'attività di vendita diretta gli imprenditori agricoli, singoli o soci di società di persone e le persone giuridiche i cui amministratori abbiano riportato, nell'espletamento delle funzioni connesse alla carica ricoperta nella società, condanne con sentenza passata in giudicato, per delitti in materia di igiene e sanità o di frode nella preparazione degli alimenti nel quinquennio precedente all'inizio dell'esercizio dell'attività. Il divieto ha efficacia per un periodo di cinque anni dal passaggio in giudicato della sentenza di condanna. PER PRESA VISIONE",
+   "branches": [],
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di essere imprenditore agricolo ai sensi dell'art. 2135 C.C. sostituito dall' art. 1 del D.L.gs. 18. 05 2001 n. 228"
+    }
+   ],
+   "fingerprint": "9962035d59522261",
+   "text": "dichiarazione relativa alla qualifica di imprenditore agricolo di essere imprenditore agricolo ai sensi dell'art. 2135 C.C. sostituito dall' art. 1 del D.L.gs. 18. 05 2001 n. 228",
+   "branches": [
+    {
+     "choice": "di essere imprenditore agricolo ai sensi dell'art. 2135 C.C. sostituito dall' art. 1 del D.L.gs. 18. 05 2001 n. 228",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazione relativa alla superficie del fondo",
+   "fields": [
+    {
+     "id": "r2c1p2reg:real",
+     "kind": "text",
+     "label": "superficie in Ha",
+     "max": 13
+    }
+   ],
+   "fingerprint": "e5c7278e7ee6d3f8",
+   "text": "dichiarazione relativa alla superficie del fondo superficie in Ha",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla provenienza dei prodotti messi in vendita",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di porre in vendita prodotti provenienti in misura prevalente dalla propria azienda"
+    }
+   ],
+   "fingerprint": "c46f6c455fd1aa54",
+   "text": "dichiarazione relativa alla provenienza dei prodotti messi in vendita di porre in vendita prodotti provenienti in misura prevalente dalla propria azienda",
+   "branches": [
+    {
+     "choice": "di porre in vendita prodotti provenienti in misura prevalente dalla propria azienda",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione dei prodotti di coltura o di allevamento venduti",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "ortofrutticoli"
+    },
+    {
+     "id": "r1c2p2reg:chk",
+     "kind": "checkbox",
+     "label": "lattiero caseari"
+    },
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "florovivaistici"
+    },
+    {
+     "id": "r2c2p4reg:chk",
+     "kind": "checkbox",
+     "label": "vitivinicoli"
+    },
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "olivicoli"
+    },
+    {
+     "id": "r3c2p6reg:chk",
+     "kind": "checkbox",
+     "label": "Altro"
+    },
+    {
+     "id": "r5c1p8reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "max": 50
+    }
+   ],
+   "fingerprint": "5d2783854ddb3598",
+   "text": "dichiarazione dei prodotti di coltura o di allevamento venduti ortofrutticoli lattiero caseari florovivaistici vitivinicoli olivicoli Altro (specificare)",
+   "branches": [
+    {
+     "choice": "ortofrutticoli",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "lattiero caseari",
+     "id": "r1c2p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "florovivaistici",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "vitivinicoli",
+     "id": "r2c2p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "olivicoli",
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Altro",
+     "id": "r3c2p6reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 8.2
+  },
+  {
+   "section": "dichiarazione della disponibilità del locale",
+   "fields": [
+    {
+     "id": "r2c1p2reg:real",
+     "kind": "text",
+     "label": "di mq.",
+     "max": 13
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "a titolo di (proprietà, affitto, altro)",
+     "max": 30
+    }
+   ],
+   "fingerprint": "8cb524e0ea627c8c",
+   "text": "dichiarazione della disponibilità del locale di mq. a titolo di (proprietà, affitto, altro)",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa all'ammontare dei ricavi derivanti dalla vendita dei prodotti",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "non è superiore a € 160.000,00 per le imprese individuali",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non è superiore a € 4.000.000,00 per le cooperative e i consorzi",
+     "group": "r2c1p2reg:radio"
+    }
+   ],
+   "fingerprint": "f5c3d15849c1f72c",
+   "text": "dichiarazione relativa all'ammontare dei ricavi derivanti dalla vendita dei prodotti non è superiore a € 160.000,00 per le imprese individuali non è superiore a € 4.000.000,00 per le cooperative e i consorzi pena l'applicazione delle disposizioni contenute nel D.Lgs. 114/98",
+   "branches": [
+    {
+     "choice": "non è superiore a € 160.000,00 per le imprese individuali",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "non è superiore a € 4.000.000,00 per le cooperative e i consorzi",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.1
+  },
+  {
+   "section": "dichiarazione di rispetto dei vincoli di programmazione del Comune",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "si impegna a far presente tempestivamente al Comune il superamento dei limiti previsti e in tal caso a rispettare gli eventuali vincoli di programmazione previs"
+    }
+   ],
+   "fingerprint": "513f0f9684c6f3a7",
+   "text": "dichiarazione di rispetto dei vincoli di programmazione del Comune si impegna a far presente tempestivamente al Comune il superamento dei limiti previsti e in tal caso a rispettare gli eventuali vincoli di programmazione previsti dal Comune",
+   "branches": [
+    {
+     "choice": "si impegna a far presente tempestivamente al Comune il superamento dei limiti previsti e in tal caso a rispettare gli eventuali vincoli di programmazione previs",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.7
+  },
+  {
+   "section": "dichiarazione della modalità di vendità dei prodotti",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "in forma itinerante"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "in locale aperto al pubblico"
+    },
+    {
+     "id": "r4c1p4reg:real",
+     "kind": "text",
+     "label": "avente la superficie di mq",
+     "max": 13
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "ubicato in località",
+     "max": 30
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "Via/Viale/Piazza",
+     "max": 40
+    },
+    {
+     "id": "r6c2p12reg:txt",
+     "kind": "text",
+     "label": "n. civico",
+     "max": 30
+    },
+    {
+     "id": "r8c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "con la forma del commercio elettronico"
+    },
+    {
+     "id": "r8c2p16reg:txt",
+     "kind": "text",
+     "label": "(indicare il sito web)",
+     "context": "con la forma del commercio elettronico",
+     "max": 30
+    },
+    {
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "commercializzando anche prodotti agricoli NON provenienti dalla propria azienda"
+    },
+    {
+     "id": "r10c2p20reg:txt",
+     "kind": "text",
+     "label": "(indicare la tipologia dei prodotti)",
+     "context": "commercializzando anche prodotti agricoli NON provenienti dalla propria azienda",
+     "max": 50
+    },
+    {
+     "id": "r12c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r12c2p24reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "altro",
+     "max": 150
+    }
+   ],
+   "fingerprint": "45e4c4c5991ae642",
+   "text": "dichiarazione della modalità di vendità dei prodotti in forma itinerante in locale aperto al pubblico avente la superficie di mq ubicato in località Via/Viale/Piazza n. civico (indicare il sito web) con la forma del commercio elettronico (indicare la tipologia dei prodotti) commercializzando anche prodotti agricoli NON provenienti dalla propria azienda (specificare) altro La comunicazione di inizio attività non è necessaria per la vendita al dettaglio esercitata su superfici all'aperto nell'ambito dell'azienda agricola, nonché per la vendita esercitata in occasione di sagre, fiere, manifestazioni a carattere religioso, benefico o politico o di promozione dei prodotti tipici o locali (art. 4, comma 2, ultimo capoverso del D.lgs n. 228/2001). (2) La vendita diretta mediante il commercio elettronico può essere iniziata contestualmente all'invio della comunicazione al comune del luogo ove ha sede l'azienda di produzione (art. 4, comma 4 bis del D.lgs n. 228/2001).",
+   "branches": [
+    {
+     "choice": "in forma itinerante",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "in locale aperto al pubblico",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "con la forma del commercio elettronico",
+     "id": "r8c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "commercializzando anche prodotti agricoli NON provenienti dalla propria azienda",
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r12c1p22reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 6.6
+  },
+  {
+   "section": "dichiarazione di conformità alle vigenti norme in materia edilizia, urbanistica, igienico-sanitaria",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che i locali dove si intende esercitare l'attività possiedono i requisiti conformi alla vigente normativa in materia edilizia, urbanistica ed igienico-sanitaria"
+    }
+   ],
+   "fingerprint": "c6d836a62b473b7f",
+   "text": "dichiarazione di conformità alle vigenti norme in materia edilizia, urbanistica, igienico-sanitaria che i locali dove si intende esercitare l'attività possiedono i requisiti conformi alla vigente normativa in materia edilizia, urbanistica ed igienico-sanitaria",
+   "branches": [
+    {
+     "choice": "che i locali dove si intende esercitare l'attività possiedono i requisiti conformi alla vigente normativa in materia edilizia, urbanistica ed igienico-sanitaria",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazione relativa alla Prevenzione Incendi",
+   "fingerprint": "649d2ecfac75455e",
+   "same_as": "suap-004-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla Prevenzione Incendi",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione del numero dei soci",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "n. soci (come da allegato elenco)",
+     "max": 10
+    }
+   ],
+   "fingerprint": "48a5a9c5d4b6e1e0",
+   "text": "dichiarazione del numero dei soci n. soci (come da allegato elenco)",
+   "branches": [],
+   "seconds": 1.2,
+   "scelta": "il dichiarante rappresenta una società"
+  }
+ ]
+}

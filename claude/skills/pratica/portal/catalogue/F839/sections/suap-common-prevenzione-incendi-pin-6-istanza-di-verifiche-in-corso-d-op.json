@@ -1,0 +1,553 @@
+{
+ "crawled": "2026-10-28T19:58:22.852Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRI ADEMPIMENTI (Prevenzione Incendi) › Prevenzione incendi › PIN 6 - Istanza di verifiche in corso d'opera (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 35.3,
+ "generated": {
+  "interventi": "Richiesta di verifica in corso d'opera per impianti ed edifici soggetti a prevenzione incendi",
+  "adempimenti": [
+   {
+    "adempimento": "Verifica in corso d'opera per impianti ed edifici soggetti a prevenzione incendi",
+    "amministrazione": "Comando dei Vigili del Fuoco - PRINCE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "Rif. Pratica VVF",
+   "Oggetto della richiesta verifica in corso",
+   "documentazione allegata",
+   "distinta di versamento",
+   "dati per la corrispondenza",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "Rif. Pratica VVF",
+   "fingerprint": "c7feb9eebcab49f1",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - intestazione",
+   "seconds": 1.4
+  },
+  {
+   "section": "Oggetto della richiesta verifica in corso",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "all'attività:",
+     "max": 100
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "per attività di categoria B e C"
+    },
+    {
+     "id": "r7c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "ubicazione"
+    },
+    {
+     "id": "r7c2p11reg:chk",
+     "kind": "checkbox",
+     "label": "comunicazioni e separazioni"
+    },
+    {
+     "id": "r7c3p12reg:chk",
+     "kind": "checkbox",
+     "label": "accesso all‘area ed accostamento dei mezzi di soccorso"
+    },
+    {
+     "id": "r8c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "caratteristiche costruttive e lay-out (distanziamenti, separazioni, isolamento)"
+    },
+    {
+     "id": "r8c2p14reg:chk",
+     "kind": "checkbox",
+     "label": "resistenza al fuoco"
+    },
+    {
+     "id": "r8c3p15reg:chk",
+     "kind": "checkbox",
+     "label": "reazione al fuoco"
+    },
+    {
+     "id": "r9c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "compartimentazione"
+    },
+    {
+     "id": "r9c2p17reg:chk",
+     "kind": "checkbox",
+     "label": "vie esodo"
+    },
+    {
+     "id": "r9c3p18reg:chk",
+     "kind": "checkbox",
+     "label": "sistema di controllo dei fumi naturale o meccanico"
+    },
+    {
+     "id": "r10c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "aree ed impianti a rischio specifico"
+    },
+    {
+     "id": "r10c2p20reg:chk",
+     "kind": "checkbox",
+     "label": "impianti elettrici di sicurezza"
+    },
+    {
+     "id": "r10c3p21reg:chk",
+     "kind": "checkbox",
+     "label": "illuminazione di sicurezza"
+    },
+    {
+     "id": "r11c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "mezzi ed impianti di estinzione degli incendi"
+    },
+    {
+     "id": "r11c2p23reg:chk",
+     "kind": "checkbox",
+     "label": "impianti di rivelazione, segnalazione e allarme"
+    },
+    {
+     "id": "r11c3p24reg:chk",
+     "kind": "checkbox",
+     "label": "segnaletica di sicurezza"
+    },
+    {
+     "id": "r13c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r13c2p28reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 100
+    }
+   ],
+   "fingerprint": "bc0df516d52973dd",
+   "text": "Oggetto della richiesta verifica in corso Responsabile dell'attività sotto specificata, chiede ai sensi dell'art. 9 del DPR 01/08/2011 n. 151, la verifica in corso d'opera all'attività: per attività di categoria B e C L'istanza è riferita ai seguenti aspetti di prevenzione incendi: ubicazione comunicazioni e separazioni accesso all‘area ed accostamento dei mezzi di soccorso caratteristiche costruttive e lay-out (distanziamenti, separazioni, isolamento) resistenza al fuoco reazione al fuoco compartimentazione vie esodo sistema di controllo dei fumi naturale o meccanico aree ed impianti a rischio specifico impianti elettrici di sicurezza illuminazione di sicurezza mezzi ed impianti di estinzione degli incendi impianti di rivelazione, segnalazione e allarme segnaletica di sicurezza specificare altro",
+   "branches": [
+    {
+     "choice": "per attività di categoria B e C",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r10c1p12reg:calendar_input",
+       "kind": "date",
+       "label": "in data"
+      },
+      {
+       "id": "r10c2p14reg:txt",
+       "kind": "text",
+       "label": "prot. n.",
+       "max": 10
+      },
+      {
+       "id": "r11c1p17reg:chk",
+       "kind": "checkbox",
+       "label": "Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archiv"
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p10reg:chk",
+       "r14c1p22reg:chk"
+      ],
+      [
+       "r7c2p11reg:chk",
+       "r14c2p23reg:chk"
+      ],
+      [
+       "r7c3p12reg:chk",
+       "r14c3p24reg:chk"
+      ],
+      [
+       "r8c1p13reg:chk",
+       "r15c1p25reg:chk"
+      ],
+      [
+       "r8c2p14reg:chk",
+       "r15c2p26reg:chk"
+      ],
+      [
+       "r8c3p15reg:chk",
+       "r15c3p27reg:chk"
+      ],
+      [
+       "r9c1p16reg:chk",
+       "r16c1p28reg:chk"
+      ],
+      [
+       "r9c2p17reg:chk",
+       "r16c2p29reg:chk"
+      ],
+      [
+       "r9c3p18reg:chk",
+       "r16c3p30reg:chk"
+      ],
+      [
+       "r10c1p19reg:chk",
+       "r17c1p31reg:chk"
+      ],
+      [
+       "r10c2p20reg:chk",
+       "r17c2p32reg:chk"
+      ],
+      [
+       "r10c3p21reg:chk",
+       "r17c3p33reg:chk"
+      ],
+      [
+       "r11c1p22reg:chk",
+       "r18c1p34reg:chk"
+      ],
+      [
+       "r11c2p23reg:chk",
+       "r18c2p35reg:chk"
+      ],
+      [
+       "r11c3p24reg:chk",
+       "r18c3p36reg:chk"
+      ],
+      [
+       "r13c1p26reg:chk",
+       "r20c1p38reg:chk"
+      ],
+      [
+       "r13c2p28reg:txt",
+       "r20c2p40reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "Il valore è obbligatorio",
+      "adds": 45
+     },
+     "then": [
+      {
+       "choice": "Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archiv",
+       "id": "r11c1p17reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "ubicazione",
+     "id": "r7c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "comunicazioni e separazioni",
+     "id": "r7c2p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "accesso all‘area ed accostamento dei mezzi di soccorso",
+     "id": "r7c3p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "caratteristiche costruttive e lay-out (distanziamenti, separazioni, isolamento)",
+     "id": "r8c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "resistenza al fuoco",
+     "id": "r8c2p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "reazione al fuoco",
+     "id": "r8c3p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "compartimentazione",
+     "id": "r9c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "vie esodo",
+     "id": "r9c2p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "sistema di controllo dei fumi naturale o meccanico",
+     "id": "r9c3p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "aree ed impianti a rischio specifico",
+     "id": "r10c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "impianti elettrici di sicurezza",
+     "id": "r10c2p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "illuminazione di sicurezza",
+     "id": "r10c3p21reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "mezzi ed impianti di estinzione degli incendi",
+     "id": "r11c1p22reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "impianti di rivelazione, segnalazione e allarme",
+     "id": "r11c2p23reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "segnaletica di sicurezza",
+     "id": "r11c3p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r13c1p26reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 16.1
+  },
+  {
+   "section": "documentazione allegata",
+   "fingerprint": "fc1d75134721cd94",
+   "same_as": "suap-common-prevenzione-incendi-pin-3-attestazione-di-rinnovo-periodico#documentazione allegata",
+   "seconds": 0.7
+  },
+  {
+   "section": "distinta di versamento",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Attestato di versamento n.",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r4c1p8reg",
+     "kind": "select",
+     "label": "intestato alla Tesoreria Provinciale dello Stato di",
+     "options": "112 options",
+     "value": "NAPOLI"
+    },
+    {
+     "id": "r4c2p10reg:real",
+     "kind": "text",
+     "label": "per un totale di euro",
+     "max": 10
+    },
+    {
+     "id": "r6c1p14reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+     "context": "allega copia del versamento",
+     "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+    },
+    {
+     "id": "r13c3p28reg:radio:0_clone",
+     "kind": "radio",
+     "label": "A",
+     "group": "r13c3p28reg:radio"
+    },
+    {
+     "id": "r13c4p29reg:radio:1_clone",
+     "kind": "radio",
+     "label": "B",
+     "group": "r13c4p29reg:radio"
+    },
+    {
+     "id": "r13c5p30reg:radio:2_clone",
+     "kind": "radio",
+     "label": "C",
+     "group": "r13c5p30reg:radio"
+    }
+   ],
+   "fingerprint": "877c3fc61fd43334",
+   "text": "distinta di versamento Attestato di versamento n. del intestato alla Tesoreria Provinciale dello Stato di per un totale di euro allega copia del versamento Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB Le attività oggetto della istanza sono individuate¹ ai n./sotto classe/ cat.: categoria A B C ___________ ¹ Al fine di definire il relativo importo, riportare il numero e la categoria corrispondente (A/B/C) individuata sulla base dell'elenco contenuto nell'Allegato I del DPR 01/08/2011 n.151 e la sottoclasse di cui al Decreto del Ministro dell'Interno del 7-8-2012.",
+   "branches": [
+    {
+     "choice": "A",
+     "id": "r13c3p28reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r15c1p33reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": [
+        "03 _ 5 _ A: Depositi di GPL in recipienti mobili (massa complessiva da 75 a 300 kg)",
+        "04 _ 3 _ A: Depositi di GPL (serbatoi fissi da 0,3 a 5 mc)",
+        "06 _ 1 _ A: Reti di trasporto gas infiamm. di densità rel. <0,8 (pressione da 0,5 a 2,4MPa)",
+        "12 _ 1 _ A: Depositi, rivendite liquidi infiamm. e/o combust. e/o oli e simili, da 1 a 9 mc",
+        "13 _ 1 _ A: Distributori di carburanti liquidi (P.I.> 65 °C), tramite contenitori < 9 mc",
+        "15 _ 1 _ A: Depositi, rivendite di alcoli (concentr. > 60% in volume), capacità da 1 a 10mc",
+        "41 _ 1 _ A: Teatri di posa per riprese cinematografiche e televisive, fino a 25 persone",
+        "49 _ 1 _ A: Gruppi elettrogeni e/o di cogenerazione con motori di potenza da 25 a 350 kW",
+        "66 _ 1 _ A: Strutture ricettive e simili, con numero di posti letto > 25 (fino a 50 posti)",
+        "67 _ 1 _ A: Scuole e simili, con numero di persone presenti > 100 (fino a 150 persone)",
+        "68 _ 1 _ A: Ospedali, RSA, case di cura e simili, da 25 a 50 posti letto",
+        "68 _ 2 _ A: Strutture ambulatoriali, riabilitative, diagnostica e simili, da 500 a 1000mq",
+        "69 _ 1 _ A: Locali di esposizione e/o vendita, ingrosso e/o dettaglio, sup. da 400 a 600mq",
+        "71 _ 1 _ A: Aziende ed uffici, con oltre 300 persone presenti (fino a 500 persone)",
+        "74 _ 1 _ A: Impianti produzione calore con potenzialità superiore a 116 KW (fino a 350 KW)",
+        "75 _ 1 _ A: Autorimesse e simili, con superficie compresa tra 200 mq a 1000 mq",
+        "77 _ 1 _ A: Edifici ad uso civile, con altezza antincendi superiore a 24 m (fino a 32 m)",
+        "80 _ 1 _ A: Gallerie stradali (lunghezza > 500m) e ferroviarie (lunghezza > 2000m)"
+       ]
+      }
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "B",
+     "id": "r13c4p29reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r16c1p35reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": "64 options"
+      }
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "C",
+     "id": "r13c5p30reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r17c1p37reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": "91 options"
+      }
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    }
+   ],
+   "seconds": 4.7
+  },
+  {
+   "section": "dati per la corrispondenza",
+   "fingerprint": "572a85fbc3ea16c6",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati per la corrispondenza",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  }
+ ]
+}

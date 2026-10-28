@@ -1,0 +1,1770 @@
+{
+ "crawled": "2026-10-28T21:22:55.510Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq, o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. 151/2011)",
+ "seconds": 84.2,
+ "generated": {
+  "interventi": "Domanda di autorizzazione per l'esercizio di media struttura di vendita non alimentare con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq, o se l’attività ricade in uno qualsiasi dei punti dell’Allegato I al D.P.R. n. 151/2011",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione per apertura esercizio di commercio di media struttura di vendita non alimentare",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "Dati catastali",
+   "SPECIFICHE DELLA MEDIA STRUTTURA DI VENDITA",
+   "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), superiore a 400 mq o comunque se l'attività ricade in uno qualsiasi dei punti dell'Allegato I al D.P.R. n.151/2011"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di esercizio che effettua la somministrazione di alimenti e bevande al pubblico in zone NON tutelate"
+    },
+    {
+     "key": "2_0",
+     "type": "CHK",
+     "label": "presenta la comunicazione di impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se non si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "2_1",
+     "type": "CHK",
+     "label": "richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"
+    },
+    {
+     "key": "2_2",
+     "type": "CHK",
+     "label": "in caso di vendita di alcolici"
+    },
+    {
+     "key": "2_3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "2_3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2_3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2_4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.4
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "SPECIFICHE DELLA MEDIA STRUTTURA DI VENDITA",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "MA/M"
+    },
+    {
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "label": "ME"
+    },
+    {
+     "id": "r2c3p4reg:chk",
+     "kind": "checkbox",
+     "label": "Vendita esclusivamente mediante apparecchi automatici"
+    },
+    {
+     "id": "r5c1p8reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Vendita al dettaglio",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r5c2p10reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Vendita al dettaglio",
+     "max": 8
+    },
+    {
+     "id": "r7c1p14reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Vendita congiunta al dettaglio e all'ingrosso",
+     "group": "r7c1p14reg:radio"
+    },
+    {
+     "id": "r7c2p16reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Vendita congiunta al dettaglio e all'ingrosso",
+     "max": 8
+    },
+    {
+     "id": "r9c1p21reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Permanente",
+     "group": "r9c1p21reg:radio"
+    },
+    {
+     "id": "r10c1p23reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Stagionale",
+     "group": "r10c1p23reg:radio"
+    },
+    {
+     "id": "r11c2p26reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r11c2p26reg:radio"
+    },
+    {
+     "id": "r11c3p27reg:radio:5_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r11c3p27reg:radio"
+    },
+    {
+     "id": "r12c2p29reg:radio:6_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r12c2p29reg:radio"
+    },
+    {
+     "id": "r14c1p32reg:radio:7_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r14c1p32reg:radio"
+    },
+    {
+     "id": "r14c2p33reg:radio:8_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r14c2p33reg:radio"
+    },
+    {
+     "id": "r17c1p38reg:radio:9_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r17c1p38reg:radio"
+    },
+    {
+     "id": "r17c2p39reg:radio:10_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r17c2p39reg:radio"
+    },
+    {
+     "id": "r20c1p44reg:radio:11_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r20c1p44reg:radio"
+    },
+    {
+     "id": "r20c2p45reg:radio:12_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r20c2p45reg:radio"
+    },
+    {
+     "id": "r23c1p50reg:radio:13_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r23c1p50reg:radio"
+    },
+    {
+     "id": "r23c2p51reg:radio:14_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r23c2p51reg:radio"
+    },
+    {
+     "id": "r26c1p55reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r26c2p57reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Alimentare",
+     "max": 7
+    },
+    {
+     "id": "r28c1p61reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    },
+    {
+     "id": "r28c2p63reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Non alimentare",
+     "max": 7
+    },
+    {
+     "id": "r30c2p69reg:txt",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di vendita complessiva",
+     "max": 7
+    },
+    {
+     "id": "r34c1p75reg:chk",
+     "kind": "checkbox",
+     "label": "Generi di monopolio"
+    },
+    {
+     "id": "r34c2p77reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Generi di monopolio",
+     "max": 7
+    },
+    {
+     "id": "r36c1p81reg:chk",
+     "kind": "checkbox",
+     "label": "Farmacie"
+    },
+    {
+     "id": "r36c2p83reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Farmacie",
+     "max": 7
+    },
+    {
+     "id": "r38c1p87reg:chk",
+     "kind": "checkbox",
+     "label": "Carburanti"
+    },
+    {
+     "id": "r38c2p89reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Carburanti",
+     "max": 7
+    }
+   ],
+   "fingerprint": "8985ad99a68fe96a",
+   "text": "SPECIFICHE DELLA MEDIA STRUTTURA DI VENDITA Il/la sottoscritto/a RICHIEDE L'AUTORIZZAZIONE per l'avvio dell'esercizio commerciale (1) di: MA/M ME Vendita esclusivamente mediante apparecchi automatici Modalità di vendita superficie di vendita mq Vendita al dettaglio superficie di vendita mq Vendita congiunta al dettaglio e all'ingrosso Esercizio a carattere Permanente Stagionale Esercizio autonomo SI NO SI Esercizio collocato in centro commerciale Si No Esercizio collocato in parco commerciale Si No Esercizio collocato in Factory outlet center Si No Mediante struttura di vendita inserita in C.C.N. riconosciuto SI NO Settori merceologici e superfici di vendita superficie di vendita mq Alimentare superficie di vendita mq Non alimentare mq Superficie di vendita complessiva (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Vendita di prodotti appartenenti alle seguenti Tabelle speciali: superficie di vendita mq Generi di monopolio superficie di vendita mq Farmacie superficie di vendita mq Carburanti (1) Come previsto dagli articoli 8 e 9 del D.Lgs. n. 114/1998 e dalle disposizioni regionali di settore.",
+   "branches": [
+    {
+     "choice": "MA/M",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "ME",
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Vendita esclusivamente mediante apparecchi automatici",
+     "id": "r2c3p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Vendita al dettaglio",
+     "id": "r5c1p8reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Vendita congiunta al dettaglio e all'ingrosso",
+     "id": "r7c1p14reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Permanente",
+     "id": "r9c1p21reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Stagionale",
+     "id": "r10c1p23reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c1p26reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r12c2p28reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c2p34reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c3p35reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r15c2p37reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p40reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p41reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p46reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p47reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r23c1p52reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r23c2p53reg:radio:12_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r26c1p58reg:radio:13_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r26c2p59reg:radio:14_clone"
+      ],
+      [
+       "r26c1p55reg:chk",
+       "r29c1p63reg:chk"
+      ],
+      [
+       "r26c2p57reg:real",
+       "r29c2p65reg:real"
+      ],
+      [
+       "r28c1p61reg:chk",
+       "r31c1p69reg:chk"
+      ],
+      [
+       "r28c2p63reg:real",
+       "r31c2p71reg:real"
+      ],
+      [
+       "r30c2p69reg:txt",
+       "r33c2p77reg:txt"
+      ],
+      [
+       "r34c1p75reg:chk",
+       "r37c1p83reg:chk"
+      ],
+      [
+       "r34c2p77reg:real",
+       "r37c2p85reg:real"
+      ],
+      [
+       "r36c1p81reg:chk",
+       "r39c1p89reg:chk"
+      ],
+      [
+       "r36c2p83reg:real",
+       "r39c2p91reg:real"
+      ],
+      [
+       "r38c1p87reg:chk",
+       "r41c1p95reg:chk"
+      ],
+      [
+       "r38c2p89reg:real",
+       "r41c2p97reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal (gg/mm)",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "SI",
+     "id": "r11c2p26reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r12c3p30reg:radio:7_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r13c2p32reg:radio:8_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r13c3p33reg:radio:9_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c2p35reg:radio:10_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c3p36reg:radio:11_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r15c2p38reg:radio:12_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r15c3p39reg:radio:13_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p41reg:radio:14_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p42reg:radio:15_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p47reg:radio:16_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p48reg:radio:17_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r23c1p53reg:radio:18_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r23c2p54reg:radio:19_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r26c1p59reg:radio:20_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r26c2p60reg:radio:21_clone"
+      ],
+      [
+       "r26c1p55reg:chk",
+       "r29c1p64reg:chk"
+      ],
+      [
+       "r26c2p57reg:real",
+       "r29c2p66reg:real"
+      ],
+      [
+       "r28c1p61reg:chk",
+       "r31c1p70reg:chk"
+      ],
+      [
+       "r28c2p63reg:real",
+       "r31c2p72reg:real"
+      ],
+      [
+       "r30c2p69reg:txt",
+       "r33c2p78reg:txt"
+      ],
+      [
+       "r34c1p75reg:chk",
+       "r37c1p84reg:chk"
+      ],
+      [
+       "r34c2p77reg:real",
+       "r37c2p86reg:real"
+      ],
+      [
+       "r36c1p81reg:chk",
+       "r39c1p90reg:chk"
+      ],
+      [
+       "r36c2p83reg:real",
+       "r39c2p92reg:real"
+      ],
+      [
+       "r38c1p87reg:chk",
+       "r41c1p96reg:chk"
+      ],
+      [
+       "r38c2p89reg:real",
+       "r41c2p98reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r11c3p27reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r12c2p29reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r14c1p32reg:radio:7_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r16c1p36reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r18c1p40reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r18c2p41reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r21c1p46reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r21c2p47reg:radio:12_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r24c1p52reg:radio:13_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r24c2p53reg:radio:14_clone"
+      ],
+      [
+       "r26c1p55reg:chk",
+       "r27c1p57reg:chk"
+      ],
+      [
+       "r26c2p57reg:real",
+       "r27c2p59reg:real"
+      ],
+      [
+       "r28c1p61reg:chk",
+       "r29c1p63reg:chk"
+      ],
+      [
+       "r28c2p63reg:real",
+       "r29c2p65reg:real"
+      ],
+      [
+       "r30c2p69reg:txt",
+       "r31c2p71reg:txt"
+      ],
+      [
+       "r34c1p75reg:chk",
+       "r35c1p77reg:chk"
+      ],
+      [
+       "r34c2p77reg:real",
+       "r35c2p79reg:real"
+      ],
+      [
+       "r36c1p81reg:chk",
+       "r37c1p83reg:chk"
+      ],
+      [
+       "r36c2p83reg:real",
+       "r37c2p85reg:real"
+      ],
+      [
+       "r38c1p87reg:chk",
+       "r39c1p89reg:chk"
+      ],
+      [
+       "r38c2p89reg:real",
+       "r39c2p91reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r14c2p33reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r17c1p38reg:radio:9_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r19c1p42reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r21c1p46reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r21c2p47reg:radio:12_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r24c1p52reg:radio:13_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r24c2p53reg:radio:14_clone"
+      ],
+      [
+       "r26c1p55reg:chk",
+       "r27c1p57reg:chk"
+      ],
+      [
+       "r26c2p57reg:real",
+       "r27c2p59reg:real"
+      ],
+      [
+       "r28c1p61reg:chk",
+       "r29c1p63reg:chk"
+      ],
+      [
+       "r28c2p63reg:real",
+       "r29c2p65reg:real"
+      ],
+      [
+       "r30c2p69reg:txt",
+       "r31c2p71reg:txt"
+      ],
+      [
+       "r34c1p75reg:chk",
+       "r35c1p77reg:chk"
+      ],
+      [
+       "r34c2p77reg:real",
+       "r35c2p79reg:real"
+      ],
+      [
+       "r36c1p81reg:chk",
+       "r37c1p83reg:chk"
+      ],
+      [
+       "r36c2p83reg:real",
+       "r37c2p85reg:real"
+      ],
+      [
+       "r38c1p87reg:chk",
+       "r39c1p89reg:chk"
+      ],
+      [
+       "r38c2p89reg:real",
+       "r39c2p91reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r17c2p39reg:radio:10_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Si",
+     "id": "r20c1p44reg:radio:11_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r22c1p48reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r24c1p52reg:radio:13_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r24c2p53reg:radio:14_clone"
+      ],
+      [
+       "r26c1p55reg:chk",
+       "r27c1p57reg:chk"
+      ],
+      [
+       "r26c2p57reg:real",
+       "r27c2p59reg:real"
+      ],
+      [
+       "r28c1p61reg:chk",
+       "r29c1p63reg:chk"
+      ],
+      [
+       "r28c2p63reg:real",
+       "r29c2p65reg:real"
+      ],
+      [
+       "r30c2p69reg:txt",
+       "r31c2p71reg:txt"
+      ],
+      [
+       "r34c1p75reg:chk",
+       "r35c1p77reg:chk"
+      ],
+      [
+       "r34c2p77reg:real",
+       "r35c2p79reg:real"
+      ],
+      [
+       "r36c1p81reg:chk",
+       "r37c1p83reg:chk"
+      ],
+      [
+       "r36c2p83reg:real",
+       "r37c2p85reg:real"
+      ],
+      [
+       "r38c1p87reg:chk",
+       "r39c1p89reg:chk"
+      ],
+      [
+       "r38c2p89reg:real",
+       "r39c2p91reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r20c2p45reg:radio:12_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r23c1p50reg:radio:13_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r25c1p54reg:txt",
+       "kind": "text",
+       "label": "Delibera di riconoscimento n.",
+       "max": 9999
+      },
+      {
+       "id": "r27c1p56reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      },
+      {
+       "id": "r27c2p58reg:txt",
+       "kind": "text",
+       "label": "emanata da",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ],
+      [
+       "r26c1p55reg:chk",
+       "r30c1p61reg:chk"
+      ],
+      [
+       "r26c2p57reg:real",
+       "r30c2p63reg:real"
+      ],
+      [
+       "r28c1p61reg:chk",
+       "r32c1p67reg:chk"
+      ],
+      [
+       "r28c2p63reg:real",
+       "r32c2p69reg:real"
+      ],
+      [
+       "r30c2p69reg:txt",
+       "r34c2p75reg:txt"
+      ],
+      [
+       "r34c1p75reg:chk",
+       "r38c1p81reg:chk"
+      ],
+      [
+       "r34c2p77reg:real",
+       "r38c2p83reg:real"
+      ],
+      [
+       "r36c1p81reg:chk",
+       "r40c1p87reg:chk"
+      ],
+      [
+       "r36c2p83reg:real",
+       "r40c2p89reg:real"
+      ],
+      [
+       "r38c1p87reg:chk",
+       "r42c1p93reg:chk"
+      ],
+      [
+       "r38c2p89reg:real",
+       "r42c2p95reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r23c2p51reg:radio:14_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Alimentare",
+     "id": "r26c1p55reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r28c1p61reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Generi di monopolio",
+     "id": "r34c1p75reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Farmacie",
+     "id": "r36c1p81reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "Carburanti",
+     "id": "r38c1p87reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r11c2p26reg:radio:4_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r11c3p27reg:radio:5_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r12c2p29reg:radio:6_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r14c1p32reg:radio:7_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r14c2p33reg:radio:8_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r17c1p38reg:radio:9_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r17c2p39reg:radio:10_clone"
+      ],
+      [
+       "r23c1p50reg:radio:13_clone",
+       "r20c1p44reg:radio:11_clone"
+      ],
+      [
+       "r23c2p51reg:radio:14_clone",
+       "r20c2p45reg:radio:12_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 56.9
+  },
+  {
+   "section": "Dichiarazione sul possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 2.1
+  }
+ ]
+}

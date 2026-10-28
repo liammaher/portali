@@ -1,5 +1,9 @@
 {
- "alcolici": ["alcol_vino", "alcol_birra"],
+ "extras": [],
+ "alcolici": [
+  "alcol_vino",
+  "alcol_birra"
+ ],
  "descrizione": "PROVA NON INVIARE - alcolici ristorante generato",
  "oggetto": "Comunicazione all'Agenzia delle Dogane per la vendita di vino e birra nella pizzeria di viale Augusto 74, già avviata.",
  "alcol_avvio": "2026-12-01",

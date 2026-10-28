@@ -191,6 +191,7 @@ def sums():
     assert v.render("{{ask.a+ask.b|positive}}") == "true"
     assert run.Values({}, fields={}, asks=asks).render("{{ask.a+ask.b}}") is None  # b unanswered
     assert [r for r, _ in run.refs_in("{{ask.a+2*ask.b|positive}}")] == ["ask.a", "ask.b"]
+    assert v.render("{{ask.b|atleast_3}} {{ask.b|atleast_4}}") == "true false"
 
 
 def too_long():

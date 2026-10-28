@@ -42,6 +42,8 @@ asks:
   dettaglio_alimenti: {type: yes_no, group: attivita_852, item: Food sold in a shop (esercizio di vicinato)}
   in_centro_commerciale: {type: yes_no, question: 'In centro commerciale? (yes: Si)', schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_si'}
   centro_commerciale_denominazione: {type: text, question: denominazione, schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_denominazione'}
+  altri_soggetti: {group: extras, type: yes_no, item: It's a company with other partners or administrators besides the one who declares, why: 'Each files a signed antimafia statement of their own (art.
+      85 D.Lgs. 159/2011), not mapped yet.'}
   zona_tutelata: {group: extras, type: yes_no, item: 'It''s in the historic centre: the UNESCO area or its buffer zone', why: 'Since 25 July 2026 an opening there needs an authorization, not a SCIA, and
       only the SCIA is mapped.'}
   alcolici: {group: extras, type: yes_no, item: 'It will sell alcoholic drinks, beer and wine included', why: 'Selling alcohol adds the Dogane notice to this pratica, a branch not mapped yet.'}
@@ -51,9 +53,14 @@ supports:
 - value: '{{business.forma_giuridica}}'
   in:
   - ditta_individuale
-  else: 'So far only for a ditta individuale: a company''s Scheda anagrafica isn''t mapped.'
-- when: '{{business.rea|empty}}'
-  else: So far only for a business not yet in the Registro delle imprese.
+  - srl
+  - srls
+  - snc
+  - sas
+  - spa
+  else: So far for a ditta individuale or an srl, srls, snc, sas or spa.
+- when: '{{ask.altri_soggetti|not}}'
+  else: 'Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet.'
 - when: '{{ask.zona_tutelata|not}}'
   else: 'In the historic centre an opening needs an authorization, not a SCIA: not supported yet.'
 - when: '{{ask.alcolici|not}}'
@@ -94,36 +101,67 @@ sections:
 - section: Scheda anagrafica
   open: false
   fields:
-  - {id: 'r1c1p1reg:radio:0_clone', kind: radio, label: DITTA/SOCIETA'/IMPRESA}
+  - {id: 'r1c1p1reg:radio:0_clone', kind: radio, when: '{{business.rea|empty|not}}', label: DITTA/SOCIETA'/IMPRESA}
+  - {id: 'r1c1p1reg:radio:0_clone', kind: radio, when: '{{business.rea|empty}}', label: DITTA/SOCIETA'/IMPRESA}
+  - {id: 'r2c2p4reg:radio:2_clone', kind: radio, when: '{{business.rea|empty|not}}', label: ISCRITTA ALLA CCIAA}
+  - {id: r8c1p16reg, kind: select, value: '{{business.cciaa|provincia_nome}}', when: '{{business.rea|empty|not}}', label: 'Camera di commercio di:'}
   - {id: 'r6c2p16reg:radio:3_clone', kind: radio, when: '{{business.rea|empty}}', label: NON ANCORA ISCRITTA}
-  - {id: 'r10c1p23reg:txt', kind: text, value: '{{t:identity.first_name}}', max: 40, label: Nome}
-  - {id: 'r10c2p25reg:txt', kind: text, value: '{{t:identity.last_name}}', max: 40, label: Cognome}
-  - {id: 'r10c3p27reg:txt', kind: text, value: '{{t:identity.codice_fiscale}}', max: 16, label: Cod.Fiscale}
-  - {id: r12c1p29reg, kind: select, value: '{{t:identity.sex}}', label: Sesso}
-  - {id: 'r12c2p31reg:calendar_input', kind: text, value: '{{t:identity.date_of_birth|date_it}}', label: Data nascita}
-  - {id: r15c2p41reg, kind: select, value: '{{t:identity.birth_province}}', label: Provincia}
-  - {id: r17c1p45reg, kind: select, value: '{{t:identity.birth_comune|upper}}', label: Comune}
-  - {id: r24c2p63reg, kind: select, value: '{{t:residenza.provincia}}', label: Provincia, nth: 2}
-  - {id: r26c1p67reg, kind: select, value: '{{t:residenza.comune|upper}}', label: Comune, nth: 2}
-  - {id: r29c1p73reg, kind: select, value: '{{t:residenza.indirizzo|dug}}', label: Toponimo (DUG)}
-  - {id: 'r31c1p79reg:txt', kind: text, value: '{{t:residenza.indirizzo|street|upper}}', max: 60, label: Denominazione stradale}
-  - {id: 'r33c1p83reg:txt', kind: text, value: '{{t:residenza.civico}}', max: 20, label: Numero civico}
-  - {id: 'r33c2p85reg:txt', kind: text, value: '{{t:residenza.cap}}', max: 5, label: CAP}
-  - {id: 'r33c3p87reg:txt', kind: text, value: '{{t:identity.email}}', max: 100, label: eMail/PEC}
-  - {id: 'r33c4p89reg:number', kind: text, value: '{{t:identity.phone|phone_it}}', max: 12, label: Telefono fisso/cellulare}
-  - {id: r36c1p93reg, kind: select, value: '{{t:ruolo.tipo|carica}}', label: Carica}
-  - {id: r41c1p103reg, kind: select, value: '{{business.forma_giuridica|forma}}', label: Forma giuridica}
-  - {id: 'r39c1p99reg:txt', kind: text, value: '{{business.denominazione}}', max: 305, label: Denominazione (nome della ditta}
-  - {id: 'r41c2p105reg:txt', kind: text, value: '{{business.codice_fiscale}}', max: 16, label: Codice Fiscale}
-  - {id: 'r41c3p107reg:txt', kind: text, value: '{{business.partita_iva}}', max: 11, label: P.IVA}
-  - {id: r44c2p113reg, kind: select, value: '{{business.sede_legale_provincia}}', label: Provincia, nth: 3}
-  - {id: r46c1p117reg, kind: select, value: '{{business.sede_legale_comune|upper}}', label: Comune, nth: 3}
-  - {id: r49c1p123reg, kind: select, value: '{{business.sede_legale_indirizzo|dug}}', label: Toponimo (DUG), nth: 2}
-  - {id: 'r51c1p129reg:txt', kind: text, value: '{{business.sede_legale_indirizzo|street|upper}}', max: 60, label: Denominazione stradale, nth: 2}
-  - {id: 'r51c2p131reg:txt', kind: text, value: '{{business.sede_legale_civico}}', max: 20, label: Numero civico, nth: 2}
-  - {id: 'r51c3p133reg:txt', kind: text, value: '{{business.sede_legale_cap}}', max: 5, label: CAP, nth: 2}
-  - {id: 'r53c1p135reg:txt', kind: text, value: '{{business.telefono|phone_it}}', max: 12, label: Telefono fisso/Cellulare, nth: 2}
-  - {id: 'r53c3p139reg:txt', kind: text, value: '{{business.pec}}', max: 100, label: PEC}
+  - {id: 'r13c1p31reg:txt', kind: text, value: '{{t:identity.first_name}}', when: '{{business.rea|empty|not}}', max: 40, label: Nome}
+  - {id: 'r10c1p23reg:txt', kind: text, value: '{{t:identity.first_name}}', when: '{{business.rea|empty}}', max: 40, label: Nome}
+  - {id: 'r13c2p33reg:txt', kind: text, value: '{{t:identity.last_name}}', when: '{{business.rea|empty|not}}', max: 40, label: Cognome}
+  - {id: 'r10c2p25reg:txt', kind: text, value: '{{t:identity.last_name}}', when: '{{business.rea|empty}}', max: 40, label: Cognome}
+  - {id: 'r13c3p35reg:txt', kind: text, value: '{{t:identity.codice_fiscale}}', when: '{{business.rea|empty|not}}', max: 16, label: Cod.Fiscale}
+  - {id: 'r10c3p27reg:txt', kind: text, value: '{{t:identity.codice_fiscale}}', when: '{{business.rea|empty}}', max: 16, label: Cod.Fiscale}
+  - {id: r15c1p37reg, kind: select, value: '{{t:identity.sex}}', when: '{{business.rea|empty|not}}', label: Sesso}
+  - {id: r12c1p29reg, kind: select, value: '{{t:identity.sex}}', when: '{{business.rea|empty}}', label: Sesso}
+  - {id: 'r15c2p39reg:calendar_input', kind: text, value: '{{t:identity.date_of_birth|date_it}}', when: '{{business.rea|empty|not}}', label: Data nascita}
+  - {id: 'r12c2p31reg:calendar_input', kind: text, value: '{{t:identity.date_of_birth|date_it}}', when: '{{business.rea|empty}}', label: Data nascita}
+  - {id: r18c2p49reg, kind: select, value: '{{t:identity.birth_province}}', when: '{{business.rea|empty|not}}', label: Provincia}
+  - {id: r15c2p41reg, kind: select, value: '{{t:identity.birth_province}}', when: '{{business.rea|empty}}', label: Provincia}
+  - {id: r20c1p53reg, kind: select, value: '{{t:identity.birth_comune|upper}}', when: '{{business.rea|empty|not}}', label: Comune}
+  - {id: r17c1p45reg, kind: select, value: '{{t:identity.birth_comune|upper}}', when: '{{business.rea|empty}}', label: Comune}
+  - {id: r27c2p71reg, kind: select, value: '{{t:residenza.provincia}}', when: '{{business.rea|empty|not}}', label: Provincia, nth: 2}
+  - {id: r24c2p63reg, kind: select, value: '{{t:residenza.provincia}}', when: '{{business.rea|empty}}', label: Provincia, nth: 2}
+  - {id: r29c1p75reg, kind: select, value: '{{t:residenza.comune|upper}}', when: '{{business.rea|empty|not}}', label: Comune, nth: 2}
+  - {id: r26c1p67reg, kind: select, value: '{{t:residenza.comune|upper}}', when: '{{business.rea|empty}}', label: Comune, nth: 2}
+  - {id: r32c1p81reg, kind: select, value: '{{t:residenza.indirizzo|dug}}', when: '{{business.rea|empty|not}}', label: Toponimo (DUG)}
+  - {id: r29c1p73reg, kind: select, value: '{{t:residenza.indirizzo|dug}}', when: '{{business.rea|empty}}', label: Toponimo (DUG)}
+  - {id: 'r34c1p87reg:txt', kind: text, value: '{{t:residenza.indirizzo|street|upper}}', when: '{{business.rea|empty|not}}', max: 60, label: Denominazione stradale}
+  - {id: 'r31c1p79reg:txt', kind: text, value: '{{t:residenza.indirizzo|street|upper}}', when: '{{business.rea|empty}}', max: 60, label: Denominazione stradale}
+  - {id: 'r36c1p91reg:txt', kind: text, value: '{{t:residenza.civico}}', when: '{{business.rea|empty|not}}', max: 20, label: Numero civico}
+  - {id: 'r33c1p83reg:txt', kind: text, value: '{{t:residenza.civico}}', when: '{{business.rea|empty}}', max: 20, label: Numero civico}
+  - {id: 'r36c2p93reg:txt', kind: text, value: '{{t:residenza.cap}}', when: '{{business.rea|empty|not}}', max: 5, label: CAP}
+  - {id: 'r33c2p85reg:txt', kind: text, value: '{{t:residenza.cap}}', when: '{{business.rea|empty}}', max: 5, label: CAP}
+  - {id: 'r36c3p95reg:txt', kind: text, value: '{{t:identity.email}}', when: '{{business.rea|empty|not}}', max: 100, label: eMail/PEC}
+  - {id: 'r33c3p87reg:txt', kind: text, value: '{{t:identity.email}}', when: '{{business.rea|empty}}', max: 100, label: eMail/PEC}
+  - {id: 'r36c4p97reg:number', kind: text, value: '{{t:identity.phone|phone_it}}', when: '{{business.rea|empty|not}}', max: 12, label: Telefono fisso/cellulare}
+  - {id: 'r33c4p89reg:number', kind: text, value: '{{t:identity.phone|phone_it}}', when: '{{business.rea|empty}}', max: 12, label: Telefono fisso/cellulare}
+  - {id: r39c1p101reg, kind: select, value: '{{t:ruolo.tipo|carica}}', when: '{{business.rea|empty|not}}', label: Carica}
+  - {id: r36c1p93reg, kind: select, value: '{{t:ruolo.tipo|carica}}', when: '{{business.rea|empty}}', label: Carica}
+  - {id: r44c1p111reg, kind: select, value: '{{business.forma_giuridica|forma}}', when: '{{business.rea|empty|not}}', label: Forma giuridica}
+  - {id: r41c1p103reg, kind: select, value: '{{business.forma_giuridica|forma}}', when: '{{business.rea|empty}}', label: Forma giuridica}
+  - {id: 'r42c1p107reg:txt', kind: text, value: '{{business.denominazione}}', when: '{{business.rea|empty|not}}', max: 305, label: Denominazione (nome della ditta}
+  - {id: 'r39c1p99reg:txt', kind: text, value: '{{business.denominazione}}', when: '{{business.rea|empty}}', max: 305, label: Denominazione (nome della ditta}
+  - {id: 'r44c2p113reg:txt', kind: text, value: '{{business.codice_fiscale}}', when: '{{business.rea|empty|not}}', max: 16, label: Codice Fiscale}
+  - {id: 'r41c2p105reg:txt', kind: text, value: '{{business.codice_fiscale}}', when: '{{business.rea|empty}}', max: 16, label: Codice Fiscale}
+  - {id: 'r44c3p115reg:txt', kind: text, value: '{{business.partita_iva}}', when: '{{business.rea|empty|not}}', max: 11, label: P.IVA}
+  - {id: 'r41c3p107reg:txt', kind: text, value: '{{business.partita_iva}}', when: '{{business.rea|empty}}', max: 11, label: P.IVA}
+  - {id: r47c2p121reg, kind: select, value: '{{business.sede_legale_provincia}}', when: '{{business.rea|empty|not}}', label: Provincia, nth: 3}
+  - {id: r44c2p113reg, kind: select, value: '{{business.sede_legale_provincia}}', when: '{{business.rea|empty}}', label: Provincia, nth: 3}
+  - {id: r49c1p125reg, kind: select, value: '{{business.sede_legale_comune|upper}}', when: '{{business.rea|empty|not}}', label: Comune, nth: 3}
+  - {id: r46c1p117reg, kind: select, value: '{{business.sede_legale_comune|upper}}', when: '{{business.rea|empty}}', label: Comune, nth: 3}
+  - {id: r52c1p131reg, kind: select, value: '{{business.sede_legale_indirizzo|dug}}', when: '{{business.rea|empty|not}}', label: Toponimo (DUG), nth: 2}
+  - {id: r49c1p123reg, kind: select, value: '{{business.sede_legale_indirizzo|dug}}', when: '{{business.rea|empty}}', label: Toponimo (DUG), nth: 2}
+  - {id: 'r54c1p137reg:txt', kind: text, value: '{{business.sede_legale_indirizzo|street|upper}}', when: '{{business.rea|empty|not}}', max: 60, label: Denominazione stradale, nth: 2}
+  - {id: 'r51c1p129reg:txt', kind: text, value: '{{business.sede_legale_indirizzo|street|upper}}', when: '{{business.rea|empty}}', max: 60, label: Denominazione stradale, nth: 2}
+  - {id: 'r54c2p139reg:txt', kind: text, value: '{{business.sede_legale_civico}}', when: '{{business.rea|empty|not}}', max: 20, label: Numero civico, nth: 2}
+  - {id: 'r51c2p131reg:txt', kind: text, value: '{{business.sede_legale_civico}}', when: '{{business.rea|empty}}', max: 20, label: Numero civico, nth: 2}
+  - {id: 'r54c3p141reg:txt', kind: text, value: '{{business.sede_legale_cap}}', when: '{{business.rea|empty|not}}', max: 5, label: CAP, nth: 2}
+  - {id: 'r51c3p133reg:txt', kind: text, value: '{{business.sede_legale_cap}}', when: '{{business.rea|empty}}', max: 5, label: CAP, nth: 2}
+  - {id: 'r56c1p143reg:txt', kind: text, value: '{{business.telefono|phone_it}}', when: '{{business.rea|empty|not}}', max: 12, label: Telefono fisso/Cellulare, nth: 2}
+  - {id: 'r53c1p135reg:txt', kind: text, value: '{{business.telefono|phone_it}}', when: '{{business.rea|empty}}', max: 12, label: Telefono fisso/Cellulare, nth: 2}
+  - {id: 'r56c3p147reg:txt', kind: text, value: '{{business.pec}}', when: '{{business.rea|empty|not}}', max: 100, label: PEC}
+  - {id: 'r53c3p139reg:txt', kind: text, value: '{{business.pec}}', when: '{{business.rea|empty}}', max: 100, label: PEC}
 - section: Oggetto della pratica
   fields:
   - {id: 'r2c1p2reg:txta', kind: text, value: '{{ask.oggetto}}', max: 300, label: descrizione sintetica}

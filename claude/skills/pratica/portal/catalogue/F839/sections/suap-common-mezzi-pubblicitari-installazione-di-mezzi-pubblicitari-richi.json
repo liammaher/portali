@@ -1,0 +1,555 @@
+{
+ "crawled": "2026-10-28T20:07:38.916Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › Richiedere l'autorizzazione per installazione di pubblicità su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni ed altre strutture di servizio e di pertinenza (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 63.9,
+ "generated": {
+  "interventi": "Domanda di autorizzazione per installazione di pubblicità su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni ed altre strutture di servizio e di pertinenza",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di autorizzazione per installazione di pubblicità su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni, ed altre strutture di servizio e di pertinenza",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "OGGETTO DELL'ISTANZA",
+   "dichiarazione relativa al messaggio pubblicitario",
+   "installazione del telo pubblicitario",
+   "ditta esecutrice lavori",
+   "altre dichiarazioni",
+   "dichiarazione relativa alla normativa tecnica",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende nominare il direttore responsabile dei lavori"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "si intende nominare il direttore responsabile dei lavori",
+   "type": "CHK",
+   "adds": [
+    "nomina del direttore responsabile dei lavori"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "OGGETTO DELL'ISTANZA",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txta",
+     "kind": "textarea",
+     "label": "500 Caratteri restanti",
+     "context": "Il rilascio dell’autorizzazione per l’installazione del/dei seguente/i impianto/i pubblicitario/i",
+     "max": 500
+    }
+   ],
+   "fingerprint": "3d0b62950163271c",
+   "text": "OGGETTO DELL'ISTANZA Il/la sottoscritto/a CHIEDE: Il rilascio dell’autorizzazione per l’installazione del/dei seguente/i impianto/i pubblicitario/i 500 Caratteri restanti Avvertenze per il dichiarante Sono in ogni caso vietati messaggi pubblicitari reclamizzanti: a) la produzione o distribuzione di armi, tabacco, prodotti alcolici e materiale diverso che possa offendere il comune senso del pudore; b) messaggi offensivi, incluse le espressioni di discriminazione, fanatismo, razzismo, odio o minaccia; c) la veicolazione pubblicitaria di un marchio, un logo o un messaggio con contenuti non conformi a quanto previsto dalle normali regole e dagli usi consolidati in materia di disciplina pubblicitaria.",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa al messaggio pubblicitario",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txta",
+     "kind": "textarea",
+     "label": "1000 Caratteri restanti",
+     "context": "il messaggio pubblicitario è il seguente:",
+     "max": 1000
+    },
+    {
+     "id": "r5c1p6reg:calendar_input",
+     "kind": "date",
+     "label": "Da:"
+    },
+    {
+     "id": "r5c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "A:"
+    }
+   ],
+   "fingerprint": "f0f8fd9aa6b1c4b1",
+   "text": "dichiarazione relativa al messaggio pubblicitario il messaggio pubblicitario è il seguente: 1000 Caratteri restanti Periodo di esposizione: Da: A:",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "installazione del telo pubblicitario",
+   "fields": [
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "che gli interventi previsti non ledono i diritti di terzi"
+    },
+    {
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "che l’installazione del telo pubblicitario avviene su beni di proprietà privata e che pertanto è stato conseguito il consenso del proprietario del bene;",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "che l’installazione del telo pubblicitario avviene su beni di proprietà pubblica e che la Ditta/Società ha titolo ad effettuare la pubblicità giusto",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p10reg:radio:2_clone",
+     "kind": "radio",
+     "label": "che l’installazione del telo pubblicitario avviene su beni di proprietà del Comune di Napoli e che la Ditta/Società ha stipulato con l’Amministrazione comunale ",
+     "group": "r6c1p10reg:radio"
+    },
+    {
+     "id": "r9c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "che l’installazione del telo avviene su ponteggi metallici di servizio e/o su impalcature di cantiere e che, pertanto, è stato conseguito il consenso dell’impre"
+    },
+    {
+     "id": "r11c1p17reg:radio:3_clone",
+     "kind": "radio",
+     "label": "che l’installazione del telo pubblicitario ricade su edificio o in aree tutelate come beni culturali e che, pertanto, è stato conseguito, ai sensi dell’art. 49,",
+     "group": "r11c1p17reg:radio"
+    },
+    {
+     "id": "r13c1p21reg:radio:4_clone",
+     "kind": "radio",
+     "label": "che l’installazione del telo pubblicitario non ricade su edificio o in aree tutelate come beni culturali",
+     "group": "r13c1p21reg:radio"
+    },
+    {
+     "id": "r16c1p24reg:radio:5_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r16c1p24reg:radio"
+    },
+    {
+     "id": "r16c2p25reg:radio:6_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r16c2p25reg:radio"
+    },
+    {
+     "id": "r17c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "che i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo pubblico e che, pertanto, è stata rilasciata la concessione di occupazione di suolo "
+    }
+   ],
+   "fingerprint": "a26543b398ab01e3",
+   "text": "installazione del telo pubblicitario Il/la sottoscritto/a dichiara: che gli interventi previsti non ledono i diritti di terzi che l’installazione del telo pubblicitario avviene su beni di proprietà privata e che pertanto è stato conseguito il consenso del proprietario del bene; che l’installazione del telo pubblicitario avviene su beni di proprietà pubblica e che la Ditta/Società ha titolo ad effettuare la pubblicità giusto che l’installazione del telo pubblicitario avviene su beni di proprietà del Comune di Napoli e che la Ditta/Società ha stipulato con l’Amministrazione comunale il contratto di sponsorizzazione ------------------------------------------------------------------------------------------------ che l’installazione del telo avviene su ponteggi metallici di servizio e/o su impalcature di cantiere e che, pertanto, è stato conseguito il consenso dell’impresa proprietaria dei ponteggi, dell’impresa esecutrice dei lavori, del direttore dei lavori ------------------------------------------------------------------------------------------------ che l’installazione del telo pubblicitario ricade su edificio o in aree tutelate come beni culturali e che, pertanto, è stato conseguito, ai sensi dell’art. 49, comma 3 del D.lgs 42/2004 e s.m.i., il nulla osta del Soprintendente per l'utilizzo a fini pubblicitari delle coperture dei ponteggi; che l’installazione del telo pubblicitario non ricade su edificio o in aree tutelate come beni culturali ------------------------------------------------------------------------------------------------ i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo pubblico? Si No che i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo pubblico e che, pertanto, è stata rilasciata la concessione di occupazione di suolo pubblico",
+   "branches": [
+    {
+     "choice": "che gli interventi previsti non ledono i diritti di terzi",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l’installazione del telo pubblicitario avviene su beni di proprietà privata e che pertanto è stato conseguito il consenso del proprietario del bene;",
+     "id": "r3c1p4reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che l’installazione del telo pubblicitario avviene su beni di proprietà pubblica e che la Ditta/Società ha titolo ad effettuare la pubblicità giusto",
+     "id": "r4c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p7reg:number",
+       "kind": "text",
+       "label": "contratto n.",
+       "max": 30
+      },
+      {
+       "id": "r6c2p9reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      },
+      {
+       "id": "r6c3p11reg:txt",
+       "kind": "text",
+       "label": "stipulato con",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r6c1p10reg:radio:2_clone",
+       "r7c1p14reg:radio:2_clone"
+      ],
+      [
+       "r9c1p15reg:chk",
+       "r10c1p19reg:chk"
+      ],
+      [
+       "r11c1p17reg:radio:3_clone",
+       "r12c1p21reg:radio:3_clone"
+      ],
+      [
+       "r13c1p21reg:radio:4_clone",
+       "r14c1p25reg:radio:4_clone"
+      ],
+      [
+       "r16c1p24reg:radio:5_clone",
+       "r17c1p28reg:radio:5_clone"
+      ],
+      [
+       "r16c2p25reg:radio:6_clone",
+       "r17c2p29reg:radio:6_clone"
+      ],
+      [
+       "r17c1p27reg:chk",
+       "r18c1p31reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "che l’installazione del telo pubblicitario avviene su beni di proprietà del Comune di Napoli e che la Ditta/Società ha stipulato con l’Amministrazione comunale ",
+     "id": "r6c1p10reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r8c1p12reg:number",
+       "kind": "text",
+       "label": "n.",
+       "max": 30
+      },
+      {
+       "id": "r8c2p14reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p15reg:chk",
+       "r11c1p19reg:chk"
+      ],
+      [
+       "r11c1p17reg:radio:3_clone",
+       "r13c1p21reg:radio:3_clone"
+      ],
+      [
+       "r13c1p21reg:radio:4_clone",
+       "r15c1p25reg:radio:4_clone"
+      ],
+      [
+       "r16c1p24reg:radio:5_clone",
+       "r18c1p28reg:radio:5_clone"
+      ],
+      [
+       "r16c2p25reg:radio:6_clone",
+       "r18c2p29reg:radio:6_clone"
+      ],
+      [
+       "r17c1p27reg:chk",
+       "r19c1p31reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "che l’installazione del telo avviene su ponteggi metallici di servizio e/o su impalcature di cantiere e che, pertanto, è stato conseguito il consenso dell’impre",
+     "id": "r9c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l’installazione del telo pubblicitario ricade su edificio o in aree tutelate come beni culturali e che, pertanto, è stato conseguito, ai sensi dell’art. 49,",
+     "id": "r11c1p17reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r13c1p19reg:txt",
+       "kind": "text",
+       "label": "Numero dell'autorizzazione della Soprintendenza",
+       "max": 30
+      },
+      {
+       "id": "r13c2p21reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p21reg:radio:4_clone",
+       "r14c1p24reg:radio:4_clone"
+      ],
+      [
+       "r16c1p24reg:radio:5_clone",
+       "r17c1p27reg:radio:5_clone"
+      ],
+      [
+       "r16c2p25reg:radio:6_clone",
+       "r17c2p28reg:radio:6_clone"
+      ],
+      [
+       "r17c1p27reg:chk",
+       "r18c1p30reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "che l’installazione del telo pubblicitario non ricade su edificio o in aree tutelate come beni culturali",
+     "id": "r13c1p21reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Si",
+     "id": "r16c1p24reg:radio:5_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r17c1p27reg:chk",
+       "kind": "checkbox",
+       "label": "che in sede di richiesta dell’occupazione suolo, ai fini della determinazione della tariffa, si è provveduto a dichiarare che i ponteggi di servizio e/o le reci"
+      }
+     ],
+     "moved": [
+      [
+       "r17c1p27reg:chk",
+       "r18c1p28reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "che in sede di richiesta dell’occupazione suolo, ai fini della determinazione della tariffa, si è provveduto a dichiarare che i ponteggi di servizio e/o le reci",
+       "id": "r17c1p27reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r16c2p25reg:radio:6_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r17c1p27reg:chk",
+       "kind": "checkbox",
+       "label": "che i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo privato"
+      }
+     ],
+     "moved": [
+      [
+       "r17c1p27reg:chk",
+       "r18c1p28reg:chk"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "che i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo privato",
+       "id": "r17c1p27reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    },
+    {
+     "choice": "che i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo pubblico e che, pertanto, è stata rilasciata la concessione di occupazione di suolo ",
+     "id": "r17c1p27reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r19c1p29reg:number",
+       "kind": "text",
+       "label": "n.",
+       "max": 30
+      },
+      {
+       "id": "r19c2p31reg:txt",
+       "kind": "text",
+       "label": "dal S.T.M. della Municipalità",
+       "max": 100
+      },
+      {
+       "id": "r21c1p35reg:calendar_input",
+       "kind": "date",
+       "label": "in data"
+      },
+      {
+       "id": "r21c2p37reg:calendar_input",
+       "kind": "date",
+       "label": "data di scadenza della concessione"
+      }
+     ]
+    }
+   ],
+   "seconds": 13.9
+  },
+  {
+   "section": "ditta esecutrice lavori",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "dalla Ditta",
+     "max": 100
+    }
+   ],
+   "fingerprint": "cdc30e14ef74c65e",
+   "text": "ditta esecutrice lavori Il/la sottoscritto/a dichiara che i lavori di installazione del mezzo/i pubblicitario/i saranno eseguiti: dalla Ditta in conformità ai progetti allegati e a quanto dichiarato nella domanda e asseverato dal Tecnico.",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla normativa tecnica",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "PER PRESA VISIONE"
+    }
+   ],
+   "fingerprint": "50661daac07aba94",
+   "text": "dichiarazione relativa alla normativa tecnica normativa tecnica per la pubblicità da effettuarsi su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni, ed altre strutture di servizio e di pertinenza Scarica il documento PER PRESA VISIONE",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa all'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  },
+  {
+   "section": "nomina del direttore responsabile dei lavori",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "il/la Sig./ra",
+     "max": 100
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "con recapito in",
+     "max": 100
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "Via/P.zza",
+     "max": 100
+    },
+    {
+     "id": "r5c2p11reg:txt",
+     "kind": "text",
+     "label": "C.F.",
+     "max": 16
+    },
+    {
+     "id": "r7c1p15reg:txt",
+     "kind": "text",
+     "label": "iscritto all’Albo dei/degli",
+     "max": 100
+    },
+    {
+     "id": "r7c2p17reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "max": 30
+    }
+   ],
+   "fingerprint": "9aa3fd49845ec9a3",
+   "text": "nomina del direttore responsabile dei lavori Il/la sottoscritto/a dichiara di aver nominato Direttore responsabile dei Lavori: il/la Sig./ra con recapito in Via/P.zza C.F. iscritto all’Albo dei/degli n.",
+   "branches": [],
+   "seconds": 0.8,
+   "scelta": "si intende nominare il direttore responsabile dei lavori"
+  }
+ ]
+}

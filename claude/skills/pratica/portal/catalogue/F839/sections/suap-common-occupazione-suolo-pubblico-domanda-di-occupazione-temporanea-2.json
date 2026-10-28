@@ -1,0 +1,651 @@
+{
+ "crawled": "2026-10-28T20:03:38.770Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Domanda di occupazione temporanea di suolo pubblico superiore ai 500 mq per eventi di natura commerciale o non commerciale (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 60.2,
+ "generated": {
+  "interventi": "Domanda di occupazione temporanea di suolo pubblico superiore ai 500 mq per eventi di natura commerciale o non commerciale",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di occupazione temporanea di suolo pubblico per eventi di natura non commerciale (manifestazioni, spettacoli, eventi e rappresentazioni, etc.) di comitati, partiti politici, Onlus, autoemoteche etc.",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "mezzi di emergenza",
+   "richiesta occupazione suolo pubblico",
+   "ulteriori dichiarazioni",
+   "Attività svolte nell'ambito dell'iniziativa di tipo commerciale/promozionale",
+   "dichiarazione finalità",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Avvertenza per le domande di concessione",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "SIN",
+     "label": "in caso di eventi di natura commerciale"
+    },
+    {
+     "key": "1",
+     "type": "SIN",
+     "label": "in caso di eventi di natura non commerciale"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "trattasi di associazione"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "per gli hobbisti (anche in forma associata), venditori dell'ingegno (anche in forma associata) e artigiani senza P.IVA (anche in forma associata)"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in caso di eventi di natura commerciale",
+   "type": "SIN",
+   "adds": [
+    "ulteriori dichiarazioni eventi commerciali"
+   ],
+   "drops": []
+  },
+  {
+   "option": "in caso di eventi di natura non commerciale",
+   "type": "SIN",
+   "adds": [
+    "Finalità dell’iniziativa"
+   ],
+   "drops": []
+  },
+  {
+   "option": "trattasi di associazione",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "mezzi di emergenza",
+   "fingerprint": "923fbe27a8424e02",
+   "same_as": "suap-common-occupazione-suolo-pubblico-domanda-di-occupazione-temporanea#mezzi di emergenza",
+   "seconds": 0.6
+  },
+  {
+   "section": "richiesta occupazione suolo pubblico",
+   "fingerprint": "a000eb4b4f7ddbd7",
+   "same_as": "suap-common-occupazione-suolo-pubblico-domanda-di-occupazione-temporanea#richiesta occupazione suolo pubblico",
+   "seconds": 0.6
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "l'Associazione, per conto della quale viene presentata la domanda HA NATURA GIURIDICA DI O.N.L.U.S.(ex legge art.17 D.Lgs 4.12.1997 n.460)",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "riportare gli estremi dell'iscrizione all'anagrafe delle onlus)",
+     "context": "l'Associazione, per conto della quale viene presentata la domanda HA NATURA GIURIDICA DI O.N.L.U.S.(ex legge art.17 D.Lg",
+     "max": 30
+    },
+    {
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "che l'Associazione, per conto della quale viene presentata la domanda HA CARATTERE DI IMPRESA COMMERCIALE",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r4c1p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "che l'Associazione, per conto della quale viene presentata la domanda E' UN'ORGANIZZAZIONE SENZA FINI DI LUCRO;",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r6c1p8reg:radio:3_clone",
+     "kind": "radio",
+     "label": "il dichiarante",
+     "group": "r6c1p8reg:radio"
+    },
+    {
+     "id": "r8c1p10reg:radio:4_clone",
+     "kind": "radio",
+     "label": "persona diversa dal dichiarante",
+     "group": "r8c1p10reg:radio"
+    },
+    {
+     "id": "r8c2p12reg:txt",
+     "kind": "text",
+     "label": "Sig. (nome, cognome)",
+     "context": "persona diversa dal dichiarante",
+     "max": 30
+    },
+    {
+     "id": "r8c3p14reg:txt",
+     "kind": "text",
+     "label": "Recapito telefonico",
+     "context": "persona diversa dal dichiarante",
+     "max": 20
+    },
+    {
+     "id": "r10c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar"
+    },
+    {
+     "id": "r11c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o pri"
+    },
+    {
+     "id": "r12c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie)"
+    },
+    {
+     "id": "r13c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire eventuali ulteriori autorizzazioni prescritte dalla legge"
+    },
+    {
+     "id": "r14c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus"
+    },
+    {
+     "id": "r15c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge;"
+    },
+    {
+     "id": "r16c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici S"
+    },
+    {
+     "id": "r18c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune"
+    },
+    {
+     "id": "r20c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "le attrezzature verranno trasportate con il seguente mezzo"
+    },
+    {
+     "id": "r20c2p28reg:txt",
+     "kind": "text",
+     "label": "specificare tipo",
+     "context": "le attrezzature verranno trasportate con il seguente mezzo",
+     "max": 30
+    },
+    {
+     "id": "r20c3p30reg:txt",
+     "kind": "text",
+     "label": "targa",
+     "context": "le attrezzature verranno trasportate con il seguente mezzo",
+     "max": 10
+    },
+    {
+     "id": "r22c1p32reg:txta",
+     "kind": "textarea",
+     "label": "1000 Caratteri restanti",
+     "context": "I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area:",
+     "max": 1000
+    }
+   ],
+   "fingerprint": "bd8c430dbd4ab9b2",
+   "text": "ulteriori dichiarazioni riportare gli estremi dell'iscrizione all'anagrafe delle onlus) l'Associazione, per conto della quale viene presentata la domanda HA NATURA GIURIDICA DI O.N.L.U.S.(ex legge art.17 D.Lgs 4.12.1997 n.460) che l'Associazione, per conto della quale viene presentata la domanda HA CARATTERE DI IMPRESA COMMERCIALE che l'Associazione, per conto della quale viene presentata la domanda E' UN'ORGANIZZAZIONE SENZA FINI DI LUCRO; La persona che dovrà essere presente o reperibile fino al termine della manifestazione è: il dichiarante Sig. (nome, cognome) Recapito telefonico persona diversa dal dichiarante INOLTRE: si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivare a persone o cose per effetto dell'occupazione stessa e delle attività svolte si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o privata, al termine dell'occupazione si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie) si impegna ad acquisire eventuali ulteriori autorizzazioni prescritte dalla legge si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni causati (se previsto) si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge; si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici Spettacoli. RELATIVAMENTE ALLE ATTREZZATURE UTILIZZATE E AI MEZZI DI TRASPORTO UTILIZZATI: provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune specificare tipo targa le attrezzature verranno trasportate con il seguente mezzo I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area: 1000 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "l'Associazione, per conto della quale viene presentata la domanda HA NATURA GIURIDICA DI O.N.L.U.S.(ex legge art.17 D.Lgs 4.12.1997 n.460)",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che l'Associazione, per conto della quale viene presentata la domanda HA CARATTERE DI IMPRESA COMMERCIALE",
+     "id": "r3c1p5reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che l'Associazione, per conto della quale viene presentata la domanda E' UN'ORGANIZZAZIONE SENZA FINI DI LUCRO;",
+     "id": "r4c1p6reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "il dichiarante",
+     "id": "r6c1p8reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "persona diversa dal dichiarante",
+     "id": "r8c1p10reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar",
+     "id": "r10c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o pri",
+     "id": "r11c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie)",
+     "id": "r12c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus",
+     "id": "r14c1p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge;",
+     "id": "r15c1p21reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici S",
+     "id": "r16c1p22reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune",
+     "id": "r18c1p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "le attrezzature verranno trasportate con il seguente mezzo",
+     "id": "r20c1p26reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 13.9
+  },
+  {
+   "section": "Attività svolte nell'ambito dell'iniziativa di tipo commerciale/promozionale",
+   "fingerprint": "da8f6a9082a7823a",
+   "same_as": "suap-common-occupazione-suolo-pubblico-domanda-di-occupazione-temporanea#attività svolte nell'ambito dell'iniziativa promozionale",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione finalità",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "che l’Associazione/Comitato richiedente l’occupazione di suolo pubblico è un ente senza scopo di lucro.",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "che l'iniziativa non ha alcuna finalità di lucro.",
+     "group": "r3c1p3reg:radio"
+    }
+   ],
+   "fingerprint": "951da7d6c4bedd5d",
+   "text": "dichiarazione finalità DICHIARA ai sensi degli artt. 46 e 47 del D.P.R. 445/2000, consapevole delle responsabilità anche penali derivanti dalle proprie dichiarazioni ai sensi degli artt. 75 e 76 del D.P.R. 445/2000: che l’Associazione/Comitato richiedente l’occupazione di suolo pubblico è un ente senza scopo di lucro. che l'iniziativa non ha alcuna finalità di lucro.",
+   "branches": [
+    {
+     "choice": "che l’Associazione/Comitato richiedente l’occupazione di suolo pubblico è un ente senza scopo di lucro.",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che l'iniziativa non ha alcuna finalità di lucro.",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.5
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Avvertenza per le domande di concessione",
+   "fingerprint": "97944b936f875c7c",
+   "same_as": "suap-common-occupazione-suolo-pubblico-richiesta-di-occupazione-suolo-pu#Avvertenza per le domande di concessione",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.8
+  },
+  {
+   "section": "ulteriori dichiarazioni eventi commerciali",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "che l'Associazione, per conto della quale viene presentata la domanda HA CARATTERE DI IMPRESA COMMERCIALE",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "il dichiarante",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "persona diversa dal dichiarante",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r5c2p7reg:txt",
+     "kind": "text",
+     "label": "Sig. (nome, cognome)",
+     "context": "persona diversa dal dichiarante",
+     "max": 30
+    },
+    {
+     "id": "r5c3p9reg:txt",
+     "kind": "text",
+     "label": "Recapito telefonico",
+     "context": "persona diversa dal dichiarante",
+     "max": 20
+    },
+    {
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar"
+    },
+    {
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o pri"
+    },
+    {
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie)"
+    },
+    {
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire eventuali ulteriori autorizzazioni prescritte dalla legge"
+    },
+    {
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus"
+    },
+    {
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge;"
+    },
+    {
+     "id": "r13c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici S"
+    },
+    {
+     "id": "r15c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune"
+    },
+    {
+     "id": "r17c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "le attrezzature verranno trasportate con il seguente mezzo"
+    },
+    {
+     "id": "r17c2p23reg:txt",
+     "kind": "text",
+     "label": "specificare tipo",
+     "context": "le attrezzature verranno trasportate con il seguente mezzo",
+     "max": 30
+    },
+    {
+     "id": "r17c3p25reg:txt",
+     "kind": "text",
+     "label": "targa",
+     "context": "le attrezzature verranno trasportate con il seguente mezzo",
+     "max": 10
+    },
+    {
+     "id": "r19c1p27reg:txta",
+     "kind": "textarea",
+     "label": "1000 Caratteri restanti",
+     "context": "I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area:",
+     "max": 1000
+    }
+   ],
+   "fingerprint": "969dd89d88bfa74f",
+   "text": "ulteriori dichiarazioni eventi commerciali che l'Associazione, per conto della quale viene presentata la domanda HA CARATTERE DI IMPRESA COMMERCIALE La persona che dovrà essere presente o reperibile fino al termine della manifestazione è: il dichiarante Sig. (nome, cognome) Recapito telefonico persona diversa dal dichiarante INOLTRE: si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivare a persone o cose per effetto dell'occupazione stessa e delle attività svolte si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o privata, al termine dell'occupazione si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie) si impegna ad acquisire eventuali ulteriori autorizzazioni prescritte dalla legge si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni causati (se previsto) si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge; si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici Spettacoli. RELATIVAMENTE ALLE ATTREZZATURE UTILIZZATE E AI MEZZI DI TRASPORTO UTILIZZATI: provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune specificare tipo targa le attrezzature verranno trasportate con il seguente mezzo I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area: 1000 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "che l'Associazione, per conto della quale viene presentata la domanda HA CARATTERE DI IMPRESA COMMERCIALE",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "il dichiarante",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "persona diversa dal dichiarante",
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar",
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o pri",
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie)",
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus",
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge;",
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici S",
+     "id": "r13c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune",
+     "id": "r15c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "le attrezzature verranno trasportate con il seguente mezzo",
+     "id": "r17c1p21reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 13,
+   "scelta": "in caso di eventi di natura commerciale"
+  },
+  {
+   "section": "Finalità dell’iniziativa",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "previdenza",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "sanità",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:2_clone",
+     "kind": "radio",
+     "label": "educazione",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:3_clone",
+     "kind": "radio",
+     "label": "cultura e ricerca scientifica",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:4_clone",
+     "kind": "radio",
+     "label": "altre finalità di utilità sociale",
+     "group": "r5c1p5reg:radio"
+    }
+   ],
+   "fingerprint": "1514434ae0efb443",
+   "text": "Finalità dell’iniziativa previdenza sanità educazione cultura e ricerca scientifica altre finalità di utilità sociale",
+   "branches": [
+    {
+     "choice": "previdenza",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "sanità",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "educazione",
+     "id": "r3c1p3reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "cultura e ricerca scientifica",
+     "id": "r4c1p4reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altre finalità di utilità sociale",
+     "id": "r5c1p5reg:radio:4_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c2p8reg:txt",
+       "kind": "text",
+       "label": "precisare la finalità",
+       "context": "altre finalità di utilità sociale",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p5reg:radio:4_clone",
+       "r6c1p6reg:radio:4_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 5.5,
+   "scelta": "in caso di eventi di natura non commerciale"
+  }
+ ]
+}

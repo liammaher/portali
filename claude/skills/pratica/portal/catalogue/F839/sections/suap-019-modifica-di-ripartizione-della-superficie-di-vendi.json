@@ -1,0 +1,970 @@
+{
+ "crawled": "2026-10-28T21:14:26.036Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Modifica di ripartizione della superficie di vendita di un centro commerciale (sector esercizio con superficie totale lorda, comprensiva di servizi e depositi (es. magazzini), fino a 400 mq)",
+ "seconds": 42.5,
+ "generated": {
+  "interventi": "Modifica di ripartizione della superficie di vendita di un centro commerciale",
+  "adempimenti": [
+   {
+    "adempimento": "Scia per modifica di ripartizione della superficie di vendita di un centro commerciale",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'esercizio commerciale",
+   "Dati catastali",
+   "SPECIFICHE RIGUARDANTI LA RIPARTIZIONE DELLA SUPERFICIE",
+   "Possesso dei requisiti di onorabilità",
+   "Ulteriori dichiarazioni",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "0_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "0_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di armi comuni"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "In caso di vendita di prodotti fitosanitari"
+    },
+    {
+     "key": "3_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "presenta contestualmente la SCIA per la vendita al minuto di prodotti agricoli e zootecnici, mangimi, prodotti di origine minerale e chimico industriali destinati all'alimentazione animale"
+    },
+    {
+     "key": "4_0",
+     "type": "CHK",
+     "label": "in caso di depositi di fitofarmaci e/o di concimi chimici a base di nitrati e/o fosfati con quantitativi in massa superiori a 50.000 kg"
+    },
+    {
+     "key": "5",
+     "type": "CHK",
+     "label": "presenta contestualmente richiesta di autorizzazione per il commercio di oggetti preziosi"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'esercizio commerciale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.4
+  },
+  {
+   "section": "SPECIFICHE RIGUARDANTI LA RIPARTIZIONE DELLA SUPERFICIE",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "MAM"
+    },
+    {
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "label": "ME"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "già avviato con la SCIA/autorizzazione prot./n.",
+     "max": 9999
+    },
+    {
+     "id": "r4c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r6c1p12reg:txt",
+     "kind": "text",
+     "label": "presentata al Comune di",
+     "max": 9999
+    },
+    {
+     "id": "r11c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r11c2p19reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Alimentare",
+     "max": 6
+    },
+    {
+     "id": "r13c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    },
+    {
+     "id": "r13c2p25reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Non alimentare",
+     "max": 6
+    },
+    {
+     "id": "r15c2p31reg:txt",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di vendita complessiva",
+     "max": 6
+    },
+    {
+     "id": "r19c1p37reg:chk",
+     "kind": "checkbox",
+     "label": "Generi di monopolio"
+    },
+    {
+     "id": "r19c2p39reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Generi di monopolio",
+     "max": 6
+    },
+    {
+     "id": "r21c1p43reg:chk",
+     "kind": "checkbox",
+     "label": "Farmacie"
+    },
+    {
+     "id": "r21c2p45reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Farmacie",
+     "max": 6
+    },
+    {
+     "id": "r23c1p49reg:chk",
+     "kind": "checkbox",
+     "label": "Carburanti"
+    },
+    {
+     "id": "r23c2p51reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Carburanti",
+     "max": 6
+    },
+    {
+     "id": "r27c1p57reg:chk",
+     "kind": "checkbox",
+     "label": "Alimentare"
+    },
+    {
+     "id": "r27c2p59reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Alimentare",
+     "max": 6
+    },
+    {
+     "id": "r29c1p63reg:chk",
+     "kind": "checkbox",
+     "label": "Non alimentare"
+    },
+    {
+     "id": "r29c2p65reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Non alimentare",
+     "max": 6
+    },
+    {
+     "id": "r31c2p71reg:txt",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie di vendita complessiva",
+     "max": 6
+    },
+    {
+     "id": "r35c1p77reg:chk",
+     "kind": "checkbox",
+     "label": "Generi di monopolio"
+    },
+    {
+     "id": "r35c2p79reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Generi di monopolio",
+     "max": 6
+    },
+    {
+     "id": "r37c1p83reg:chk",
+     "kind": "checkbox",
+     "label": "Farmacie"
+    },
+    {
+     "id": "r37c2p85reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Farmacie",
+     "max": 6
+    },
+    {
+     "id": "r39c1p89reg:chk",
+     "kind": "checkbox",
+     "label": "Carburanti"
+    },
+    {
+     "id": "r39c2p91reg:real",
+     "kind": "text",
+     "label": "superficie di vendita mq",
+     "context": "Carburanti",
+     "max": 6
+    }
+   ],
+   "fingerprint": "356aefb54688d929",
+   "text": "SPECIFICHE RIGUARDANTI LA RIPARTIZIONE DELLA SUPERFICIE Il/la sottoscritto/a SEGNALA che il centro commerciale di tipologia: MAM ME già avviato con la SCIA/autorizzazione prot./n. del presentata al Comune di sarà modificato, senza ampliamento della superficie di vendita, come segue: DA: Settori merceologici e superfici di vendita superficie di vendita mq Alimentare superficie di vendita mq Non alimentare mq Superficie di vendita complessiva (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Vendita di prodotti appartenenti alle seguenti Tabelle speciali: superficie di vendita mq Generi di monopolio superficie di vendita mq Farmacie superficie di vendita mq Carburanti A: Settori merceologici e superfici di vendita superficie di vendita mq Alimentare superficie di vendita mq Non alimentare mq Superficie di vendita complessiva (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Vendita di prodotti appartenenti alle seguenti Tabelle speciali: superficie di vendita mq Generi di monopolio superficie di vendita mq Farmacie superficie di vendita mq Carburanti",
+   "branches": [
+    {
+     "choice": "MAM",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "ME",
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Alimentare",
+     "id": "r11c1p17reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r13c1p23reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Generi di monopolio",
+     "id": "r19c1p37reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Farmacie",
+     "id": "r21c1p43reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Carburanti",
+     "id": "r23c1p49reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Alimentare",
+     "id": "r27c1p57reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Non alimentare",
+     "id": "r29c1p63reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Generi di monopolio",
+     "id": "r35c1p77reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Farmacie",
+     "id": "r37c1p83reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    },
+    {
+     "choice": "Carburanti",
+     "id": "r39c1p89reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r27c1p57reg:chk",
+       "r11c1p17reg:chk"
+      ],
+      [
+       "r27c2p59reg:real",
+       "r11c2p19reg:real"
+      ],
+      [
+       "r29c1p63reg:chk",
+       "r13c1p23reg:chk"
+      ],
+      [
+       "r29c2p65reg:real",
+       "r13c2p25reg:real"
+      ],
+      [
+       "r31c2p71reg:txt",
+       "r15c2p31reg:txt"
+      ],
+      [
+       "r35c1p77reg:chk",
+       "r19c1p37reg:chk"
+      ],
+      [
+       "r35c2p79reg:real",
+       "r19c2p39reg:real"
+      ],
+      [
+       "r37c1p83reg:chk",
+       "r21c1p43reg:chk"
+      ],
+      [
+       "r37c2p85reg:real",
+       "r21c2p45reg:real"
+      ],
+      [
+       "r39c1p89reg:chk",
+       "r23c1p49reg:chk"
+      ],
+      [
+       "r39c2p91reg:real",
+       "r23c2p51reg:real"
+      ]
+     ]
+    }
+   ],
+   "seconds": 24.6
+  },
+  {
+   "section": "Possesso dei requisiti di onorabilità",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Ulteriori dichiarazioni",
+   "fingerprint": "47c57c3a7ea039c8",
+   "same_as": "suap-019-aprire-l-attivita-per-accorpamento-o-concentrazion#Ulteriori dichiarazioni",
+   "seconds": 1.5
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

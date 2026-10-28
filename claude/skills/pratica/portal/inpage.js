@@ -382,7 +382,7 @@
     // row); the beds total under a shared header is not the rooms total.
     const ownLabel = (e) => [e.title, ...win().eval(`(${steps.label_js})`)(e)].find((t) => norm(t) && !MESSAGE.test(norm(t)));
     const own = hits.filter((e) => norm(ownLabel(e)).startsWith(norm(f.label)));
-    if (own.length) hits = own;
+    if (own.length >= (f.nth || 1)) hits = own; // else a box labelled from above ("Provincia" of birth) counts too
     const e = hits[(f.nth || 1) - 1] || fail(`${f.label}: ${hits.length} fields with this label${f.anchor ? ` in block ${f.block || 1}` : ""}`);
     return { ...f, id: e.id.split("dynaForm:")[1].replace(/:combo_input$/, "") };
   }

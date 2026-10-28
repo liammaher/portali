@@ -1,0 +1,159 @@
+{
+ "crawled": "2026-10-28T20:10:06.675Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › Rimozione di messaggi pubblicitari (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 38.9,
+ "generated": {
+  "interventi": "Cessazione di messaggio pubblicitario",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per cessazione messaggio pubblicitario",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "cessazione del messaggio pubblicitario",
+   "Dichiarazione in materia di rispetto sulle tasse comunali"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "cessazione del messaggio pubblicitario",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "l'autorizzazione / Nulla Osta tecnico n°/ prot. n°",
+     "max": 20
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r2c3p6reg:calendar_input",
+     "kind": "date",
+     "label": "cesserà a far data dal"
+    },
+    {
+     "id": "r3c1p9reg:radio:0_clone",
+     "kind": "radio",
+     "label": "integralmente",
+     "group": "r3c1p9reg:radio"
+    },
+    {
+     "id": "r3c2p10reg:radio:1_clone",
+     "kind": "radio",
+     "label": "parzialmente",
+     "group": "r3c2p10reg:radio"
+    },
+    {
+     "id": "r5c1p12reg:txta",
+     "kind": "textarea",
+     "label": "150 Caratteri restanti",
+     "context": "messaggio pubblicitario da cessare (specificare)",
+     "max": 150
+    },
+    {
+     "id": "r7c1p14reg:txta",
+     "kind": "textarea",
+     "label": "150 Caratteri restanti",
+     "context": "la cessazione avviene per il seguente motivo:",
+     "max": 150
+    }
+   ],
+   "fingerprint": "290a2f8581fb630a",
+   "text": "cessazione del messaggio pubblicitario l'autorizzazione / Nulla Osta tecnico n°/ prot. n° del cesserà a far data dal integralmente parzialmente messaggio pubblicitario da cessare (specificare) 150 Caratteri restanti la cessazione avviene per il seguente motivo: 150 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "integralmente",
+     "id": "r3c1p9reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "l'autorizzazione / Nulla Osta tecnico n°/ prot. n°",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "parzialmente",
+     "id": "r3c2p10reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "l'autorizzazione / Nulla Osta tecnico n°/ prot. n°",
+      "adds": 14
+     }
+    }
+   ],
+   "seconds": 26.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  }
+ ]
+}

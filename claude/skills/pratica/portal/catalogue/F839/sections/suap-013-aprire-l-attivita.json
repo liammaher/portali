@@ -1,0 +1,357 @@
+{
+ "crawled": "2026-10-28T20:45:58.842Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector Lavanderia a gettone)",
+ "seconds": 25.5,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività di Lavanderia Self-Service a gettoni",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per apertura attività di Lavanderia Self-Service a gettoni",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "dati relativi all'attività",
+   "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA",
+   "Altre dichiarazioni",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "dichiarazione della user Telemaco",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "nel caso di impianti di produzione di calore alimentati a combustibile solido, liquido o gassoso"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "2_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "2_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati relativi all'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "Lavanderia a gettoni ¹"
+    },
+    {
+     "id": "r4c1p6reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r4c2p7reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r4c2p7reg:radio"
+    },
+    {
+     "id": "r8c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "Superficie destinata all'attività di lavanderia a gettoni"
+    },
+    {
+     "id": "r8c2p15reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie destinata all'attività di lavanderia a gettoni",
+     "max": 6
+    },
+    {
+     "id": "r10c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "Superficie adibita ad altri usi"
+    },
+    {
+     "id": "r10c2p21reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie adibita ad altri usi",
+     "max": 6
+    },
+    {
+     "id": "r12c2p27reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie complessiva",
+     "max": 8
+    },
+    {
+     "id": "r15c1p32reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Permanente",
+     "group": "r15c1p32reg:radio"
+    },
+    {
+     "id": "r16c1p34reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Stagionale",
+     "group": "r16c1p34reg:radio"
+    }
+   ],
+   "fingerprint": "900564c25c54d23e",
+   "text": "dati relativi all'attività Il/la sottoscritto/a, SEGNALA l'avvio dell'attività di: Lavanderia a gettoni ¹ Attività collocata in centro commerciale: Si No Superficie di esercizio dell'attività: mq Superficie destinata all'attività di lavanderia a gettoni mq Superficie adibita ad altri usi mq Superficie complessiva (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Esercizio a carattere Permanente Stagionale ___________________________________ ¹ Come previsto dall'art. 79, comma 1-bis, del D.Lgs. n. 59 del 2010 e dalle disposizioni regionali di settore.",
+   "branches": [
+    {
+     "choice": "Lavanderia a gettoni ¹",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Si",
+     "id": "r4c1p6reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p10reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p13reg:chk",
+       "r9c1p15reg:chk"
+      ],
+      [
+       "r8c2p15reg:real",
+       "r9c2p17reg:real"
+      ],
+      [
+       "r10c1p19reg:chk",
+       "r11c1p21reg:chk"
+      ],
+      [
+       "r10c2p21reg:real",
+       "r11c2p23reg:real"
+      ],
+      [
+       "r12c2p27reg:real",
+       "r13c2p29reg:real"
+      ],
+      [
+       "r15c1p32reg:radio:2_clone",
+       "r16c1p34reg:radio:2_clone"
+      ],
+      [
+       "r16c1p34reg:radio:3_clone",
+       "r17c1p36reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r4c2p7reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Superficie destinata all'attività di lavanderia a gettoni",
+     "id": "r8c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Superficie adibita ad altri usi",
+     "id": "r10c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Permanente",
+     "id": "r15c1p32reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Stagionale",
+     "id": "r16c1p34reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r18c1p37reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r18c2p39reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "plus": {
+      "anchor": "dal (gg/mm)",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 6.8
+  },
+  {
+   "section": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA",
+   "fields": [
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti de"
+    }
+   ],
+   "fingerprint": "f113d78df2f34c69",
+   "text": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA Il/la sottoscritto/a, consapevole delle sanzioni penali previste dalla legge per le false dichiarazioni e attestazioni (art. 76 del DPR n. 445 del 2000 e Codice penale e art.19, comma 6, della L. n. 241 del 1990), sotto la propria responsabilità, dichiara: che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti delle misure di prevenzione previste dal Codice delle leggi antimafia e delle misure di prevenzione, nonché nuove disposizioni in materia di documentazione antimafia”).",
+   "branches": [
+    {
+     "choice": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti de",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.6
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

@@ -1,0 +1,296 @@
+{
+ "crawled": "2026-10-28T19:59:37.380Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Comunicazione occupazione suolo pubblico per riprese televisive e/o cinematografiche uguale o inferiore a 10 mq per attrezzature quali ad esempio easy up, videovillage, carrelli, gruppi elettrogeni, elementi scenografici autoportanti e di basso impatto, attrezzature di riprese, senza intralcio alla viabilità veicolare e pedonale (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 26.7,
+ "generated": {
+  "interventi": "Comunicazione occupazione suolo pubblico per riprese televisive e/o cinematografiche uguale o inferiore a 10 mq per attrezzature quali ad esempio easy up, videovillage, carrelli, gruppi elettrogeni, elementi scenografici autoportanti e di basso impatto, attrezzature di riprese, senza intralcio alla viabilità veicolare e pedonale",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione occupazione suolo pubblico per riprese televisive e/o cinematografiche uguale o inferiore a 10 mq per attrezzature quali ad esempio easy up, videovillage, carrelli, gruppi elettrogeni, elementi scenografici autoportanti e di basso impatto, attrezzature di riprese, senza intralcio alla viabilità veicolare e pedonale",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "UBICAZIONE DELL'ATTIVITA'",
+   "DICHIARAZIONE DI CONSAPEVOLEZZA PEC",
+   "OGGETTO DELL'ISTANZA",
+   "DICHIARAZIONE VIABILITÀ",
+   "ULTERIORI DICHIARAZIONI",
+   "DICHIARAZIONE DI REGOLARITÀ CONTRIBUTIVA",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "UBICAZIONE DELL'ATTIVITA'",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "DICHIARAZIONE DI CONSAPEVOLEZZA PEC",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "OGGETTO DELL'ISTANZA",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "indicare il tipo di struttura per cui si comunica l’occupazione. es. Easy up, videovillage etc.",
+     "max": 200
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "per complessivi mq",
+     "max": 5
+    },
+    {
+     "id": "r6c1p9reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r6c2p11reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "label": "Toponimo (via, corso, piazza)",
+     "options": [
+      "ALTRO",
+      "CORSO",
+      "LARGO",
+      "PIAZZA",
+      "VIA",
+      "VIALE"
+     ]
+    },
+    {
+     "id": "r11c2p22reg:txt",
+     "kind": "text",
+     "label": "Denominazione stradale",
+     "max": 100
+    },
+    {
+     "id": "r11c3p24reg:txt",
+     "kind": "text",
+     "label": "Numero civico",
+     "max": 50
+    }
+   ],
+   "fingerprint": "d331ee9a0d6199d5",
+   "text": "OGGETTO DELL'ISTANZA Comunica l’occupazione temporanea di spazi e aree pubbliche per l’allestimento di indicare il tipo di struttura per cui si comunica l’occupazione. es. Easy up, videovillage etc. per complessivi mq Nei giorni (1): dal al (1) È necessario indicare una data che sia successiva di almeno 5 giorni lavorativi dalla data di comunicazione o 10 giorni lavorativi se la location è soggetta all’acquisizione del parere della Soprintendenza Presso: Toponimo (via, corso, piazza) Denominazione stradale Numero civico",
+   "branches": [
+    {
+     "choice": "Toponimo (via, corso, piazza) = ALTRO",
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "option": "ALTRO",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Toponimo (via, corso, piazza) = CORSO",
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "option": "CORSO",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Toponimo (via, corso, piazza) = LARGO",
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "option": "LARGO",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Toponimo (via, corso, piazza) = PIAZZA",
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "option": "PIAZZA",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Toponimo (via, corso, piazza) = VIA",
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "option": "VIA",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "Toponimo (via, corso, piazza) = VIALE",
+     "id": "r11c1p20reg",
+     "kind": "select",
+     "option": "VIALE",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 8.7
+  },
+  {
+   "section": "DICHIARAZIONE VIABILITÀ",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "Il/la sottoscritto/a dichiara che l’occupazione comunicata non inciderà sulla regolare viabilità ed in particolare sulla presenza di passi carrai, accessi priva"
+    }
+   ],
+   "fingerprint": "7b89f62f38a476b0",
+   "text": "DICHIARAZIONE VIABILITÀ Il/la sottoscritto/a dichiara che l’occupazione comunicata non inciderà sulla regolare viabilità ed in particolare sulla presenza di passi carrai, accessi privati esistenti, stalli sosta di qualunque genere, fermate autobus, postazioni per il collocamento dei rifiuti, etc.. Inoltre, qualora il manufatto sia collocato su marciapiede o in area pedonale, consentirà il passaggio pedonale lasciando liberi almeno 1,5 metri della suddetta area.",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "ULTERIORI DICHIARAZIONI",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "dichiara che l’occupazione di suolo pubblico con il manufatto installato sarà perfettamente conforme al limite di superficie concesso e nel rispetto delle attiv"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "dichiara che il manufatto installato non presenta loghi o messaggi pubblicitari;"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "è consapevole che è tassativamente vietato qualsiasi uso diverso dell’occupazione rispetto a quello per il quale è stata comunicata, ivi compreso qualsiasi form"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "è consapevole che è in facoltà dell’Amministrazione procedere all’inibizione dell’occupazione comunicata, nonché all’incameramento delle somme corrisposte nei c"
+    }
+   ],
+   "fingerprint": "d99289c751537021",
+   "text": "ULTERIORI DICHIARAZIONI Il/la sottoscritto/a: dichiara che l’occupazione di suolo pubblico con il manufatto installato sarà perfettamente conforme al limite di superficie concesso e nel rispetto delle attività esistenti nei siti, nonché nel rispetto delle vigenti norme del Codice della Strada; dichiara che il manufatto installato non presenta loghi o messaggi pubblicitari; è consapevole che è tassativamente vietato qualsiasi uso diverso dell’occupazione rispetto a quello per il quale è stata comunicata, ivi compreso qualsiasi forma di vendita diretta o indiretta; è consapevole che è in facoltà dell’Amministrazione procedere all’inibizione dell’occupazione comunicata, nonché all’incameramento delle somme corrisposte nei casi di violazione delle norme stabilite dalla Legge e dai Regolamenti Comunali; come previsto dall’art. 76 del D.P.R. 445 del 28-12-2000, e che in caso di dichiarazioni non veritiere il sottoscritto decade dai benefici conseguenti al provvedimento eventualmente emanato, sulla base della presente domanda, ex ’art. 75 del suddetto decreto.",
+   "branches": [
+    {
+     "choice": "dichiara che l’occupazione di suolo pubblico con il manufatto installato sarà perfettamente conforme al limite di superficie concesso e nel rispetto delle attiv",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "dichiara che il manufatto installato non presenta loghi o messaggi pubblicitari;",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "DICHIARAZIONE DI REGOLARITÀ CONTRIBUTIVA",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "Il/la sottoscritto/a dichiara di non avere procedure di riscossione coattiva in corso con il concessionario (con avvenuta notifica e per la quale non sia interv"
+    }
+   ],
+   "fingerprint": "6b9d954f4a83c8a1",
+   "text": "DICHIARAZIONE DI REGOLARITÀ CONTRIBUTIVA Il/la sottoscritto/a dichiara di non avere procedure di riscossione coattiva in corso con il concessionario (con avvenuta notifica e per la quale non sia intervenuta prescrizione/decadenza) nei confronti del Comune di Napoli per qualsiasi tipo di entrata",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

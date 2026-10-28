@@ -1,0 +1,393 @@
+{
+ "crawled": "2026-10-28T19:48:08.866Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Spandimenti in agricoltura › Richiedere l'autorizzazione all'utilizzo in agricoltura di fanghi di depurazione (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 32.8,
+ "generated": {
+  "interventi": "Utilizzo dei fanghi derivanti dal processo di depurazione in agricoltura di cui all'articolo 9 del D.Lgs. 99/1992",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di utilizzo dei fanghi derivanti dal processo di depurazione in agricoltura di cui all'articolo 9 del D.Lgs. 99/1992",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dichiarazione relativa ai terreni",
+   "tipologia dei fanghi",
+   "Impianto di stoccaggio",
+   "caratteristiche della distribuzione dei fanghi",
+   "requisiti soggettivi",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazione relativa ai terreni",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "nella propria attività agricola"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "attività agricola di terzi"
+    }
+   ],
+   "fingerprint": "c4c54a0ff089d5a5",
+   "text": "dichiarazione relativa ai terreni nella propria attività agricola attività agricola di terzi",
+   "branches": [
+    {
+     "choice": "nella propria attività agricola",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "attività agricola di terzi",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.9
+  },
+  {
+   "section": "tipologia dei fanghi",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "Acque reflue provenienti esclusivamente da insediamenti civili come definiti dalla lettera b) art. 1-quater, L. 690/1976"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Impianto di provenienza dei fanghi",
+     "context": "Acque reflue provenienti esclusivamente da insediamenti civili come definiti dalla lettera b) art. 1-quater, L. 690/1976",
+     "max": 100
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "Acque reflue provenienti da insediamenti civili e produttivi. I fanghi ottenuti devono possedere caratteristiche sostanzialmente non diverse da quelle possedute"
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "Impianto di provenienza dei fanghi",
+     "context": "Acque reflue provenienti da insediamenti civili e produttivi. I fanghi ottenuti devono possedere caratteristiche sostanz",
+     "max": 100
+    },
+    {
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "Acque reflue provenienti esclusivamente da insediamenti produttivi come definiti dalla legge 319/76 e s.m.i.. Tali fanghi devono essere assimilabili per qualità"
+    },
+    {
+     "id": "r6c2p12reg:txt",
+     "kind": "text",
+     "label": "Impianto di provenienza dei fanghi",
+     "context": "Acque reflue provenienti esclusivamente da insediamenti produttivi come definiti dalla legge 319/76 e s.m.i.. Tali fangh",
+     "max": 100
+    }
+   ],
+   "fingerprint": "3101cad8e039c10b",
+   "text": "tipologia dei fanghi Impianto di provenienza dei fanghi Acque reflue provenienti esclusivamente da insediamenti civili come definiti dalla lettera b) art. 1-quater, L. 690/1976 Impianto di provenienza dei fanghi Acque reflue provenienti da insediamenti civili e produttivi. I fanghi ottenuti devono possedere caratteristiche sostanzialmente non diverse da quelle possedute da fanghi ottenuti dalle acque reflue provenienti esclusivamente da insediamenti civili Impianto di provenienza dei fanghi Acque reflue provenienti esclusivamente da insediamenti produttivi come definiti dalla legge 319/76 e s.m.i.. Tali fanghi devono essere assimilabili per qualità a quelli derivanti dal trattamento delle acque reflue provenienti esclusivamente da insediamenti civili e che rispettano le condizioni per l'utilizzazione indicate nell'art. 3 comma 1 del D.Lgs 99/92",
+   "branches": [
+    {
+     "choice": "Acque reflue provenienti esclusivamente da insediamenti civili come definiti dalla lettera b) art. 1-quater, L. 690/1976",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c2p12reg:txt",
+       "r2c2p4reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "Acque reflue provenienti da insediamenti civili e produttivi. I fanghi ottenuti devono possedere caratteristiche sostanzialmente non diverse da quelle possedute",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c2p12reg:txt",
+       "r2c2p4reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "Acque reflue provenienti esclusivamente da insediamenti produttivi come definiti dalla legge 319/76 e s.m.i.. Tali fanghi devono essere assimilabili per qualità",
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c2p12reg:txt",
+       "r2c2p4reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.4
+  },
+  {
+   "section": "Impianto di stoccaggio",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "previsto (indicare ubicazione)",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non previsto",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "Comune",
+     "max": 50
+    },
+    {
+     "id": "r3c2p6reg:txt",
+     "kind": "text",
+     "label": "Frazione",
+     "max": 50
+    },
+    {
+     "id": "r3c3p8reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r5c1p10reg:txt",
+     "kind": "text",
+     "label": "Via, Viale, Piazza",
+     "max": 100
+    },
+    {
+     "id": "r7c1p12reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 20
+    },
+    {
+     "id": "r9c1p16reg:txt",
+     "kind": "text",
+     "label": "etremi atto autorizzativo",
+     "max": 50
+    },
+    {
+     "id": "r11c1p18reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "tipologia del contenitore (manufatto in cemento o bacino impermeabilizzato; presenza o assenza di copertura)",
+     "max": 200
+    },
+    {
+     "id": "r13c1p20reg:real",
+     "kind": "text",
+     "label": "volume complessivo dei contenitori di stoccaggio espresso in metri cubi",
+     "max": 13
+    },
+    {
+     "id": "r15c1p24reg:txt",
+     "kind": "text",
+     "label": "titolare del contenitore di stoccaggio",
+     "max": 60
+    }
+   ],
+   "fingerprint": "dadb8151e687297b",
+   "text": "Impianto di stoccaggio previsto (indicare ubicazione) non previsto Comune Frazione CAP Via, Viale, Piazza numero civico etremi atto autorizzativo tipologia del contenitore (manufatto in cemento o bacino impermeabilizzato; presenza o assenza di copertura) 200 Caratteri restanti volume complessivo dei contenitori di stoccaggio espresso in metri cubi titolare del contenitore di stoccaggio",
+   "branches": [
+    {
+     "choice": "previsto (indicare ubicazione)",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "non previsto",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.7
+  },
+  {
+   "section": "caratteristiche della distribuzione dei fanghi",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "mezzi impiegati",
+     "max": 300
+    },
+    {
+     "id": "r4c1p4reg:txta",
+     "kind": "textarea",
+     "label": "500 Caratteri restanti",
+     "context": "modalità di distribuzione ed interramento",
+     "max": 500
+    }
+   ],
+   "fingerprint": "a10d9376d73cbf70",
+   "text": "caratteristiche della distribuzione dei fanghi mezzi impiegati 300 Caratteri restanti modalità di distribuzione ed interramento 500 Caratteri restanti",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "requisiti soggettivi",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "di essere cittadino italiano, di Stato membro della UE oppure di essere cittadino residente in Italia o di un altro Stato che riconosca analogo diritto ai citta"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "di non aver riportato condanne con sentenza passata in giudicato, salvi gli effetti della riabilitazione e della sospensione della pena:"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "di non trovarsi in stato di fallimento, di liquidazione, di cessazione di attività o di concordato preventivo e in qualsiasi altra situazione equivalente second"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in regola con gli obblighi relativi al pagamento dei contributi previdenziali ed assistenziali a favore dei lavoratori, secondo la legislazione italia"
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "di non essere sottoposto/a a misure di prevenzione ai sensi dell'art. 3 della legge 27 dicembre 1956 n. 1423 e successive modifiche ed integrazioni."
+    }
+   ],
+   "fingerprint": "f6be77e639f39baa",
+   "text": "requisiti soggettivi di essere cittadino italiano, di Stato membro della UE oppure di essere cittadino residente in Italia o di un altro Stato che riconosca analogo diritto ai cittadini italiani di non aver riportato condanne con sentenza passata in giudicato, salvi gli effetti della riabilitazione e della sospensione della pena: - a pena detentiva per reati previsti dalle norme a tutela dell'ambiente; - alla reclusione per un tempo non inferiore a un anno per un delitto contro la pubblica amministrazione, contro la fede pubblica, contro il patrimonio, contro l'ordine pubblico, contro l'economia pubblica, ovvero per un delitto in materia tributaria; - alla reclusione per un tempo non inferiore a due anni per un qualunque delitto non colposo; di non trovarsi in stato di fallimento, di liquidazione, di cessazione di attività o di concordato preventivo e in qualsiasi altra situazione equivalente secondo la legislazione straniera; di essere in regola con gli obblighi relativi al pagamento dei contributi previdenziali ed assistenziali a favore dei lavoratori, secondo la legislazione italiana o quella del Paese di residenza; di non essere sottoposto/a a misure di prevenzione ai sensi dell'art. 3 della legge 27 dicembre 1956 n. 1423 e successive modifiche ed integrazioni. Dichiara altresì di avere diretta conoscenza del fatto che i soci muniti di rappresentanza legale sono in possesso dei requisiti soggettivi di cui all'art. 10 del D. M. 5.02.1998.",
+   "branches": [
+    {
+     "choice": "di essere cittadino italiano, di Stato membro della UE oppure di essere cittadino residente in Italia o di un altro Stato che riconosca analogo diritto ai citta",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non aver riportato condanne con sentenza passata in giudicato, salvi gli effetti della riabilitazione e della sospensione della pena:",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non trovarsi in stato di fallimento, di liquidazione, di cessazione di attività o di concordato preventivo e in qualsiasi altra situazione equivalente second",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere in regola con gli obblighi relativi al pagamento dei contributi previdenziali ed assistenziali a favore dei lavoratori, secondo la legislazione italia",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non essere sottoposto/a a misure di prevenzione ai sensi dell'art. 3 della legge 27 dicembre 1956 n. 1423 e successive modifiche ed integrazioni.",
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 7.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.1
+  }
+ ]
+}

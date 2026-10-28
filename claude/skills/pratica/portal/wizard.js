@@ -188,8 +188,10 @@
   // answered Si, a box ticked), noting the sections it adds or drops; then back.
   // onPratica(pratica, variant) runs on each generated pratica's screen (crawl.js's batch reads
   // its sections there); variant is null for the base pratica. `variants` is true, false, or a
-  // function of a scelta's label saying whether to try it.
-  async function follow(op, variants, onPratica) {
+  // function of a scelta's label saying whether to try it. With `interventi`, each top-level
+  // tick of "Scelta interventi eventuali" is tried alone the same way (alcohol, an outside sign,
+  // fire prevention added to the pratica), its variant's type "intervento".
+  async function follow(op, variants, onPratica, interventi) {
     const screens = [];
     const b = button("Conferma");
     await go(() => b.click());
@@ -233,6 +235,34 @@
         } catch (e) {
           v.error = String(e.message || e);
           await toScreen("scelte eventuali").catch(() => {});
+        }
+      }
+    }
+    const inter = interventi && screens.find((s) => s.screen.includes("interventi eventuali"));
+    if (variants && inter && Array.isArray(inter.options)) {
+      op.variants = op.variants || [];
+      const wanted = (x) => typeof variants !== "function" || variants(x.label);
+      // A child tick ("1_0": the ANAS's own SCIA for a sign) shows only under its parent.
+      for (const o of inter.options.filter((x) => x.type === "CHK" && !String(x.key).includes("_") && wanted(x))) {
+        const v = { option: o.label, type: "intervento" };
+        op.variants.push(v);
+        try {
+          await back("interventi eventuali");
+          if (!(await setSelected(o.key, true))) throw new Error("didn't tick");
+          const was = title();
+          await go(() => button("Conferma").click());
+          if (title() === was) throw new Error(`${was}: ${messages().join(" / ") || "didn't go on"}`);
+          const p = await forward(null);
+          const base = new Set(op.pratica.sections);
+          v.adds = p.sections.filter((s) => !base.has(s));
+          v.drops = op.pratica.sections.filter((s) => !p.sections.includes(s));
+          if (JSON.stringify(p.adempimenti) !== JSON.stringify(op.pratica.adempimenti)) v.adempimenti = p.adempimenti;
+          if (onPratica) await onPratica(p, v);
+          await back("interventi eventuali");
+          await setSelected(o.key, false);
+        } catch (e) {
+          v.error = String(e.message || e);
+          await toScreen("interventi eventuali").then(() => setSelected(o.key, false)).catch(() => {});
         }
       }
     }

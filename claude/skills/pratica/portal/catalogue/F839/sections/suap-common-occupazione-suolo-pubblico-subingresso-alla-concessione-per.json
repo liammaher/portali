@@ -1,0 +1,484 @@
+{
+ "crawled": "2026-10-28T20:02:55.567Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Subingresso alla concessione per l'occupazione di suolo pubblico (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 30.5,
+ "generated": {
+  "interventi": "Subingresso alla concessione per l'occupazione di suolo pubblico",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per subentro nella titolarità della concessione per l'occupazione di suolo pubblico",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dichiarazione relativa ai titoli abilitanti",
+   "dichiarazione della modalità di subingresso",
+   "dichiarazione degli estremi della concessione",
+   "Rispetto dei limiti acustici",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa ai titoli abilitanti",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "SCIA/DIA/AUTORIZZAZIONE prot. n°",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "per l'attività di",
+     "max": 200
+    }
+   ],
+   "fingerprint": "ba7fdc60e6ecedac",
+   "text": "dichiarazione relativa ai titoli abilitanti SCIA/DIA/AUTORIZZAZIONE prot. n° del per l'attività di",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione della modalità di subingresso",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Denominazione ditta cedente",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Codice Fiscale",
+     "max": 16
+    },
+    {
+     "id": "r4c1p6reg:radio:0_clone",
+     "kind": "radio",
+     "label": "autorizzazione",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r4c2p7reg:radio:1_clone",
+     "kind": "radio",
+     "label": "comunicazione",
+     "group": "r4c2p7reg:radio"
+    },
+    {
+     "id": "r5c1p8reg:radio:2_clone",
+     "kind": "radio",
+     "label": "D.I.A.",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r5c2p9reg:radio:3_clone",
+     "kind": "radio",
+     "label": "S.C.I.A.",
+     "group": "r5c2p9reg:radio"
+    },
+    {
+     "id": "r7c1p11reg:txt",
+     "kind": "text",
+     "label": "n°",
+     "max": 30
+    },
+    {
+     "id": "r7c2p13reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r10c1p19reg:radio:4_clone",
+     "kind": "radio",
+     "label": "atto di trasferimento d'azienda o di ramo d'azienda:",
+     "group": "r10c1p19reg:radio"
+    },
+    {
+     "id": "r11c1p20reg:radio:5_clone",
+     "kind": "radio",
+     "label": "compravendita",
+     "group": "r11c1p20reg:radio"
+    },
+    {
+     "id": "r11c2p21reg:radio:6_clone",
+     "kind": "radio",
+     "label": "affitto",
+     "group": "r11c2p21reg:radio"
+    },
+    {
+     "id": "r11c3p22reg:radio:7_clone",
+     "kind": "radio",
+     "label": "fusione",
+     "group": "r11c3p22reg:radio"
+    },
+    {
+     "id": "r12c1p23reg:radio:8_clone",
+     "kind": "radio",
+     "label": "conferimento",
+     "group": "r12c1p23reg:radio"
+    },
+    {
+     "id": "r12c2p24reg:radio:9_clone",
+     "kind": "radio",
+     "label": "fallimento",
+     "group": "r12c2p24reg:radio"
+    },
+    {
+     "id": "r12c3p25reg:radio:10_clone",
+     "kind": "radio",
+     "label": "donazione",
+     "group": "r12c3p25reg:radio"
+    },
+    {
+     "id": "r14c1p27reg:radio:11_clone",
+     "kind": "radio",
+     "label": "reintestazione",
+     "group": "r14c1p27reg:radio"
+    },
+    {
+     "id": "r14c2p29reg:radio:12_clone",
+     "kind": "radio",
+     "label": "altre cause",
+     "group": "r14c2p29reg:radio"
+    },
+    {
+     "id": "r14c3p31reg:txt",
+     "kind": "text",
+     "label": "specificare:",
+     "context": "altre cause",
+     "max": 100
+    },
+    {
+     "id": "r16c1p33reg:calendar_input",
+     "kind": "date",
+     "label": "stipulato/ autenticato in data"
+    },
+    {
+     "id": "r16c2p35reg:calendar_input",
+     "kind": "date",
+     "label": "con decorrenza"
+    },
+    {
+     "id": "r18c1p39reg:txt",
+     "kind": "text",
+     "label": "presso il notaio",
+     "max": 100
+    },
+    {
+     "id": "r18c2p41reg:txt",
+     "kind": "text",
+     "label": "con sede a",
+     "max": 100
+    },
+    {
+     "id": "r20c1p43reg:radio:13_clone",
+     "kind": "radio",
+     "label": "successione mortis causa",
+     "group": "r20c1p43reg:radio"
+    },
+    {
+     "id": "r20c2p45reg:calendar_input",
+     "kind": "date",
+     "label": "data di decesso del titolare"
+    }
+   ],
+   "fingerprint": "827c0220b0c406c4",
+   "text": "dichiarazione della modalità di subingresso Denominazione ditta cedente Codice Fiscale In possesso di: autorizzazione comunicazione D.I.A. S.C.I.A. n° data A seguito di: atto di trasferimento d'azienda o di ramo d'azienda: compravendita affitto fusione conferimento fallimento donazione specificare: reintestazione altre cause stipulato/ autenticato in data con decorrenza presso il notaio con sede a data di decesso del titolare successione mortis causa **A norma dell'art.2556 del codice civile i contratti di trasferimento di proprietà o gestione di un'azienda commerciale sono stipulati presso un notaio.",
+   "branches": [
+    {
+     "choice": "autorizzazione",
+     "id": "r4c1p6reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "comunicazione",
+     "id": "r4c2p7reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "D.I.A.",
+     "id": "r5c1p8reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "S.C.I.A.",
+     "id": "r5c2p9reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "atto di trasferimento d'azienda o di ramo d'azienda:",
+     "id": "r10c1p19reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "compravendita",
+     "id": "r11c1p20reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "affitto",
+     "id": "r11c2p21reg:radio:6_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "fusione",
+     "id": "r11c3p22reg:radio:7_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "conferimento",
+     "id": "r12c1p23reg:radio:8_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "fallimento",
+     "id": "r12c2p24reg:radio:9_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "donazione",
+     "id": "r12c3p25reg:radio:10_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "reintestazione",
+     "id": "r14c1p27reg:radio:11_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "altre cause",
+     "id": "r14c2p29reg:radio:12_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "successione mortis causa",
+     "id": "r20c1p43reg:radio:13_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "autorizzazione",
+      "adds": 12
+     }
+    }
+   ],
+   "seconds": 16.6
+  },
+  {
+   "section": "dichiarazione degli estremi della concessione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "titolare (cognome e nome o ragione sociale)",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Cod.Fiscale/P.Iva",
+     "max": 16
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "concessione n°",
+     "max": 15
+    },
+    {
+     "id": "r4c2p8reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "dichiara che non sono state apportate modifiche e/o variazioni rispetto a quanto contenuto nella concessione in cui si intende subentrare nella titolarità"
+    }
+   ],
+   "fingerprint": "0cfcf70539a83476",
+   "text": "dichiarazione degli estremi della concessione titolare (cognome e nome o ragione sociale) Cod.Fiscale/P.Iva concessione n° del dichiara che non sono state apportate modifiche e/o variazioni rispetto a quanto contenuto nella concessione in cui si intende subentrare nella titolarità",
+   "branches": [
+    {
+     "choice": "dichiara che non sono state apportate modifiche e/o variazioni rispetto a quanto contenuto nella concessione in cui si intende subentrare nella titolarità",
+     "id": "r5c1p11reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "titolare (cognome e nome o ragione sociale)",
+      "adds": 10
+     }
+    }
+   ],
+   "seconds": 1.8
+  },
+  {
+   "section": "Rispetto dei limiti acustici",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "Dichiara che l'attività sarà svolta nel rispetto dei limiti acustici stabiliti dal Piano di Zonizzazione acustica comunale ovvero, ove questo non sia stato adot"
+    }
+   ],
+   "fingerprint": "291d10678a846ff9",
+   "text": "Rispetto dei limiti acustici Dichiara che l'attività sarà svolta nel rispetto dei limiti acustici stabiliti dal Piano di Zonizzazione acustica comunale ovvero, ove questo non sia stato adottato, nel rispetto dei limiti individuati dal DPCM 14.11.1997",
+   "branches": [
+    {
+     "choice": "Dichiara che l'attività sarà svolta nel rispetto dei limiti acustici stabiliti dal Piano di Zonizzazione acustica comunale ovvero, ove questo non sia stato adot",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.3
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

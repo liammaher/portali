@@ -5,7 +5,8 @@
 #
 # A field: kind and label (the start of one of its first texts on the page: its own cell, the
 # row above, the cell to its left, as inpage.js reads them), `nth` when several share the label,
-# the value (vault fields by role, {{ask.x}} for pre-flight's questions) and `when`. A radio or a
+# the value (vault fields by role, {{ask.x}} for pre-flight's questions) and `when`; an entry's
+# `branches` repeats its boxes once per condition of a first choice that renumbers them. A radio or a
 # checkbox listed is ticked, and what it opens is found in the crawl. `via: <option>` is a field
 # a templated dropdown opens only on that option (its `when` says when). `leave:` names what the
 # section shows that stays empty; `omit:` a section that is the person's alone. `kind: tick`
@@ -231,6 +232,10 @@ asks:
   sede_precedente_via: {type: text, question: "The previous registered office: street and number"}
   sede_precedente_comune: {type: text, question: "Its comune"}
   sede_precedente_cap: {type: text, question: "Its CAP"}
+  sede_precedente_provincia: {type: text, question: "Its province (sigla, e.g. NA)"}
+  var_atto: {type: choice, question: "What decided the change", options: [Verbale, Delibera, Altro]}
+  var_atto_data: {type: date, question: "Its date"}
+  var_atto_altro: {type: text, question: "What it was (e.g. decisione del titolare)", default: "decisione del titolare"}
   superficie_vendita_prima_mq: {type: number, question: "The sales area before the change, in m²"}
   superficie_alimentare_prima_mq: {type: number, question: "Of that, m² for food before the change"}
   superficie_non_alimentare_prima_mq: {type: number, question: "Of that, m² for non-food before the change"}
@@ -1065,14 +1070,20 @@ sections:
       - {kind: text, label: prot./n., value: "{{ask.titolo_protocollo}}"}
       - {kind: date, label: del, value: "{{ask.titolo_data|date_it}}"}
 
-  # The business itself declaring (a SUAP pratica: the ditta and its titolare `t:`, its
-  # premises `locale`), from the pizzeria walk (rehearsals/pizzeria-fittizia). A recipe with
-  # `subject: impresa` takes these before the ones above.
+  # The business itself declaring (a SUAP pratica: the ditta or company and its titolare or
+  # legale rappresentante `t:`, its premises `locale`), from the pizzeria walk
+  # (rehearsals/pizzeria-fittizia). A recipe with `subject: impresa` takes these before the ones
+  # above.
   - section: Scheda anagrafica
     subject: impresa
     open: false
+    branches: ["{{business.rea|empty|not}}", "{{business.rea|empty}}"]
     fields:
       - {kind: radio, label: "DITTA/SOCIETA'/IMPRESA"}
+      # A business in the Registro delle imprese names its Camera di commercio; a company's
+      # legale rappresentante declares (`t:`, Carica from the ruolo), its forma below.
+      - {kind: radio, label: ISCRITTA ALLA CCIAA, when: "{{business.rea|empty|not}}"}
+      - {kind: select, label: "Camera di commercio di:", value: "{{business.cciaa|provincia_nome}}", when: "{{business.rea|empty|not}}"}
       - {kind: radio, label: NON ANCORA ISCRITTA, when: "{{business.rea|empty}}"}
       - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
       - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
@@ -1122,6 +1133,7 @@ sections:
   - section: ubicazione dell'attività
     aliases: [ubicazione dello stabilimento, ubicazione dell'impianto produttivo, ubicazione impianto, "Ubicazione",
               indirizzo dell'attività, indirizzo dello stabilimento, sede dell'attività, dichiarazione ubicazione locale,
+              dichiarazione relativa alla sede dell'attività,
               dichiarazione dell'ubicazione dell'esercizio, dichiarazione relativa all'indirizzo dello stabilimento,
               nuovo indirizzo dell'esercizio, nuovo indirizzo dell'ubicazione dell'esercizio]
     subject: impresa
@@ -1438,6 +1450,40 @@ sections:
       - {kind: text, label: a via o ..., value: "{{business.sede_legale_indirizzo}} {{business.sede_legale_civico}}", when: "{{ask.var_sede_legale}}"}
       - {kind: text, label: comune, nth: 2, value: "{{business.sede_legale_comune}}", when: "{{ask.var_sede_legale}}"}
       - {kind: text, label: C.A.P., nth: 2, value: "{{business.sede_legale_cap}}", when: "{{ask.var_sede_legale}}"}
+  # The shops' version (crawled three deep): one tick opens a new name or a moved office, each
+  # with the act that decided it (minutes, a resolution, or another: a ditta's own decision).
+  # Recipes take one change at a time: the two blocks repeat their labels. Each act opens its
+  # own date box: the one opened is filled on the page, the others stay empty. Its "del" is the
+  # second (the first: "della la Società/impresa").
+  - section: dichiarazione relativa alle variazioni della società o dei soggetti
+    leave: [del, specificare]
+    fields:
+      - {kind: checkbox, label: MODIFICA DENOMINAZIONE / RAGIONE SOCIALE / SEDE LEGALE}
+      - {kind: checkbox, label: Il/La sottoscritto/a COMUNICA la modifica della DENOMINAZION, when: "{{ask.var_denominazione}}"}
+      - {kind: text, label: della la Società/impresa, value: "{{business.denominazione}}", when: "{{ask.var_denominazione}}"}
+      - {kind: date, label: a far data dal, value: "{{ask.var_decorrenza|date_it}}", when: "{{ask.var_denominazione}}"}
+      - {kind: text, label: da, value: "{{ask.denominazione_precedente}}", when: "{{ask.var_denominazione}}"}
+      - {kind: text, label: a, nth: 2, value: "{{business.denominazione}}", when: "{{ask.var_denominazione}}"}  # 1: "a far data dal"
+      - {kind: checkbox, label: Il/la sottoscritto/a comunica la modifica della SEDE LEGALE, when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: della la Società/impresa, value: "{{business.denominazione}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: date, label: a far data dal, value: "{{ask.var_decorrenza|date_it}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: dalla via, value: "{{ask.sede_precedente_via}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: Comune, value: "{{ask.sede_precedente_comune}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: prov., value: "{{ask.sede_precedente_provincia}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: alla via, value: "{{business.sede_legale_indirizzo}} {{business.sede_legale_civico}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: Comune, nth: 2, value: "{{business.sede_legale_comune}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: text, label: prov., nth: 2, value: "{{business.sede_legale_provincia}}", when: "{{ask.var_sede_legale}}"}
+      - {kind: radio, label: Verbale, when: "{{ask.var_denominazione}} {{ask.var_atto|is_verbale}}"}
+      - {kind: radio, label: Delibera societaria del CdA o Assemblea, when: "{{ask.var_denominazione}} {{ask.var_atto|is_delibera}}"}
+      - {kind: radio, label: Altro, when: "{{ask.var_denominazione}} {{ask.var_atto|is_altro}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.var_atto_data|date_it}}", when: "{{ask.var_denominazione}} {{ask.var_atto|is_altro|not}}", on_page: true}
+      - {kind: text, label: specificare, value: "{{ask.var_atto_altro}}", when: "{{ask.var_denominazione}} {{ask.var_atto|is_altro}}", on_page: true}
+      - {kind: radio, label: Verbale, when: "{{ask.var_sede_legale}} {{ask.var_atto|is_verbale}}"}
+      - {kind: radio, label: Delibera societaria del CdA o Assemblea, when: "{{ask.var_sede_legale}} {{ask.var_atto|is_delibera}}"}
+      - {kind: radio, label: Altro, when: "{{ask.var_sede_legale}} {{ask.var_atto|is_altro}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.var_atto_data|date_it}}", when: "{{ask.var_sede_legale}} {{ask.var_atto|is_altro|not}}", on_page: true}
+      - {kind: text, label: specificare, value: "{{ask.var_atto_altro}}", when: "{{ask.var_sede_legale}} {{ask.var_atto|is_altro}}", on_page: true}
+
   # The hairdressers' version: each tick opens its boxes, and the new name and office aren't asked.
   - section: variazioni della società o dei soggetti
     fields:
@@ -1485,7 +1531,8 @@ sections:
       - {kind: checkbox, label: Profumeria alcolica, when: "{{ask.alcol_profumeria}}"}
       - {kind: checkbox, label: Altri prodotti alcolici, when: "{{ask.alcol_altri}}"}
       - {kind: radio, label: Che la Comunicazione/SCIA/Istanza per l'esercizio, when: "{{ask.alcol_con_scia}}"}
-      - {kind: text, label: codice ATECO e descrizione dell'attività svolta, value: "{{ask.ateco_descrizione}}", when: "{{ask.alcol_con_scia}}"}
+      # With the SCIA the box takes the code alone ("dd.dd.dd"), after it the code and a few words.
+      - {kind: text, label: codice ATECO e descrizione dell'attività svolta, value: "{{business.codice_ateco}}", when: "{{ask.alcol_con_scia}}"}
       - {kind: radio, label: Che la presentazione della presente Comunicazione è successivo, when: "{{ask.alcol_con_scia|not}}"}
       - {kind: date, label: con avvio dell'attività a partire dal, value: "{{ask.alcol_avvio|date_it}}", when: "{{ask.alcol_con_scia|not}}"}
       - {kind: select, label: Estremi del titolo posseduto, value: "{{ask.titolo_attivita_tipo}}", when: "{{ask.alcol_con_scia|not}}"}

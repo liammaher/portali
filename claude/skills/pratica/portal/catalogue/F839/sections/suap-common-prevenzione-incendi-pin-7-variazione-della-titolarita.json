@@ -1,0 +1,400 @@
+{
+ "crawled": "2026-10-28T19:58:58.116Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRI ADEMPIMENTI (Prevenzione Incendi) › Prevenzione incendi › PIN 7 - Variazione della titolarità (voltura) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 19.1,
+ "generated": {
+  "interventi": "Variazione della titolarità di attività soggetta alla prevenzione incendi",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione al Comando provinciale dei vigili del fuoco di variazione della titolarità di attività soggetta alla prevenzione incendi",
+    "amministrazione": "Comando dei Vigili del Fuoco - PRINCE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "Rif. Pratica VVF",
+   "dichiarazione relativa al responsabile attività",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "Rif. Pratica VVF",
+   "fingerprint": "c7feb9eebcab49f1",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - intestazione",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione relativa al responsabile attività",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "di essere subentrato, a seguito di:",
+     "max": 100
+    },
+    {
+     "id": "r5c1p5reg:txt",
+     "kind": "text",
+     "label": "quale responsabile dell'attività",
+     "max": 100
+    },
+    {
+     "id": "r5c2p7reg:number",
+     "kind": "text",
+     "label": "identificata con numero di pratica VV.F",
+     "max": 7
+    },
+    {
+     "id": "r7c3p12reg:radio:0_clone",
+     "kind": "radio",
+     "label": "A",
+     "group": "r7c3p12reg:radio"
+    },
+    {
+     "id": "r7c4p13reg:radio:1_clone",
+     "kind": "radio",
+     "label": "B",
+     "group": "r7c4p13reg:radio"
+    },
+    {
+     "id": "r7c5p14reg:radio:2_clone",
+     "kind": "radio",
+     "label": "C",
+     "group": "r7c5p14reg:radio"
+    },
+    {
+     "id": "r13c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "a) di essere a conoscenza e di impegnarsi ad osservare gli obblighi connessi con l'esercizio dell'attività indicati, all'articolo 6 del decreto del Presidente d"
+    },
+    {
+     "id": "r14c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "b) che le condizioni relative alla sicurezza antincendio dell'attività, non hanno subito variazioni rispetto a quanto in precedenza segnalato al Comando e che l"
+    },
+    {
+     "id": "r16c1p28reg:txt",
+     "kind": "text",
+     "label": "nominativo",
+     "max": 100
+    },
+    {
+     "id": "r16c2p30reg:txt",
+     "kind": "text",
+     "label": "indirizzo",
+     "max": 100
+    },
+    {
+     "id": "r16c3p32reg:number",
+     "kind": "text",
+     "label": "n. civico",
+     "max": 20
+    },
+    {
+     "id": "r18c1p34reg:txt",
+     "kind": "text",
+     "label": "C.A.P",
+     "max": 5
+    },
+    {
+     "id": "r18c2p36reg",
+     "kind": "select",
+     "label": "comune",
+     "options": []
+    },
+    {
+     "id": "r18c3p38reg",
+     "kind": "select",
+     "label": "provincia",
+     "options": "111 options"
+    }
+   ],
+   "fingerprint": "0c7905eafcbc4a4f",
+   "text": "dichiarazione relativa al responsabile attività Responsabile dell'attività sotto specificata,consapevole delle conseguenze penali e amministrative previste dagli artt. 75 e 76 del D.P.R. 445/2000 in caso di dichiarazioni mendaci e formazione o uso di atti falsi nonché delle sanzioni penali previste dalla vigente normativa dichiara di essere subentrato, a seguito di: quale responsabile dell'attività identificata con numero di pratica VV.F individuata/e¹ ai n./sotto classe/ cat.: categoria A B C Il sottoscritto, inoltre, dichiara sotto la propria responsabilità civile e penale: a) di essere a conoscenza e di impegnarsi ad osservare gli obblighi connessi con l'esercizio dell'attività indicati, all'articolo 6 del decreto del Presidente della Repubblica 1 agosto 2011, n. 151 e, per le attività rientranti nel campo di applicazione del decreto legislativo 9 aprile 2008, n. 81, limitatamente agli aspetti antincendi, l'impegno a osservare gli obblighi ivi previsti; b) che le condizioni relative alla sicurezza antincendio dell'attività, non hanno subito variazioni rispetto a quanto in precedenza segnalato al Comando e che la documentazione tecnica relativa alla stessa è raccolta in apposito fascicolo custodito presso l'attività o l'indirizzo di seguito indicato, e sarà reso prontamente disponibile in occasione dei controlli delle autorità competenti nominativo indirizzo n. civico C.A.P comune provincia ¹ Riportare il numero e la categoria corrispondente (A/B/C) individuata sulla base dell'elenco contenuto nell'Allegato I del DPR 01/08/2011 n.151 e la sottoclasse di cui al Decreto del Ministro dell'Interno del 7-8-2012.",
+   "branches": [
+    {
+     "choice": "A",
+     "id": "r7c3p12reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r9c1p17reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": [
+        "03 _ 5 _ A: Depositi di GPL in recipienti mobili (massa complessiva da 75 a 300 kg)",
+        "04 _ 3 _ A: Depositi di GPL (serbatoi fissi da 0,3 a 5 mc)",
+        "06 _ 1 _ A: Reti di trasporto gas infiamm. di densità rel. <0,8 (pressione da 0,5 a 2,4MPa)",
+        "12 _ 1 _ A: Depositi, rivendite liquidi infiamm. e/o combust. e/o oli e simili, da 1 a 9 mc",
+        "13 _ 1 _ A: Distributori di carburanti liquidi (P.I.> 65 °C), tramite contenitori < 9 mc",
+        "15 _ 1 _ A: Depositi, rivendite di alcoli (concentr. > 60% in volume), capacità da 1 a 10mc",
+        "41 _ 1 _ A: Teatri di posa per riprese cinematografiche e televisive, fino a 25 persone",
+        "49 _ 1 _ A: Gruppi elettrogeni e/o di cogenerazione con motori di potenza da 25 a 350 kW",
+        "66 _ 1 _ A: Strutture ricettive e simili, con numero di posti letto > 25 (fino a 50 posti)",
+        "67 _ 1 _ A: Scuole e simili, con numero di persone presenti > 100 (fino a 150 persone)",
+        "68 _ 1 _ A: Ospedali, RSA, case di cura e simili, da 25 a 50 posti letto",
+        "68 _ 2 _ A: Strutture ambulatoriali, riabilitative, diagnostica e simili, da 500 a 1000mq",
+        "69 _ 1 _ A: Locali di esposizione e/o vendita, ingrosso e/o dettaglio, sup. da 400 a 600mq",
+        "71 _ 1 _ A: Aziende ed uffici, con oltre 300 persone presenti (fino a 500 persone)",
+        "74 _ 1 _ A: Impianti produzione calore con potenzialità superiore a 116 KW (fino a 350 KW)",
+        "75 _ 1 _ A: Autorimesse e simili, con superficie compresa tra 200 mq a 1000 mq",
+        "77 _ 1 _ A: Edifici ad uso civile, con altezza antincendi superiore a 24 m (fino a 32 m)",
+        "80 _ 1 _ A: Gallerie stradali (lunghezza > 500m) e ferroviarie (lunghezza > 2000m)"
+       ]
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p25reg:chk",
+       "r14c1p27reg:chk"
+      ],
+      [
+       "r14c1p26reg:chk",
+       "r15c1p28reg:chk"
+      ],
+      [
+       "r16c1p28reg:txt",
+       "r17c1p30reg:txt"
+      ],
+      [
+       "r16c2p30reg:txt",
+       "r17c2p32reg:txt"
+      ],
+      [
+       "r16c3p32reg:number",
+       "r17c3p34reg:number"
+      ],
+      [
+       "r18c1p34reg:txt",
+       "r19c1p36reg:txt"
+      ],
+      [
+       "r18c2p36reg",
+       "r19c2p38reg"
+      ],
+      [
+       "r18c3p38reg",
+       "r19c3p40reg"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "B",
+     "id": "r7c4p13reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c1p19reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": "64 options"
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p25reg:chk",
+       "r14c1p27reg:chk"
+      ],
+      [
+       "r14c1p26reg:chk",
+       "r15c1p28reg:chk"
+      ],
+      [
+       "r16c1p28reg:txt",
+       "r17c1p30reg:txt"
+      ],
+      [
+       "r16c2p30reg:txt",
+       "r17c2p32reg:txt"
+      ],
+      [
+       "r16c3p32reg:number",
+       "r17c3p34reg:number"
+      ],
+      [
+       "r18c1p34reg:txt",
+       "r19c1p36reg:txt"
+      ],
+      [
+       "r18c2p36reg",
+       "r19c2p38reg"
+      ],
+      [
+       "r18c3p38reg",
+       "r19c3p40reg"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "C",
+     "id": "r7c5p14reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p21reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": "91 options"
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p25reg:chk",
+       "r14c1p27reg:chk"
+      ],
+      [
+       "r14c1p26reg:chk",
+       "r15c1p28reg:chk"
+      ],
+      [
+       "r16c1p28reg:txt",
+       "r17c1p30reg:txt"
+      ],
+      [
+       "r16c2p30reg:txt",
+       "r17c2p32reg:txt"
+      ],
+      [
+       "r16c3p32reg:number",
+       "r17c3p34reg:number"
+      ],
+      [
+       "r18c1p34reg:txt",
+       "r19c1p36reg:txt"
+      ],
+      [
+       "r18c2p36reg",
+       "r19c2p38reg"
+      ],
+      [
+       "r18c3p38reg",
+       "r19c3p40reg"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "a) di essere a conoscenza e di impegnarsi ad osservare gli obblighi connessi con l'esercizio dell'attività indicati, all'articolo 6 del decreto del Presidente d",
+     "id": "r13c1p25reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "b) che le condizioni relative alla sicurezza antincendio dell'attività, non hanno subito variazioni rispetto a quanto in precedenza segnalato al Comando e che l",
+     "id": "r14c1p26reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "A",
+      "adds": 6
+     }
+    }
+   ],
+   "seconds": 7.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

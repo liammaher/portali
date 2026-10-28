@@ -134,8 +134,11 @@ def _qualita(v):
 
 class Filters(dict):
     """`is_<answer>` is true when the value is that answer, spaces as underscores
-    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`."""
+    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `atleast_<n>`
+    is true when the number is n or more (the 20 m² the historic centre's Piano requires)."""
     def __missing__(self, name):
+        if name.startswith("atleast_") and name[8:].isdigit():
+            return lambda v: "true" if float(str(v or 0).replace(",", ".")) >= int(name[8:]) else "false"
         if not name.startswith("is_"):
             raise KeyError(name)
         return lambda v: "true" if re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_") == name[3:] else "false"

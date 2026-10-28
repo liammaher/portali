@@ -1,0 +1,1123 @@
+{
+ "crawled": "2026-10-28T20:53:12.843Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Comunicazione variazione responsabile tecnico (sector Impresa di pulizie)",
+ "seconds": 102,
+ "generated": {
+  "interventi": "Comunicazione variazione responsabile tecnico attività di disinfestazione, derattizzazione e sanificazione",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazione attività di disinfestazione, derattizzazione e sanificazione (L. n. 82/1994)",
+    "amministrazione": "Camera di Commercio Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "Attività oggetto della segnalazione",
+   "requisiti morali e di onorabilità",
+   "Designazione del responsabile tecnico",
+   "dichiarazione della user Telemaco",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.2
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.9
+  },
+  {
+   "section": "Attività oggetto della segnalazione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "disinfestazione (sono attività di disinfestazione quelle che riguardano il complesso di procedimenti e operazioni atti a distruggere piccoli animali, in partico"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "derattizzazione (sono attività di derattizzazione quelle che riguardano il complesso di procedimenti e operazioni di disinfestazione atti a determinare o la dis"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "sanificazione (sono attività di sanificazione quelle che riguardano il complesso di procedimenti e operazioni atti a rendere sani determinati ambuenti mediante "
+    }
+   ],
+   "fingerprint": "324fc74e076a0139",
+   "text": "Attività oggetto della segnalazione disinfestazione (sono attività di disinfestazione quelle che riguardano il complesso di procedimenti e operazioni atti a distruggere piccoli animali, in particolare artropodi, sia perché parassiti, vettori o riserve di agenti infettivi sia perché molesti e specie vegetali non desiderate. La disinfestazione può essere integrale se rivolta a tutte le specie infestanti ovvero mirata se rivolta a singola specie) derattizzazione (sono attività di derattizzazione quelle che riguardano il complesso di procedimenti e operazioni di disinfestazione atti a determinare o la distruzione completa oppure la riduzione del numero della popolazione dei ratti e dei topo al di sotto di una certa soglia) sanificazione (sono attività di sanificazione quelle che riguardano il complesso di procedimenti e operazioni atti a rendere sani determinati ambuenti mediante l'attività di pulizia e/o di disinfezione ovvero mediante il controllo e il miglioramento delle condizioni del microclima per quanto riguarda la temperatura, l'umidità e la ventilazione ovvero per quanto riguarda l'illuminazione e il rumore)",
+   "branches": [
+    {
+     "choice": "disinfestazione (sono attività di disinfestazione quelle che riguardano il complesso di procedimenti e operazioni atti a distruggere piccoli animali, in partico",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "derattizzazione (sono attività di derattizzazione quelle che riguardano il complesso di procedimenti e operazioni di disinfestazione atti a determinare o la dis",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "sanificazione (sono attività di sanificazione quelle che riguardano il complesso di procedimenti e operazioni atti a rendere sani determinati ambuenti mediante ",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 7.1
+  },
+  {
+   "section": "requisiti morali e di onorabilità",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.Lgs. 6.9.2011 n.159 (antimafia)"
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "1. non è stata pronunciata sentenza penale definitiva di condanna o non sono in corso procedimenti penali nei quali sia già stata pronunciata sentenza di condan"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "2. non sia stata svolta o non sia in corso procedura fallimentare (salvo che sia intervenuto provvedimento di chiusura del fallimento o provvedimento riabilitat"
+    },
+    {
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "3.non è stata pronunciata sentenza penale definitiva di condanna per il reato di cui all'art. 513-bis del codice penale;"
+    },
+    {
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "4.non sono state accertate contravvenzioni per violazioni di norme in materia di lavoro, di previdenza e di assicurazione obbligatoria contro gli infortuni sul "
+    }
+   ],
+   "fingerprint": "1cbec5979888e17d",
+   "text": "requisiti morali e di onorabilità Il sottoscritto dichiara che : non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.Lgs. 6.9.2011 n.159 (antimafia) E che : I soggetti sotto indicati rispettano i requisiti di onorabilità previsti dalla norma e pertanto dichiara a loro carico che : 1. non è stata pronunciata sentenza penale definitiva di condanna o non sono in corso procedimenti penali nei quali sia già stata pronunciata sentenza di condanna per reati non colposi a pena detentiva superiore a due anni o sentenza di condanna per reati contro la fede pubblica o il patrimonio; o alla pena accessoria dell'interdizione dall'esercizio di una professione o di un'arte o all'interdizione dagli uffici direttivi delle imprese (salvo che sia intervenuta la riabilitazione penale ai sensi delle leggi vigenti); 2. non sia stata svolta o non sia in corso procedura fallimentare (salvo che sia intervenuto provvedimento di chiusura del fallimento o provvedimento riabilitativo se previsto dal Tribunale di competenza); 3.non è stata pronunciata sentenza penale definitiva di condanna per il reato di cui all'art. 513-bis del codice penale; 4.non sono state accertate contravvenzioni per violazioni di norme in materia di lavoro, di previdenza e di assicurazione obbligatoria contro gli infortuni sul lavoro e le malattie professionali, non conciliabili in via amministrativa.",
+   "branches": [
+    {
+     "choice": "non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.Lgs. 6.9.2011 n.159 (antimafia)",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "1. non è stata pronunciata sentenza penale definitiva di condanna o non sono in corso procedimenti penali nei quali sia già stata pronunciata sentenza di condan",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "2. non sia stata svolta o non sia in corso procedura fallimentare (salvo che sia intervenuto provvedimento di chiusura del fallimento o provvedimento riabilitat",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "3.non è stata pronunciata sentenza penale definitiva di condanna per il reato di cui all'art. 513-bis del codice penale;",
+     "id": "r7c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "4.non sono state accertate contravvenzioni per violazioni di norme in materia di lavoro, di previdenza e di assicurazione obbligatoria contro gli infortuni sul ",
+     "id": "r8c1p9reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 10.1
+  },
+  {
+   "section": "Designazione del responsabile tecnico",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Cognome",
+     "max": 50
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "Nome",
+     "max": 9999
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "Codice Fiscale",
+     "max": 16
+    },
+    {
+     "id": "r5c2p11reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r7c1p15reg:radio:0_clone",
+     "kind": "radio",
+     "label": "titolare",
+     "group": "r7c1p15reg:radio"
+    },
+    {
+     "id": "r7c2p16reg:radio:1_clone",
+     "kind": "radio",
+     "label": "amministratore",
+     "group": "r7c2p16reg:radio"
+    },
+    {
+     "id": "r7c3p17reg:radio:2_clone",
+     "kind": "radio",
+     "label": "socio lavoratore",
+     "group": "r7c3p17reg:radio"
+    },
+    {
+     "id": "r8c1p18reg:radio:3_clone",
+     "kind": "radio",
+     "label": "collaboratore familiare",
+     "group": "r8c1p18reg:radio"
+    },
+    {
+     "id": "r8c2p19reg:radio:4_clone",
+     "kind": "radio",
+     "label": "dipendente",
+     "group": "r8c2p19reg:radio"
+    },
+    {
+     "id": "r8c3p20reg:radio:5_clone",
+     "kind": "radio",
+     "label": "institore",
+     "group": "r8c3p20reg:radio"
+    },
+    {
+     "id": "r9c1p21reg:radio:6_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r9c1p21reg:radio"
+    },
+    {
+     "id": "r11c1p24reg:radio:7_clone",
+     "kind": "radio",
+     "label": "in sostituzione di",
+     "group": "r11c1p24reg:radio"
+    },
+    {
+     "id": "r12c1p28reg:radio:8_clone",
+     "kind": "radio",
+     "label": "in aggiunta di",
+     "group": "r12c1p28reg:radio"
+    },
+    {
+     "id": "r14c1p33reg:radio:9_clone",
+     "kind": "radio",
+     "label": "A) TITOLO DI STUDIO (1)",
+     "group": "r14c1p33reg:radio"
+    },
+    {
+     "id": "r16c1p35reg:radio:10_clone",
+     "kind": "radio",
+     "label": "B) OBBLIGO SCOLASTICO ED ESPERIENZA PROFESSIONALE",
+     "group": "r16c1p35reg:radio"
+    },
+    {
+     "id": "r17c1p36reg:radio:11_clone",
+     "kind": "radio",
+     "label": "C) RICONOSCIMENTO TITOLO ESTERO",
+     "group": "r17c1p36reg:radio"
+    },
+    {
+     "id": "r18c1p37reg:radio:12_clone",
+     "kind": "radio",
+     "label": "D) CASI PARTICOLARI",
+     "group": "r18c1p37reg:radio"
+    },
+    {
+     "id": "r26c1p50reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+     "context": "Allegare il Documento compilato in tutte le sue parti e Copia documento di identità in corso di validità",
+     "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+    }
+   ],
+   "fingerprint": "8f5b9ebf12bef065",
+   "text": "Designazione del responsabile tecnico Comunica la designazione del responsabile tecnico il/la Signor/Sig.ra : Cognome Nome Codice Fiscale dal in qualità di (indicare il rapporto di immedesimazione con l'impresa): titolare amministratore socio lavoratore collaboratore familiare dipendente institore altro Il Responsabile tecnico è designato : in sostituzione di in aggiunta di Il responsabile tecnico risulta in possesso dei requisiti tecnico-professionali previsti dall'art. 2 co. 3 D.M. 274 /97 sottoindicati: A) TITOLO DI STUDIO (1) (1) è necessario che il corso di studi preveda almeno un biennio di chimica, nonché nozioni di scienze naturali e biologiche. B) OBBLIGO SCOLASTICO ED ESPERIENZA PROFESSIONALE C) RICONOSCIMENTO TITOLO ESTERO D) CASI PARTICOLARI Dichiarazione del Responsabile Tecnico Scarica il documento Allegare il Documento compilato in tutte le sue parti e Copia documento di identità in corso di validità Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB _______________________________________________________",
+   "branches": [
+    {
+     "choice": "titolare",
+     "id": "r7c1p15reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "amministratore",
+     "id": "r7c2p16reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "socio lavoratore",
+     "id": "r7c3p17reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "collaboratore familiare",
+     "id": "r8c1p18reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "dipendente",
+     "id": "r8c2p19reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "institore",
+     "id": "r8c3p20reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "altro",
+     "id": "r9c1p21reg:radio:6_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r10c2p24reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "altro",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p21reg:radio:6_clone",
+       "r10c1p22reg:radio:6_clone"
+      ],
+      [
+       "r11c1p24reg:radio:7_clone",
+       "r12c1p26reg:radio:7_clone"
+      ],
+      [
+       "r12c1p28reg:radio:8_clone",
+       "r13c1p30reg:radio:8_clone"
+      ],
+      [
+       "r14c1p33reg:radio:9_clone",
+       "r15c1p35reg:radio:9_clone"
+      ],
+      [
+       "r16c1p35reg:radio:10_clone",
+       "r17c1p37reg:radio:10_clone"
+      ],
+      [
+       "r17c1p36reg:radio:11_clone",
+       "r18c1p38reg:radio:11_clone"
+      ],
+      [
+       "r18c1p37reg:radio:12_clone",
+       "r19c1p39reg:radio:12_clone"
+      ],
+      [
+       "r26c1p50reg:upload1_input",
+       "r27c1p52reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "in sostituzione di",
+     "id": "r11c1p24reg:radio:7_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r12c2p27reg:txt",
+       "kind": "text",
+       "label": "cognome",
+       "context": "in sostituzione di",
+       "max": 50
+      },
+      {
+       "id": "r12c3p29reg:txt",
+       "kind": "text",
+       "label": "nome",
+       "context": "in sostituzione di",
+       "max": 50
+      },
+      {
+       "id": "r12c4p31reg:txt",
+       "kind": "text",
+       "label": "cod. fisc.",
+       "context": "in sostituzione di",
+       "max": 16
+      }
+     ],
+     "moved": [
+      [
+       "r11c1p24reg:radio:7_clone",
+       "r12c1p25reg:radio:7_clone"
+      ],
+      [
+       "r12c1p28reg:radio:8_clone",
+       "r13c1p32reg:radio:8_clone"
+      ],
+      [
+       "r14c1p33reg:radio:9_clone",
+       "r15c1p37reg:radio:9_clone"
+      ],
+      [
+       "r16c1p35reg:radio:10_clone",
+       "r17c1p39reg:radio:10_clone"
+      ],
+      [
+       "r17c1p36reg:radio:11_clone",
+       "r18c1p40reg:radio:11_clone"
+      ],
+      [
+       "r18c1p37reg:radio:12_clone",
+       "r19c1p41reg:radio:12_clone"
+      ],
+      [
+       "r26c1p50reg:upload1_input",
+       "r27c1p54reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "in aggiunta di",
+     "id": "r12c1p28reg:radio:8_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r13c2p31reg:txt",
+       "kind": "text",
+       "label": "cognome",
+       "context": "in aggiunta di",
+       "max": 50
+      },
+      {
+       "id": "r13c3p33reg:txt",
+       "kind": "text",
+       "label": "nome",
+       "context": "in aggiunta di",
+       "max": 50
+      },
+      {
+       "id": "r13c4p35reg:txt",
+       "kind": "text",
+       "label": "cod.fisc.",
+       "context": "in aggiunta di",
+       "max": 16
+      }
+     ],
+     "moved": [
+      [
+       "r12c1p28reg:radio:8_clone",
+       "r13c1p29reg:radio:8_clone"
+      ],
+      [
+       "r14c1p33reg:radio:9_clone",
+       "r15c1p37reg:radio:9_clone"
+      ],
+      [
+       "r16c1p35reg:radio:10_clone",
+       "r17c1p39reg:radio:10_clone"
+      ],
+      [
+       "r17c1p36reg:radio:11_clone",
+       "r18c1p40reg:radio:11_clone"
+      ],
+      [
+       "r18c1p37reg:radio:12_clone",
+       "r19c1p41reg:radio:12_clone"
+      ],
+      [
+       "r26c1p50reg:upload1_input",
+       "r27c1p54reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "A) TITOLO DI STUDIO (1)",
+     "id": "r14c1p33reg:radio:9_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r16c1p35reg:chk",
+       "kind": "checkbox",
+       "label": "Laurea in materia tecnica / Diploma universitario in materia tecnica (laurea breve) idoneo per la specifica attività richiesta"
+      },
+      {
+       "id": "r17c1p36reg:chk",
+       "kind": "checkbox",
+       "label": "Diploma di istruzione secondaria superiore in materia tecnica idoneo per la specifica attività richiesta"
+      },
+      {
+       "id": "r18c1p37reg:chk",
+       "kind": "checkbox",
+       "label": "Attestato di qualifica a carattere tecnico attinente l'attività conseguito ai sensi della legislazione vigente in materia di formazione professionale idoneo per"
+      }
+     ],
+     "moved": [
+      [
+       "r16c1p35reg:radio:10_clone",
+       "r19c1p38reg:radio:10_clone"
+      ],
+      [
+       "r17c1p36reg:radio:11_clone",
+       "r20c1p39reg:radio:11_clone"
+      ],
+      [
+       "r18c1p37reg:radio:12_clone",
+       "r21c1p40reg:radio:12_clone"
+      ],
+      [
+       "r26c1p50reg:upload1_input",
+       "r29c1p53reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     },
+     "then": [
+      {
+       "choice": "Laurea in materia tecnica / Diploma universitario in materia tecnica (laurea breve) idoneo per la specifica attività richiesta",
+       "id": "r16c1p35reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r18c1p37reg:calendar_input",
+         "kind": "date",
+         "label": "conseguita/o il"
+        },
+        {
+         "id": "r18c2p39reg:txt",
+         "kind": "text",
+         "label": "rilasciato dall'Università degli Studi di",
+         "max": 50
+        },
+        {
+         "id": "r20c1p41reg:txt",
+         "kind": "text",
+         "label": "specializzazione tecnica in",
+         "max": 80
+        }
+       ],
+       "moved": [
+        [
+         "r17c1p36reg:chk",
+         "r21c1p42reg:chk"
+        ],
+        [
+         "r18c1p37reg:chk",
+         "r22c1p43reg:chk"
+        ],
+        [
+         "r19c1p38reg:radio:10_clone",
+         "r23c1p44reg:radio:10_clone"
+        ],
+        [
+         "r20c1p39reg:radio:11_clone",
+         "r24c1p45reg:radio:11_clone"
+        ],
+        [
+         "r21c1p40reg:radio:12_clone",
+         "r25c1p46reg:radio:12_clone"
+        ],
+        [
+         "r29c1p53reg:upload1_input",
+         "r33c1p59reg:upload1_input"
+        ]
+       ]
+      },
+      {
+       "choice": "Diploma di istruzione secondaria superiore in materia tecnica idoneo per la specifica attività richiesta",
+       "id": "r17c1p36reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r19c1p38reg:calendar_input",
+         "kind": "date",
+         "label": "conseguito il"
+        },
+        {
+         "id": "r19c2p40reg:txt",
+         "kind": "text",
+         "label": "rilasciato dall'Istituto",
+         "max": 80
+        },
+        {
+         "id": "r21c1p42reg:txt",
+         "kind": "text",
+         "label": "con sede nel Comune di",
+         "max": 80
+        },
+        {
+         "id": "r21c2p44reg:txt",
+         "kind": "text",
+         "label": "specializzazione tecnica",
+         "max": 80
+        }
+       ],
+       "moved": [
+        [
+         "r18c1p37reg:chk",
+         "r22c1p45reg:chk"
+        ],
+        [
+         "r19c1p38reg:radio:10_clone",
+         "r23c1p46reg:radio:10_clone"
+        ],
+        [
+         "r20c1p39reg:radio:11_clone",
+         "r24c1p47reg:radio:11_clone"
+        ],
+        [
+         "r21c1p40reg:radio:12_clone",
+         "r25c1p48reg:radio:12_clone"
+        ],
+        [
+         "r29c1p53reg:upload1_input",
+         "r33c1p61reg:upload1_input"
+        ]
+       ]
+      },
+      {
+       "choice": "Attestato di qualifica a carattere tecnico attinente l'attività conseguito ai sensi della legislazione vigente in materia di formazione professionale idoneo per",
+       "id": "r18c1p37reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r20c1p39reg:calendar_input",
+         "kind": "date",
+         "label": "conseguito il"
+        },
+        {
+         "id": "r20c2p41reg:txt",
+         "kind": "text",
+         "label": "rilasciato dal Centro",
+         "max": 80
+        },
+        {
+         "id": "r22c1p43reg:txt",
+         "kind": "text",
+         "label": "con sede nel Comune di",
+         "max": 80
+        },
+        {
+         "id": "r22c2p45reg:txt",
+         "kind": "text",
+         "label": "specializzazione tecnica",
+         "max": 80
+        }
+       ],
+       "moved": [
+        [
+         "r19c1p38reg:radio:10_clone",
+         "r23c1p46reg:radio:10_clone"
+        ],
+        [
+         "r20c1p39reg:radio:11_clone",
+         "r24c1p47reg:radio:11_clone"
+        ],
+        [
+         "r21c1p40reg:radio:12_clone",
+         "r25c1p48reg:radio:12_clone"
+        ],
+        [
+         "r29c1p53reg:upload1_input",
+         "r33c1p61reg:upload1_input"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "B) OBBLIGO SCOLASTICO ED ESPERIENZA PROFESSIONALE",
+     "id": "r16c1p35reg:radio:10_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r19c1p38reg:txt",
+       "kind": "text",
+       "label": "conseguito presso la Scuola",
+       "max": 80
+      },
+      {
+       "id": "r19c2p40reg:txt",
+       "kind": "text",
+       "label": "con sede nel Comune",
+       "max": 100
+      },
+      {
+       "id": "r21c1p42reg:chk",
+       "kind": "checkbox",
+       "label": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'"
+      },
+      {
+       "id": "r22c1p43reg:chk",
+       "kind": "checkbox",
+       "label": "collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecni"
+      },
+      {
+       "id": "r23c1p44reg:chk",
+       "kind": "checkbox",
+       "label": "dipendente qualificato"
+      }
+     ],
+     "moved": [
+      [
+       "r17c1p36reg:radio:11_clone",
+       "r24c1p45reg:radio:11_clone"
+      ],
+      [
+       "r18c1p37reg:radio:12_clone",
+       "r25c1p46reg:radio:12_clone"
+      ],
+      [
+       "r26c1p50reg:upload1_input",
+       "r33c1p59reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     },
+     "then": [
+      {
+       "choice": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'",
+       "id": "r21c1p42reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r23c1p44reg:txt",
+         "kind": "text",
+         "label": "impresa",
+         "max": 100
+        },
+        {
+         "id": "r23c2p46reg:number",
+         "kind": "text",
+         "label": "n. R.E.A",
+         "max": 15
+        },
+        {
+         "id": "r25c1p48reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r25c3p52reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        }
+       ],
+       "moved": [
+        [
+         "r5c2p11reg:calendar_input",
+         "r25c2p50reg:calendar_input"
+        ],
+        [
+         "r22c1p43reg:chk",
+         "r26c1p53reg:chk"
+        ],
+        [
+         "r23c1p44reg:chk",
+         "r27c1p54reg:chk"
+        ],
+        [
+         "r24c1p45reg:radio:11_clone",
+         "r28c1p55reg:radio:11_clone"
+        ],
+        [
+         "r25c1p46reg:radio:12_clone",
+         "r29c1p56reg:radio:12_clone"
+        ],
+        [
+         "r33c1p59reg:upload1_input",
+         "r37c1p69reg:upload1_input"
+        ]
+       ]
+      },
+      {
+       "choice": "collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecni",
+       "id": "r22c1p43reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r24c1p45reg:txt",
+         "kind": "text",
+         "label": "impresa",
+         "max": 100
+        },
+        {
+         "id": "r24c2p47reg:number",
+         "kind": "text",
+         "label": "n. R.E.A",
+         "max": 15
+        },
+        {
+         "id": "r26c1p49reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r26c3p53reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        }
+       ],
+       "moved": [
+        [
+         "r5c2p11reg:calendar_input",
+         "r26c2p51reg:calendar_input"
+        ],
+        [
+         "r23c1p44reg:chk",
+         "r27c1p54reg:chk"
+        ],
+        [
+         "r24c1p45reg:radio:11_clone",
+         "r28c1p55reg:radio:11_clone"
+        ],
+        [
+         "r25c1p46reg:radio:12_clone",
+         "r29c1p56reg:radio:12_clone"
+        ],
+        [
+         "r33c1p59reg:upload1_input",
+         "r37c1p69reg:upload1_input"
+        ]
+       ]
+      },
+      {
+       "choice": "dipendente qualificato",
+       "id": "r23c1p44reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r25c1p46reg:txt",
+         "kind": "text",
+         "label": "dell'impresa",
+         "max": 100
+        },
+        {
+         "id": "r25c2p48reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r27c1p50reg:txt",
+         "kind": "text",
+         "label": "qualifica risultante dal libretto di lavoro/scheda professionale/busta paga",
+         "max": 100
+        },
+        {
+         "id": "r29c1p52reg:number",
+         "kind": "text",
+         "label": "n. R.E.A",
+         "max": 15
+        },
+        {
+         "id": "r29c3p56reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        }
+       ],
+       "moved": [
+        [
+         "r5c2p11reg:calendar_input",
+         "r29c2p54reg:calendar_input"
+        ],
+        [
+         "r24c1p45reg:radio:11_clone",
+         "r30c1p57reg:radio:11_clone"
+        ],
+        [
+         "r25c1p46reg:radio:12_clone",
+         "r31c1p58reg:radio:12_clone"
+        ],
+        [
+         "r33c1p59reg:upload1_input",
+         "r39c1p71reg:upload1_input"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "C) RICONOSCIMENTO TITOLO ESTERO",
+     "id": "r17c1p36reg:radio:11_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r20c1p39reg:number",
+       "kind": "text",
+       "label": "decreto n.",
+       "max": 30
+      },
+      {
+       "id": "r20c2p41reg:calendar_input",
+       "kind": "date",
+       "label": "emesso il"
+      },
+      {
+       "id": "r20c3p43reg:txt",
+       "kind": "text",
+       "label": "dal Ministero",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r18c1p37reg:radio:12_clone",
+       "r21c1p44reg:radio:12_clone"
+      ],
+      [
+       "r26c1p50reg:upload1_input",
+       "r29c1p57reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "D) CASI PARTICOLARI",
+     "id": "r18c1p37reg:radio:12_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r19c1p38reg:chk",
+       "kind": "checkbox",
+       "label": "soggetto già abilitato in quanto responsabile tecnico"
+      },
+      {
+       "id": "r20c1p39reg:chk",
+       "kind": "checkbox",
+       "label": "dipendente/collaboratore familiare/titolare qualificato di Impresa/Ente non del settore dotata/o di ufficio tecnico interno, con regolare iscrizione INAIL per i"
+      }
+     ],
+     "moved": [
+      [
+       "r26c1p50reg:upload1_input",
+       "r28c1p52reg:upload1_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "Cognome",
+      "adds": 36
+     },
+     "then": [
+      {
+       "choice": "soggetto già abilitato in quanto responsabile tecnico",
+       "id": "r19c1p38reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r21c1p40reg:txt",
+         "kind": "text",
+         "label": "dell'imprese",
+         "max": 100
+        },
+        {
+         "id": "r21c2p42reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r21c3p44reg:number",
+         "kind": "text",
+         "label": "n. R.E.A",
+         "max": 15
+        }
+       ],
+       "moved": [
+        [
+         "r20c1p39reg:chk",
+         "r22c1p45reg:chk"
+        ],
+        [
+         "r28c1p52reg:upload1_input",
+         "r30c1p58reg:upload1_input"
+        ]
+       ]
+      },
+      {
+       "choice": "dipendente/collaboratore familiare/titolare qualificato di Impresa/Ente non del settore dotata/o di ufficio tecnico interno, con regolare iscrizione INAIL per i",
+       "id": "r20c1p39reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r22c1p41reg:txt",
+         "kind": "text",
+         "label": "Impresa/Ente",
+         "max": 100
+        },
+        {
+         "id": "r22c2p43reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r22c3p45reg:number",
+         "kind": "text",
+         "label": "n. R.E.A",
+         "max": 15
+        },
+        {
+         "id": "r24c1p47reg:txt",
+         "kind": "text",
+         "label": "qualifica risultante dal libretto di lavoro/busta paga/scheda professionale",
+         "max": 100
+        },
+        {
+         "id": "r26c2p51reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        }
+       ],
+       "moved": [
+        [
+         "r5c2p11reg:calendar_input",
+         "r26c1p49reg:calendar_input"
+        ],
+        [
+         "r28c1p52reg:upload1_input",
+         "r33c1p63reg:upload1_input"
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "seconds": 69.9
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 1.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}
