@@ -18,6 +18,80 @@ yours:
   - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen, and the ASL tariffa forfettaria"
   - "Attach, signed with your firma digitale (.p7m): the planimetria quotata of the premises and the ASL tariff receipt"
   - "Sign and send (Firma e invio); keep the receipt"
+# Every {{ask.x}} the run needs, asked in one message before the portal opens
+# (`run.py preflight` lists the ones answers.json lacks; one with a default isn't asked,
+# and one no field of this case reads isn't either). The yes/no ones are items of one
+# checklist, each phrased as the exception, so "none of these" is the usual answer; the
+# answer is the list of items that apply, under the group's key. The ones `supports`
+# reads come first: their answers can end the pratica before it starts.
+groups:
+  extras:
+    question: "Does any of this apply to the business? Tick all that do, or none."
+
+asks:
+  zona_tutelata:
+    group: extras
+    type: yes_no
+    item: "It's in the historic centre: the UNESCO area or its buffer zone"
+    why: >-
+      Since 25 July 2026 an opening there needs an authorization, not a SCIA, and only the
+      SCIA is mapped. The Piano's street list (portal-map.yaml, README) could answer it
+      instead, once it's data.
+  alcolici:
+    group: extras
+    type: yes_no
+    item: "It will sell alcoholic drinks, beer and wine included"
+    why: Selling alcohol adds the Dogane notice to this pratica, a branch not mapped yet.
+  musica:
+    group: extras
+    type: yes_no
+    item: "It will have music or a sound system"
+    why: Music adds the impatto acustico papers, a branch not mapped yet.
+  insegna_esterna:
+    group: extras
+    type: yes_no
+    item: "It will have a sign outside"
+    why: An outside sign bundles the insegna's SCIA into this one, a branch not mapped yet.
+  centro_commerciale:
+    group: extras
+    type: yes_no
+    item: "It's inside a shopping centre"
+  stagionale:
+    group: extras
+    type: yes_no
+    item: "It will open only for part of the year (a season)"
+  insegna:
+    type: text
+    question: "What name goes on the sign?"
+  superficie_somministrazione_mq:
+    type: number
+    question: "How many m² is the area where customers eat and drink? (not the whole premises)"
+  descrizione:
+    type: text
+    question: "A name for the draft in the portal's Pratiche in bozza"
+    default: "SCIA somministrazione - {{business.denominazione}}"
+  diritti_euro:
+    type: number
+    question: "The SUAP fees in euro"
+    default: "120"
+    why: >-
+      The 2026 table's line for a bar or restaurant with the notifica sanitaria outside the
+      protected zones, the only case `supports` lets through.
+
+# The cases this file maps; anything else stops at pre-flight with the reason.
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's SCIA has screens we haven't mapped."
+  - when: "{{ask.zona_tutelata|not}}"
+    else: "In the historic centre an opening needs an authorization, not a SCIA: not supported yet."
+  - when: "{{ask.alcolici|not}}"
+    else: "Selling alcohol isn't supported yet: it adds the Dogane notice to the pratica."
+  - when: "{{ask.musica|not}}"
+    else: "Music or a sound system isn't supported yet: it adds the impatto acustico papers."
+  - when: "{{ask.insegna_esterna|not}}"
+    else: "An outside sign isn't supported yet: it bundles the insegna's SCIA into this one."
+
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 
@@ -106,8 +180,8 @@ sections:
   - section: Dati dell'esercizio di somministrazione
     fields:
       - {id: "r3c1p3reg:txt", kind: text, label: Denominazione insegna, value: "{{ask.insegna}}"}
-      - {id: "r5c1p7reg:radio:0_clone", kind: radio, label: Permanente, when: "{{ask.permanente}}"}
-      - {id: "r6c1p9reg:radio:1_clone", kind: radio, label: Stagionale, when: "{{ask.permanente|not}}"}
+      - {id: "r5c1p7reg:radio:0_clone", kind: radio, label: Permanente, when: "{{ask.stagionale|not}}"}
+      - {id: "r6c1p9reg:radio:1_clone", kind: radio, label: Stagionale, when: "{{ask.stagionale}}"}
       - {id: "r8c1p12reg:txta", kind: text, label: Tipologia di esercizio, value: "{{business.descrizione_attivita}}"}
       - {id: "r10c1p17reg:radio:2_clone", kind: radio, label: "Si", when: "{{ask.centro_commerciale}}"}
       - {id: "r10c2p18reg:radio:3_clone", kind: radio, label: "No", when: "{{ask.centro_commerciale|not}}"}

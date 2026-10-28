@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Fill a portal pratica from the vault in a real browser, then hand it to the person.
 
+  run.py preflight --steps STEPS.yaml [--answers A.json] VAULT
+      Before anything opens: prints JSON with why this case isn't supported (the steps
+      file's `supports:`), the questions still to ask (its `asks:`, branch questions
+      first), the vault fields missing or expired, the files to attach and whether they
+      fit the pane, and the person's own steps. Exits 0 when `ready`, 3 when not.
+
   run.py plan --steps STEPS.yaml --answers A.json
               (--values - | --server S.json --token NAME | --vault-dir DIR [--keychain SERVICE])
       Resolves every value the steps need and prints what goes where. No browser.
@@ -14,8 +20,9 @@
               [--cdp URL | --profile DIR] [--close]
       Opens the portal in a Playwright window (its own Chromium) and waits for the person
       to log in, then runs inpage.js there, as in the pane: the wizard, each section filled,
-      saved and read back. It stops before what is the person's: the declarations, the
-      attachments, the payment, signing and sending, and shows the draft, left open for
+      saved and read back, then the draft loaded again and every value read once more. It
+      stops before what is the person's: the declarations, the attachments the steps file
+      doesn't name, the payment, signing and sending, and shows the draft, left open for
       them unless --close. Writes DIR/report.json (timings, what each section kept),
       DIR/review.html (the page the person reviews: what's left for them, the steps file's
       `yours`, and every value) and DIR/failure.png when a step fails.
@@ -32,15 +39,23 @@ browser Playwright launched; otherwise Chromium starts with its own profile (--p
 default ~/.cache/pratica-portal/profile), never the person's own, so a login there
 lasts as long as the portal keeps it.
 
+A `kind: file` field attaches a file: its value is a path (usually an {{ask.x}}), and
+its bytes travel in run.js. With `page` they pass through the conversation, so all of a
+run's files together may be at most 256 KB (PAGE_FILES_LIMIT); `run` evaluates run.js
+itself and takes any size.
+
 No model is called during a run. A step that doesn't match what the steps file expects
 (a label, a lookup with no single answer, a value the portal didn't keep) stops the run:
 that is the point where Claude looks at the page and fixes the steps file.
 """
 
 import argparse
+import base64
 import json
+import mimetypes
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -58,6 +73,10 @@ DECLARATIONS = re.compile(
     r"dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75", re.I)
 
 DUG = {"VIA", "VIALE", "PIAZZA", "CORSO", "LARGO"}
+# run.js for the pane is one tool call's text: a receipt or a small scan, not a planimetria.
+# Larger files need another route into the page (docs/north-star.md, open question 7).
+PAGE_FILES_LIMIT = 256 * 1024
+FILE_TYPES = {".p7m": "application/pkcs7-mime", ".pdf": "application/pdf"}
 CARICA = {"titolare": "TITOLARE", "legale_rappresentante": "LEGALE RAPPRESENTANTE"}
 FORMA = {
     "ditta_individuale": "IMPRESA INDIVIDUALE",
@@ -110,12 +129,20 @@ class StepError(Exception):
 class Values:
     """The vault fields and answers a steps file refers to."""
 
-    def __init__(self, answers, vault=None, fields=None):
-        """From the vault with a token, or from fields already read (pvault get's JSON)."""
+    def __init__(self, answers, vault=None, fields=None, asks=None):
+        """From the vault with a token, or from fields already read (pvault get's JSON).
+        asks is the steps file's `asks:`, for the defaults of what answers leave out."""
         self.vault, self.fields = vault, fields
-        self.answers = answers
+        self.answers, self.asks = answers, asks or {}
         self.cache = {}
-        self.titolare = self._titolare()
+        self._titolare_slug = None
+
+    @property
+    def titolare(self):
+        # Found when a template first names t:, so pre-flight can report a missing one.
+        if self._titolare_slug is None:
+            self._titolare_slug = self._titolare()
+        return self._titolare_slug
 
     def _get(self, path):
         status, body = self.vault.call("GET", path)
@@ -142,9 +169,20 @@ class Values:
             raise StepError(f"want one titolare or legale rappresentante, found {found or 'none'}")
         return found[0]
 
+    def raw(self, key):
+        """An ask's answer as given; a checklist's answer (the items ticked, as a list
+        under the group's key) answers each of its items, ticked or not."""
+        v = self.answers.get(key)
+        group = self.asks.get(key, {}).get("group")
+        if v is None and group and isinstance(self.answers.get(group), list):
+            v = key in self.answers[group]
+        return v
+
     def field(self, ref):
         if ref.startswith("ask."):
-            v = self.answers.get(ref[4:])
+            v = self.raw(ref[4:])
+            if v is None and "default" in self.asks.get(ref[4:], {}):
+                v = self.render(self.asks[ref[4:]]["default"])
             return None if v is None else str(v).lower() if isinstance(v, bool) else str(v)
         if ref.startswith("t:"):
             ref = self.titolare + ":" + ref[2:]
@@ -178,35 +216,284 @@ def plan(steps, values):
             if "when" in f and not truthy(values.render(f["when"]) or ""):
                 continue
             v = values.render(f["value"]) if "value" in f else None
+            name = f.get("label") or f.get("id") or f.get("css")
             if "value" in f and v is None and not f.get("optional"):
-                missing.append(f"{sec['section']}: {f.get('label', f['id'])} ({f['value']})")
-            out.append({"section": sec["section"], "id": f["id"], "kind": f["kind"],
+                missing.append(f"{sec['section']}: {name} ({f['value']})")
+            if f["kind"] == "file" and v and not Path(v).expanduser().is_file():
+                missing.append(f"{sec['section']}: {name}: no file {v}")
+            out.append({"section": sec["section"], "id": f.get("id") or f.get("css"), "kind": f["kind"],
                         "label": f.get("label"), "value": v})
     if missing:
         raise StepError("missing values:\n  " + "\n  ".join(missing))
     return out
 
 
-def page_scripts(steps, values):
+# --- pre-flight and branch coverage --------------------------------------------------
+
+ASK_TYPES = {"text", "number", "yes_no", "date", "choice", "file"}
+
+
+def refs_in(template):
+    """The fields a template reads, each with its filters."""
+    return [(parts[0], parts[1:]) for parts in
+            ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))]
+
+
+def templates(steps):
+    """Every template in a steps file, with where it is."""
+    for w in steps.get("wizard", []):
+        if "fill" in w:
+            yield f"wizard: {w['screen']}", w["fill"]["value"], {}
+    for sec in steps["sections"]:
+        for f in sec["fields"]:
+            for k in ("when", "value"):
+                if k in f:
+                    yield f"{sec['section']}: {f.get('label') or f.get('id') or f.get('css')}", f[k], f
+    for y in steps.get("yours", []):
+        yield "yours", y, {}
+    for c in steps.get("supports", []):
+        for k in ("when", "value", "else"):
+            if k in c:
+                yield "supports", c[k], {}
+
+
+def check_asks(steps):
+    """The asks block itself, and the order to ask in. Every ask a field reads has its
+    question, and every question is read by a field, a wizard screen or `supports`: one
+    only the person's own steps mention is not worth asking. A yes/no in a `group` is an
+    item of that group's checklist, asked as one question."""
+    asks, groups = steps.get("asks", {}), steps.get("groups", {})
+    reads = lambda wheres: {r[4:] for where, t, _ in templates(steps) if wheres(where)
+                            for r, _ in refs_in(t) if r.startswith("ask.")}
+    used = reads(lambda w: w != "yours")
+    lacking = sorted((used | reads(lambda w: w == "yours")) - set(asks))
+    if lacking:
+        raise StepError(f"steps file: no question in asks: for {', '.join(lacking)}")
+    unused = sorted(set(asks) - used)
+    if unused:
+        raise StepError(f"steps file: no field reads asks.{', asks.'.join(unused)}: drop it")
+    for k, a in asks.items():
+        if "group" in a:
+            if a["group"] not in groups or a.get("type") != "yes_no" or not a.get("item"):
+                raise StepError(f"steps file: asks.{k} is in a group, so it needs type yes_no, an item, "
+                                "and its group in groups:")
+        elif a.get("type") not in ASK_TYPES or not a.get("question") or (a["type"] == "choice" and not a.get("options")):
+            raise StepError(f"steps file: asks.{k} needs a question and a type ({', '.join(sorted(ASK_TYPES))}), "
+                            "and options for a choice")
+    for g, d in groups.items():
+        if not d.get("question") or not any(a.get("group") == g for a in asks.values()):
+            raise StepError(f"steps file: groups.{g} needs a question and at least one ask in it")
+    # The asks that decide the branch come first: their answers can end the pratica here.
+    branch = {r[4:] for c in steps.get("supports", []) for k in ("when", "value")
+              for r, _ in refs_in(c.get(k, "")) if r.startswith("ask.")}
+    return sorted(asks, key=lambda k: k not in branch)
+
+
+def needed(steps, values):
+    """The asks this case needs answered, each with the unanswered asks its need hangs on
+    (empty: needed whatever they say). A field whose `when` is false for this case needs
+    nothing, so its questions aren't asked."""
+    need = {}
+
+    def add(keys, deps=()):
+        for k in keys:
+            need[k] = set() if (k in need and not need[k]) or not deps else need.get(k, set()) | set(deps)
+
+    asked = lambda tmpl: [r[4:] for r, _ in refs_in(tmpl) if r.startswith("ask.")]
+    for c in steps.get("supports", []):
+        add(asked(c.get("when", c.get("value", ""))))
+    for w in steps.get("wizard", []):
+        if "fill" in w:
+            add(asked(w["fill"]["value"]))
+    for sec in steps["sections"]:
+        for f in sec["fields"]:
+            deps = ()
+            if "when" in f:
+                add(asked(f["when"]))
+                w = values.render(f["when"])
+                if w is not None and not truthy(w):
+                    continue
+                if w is None:
+                    deps = [k for k in asked(f["when"]) if values.field("ask." + k) is None]
+            add(asked(f.get("value", "")), deps)
+    return need
+
+
+def supported(steps, values):
+    """Why this case isn't mapped, and the asks still needed to tell."""
+    out, need = [], []
+    for c in steps.get("supports", []):
+        tmpl = c.get("when", c.get("value"))
+        unknown = [r for r, f in refs_in(tmpl) if r.startswith("ask.") and values.field(r) is None]
+        if unknown:
+            need += unknown
+            continue
+        v = values.render(tmpl)
+        ok = v is not None and (truthy(v) if "when" in c else v in [str(x) for x in c["in"]])
+        if not ok:
+            out.append(values.render(c["else"]) or c["else"])
+    return out, need
+
+
+def require_supported(steps, values):
+    out, need = supported(steps, values)
+    if out:
+        raise StepError("not supported: " + "; ".join(out))
+    if need:
+        raise StepError("unanswered: " + ", ".join(sorted(set(need))) + " (run preflight)")
+
+
+def check_answer(ask, v):
+    """Why an answer doesn't fit its ask, or None."""
+    s = str(v).strip()
+    kind = ask["type"]
+    if kind == "yes_no" and not (isinstance(v, bool) or s.lower() in ("true", "false", "si", "sì", "no", "yes")):
+        return "answer yes or no"
+    if kind == "number":
+        try:
+            float(s.replace(",", "."))
+        except ValueError:
+            return "answer with a number"
+    if kind == "date":
+        try:
+            date.fromisoformat(s)
+        except ValueError:
+            return "answer with a date (YYYY-MM-DD)"
+    if kind == "choice" and s not in [str(o) for o in ask["options"]]:
+        return "answer with one of: " + ", ".join(map(str, ask["options"]))
+    if kind == "file" and not Path(s).expanduser().is_file():
+        return f"no file {s}"
+    if kind == "text" and not s:
+        return "the answer is empty"
+    return None
+
+
+def preflight(steps, values):
+    """Everything a run needs, settled before any browser opens: why this case isn't
+    supported, the questions still to ask, the vault fields missing or expired, the files
+    to attach, and the person's own steps. ready: nothing is left before the run."""
+    order = check_asks(steps)
+    asks = steps.get("asks", {})
+    report = {"ready": False, "unsupported": [], "questions": [], "missing": [], "files": [], "yours": []}
+    if any(r.startswith("t:") for _, t, _ in templates(steps) for r, _ in refs_in(t)):
+        try:
+            values.titolare
+        except StepError as e:  # nobody is titolare yet: a missing field like any other
+            report["missing"].append({"field": "*:ruolo.tipo", "why": str(e)})
+            return report
+    report["unsupported"], _ = supported(steps, values)
+    if report["unsupported"]:
+        return report
+    need, groups, lists = needed(steps, values), steps.get("groups", {}), {}
+    for k in order:
+        if k not in need:
+            continue
+        a, v = asks[k], values.raw(k)
+        if v is None and "default" in a:
+            continue
+        why = "not answered" if v is None else check_answer(a, v)
+        if not why:
+            continue
+        hangs = {"only_if": sorted(need[k])} if need[k] else {}
+        if "group" in a:
+            g = a["group"]
+            if g not in lists:
+                lists[g] = {"key": g, "type": "checklist", "question": values.render(groups[g]["question"])
+                            or groups[g]["question"], "items": []}
+                report["questions"].append(lists[g])
+            lists[g]["items"].append({"key": k, "item": a["item"]} | {x: a[x] for x in ("why",) if x in a} | hangs)
+            continue
+        report["questions"].append({"key": k, "type": a["type"], "question": a["question"]}
+                                   | {x: a[x] for x in ("options", "why") if x in a} | hangs
+                                   | ({"error": why} if v is not None else {}))
+    for g in groups:
+        ticked = values.answers.get(g)
+        members = [k for k, a in asks.items() if a.get("group") == g]
+        if ticked is not None and (not isinstance(ticked, list) or set(ticked) - set(members)):
+            if g not in lists:  # every item looked answered, but by a list that isn't one
+                lists[g] = {"key": g, "type": "checklist", "question": values.render(groups[g]["question"])
+                            or groups[g]["question"], "items": [{"key": k, "item": asks[k]["item"]} for k in members]}
+                report["questions"].insert(0, lists[g])
+            lists[g]["error"] = "answer with a list of the keys of the items that apply ([] for none)"
+    missing, read = {}, set()
+    for where, tmpl, f in templates(steps):
+        if where in ("supports", "yours") or (f.get("optional") and tmpl == f.get("value")):
+            continue
+        if f and tmpl == f.get("value") and "when" in f:
+            w = values.render(f["when"])
+            if w is not None and not truthy(w):
+                continue  # this field isn't filled for this case
+        for ref, filters in refs_in(tmpl):
+            if ref.startswith("ask."):
+                continue
+            full = values.titolare + ":" + ref[2:] if ref.startswith("t:") else ref
+            read.add(full.rsplit(".", 1)[0])
+            if values.field(ref) is None and "empty" not in filters:
+                missing.setdefault(full, {"field": full, "why": "empty in the vault", "for": where})
+    today = date.today().isoformat()
+    for cat in sorted(read):
+        end = values.category(cat).get(cat + ".data_scadenza")
+        if end and end < today:
+            missing.setdefault(cat + ".data_scadenza", {"field": cat + ".data_scadenza", "why": f"expired on {end}",
+                                                       "for": cat})
+    report["missing"] = list(missing.values())
+    for sec in steps["sections"]:
+        for f in sec["fields"]:
+            if f["kind"] == "file":
+                path = values.render(f.get("value", ""))
+                p = Path(path).expanduser() if path else None
+                report["files"].append({"for": f"{sec['section']}: {f.get('label') or f.get('id')}", "path": path,
+                                        "exists": bool(p and p.is_file()),
+                                        "bytes": p.stat().st_size if p and p.is_file() else None})
+    report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"]) <= PAGE_FILES_LIMIT
+    report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
+    report["ready"] = not (report["questions"] or report["missing"]
+                           or any(not x["exists"] for x in report["files"] if x["path"]))
+    return report
+
+
+def attachment(path):
+    """A file as run.js carries it to inpage.js."""
+    p = Path(path).expanduser()
+    kind = FILE_TYPES.get(p.suffix.lower()) or mimetypes.guess_type(p.name)[0] or "application/octet-stream"
+    return {"name": p.name, "type": kind, "b64": base64.b64encode(p.read_bytes()).decode()}
+
+
+def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT):
     """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
+    require_supported(steps, values)
     plan(steps, values)  # stops on a missing required value
     skeleton = {
         "start": steps["start"], "logged_in": steps["logged_in"],
         "wizard": [{k: v for k, v in w.items() if k != "fill"} | (
             {"fill": {"css": w["fill"]["css"]}} if "fill" in w else {}) for w in steps["wizard"]],
-        "sections": [{"section": s["section"], "open": s.get("open", True),
-                      "fields": [{k: f[k] for k in ("id", "kind", "label") if k in f} for f in s["fields"]]}
+        "sections": [{"section": s["section"], "open": s.get("open", True)}
+                     | ({"save": s["save"]} if "save" in s else {})
+                     | {"fields": [{k: f[k] for k in ("id", "css", "kind", "label") if k in f} for f in s["fields"]]}
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,
         "dug": sorted(DUG), "label_js": LABEL_JS,
     }
-    # One entry per field: false when its `when` is false, true for a tick, else the value.
+
+    def value(f):
+        """False when its `when` is false, true for a tick, a file's bytes, else the value."""
+        if "when" in f and not truthy(values.render(f["when"]) or ""):
+            return False
+        if "value" not in f:
+            return True
+        v = values.render(f["value"])
+        return attachment(v) if f["kind"] == "file" and v else v
+
     vals = {
         "wizard": [values.render(w["fill"]["value"]) if "fill" in w else None for w in steps["wizard"]],
-        "sections": [[False if "when" in f and not truthy(values.render(f["when"]) or "")
-                      else True if "value" not in f else values.render(f["value"])
-                      for f in s["fields"]] for s in steps["sections"]],
+        "sections": [[value(f) for f in s["fields"]] for s in steps["sections"]],
     }
+    if files_limit is not None:
+        files = [v for s in vals["sections"] for v in s if isinstance(v, dict)]
+        size = sum(len(f["b64"]) * 3 // 4 for f in files)
+        if size > files_limit:
+            raise StepError(f"the attachments come to {size // 1024} KB, more than the {files_limit // 1024} KB "
+                            "run.js can carry in the pane: use `run` (a Playwright window) or attach them by hand")
     proc = steps["procedure"]
     runner = Path(__file__).with_name("inpage.js").read_text()
     # A function's source is its text, so neither part needs escaping into a string.
@@ -242,14 +529,18 @@ LABEL_JS = """(el) => {
 
 def run(steps, values, out, cdp=None, profile=None, close=False):
     """inpage.js in a Playwright window: the runner the Claude browser pane uses, without
-    the pane's 45 s call limit and slowed timers."""
+    the pane's 45 s call limit and slowed timers. A window behind others keeps full speed
+    with no call of ours: Playwright turns on focus emulation for each page it drives
+    (--cdp too) and launches Chromium with background throttling off."""
     from playwright.sync_api import sync_playwright
-    install, run_js = page_scripts(steps, values)
+    # page.evaluate runs run.js here, not through the conversation, so files of any size.
+    install, run_js = page_scripts(steps, values, files_limit=None)
     out.mkdir(parents=True, exist_ok=True)
     # What the review page shows besides the run: each value, and the person's own steps.
     shown = {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
              "values": [{"section": v["section"], "label": v["label"] or v["id"],
-                         "value": v["value"] if v["value"] is not None else "chosen"}
+                         "value": "chosen" if v["value"] is None
+                         else "attached: " + Path(v["value"]).name if v["kind"] == "file" else v["value"]}
                         for v in plan(steps, values)]}
     report = {"procedure": steps["procedure"], "result": "stopped"}
     with sync_playwright() as pw:
@@ -283,6 +574,9 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
                     print(f"  {sec['section']}: {sec['seconds']} s", flush=True)
                 sections_shown = len(report["sections"])
                 if report["result"] != "running":
+                    if report.get("verify_seconds") is not None:
+                        print(f"  fresh load of the draft, every value read again: {report['verify_seconds']} s",
+                              flush=True)
                     break
         except Exception as e:
             report["result"] = "stopped"
@@ -299,7 +593,7 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
             if not close and not page.is_closed():
                 if report["result"] == "filled":
                     page.evaluate("__pv.open()")
-                print("Left open for you: tick the declarations, attach, sign and pay yourself. "
+                print("Left open for you: tick the declarations, attach what's left, sign and pay yourself. "
                       "Close the window when done.", flush=True)
                 page.wait_for_event("close", timeout=0)
             try:
@@ -311,9 +605,9 @@ def run(steps, values, out, cdp=None, profile=None, close=False):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("command", choices=["plan", "page", "run"])
+    ap.add_argument("command", choices=["preflight", "plan", "page", "run"])
     ap.add_argument("--steps", required=True, type=Path)
-    ap.add_argument("--answers", required=True, type=Path)
+    ap.add_argument("--answers", type=Path, help="the asks' answers as JSON (none yet: preflight lists them all)")
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--server", type=Path)
     src.add_argument("--vault-dir")
@@ -327,18 +621,24 @@ def main():
     a = ap.parse_args()
     steps = yaml.safe_load(a.steps.read_text())
     try:
-        answers = json.loads(a.answers.read_text())
+        answers = json.loads(a.answers.read_text()) if a.answers else {}
+        asks = steps.get("asks")
         if a.values:
             given = sys.stdin.read() if a.values == "-" else Path(a.values).read_text()
             if not given.strip():
                 raise StepError("no values: pvault get printed nothing (its error is above)")
-            values = Values(answers, fields=json.loads(given))
+            values = Values(answers, fields=json.loads(given), asks=asks)
         else:
             vaults = fill.connect(argparse.Namespace(server=a.server, vault_dir=a.vault_dir, keychain=a.keychain))
             if a.server and a.token not in vaults:
                 ap.error(f"{a.server} has no token {a.token!r}")
-            values = Values(answers, vault=vaults[a.token if a.server else "prepare"])
+            values = Values(answers, vault=vaults[a.token if a.server else "prepare"], asks=asks)
+        if a.command == "preflight":
+            report = preflight(steps, values)
+            print(json.dumps(report, indent=2, ensure_ascii=False))
+            return 0 if report["ready"] else 3
         if a.command == "plan":
+            require_supported(steps, values)
             print(f"titolare: {values.titolare}")
             for p in plan(steps, values):
                 print(f"{p['section'][:28]:28}  {(p['label'] or p['id'])[:34]:34}  {p['value'] if p['value'] is not None else '(' + p['kind'] + ')'}")

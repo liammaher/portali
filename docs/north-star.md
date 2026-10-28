@@ -177,6 +177,22 @@ and 2 are already answered for them.
 the July 2026 SUE switch, and `fill.py` has its Allegato A layout. Alongside it, if a business is ready,
 a TARI non domestica by PEC, to test that path.
 
+### 7. Large attachments in the Claude browser pane
+
+`inpage.js` attaches a file by building it in the page and handing it to the file box (`kind: file` in a
+steps file). In a Playwright window (`run.py run`) any size works, because run.js never passes through
+the conversation. In the pane run.js is one tool call's text, so `run.py page` carries at most 256 KB of
+files: a receipt or a small scan, not a planimetria (often 1–5 MB). Tested on a local bench on
+2026-10-28, the pane offers no other way in: its form tool can't set a file box, a public portal page
+can't fetch or frame `localhost` (`ERR_BLOCKED_BY_CLIENT`, the app's own block), and `window.open`
+replaces the tab, so a helper page can't hand a file over. A normal `https` fetch with CORS works.
+
+**Suggested:** the connector puts each large file at a short-lived `https` URL that only the run can
+read (one-time token, CORS limited to the portal's origin, deleted after the upload), and run.js carries
+the URL instead of the bytes. That is the first time a document leaves the computer, so it waits for the
+hosting design (decision 1, question 5): encrypted per business, in the EU, never kept. Until then,
+large files are attached in a Playwright window or by the person.
+
 ## Parked
 
 Good for a personal vault, not part of the product. Kept working, not developed further:
@@ -267,4 +283,7 @@ or AI-provider credits, as the plan already lists.
 - [`reports/`](../reports/): the strategy reports this comes from (three personas, the synthesis, the
   MVP checklist, the sensitivity ranking, the research on recurring obligations).
 - [pratiche-napoli](https://github.com/liammaher/pratiche-napoli): the library.
+- [`design/supported-flows.md`](design/supported-flows.md): what a supported pratica promises (one
+  message of questions, a login, a finished draft) and the plan to get there: pre-flight, branch
+  coverage, self-recovery.
 - The earlier plan (25 Oct) is Liam's local plan file; it points here for what has changed.

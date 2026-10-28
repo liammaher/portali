@@ -6,8 +6,12 @@
 // runner stays in the top page and drives the portal in a same-origin frame over it (the
 // portal sends no X-Frame-Options or frame-ancestors). It waits on PrimeFaces' own ajax
 // queue instead of fixed pauses, sets dropdowns through their widgets (the same change
-// event and server call a click makes), reads every field back after each save, and
-// never opens a declaration or clicks what is the person's: payment, signing, sending.
+// event and server call a click makes), reads every field back after each save and
+// again on a fresh load of the draft before it says `filled`, and never opens a
+// declaration or clicks what is the person's: payment, signing, sending.
+// A file is attached by building it in the page and handing it to the file box as a
+// drop would (DataTransfer): the pane can't type a path into one, and a public page
+// can't fetch from localhost, so its bytes come in run.js (run.py says how big).
 //
 //   __pv.start(procedure, values)  starts a run, returns at once
 //   await __pv.wait(ms)            the run's report once it ends, or after ms
@@ -23,11 +27,11 @@
   const norm = (s) => (s || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "")
     .replace(/\s+/g, " ").trim().toLowerCase();
 
-  let steps, frame, report;
+  let steps, frame, report, kept;
   const win = () => frame.contentWindow;
   const doc = () => frame.contentDocument;
   const el = (id) => doc().querySelector(`[id$="dynaForm:${id}"]`);
-  const widgets = () => Object.values(win().PrimeFaces.widgets);
+  const widgets = () => Object.values((win().PrimeFaces || {}).widgets || {}); // none: a plain form
   const widgetOf = (e) => widgets().find((w) => w && w.input && w.input[0] === e);
 
   const busy = () => {
@@ -98,6 +102,26 @@
     for (const t of ["input", "change"]) e.dispatchEvent(new (win().Event)(t, { bubbles: true }));
   }
 
+  // A script's click reaches e even under a banner, a dialog or a re-render's leftovers,
+  // where a person's couldn't: the page is then in a state the steps file doesn't know,
+  // so stop there. e must still be in the page and be what's on top at its centre.
+  function onTop(e, what) {
+    if (!e.isConnected) fail(`${what}: the page changed under it`);
+    e.scrollIntoView({ block: "center", inline: "nearest" });
+    const r = e.getBoundingClientRect();
+    if (!r.width || !r.height) fail(`${what}: not visible`);
+    const hit = doc().elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    if (hit && hit !== e && !e.contains(hit) && !(hit.control === e)) {
+      const name = hit.id ? `#${hit.id}` : hit.className ? `.${String(hit.className).split(" ")[0]}` : "";
+      fail(`${what}: covered by ${hit.tagName.toLowerCase()}${name} "${norm(hit.innerText).slice(0, 60)}"`);
+    }
+  }
+
+  function press(e, what) {
+    onTop(e, what);
+    e.click();
+  }
+
   // wizard
 
   async function tree(leaf) {
@@ -114,12 +138,12 @@
     for (const k of keys) {
       const c = doc().querySelector(`li[data-rowkey="${k}"] > .ui-treenode-content`);
       if (c.getAttribute("aria-expanded") !== "true") {
-        c.querySelector(".ui-treenode-label").click();
+        press(c.querySelector(".ui-treenode-label"), `tree: ${leaf}`);
         await idle();
       }
     }
     if (!node().closest("li.ui-treenode").classList.contains("ui-treenode-selected")) {
-      node().click();
+      press(node(), `tree: ${leaf}`);
       await idle();
     }
     if (!node().closest("li.ui-treenode").classList.contains("ui-treenode-selected")) {
@@ -138,7 +162,7 @@
       await idle();
     }
     for (const leaf of [].concat(step.tree || [])) await tree(leaf);
-    await act(() => button(step.confirm).click());
+    await act(() => press(button(step.confirm), step.confirm));
   }
 
   // form sections
@@ -146,6 +170,7 @@
   async function text(f, value) {
     const e = el(f.id) || fail(`${f.id}: no field`);
     checkLabel(e, f.label);
+    onTop(e, f.label || f.id);
     const w = widgetOf(e);
     e.focus();
     if (w && typeof w.setValue === "function") w.setValue(value);
@@ -182,7 +207,7 @@
     checkLabel(e, f.label);
     if (!e.checked) {
       const wrap = e.closest(".ui-radiobutton, .ui-chkbox");
-      (wrap && wrap.querySelector(".ui-radiobutton-box, .ui-chkbox-box") || e).click();
+      press(wrap && wrap.querySelector(".ui-radiobutton-box, .ui-chkbox-box") || e, f.label || f.id);
       await idle();
     }
     if (!el(f.id).checked) fail(`${f.id}: didn't stay ticked`);
@@ -204,12 +229,36 @@
     const items = lis.map((l) => norm(l.textContent).toUpperCase());
     const hits = items.filter((t) => t.split(" ")[0] === dug && words.every((w) => t.split(" ").includes(w)));
     if (hits.length !== 1) fail(`${f.id}: ${value} matches ${JSON.stringify(hits)} among ${items.length}`);
-    lis[items.indexOf(hits[0])].click();
+    press(lis[items.indexOf(hits[0])], `${f.id}: ${hits[0]}`);
     await idle();
     return hits[0];
   }
 
+  // v is {name, type, b64}. The portal's own change handler then uploads it, as when a
+  // person picks the file.
+  async function attach(f, v) {
+    const e = (f.css ? doc().querySelector(f.css) : el(f.id)) || fail(`${f.css || f.id}: no file box`);
+    if (e.type !== "file") fail(`${f.css || f.id}: not a file box`);
+    checkLabel(e, f.label);
+    const w = win(), bytes = Uint8Array.from(w.atob(v.b64), (c) => c.charCodeAt(0));
+    const dt = new w.DataTransfer();
+    dt.items.add(new w.File([bytes], v.name, { type: v.type }));
+    e.files = dt.files;
+    fire(e);
+    await idle();
+    // An upload that isn't jQuery's doesn't show as busy: give it until its list names
+    // the file. A portal that names it only after Salva costs these 10 s once.
+    for (const end = performance.now() + 10000; performance.now() < end &&
+      !norm(doc().body.innerText).includes(norm(v.name));) await sleep(100);
+    return v.name;
+  }
+
   function readBack(f) {
+    if (f.kind === "file") {
+      // An upload widget empties its box once it has sent the file; its list names it.
+      const got = norm(doc().body.innerText).includes(norm(f.typed)) ? f.typed : null;
+      return { label: f.label || f.css || f.id, want: f.typed, got, ok: got !== null };
+    }
     if (f.kind === "radio" || f.kind === "checkbox") {
       const got = el(f.id) && el(f.id).checked ? "checked" : "unchecked";
       return { label: f.label, want: "checked", got, ok: got === "checked" };
@@ -227,7 +276,7 @@
     if (sec.open !== false) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
       if (!a) fail(`no section ${sec.section}`);
-      await act(() => a.click());
+      await act(() => press(a, sec.section));
     }
     const done = [];
     for (const [i, f] of sec.fields.entries()) {
@@ -238,15 +287,36 @@
       else if (v === null || v === "") continue;
       else if (f.kind === "select") typed = await select(f, v);
       else if (f.kind === "lookup") typed = await lookup(f, v);
+      else if (f.kind === "file") typed = await attach(f, v);
       else typed = await text(f, v);
       done.push({ ...f, typed });
     }
-    await act(() => button("Salva").click());
+    // An attachments screen may keep each file as it uploads, with no Salva (save: false).
+    if (sec.save !== false) await act(() => press(button(sec.save || "Salva"), sec.save || "Salva"));
     const errs = errors();
     const checks = done.map(readBack);
     const bad = checks.filter((c) => !c.ok);
     report.sections.push({ section: sec.section, seconds: +((performance.now() - t0) / 1000).toFixed(1), errors: errs, bad });
     if (errs.length || bad.length) fail(`${sec.section}: portal errors ${JSON.stringify(errs)}, not kept ${JSON.stringify(bad)}`);
+    kept.push({ sec, done });
+  }
+
+  // Each read-back above saw its section right after its own Salva. A later section can
+  // re-render an earlier one, and a portal can show a value it never stored, so the
+  // draft is loaded again from its address and every value read once more.
+  async function verify() {
+    const t0 = performance.now();
+    const url = doc().location.href;
+    await act(() => win().location.replace(url));
+    const bad = [];
+    for (const { sec, done } of kept) {
+      const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
+      if (a) await act(() => press(a, sec.section));
+      else if (sec.open !== false) fail(`fresh load of the draft: no section ${sec.section}`);
+      for (const c of done.map(readBack)) if (!c.ok) bad.push({ section: sec.section, ...c });
+    }
+    report.verify_seconds = +((performance.now() - t0) / 1000).toFixed(1);
+    if (bad.length) fail(`fresh load of the draft: not kept ${JSON.stringify(bad)}`);
   }
 
   async function run(values) {
@@ -264,6 +334,7 @@
       for (const [i, w] of steps.wizard.entries()) await wizard(w, values.wizard[i]);
       report.wizard_seconds = secs();
       for (const [i, s] of steps.sections.entries()) await section(s, values.sections[i]);
+      await verify();
       report.result = "filled";
     } catch (e) {
       report.result = "stopped";
@@ -281,6 +352,7 @@
       steps.forbidden = new RegExp(steps.forbidden, "i");
       steps.declarations = new RegExp(steps.declarations, "i");
       report = { procedure, result: "running", sections: [] };
+      kept = [];
       run(values);
       return "started";
     },

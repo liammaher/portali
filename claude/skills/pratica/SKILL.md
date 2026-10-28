@@ -279,10 +279,33 @@ Find one for the entry with
 `grep -l "procedure: <entry id>" "$(cd ~/.claude/skills/pratica && pwd -P)"/../../../rehearsals/*/portal-steps.yaml`.
 When there is one, follow it instead of exploring the portal:
 
-1. **Values first.** Read every field the steps name (step 2's reading, one `pvault get` or
-   token for all of them) and ask its `{{ask.x}}` questions before opening the portal; apply
-   the filters `run.py` defines (`FILTERS`: dates gg/MM/aaaa, the street split into DUG and
-   name, carica and forma giuridica as the portal names them).
+1. **Pre-flight first, before anything opens.** `run.py preflight --steps <folder>/portal-steps.yaml
+   [--answers <answers.json>]` with the same values as step 2 (the `pvault get` piped in,
+   or `--vault-dir`) prints JSON and exits 0 only when `ready`:
+   - `unsupported`: this case isn't mapped (the steps file's `supports:`). Tell the user
+     the reason in one line and stop: don't open the portal, don't ask anything else.
+   - `questions`: only what this case needs (pre-flight leaves out a question no field of
+     this case reads, and one with a default). Ask all of them **in one short message**, in
+     that order, numbered, each `question` as written:
+     - a `checklist` is one question with its `items` as bullets ("tick any that apply, or
+       none"): the usual answer is "none". Write the reply as the list of the ticked items'
+       `key`s under the checklist's `key` (`[]` for none);
+     - an `only_if` question applies only when those items are ticked: put it under them
+       ("if so: …"), never as a question of its own;
+     - give `options` when there are some, and never explain `why` unless asked.
+
+     Write the other replies under each `key` (dates YYYY-MM-DD, files as paths) and run
+     pre-flight again; an `error` says why an answer didn't fit, so ask only that again. A
+     reply that makes the case unsupported ends it there, as above.
+   - `missing`: vault fields that are empty or expired. Ask for each in the same message,
+     or have the user fill them in the vault (`pvault set`, the onboarding page).
+   - `files`: each attachment, whether it exists, and `pane_ok` (all of them within the
+     pane's 256 KB): if not, use the Playwright window or leave the big ones to the user.
+   - `yours`: tell the user now what they'll do at the end, so nothing surprises them.
+
+   Only when it says `ready` go on: the user hears nothing more from you until the review
+   page, except the login. A steps file without `asks:` (an older one) fails pre-flight
+   with "no question in asks: for …": add them before using it.
 2. **Run it with one command** (run in the background: it waits for the login). With Touch
    ID on, the values come from one `pvault get` of the folder's `needs.json` scope (its
    patterns, without `pratiche.*`), piped in: one fingerprint, no token, nothing on disk:
@@ -298,9 +321,12 @@ When there is one, follow it instead of exploring the portal:
    scope saved where fill.py looks (`pvault --vault <name> create-service-token pratica-fill
    --scope '<scope>' --access append --ttl 1h --keychain pvault-<name>-pratica-fill`, which the
    user runs). The answers are the `{{ask.x}}` replies as JSON. It runs `inpage.js`: the wizard
-   and every section in about a minute, each field read back after Salva, then shows the draft,
-   prints a line per section and a JSON result, and writes `<dir>/review.html`: show it to the
-   user (SendUserFile, `display: render`) as the place to check the draft, with step 5's list.
+   and every section in about a minute, each field read back after Salva, then the draft
+   loaded again from its address and every value read once more (only then `filled`: a
+   section can re-render an earlier one, or show a value the portal never stored). It then
+   shows the draft, prints a line per section and a JSON result, and writes
+   `<dir>/review.html`: show it to the user (SendUserFile, `display: render`) as the place to
+   check the draft, with step 5's list.
    No environment yet: `python3 -m venv ~/.cache/pratica-portal/venv`, then its `pip install
    pyyaml playwright` and `python -m playwright install chromium` (ask first).
    If it stops, `error` says where and `<dir>/failure.png` shows it: finish that part by hand
@@ -313,8 +339,14 @@ When there is one, follow it instead of exploring the portal:
    personal data), poll `await __pv.wait(40000)` until `result` is `filled` or `stopped`, and
    `__pv.open()` shows the draft.
 3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
-   Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand. Stop at
-   the attachments.
+   Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand.
+   Attachments: a field `{id: ..., kind: file, label: ..., value: "{{ask.x}}"}` (or `css:`
+   in place of `id`) attaches the file at that path, built in the page as a drop would, and
+   checks its name shows up on the page; a section whose files upload one by one, with no
+   Salva, takes `save: false` (or `save: <button>`). A file the person must sign first
+   (`.p7m`) is attached only once they've signed it. In the pane all of a run's files may
+   come to 256 KB (`run.py page` refuses more): use the Playwright window for a planimetria,
+   or leave it to the person (docs/north-star.md, open question 7). Stop at what's left.
 4. **When the portal differs** (a screen, a label, a lookup with no single match), stop,
    correct the steps file and the map, and add the run to the README.
 
@@ -322,6 +354,17 @@ When there is one, follow it instead of exploring the portal:
 skill: `playwright-cli open --headed --persistent <url>`, then `snapshot`, `click`, `fill`),
 which keeps page snapshots in files instead of the conversation. The walk ends in a
 `portal-map.yaml` and a `portal-steps.yaml`, so the next run is the one command above.
+
+- **Write each screen down as soon as it's done**, not at the end: its entry in the map
+  (what it says, `seen:` today) and its step or fields in the steps file, one screen at a
+  time. A long walk outlives the conversation's context (the SCIA benchmark lost it once
+  mid-run); with the files current, the next session reads them and carries on from the
+  last screen written, instead of walking from the start.
+- **A cookie or consent banner** is a screen like any other: write it into the map. Choose
+  only what's necessary ("Rifiuta", "Solo necessari", "Rifiuta tutti"), never "Accetta
+  tutti", unless the user asks. The runner has no banner step yet: it clicks and types
+  only on what's on top, so a banner (or a dialog) over the portal stops the run with
+  "covered by …". Dismiss it as above, run again, and note it in the README's runs.
 
 ### Filling with fill.py
 
