@@ -182,3 +182,10 @@ INVIARE" and deleted afterwards, logins are the person's own, FAC-SIMILE on ever
   and does the human baseline, as "The answer key" and "The human baseline" allow. Every
   accuracy and speed figure is marked "weaker key" / "weaker baseline" until a professional
   redoes them.
+- 2026-10-28, first walk: the mapping session read `answer-key/p6.yaml` before mapping, against
+  "The answer key" above. P6's key was already the weakest; every P6 accuracy figure now also
+  says "key seen before mapping".
+- 2026-10-28, first walk, stopped in quadro h): the official schema of the CILA (InfoCamere's
+  `mod_cila_v1.0.7.xsd`) holds 137 of the 152 portal fields walked (`schema/schema-vs-portal.md`).
+  The next step tests building the portal map from the schema plus a crawler instead of walking
+  each screen by hand.

@@ -1,0 +1,179 @@
+# The CILA (Mod.CILA-23-06-2025 online modules) as steps a program runs:
+# claude/skills/pratica/portal/run.py. portal-map.yaml says what each screen is and why;
+# this file says exactly what to click and type, as the first walk (2026-10-28) found it.
+#
+# The SUE is the SUAP's front office (fnsuap, PrimeFaces), so the ids, widgets and filters
+# are the SCIA's (rehearsals/pizzeria-fittizia/portal-steps.yaml). The user is the
+# architect filing for a client with a procura: in the studio's business vault `t:` is the
+# architect (ruolo.tipo titolare) and `c:` the client (the person the run is for,
+# answers.json `cliente`). {{ask.x}} are pre-flight's answers. The declarations, the
+# payment and sending are not here: they are the person's.
+
+procedure: napoli/comune/cila-lavori-edilizi
+title: "CILA: lavori interni non strutturali, SUE Napoli (tecnico con procura)"
+
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E
+logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
+
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - screen: Controlla l'accesso alla pratica
+    confirm: CONFERMA
+  - screen: Scelta settore attività
+    tree: Edilizia e pianificazione urbana
+    confirm: CONFERMA
+  - screen: Scelta operazioni
+    tree: Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)
+    confirm: CONFERMA
+  - screen: Scelta del destinatario della pratica
+    confirm: CONFERMA
+  - screen: Scelte eventuali
+    tree: IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE
+    confirm: CONFERMA
+
+sections:
+  # The dichiarante is the client (the titolare), as a private person.
+  - section: Scheda anagrafica
+    open: false
+    fields:
+      - {id: "r1c2p2reg:radio:1_clone", kind: radio, label: PERSONA (Privato)}
+      - {id: "r10c1p23reg:txt", kind: text, label: Nome, value: "{{c:identity.first_name}}"}
+      - {id: "r10c2p25reg:txt", kind: text, label: Cognome, value: "{{c:identity.last_name}}"}
+      - {id: "r10c3p27reg:txt", kind: text, label: Cod.Fiscale, value: "{{c:identity.codice_fiscale}}"}
+      - {id: "r12c1p29reg", kind: select, label: Sesso, value: "{{c:identity.sex}}"}
+      - {id: "r12c2p31reg:calendar_input", kind: text, label: Data nascita, value: "{{c:identity.date_of_birth|date_it}}"}
+      - {id: "r15c2p41reg", kind: select, label: Provincia, value: "{{c:identity.birth_province}}"}
+      - {id: "r17c1p45reg", kind: select, label: Comune, value: "{{c:identity.birth_comune|upper}}"}
+      - {id: "r24c2p63reg", kind: select, label: Provincia, value: "{{c:residenza.provincia}}"}
+      - {id: "r26c1p67reg", kind: select, label: Comune, value: "{{c:residenza.comune|upper}}"}
+      - {id: "r29c1p73reg", kind: select, label: Toponimo (DUG), value: "{{c:residenza.indirizzo|dug}}"}
+      - {id: "r31c1p79reg:txt", kind: text, label: Denominazione stradale, value: "{{c:residenza.indirizzo|street|upper}}"}
+      - {id: "r33c1p83reg:txt", kind: text, label: Numero civico, value: "{{c:residenza.civico}}"}
+      - {id: "r33c2p85reg:txt", kind: text, label: CAP, value: "{{c:residenza.cap}}"}
+      - {id: "r33c3p87reg:txt", kind: text, label: eMail/PEC, value: "{{c:identity.email}}"}
+      - {id: "r33c4p89reg:number", kind: text, label: Telefono fisso/cellulare, value: "{{c:identity.phone|phone_it}}"}
+      # In qualità di: Proprietario, Comproprietario, Usufruttuario, Amministratore di
+      # condominio, Legale rappresentante, Amministratore unico, Procuratore, Altro (+ specificare).
+      - {id: "r35c1p91reg", kind: select, label: "In qualità di", value: "{{ask.titolo|qualita}}"}
+      - {id: "r37c1p95reg:txt", kind: text, label: specificare, value: "{{ask.titolo|qualita_altro}}", when: "{{ask.titolo|qualita_is_altro}}"}
+
+  # The architect, from the studio vault's titolare. Prefilled with the SPID login's
+  # name and CF, overwritten here.
+  - section: Qualifica e dati del procuratore
+    fields:
+      - {id: "r2c1p2reg", kind: select, label: Qualifica del procuratore, value: PROFESSIONISTA INCARICATO}
+      - {id: "r5c1p7reg:txt", kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {id: "r5c2p9reg:txt", kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {id: "r5c3p11reg", kind: select, label: Sesso, value: "{{t:identity.sex}}"}
+      - {id: "r5c4p13reg", kind: select, label: Cittadinanza, value: ITALIA}
+      - {id: "r7c1p15reg:txt", kind: text, label: Nato a, value: "{{t:identity.birth_comune|upper}}"}
+      - {id: "r7c2p17reg:calendar_input", kind: text, label: il, value: "{{t:identity.date_of_birth|date_it}}"}
+      - {id: "r9c1p19reg:radio:0_clone", kind: radio, label: in Italia}
+      - {id: "r9c2p21reg:txt", kind: text, label: Provincia, value: "{{t:identity.birth_province}}"}
+      - {id: "r11c1p27reg:txt", kind: text, label: Cod.Fiscale, value: "{{t:identity.codice_fiscale}}"}
+      - {id: "r14c1p32reg:txt", kind: text, label: Residente in, value: "{{t:residenza.comune|upper}}"}
+      - {id: "r14c2p34reg:txt", kind: text, label: Provincia, value: "{{t:residenza.provincia}}"}
+      - {id: "r14c3p36reg:txt", kind: text, label: CAP, value: "{{t:residenza.cap}}"}
+      - {id: "r16c1p40reg:txt", kind: text, label: Indirizzo, value: "{{t:residenza.indirizzo|upper}} {{t:residenza.civico}}"}
+      - {id: "r16c2p42reg:number", kind: text, label: Tel, value: "{{t:identity.phone|phone_it}}"}
+      - {id: "r18c1p46reg:txt", kind: text, label: eMail PEC, value: "{{t:identity.pec}}"}
+
+  - section: Oggetto della pratica
+    fields:
+      - {id: "r2c1p2reg:txta", kind: text, label: descrizione sintetica, value: "{{ask.oggetto}}"}
+
+  # The client's own domicilio digitale: saved empty when they have no PEC. A client with
+  # a PEC (INAD r4c1p4reg:chk, its address box) isn't walked yet: `supports` refuses it.
+  - section: DOMICILIO DIGITALE
+    fields: []
+
+  - section: DOMICILIO ELETTRONICO
+    fields:
+      - {id: "r3c1p3reg:txt", kind: text, label: casella PEC, value: "{{t:identity.pec}}"}
+
+  # The property: no vault category holds it yet, so it comes from pre-flight's answers.
+  - section: Localizzazione dell'intervento
+    fields:
+      - {id: "r2c4p8reg:txtws_input", kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
+      - {id: "r5c1p13reg:txtws_input", kind: lookup, label: "Via, Viale, Piazza", value: "{{ask.immobile_indirizzo}}"}
+      - {id: "r5c2p15reg:txtws_input", kind: text, label: n° civico, value: "{{ask.immobile_civico}}"}
+      - {id: "r7c1p19reg:txtws_input", kind: text, label: scala, value: "{{ask.immobile_scala}}", optional: true}
+      - {id: "r7c2p21reg:txtws_input", kind: text, label: piano, value: "{{ask.immobile_piano}}", optional: true}
+      - {id: "r7c3p23reg:txtws_input", kind: text, label: interno, value: "{{ask.immobile_interno}}", optional: true}
+
+  - section: Dati catastali
+    fields:
+      - {id: "r1c1p1reg:radio:0_clone", kind: radio, label: NCEU}
+      - {id: "r3c1p5reg:number", kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
+      - {id: "r3c2p7reg:txt", kind: text, label: particella/mappale, value: "{{ask.catasto_particella}}"}
+      - {id: "r3c3p9reg:number", kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
+      - {id: "r5c2p15reg:txt", kind: text, label: sezione Urbana, value: "{{ask.catasto_sezione}}", optional: true}
+      - {id: "r8c1p23reg", kind: select, label: categoria, value: "{{ask.catasto_categoria|categoria}}"}
+
+  # A tenant: "altro" + locatario, and the non-exclusive title, which opens the owner's
+  # row (the terzo titolare who gave assent). `o:` is the owner company's person in the
+  # vault (answers.json `proprietario`), `r:` its legale rappresentante (`rappresentante`).
+  - section: a) Titolarità dell'intervento
+    fields:
+      - {id: "r2c1p2reg", kind: select, label: "Il richiedente dichiara di avere titolo", value: altro}
+      - {id: "r4c1p4reg:txt", kind: text, label: specificare, value: locatario}
+      - {id: "r7c1p9reg:radio:1_clone", kind: radio, label: non avere titolarità esclusiva}
+      - {id: "r11c1p13reg:txt", kind: text, label: Cognome, value: "{{r:identity.last_name}}"}
+      - {id: "r11c2p15reg:txt", kind: text, label: Nome, value: "{{r:identity.first_name}}"}
+      - {id: "r13c1p19reg:txt", kind: text, label: C.F., value: "{{r:identity.codice_fiscale}}"}
+      - {id: "r15c1p23reg:calendar_input", kind: text, label: Data di nascita, value: "{{r:identity.date_of_birth|date_it}}"}
+      - {id: "r15c3p27reg", kind: select, label: Sesso, value: "{{r:identity.sex|sesso}}"}
+      - {id: "r17c3p35reg", kind: select, label: Provincia, value: "{{r:identity.birth_province}}"}
+      - {id: "r19c1p39reg:txt", kind: text, label: Comune italiano, value: "{{r:identity.birth_comune|upper}}"}
+      - {id: "r21c3p47reg", kind: select, label: Provincia, value: "{{r:residenza.provincia}}"}
+      - {id: "r23c1p51reg:txt", kind: text, label: Comune italiano, value: "{{r:residenza.comune|upper}}"}
+      - {id: "r25c1p55reg:txt", kind: text, label: "Via, Piazza", value: "{{r:residenza.indirizzo|upper}}"}
+      - {id: "r25c2p57reg:txt", kind: text, label: "N.", value: "{{r:residenza.civico}}"}
+      - {id: "r25c3p59reg:txt", kind: text, label: C.A.P., value: "{{r:residenza.cap}}"}
+      - {id: "r27c1p63reg:txt", kind: text, label: PEC / posta elettronica, value: "{{o:business.pec}}"}
+      - {id: "r27c2p65reg:txt", kind: text, label: Telefono, value: "{{o:business.telefono|phone_it}}"}
+      - {id: "r28c1p68reg:chk", kind: checkbox, label: titolare sia una ditta o società}
+      - {id: "r30c1p71reg:txt", kind: text, label: in qualità di, value: legale rappresentante}
+      - {id: "r32c1p75reg:txt", kind: text, label: della ditta / società, value: "{{o:business.denominazione}}"}
+      - {id: "r32c2p77reg:txt", kind: text, label: p. IVA, value: "{{o:business.partita_iva}}"}
+
+  - section: b) Opere su parti comuni
+    fields:
+      - {id: "r2c1p2reg:radio:0_clone", kind: radio, label: non riguardano parti comuni}
+
+  # c) is only the dichiarante's PER PRESA VISIONE: theirs (yours, below).
+
+  # Works already started (d.2): the date and the 333 € receipt, uploaded here.
+  - section: d) Qualificazione dell'intervento
+    fields:
+      - {id: "r3c1p3reg:radio:1_clone", kind: radio, label: intervento in corso di esecuzione}
+      - {id: "r5c1p5reg:calendar_input", kind: text, label: intervento iniziato in data, value: "{{ask.data_inizio_lavori|date_it}}"}
+      - {id: "r7c1p9reg:upload1_input", kind: file, label: ricevuta di versamento di € 333,00, value: "{{ask.ricevuta_sanzione}}"}
+
+  - section: e) Destinazione d'uso
+    fields:
+      - {id: "r2c1p2reg", kind: select, label: destinazione d'uso, value: "{{ask.destinazione_uso}}"}
+
+  - section: f) Calcolo del contributo
+    fields:
+      - {id: "r1c1p1reg:radio:0_clone", kind: radio, label: a titolo gratuito}
+
+  # The architect presents the pratica and is progettista and direttore dei lavori: her
+  # name comes from the procuratore's section.
+  - section: G1) Tecnici incaricati
+    fields:
+      - {id: "r3c3p7reg:radio:1_clone", kind: radio, label: colui che presenta la pratica}
+      - {id: "r5c1p11reg:chk", kind: checkbox, label: incaricato anche come direttore dei lavori}
+      - {id: "r8c3p20reg", kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
+      - {id: "r10c1p24reg:txt", kind: text, label: Comune italiano, value: "{{business.sede_legale_comune|upper}}"}
+      - {id: "r12c1p28reg:txt", kind: text, label: "Via, Piazza", value: "{{business.sede_legale_indirizzo|upper}}"}
+      - {id: "r12c2p30reg:txt", kind: text, label: "N.", value: "{{business.sede_legale_civico}}"}
+      - {id: "r12c3p32reg:txt", kind: text, label: C.A.P., value: "{{business.sede_legale_cap}}"}
+      - {id: "r14c1p36reg:txt", kind: text, label: Iscritto all'ordine/collegio, value: "{{t:albo.ordine}}"}
+      - {id: "r14c2p38reg:txt", kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {id: "r14c3p40reg:txt", kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {id: "r16c1p44reg:number", kind: text, label: Telefono, value: "{{business.telefono|phone_it}}"}
+      - {id: "r18c1p50reg:number", kind: text, label: cell., value: "{{t:identity.phone|phone_it}}"}
+      - {id: "r18c2p52reg:txt", kind: text, label: posta elettronica certificata, value: "{{t:identity.pec}}"}
