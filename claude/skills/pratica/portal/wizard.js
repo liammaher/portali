@@ -187,7 +187,8 @@
   // pratica, noting each screen; then each option of Scelte eventuali alone (a Si
   // answered Si, a box ticked), noting the sections it adds or drops; then back.
   // onPratica(pratica, variant) runs on each generated pratica's screen (crawl.js's batch reads
-  // its sections there); variant is null for the base pratica.
+  // its sections there); variant is null for the base pratica. `variants` is true, false, or a
+  // function of a scelta's label saying whether to try it.
   async function follow(op, variants, onPratica) {
     const screens = [];
     const b = button("Conferma");
@@ -200,7 +201,8 @@
     const scelte = screens.find((s) => s.screen.includes("scelte eventuali"));
     if (variants && scelte && Array.isArray(scelte.options)) {
       op.variants = [];
-      for (const o of scelte.options.filter((x) => x.type === "CHK" || x.type === "SIN")) {
+      const wanted = (x) => typeof variants !== "function" || variants(x.label);
+      for (const o of scelte.options.filter((x) => (x.type === "CHK" || x.type === "SIN") && wanted(x))) {
         const v = { option: o.label, type: o.type };
         op.variants.push(v);
         try {

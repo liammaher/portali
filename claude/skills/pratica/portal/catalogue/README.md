@@ -60,7 +60,12 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   those again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns
   into `same.json`: the same pratica, counted as a use of it, or one that differs and gets a
   crawl of its own. Priority sectors first (bars and restaurants, shops, B&B, hairdressers,
-  bakeries), then the common operations, then the rest. About 45 s a pratica.
+  bakeries), then the common operations, then the other everyday sectors, then the rare ones
+  (military canteens, livestock, fuel stations, large stores, dance halls and games, ...:
+  `crawl:ops:suap3`), then the checks. Each scelta is tried once (`variants: "new"`): the same
+  few (procura, other soci, the Terzo settore exemption) add the same sections everywhere, and
+  re-trying them cost 40% of the time for 1 new section in 19; `gen.py` takes a scelta's
+  sections from the pratica where it was tried.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
 - Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening

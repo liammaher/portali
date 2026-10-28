@@ -7,7 +7,8 @@
 //
 //   __crawl.start({url, sections: [names] | null, depth: 2})  starts, returns at once
 //   __crawl.batch({draft, ops: [{name, sector, path, check, like}], variants, check})  many pratiche on
-//       one draft; `check`: fingerprints only (catalogue.py drift), for the batch or one op (`like`:
+//       one draft (variants: true, false, or "new": each scelta label once);
+//       `check`: fingerprints only (catalogue.py drift), for the batch or one op (`like`:
 //       the crawled pratica it should match)
 //   await __crawl.wait(ms)                               the map so far, once done or after ms
 //   __crawl.slots()                                      the attachments screen's slots
@@ -322,6 +323,10 @@
     const nav = window.__wizard.driver(frame, opts.draft);
     await nav.reopen(true);
     const known = JSON.parse(localStorage.getItem("crawl:known") || "{}");
+    // variants: "new" tries a scelta only the first time its label is seen: the same few (the
+    // procura, other soci, the Terzo settore exemption) add the same sections to every pratica.
+    const seen = new Set(JSON.parse(localStorage.getItem("crawl:scelte") || "[]"));
+    const variants = opts.variants === "new" ? (label) => !seen.has(norm(label)) : !!opts.variants;
     let sector = null;
     for (const op of opts.ops) {
       // An op can be a check of its own (`check`), of the pratica it should match (`like`): the
@@ -345,7 +350,7 @@
         await nav.toScreen("scelta operazioni");
         await pick(nav, op.path, op.nth);
         const w = { label: op.path };
-        await nav.follow(w, !!opts.variants, async (p, v) => {
+        await nav.follow(w, variants, async (p, v) => {
           for (const name of v ? v.adds : p.sections) {
             const sec = await section(name, { ...opts, check }, known, op.name);
             if (v) sec.scelta = v.option;
@@ -354,6 +359,8 @@
           }
         });
         for (const k of ["refused", "pratica", "screens", "variants"]) if (w[k]) r[k] = w[k];
+        for (const v of w.variants || []) if (!v.error) seen.add(norm(v.option));
+        localStorage.setItem("crawl:scelte", JSON.stringify([...seen]));
         const n = await nav.setSelected(findPath(nav.tree(), tag(op.path), op.nth).key, false);
         if (!n) throw new Error("didn't unselect");
       } catch (e) {

@@ -343,6 +343,18 @@ def generate(recipe, base=HERE):
         # A batch crawl (crawl.js batch) says which sections the base pratica has and which a
         # scelta adds; the recipe's scelte pick those.
         names = [s["section"] for s in crawl["sections"] if not s.get("scelta") or s["scelta"] in recipe.get("scelte", [])]
+        # A scelta the batch tried only once (its first pratica): its sections from there.
+        for sc in recipe.get("scelte", []):
+            if any(s.get("scelta") == sc for s in crawl["sections"]):
+                continue
+            for other in sorted((cat_dir / "sections").glob("*.json")):
+                found = [s for s in json.loads(other.read_text())["sections"] if s.get("scelta") == sc]
+                if found:
+                    crawl["sections"] += [{"section": s["section"], "same_as": f"{other.stem}#{s['section']}", "scelta": sc} for s in found]
+                    names += [s["section"] for s in found]
+                    break
+            else:
+                raise GenError(f"no crawl has tried the scelta {sc!r}")
         if "wizard" not in recipe:
             raise GenError("the catalogue has no pratica for this operation: the recipe needs `wizard`")
     else:
