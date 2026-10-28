@@ -11,12 +11,15 @@ catastale (`F839` is Napoli).
   portal generates (its adempimenti, the office each goes to, its sections in order), and
   each option of "Scelte eventuali" tried alone (a Si/No answered Si, a box ticked) with the
   sections it adds or drops. Sections are indices into `sections`.
-- `<comune>/sections/<pratica>.json`: an empty draft of one pratica crawled by `crawl.js`:
-  each section's fields (id, kind, label), each choice tried with what it opens, hides and
-  shifts, and the attachments screen's slots (`slots`, read on the screen). The SUE's edilizia
-  family so far: `cila`, `cil`, `scia`, `inizio-lavori`, `fine-lavori`, `agibilita` (each
-  generated and run to its stop point on 2026-10-28, `rehearsals/*-fittizia`). `gen.py` writes a steps file from one of these, the dictionary
-  (`../dictionary/fnsuap.yaml`) and a recipe (`rehearsals/*/recipe.yaml`).
+- `<comune>/sections/<pratica>.json`: one pratica's sections, crawled by `crawl.js`: each
+  section's fields (id, kind, label), each choice tried with what it opens, hides and shifts,
+  its fingerprint, and the attachments screen's slots (`slots`, read on the screen). A batch
+  crawl (`sue-*`, `suap-NNN-*` for sector NNN of `suap-wizard.json`) also holds the pratica the
+  portal generated (`generated`: adempimenti and sections), the wizard's screens and each
+  scelta's sections (`scelta`); a section seen before is only a reference (`same_as:
+  "<pratica>#<section>"`), which `gen.py` follows. The first ones, by hand: `cila`, `cil`,
+  `scia`, `inizio-lavori`, `fine-lavori`, `agibilita`, `acconciatore`.
+- `<comune>/drift.json`: what the last drift check found changed, per pratica (below).
 
 ## How it's made
 
@@ -29,14 +32,33 @@ catalogo <sportello>" (Liam deletes it afterwards):
   `/fnsuap/cmd/home` when the portal shows its error page. About 8 s per operation, 15 s
   with the scelte tried.
 - `crawl.js`: the sections. Tries each radio, checkbox and short dropdown and undoes it with
-  the section's Annulla. Never presses Salva.
+  the section's Annulla. Never presses Salva. `__crawl.batch({draft, ops, variants})` walks
+  many pratiche on the one scratch draft with `wizard.js`'s moves (sector, operation, forward
+  with the defaults, each scelta alone): a section whose fingerprint it has seen is not
+  crawled again. Each pratica goes to the pane's `localStorage` as it's done (`crawl:op:*`),
+  so a batch stopped by a logout resumes where it stopped. 20 to 60 s a pratica once the
+  common sections are known (the first restaurant pratica: 140 s).
+- `catalogue.py`: `ops sue|suap` lists a batch's operations, `known` the fingerprints the
+  stored crawls have, `import` writes an exported batch here (refusing one that holds the
+  login's name: `CATALOGUE_PRIVATE`), `count` the distinct sections, how many pratiche use each
+  and whether the dictionary fills it (gen.py's own test, not a name match).
 
 Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
+## Drift
+
+A section's fingerprint is a hash of what it shows before any choice: ids, kinds, labels,
+lengths, short dropdown lists. `__crawl.batch({..., check: true})` reads only those (about 1 s
+a section) into `crawl:check:*`; `catalogue.py drift EXPORT.json` compares them with the
+stored crawls and writes `drift.json`. A pratica with a difference is refused by `gen.py` and
+by `run.py preflight` until it is crawled again (`import` clears it).
+
 ## Limits
 
-- One comune's view on one day: the portal changes, so a run checks each section's
-  fingerprint first and stops on a difference.
+- One comune's view on one day: the portal changes, so a drift check (above) stops runs of a
+  changed pratica. Between checks, the runner's label checks still stop a run on a moved box.
+- The fingerprint is the section before any choice: a change only inside a branch is caught by
+  the runner, not by the check.
 - Operations are crawled one at a time; combinations (two operations in one pratica, an
   intervento eventuale) are only what each adds on its own.
 - Names aren't identity: two sections with different titles can hold the same fields, which

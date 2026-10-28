@@ -1,0 +1,205 @@
+{
+ "crawled": "2026-10-28T17:20:10.878Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Beni Paesaggistici › Proroga autorizzazione paesaggistica (art. 10 septies, Legge 51/2022 - Comune) (sector Edilizia e pianificazione urbana)",
+ "seconds": 24.4,
+ "generated": {
+  "interventi": "Proroga autorizzazione paesaggistica (art. 10 septies, Legge 51/2022)",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di proroga dell'efficacia dell'autorizzazione paesaggistica ai sensi dell' art. 10 septies, Legge 51/2022",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "PERIODO DI PROROGA",
+   "RIFERIMENTI AUTORIZZAZIONE PAESAGGISTICA E DATA SCADENZA EFFICACIA",
+   "richiesta della proroga di ultimazione dei lavori",
+   "Altre dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in assenza di titolarità esclusiva all'esecuzione dell'intervento edilizio, si dispone della dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in assenza di titolarità esclusiva all'esecuzione dell'intervento edilizio, si dispone della dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "PERIODO DI PROROGA",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "Il sottoscritto comunica la proroga di due anni prevista dall'art. art. 10 septies, Legge 51/2022"
+    }
+   ],
+   "fingerprint": "086272835dc216c1",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "RIFERIMENTI AUTORIZZAZIONE PAESAGGISTICA E DATA SCADENZA EFFICACIA",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Autorizzazione paesaggistica P.G. numero",
+     "max": 9999
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "per (specificare l'oggetto dell'intervento)",
+     "max": 9999
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "intestato a",
+     "max": 9999
+    },
+    {
+     "id": "r8c1p14reg:calendar_input",
+     "kind": "date",
+     "label": "la cui data di scadenza dell'efficacia dovrebbe essere il"
+    },
+    {
+     "id": "r8c2p16reg:calendar_input",
+     "kind": "date",
+     "label": "ed è invece prevista per il"
+    }
+   ],
+   "fingerprint": "1010675355ff76f7",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "richiesta della proroga di ultimazione dei lavori",
+   "fingerprint": "10395948f398f904",
+   "same_as": "sue-proroga-fine-lavori#richiesta della proroga di ultimazione dei lavori",
+   "seconds": 1.1
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1.1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

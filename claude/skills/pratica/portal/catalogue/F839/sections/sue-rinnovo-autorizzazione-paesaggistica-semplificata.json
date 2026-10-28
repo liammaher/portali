@@ -1,0 +1,218 @@
+{
+ "crawled": "2026-10-28T17:19:16.775Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Beni Paesaggistici › Rinnovo Autorizzazione Paesaggistica Semplificata  (DPR 31/2017 - Comune) (sector Edilizia e pianificazione urbana)",
+ "seconds": 28.6,
+ "generated": {
+  "interventi": "Richiesta di Rinnovo Autorizzazione Paesaggistica Semplificata ai sensi dell'art.7 del DPR 31/2017 (Ente Comune)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione Paesaggistica Semplificata ex DPR 31/2017 (Ente Comune)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione dell'intervento",
+   "dati catastali",
+   "Qualificazione dell'intervento di rinnovo",
+   "dati relativi al nome del tecnico",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.2
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "Qualificazione dell'intervento di rinnovo",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "Num.",
+     "max": 9999
+    },
+    {
+     "id": "r3c2p6reg:calendar_input",
+     "kind": "date",
+     "label": "Data"
+    },
+    {
+     "id": "r3c3p8reg:txt",
+     "kind": "text",
+     "label": "Scadenza",
+     "max": 9999
+    },
+    {
+     "id": "r3c4p10reg:txt",
+     "kind": "text",
+     "label": "Ente",
+     "max": 9999
+    },
+    {
+     "id": "r4c1p13reg:radio:0_clone",
+     "kind": "radio",
+     "label": "L'istanza di rinnovo riguarda Autorizzazione Paesaggistica Semplificata per interventi di lieve entita' indicati nell'elenco di cui all'Allegato «B» del DPR del",
+     "group": "r4c1p13reg:radio"
+    },
+    {
+     "id": "r5c1p14reg:radio:1_clone",
+     "kind": "radio",
+     "label": "L'istanza di rinnovo riguarda l'Autorizzazione Paesaggistica, rilasciata ai sensi dell'articolo 146 del Codic e scaduta da non piu' di un anno. A tal fine Dichi",
+     "group": "r5c1p14reg:radio"
+    }
+   ],
+   "fingerprint": "dba88e495dd96ac1",
+   "branches": [
+    {
+     "choice": "L'istanza di rinnovo riguarda Autorizzazione Paesaggistica Semplificata per interventi di lieve entita' indicati nell'elenco di cui all'Allegato «B» del DPR del",
+     "id": "r4c1p13reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "L'istanza di rinnovo riguarda l'Autorizzazione Paesaggistica, rilasciata ai sensi dell'articolo 146 del Codic e scaduta da non piu' di un anno. A tal fine Dichi",
+     "id": "r5c1p14reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p15reg:chk",
+       "kind": "checkbox",
+       "label": "sono richieste variazioni progettuali e/o sono sopravvenute specifiche prescrizioni di tutela"
+      }
+     ],
+     "then": [
+      {
+       "choice": "sono richieste variazioni progettuali e/o sono sopravvenute specifiche prescrizioni di tutela",
+       "id": "r6c1p15reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r10c1p19reg:upload1_input",
+         "kind": "file",
+         "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+         "context": "Allega Relazione paesaggistica semplificata",
+         "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "seconds": 6.1
+  },
+  {
+   "section": "dati relativi al nome del tecnico",
+   "fingerprint": "ffddb90f4d2ab273",
+   "same_as": "sue-autorizzazione-paesaggistica-ordinaria#dati relativi al nome del tecnico",
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.2
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 1,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}

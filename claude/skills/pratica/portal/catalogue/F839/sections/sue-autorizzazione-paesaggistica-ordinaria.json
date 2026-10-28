@@ -1,0 +1,954 @@
+{
+ "crawled": "2026-10-28T17:16:57.640Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUE: EDILIZIA › Beni Paesaggistici › Autorizzazione paesaggistica ordinaria (art.146 del D.Lgs 42/2004 - Comune) (sector Edilizia e pianificazione urbana)",
+ "seconds": 61.8,
+ "generated": {
+  "interventi": "Autorizzazione paesaggistica ordinaria per interventi ricadenti in aree soggette a vincolo paesaggistico (art.146 D.Lgs. 42/2004)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione Paesaggistica ordinaria ex art. 146 D.Lgs. 42/2004 (Ente Comune)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI - SUE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione dell'intervento",
+   "dati catastali",
+   "dati relativi al nome del tecnico",
+   "dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE",
+   "type": "CHK",
+   "adds": [
+    "Qualifica e dati del procuratore"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.3
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 4.1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 3.1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 2
+  },
+  {
+   "section": "dati relativi al nome del tecnico",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è colui che presenta la pratica",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non è colui che presenta la pratica",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r9c1p22reg:txt",
+     "kind": "text",
+     "label": "ordine/collegio/albo (1) (2)",
+     "max": 100
+    },
+    {
+     "id": "r9c2p24reg:txt",
+     "kind": "text",
+     "label": "provincia (sigla) (2)",
+     "max": 2
+    },
+    {
+     "id": "r9c3p26reg:txt",
+     "kind": "text",
+     "label": "numero iscrizione (2)",
+     "max": 8
+    }
+   ],
+   "fingerprint": "ffddb90f4d2ab273",
+   "branches": [
+    {
+     "choice": "è colui che presenta la pratica",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "ordine/collegio/albo (1) (2)",
+      "adds": 6
+     }
+    },
+    {
+     "choice": "non è colui che presenta la pratica",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r3c1p5reg:txt",
+       "kind": "text",
+       "label": "cognome",
+       "max": 30
+      },
+      {
+       "id": "r3c2p7reg:txt",
+       "kind": "text",
+       "label": "nome",
+       "max": 30
+      },
+      {
+       "id": "r5c1p11reg:txt",
+       "kind": "text",
+       "label": "codice fiscale",
+       "max": 16
+      },
+      {
+       "id": "r8c1p17reg",
+       "kind": "select",
+       "label": "Stato",
+       "options": "251 options",
+       "value": "ITALIA"
+      },
+      {
+       "id": "r8c2p19reg",
+       "kind": "select",
+       "label": "Provincia",
+       "options": "112 options"
+      },
+      {
+       "id": "r8c3p21reg:txt",
+       "kind": "text",
+       "label": "Comune italiano o Località estera",
+       "max": 100
+      },
+      {
+       "id": "r10c1p25reg:txt",
+       "kind": "text",
+       "label": "Via, viale, piazza",
+       "max": 50
+      },
+      {
+       "id": "r10c2p27reg:txt",
+       "kind": "text",
+       "label": "Numero civico",
+       "max": 5
+      },
+      {
+       "id": "r10c3p29reg:txt",
+       "kind": "text",
+       "label": "C.A.P.",
+       "max": 5
+      },
+      {
+       "id": "r12c1p31reg:number",
+       "kind": "text",
+       "label": "Telefono",
+       "max": 10
+      },
+      {
+       "id": "r12c2p33reg:number",
+       "kind": "text",
+       "label": "Fax",
+       "max": 15
+      },
+      {
+       "id": "r14c1p37reg:number",
+       "kind": "text",
+       "label": "Cell.",
+       "max": 15
+      },
+      {
+       "id": "r14c2p39reg:txt",
+       "kind": "text",
+       "label": "Posta elettronica certificata",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p22reg:txt",
+       "r16c1p43reg:txt"
+      ],
+      [
+       "r9c2p24reg:txt",
+       "r16c2p45reg:txt"
+      ],
+      [
+       "r9c3p26reg:txt",
+       "r16c3p47reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "cognome",
+      "adds": 32
+     }
+    }
+   ],
+   "seconds": 11.9
+  },
+  {
+   "section": "dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "proprietà",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "comproprietà (munito del consenso esplicito dei comproprietari)",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "amministratore/delegato dal Condominio",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r5c1p7reg:radio:3_clone",
+     "kind": "radio",
+     "label": "altro diritto reale di godimento",
+     "group": "r5c1p7reg:radio"
+    },
+    {
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "atto/contratto a rogito"
+    },
+    {
+     "id": "r8c2p14reg:txt",
+     "kind": "text",
+     "label": "presso il Notaio",
+     "context": "atto/contratto a rogito",
+     "max": 100
+    },
+    {
+     "id": "r8c3p16reg:txt",
+     "kind": "text",
+     "label": "con sede a",
+     "context": "atto/contratto a rogito",
+     "max": 100
+    },
+    {
+     "id": "r8c4p18reg:txt",
+     "kind": "text",
+     "label": "repertorio",
+     "context": "atto/contratto a rogito",
+     "max": 30
+    },
+    {
+     "id": "r10c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "atto/contratto registrato all'Agenzia delle Entrate"
+    },
+    {
+     "id": "r10c2p24reg:txt",
+     "kind": "text",
+     "label": "con sede a",
+     "context": "atto/contratto registrato all'Agenzia delle Entrate",
+     "max": 100
+    },
+    {
+     "id": "r10c3p26reg:txt",
+     "kind": "text",
+     "label": "al n. gen.",
+     "context": "atto/contratto registrato all'Agenzia delle Entrate",
+     "max": 20
+    },
+    {
+     "id": "r10c4p28reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r12c1p30reg:chk",
+     "kind": "checkbox",
+     "label": "atto/contratto registrato alla Conservatoria"
+    },
+    {
+     "id": "r12c2p32reg:txt",
+     "kind": "text",
+     "label": "con sede a",
+     "context": "atto/contratto registrato alla Conservatoria",
+     "max": 30
+    },
+    {
+     "id": "r12c3p34reg:txt",
+     "kind": "text",
+     "label": "al n. gen.",
+     "context": "atto/contratto registrato alla Conservatoria",
+     "max": 20
+    },
+    {
+     "id": "r12c4p36reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r16c1p41reg:radio:4_clone",
+     "kind": "radio",
+     "label": "l'area",
+     "group": "r16c1p41reg:radio"
+    },
+    {
+     "id": "r16c2p42reg:radio:5_clone",
+     "kind": "radio",
+     "label": "l'immobile",
+     "group": "r16c2p42reg:radio"
+    },
+    {
+     "id": "r18c1p45reg:txt",
+     "kind": "text",
+     "label": "ad uso",
+     "max": 30
+    },
+    {
+     "id": "r18c2p47reg:txt",
+     "kind": "text",
+     "label": "come da n. NTA del PRG",
+     "max": 30
+    },
+    {
+     "id": "r18c3p49reg:txt",
+     "kind": "text",
+     "label": "in zona di PRG",
+     "max": 30
+    },
+    {
+     "id": "r21c1p52reg:radio:6_clone",
+     "kind": "radio",
+     "label": "sì",
+     "group": "r21c1p52reg:radio"
+    },
+    {
+     "id": "r22c1p55reg:radio:7_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r22c1p55reg:radio"
+    },
+    {
+     "id": "r24c2p59reg:radio:8_clone",
+     "kind": "radio",
+     "label": "sì",
+     "group": "r24c2p59reg:radio"
+    },
+    {
+     "id": "r24c3p60reg:radio:9_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r24c3p60reg:radio"
+    },
+    {
+     "id": "r25c1p61reg:chk",
+     "kind": "checkbox",
+     "label": "art. 136 D.Lgs. 42/2004"
+    },
+    {
+     "id": "r26c1p63reg:chk",
+     "kind": "checkbox",
+     "label": "art. 142 D.Lgs. 42/2004"
+    }
+   ],
+   "fingerprint": "0dda28ca5077533f",
+   "branches": [
+    {
+     "choice": "proprietà",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "comproprietà (munito del consenso esplicito dei comproprietari)",
+     "id": "r3c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "amministratore/delegato dal Condominio",
+     "id": "r4c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p8reg:txt",
+       "kind": "text",
+       "label": "sito in via, viale, piazza, ecc.",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p7reg:radio:3_clone",
+       "r7c1p9reg:radio:3_clone"
+      ],
+      [
+       "r8c1p12reg:chk",
+       "r10c1p14reg:chk"
+      ],
+      [
+       "r8c2p14reg:txt",
+       "r10c2p16reg:txt"
+      ],
+      [
+       "r8c3p16reg:txt",
+       "r10c3p18reg:txt"
+      ],
+      [
+       "r8c4p18reg:txt",
+       "r10c4p20reg:txt"
+      ],
+      [
+       "r10c1p22reg:chk",
+       "r12c1p24reg:chk"
+      ],
+      [
+       "r10c2p24reg:txt",
+       "r12c2p26reg:txt"
+      ],
+      [
+       "r10c3p26reg:txt",
+       "r12c3p28reg:txt"
+      ],
+      [
+       "r12c4p36reg:calendar_input",
+       "r12c4p30reg:calendar_input"
+      ],
+      [
+       "r12c1p30reg:chk",
+       "r14c1p32reg:chk"
+      ],
+      [
+       "r12c2p32reg:txt",
+       "r14c2p34reg:txt"
+      ],
+      [
+       "r12c3p34reg:txt",
+       "r14c3p36reg:txt"
+      ],
+      [
+       "r12c4p36reg:calendar_input",
+       "r14c4p38reg:calendar_input"
+      ],
+      [
+       "r16c1p41reg:radio:4_clone",
+       "r18c1p43reg:radio:4_clone"
+      ],
+      [
+       "r16c2p42reg:radio:5_clone",
+       "r18c2p44reg:radio:5_clone"
+      ],
+      [
+       "r18c1p45reg:txt",
+       "r20c1p47reg:txt"
+      ],
+      [
+       "r18c2p47reg:txt",
+       "r20c2p49reg:txt"
+      ],
+      [
+       "r18c3p49reg:txt",
+       "r20c3p51reg:txt"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r23c1p54reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r24c1p57reg:radio:7_clone"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r26c2p61reg:radio:8_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r26c3p62reg:radio:9_clone"
+      ],
+      [
+       "r25c1p61reg:chk",
+       "r27c1p63reg:chk"
+      ],
+      [
+       "r26c1p63reg:chk",
+       "r28c1p65reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "altro diritto reale di godimento",
+     "id": "r5c1p7reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r7c1p10reg:txt",
+       "kind": "text",
+       "label": "specificare il titolo",
+       "max": 30
+      },
+      {
+       "id": "r7c2p12reg:txt",
+       "kind": "text",
+       "label": "nome cognome/denominazione del proprietario",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p12reg:chk",
+       "r10c1p16reg:chk"
+      ],
+      [
+       "r8c2p14reg:txt",
+       "r10c2p18reg:txt"
+      ],
+      [
+       "r8c3p16reg:txt",
+       "r10c3p20reg:txt"
+      ],
+      [
+       "r8c4p18reg:txt",
+       "r10c4p22reg:txt"
+      ],
+      [
+       "r10c1p22reg:chk",
+       "r12c1p26reg:chk"
+      ],
+      [
+       "r10c2p24reg:txt",
+       "r12c2p28reg:txt"
+      ],
+      [
+       "r10c3p26reg:txt",
+       "r12c3p30reg:txt"
+      ],
+      [
+       "r12c4p36reg:calendar_input",
+       "r12c4p32reg:calendar_input"
+      ],
+      [
+       "r12c1p30reg:chk",
+       "r14c1p34reg:chk"
+      ],
+      [
+       "r12c2p32reg:txt",
+       "r14c2p36reg:txt"
+      ],
+      [
+       "r12c3p34reg:txt",
+       "r14c3p38reg:txt"
+      ],
+      [
+       "r12c4p36reg:calendar_input",
+       "r14c4p40reg:calendar_input"
+      ],
+      [
+       "r16c1p41reg:radio:4_clone",
+       "r18c1p45reg:radio:4_clone"
+      ],
+      [
+       "r16c2p42reg:radio:5_clone",
+       "r18c2p46reg:radio:5_clone"
+      ],
+      [
+       "r18c1p45reg:txt",
+       "r20c1p49reg:txt"
+      ],
+      [
+       "r18c2p47reg:txt",
+       "r20c2p51reg:txt"
+      ],
+      [
+       "r18c3p49reg:txt",
+       "r20c3p53reg:txt"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r23c1p56reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r24c1p59reg:radio:7_clone"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r26c2p63reg:radio:8_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r26c3p64reg:radio:9_clone"
+      ],
+      [
+       "r25c1p61reg:chk",
+       "r27c1p65reg:chk"
+      ],
+      [
+       "r26c1p63reg:chk",
+       "r28c1p67reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "atto/contratto a rogito",
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "atto/contratto registrato all'Agenzia delle Entrate",
+     "id": "r10c1p22reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "atto/contratto registrato alla Conservatoria",
+     "id": "r12c1p30reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "l'area",
+     "id": "r16c1p41reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "l'immobile",
+     "id": "r16c2p42reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "sì",
+     "id": "r21c1p52reg:radio:6_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r22c2p55reg:txt",
+       "kind": "text",
+       "label": "come da atto (specificare)",
+       "context": "sì",
+       "max": 60
+      }
+     ],
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r22c1p53reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r23c1p58reg:radio:7_clone"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r25c2p62reg:radio:8_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r25c3p63reg:radio:9_clone"
+      ],
+      [
+       "r25c1p61reg:chk",
+       "r26c1p64reg:chk"
+      ],
+      [
+       "r26c1p63reg:chk",
+       "r27c1p66reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "no",
+     "id": "r22c1p55reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "sì",
+     "id": "r24c2p59reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "no",
+     "id": "r24c3p60reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "art. 136 D.Lgs. 42/2004",
+     "id": "r25c1p61reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "art. 142 D.Lgs. 42/2004",
+     "id": "r26c1p63reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r12c4p36reg:calendar_input",
+       "r10c4p28reg:calendar_input"
+      ],
+      [
+       "r24c2p59reg:radio:8_clone",
+       "r21c1p52reg:radio:6_clone"
+      ],
+      [
+       "r24c3p60reg:radio:9_clone",
+       "r22c1p55reg:radio:7_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 20.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "sue-segnalazione-certificata-inizio-attivita-alternativa-al-permesso-di-cost#Qualifica e dati del procuratore",
+   "seconds": 0.9,
+   "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+  }
+ ]
+}
