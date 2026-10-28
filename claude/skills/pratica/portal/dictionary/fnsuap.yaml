@@ -120,6 +120,9 @@ asks:
   notifica_852_protocollo: {type: text, question: "The protocol number of its Reg. 852 food-safety notifica"}
   notifica_852_data: {type: date, question: "Its date"}
   cessazione_852_data: {type: date, question: "The day the food business stops"}
+  attivita_sospesa: {type: text, question: "The activity suspended, in a few words (100 characters)"}
+  sospensione_dal: {type: date, question: "The first day it is closed"}
+  sospensione_al: {type: date, question: "The last day it stays closed"}
   fine_protocollo: {type: text, question: "Its protocol number", when: "{{ask.fine_presentata}}"}
   fine_data: {type: date, question: "Its protocol date", when: "{{ask.fine_presentata}}"}
   impianti: {type: yes_no, question: "Did the works touch the building's systems (impianti)?"}
@@ -1135,6 +1138,23 @@ sections:
       - {kind: radio, label: Cessazione contestuale alla comunicazione, when: "{{ask.cessazione_data|empty}}"}
       - {kind: radio, label: Cessazione con decorrenza, when: "{{ask.cessazione_data|empty|not}}"}
       - {kind: date, label: dal, value: "{{ask.cessazione_data|date_it}}", when: "{{ask.cessazione_data|empty|not}}"}
+  # Suspending a business for a while (same title, its own boxes): which activity, its title,
+  # from and to when; and the Reg. 852/2004 registration it suspends. Always "con decorrenza",
+  # which holds from today too, so the dates are the only questions.
+  - section: Oggetto della comunicazione
+    fields:
+      - {kind: text, label: la sospensione temporanea dell'attività di, value: "{{ask.attivita_sospesa}}"}
+      - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.titolo_attivita_data|date_it}}"}
+      - {kind: radio, label: Sospensione con decorrenza}
+      - {kind: date, label: dal, value: "{{ask.sospensione_dal|date_it}}"}
+      - {kind: date, label: al, value: "{{ask.sospensione_al|date_it}}"}
+  - section: Sospensione temporanea dell'attività ai sensi dell'art. 6, Reg. CE n. 852/2004
+    fields:
+      - {kind: text, label: prot./n., value: "{{ask.notifica_852_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.notifica_852_data|date_it}}"}
+      - {kind: date, label: dal, value: "{{ask.sospensione_dal|date_it}}"}
+      - {kind: date, label: al, value: "{{ask.sospensione_al|date_it}}"}
   - section: Cessazione dell'attività ai sensi dell'art. 6, Reg. CE n. 852/2004
     fields:
       - {kind: text, label: prot./n., value: "{{ask.notifica_852_protocollo}}"}

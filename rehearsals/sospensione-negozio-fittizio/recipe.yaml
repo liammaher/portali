@@ -1,0 +1,35 @@
+# Suspending a business for a while (comunicazione di sospensione temporanea), as gen.py writes
+# its steps file from the batch crawl (catalogue/F839/sections/suap-016-sospendere-l-attivita.json), for
+# the shop rehearsal's made-up ditta individuale (rehearsals/negozio-fittizio/fixture.json).
+procedure: napoli/comune/sospensione-attivita
+title: "Sospensione temporanea di un negozio di vicinato non alimentare, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-016-sospendere-l-attivita
+subject: impresa
+operation: Sospendere l'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+after: [Pagamento degli oneri, Gestione degli allegati]
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Vicinato - settore merceologico NON alimentare], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Sospendere l'attività"], confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+asks:
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - sospensione {{business.denominazione}}"}
+  diritti_euro: {type: number, question: "The SUAP fees in euro (the 2026 table doesn't list a suspension: ask the SUAP; 0 when none are due)"}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, altre dichiarazioni, art. 75 DPR 445/2000"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
+  - when: "{{business.rea|empty}}"
+    else: "So far only for a business not yet in the Registro delle imprese."
