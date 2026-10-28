@@ -86,6 +86,10 @@ asks:
   atto_registrazione_data: {type: date, question: "Registration date"}
   atto_registrazione_numero: {type: text, question: "Registration number"}
   zona_prg: {type: text, question: "The property's zone in the PRG (e.g. zona B)"}
+  attivita_svolta: {type: text, question: "The new holder's occupation or business (60 characters)"}
+  soggetti_cambiati: {type: yes_no, question: "Will the works' direttore or firm change with the new holder?", default: "false"}
+  nuovo_dl: {type: text, question: "The new direttore dei lavori's name"}
+  nuovo_esecutore: {type: text, question: "The new firm's name"}
   proroga_giorni: {type: text, question: "How many days of extension are asked (e.g. 365)"}
   proroga_motivo: {type: text, question: "Why the extension is needed: the facts beyond the holder's control (500 characters)"}
   proroga_tipo_lavori: {type: text, question: "The works still to finish, in a few words (30 characters)"}
@@ -588,6 +592,7 @@ sections:
       - {kind: text, label: nome, value: "{{ask.precedente_nome}}", optional: true}
       - {kind: text, label: codice fiscale / P. IVA, value: "{{ask.precedente_cf}}"}
   - section: Contenuti dell'intervento (titolo del richiedente
+    aliases: ["dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente"]
     leave: [coordinate geografiche, latitudine, longitudine]
     fields:
       - {kind: radio, label: proprietà, when: "{{ask.titolo|is_proprietario}}"}
@@ -613,9 +618,11 @@ sections:
     theirs: [di aver preso visione]
     fields: []
   - section: Contributo di Costruzione
+    aliases: [dichiarazione relativa al Contributo di Costruzione]
     theirs: [di impegnarsi al versamento del Contributo di Costruzione residuo]
     fields: []
   - section: Domicilio dei nuovi intestatari per comunicazioni o notifiche
+    aliases: [dichiarazione relativa al domicilio dei nuovi intestatari]
     leave: [fax]
     fields:
       - {kind: text, label: comune, value: "{{c:residenza.comune|upper}}"}
@@ -624,6 +631,31 @@ sections:
       - {kind: text, label: CAP, value: "{{c:residenza.cap}}"}
       - {kind: text, label: prov, value: "{{c:residenza.provincia}}"}
       - {kind: text, label: tel, value: "{{c:identity.phone|phone_it}}"}
+
+  # Cambio d'intestazione of a CILA, SCIA or DIA: as the voltura, the title by its kind.
+  - section: dichiarazione relativa agli estremi della CILA / SCIA / DIA e proprietario
+    fields:
+      - {kind: select, label: seleziona un titolo, value: "{{ask.titolo_tipo|sigla}}"}
+      - {kind: text, label: prot. n°, value: "{{ask.pdc_protocollo}}"}
+      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}"}
+      - {kind: text, label: cognome / ragione sociale, value: "{{ask.precedente_cognome}}"}
+      - {kind: text, label: nome, value: "{{ask.precedente_nome}}", optional: true}
+      - {kind: text, label: codice fiscale / P. IVA, value: "{{ask.precedente_cf}}"}
+  - section: dichiarazione della tipologia di attività svolta
+    fields:
+      - {kind: text, label: è la seguente, value: "{{ask.attivita_svolta}}"}
+  - section: dichiarazione relativa alla conoscenza dei soggetti che intervengono
+    fields:
+      - {kind: radio, label: di essere a conoscenza dei nominativi del Progettista, when: "{{ask.soggetti_cambiati|not}}"}
+      - {kind: radio, label: la direzione e/o l'esecuzione dei lavori saranno assunte, when: "{{ask.soggetti_cambiati}}"}
+      - {kind: text, label: Direttore dei Lavori, value: "{{ask.nuovo_dl}}", when: "{{ask.soggetti_cambiati}}"}
+      - {kind: text, label: Esecutore, value: "{{ask.nuovo_esecutore}}", when: "{{ask.soggetti_cambiati}}"}
+  - section: dichiarazione relativa all'impegno nel rispettare prescrizioni
+    theirs: [di impegnarsi a rispettare le prescrizioni]
+    fields: []
+  - section: dichiarazione relativa alla presa visione della CILA / SCIA / DIA
+    theirs: [di aver preso visione]
+    fields: []
 
   # A new direttore dei lavori: the studio's architect (`t:`), her studio's address and her albo.
   - section: nomina nuovo direttore dei lavori

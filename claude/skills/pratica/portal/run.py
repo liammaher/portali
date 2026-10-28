@@ -144,6 +144,7 @@ class Filters(dict):
 FILTERS = Filters({
     "upper": str.upper,
     "albo_tipo": _albo_tipo,
+    "sigla": lambda v: ".".join(v.strip().upper()) + "." if v.strip().isalpha() and len(v.strip()) <= 5 else v,
     "sesso": lambda v: {"F": "Femmina", "M": "Maschio"}[v.strip().upper()],
     "provincia_nome": lambda v: PROVINCE[v.strip().upper()],
     "qualita": _qualita,
