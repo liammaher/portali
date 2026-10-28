@@ -290,6 +290,16 @@ asks:
   superficie_somministrazione_prima_mq: {type: number, question: "The customer area before the change, in m²"}
   titolo_attivita_comune: {type: text, question: "The comune the title was filed with", default: "Napoli"}
 
+  orario_dalle: {type: text, question: "Opening time, the same every open day (hh:mm)"}
+  orario_alle: {type: text, question: "Closing time (hh:mm)"}
+  giorno_chiusura: {type: text, question: "The weekly closing day ('nessuno' if none)", default: "nessuno"}
+  area_privata_uso_pubblico: {type: yes_no, question: "Is the ground private but open to the public (rather than public)?", default: "false"}
+  dehors_dal: {type: date, question: "The season's first day for the dehors"}
+  dehors_al: {type: date, question: "Its last day"}
+  dehors_lunghezza_m: {type: number, question: "The dehors area's length in metres"}
+  dehors_larghezza_m: {type: number, question: "Its width in metres"}
+  dehors_mq: {type: number, question: "Its area in m² (length × width)"}
+
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
   superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
   superficie_attivita: {type: "number", question: "Superficie del locale adibita all'esercizio dell'attività: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_attivita"}
@@ -1804,6 +1814,52 @@ sections:
       - {kind: text, label: mq, value: "{{ask.superficie_vendita_mq}}"}
       - {kind: checkbox, label: Generi di monopolio, when: "{{ask.superficie_monopolio_mq|positive}}"}
       - {kind: text, label: superficie di vendita mq, nth: 3, value: "{{ask.superficie_monopolio_mq}}", when: "{{ask.superficie_monopolio_mq|positive}}"}
+
+  # A bar or restaurant's outdoor seating (dehors: suolo pubblico annesso a un esercizio di
+  # somministrazione). The 852 notifica already filed, the sign's name, the same hours every open
+  # day, the ground, the period, the measures, noise; the commitments (certified mounting, paying
+  # the canone) are the person's.
+  - section: dichiarazione dell'obbligo di notifica ai fini della registrazione
+    fields:
+      - {kind: radio, label: ha presentato notifica sanitaria}
+      - {kind: text, label: all'Azienda Sanitaria di, value: "NAPOLI 1 CENTRO"}
+      - {kind: date, label: in data, value: "{{ask.notifica_852_data|date_it}}"}
+  - section: dichiarazione dell'insegna dell'esercizio
+    fields:
+      - {kind: text, label: descrizione insegna (nome del locale), value: "{{ask.insegna}}"}
+  - section: dichiarazione relativa agli orari ed ai giorni di apertura
+    leave: [dalle ore, alle ore]
+    fields:
+      - {kind: radio, label: "oppure tutti i giorni:"}
+      - {kind: text, label: dalle ore, nth: 15, value: "{{ask.orario_dalle}}"}
+      - {kind: text, label: alle ore, nth: 15, value: "{{ask.orario_alle}}"}
+      - {kind: text, label: giorno di chiusura, value: "{{ask.giorno_chiusura}}"}
+  - section: dichiarazione relativa all'occupazione di suolo pubblico per attività di somministrazione
+    fields:
+      - {kind: radio, label: area pubblica, when: "{{ask.area_privata_uso_pubblico|not}}"}
+      - {kind: radio, label: area privata ad uso pubblico, when: "{{ask.area_privata_uso_pubblico}}"}
+  - section: dichiarazione del periodo di effettiva occupazione
+    fields:
+      - {kind: radio, label: a carattere annuale (1° anno di richiesta), when: "{{ask.stagionale|not}}"}
+      - {kind: radio, label: a carattere stagionale, when: "{{ask.stagionale}}"}
+      - {kind: date, label: dal giorno, value: "{{ask.dehors_dal|date_it}}", when: "{{ask.stagionale}}"}
+      - {kind: date, label: al giorno, value: "{{ask.dehors_al|date_it}}", when: "{{ask.stagionale}}"}
+    leave: [numero, del, dal giorno, al giorno, specificare]
+  - section: dichiarazione delle misure dell'area richiesta
+    fields:
+      - {kind: text, label: lunghezza area occupata in mt. lineari, value: "{{ask.dehors_lunghezza_m}}"}
+      - {kind: text, label: larghezza area occupata in mt. lineari, value: "{{ask.dehors_larghezza_m}}"}
+      - {kind: text, label: totale in mq, value: "{{ask.dehors_mq}}"}
+  - section: dichiarazione relativa all'inquinamento acustico
+    fields:
+      - {kind: radio, label: che non sono presenti fonti acustiche, when: "{{ask.musica|not}}"}
+      - {kind: radio, label: che rispetta i limiti acustici, when: "{{ask.musica}}"}
+  - section: dichiarazione di impegno relativa al montaggio della struttura
+    theirs: [di impegnarsi a far pervenire al Comune]
+    fields: []
+  - section: dichiarazione di impegno al pagamento della TOSAP/COSAP
+    theirs: [si impegna a pagare, è a conoscenza che il mancato pagamento]
+    fields: []
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"

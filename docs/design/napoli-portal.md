@@ -39,7 +39,7 @@ restaurant, a non-food shop, a bakery and rooms to let, the takeover and the sus
 shop and of a restaurant, a restaurant's new name, a shop's bigger sales area, a running
 restaurant's alcohol notice and a restaurant's closure; written and waiting for the portal: an
 opening with alcohol, one with an outside sign, a historic-centre authorization, a company's
-suspension and a shop's new name. A drift check
+suspension, a shop's new name and a restaurant's dehors. A drift check
 reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
 `draft.py` pairs boxes with the national schema by order and type, since the portal draws a
@@ -48,8 +48,8 @@ of 49 boxes right (33 before), and sections it marks `exact` held 17 of 18. Draf
 person to check, never used unchecked. The pratica's XML, which would name each box's schema
 field, exists only once a pratica is sent: the portal offers PDFs before (`rehearsals/cessazione-fittizia`).
 
-Next: run the five waiting recipes; finish the SUAP batch and import it; the 75 pratiche one
-or two sections short, then outdoor seating (dehors); a company's other partners (their art. 85
+Next: run the six waiting recipes; finish the SUAP batch and import it; the 75 pratiche one
+or two sections short; a company's other partners (their art. 85
 statements); the SUE's last seven pratiche with a professional (asseverazioni, landscape
 classifications).
 
