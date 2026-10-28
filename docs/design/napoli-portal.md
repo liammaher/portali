@@ -8,7 +8,7 @@ pratica; this is what it takes for the whole platform, in five pieces.
 
 Status (2026-10-28): piece 1 built for the whole SUE and under way for the SUAP (batch crawl,
 fingerprints, drift check); 5 built; 3 and 4 partly; 2 not started as data. Vault PRs #87,
-#88 and this branch; library PR #62.
+#88, #89 and this branch; library PR #62.
 
 ## 1. The portal map: every box, and what goes in it
 
@@ -32,8 +32,9 @@ once by fingerprint (`catalogue/README.md`). SUE: all 27 pratiche crawled, 127 d
 sections, 88 in the dictionary (88% of uses), 20 pratiche complete; 7 generated and run
 (CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 160 pratiche
 crawled so far (the priority sectors; the batch continues, 1,028 trips in all), 236 distinct
-sections, 21 in the dictionary (71% of uses); the acconciatore, a restaurant's opening and its
-closure generated and run. A drift check
+sections, 29 in the dictionary (71% of uses, counted under each title a section has); the
+openings of a hairdresser, a restaurant, a non-food shop, a bakery and rooms to let, and a
+restaurant's closure, generated and run. A drift check
 reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
 `draft.py` pairs boxes with the national schema by order and type, since the portal draws a

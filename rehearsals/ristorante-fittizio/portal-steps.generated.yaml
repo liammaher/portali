@@ -33,6 +33,13 @@ asks:
   manifestazioni: {type: yes_no, group: attivita_852, item: Food service at fairs and events}
   home_restaurant: {type: yes_no, group: attivita_852, item: A home restaurant}
   diritti_euro: {type: number, question: The SUAP fees in euro, default: '120', why: The 2026 table's line for a bar or restaurant with the notifica sanitaria outside the protected zones.}
+  forno: {type: yes_no, group: attivita_852, item: 'Bread, pizza, pastry, ice cream or ready meals made on the premises'}
+  pane: {type: yes_no, group: attivita_852, item: 'Bread, pizza and other baked goods'}
+  pasticceria: {type: yes_no, group: attivita_852, item: Pastry}
+  gelateria: {type: yes_no, group: attivita_852, item: Ice cream}
+  gastronomia: {type: yes_no, group: attivita_852, item: 'Ready meals (gastronomia, rosticceria, friggitoria)'}
+  pasta: {type: yes_no, group: attivita_852, item: Fresh or dry pasta}
+  dettaglio_alimenti: {type: yes_no, group: attivita_852, item: Food sold in a shop (esercizio di vicinato)}
   in_centro_commerciale: {type: yes_no, question: 'In centro commerciale? (yes: Si)', schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_si'}
   centro_commerciale_denominazione: {type: text, question: denominazione, schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_denominazione'}
   zona_tutelata: {group: extras, type: yes_no, item: 'It''s in the historic centre: the UNESCO area or its buffer zone', why: 'Since 25 July 2026 an opening there needs an authorization, not a SCIA, and
@@ -57,6 +64,8 @@ supports:
   else: 'An outside sign isn''t supported yet: it bundles the insegna''s SCIA into this one.'
 - when: '{{ask.ristorazione}}'
   else: 'So far only a bar or restaurant: the notifica''s other activity lines aren''t mapped.'
+- when: '{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}'
+  else: 'A bar or restaurant that also bakes or runs a food shop isn''t supported yet: those lines together aren''t mapped.'
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 wizard:
@@ -172,6 +181,14 @@ sections:
   - {id: 'r14c1p27reg:chk', kind: checkbox, when: '{{ask.ristorazione}} {{ask.bar_laboratorio}}', label: Bar e altri esercizi pubblici simili con laboratorio}
   - {id: 'r15c2p29reg:chk', kind: checkbox, when: '{{ask.ristorazione}} {{ask.manifestazioni}}', label: Ristorazione pubblica in ambito di manifestazioni}
   - {id: 'r16c2p32reg:chk', kind: checkbox, when: '{{ask.ristorazione}} {{ask.home_restaurant}}', label: Home restaurant}
+  - {id: 'r3c1p5reg:chk', kind: checkbox, when: '{{ask.forno}}', label: PRODOTTI DA FORNO E DI PASTICCERIA}
+  - {id: 'r5c2p10reg:chk', kind: checkbox, when: '{{ask.forno}} {{ask.pane}}', label: 'Pane, pizza e altri prodotti da forno'}
+  - {id: 'r6c2p13reg:chk', kind: checkbox, when: '{{ask.forno}} {{ask.pasticceria}}', label: Prodotti di pasticceria freschi e secchi}
+  - {id: 'r7c2p16reg:chk', kind: checkbox, when: '{{ask.forno}} {{ask.gelateria}}', label: Prodotti di gelateria}
+  - {kind: checkbox, when: '{{ask.forno}} {{ask.gastronomia}}', label: Cibi pronti in genere}
+  - {id: 'r4c2p7reg:chk', kind: checkbox, when: '{{ask.forno}} {{ask.pasta}}', label: Pasta secca e/o fresca}
+  - {kind: checkbox, when: '{{ask.dettaglio_alimenti}}', label: 'COMMERCIO AL DETTAGLIO DI ALIMENTI E BEVANDE:'}
+  - {kind: checkbox, when: '{{ask.dettaglio_alimenti}}', label: In Esercizi di vicinato}
 - section: Dichiarazione relativa ai diritti
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.diritti_euro|positive|not}}', label: non sono dovuti oneri}

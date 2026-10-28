@@ -322,7 +322,7 @@ def fill(entry, as_name, c, recipe, name):
         out["note"] = entry["note"]
     # The questions this section asks: those its emitted fields read (a field only some
     # pratiche show doesn't bring its question along).
-    asks_used = set(re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(fields)))
+    asks_used = set(re.findall(r"(?:\{\{|[+*])\s*ask\.(\w+)", json.dumps(fields)))
     return out, problems, asks_used
 
 
@@ -436,7 +436,7 @@ def generate(recipe, base=HERE):
                 out["theirs"] = out.get("theirs", []) + [d["label"]]
                 continue
             fields.append(dict(d))
-            for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(d)):
+            for t in re.findall(r"(?:\{\{|[+*])\s*ask\.(\w+)", json.dumps(d)):
                 asks_used.add(t)
         if slots is not None:
             # Every slot that takes only signed files is the person's, named or not.
@@ -459,7 +459,7 @@ def generate(recipe, base=HERE):
         raise GenError("\n".join(problems))
     for t in recipe.get("asks_used", []):
         asks_used.add(t)
-    for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps([recipe.get("yours"), recipe.get("supports")])):
+    for t in re.findall(r"(?:\{\{|[+*])\s*ask\.(\w+)", json.dumps([recipe.get("yours"), recipe.get("supports")])):
         asks_used.add(t)
     # The dictionary's questions, the recipe's wording over them; a question only this pratica
     # asks (one `supports` reads) is the recipe's alone.

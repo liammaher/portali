@@ -54,3 +54,4 @@ supports:
   - {when: "{{ask.musica|not}}", else: "Music or a sound system isn't supported yet: it adds the impatto acustico papers."}
   - {when: "{{ask.insegna_esterna|not}}", else: "An outside sign isn't supported yet: it bundles the insegna's SCIA into this one."}
   - {when: "{{ask.ristorazione}}", else: "So far only a bar or restaurant: the notifica's other activity lines aren't mapped."}
+  - {when: "{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}", else: "A bar or restaurant that also bakes or runs a food shop isn't supported yet: those lines together aren't mapped."}

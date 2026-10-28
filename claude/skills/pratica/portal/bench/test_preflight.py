@@ -183,6 +183,16 @@ def proposals():
     raises(lambda: run.preflight(steps, values(steps=steps)), "no propose")
 
 
+def sums():
+    # A total the portal wants (rooms, beds) from what was asked: each term is a question.
+    asks = {"a": {"type": "number", "question": "a", "default": "0"}, "b": {"type": "number", "question": "b"}}
+    v = run.Values({"b": "3"}, fields={}, asks=asks)
+    assert v.render("{{ask.a+2*ask.b}}") == "6", v.render("{{ask.a+2*ask.b}}")
+    assert v.render("{{ask.a+ask.b|positive}}") == "true"
+    assert run.Values({}, fields={}, asks=asks).render("{{ask.a+ask.b}}") is None  # b unanswered
+    assert [r for r, _ in run.refs_in("{{ask.a+2*ask.b|positive}}")] == ["ask.a", "ask.b"]
+
+
 CASES = [
     ("the SCIA with its answers is ready", ready),
     ("no answers: one checklist, branch items first, then two questions, no defaults", all_questions),
@@ -200,6 +210,7 @@ CASES = [
     ("a question no field reads is a steps-file error", unused_ask),
     ("a question this case doesn't need isn't asked; a conditional one says on what", not_needed_here),
     ("a proposal is offered to confirm, used once confirmed, and asked when the vault can't fill it", proposals),
+    ("a sum of answers renders, needs every term, and each term is asked", sums),
 ]
 
 

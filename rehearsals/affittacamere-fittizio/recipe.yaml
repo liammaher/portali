@@ -1,0 +1,51 @@
+# The SUAP's opening of rooms to let or a B&B (SCIA per strutture ricettive extralberghiere), as
+# gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-056-aprire-l-attivita.json), for this folder's made-up ditta
+# individuale (fixture.json). Its own sections (type, name, season, services, rooms) were written
+# from the crawl and mod_attivita_extra_alberghiere_apertura.
+procedure: napoli/comune/avvio-bed-and-breakfast
+title: "SCIA: apertura di un affittacamere o B&B, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-056-aprire-l-attivita
+subject: impresa
+operation: Aprire l'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+after: [Pagamento degli oneri, Gestione degli allegati]
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: ["Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna)"], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Aprire l'attività"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+groups:
+  extras:
+    question: "Does any of this apply to the lodging? Tick all that do, or none."
+asks:
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - camere {{business.denominazione}}"}
+  grande: {group: extras, type: yes_no, item: "More than 25 beds, or fire-prevention controls apply", why: "That adds the fire-prevention SCIA, a branch not mapped yet."}
+  alcolici: {group: extras, type: yes_no, item: "It will sell alcoholic drinks", why: "Selling alcohol adds the Dogane notice, a branch not mapped yet."}
+  insegna_esterna: {group: extras, type: yes_no, item: "It will have a sign outside", why: "An outside sign bundles the insegna's SCIA into this one, a branch not mapped yet."}
+  servizi: {group: extras, type: yes_no, item: "A pool, a beauty centre, a gym, or a shop for guests or the public", why: "Those services aren't mapped yet."}
+  diritti_euro: {type: number, question: "The SUAP fees in euro", default: "200", why: "The 2026 table's line S94 for an extra-hotel lodging without the notifica sanitaria."}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, requisiti di onorabilità, altre dichiarazioni, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale]
+    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
+  - when: "{{business.rea|empty}}"
+    else: "So far only for a business not yet in the Registro delle imprese."
+  - {when: "{{ask.grande|not}}", else: "More than 25 beds or fire-prevention controls aren't supported yet."}
+  - {when: "{{ask.alcolici|not}}", else: "Selling alcohol isn't supported yet: it adds the Dogane notice to the pratica."}
+  - {when: "{{ask.insegna_esterna|not}}", else: "An outside sign isn't supported yet: it bundles the insegna's SCIA into this one."}
+  - {when: "{{ask.servizi|not}}", else: "A pool, beauty centre, gym or shop isn't supported yet."}
+  - {when: "{{ask.colazione|is_nessuna}}", else: "Food for the guests isn't supported yet: it adds the somministrazione to the guests (and, prepared, the Reg. 852 notifica)."}

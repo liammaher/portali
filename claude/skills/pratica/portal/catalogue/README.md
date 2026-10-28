@@ -41,7 +41,8 @@ catalogo <sportello>" (Liam deletes it afterwards):
 - `catalogue.py`: `ops sue|suap` lists a batch's operations, `known` the fingerprints the
   stored crawls have, `import` writes an exported batch here (refusing one that holds the
   login's name: `CATALOGUE_PRIVATE`), `count` the distinct sections, how many pratiche use each
-  and whether the dictionary fills it (gen.py's own test, not a name match).
+  and whether the dictionary fills it under each title the portal gives it (gen.py's own test;
+  `names_missing` lists a title with no entry).
 
 Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
@@ -54,7 +55,9 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   technical choices more than mapping.
 - **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
   B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
-  21 filled, 71% of section uses (the shared ones). The whole tree is 2,333 sector-and-operation
+  29 filled, 71% of section uses (65% before the shops, bakeries and lodgings; the 71% said at
+  the first import counted a section under every title it has, though the dictionary finds it
+  by title: `count` now checks each title). The whole tree is 2,333 sector-and-operation
   pairs plus 64 common operations, but only the sector's own operations (open, take over, move,
   suspend, close: 710 pairs) differ by sector. The batch in the pane (`crawl:ops:suap3`, 1,028
   trips) crawls those in every sector, every other operation once (69 of them) and each of
@@ -68,9 +71,9 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   sections from the pratica where it was tried.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
-- Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening
-  and a restaurant's closure (SUAP), the proroga di inizio lavori (SUE), besides the seven run
-  before.
+- Proven on the portal with made-up data, generated from a batch crawl: the openings of a
+  restaurant, a non-food shop, a bakery and rooms to let, and a restaurant's closure (SUAP), the
+  proroga di inizio lavori (SUE), besides the seven run before.
 
 ## Drift
 

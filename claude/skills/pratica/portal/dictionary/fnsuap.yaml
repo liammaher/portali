@@ -169,6 +169,40 @@ asks:
   stato_legittimo_doc: {type: file, question: "The documents proving the stato legittimo (the building's titles, PDF)"}
   dichiarazione_conformita: {type: file, question: "The installers' dichiarazioni di conformità of the systems touched (PDF)", when: "{{ask.impianti}}"}
 
+  solo_distributori: {type: yes_no, question: "Will it sell only through vending machines?", default: "false"}
+  anche_ingrosso: {type: yes_no, question: "Will it also sell wholesale (not only to the public)?", default: "false"}
+  superficie_vendita_mq: {type: number, question: "The sales area in m² (where customers shop, not stores or toilets)"}
+  superficie_alimentare_mq: {type: number, question: "Of that, m² for food", default: "0"}
+  superficie_non_alimentare_mq: {type: number, question: "Of that, m² for everything else (non-food)", default: "0"}
+  superficie_monopolio_mq: {type: number, question: "m² for tobacco and other state-monopoly goods", default: "0"}
+  in_ccn: {type: yes_no, question: "Is it in a recognised centro commerciale naturale (C.C.N.)?", default: "false"}
+  ccn_delibera: {type: text, question: "The C.C.N.'s recognition: delibera number"}
+  ccn_delibera_data: {type: date, question: "Its date"}
+  ccn_delibera_ente: {type: text, question: "Who passed it (e.g. Giunta comunale)"}
+  in_factory_outlet: {type: yes_no, question: "Is it in a factory outlet centre?", default: "false"}
+
+  forno: {type: yes_no, group: attivita_852, item: "Bread, pizza, pastry, ice cream or ready meals made on the premises"}
+  pane: {type: yes_no, group: attivita_852, item: "Bread, pizza and other baked goods"}
+  pasticceria: {type: yes_no, group: attivita_852, item: "Pastry"}
+  gelateria: {type: yes_no, group: attivita_852, item: "Ice cream"}
+  gastronomia: {type: yes_no, group: attivita_852, item: "Ready meals (gastronomia, rosticceria, friggitoria)"}
+  pasta: {type: yes_no, group: attivita_852, item: "Fresh or dry pasta"}
+  dettaglio_alimenti: {type: yes_no, group: attivita_852, item: "Food sold in a shop (esercizio di vicinato)"}
+  consumo_sul_posto: {type: yes_no, question: "Can customers eat its products on the spot (no table service)?", default: "false"}
+  centro_commerciale_tipologia: {type: text, question: "The shopping centre's type (centro commerciale, mercato coperto, ...)"}
+  responsabile_produzione_altro: {type: yes_no, question: "Is the production manager someone other than the titolare?", default: "false"}
+  responsabile_produzione_nome: {type: text, question: "The production manager's full name"}
+  responsabile_produzione_dichiarazione: {type: file, question: "The production manager's signed statement of their requirements (PDF)"}
+
+  tipo_struttura: {type: choice, question: "What kind of lodging is it?", options: [Affittacamere, Bed and breakfast]}
+  imprenditoriale: {type: yes_no, question: "Is it run as a business (forma imprenditoriale)?", default: "true"}
+  denominazione_struttura: {type: text, question: "The lodging's name", default: "{{business.denominazione}}"}
+  colazione: {type: choice, question: "Food for the guests: none, packaged only, or prepared on site?", options: [Nessuna, Confezionata, Preparata]}
+  camere_singole_bagno: {type: number, question: "Single rooms with a private bathroom", default: "0"}
+  camere_singole_senza: {type: number, question: "Single rooms without one", default: "0"}
+  camere_doppie_bagno: {type: number, question: "Double rooms with a private bathroom", default: "0"}
+  camere_doppie_senza: {type: number, question: "Double rooms without one", default: "0"}
+
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura).
   superficie_complessiva: {type: "number", question: "Superficie complessiva del locale: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_complessiva"}
   superficie_attivita: {type: "number", question: "Superficie del locale adibita all'esercizio dell'attività: mq", schema: "modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/superficie_acc_est/[superfice_acc_est_ctype]/superficie_attivita"}
@@ -717,6 +751,7 @@ sections:
   # paid on pagoPA (the payment is the person's, after sending) or with marche whose serial
   # numbers go here (that route isn't run yet). Exemptions are a case of their own: not mapped.
   - section: Dichiarazione relativa all'assolvimento dell'imposta di bollo
+    aliases: [dichiarazione relativa all'imposta di bollo]
     fields:
       - {kind: radio, label: "Il pagamento è dovuto e si intende assolvere l'obbligo tramite il circuito digitale pagoPA", when: "{{ask.bollo_marche|not}}"}
       - {kind: radio, label: "Due marche da €16,00 ciascuna", when: "{{ask.bollo_marche|not}}"}
@@ -1037,7 +1072,13 @@ sections:
     fields:
       - {kind: text, label: "N.B. Inserire l'indirizzo della casella PEC", value: "{{business.pec}}"}
 
+  # The business's premises, under the titles each sector gives them (a transfer's new address
+  # is the premises it moves to; the old one, "precedente ubicazione", is not this).
   - section: ubicazione dell'attività
+    aliases: [ubicazione dello stabilimento, ubicazione dell'impianto produttivo, ubicazione impianto, "Ubicazione",
+              indirizzo dell'attività, indirizzo dello stabilimento, sede dell'attività, dichiarazione ubicazione locale,
+              dichiarazione dell'ubicazione dell'esercizio, dichiarazione relativa all'indirizzo dello stabilimento,
+              nuovo indirizzo dell'esercizio, nuovo indirizzo dell'ubicazione dell'esercizio]
     subject: impresa
     leave: [Frazione]
     fields:
@@ -1074,6 +1115,7 @@ sections:
   # Closing a business (cessazione): which activity, the title it started under, from when;
   # and the Reg. 852/2004 registration it ends.
   - section: Oggetto della comunicazione
+    aliases: [dichiarazione relativa alla cessazione dell'attività]
     fields:
       - {kind: text, label: la cessazione dell'attività di, value: "{{ask.attivita_cessata}}"}
       - {kind: text, label: prot./n., value: "{{ask.titolo_attivita_protocollo}}"}
@@ -1099,9 +1141,10 @@ sections:
       - {kind: text, label: dal (gg/mm), value: "{{ask.stagione_dal}}", when: "{{ask.stagionale}}"}
       - {kind: text, label: al (gg/mm), value: "{{ask.stagione_al}}", when: "{{ask.stagionale}}"}
       - {kind: textarea, label: Tipologia di esercizio, value: "{{business.descrizione_attivita}}"}
-      - {kind: radio, label: Si, when: "{{ask.in_centro_commerciale}}"}
-      - {kind: radio, label: "No", when: "{{ask.in_centro_commerciale|not}}"}
-      - {kind: text, label: denominazione, nth: 2, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      # The protected zones' authorization has no shopping-centre question.
+      - {kind: radio, label: Si, when: "{{ask.in_centro_commerciale}}", if_present: true}
+      - {kind: radio, label: "No", when: "{{ask.in_centro_commerciale|not}}", if_present: true}
+      - {kind: text, label: denominazione, nth: 2, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}", if_present: true}
       - {kind: text, label: Superficie di somministrazione, value: "{{ask.superficie_somministrazione_mq}}"}
 
   # The Reg. 852/2004 notifica (mod_notifica_sanitaria): when the activity starts, and if it
@@ -1115,8 +1158,9 @@ sections:
       - {kind: checkbox, label: Termine dell'attività, when: "{{ask.termine_data|empty|not}}"}
       - {kind: date, label: in data, value: "{{ask.termine_data|date_it}}", when: "{{ask.termine_data|empty|not}}"}
 
-  # What the food business does, in the notifica's master list: only the food-service block
-  # so far (a bar, a restaurant); a heading opens its lines. The other blocks stay unticked.
+  # What the food business does, in the notifica's master list: the food-service block (a bar,
+  # a restaurant), the bakery and pastry block, and food retail in a shop; a heading opens its
+  # lines. The other blocks stay unticked.
   - section: tipologia di attività ai sensi dell'art. 6
     fields:
       - {kind: checkbox, label: "RISTORAZIONE:", when: "{{ask.ristorazione}}"}
@@ -1127,6 +1171,133 @@ sections:
       - {kind: checkbox, label: Bar e altri esercizi pubblici simili con laboratorio, when: "{{ask.ristorazione}} {{ask.bar_laboratorio}}"}
       - {kind: checkbox, label: Ristorazione pubblica in ambito di manifestazioni, when: "{{ask.ristorazione}} {{ask.manifestazioni}}"}
       - {kind: checkbox, label: Home restaurant, when: "{{ask.ristorazione}} {{ask.home_restaurant}}"}
+      - {kind: checkbox, label: "PRODOTTI DA FORNO E DI PASTICCERIA", when: "{{ask.forno}}"}
+      - {kind: checkbox, label: "Pane, pizza e altri prodotti da forno", when: "{{ask.forno}} {{ask.pane}}"}
+      - {kind: checkbox, label: Prodotti di pasticceria freschi e secchi, when: "{{ask.forno}} {{ask.pasticceria}}"}
+      - {kind: checkbox, label: Prodotti di gelateria, when: "{{ask.forno}} {{ask.gelateria}}"}
+      - {kind: checkbox, label: Cibi pronti in genere, when: "{{ask.forno}} {{ask.gastronomia}}"}
+      - {kind: checkbox, label: Pasta secca e/o fresca, when: "{{ask.forno}} {{ask.pasta}}"}
+      - {kind: checkbox, label: "COMMERCIO AL DETTAGLIO DI ALIMENTI E BEVANDE:", when: "{{ask.dettaglio_alimenti}}"}
+      - {kind: checkbox, label: In Esercizi di vicinato, when: "{{ask.dettaglio_alimenti}}"}
+
+  # A shop (esercizio di vicinato): how it sells, its season, a shopping centre, the sales area
+  # per sector. Drafted by draft.py from mod_esercizio_vicinato_apertura and checked by hand:
+  # the shopping-centre types (G2CQ...), the C.C.N. and the factory outlet are Napoli's own
+  # boxes, not the schema's. The total must equal the sectors' sum (the portal's note).
+  - section: Dati sull'esercizio di vicinato
+    fields:
+      - {kind: checkbox, label: Vicinato, when: "{{ask.solo_distributori|not}}"}
+      - {kind: checkbox, label: Vendita esclusivamente mediante apparecchi automatici, when: "{{ask.solo_distributori}}"}
+      - {kind: radio, label: Vendita al dettaglio, when: "{{ask.anche_ingrosso|not}}"}
+      - {kind: text, label: superficie di vendita mq, value: "{{ask.superficie_vendita_mq}}", when: "{{ask.anche_ingrosso|not}}"}
+      - {kind: radio, label: Vendita congiunta al dettaglio e all'ingrosso, when: "{{ask.anche_ingrosso}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 2, value: "{{ask.superficie_vendita_mq}}", when: "{{ask.anche_ingrosso}}"}
+      - {kind: radio, label: Permanente, when: "{{ask.stagionale|not}}"}
+      - {kind: radio, label: Stagionale, when: "{{ask.stagionale}}"}
+      - {kind: text, label: dal (gg/mm), value: "{{ask.stagione_dal}}", when: "{{ask.stagionale}}"}
+      - {kind: text, label: al (gg/mm), value: "{{ask.stagione_al}}", when: "{{ask.stagionale}}"}
+      - {kind: radio, label: Si, when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: "No", when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: text, label: denominazione, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: Si, nth: 2, when: "{{ask.in_ccn}}"}
+      - {kind: radio, label: "No", nth: 2, when: "{{ask.in_ccn|not}}"}
+      - {kind: text, label: Delibera di riconoscimento n., value: "{{ask.ccn_delibera}}", when: "{{ask.in_ccn}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.ccn_delibera_data|date_it}}", when: "{{ask.in_ccn}}"}  # 1: "Delibera..."
+      - {kind: text, label: emanata da, value: "{{ask.ccn_delibera_ente}}", when: "{{ask.in_ccn}}"}
+      - {kind: radio, label: "No", nth: 3, when: "{{ask.in_factory_outlet|not}}"}
+      - {kind: checkbox, label: Alimentare, when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 3, value: "{{ask.superficie_alimentare_mq}}", when: "{{ask.superficie_alimentare_mq|positive}}"}
+      - {kind: checkbox, label: Non alimentare, when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 4, value: "{{ask.superficie_non_alimentare_mq}}", when: "{{ask.superficie_non_alimentare_mq|positive}}"}
+      - {kind: text, label: mq, value: "{{ask.superficie_vendita_mq}}"}
+      - {kind: checkbox, label: Generi di monopolio, when: "{{ask.superficie_monopolio_mq|positive}}"}
+      - {kind: text, label: superficie di vendita mq, nth: 5, value: "{{ask.superficie_monopolio_mq}}", when: "{{ask.superficie_monopolio_mq|positive}}"}
+    # Pharmacies and fuel are not shops' business here: their boxes stay empty.
+    leave: [Farmacie, Carburanti]
+
+  # A bakery (panificio, mod_panifici_apertura): selling its own products to eat on the spot
+  # (no table service), a C.C.N., a shopping centre or covered market, its season.
+  - section: dati relativi all'attività
+    fields:
+      - {kind: radio, label: SI, when: "{{ask.consumo_sul_posto}}"}
+      - {kind: radio, label: "NO", when: "{{ask.consumo_sul_posto|not}}"}
+      - {kind: radio, label: Si, nth: 2, when: "{{ask.in_ccn}}"}
+      - {kind: radio, label: "No", nth: 2, when: "{{ask.in_ccn|not}}"}
+      - {kind: text, label: n., value: "{{ask.ccn_delibera}}", when: "{{ask.in_ccn}}"}
+      - {kind: date, label: del, value: "{{ask.ccn_delibera_data|date_it}}", when: "{{ask.in_ccn}}"}
+      - {kind: text, label: emanata da, value: "{{ask.ccn_delibera_ente}}", when: "{{ask.in_ccn}}"}
+      - {kind: radio, label: Si, nth: 3, when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: "No", nth: 3, when: "{{ask.in_centro_commerciale|not}}"}
+      - {kind: text, label: denominazione, value: "{{ask.centro_commerciale_denominazione}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: text, label: tipologia, value: "{{ask.centro_commerciale_tipologia}}", when: "{{ask.in_centro_commerciale}}"}
+      - {kind: radio, label: Permanente, when: "{{ask.stagionale|not}}"}
+      - {kind: radio, label: Stagionale, when: "{{ask.stagionale}}"}
+      - {kind: text, label: dal (gg/mm), value: "{{ask.stagione_dal}}", when: "{{ask.stagionale}}"}
+      - {kind: text, label: al (gg/mm), value: "{{ask.stagione_al}}", when: "{{ask.stagionale}}"}
+
+  # The bakery's antimafia statement and what its production manager guarantees are the
+  # person's to tick; who the manager is is a fact (another person adds their own statement).
+  - section: DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI
+    theirs: [che non sussistono nei propri confronti, l'utilizzo delle materie prime, l'osservanza delle norme igienico-sanitarie, altro]
+    fields:
+      - {kind: radio, label: "di essere il/la responsabile dell'attività produttiva", when: "{{ask.responsabile_produzione_altro|not}}"}
+      - {kind: radio, label: "che il/la responsabile dell'attività produttiva è:", when: "{{ask.responsabile_produzione_altro}}"}
+      - {kind: text, label: il/la Sig./ra, value: "{{ask.responsabile_produzione_nome}}", when: "{{ask.responsabile_produzione_altro}}"}
+      - {kind: file, label: Tipologie ammesse, value: "{{ask.responsabile_produzione_dichiarazione}}", when: "{{ask.responsabile_produzione_altro}}"}
+
+  # An extra-hotel lodging (affittacamere, B&B, holiday homes: mod_attivita_extra_alberghiere_apertura
+  # and Napoli's own boxes): its type and form, its name, its season, its services, its rooms.
+  - section: TIPOLOGIA
+    fields:
+      - {kind: checkbox, label: AFFITTACAMERE, when: "{{ask.tipo_struttura|is_affittacamere}}"}
+      - {kind: checkbox, label: BED AND BREAKFAST, when: "{{ask.tipo_struttura|is_bed_and_breakfast}}"}
+      - {kind: radio, label: NON IMPRENDITORIALE, when: "{{ask.imprenditoriale|not}}"}
+      - {kind: radio, label: IMPRENDITORIALE, when: "{{ask.imprenditoriale}}"}
+  - section: apertura
+    fields:
+      - {kind: text, label: Denominazione della struttura, value: "{{ask.denominazione_struttura}}"}
+      - {kind: radio, label: AFFITTACAMERE, when: "{{ask.tipo_struttura|is_affittacamere}}"}
+      - {kind: radio, label: BED AND BREAKFAST, when: "{{ask.tipo_struttura|is_bed_and_breakfast}}"}
+  - section: carattere dell'esercizio
+    fields:
+      - {kind: radio, label: Annuale, when: "{{ask.stagionale|not}}"}
+      - {kind: radio, label: Stagionale, when: "{{ask.stagionale}}"}
+      - {kind: text, label: dal (gg/mm), value: "{{ask.stagione_dal}}", when: "{{ask.stagionale}}"}
+      - {kind: text, label: al (gg/mm), value: "{{ask.stagione_al}}", when: "{{ask.stagionale}}"}
+  # Food for the guests (packaged, or prepared: that one needs the Reg. 852 notifica, a scelta);
+  # no pool, beauty centre, gym or shop (a recipe refuses them). The boxes for those stay empty.
+  - section: Dotazioni e servizi della struttura
+    fields:
+      - {kind: radio, label: non ha servizio di somministrazione, when: "{{ask.colazione|is_nessuna}}"}
+      - {kind: radio, label: prevede la somministrazione di alimenti e bevande confezionati, when: "{{ask.colazione|is_confezionata}}"}
+      - {kind: radio, label: prevede la somministrazione di alimenti e bevande preparati, when: "{{ask.colazione|is_preparata}}"}
+      - {kind: radio, label: non ha impianti ad uso natatorio}
+      - {kind: radio, label: non è dotata di centro estetico}
+      - {kind: radio, label: non è dotata di sala con attrezzi da palestra}
+      - {kind: radio, label: non effettua vendita di prodotti alimentari e artigianali}
+    leave: [n. impianti, di mq., mq., altro, Servizio, Soggetto gestore]
+  # Rooms (camere) only, singles and doubles: a row's totals and the structure's are sums of
+  # what was asked. A double row after a single one is the page's second (found there).
+  - section: capacità ricettiva
+    fields:
+      - {kind: text, label: n., value: "{{ask.camere_singole_bagno+ask.camere_singole_senza+2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}"}
+      - {kind: checkbox, label: Camere}
+      - {kind: checkbox, label: Numero camere singole, when: "{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}"}
+      - {kind: text, label: con bagno (n.), value: "{{ask.camere_singole_bagno}}", when: "{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}"}
+      - {kind: text, label: senza bagno (n.), value: "{{ask.camere_singole_senza}}", when: "{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}"}
+      - {kind: text, label: totale camere (n.), value: "{{ask.camere_singole_bagno+ask.camere_singole_senza}}", when: "{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}"}
+      - {kind: text, label: Totale posti letto (n.), value: "{{ask.camere_singole_bagno+ask.camere_singole_senza}}", when: "{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}"}
+      - {kind: checkbox, label: Numero camere doppie, when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}}"}
+      - {kind: text, label: con bagno (n.), value: "{{ask.camere_doppie_bagno}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive|not}}"}
+      - {kind: text, label: senza bagno (n.), value: "{{ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive|not}}"}
+      - {kind: text, label: totale camere (n.), value: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive|not}}"}
+      - {kind: text, label: Totale posti letto (n.), value: "{{2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive|not}}"}
+      - {kind: text, label: con bagno (n.), nth: 2, value: "{{ask.camere_doppie_bagno}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}", on_page: true}
+      - {kind: text, label: senza bagno (n.), nth: 2, value: "{{ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}", on_page: true}
+      - {kind: text, label: totale camere (n.), nth: 2, value: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}", on_page: true}
+      - {kind: text, label: Totale posti letto (n.), nth: 2, value: "{{2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}", when: "{{ask.camere_doppie_bagno+ask.camere_doppie_senza|positive}} {{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}", on_page: true}
+      - {kind: text, label: TOTALE camere n., value: "{{ask.camere_singole_bagno+ask.camere_singole_senza+ask.camere_doppie_bagno+ask.camere_doppie_senza}}"}
+      - {kind: text, label: TOTALE posti letto camere n., value: "{{ask.camere_singole_bagno+ask.camere_singole_senza+2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}"}
 
   # Drafted by draft.py from the national schema (mod_acconciatori_estetisti_apertura), as drafted.
   - section: "Dati sull'attività"
@@ -1144,11 +1315,13 @@ sections:
       - {kind: "date", label: "del", value: "{{ask.data_protocollo|date_it}}", when: "{{ask.attivita_esercita|not}}"}
 
   - section: "Dichiarazione sul possesso dei requisiti antimafia"
+    aliases: [DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA]
     schema: modulo_acconciatori_estetisti_apertura/scheda_anagrafica
     theirs: ["che non sussistono nei propri confronti le cause di"]
     fields: []
 
   - section: "Dichiarazione sul possesso dei requisiti professionali (attività di acconciatore)"
+    aliases: ["Dichiarazione sul possesso dei requisiti professionali (attività di estetista)"]
     schema: modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura
     fields:
       - {kind: "tick", label: "di essere Responsabile tecnico", when: "{{ask.responsabile_tecnico}}"}

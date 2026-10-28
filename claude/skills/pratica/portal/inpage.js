@@ -263,13 +263,21 @@
     const words = street.toUpperCase().split(/\W+/).filter((w) => w.length > 2);
     const e = el(f.id) || fail(`${f.id}: no field`);
     checkLabel(e, f.label);
-    const query = words.reduce((a, b) => (b.length > a.length ? b : a));
-    e.value = query;
-    (widgetOf(e) || fail(`${f.id}: no lookup widget`)).search(query);
-    await idle();
-    const lis = [...el(f.id.replace(/_input$/, "_panel")).querySelectorAll("li")];
-    const items = lis.map((l) => norm(l.textContent).toUpperCase());
-    const hits = items.filter((t) => t.split(" ")[0] === dug && words.every((w) => t.split(" ").includes(w)));
+    // The longest word first; the list shows only the first 20 streets, so a common one
+    // ("Francesco") may leave the street out: then the next word.
+    let lis = [], items = [], hits = [];
+    for (const query of [...words].sort((a, b) => b.length - a.length)) {
+      e.value = query;
+      (widgetOf(e) || fail(`${f.id}: no lookup widget`)).search(query);
+      await idle();
+      lis = [...el(f.id.replace(/_input$/, "_panel")).querySelectorAll("li")];
+      items = lis.map((l) => norm(l.textContent).toUpperCase());
+      hits = items.filter((t) => t.split(" ")[0] === dug && words.every((w) => t.split(" ").includes(w)));
+      // "Via Foria" is also inside "Via Santa Maria Avvocata a Foria": the street named exactly wins.
+      const exact = hits.filter((t) => t === norm(`${dug} ${street}`).toUpperCase());
+      if (hits.length > 1 && exact.length === 1) hits = exact;
+      if (hits.length) break;
+    }
     if (hits.length !== 1) fail(`${f.id}: ${value} matches ${JSON.stringify(hits)} among ${items.length}`);
     press(lis[items.indexOf(hits[0])], `${f.id}: ${hits[0]}`);
     await idle();
@@ -368,7 +376,13 @@
       list = list.slice(starts[b], starts[b + 1]);
     }
     const want = f.kind === "number" || f.kind === "date" ? "text" : f.kind;
-    const hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
+    let hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
+    // A box is counted by its own label (its title, else its cell), as the crawl counts it: a
+    // "Si" whose nearby texts include the "No" before it is not a "No" (three Si/No pairs in a
+    // row); the beds total under a shared header is not the rooms total.
+    const ownLabel = (e) => [e.title, ...win().eval(`(${steps.label_js})`)(e)].find((t) => norm(t) && !MESSAGE.test(norm(t)));
+    const own = hits.filter((e) => norm(ownLabel(e)).startsWith(norm(f.label)));
+    if (own.length) hits = own;
     const e = hits[(f.nth || 1) - 1] || fail(`${f.label}: ${hits.length} fields with this label${f.anchor ? ` in block ${f.block || 1}` : ""}`);
     return { ...f, id: e.id.split("dynaForm:")[1].replace(/:combo_input$/, "") };
   }

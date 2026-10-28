@@ -1,0 +1,11 @@
+{
+ "extras": [],
+ "descrizione": "PROVA NON INVIARE - affittacamere generato",
+ "oggetto": "Apertura di un affittacamere in forma imprenditoriale: tre camere doppie, due con bagno, senza somministrazione.",
+ "tipo_struttura": "Affittacamere",
+ "imprenditoriale": "true",
+ "colazione": "Nessuna",
+ "camere_doppie_bagno": "2",
+ "camere_doppie_senza": "1",
+ "diritti_euro": "200"
+}

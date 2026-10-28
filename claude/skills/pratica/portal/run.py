@@ -244,11 +244,22 @@ class Values:
         cat = ref.rsplit(".", 1)[0]
         return self.category(cat).get(ref)
 
+    def sum(self, ref):
+        """`ask.a+2*ask.b`: a box the portal wants as a total of what was asked (rooms, beds)."""
+        total = 0
+        for term in ref.split("+"):
+            n, _, r = term.strip().rpartition("*")
+            v = self.field(r.strip())
+            if v is None:
+                return None
+            total += int(n or 1) * float(str(v or 0).replace(",", "."))
+        return f"{total:g}"
+
     def render(self, template):
         """A template's value, or None when a field it names is missing."""
         def one(m):
             ref, *filters = [p.strip() for p in m.group(1).split("|")]
-            v = self.field(ref)
+            v = self.sum(ref) if "+" in ref or "*" in ref else self.field(ref)
             if v is None:
                 if "empty" in filters:
                     v = ""
@@ -291,9 +302,10 @@ ASK_TYPES = {"text", "number", "yes_no", "date", "choice", "file"}
 
 
 def refs_in(template):
-    """The fields a template reads, each with its filters."""
-    return [(parts[0], parts[1:]) for parts in
-            ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))]
+    """The fields a template reads, each with its filters (each term of a sum on its own)."""
+    return [(t.strip().rpartition("*")[2].strip(), parts[1:]) for parts in
+            ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))
+            for t in parts[0].split("+")]
 
 
 def templates(steps):
