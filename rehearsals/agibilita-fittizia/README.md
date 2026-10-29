@@ -15,6 +15,7 @@ The attestations (impianti, statics, energy, barriers, catasto, fire) are yes/no
 | Date | Browser | Login → draft | Result |
 |---|---|---|---|
 | 2026-10-28 | pane | 218 s of runs in six legs on one draft; attachments 9.5 s | 121 values and 4 attachments kept, every value read back on a fresh load (23.1 s) |
+| 2026-10-29 | pane | 89.2 s from a blank draft (`bench/rerun.py` batch, after the SCIA's dictionary change; fresh load 14.3 s) | **Filled**, every value read back on a fresh load |
 
 Each stop was general, fixed where it belongs, and the run resumed on the same draft:
 
