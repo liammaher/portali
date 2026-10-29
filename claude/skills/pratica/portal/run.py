@@ -847,7 +847,7 @@ def main():
             require_supported(steps, values)
             print(f"titolare: {values.titolare}")
             for p in plan(steps, values):
-                print(f"{p['section'][:28]:28}  {(p['label'] or p['id'])[:34]:34}  {p['value'] if p['value'] is not None else '(' + p['kind'] + ')'}")
+                print(f"{p['section'][:28]:28}  {(p['label'] or p['id'] or p.get('css') or '')[:34]:34}  {p['value'] if p['value'] is not None else '(' + p['kind'] + ')'}")
             return 0
         if not a.out:
             ap.error(f"{a.command} needs --out")
