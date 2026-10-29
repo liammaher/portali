@@ -31,6 +31,7 @@ Napoli's tariff charges for a fine lavori is the person's answer, not known here
 | Date | Browser | Login → draft | Result |
 |---|---|---|---|
 | 2026-10-28 | pane | 60.3 s to the end of the form (wizard 11.7, 9 sections ~40, fresh load 7.8), then 5.4 s for the attachments | First run, no stop: 70 values and 3 attachments kept, every value read back on a fresh load |
+| 2026-10-29 | pane | 53.1 s from a blank draft (`bench/rerun.py` batch, after the SCIA's dictionary change; fresh load 8.0 s) | **Filled**, every value read back on a fresh load |
 
 The attachments went in a second step: `gen.py` refuses an attachments screen nobody has seen,
 so the first run ended with the form; the slots were read on the screen (`crawl.js` slots()),

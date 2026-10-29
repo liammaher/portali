@@ -461,5 +461,20 @@ def _():
     assert alone == [True], alone  # just "in proprio"
 
 
+@case("a SCIA on structures fills the structural designer's block by label, and a SCIA condizionata gives no start date")
+def _():
+    steps = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-fittizia" / "recipe.yaml"))
+    h1 = section(steps, "h1) Tecnici")
+    block = [f for f in h1["fields"] if f.get("anchor") == "Cognome"]
+    assert block and all("id" not in f for f in block)  # its labels repeat the architect's
+    structural = filled(steps, p6_values("scia-fittizia", "answers-strutture.json"))
+    plain = filled(steps, p6_values("scia-fittizia"))
+    assert "SMPDVD80E20F839S" in structural[gen.norm("Tecnici incaricati")]
+    assert "SMPDVD80E20F839S" not in plain[gen.norm("Tecnici incaricati")]
+    b = gen.norm("Presentazione della SCIA/SCIA Unica/SCIA Condizionata")
+    assert structural[b] == ["23/11/2026"], structural[b]
+    assert filled(steps, p6_values("scia-fittizia", "answers-tutele.json")).get(b, []) == []  # assents asked with it
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)
