@@ -9,7 +9,8 @@ business's and its people), served to the CLI, an onboarding page and an MCP ser
 - **Database:** `modernc.org/sqlite` (pure Go)
 - **Crypto:** `golang.org/x/crypto` (argon2, hkdf) + stdlib `crypto/aes`, `crypto/cipher`
 - **HTTP:** stdlib `net/http`
-- **Tests:** `go test -race ./...` (MCP: `cd mcp && npx tsc -p tsconfig.test.json && npm test`; tsx doesn't check types)
+- **Tests:** `go test -race ./...` (MCP: `cd mcp && npx tsc -p tsconfig.test.json && npm test`; tsx doesn't check types;
+  the connector: `cd connector && npx tsc --noEmit -p . && npm test`, with `REGISTRY_DIR` for the real build)
 - **Build:** `make build` (outputs `bin/pvault`, and `bin/pvault-touchid` on macOS)
 
 ## Commands
@@ -102,6 +103,12 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      draft.py drafts dictionary entries for a new section from the national
                      schema (`schema/`, InfoCamere's forms flattened), for a person to check
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
+plugin/              the Napoli plugin for Cowork (docs/design/packaging.md): build.py copies the
+                     runner, the rehearsals' steps files (as JSON: no packages in Cowork) and the
+                     library into it; it stops unless each pratica's pre-flight matches the repo's
+connector/           the napoli connector (remote MCP, read-only, no sign-in): coverage, search, a
+                     pratica's status and freshness, library entries, from plugin/build.py's output.
+                     It never takes personal data: its tools take a case's facts
 ```
 
 ## Security Model

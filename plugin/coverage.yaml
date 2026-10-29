@@ -1,0 +1,21 @@
+# What build.py can't derive for coverage.json: which comuni there are, who files each
+# sportello's pratiche, and what's coming. Everything else (available, paused, the last
+# rehearsal, the library-only procedures) comes from the rehearsals, drift.json and the
+# library, so a status is never typed by hand.
+
+comuni:
+  F839: Napoli
+
+# A rehearsal without a recipe.yaml names no comune or sportello.
+default_comune: F839
+sportello:
+  pizzeria-fittizia: suap
+
+# Who files a sportello's pratiche: the avatars a coverage question can name.
+avatars:
+  sue: [architetto, geometra, ingegnere]
+  suap: [impresa, architetto, geometra, commercialista]
+
+# Coming soon: pratiche being mapped or rehearsed, shown as such until a steps file lands.
+# Each: {title, comune, sportello, avatars, procedure (when the library has it), expected (YYYY-MM)}.
+coming: []

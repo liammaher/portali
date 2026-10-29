@@ -4,7 +4,9 @@ was checked, and every value as it went on the form or portal.
 
   review.py OUT [--route ROUTE.json]
 
-OUT is the folder fill.py run or run.py run wrote (its report.json); --route is
+OUT is the folder fill.py run or run.py run wrote (its report.json), or the one run.py page
+wrote with the pane's `__pv.last()` saved there as report.json (its shown.json adds the
+values and the person's steps); --route is
 `fill.py route --json` for a form, for where it goes and the person's steps. Writes
 OUT/review.html: one self-contained file (the form's pages inlined), to show the person
 before they sign anything. It reads only those files.
@@ -132,6 +134,8 @@ def main():
     ap.add_argument("--route", type=Path)
     a = ap.parse_args()
     report = json.loads((a.out / "report.json").read_text())
+    if (a.out / "shown.json").exists():  # run.py page: the pane's report has only the run
+        report |= json.loads((a.out / "shown.json").read_text())
     route = json.loads(a.route.read_text()) if a.route else None
     doc = form_review(a.out, report, route) if "rows" in report else portal_review(report)
     (a.out / "review.html").write_text(doc, encoding="utf-8")
