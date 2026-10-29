@@ -348,7 +348,8 @@
   // A box's validation message ("Il valore è obbligatorio", as its title and in its cell) is
   // not its label.
   const MESSAGE = /^(il valore e obbligatorio|deve essere selezionata)/;
-  function labelled(e, label) {
+  // Where label is among the box's first texts (0: its own), or -1.
+  function labelRank(e, label) {
     const texts = win().eval(`(${steps.label_js})`)(e);
     if (e.title) texts.unshift(e.title);
     // Only the messages in front: an empty cell keeps its place, or the label of the box to
@@ -356,8 +357,9 @@
     while (texts.length && MESSAGE.test(norm(texts[0]))) texts.shift();
     // A text said twice (the title "mq" and its cell "mq") counts once, so the third is the
     // label beside it ("Superficie di somministrazione").
-    return texts.filter((t, i) => !t || texts.indexOf(t) === i).slice(0, 3).some((t) => norm(t).startsWith(norm(label)));
+    return texts.filter((t, i) => !t || texts.indexOf(t) === i).slice(0, 3).findIndex((t) => norm(t).startsWith(norm(label)));
   }
+  const labelled = (e, label) => labelRank(e, label) >= 0;
   function resolve(f) {
     if (f.id || f.css) return f;
     let list = inputs();
@@ -368,7 +370,13 @@
       list = list.slice(starts[b], starts[b + 1]);
     }
     const want = f.kind === "number" || f.kind === "date" ? "text" : f.kind;
-    const hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
+    let hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
+    // With no nth, a box whose own text is the label before one that only has it further
+    // off: in a row of three boxes, the last column's label is the one before each in the page.
+    if (!f.nth && hits.length > 1) {
+      const best = Math.min(...hits.map((e) => labelRank(e, f.label)));
+      hits = hits.filter((e) => labelRank(e, f.label) === best);
+    }
     const e = hits[(f.nth || 1) - 1] || fail(`${f.label}: ${hits.length} fields with this label${f.anchor ? ` in block ${f.block || 1}` : ""}`);
     return { ...f, id: e.id.split("dynaForm:")[1].replace(/:combo_input$/, "") };
   }

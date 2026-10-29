@@ -1,0 +1,21 @@
+{
+ "people": {
+  "c": "luca"
+ },
+ "descrizione": "PROVA NON INVIARE - rinnovo paesaggistica P6 generato",
+ "titolo": "proprietario",
+ "immobile_indirizzo": "VIA DOMENICO FONTANA",
+ "immobile_civico": "40",
+ "immobile_cap": "80128",
+ "catasto_foglio": "12",
+ "catasto_particella": "345",
+ "catasto_subalterno": "7",
+ "catasto_categoria": "A/2",
+ "bollo_marche": false,
+ "diritti_euro": "0",
+ "oggetto": "Rinnovo dell'autorizzazione paesaggistica semplificata per la sostituzione degli infissi esterni, senza variazioni.",
+ "paes_protocollo": "PG/2021/0777777",
+ "paes_data": "2021-09-01",
+ "paes_scadenza": "2026-09-01",
+ "paes_rinnovo_di": "semplificata"
+}

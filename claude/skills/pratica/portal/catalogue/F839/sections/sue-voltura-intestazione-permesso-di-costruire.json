@@ -332,9 +332,52 @@
   },
   {
    "section": "dichiarazione relativa alla conoscenza dei soggetti che intervengono nella realizzazione dell'intervento",
-   "fingerprint": "923f0a595e17ec6b",
-   "same_as": "sue-voltura-intestazione-permesso-di-costruire#dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare",
-   "seconds": 0.6
+   "by_hand": "2026-10-29: the batch read the prescrizioni section again here (crawl.js waited on the first 20 characters of the title, which both share); read in the pane, labels from the radios' own cells",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di essere a conoscenza dei nominativi del Progettista, del Direttore dei Lavori, del Coordinatore per la sicurezza, dell'Esecutore ed altri soggetti che interve",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "la direzione e/o l'esecuzione dei lavori saranno assunte dai soggetti di seguito indicati",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "direttore dei lavori",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "coordinatore per la sicurezza",
+     "max": 50
+    },
+    {
+     "id": "r8c1p8reg:txt",
+     "kind": "text",
+     "label": "esecutore",
+     "max": 50
+    }
+   ],
+   "fingerprint": "5fb787b8c572e94b",
+   "branches": [
+    {
+     "choice": "di essere a conoscenza dei nominativi del Progettista, del Direttore dei Lavori, del Coordinatore per la sicurezza, dell'Esecutore ed altri soggetti che interve",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "la direzione e/o l'esecuzione dei lavori saranno assunte dai soggetti di seguito indicati",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ]
   },
   {
    "section": "Contributo di Costruzione",

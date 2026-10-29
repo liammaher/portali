@@ -1,0 +1,29 @@
+# Autorizzazione paesaggistica ordinaria (art. 146 D.Lgs. 42/2004) from the Comune of Napoli, on
+# its SUE, as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-autorizzazione-paesaggistica-ordinaria.json). The CILA
+# rehearsal's architect (with procura) and client (rehearsals/cila-fittizia).
+procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria
+title: "Autorizzazione paesaggistica ordinaria (art. 146 D.Lgs. 42/2004), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-autorizzazione-paesaggistica-ordinaria
+operation: Autorizzazione paesaggistica ordinaria (art.146 del D.Lgs 42/2004 - Comune)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - paesaggistica ordinaria {{c:identity.last_name}}"}
+  oggetto: {question: "The works in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: consapevolezza (artt. 46-47), informativa privacy, tasse comunali"
+  - "On Allega documenti: the relazione paesaggistica (DPCM 12/12/2005), the drawings and the photos, signed digitally"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Pay the imposta di bollo (two marche da 16 €) and any diritti on pagoPA after sending"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.vincolo|is_art_134|not}}"
+    else: "The ordinaria's form names only art. 136 and art. 142: a property protected by the piano paesaggistico alone (art. 134) needs a person to choose."
+  - when: "{{ask.titolo|is_locatario|not}}"
+    else: "The ordinaria's form offers only ownership, co-ownership, the condominio's administrator or another real right: a tenant isn't one."
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

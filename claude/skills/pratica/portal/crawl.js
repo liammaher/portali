@@ -155,9 +155,13 @@
   async function open(name) {
     const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(name)));
     if (!a) return false; // already open, or not in this pratica
+    const before = current();
     await act(() => a.click());
-    // Scheda anagrafica reloads the whole page, which act() can't see starting.
-    for (let end = performance.now() + 10000; performance.now() < end && !norm(current()).startsWith(norm(name).slice(0, 20));) await sleep(200);
+    // Scheda anagrafica reloads the whole page, which act() can't see starting. The title must
+    // change too: two sections can share their first 20 characters ("dichiarazione relativa
+    // alla conoscenza d...": the voltura's prescrizioni and soggetti).
+    for (let end = performance.now() + 10000; performance.now() < end &&
+      (current() === before || !norm(current()).startsWith(norm(name).slice(0, 20)));) await sleep(200);
     await idle();
     return true;
   }

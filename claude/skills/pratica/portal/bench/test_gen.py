@@ -124,6 +124,14 @@ def _():
     assert "id" not in field(s, "non è soggetto agli obblighi")
 
 
+@case("two scelte both keep the sections they add, and the wizard ticks both (voltura with a co-holder)")
+def _():
+    steps = generated("voltura-pdc-fittizia")
+    names = [x["section"] for x in steps["sections"]]
+    assert "Informazioni su eventuali altri aventi titolo" in names and "Qualifica e dati del procuratore" in names
+    assert steps["wizard"][-1]["tree"][0] == "ci sono cointestatari" and len(steps["wizard"][-1]["tree"]) == 2
+
+
 @case("a section name two pratiche share takes the entry that fits; a tick that renumbers itself and what follows go by label (paesaggistica semplificata)")
 def _():
     steps = generated("paesaggistica-semplificata-fittizia")

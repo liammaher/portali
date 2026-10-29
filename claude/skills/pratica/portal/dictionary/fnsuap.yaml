@@ -141,10 +141,33 @@ asks:
   atto_registrazione_data: {type: date, question: "Registration date"}
   atto_registrazione_numero: {type: text, question: "Registration number"}
   zona_prg: {type: text, question: "The property's zone in the PRG (e.g. zona B)"}
+  prg_nta: {type: text, question: "The article of the PRG's NTA for that zone (e.g. art. 33)"}
+  proprietario_nome: {type: text, question: "The owner's name or company (the client holds another real right)"}
+  titolo_atto:
+    type: choice
+    question: "What proves the client's title: a notarial deed (rogito), a contract registered at the Agenzia delle Entrate, or one transcribed at the Conservatoria?"
+    options: [rogito, agenzia entrate, conservatoria]
+  atto_trascrizione_sede: {type: text, question: "The Conservatoria (servizio di pubblicità immobiliare) it was transcribed at"}
+  atto_trascrizione_numero: {type: text, question: "Its registro generale number"}
+  atto_trascrizione_data: {type: date, question: "Its transcription date"}
+  paes_interessa:
+    type: choice
+    question: "Do the works concern a building or an area (land with no building)?"
+    options: [immobile, area]
+    default: immobile
+  atti_gravanti: {type: yes_no, question: "Do registered deeds weigh on the property: servitudes, atti unilaterali d'obbligo, convenzioni?", default: "false"}
+  atti_gravanti_quali: {type: text, question: "Which deed(s), as the deed names them"}
+  paes_ente: {type: text, question: "The ente that issued the landscape authorization", default: "Comune di Napoli"}
+  paes_rinnovo_di:
+    type: choice
+    question: "What is being renewed: a semplificata (DPR 31/2017) or an ordinaria (art. 146 D.Lgs. 42/2004)?"
+    options: [semplificata, ordinaria]
+  paes_rinnovo_variazioni: {type: yes_no, question: "Does the renewal change the project?", default: "false"}
   attivita_svolta: {type: text, question: "The new holder's occupation or business (60 characters)"}
   soggetti_cambiati: {type: yes_no, question: "Will the works' direttore or firm change with the new holder?", default: "false"}
   nuovo_dl: {type: text, question: "The new direttore dei lavori's name"}
   nuovo_esecutore: {type: text, question: "The new firm's name"}
+  nuovo_csp: {type: text, question: "The new coordinatore per la sicurezza's name (none: empty)", default: ""}
   proroga_giorni: {type: text, question: "How many days of extension are asked (e.g. 365)"}
   proroga_motivo: {type: text, question: "Why the extension is needed: the facts beyond the holder's control (500 characters)"}
   proroga_tipo_lavori: {type: text, question: "The works still to finish, in a few words (30 characters)"}
@@ -320,8 +343,9 @@ sections:
 
   # The property: no vault category holds it yet, so it comes from pre-flight's answers.
   - section: Localizzazione dell'intervento
-    # The proroga's "sede dell'attività" is the same block: where the works are.
-    aliases: ["ubicazione dell'immobile", "dichiarazione relativa alla sede dell'attività", "dichiarazione ubicazione dell'intervento"]
+    # The proroga's "sede dell'attività" and the voltura's "ubicazione dell'attività" are the
+    # same block: where the works are (a business vault's recipe takes its own entry first).
+    aliases: ["ubicazione dell'immobile", "dichiarazione relativa alla sede dell'attività", "dichiarazione ubicazione dell'intervento", "ubicazione dell'attività"]
     leave: [Frazione]
     fields:
       - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
@@ -705,6 +729,17 @@ sections:
       - {kind: text, label: "dell'art. 142", value: "{{ask.vincolo_142_lettera}}", when: "{{ask.vincolo|is_art_136_and_142}}"}
       - {kind: checkbox, label: "dell'art. 134", when: "{{ask.vincolo|is_art_134}}"}
 
+  # Its renewal (DPR 31/2017 art. 7): the authorization that expired and what kind it was. A
+  # renewal that changes the project opens more and is refused by its recipe.
+  - section: Qualificazione dell'intervento di rinnovo
+    fields:
+      - {kind: text, label: Num., value: "{{ask.paes_protocollo}}"}
+      - {kind: date, label: Data, value: "{{ask.paes_data|date_it}}"}
+      - {kind: text, label: Scadenza, value: "{{ask.paes_scadenza|date_it}}"}
+      - {kind: text, label: Ente, value: "{{ask.paes_ente}}"}
+      - {kind: radio, label: "L'istanza di rinnovo riguarda Autorizzazione Paesaggistica Semplificata", when: "{{ask.paes_rinnovo_di|is_semplificata}}"}
+      - {kind: radio, label: "L'istanza di rinnovo riguarda l'Autorizzazione Paesaggistica, rilasciata ai sensi dell'articolo 146", when: "{{ask.paes_rinnovo_di|is_ordinaria}}"}
+
   # Voltura of a permesso di costruire to a new holder (the client, `c:`): the permit and its
   # holder until now, the deed that passed the property, the property, where the new holder
   # takes notices. Their acknowledgements, and their promise to pay what's left of the
@@ -736,12 +771,50 @@ sections:
       - {kind: textarea, label: sommaria e sintetica, value: "{{ask.pdc_interventi}}"}
       - {kind: text, label: ad uso, value: "{{ask.destinazione_uso}}"}
       - {kind: text, label: in zona di PRG, value: "{{ask.zona_prg}}"}
+  # The ordinaria's own version (art. 146 D.Lgs. 42/2004): the title and what proves it, the
+  # area or building, deeds weighing on it, and the protection (only art. 136 and 142 here: its
+  # recipe refuses art. 134 alone). Tried after the voltura's, which it shares a name with.
+  - section: "dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti"
+    fields:
+      - {kind: radio, label: proprietà, when: "{{ask.titolo|is_proprietario}}"}
+      - {kind: radio, label: comproprietà, when: "{{ask.titolo|is_comproprietario}}"}
+      - {kind: radio, label: amministratore/delegato dal Condominio, when: "{{ask.titolo|is_amministratore_di_condominio}}"}
+      - {kind: text, label: "sito in via, viale, piazza", value: "{{ask.immobile_indirizzo|upper}} {{ask.immobile_civico}}", when: "{{ask.titolo|is_amministratore_di_condominio}}"}
+      - {kind: radio, label: altro diritto reale di godimento, when: "{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}} {{ask.titolo|is_amministratore_di_condominio|not}}"}
+      - {kind: text, label: specificare il titolo, value: "{{ask.titolo}}", when: "{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}} {{ask.titolo|is_amministratore_di_condominio|not}}"}
+      - {kind: text, label: nome cognome/denominazione del proprietario, value: "{{ask.proprietario_nome}}", when: "{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}} {{ask.titolo|is_amministratore_di_condominio|not}}"}
+      - {kind: checkbox, label: atto/contratto a rogito, when: "{{ask.titolo_atto|is_rogito}}"}
+      - {kind: text, label: presso il Notaio, value: "{{ask.atto_notaio}}", when: "{{ask.titolo_atto|is_rogito}}"}
+      - {kind: text, label: con sede a, value: "{{ask.atto_notaio_sede}}", when: "{{ask.titolo_atto|is_rogito}}"}
+      - {kind: text, label: repertorio, value: "{{ask.atto_repertorio}}", when: "{{ask.titolo_atto|is_rogito}}"}
+      - {kind: checkbox, label: "atto/contratto registrato all'Agenzia delle Entrate", when: "{{ask.titolo_atto|is_agenzia_entrate}}"}
+      - {kind: text, label: con sede a, nth: 2, value: "{{ask.atto_registrato_a}}", when: "{{ask.titolo_atto|is_agenzia_entrate}}"}
+      - {kind: text, label: al n. gen., value: "{{ask.atto_registrazione_numero}}", when: "{{ask.titolo_atto|is_agenzia_entrate}}"}
+      - {kind: date, label: in data, value: "{{ask.atto_registrazione_data|date_it}}", when: "{{ask.titolo_atto|is_agenzia_entrate}}"}
+      - {kind: checkbox, label: atto/contratto registrato alla Conservatoria, when: "{{ask.titolo_atto|is_conservatoria}}"}
+      - {kind: text, label: con sede a, nth: 3, value: "{{ask.atto_trascrizione_sede}}", when: "{{ask.titolo_atto|is_conservatoria}}"}
+      - {kind: text, label: al n. gen., nth: 2, value: "{{ask.atto_trascrizione_numero}}", when: "{{ask.titolo_atto|is_conservatoria}}"}
+      - {kind: date, label: in data, nth: 2, value: "{{ask.atto_trascrizione_data|date_it}}", when: "{{ask.titolo_atto|is_conservatoria}}"}
+      - {kind: radio, label: "l'immobile", when: "{{ask.paes_interessa|is_immobile}}"}
+      - {kind: radio, label: "l'area", when: "{{ask.paes_interessa|is_area}}"}
+      - {kind: text, label: ad uso, value: "{{ask.destinazione_uso}}"}
+      - {kind: text, label: come da n. NTA del PRG, value: "{{ask.prg_nta}}"}
+      - {kind: text, label: in zona di PRG, value: "{{ask.zona_prg}}"}
+      - {kind: radio, label: sì, when: "{{ask.atti_gravanti}}"}
+      - {kind: text, label: come da atto (specificare), value: "{{ask.atti_gravanti_quali}}", when: "{{ask.atti_gravanti}}"}
+      - {kind: radio, label: "no", when: "{{ask.atti_gravanti|not}}"}
+      # 4) Vincoli: an ordinaria is asked because the property is protected. Its "sì" goes by the
+      # question beside it: "sì" alone would also name the "no" above, which sits under a "sì";
+      # the crawl labels it "sì", hence `on_page`.
+      - {kind: radio, label: "l'area/immobile è sottoposta/o a tutela", on_page: true}
+      - {kind: checkbox, label: art. 136 D.Lgs. 42/2004, when: "{{ask.vincolo|is_art_136}}"}
+      - {kind: checkbox, label: art. 142 D.Lgs. 42/2004, when: "{{ask.vincolo|is_art_142}}"}
+      - {kind: checkbox, label: art. 136 D.Lgs. 42/2004, when: "{{ask.vincolo|is_art_136_and_142}}"}
+      - {kind: checkbox, label: art. 142 D.Lgs. 42/2004, when: "{{ask.vincolo|is_art_136_and_142}}"}
   - section: dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare
-    theirs: [di aver preso visione]
+    theirs: [di aver preso visione, di essere pertanto a conoscenza]
     fields: []
-  - section: dichiarazione relativa alla conoscenza dei soggetti che intervengono
-    theirs: [di aver preso visione]
-    fields: []
+  # Who directs and builds the works: the cambio intestazione's entry below.
   - section: Contributo di Costruzione
     aliases: [dichiarazione relativa al Contributo di Costruzione]
     theirs: [di impegnarsi al versamento del Contributo di Costruzione residuo]
@@ -775,12 +848,34 @@ sections:
       - {kind: radio, label: la direzione e/o l'esecuzione dei lavori saranno assunte, when: "{{ask.soggetti_cambiati}}"}
       - {kind: text, label: Direttore dei Lavori, value: "{{ask.nuovo_dl}}", when: "{{ask.soggetti_cambiati}}"}
       - {kind: text, label: Esecutore, value: "{{ask.nuovo_esecutore}}", when: "{{ask.soggetti_cambiati}}"}
+      - {kind: text, label: coordinatore per la sicurezza, value: "{{ask.nuovo_csp}}", when: "{{ask.soggetti_cambiati}}", if_present: true}
   - section: dichiarazione relativa all'impegno nel rispettare prescrizioni
     theirs: [di impegnarsi a rispettare le prescrizioni]
     fields: []
   - section: dichiarazione relativa alla presa visione della CILA / SCIA / DIA
     theirs: [di aver preso visione]
     fields: []
+  # Another holder of title with the new one, the `a:` person: shown by the scelta "ci sono
+  # cointestatari" (the voltura and the cambio intestazione), one person.
+  - section: Informazioni su eventuali altri aventi titolo
+    aliases: [dichiarazione relativa ad eventuali altri aventi titolo]
+    fields:
+      - {kind: text, label: cognome, value: "{{a:identity.last_name|upper}}"}
+      - {kind: text, label: nome, value: "{{a:identity.first_name|upper}}"}
+      - {kind: date, label: nato/a il, value: "{{a:identity.date_of_birth|date_it}}"}
+      - {kind: text, label: a, value: "{{a:identity.birth_comune|upper}}"}
+      - {kind: text, label: prov, value: "{{a:identity.birth_province}}"}
+      - {kind: text, label: residente a, value: "{{a:residenza.comune|upper}}"}
+      - {kind: text, label: in via, value: "{{a:residenza.indirizzo|upper}}"}
+      - {kind: text, label: numero civico, value: "{{a:residenza.civico}}"}
+      - {kind: text, label: CAP, value: "{{a:residenza.cap}}"}
+      - {kind: text, label: prov, nth: 2, value: "{{a:residenza.provincia}}"}
+      - {kind: text, label: cittadinanza, value: "{{a:identity.citizenship|upper}}"}
+      # Two radio groups, each required: the section saves only with both ticked (seen
+      # 2026-10-29, as anyone filing by hand must). The codice fiscale says which.
+      - {kind: radio, label: "sesso: M"}
+      - {kind: radio, label: "sesso: F"}
+      - {kind: text, label: codice fiscale, value: "{{a:identity.codice_fiscale}}"}
 
   # A new direttore dei lavori: the studio's architect (`t:`), her studio's address and her albo.
   - section: nomina nuovo direttore dei lavori

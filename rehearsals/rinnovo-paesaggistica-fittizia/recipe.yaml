@@ -1,0 +1,22 @@
+# Rinnovo dell'autorizzazione paesaggistica semplificata (DPR 31/2017 art. 7) on Napoli's SUE, as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-rinnovo-autorizzazione-paesaggistica-semplificata.json). The CILA rehearsal's architect (with procura) and
+# client (rehearsals/cila-fittizia).
+procedure: napoli/comune/rinnovo-autorizzazione-paesaggistica-semplificata
+title: "Rinnovo dell'autorizzazione paesaggistica semplificata (DPR 31/2017 art. 7), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-rinnovo-autorizzazione-paesaggistica-semplificata
+operation: Rinnovo Autorizzazione Paesaggistica Semplificata  (DPR 31/2017 - Comune)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - rinnovo paesaggistica {{c:identity.last_name}}"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: consapevolezza (artt. 46-47), informativa privacy, tasse comunali, and the acknowledgements in the client's name"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Pay the imposta di bollo (two marche da 16 €) and any diritti on pagoPA after sending"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

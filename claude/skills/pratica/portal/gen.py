@@ -371,11 +371,14 @@ def generate(recipe, base=HERE):
         if not op:
             raise GenError(f"no operation {recipe['operation']!r} in the catalogue")
         names = [catalogue["sections"][i] for i in op["sections"]]
-    for s in recipe.get("scelte", []) if "operations" in catalogue else []:
-        sc = next((x for x in op.get("scelte", []) if x["option"] == s), None) or \
-            (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {op['label']}"))
-        names = [n for i, n in zip(op["sections"], names) if i not in sc.get("drops", [])] + \
-            [catalogue["sections"][i] for i in sc.get("adds", [])]
+    if "operations" in catalogue:
+        # Each scelta drops and adds by index, so a second one keeps what the first added.
+        idx = list(op["sections"])
+        for s in recipe.get("scelte", []):
+            sc = next((x for x in op.get("scelte", []) if x["option"] == s), None) or \
+                (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {op['label']}"))
+            idx = [i for i in idx if i not in sc.get("drops", [])] + [i for i in sc.get("adds", []) if i not in idx]
+        names = [catalogue["sections"][i] for i in idx]
     # A batch crawl names a section it had seen elsewhere (`same_as`: "pratica#section").
     import catalogue as cat_py
     others = {}
@@ -505,7 +508,7 @@ def generate(recipe, base=HERE):
         {"screen": "Scelta del destinatario della pratica", "confirm": "CONFERMA"},
     ]
     if recipe.get("scelte") is not None and "wizard" not in recipe:
-        wizard.append({"screen": "Scelte eventuali", **({"tree": recipe["scelte"][0]} if recipe["scelte"] else {}),
+        wizard.append({"screen": "Scelte eventuali", **({"tree": recipe["scelte"][0] if len(recipe["scelte"]) == 1 else recipe["scelte"]} if recipe["scelte"] else {}),
                        **({"answers": recipe["si_no"]} if recipe.get("si_no") else {}),
                        "confirm": "CONFERMA"})
     return {
