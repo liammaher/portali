@@ -42,9 +42,10 @@ fills forms
 remote connectors are on Pro
 ([help](https://support.claude.com/en/articles/11175166)).
 
-So north-star's question 1 ("a browser agent, which today is Claude in Chrome") has a better
-answer for desktops: the app's own browser, which is where our runner already runs, in the Code
-tab. Claude in Chrome stays out.
+So portal pratiche run in the Claude desktop app's own browser, where our runner already runs in
+the Code tab (north-star question 1). Never Claude in Chrome, the extension in the user's own
+Chrome: not as a fallback, not as Cowork's "preferred browser" setting. The plugin tells the
+user to keep that setting on the built-in browser.
 
 | Surface | Fills the portal | For an architect | Verdict |
 |---|---|---|---|
