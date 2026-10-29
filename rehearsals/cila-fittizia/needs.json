@@ -1,7 +1,7 @@
 {
   "tokens": {
     "cila": {
-      "scope": "business.*,*:identity.*,*:residenza.*,*:ruolo.*,*:albo.*,*:procura.*,*:business.*,pratiche.*",
+      "scope": "business.*,*:identity.*,*:residenza.*,*:ruolo.*,*:albo.*,*:procura.*,*:immobile.*,*:business.*,pratiche.*",
       "access": "append"
     }
   }

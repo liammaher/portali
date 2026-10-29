@@ -32,18 +32,6 @@ asks:
   oggetto:
     type: text
     question: "The works in one sentence (300 characters)"
-  immobile_indirizzo: {type: text, question: "The property's street, as the Comune names it (e.g. VIA DOMENICO FONTANA)"}
-  immobile_civico: {type: text, question: "Its civico"}
-  immobile_cap: {type: text, question: "Its CAP"}
-  immobile_scala: {type: text, question: "Scala", default: ""}
-  immobile_piano: {type: text, question: "Piano", default: ""}
-  immobile_interno: {type: text, question: "Interno", default: ""}
-  catasto_foglio: {type: text, question: "Catasto fabbricati: foglio"}
-  catasto_particella: {type: text, question: "particella"}
-  catasto_subalterno: {type: text, question: "subalterno"}
-  catasto_sezione: {type: text, question: "sezione urbana", default: ""}
-  catasto_categoria: {type: text, question: "categoria catastale (e.g. A/2)"}
-  destinazione_uso: {type: text, question: "Destinazione d'uso (residenziale, industriale, commerciale, altro)", default: residenziale}
   data_inizio_lavori: {type: date, question: "When the works started (they're already under way: a late CILA, d.2)"}
   ricevuta_sanzione: {type: file, question: "The 333 € penalty receipt (PDF)"}
   dettaglio_intervento:
@@ -149,21 +137,21 @@ sections:
   # The property: no vault category holds it yet, so it comes from pre-flight's answers.
   - section: Localizzazione dell'intervento
     fields:
-      - {id: "r2c4p8reg:txtws_input", kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
-      - {id: "r5c1p13reg:txtws_input", kind: lookup, label: "Via, Viale, Piazza", value: "{{ask.immobile_indirizzo}}"}
-      - {id: "r5c2p15reg:txtws_input", kind: text, label: n° civico, value: "{{ask.immobile_civico}}"}
-      - {id: "r7c1p19reg:txtws_input", kind: text, label: scala, value: "{{ask.immobile_scala}}", optional: true}
-      - {id: "r7c2p21reg:txtws_input", kind: text, label: piano, value: "{{ask.immobile_piano}}", optional: true}
-      - {id: "r7c3p23reg:txtws_input", kind: text, label: interno, value: "{{ask.immobile_interno}}", optional: true}
+      - {id: "r2c4p8reg:txtws_input", kind: text, label: CAP, value: "{{c:immobile.cap}}"}
+      - {id: "r5c1p13reg:txtws_input", kind: lookup, label: "Via, Viale, Piazza", value: "{{c:immobile.indirizzo|upper}}"}
+      - {id: "r5c2p15reg:txtws_input", kind: text, label: n° civico, value: "{{c:immobile.civico}}"}
+      - {id: "r7c1p19reg:txtws_input", kind: text, label: scala, value: "{{c:immobile.scala}}", optional: true}
+      - {id: "r7c2p21reg:txtws_input", kind: text, label: piano, value: "{{c:immobile.piano}}", optional: true}
+      - {id: "r7c3p23reg:txtws_input", kind: text, label: interno, value: "{{c:immobile.interno}}", optional: true}
 
   - section: Dati catastali
     fields:
       - {id: "r1c1p1reg:radio:0_clone", kind: radio, label: NCEU}
-      - {id: "r3c1p5reg:number", kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
-      - {id: "r3c2p7reg:txt", kind: text, label: particella/mappale, value: "{{ask.catasto_particella}}"}
-      - {id: "r3c3p9reg:number", kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
-      - {id: "r5c2p15reg:txt", kind: text, label: sezione Urbana, value: "{{ask.catasto_sezione}}", optional: true}
-      - {id: "r8c1p23reg", kind: select, label: categoria, value: "{{ask.catasto_categoria|categoria}}"}
+      - {id: "r3c1p5reg:number", kind: text, label: foglio, value: "{{c:immobile.catasto_foglio}}"}
+      - {id: "r3c2p7reg:txt", kind: text, label: particella/mappale, value: "{{c:immobile.catasto_particella}}"}
+      - {id: "r3c3p9reg:number", kind: text, label: subalterno, value: "{{c:immobile.catasto_subalterno}}"}
+      - {id: "r5c2p15reg:txt", kind: text, label: sezione Urbana, value: "{{c:immobile.catasto_sezione}}", optional: true}
+      - {id: "r8c1p23reg", kind: select, label: categoria, value: "{{c:immobile.catasto_categoria|categoria}}"}
 
   # A tenant: "altro" + locatario, and the non-exclusive title, which opens the owner's
   # row (the terzo titolare who gave assent). `o:` is the owner company's person in the
@@ -207,7 +195,7 @@ sections:
 
   - section: e) Destinazione d'uso
     fields:
-      - {id: "r2c1p2reg", kind: select, label: destinazione d'uso, value: "{{ask.destinazione_uso}}"}
+      - {id: "r2c1p2reg", kind: select, label: destinazione d'uso, value: "{{c:immobile.destinazione_uso}}"}
 
   - section: f) Calcolo del contributo
     fields:

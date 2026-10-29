@@ -43,18 +43,6 @@ asks:
   oggetto:
     type: text
     question: "The works in one sentence (300 characters)"
-  immobile_indirizzo: {type: text, question: "The property's street, as the Comune names it (e.g. VIA DOMENICO FONTANA)"}
-  immobile_civico: {type: text, question: "Its civico"}
-  immobile_cap: {type: text, question: "Its CAP"}
-  immobile_scala: {type: text, question: "Scala", default: ""}
-  immobile_piano: {type: text, question: "Piano", default: ""}
-  immobile_interno: {type: text, question: "Interno", default: ""}
-  catasto_foglio: {type: text, question: "Catasto fabbricati: foglio"}
-  catasto_particella: {type: text, question: "particella"}
-  catasto_subalterno: {type: text, question: "subalterno"}
-  catasto_sezione: {type: text, question: "sezione urbana", default: ""}
-  catasto_categoria: {type: text, question: "categoria catastale (e.g. A/2)"}
-  destinazione_uso: {type: text, question: "Destinazione d'uso (residenziale, industriale, commerciale, altro)", default: residenziale}
   data_inizio_lavori: {type: date, question: "When the works started (they're already under way: a late CILA, d.2)"}
   ricevuta_sanzione: {type: file, question: "The 333 € penalty receipt (PDF)"}
   dettaglio_intervento:
@@ -449,28 +437,28 @@ sections:
     fields:
       - {kind: text, label: "N.B. Inserire l'indirizzo della casella PEC", value: "{{t:identity.pec}}"}
 
-  # The property: no vault category holds it yet, so it comes from pre-flight's answers.
+  # The property: the client's immobile in the vault (c:immobile.*), the property the works are on.
   - section: Localizzazione dell'intervento
     # The proroga's "sede dell'attività" is the same block: where the works are.
     aliases: ["ubicazione dell'immobile", "dichiarazione relativa alla sede dell'attività", "dichiarazione ubicazione dell'intervento"]
     leave: [Frazione]
     fields:
-      - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
-      - {kind: lookup, label: "Via, Viale, Piazza", value: "{{ask.immobile_indirizzo}}"}
-      - {kind: text, label: n° civico, value: "{{ask.immobile_civico}}"}
-      - {kind: text, label: scala, value: "{{ask.immobile_scala}}", optional: true}
-      - {kind: text, label: piano, value: "{{ask.immobile_piano}}", optional: true}
-      - {kind: text, label: interno, value: "{{ask.immobile_interno}}", optional: true}
+      - {kind: text, label: CAP, value: "{{c:immobile.cap}}"}
+      - {kind: lookup, label: "Via, Viale, Piazza", value: "{{c:immobile.indirizzo|upper}}"}
+      - {kind: text, label: n° civico, value: "{{c:immobile.civico}}"}
+      - {kind: text, label: scala, value: "{{c:immobile.scala}}", optional: true}
+      - {kind: text, label: piano, value: "{{c:immobile.piano}}", optional: true}
+      - {kind: text, label: interno, value: "{{c:immobile.interno}}", optional: true}
 
   - section: Dati catastali
     leave: [sezione Amministrativa, classe]
     fields:
       - {kind: radio, label: Nuovo Catasto Edilizio Urbano}
-      - {kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
-      - {kind: text, label: particella/mappale, value: "{{ask.catasto_particella}}"}
-      - {kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
-      - {kind: text, label: sezione Urbana, value: "{{ask.catasto_sezione}}", optional: true}
-      - {kind: select, label: categoria, value: "{{ask.catasto_categoria|categoria}}"}
+      - {kind: text, label: foglio, value: "{{c:immobile.catasto_foglio}}"}
+      - {kind: text, label: particella/mappale, value: "{{c:immobile.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{c:immobile.catasto_subalterno}}"}
+      - {kind: text, label: sezione Urbana, value: "{{c:immobile.catasto_sezione}}", optional: true}
+      - {kind: select, label: categoria, value: "{{c:immobile.catasto_categoria|categoria}}"}
 
   # A tenant: "altro" + locatario, and the non-exclusive title, which opens the owner's row
   # (the terzo titolare who gave assent): `o:` the owner company, `r:` its legale rappresentante.
@@ -516,7 +504,7 @@ sections:
 
   - section: e) Destinazione d'uso
     fields:
-      - {kind: select, label: "L'intervento interessa l'immobile", value: "{{ask.destinazione_uso}}"}
+      - {kind: select, label: "L'intervento interessa l'immobile", value: "{{c:immobile.destinazione_uso}}"}
 
   - section: f) Calcolo del contributo
     fields:
@@ -657,8 +645,8 @@ sections:
   - section: dichiarazione dell'ubicazione dei lavori
     fields:
       - {kind: text, label: comune, value: NAPOLI}
-      - {kind: text, label: "via, viale, piazza", value: "{{ask.immobile_indirizzo}}"}
-      - {kind: text, label: numero civico, value: "{{ask.immobile_civico}}"}
+      - {kind: text, label: "via, viale, piazza", value: "{{c:immobile.indirizzo|upper}}"}
+      - {kind: text, label: numero civico, value: "{{c:immobile.civico}}"}
 
   # Proroga dei termini di inizio o di fine lavori (art. 15 c. 2 DPR 380/2001): the property,
   # the permit (a permesso di costruire, or a DIA by its P.G. number), its catasto and holder,
@@ -666,18 +654,18 @@ sections:
   - section: dichiarazione dell'immobile oggetto della domanda
     leave: [Località, N.Put]
     fields:
-      - {kind: text, label: "via , viale, piazza", value: "{{ask.immobile_indirizzo}}"}
-      - {kind: text, label: numero civico, value: "{{ask.immobile_civico}}"}
-      - {kind: text, label: CAP, value: "{{ask.immobile_cap}}"}
+      - {kind: text, label: "via , viale, piazza", value: "{{c:immobile.indirizzo|upper}}"}
+      - {kind: text, label: numero civico, value: "{{c:immobile.civico}}"}
+      - {kind: text, label: CAP, value: "{{c:immobile.cap}}"}
       - {kind: radio, label: di cui al Permesso di costruire, when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
       - {kind: text, label: P.G. numero, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
       - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_permesso_di_costruire}}"}
       - {kind: radio, label: di cui alla DIA, when: "{{ask.titolo_tipo|is_dia}}"}
       - {kind: text, label: P.G. numero, nth: 2, value: "{{ask.pdc_protocollo}}", when: "{{ask.titolo_tipo|is_dia}}"}
       - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.titolo_tipo|is_dia}}"}
-      - {kind: text, label: foglio, value: "{{ask.catasto_foglio}}"}
-      - {kind: text, label: mappale, value: "{{ask.catasto_particella}}"}
-      - {kind: text, label: subalterno, value: "{{ask.catasto_subalterno}}"}
+      - {kind: text, label: foglio, value: "{{c:immobile.catasto_foglio}}"}
+      - {kind: text, label: mappale, value: "{{c:immobile.catasto_particella}}"}
+      - {kind: text, label: subalterno, value: "{{c:immobile.catasto_subalterno}}"}
       - {kind: text, label: per (specificare l'oggetto dell'intervento), value: "{{ask.pdc_interventi}}"}
       - {kind: text, label: intestato a, value: "{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}"}
       - {kind: date, label: la cui data di inizio lavori è prevista per, value: "{{ask.proroga_data_prevista|date_it}}", if_present: true}
@@ -865,7 +853,7 @@ sections:
       - {kind: date, label: in data, value: "{{ask.atto_registrazione_data|date_it}}"}
       - {kind: text, label: al n°, value: "{{ask.atto_registrazione_numero}}"}
       - {kind: textarea, label: sommaria e sintetica, value: "{{ask.pdc_interventi}}"}
-      - {kind: text, label: ad uso, value: "{{ask.destinazione_uso}}"}
+      - {kind: text, label: ad uso, value: "{{c:immobile.destinazione_uso}}"}
       - {kind: text, label: in zona di PRG, value: "{{ask.zona_prg}}"}
   - section: dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare
     theirs: [di aver preso visione]
@@ -1043,16 +1031,16 @@ sections:
       # Each system ticked opens its rows (the crawl tried no two choices together): found on the
       # page inside the block that starts at its box.
       - {kind: checkbox, label: "Impianti di produzione, trasformazione, trasporto, distribuzione", when: "{{ask.impianto_elettrico}}"}
-      - {kind: text, label: Subalt. n., anchor: "Impianti di produzione, trasformazione, trasporto, distribuzione", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_elettrico}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti di produzione, trasformazione, trasporto, distribuzione", block: 1, value: "{{c:immobile.catasto_subalterno}}", when: "{{ask.impianto_elettrico}}"}
       - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti di produzione, trasformazione, trasporto, distribuzione", block: 1, when: "{{ask.impianto_elettrico}}"}
       - {kind: checkbox, label: "Impianti di riscaldamento, climatizzazione", when: "{{ask.impianto_termico}}"}
-      - {kind: text, label: Subalt. n., anchor: "Impianti di riscaldamento, climatizzazione", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_termico}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti di riscaldamento, climatizzazione", block: 1, value: "{{c:immobile.catasto_subalterno}}", when: "{{ask.impianto_termico}}"}
       - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti di riscaldamento, climatizzazione", block: 1, when: "{{ask.impianto_termico}}"}
       - {kind: checkbox, label: "Impianti idrici e sanitari", when: "{{ask.impianto_idrico}}"}
-      - {kind: text, label: Subalt. n., anchor: "Impianti idrici e sanitari", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_idrico}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti idrici e sanitari", block: 1, value: "{{c:immobile.catasto_subalterno}}", when: "{{ask.impianto_idrico}}"}
       - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti idrici e sanitari", block: 1, when: "{{ask.impianto_idrico}}"}
       - {kind: checkbox, label: "Impianti per la distribuzione e l’utilizzazione di gas", when: "{{ask.impianto_gas}}"}
-      - {kind: text, label: Subalt. n., anchor: "Impianti per la distribuzione e l’utilizzazione di gas", block: 1, value: "{{ask.catasto_subalterno}}", when: "{{ask.impianto_gas}}"}
+      - {kind: text, label: Subalt. n., anchor: "Impianti per la distribuzione e l’utilizzazione di gas", block: 1, value: "{{c:immobile.catasto_subalterno}}", when: "{{ask.impianto_gas}}"}
       - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: "Impianti per la distribuzione e l’utilizzazione di gas", block: 1, when: "{{ask.impianto_gas}}"}
 
   - section: Attestazione tecnica - Sicurezza statica

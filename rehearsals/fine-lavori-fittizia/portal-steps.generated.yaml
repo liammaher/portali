@@ -12,12 +12,6 @@ asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - fine lavori {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
   oggetto: {type: text, question: 'The pratica in one sentence (300 characters), e.g. the end of the works of the CILA'}
-  immobile_indirizzo: {type: text, question: 'The property''s street, as the Comune names it (e.g. VIA DOMENICO FONTANA)'}
-  immobile_civico: {type: text, question: Its civico}
-  immobile_cap: {type: text, question: Its CAP}
-  immobile_scala: {type: text, question: Scala, default: ''}
-  immobile_piano: {type: text, question: Piano, default: ''}
-  immobile_interno: {type: text, question: Interno, default: ''}
   diritti_euro: {type: number, question: The SUE's diritti for this pratica in euro (0 when none are due)}
   data_fine_lavori: {type: date, question: When the works ended}
   fine_completa: {type: yes_no, question: 'Were the works finished completely (not in part)?', default: 'true'}
@@ -108,12 +102,12 @@ sections:
   - {id: 'r3c1p3reg:txt', kind: text, value: '{{t:identity.pec}}', max: 9999, label: N.B. Inserire l'indirizzo della casella PEC}
 - section: ubicazione dell'immobile
   fields:
-  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{ask.immobile_cap}}', max: 5, label: CAP}
-  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{ask.immobile_indirizzo}}', max: 60, label: 'Via, Viale, Piazza'}
-  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{ask.immobile_civico}}', max: 20, label: n° civico}
-  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{ask.immobile_scala}}', optional: true, max: 9999, label: scala}
-  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{ask.immobile_piano}}', optional: true, max: 10, label: piano}
-  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{ask.immobile_interno}}', optional: true, max: 10, label: interno}
+  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{c:immobile.cap}}', max: 5, label: CAP}
+  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{c:immobile.indirizzo|upper}}', max: 60, label: 'Via, Viale, Piazza'}
+  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{c:immobile.civico}}', max: 20, label: n° civico}
+  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{c:immobile.scala}}', optional: true, max: 9999, label: scala}
+  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{c:immobile.piano}}', optional: true, max: 10, label: piano}
+  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{c:immobile.interno}}', optional: true, max: 10, label: interno}
 - section: Titolarità dell'intervento
   fields:
   - {id: r2c1p2reg, kind: select, value: altro, label: Il richiedente dichiara di avere titolo}
@@ -163,6 +157,6 @@ sections:
   - Quadro riepilogativo della documentazione
   - copia attestazione versamento oneri, diritti e spese
   fields:
-  - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}'}
-  - {kind: file, label: Copia dei documenti d'identità del/i titolare/i, value: '{{ask.documento_identita_cliente}}'}
-  - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: '{{ask.assenso_proprietario}}'}
+  - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}', accepts: pdf;pdf.p7m}
+  - {kind: file, label: Copia dei documenti d'identità del/i titolare/i, value: '{{ask.documento_identita_cliente}}', accepts: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m}
+  - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: '{{ask.assenso_proprietario}}', accepts: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m}
