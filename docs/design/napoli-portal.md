@@ -7,7 +7,7 @@ declarations, paying, signing and sending. `supported-flows.md` is the promise f
 pratica; this is what it takes for the whole platform, in five pieces.
 
 Status (2026-10-28): piece 1 built for the whole SUE and under way for the SUAP (batch crawl,
-fingerprints, drift check, interventi); 5 built; 3 and 4 partly; 2 not started as data. Vault PRs #87,
+fingerprints, drift check, interventi); 5 built; 3 and 4 partly; 2 started as data (the SUAP's common cases). Vault PRs #87,
 #88, #89 and this branch; library PR #62.
 
 ## 1. The portal map: every box, and what goes in it
@@ -66,10 +66,20 @@ authorization, notice); the Glossario unico, DM 2 March 2018 (building works to 
 libera, CILA, SCIA, permesso di costruire); Napoli's and Campania's own rules (the 2026
 historic-centre rule for food and drink openings, zones, the regolamento edilizio).
 
-Today only fragments: each recipe's `supports` (the cases it refuses), a few case questions,
-the pratiche-napoli library's procedures. Next: these tables as data in the library, for the
-common cases first, each rule with its source and date, re-checked on a schedule; the facts
-the law branches on asked of the person; anything uncovered refused at pre-flight.
+Started (2026-10-29, library branch `claude/legal-rules-table`): `rules/suap-napoli.yaml` in
+pratiche-napoli. Eleven facts, each with its plain-Italian question (the activity, what happens
+to it, the Piano's zone, the sales area, a sign, music, dehors, fire prevention, alcohol), and
+39 rules from them to the procedure, its regime and the portal's sector and operation, for
+shops, bars and restaurants, hairdressers and beauticians, and B&Bs. A rule cites a procedure's
+source that backs a verified claim there, so the table states nothing of its own and the
+source monitor watches it. Cases known and not handled are refused with a reason (a takeover in
+zones A and B, over 250 mq, the Dogane notice for alcohol). The validator tries every
+combination of the facts and fails on a gap or two rules that disagree; `decide()` gives the
+pratiche, or the facts still to ask, or the refusals.
+
+Next: pre-flight reads the table (the facts asked in its one message, the recipe picked from
+the answer, a refusal stops the run), replacing each recipe's own `supports`; the Dogane
+notice and the SUE's building works (the Glossario unico) as procedures, then as rules.
 
 ## 3. Intake: the person's context into answers
 
