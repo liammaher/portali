@@ -5,8 +5,8 @@
       Before anything opens: prints JSON with why this case isn't supported (the steps
       file's `supports:`), the answers it proposes for the person to confirm (an ask's
       `propose:`), the questions still to ask (its `asks:`, branch questions first), the
-      vault fields missing or expired, the files to attach and whether they fit the pane,
-      and the person's own steps. Exits 0 when `ready`, 3 when not.
+      vault fields missing or expired, the files to attach (each within the portal's 9.77 MB
+      and of a type its slot takes) and whether they fit the pane, and the person's own steps. Exits 0 when `ready`, 3 when not.
 
   run.py plan --steps STEPS.yaml --answers A.json
               (--values - | --server S.json --token NAME | --vault-dir DIR [--keychain SERVICE])
@@ -83,6 +83,8 @@ DUG = {"VIA", "VIALE", "PIAZZA", "CORSO", "LARGO"}
 # run.js for the pane is one tool call's text: a receipt or a small scan, not a planimetria.
 # Larger files need another route into the page (docs/north-star.md, open question 7).
 PAGE_FILES_LIMIT = 256 * 1024
+# What impresainungiorno takes in one slot: "Max: 9,77 MB" beside each, 10,000 KB.
+SLOT_MAX_BYTES = 10_000 * 1024
 FILE_TYPES = {".p7m": "application/pkcs7-mime", ".pdf": "application/pdf"}
 CARICA = {"titolare": "TITOLARE", "legale_rappresentante": "LEGALE RAPPRESENTANTE"}
 FORMA = {
@@ -521,13 +523,20 @@ def preflight(steps, values):
             if f["kind"] == "file":
                 path = values.render(f.get("value", ""))
                 p = Path(path).expanduser() if path else None
-                report["files"].append({"for": f"{sec['section']}: {f.get('label') or f.get('id')}", "path": path,
-                                        "exists": bool(p and p.is_file()),
-                                        "bytes": p.stat().st_size if p and p.is_file() else None})
+                entry = {"for": f"{sec['section']}: {f.get('label') or f.get('id')}", "path": path,
+                         "exists": bool(p and p.is_file()), "bytes": p.stat().st_size if p and p.is_file() else None}
+                if entry["exists"]:
+                    takes = [t for t in f.get("accepts", "").lower().split(";") if t]
+                    if entry["bytes"] > SLOT_MAX_BYTES:
+                        entry["problem"] = (f"{entry['bytes'] / 1024 / 1024:.1f} MB, over the portal's 9.77 MB a file: "
+                                            "compress it or split it across the slot's +")
+                    elif takes and not any(p.name.lower().endswith("." + t) for t in takes):
+                        entry["problem"] = f"the slot takes only {', '.join(takes)}"
+                report["files"].append(entry)
     report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"]) <= PAGE_FILES_LIMIT
     report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
     report["ready"] = not (report["questions"] or report["proposals"] or report["missing"]
-                           or any(not x["exists"] for x in report["files"] if x["path"]))
+                           or any(not x["exists"] or x.get("problem") for x in report["files"] if x["path"]))
     return report
 
 

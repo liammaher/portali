@@ -444,7 +444,8 @@ def generate(recipe, base=HERE):
                 # Signed files only: the person's to sign and attach, never a plain copy.
                 out["theirs"] = out.get("theirs", []) + [d["label"]]
                 continue
-            fields.append(dict(d))
+            # What the slot takes, so pre-flight can refuse a file it wouldn't.
+            fields.append(dict(d) | ({"accepts": slot["accepts"]} if slot.get("accepts") else {}))
             for t in re.findall(r"\{\{\s*ask\.(\w+)", json.dumps(d)):
                 asks_used.add(t)
         if slots is not None:

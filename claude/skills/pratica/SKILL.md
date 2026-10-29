@@ -395,7 +395,9 @@ with `--for <slug>` (on both `needs` and `run`) the person the form is for (step
 ask by display name when it isn't clearly the user); it reads that person's own fields,
 and the pratica record names them in `persona`. In a business vault a person always
 signs: `--for <slug>` of someone whose `ruolo.tipo` is one of the entry's dichiarante
-roles (`vault_household`; several: ask which). For other people the form reads, pass
+roles (`vault_household`; several: ask which), or of a client (`cliente`) declaring in
+their own name, as on a studio's CILA, where none of the business's own data may reach the
+form (fill.py refuses it, e.g. a client ticking legale rappresentante). For other people the form reads, pass
 `--party <ruolo>=<slug>` (repeatable; `--party socio=verdi,gialli` for every socio of a
 repeat by ruolo), the same on `needs` and `run`: party rows read that person, a repeat
 gets a table row or an allegato copy per person. A role the vault has but `--party`
