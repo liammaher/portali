@@ -291,14 +291,37 @@ asks:
   docfa_data: {type: date, question: "The DOCFA's date", when: "{{ask.catasto_variazione}}"}
   civici_variazione: {type: yes_no, question: "Did the works change the house numbers (numerazione civica)?", default: "false"}
   antincendio_variazione: {type: yes_no, question: "Did the works change the building's fire-safety conditions?", default: "false"}
-  # The SCIA edilizia's works (art. 22 c. 1 DPR 380/2001: a) to c)), quadro c) and the
-  # asseverazione's tipologia; a change of use isn't mapped (the recipe refuses it).
+  # The SCIA edilizia's quadro c) and the asseverazione's tipologia: works of art. 22 c. 1 a)
+  # to c), a variant in corso d'opera, or a change of use (art. 23-ter, as the 2024 Salva Casa
+  # changed it).
   scia_tipo:
     type: choice
-    question: "What are the works (art. 3 c. 1 DPR 380/2001)? manutenzione straordinaria (b: on structural parts or the facades); restauro (c: restauro e risanamento conservativo on structural parts); ristrutturazione (d: a ristrutturazione edilizia that isn't one of art. 10 c. 1 c)"
-    options: [manutenzione straordinaria, restauro, ristrutturazione]
-  scia_cambio_uso: {type: yes_no, question: "Do the works change the use (destinazione d'uso) of the unit or the building?", default: "false"}
+    question: "What does the SCIA file? manutenzione straordinaria (art. 3 c. 1 b: on structural parts or the facades); restauro (c: restauro e risanamento conservativo on structural parts); ristrutturazione (d: a ristrutturazione edilizia that isn't one of art. 10 c. 1 c); variante pdc (a variant in corso d'opera to a permesso di costruire, art. 22 c. 2 and 2-bis); variante scia (a variant to a SCIA that isn't an essential variation); variante scia essenziale (one that is, art. 32); cambio uso (a change of use alone, art. 23-ter)"
+    options: [manutenzione straordinaria, restauro, ristrutturazione, variante pdc, variante scia, variante scia essenziale, cambio uso]
+  scia_cambio_uso:
+    type: choice
+    question: "Do the works change the use? no; stessa categoria (one unit, within the same functional category); tra categorie (one unit in a building in zone A, B or C of DM 1444/1968, to another category: art. 23-ter c. 1-ter); intero immobile (a whole building, within the same category: art. 23-ter c. 3)"
+    options: ["no", stessa categoria, tra categorie, intero immobile]
+    propose: "no"
+  cambio_uso_tipo:
+    type: choice
+    question: "Which change of use, alone? unita senza opere stessa categoria / unita senza opere tra categorie (one unit, with no works or only edilizia libera, art. 6); unita opere 6bis stessa categoria / unita opere 6bis tra categorie (one unit, with CILA works, art. 6-bis); immobile senza opere / immobile opere 6bis (a whole building, within the same category)"
+    options: [unita senza opere stessa categoria, unita senza opere tra categorie, unita opere 6bis stessa categoria, unita opere 6bis tra categorie, immobile senza opere, immobile opere 6bis]
+  scia_variata_numero: {type: text, question: "The SCIA the variant changes: its number"}
+  scia_variata_data: {type: date, question: "Its date"}
+  # Quadro g): the contributo di costruzione, free (the rule why) or due, how it's paid, and
+  # who works it out.
+  scia_onerosa: {type: yes_no, question: "Is a contributo di costruzione due (e.g. a change of use between categories, or works adding urban load)?", propose: "false"}
   contributo_normativa: {type: text, question: "Why the works are free of the contributo di costruzione (the rule, e.g. art. 17 c. 3 DPR 380/2001)"}
+  contributo_pagamento:
+    type: choice
+    question: "How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start); rateizzazione (in instalments, as the Comune sets); in corso d'opera (the costo di costruzione paid during the works)"
+    options: [pagato, prima dei lavori, rateizzazione, in corso d'opera]
+  contributo_calcolo:
+    type: choice
+    question: "Who works the contributo out: prospetto (the progettista's prospetto di calcolo preventivo, attached); sportello (the SUE, from the technical documents attached)"
+    options: [prospetto, sportello]
+  documentazione_calcolo_contributo: {type: file, question: "The technical documents the SUE needs to work out the contributo (PDF)"}
   precedente_numero: {type: text, question: "The building's own title (licenza / concessione / permesso di costruire): its number"}
   precedente_data: {type: date, question: "Its date"}
   superficie_mq: {type: number, question: "The unit's surface in m²"}
@@ -332,6 +355,7 @@ asks:
     type: choice
     question: "Is the property under landscape protection (D.Lgs. 42/2004 parte III: art. 136, art. 142 or the piano paesaggistico), and what do the works need? no (not protected); senza autorizzazione (protected, but the works don't alter the place or the buildings' look, or need no authorization: art. 149, DPR 31/2017 Allegato A); semplificata (DPR 31/2017 Allegato B); ordinaria (art. 146)"
     options: ["no", senza autorizzazione, semplificata, ordinaria]
+  relazione_paesaggistica: {type: file, question: "The relazione paesaggistica (DPCM 12/12/2005), for the autorizzazione paesaggistica ordinaria (PDF)"}
   bene_culturale:
     type: yes_no
     question: "Is the building itself a protected bene culturale (D.Lgs. 42/2004 parte II: listed, so the works need the Soprintendenza's authorization, art. 21)?"
@@ -1396,16 +1420,46 @@ sections:
     theirs: [PER PRESA VISIONE]
     leave: ["Per SCIA/SCIA Unica, il titolare dichiara"]
     fields:
-      - {kind: date, label: "Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio", value: "{{ask.data_inizio_lavori|date_it}}", when: "{{ask.bene_culturale|not}} {{ask.area_protetta|is_nulla_osta|not}} {{ask.idrogeologico|is_autorizzazione|not}} {{ask.idraulico|not}} {{ask.vinca|not}} {{ask.rir|is_in_area|not}} {{ask.rir|is_non_individuata|not}} {{ask.altri_vincoli_eco|is_assenso|not}} {{ask.fasce|is_assenso|not}}"}
+      - {kind: date, label: "Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio", value: "{{ask.data_inizio_lavori|date_it}}", when: "{{ask.bene_culturale|not}} {{ask.area_protetta|is_nulla_osta|not}} {{ask.idrogeologico|is_autorizzazione|not}} {{ask.idraulico|not}} {{ask.vinca|not}} {{ask.rir|is_in_area|not}} {{ask.rir|is_non_individuata|not}} {{ask.altri_vincoli_eco|is_assenso|not}} {{ask.fasce|is_assenso|not}} {{ask.paesaggio|is_semplificata|not}} {{ask.paesaggio|is_ordinaria|not}}"}
 
+  # One choice: the works (each with whether it changes the use), a variant, or a change of
+  # use alone. The labels keep the portal's apostrophes (’ and ' both appear).
   - section: Qualificazione dell'intervento
     fields:
       - {kind: radio, label: intervento di manutenzione straordinaria, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}}"}
-      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di una singola unità immobiliare all’interno, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}} {{ask.scia_cambio_uso|is_stessa_categoria}}"}
+      - {kind: radio, label: "comporta mutamento di destinazione d’uso di una singola unità immobiliare, ubicata", when: "{{ask.scia_tipo|is_manutenzione_straordinaria}} {{ask.scia_cambio_uso|is_tra_categorie}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di un intero immobile, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}} {{ask.scia_cambio_uso|is_intero_immobile}}"}
       - {kind: radio, label: intervento di manutenzione restauro e risanamento conservativo, when: "{{ask.scia_tipo|is_restauro}}"}
-      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_tipo|is_restauro}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_tipo|is_restauro}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di una singola unità immobiliare all’interno, when: "{{ask.scia_tipo|is_restauro}} {{ask.scia_cambio_uso|is_stessa_categoria}}"}
+      - {kind: radio, label: "comporta mutamento di destinazione d’uso di una singola unità immobiliare, ubicata", when: "{{ask.scia_tipo|is_restauro}} {{ask.scia_cambio_uso|is_tra_categorie}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di un intero immobile, when: "{{ask.scia_tipo|is_restauro}} {{ask.scia_cambio_uso|is_intero_immobile}}"}
       - {kind: radio, label: intervento di ristrutturazione edilizia, when: "{{ask.scia_tipo|is_ristrutturazione}}"}
-      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_tipo|is_ristrutturazione}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_tipo|is_ristrutturazione}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di una singola unità immobiliare all’interno, when: "{{ask.scia_tipo|is_ristrutturazione}} {{ask.scia_cambio_uso|is_stessa_categoria}}"}
+      - {kind: radio, label: "comporta mutamento di destinazione d’uso di una singola unità immobiliare, ubicata", when: "{{ask.scia_tipo|is_ristrutturazione}} {{ask.scia_cambio_uso|is_tra_categorie}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di un intero immobile, when: "{{ask.scia_tipo|is_ristrutturazione}} {{ask.scia_cambio_uso|is_intero_immobile}}"}
+      - {kind: radio, label: "variante in corso d'opera a permesso di costruire", when: "{{ask.scia_tipo|is_variante_pdc}}"}
+      - {kind: text, label: permesso di costruire n., value: "{{ask.pdc_numero}}", when: "{{ask.scia_tipo|is_variante_pdc}}"}
+      - {kind: date, label: del, value: "{{ask.pdc_data|date_it}}", when: "{{ask.scia_tipo|is_variante_pdc}}"}
+      - {kind: radio, label: variante in corso d’opera a SCIA che non costituisce, when: "{{ask.scia_tipo|is_variante_scia}}"}
+      - {kind: text, label: SCIA n., value: "{{ask.scia_variata_numero}}", when: "{{ask.scia_tipo|is_variante_scia}}"}
+      - {kind: date, label: del, value: "{{ask.scia_variata_data|date_it}}", when: "{{ask.scia_tipo|is_variante_scia}}"}
+      - {kind: radio, label: variante in corso d’opera a SCIA che si configura, when: "{{ask.scia_tipo|is_variante_scia_essenziale}}"}
+      - {kind: radio, label: "mutamento di destinazione d’uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_stessa_categoria}}"}
+      - {kind: radio, label: "senza opere (o con opere riconducibili agli interventi di cui all'articolo 6) di singola unità immobiliare all", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_stessa_categoria}}"}
+      - {kind: radio, label: "mutamento di destinazione d’uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_tra_categorie}}"}
+      - {kind: radio, label: "senza opere (o con opere riconducibili agli interventi di cui all'articolo 6) di singola unità immobiliare tra", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_tra_categorie}}"}
+      - {kind: radio, label: "mutamento di destinazione d’uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_stessa_categoria}}"}
+      - {kind: radio, label: "con opere riconducibili agli interventi di cui all'articolo 6-bis di singola unità immobiliare all", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_stessa_categoria}}"}
+      - {kind: radio, label: "mutamento di destinazione d’uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_tra_categorie}}"}
+      - {kind: radio, label: "con opere riconducibili agli interventi di cui all'articolo 6-bis di singola unità immobiliare tra", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_tra_categorie}}"}
+      - {kind: radio, label: "mutamento di destinazione d'uso, di un intero immobile", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_senza_opere}}"}
+      - {kind: radio, label: "senza opere (o con opere riconducibili agli interventi di cui all'articolo 6 del d.P.R.", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_senza_opere}}"}
+      - {kind: radio, label: "mutamento di destinazione d'uso, di un intero immobile", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}"}
+      - {kind: radio, label: "con opere riconducibili agli interventi di cui di cui all'articolo 6-bis", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}"}
 
   - section: Regolarità urbanistica e precedenti edilizi
     leave: [n., del, specificare, di Euro, a titolo di sanzione, Prot. n., atto di registrazione, in data]
@@ -1417,9 +1471,17 @@ sections:
       - {kind: radio, label: pienamente conforme alla documentazione dello stato legittimo}
 
   - section: Calcolo del contributo di costruzione
+    leave: [ai sensi della seguente normativa]
     fields:
-      - {kind: radio, label: l'intervento da realizzare è a titolo gratuito}
-      - {kind: text, label: ai sensi della seguente normativa, value: "{{ask.contributo_normativa}}"}
+      - {kind: radio, label: l'intervento da realizzare è a titolo gratuito, when: "{{ask.scia_onerosa|not}}"}
+      - {kind: text, label: ai sensi della seguente normativa, value: "{{ask.contributo_normativa}}", when: "{{ask.scia_onerosa|not}}"}
+      - {kind: radio, label: l'intervento da realizzare è a titolo oneroso, when: "{{ask.scia_onerosa}}"}
+      - {kind: radio, label: si allega l'attestazione del completo versamento, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_pagato}}"}
+      - {kind: radio, label: si riserva di trasmettere prima dell'inizio dei lavori, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_prima_dei_lavori}}"}
+      - {kind: radio, label: chiede la rateizzazione del contributo, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_rateizzazione}}"}
+      - {kind: radio, label: si impegna a corrispondere il costo di costruzione, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_in_corso_d_opera}}"}
+      - {kind: radio, label: chiede allo Sportello unico di effettuare il calcolo, when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_sportello}}"}
+      - {kind: radio, label: allega il prospetto di calcolo preventivo, when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_prospetto}}"}
 
   # The architect designs the works and presents the pratica; the direttore dei lavori is named
   # before the works start (the crawl doesn't reach the fields of "di aver incaricato").
@@ -1492,11 +1554,29 @@ sections:
       - {kind: text, label: al n., value: "{{t:albo.numero}}"}
       - {kind: checkbox, label: che le opere in progetto sono subordinate a Segnalazione}
       - {kind: checkbox, label: intervento di manutenzione straordinaria, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}}"}
-      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}}"}
+      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: Si specifica che l’intervento comporta mutamento, when: "{{ask.scia_tipo|is_manutenzione_straordinaria}} {{ask.scia_cambio_uso|is_no|not}}"}
       - {kind: checkbox, label: intervento di restauro e risanamento conservativo, when: "{{ask.scia_tipo|is_restauro}}"}
-      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_tipo|is_restauro}}"}
+      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_tipo|is_restauro}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: Si specifica che l’intervento comporta mutamento, when: "{{ask.scia_tipo|is_restauro}} {{ask.scia_cambio_uso|is_no|not}}"}
       - {kind: checkbox, label: intervento di ristrutturazione edilizia, when: "{{ask.scia_tipo|is_ristrutturazione}}"}
-      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_tipo|is_ristrutturazione}}"}
+      - {kind: radio, label: Si specifica che l’intervento non comporta mutamento, when: "{{ask.scia_tipo|is_ristrutturazione}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: Si specifica che l’intervento comporta mutamento, when: "{{ask.scia_tipo|is_ristrutturazione}} {{ask.scia_cambio_uso|is_no|not}}"}
+      - {kind: checkbox, label: variante in corso d’opera a permessi di costruire, when: "{{ask.scia_tipo|is_variante_pdc}}"}
+      - {kind: checkbox, label: variante in corso d’opera a SCIA che non costituisce, when: "{{ask.scia_tipo|is_variante_scia}}"}
+      - {kind: checkbox, label: variante in corso d’opera a SCIA che si configura, when: "{{ask.scia_tipo|is_variante_scia_essenziale}}"}
+      - {kind: checkbox, label: "mutamento di destinazione d'uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_stessa_categoria}}"}
+      - {kind: radio, label: "senza opere (o con opere riconducibili agli interventi di cui all'articolo 6) di singola unità immobiliare all", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_stessa_categoria}}"}
+      - {kind: checkbox, label: "mutamento di destinazione d'uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_tra_categorie}}"}
+      - {kind: radio, label: "senza opere (o con opere riconducibili agli interventi di cui all'articolo 6) di singola unità immobiliare tra", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_senza_opere_tra_categorie}}"}
+      - {kind: checkbox, label: "mutamento di destinazione d'uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_stessa_categoria}}"}
+      - {kind: radio, label: "con opere riconducibili agli interventi di cui all'articolo 6-bis di singola unità immobiliare all", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_stessa_categoria}}"}
+      - {kind: checkbox, label: "mutamento di destinazione d'uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_tra_categorie}}"}
+      - {kind: radio, label: "con opere riconducibili agli interventi di cui all'articolo 6-bis di singola unità immobiliare tra", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_unita_opere_6bis_tra_categorie}}"}
+      - {kind: checkbox, label: "mutamento di destinazione d'uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_senza_opere}}"}
+      - {kind: radio, label: "senza opere (o con opere riconducibili agli interventi di cui all'articolo 6) di un intero immobile", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_senza_opere}}"}
+      - {kind: checkbox, label: "mutamento di destinazione d'uso, nel rispetto", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}"}
+      - {kind: radio, label: "con opere riconducibili agli interventi di cui all'articolo 6-bis di un intero immobile", when: "{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}"}
       - {kind: textarea, label: e che l’intervento sopra indicato, value: "{{ask.dettaglio_intervento}}"}
 
   # Three Si/No questions: the state is the legitimate one (from the titles), no tolerances,
@@ -1566,13 +1646,20 @@ sections:
 
   # Three protections, one answer each: the landscape (parte III D.Lgs. 42/2004), the building
   # as a bene culturale (parte II: the Soprintendenza), a protected natural area (L. 394/1991).
-  # A landscape authorization is its own pratica on Napoli's SUE, selected with the SCIA (the
-  # recipe refuses it until that combination is mapped). The two "Si allega ... parere/nulla
+  # A landscape authorization is its own operation on Napoli's SUE, selected with the SCIA in
+  # the wizard (rehearsals/scia-paesaggistica-*): here the asseverazione names its procedure.
+  # The two "Si allega ... parere/nulla
   # osta" boxes are the Soprintendenza's (first) and the park's (second).
   - section: Asseverazione SCIA - Tutela Storico Ambientale
     fields:
       - {kind: radio, label: NON ricade in zona sottoposta a tutela, when: "{{ask.paesaggio|is_no}}"}
       - {kind: radio, label: "ricade in zona tutelata, ma le opere non comportano alterazione", when: "{{ask.paesaggio|is_senza_autorizzazione}}"}
+      - {kind: radio, label: ricade in zona tutelata e le opere comportano alterazione, when: "{{ask.paesaggio|is_semplificata}}"}
+      - {kind: radio, label: è assoggettato al procedimento semplificato, when: "{{ask.paesaggio|is_semplificata}}"}
+      - {kind: checkbox, label: Si allega la relazione paesaggistica semplificata, when: "{{ask.paesaggio|is_semplificata}}"}
+      - {kind: radio, label: ricade in zona tutelata e le opere comportano alterazione, when: "{{ask.paesaggio|is_ordinaria}}"}
+      - {kind: radio, label: è assoggettato al procedimento ordinario, when: "{{ask.paesaggio|is_ordinaria}}"}
+      - {kind: checkbox, label: Si allega la relazione paesaggistica e la documentazione, when: "{{ask.paesaggio|is_ordinaria}}"}
       - {kind: radio, label: non è sottoposto a tutela, when: "{{ask.bene_culturale|not}}"}
       - {kind: radio, label: è sottoposto a tutela, when: "{{ask.bene_culturale}}"}
       - {kind: checkbox, label: "Si allega la documentazione necessaria ai fini del rilascio del parere/nulla osta", when: "{{ask.bene_culturale}}"}

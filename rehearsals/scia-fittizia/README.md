@@ -12,9 +12,19 @@ The wizard's required Si/No (sanatoria) is answered No (`si_no` in the recipe).
 
 ## What it maps
 
-- **The works** (art. 22 c. 1 a) to c) DPR 380/2001): manutenzione straordinaria, restauro e
-  risanamento conservativo, ristrutturazione edilizia, without a change of use (quadro c) and
-  the asseverazione's tipologia).
+- **What it files** (quadro c) and the asseverazione's tipologia): manutenzione straordinaria,
+  restauro e risanamento conservativo or ristrutturazione edilizia (art. 22 c. 1 a) to c) DPR
+  380/2001), each changing the use or not (one unit within its category, one unit in zone A, B
+  or C to another category, a whole building within its category: art. 23-ter as the 2024 Salva
+  Casa changed it); a variant in corso d'opera to a permesso di costruire or to a SCIA (essential
+  or not), naming the title it changes; or a change of use alone, of a unit or a whole building,
+  with no works or CILA works (art. 6-bis).
+- **The contributo** (quadro g): free (the rule why), or due: paid (its receipt), before the
+  works, in instalments or during the works, worked out on the architect's prospetto or by the
+  SUE (the documents it needs). Each adds its slot.
+- **With a landscape authorization**: the SCIA and the semplificata or the ordinaria in one
+  pratica are their own recipes (`rehearsals/scia-paesaggistica-*-fittizia`), the asseverazione
+  naming the procedure.
 - **Structures.** The structural designer, another technician, in h1)'s block under the
   architect's (their albo, residence and studio); concrete or steel works and their art. 65
   denuncia; the seismic filing (Napoli is zone 2: L.R. Campania 9/1983, Reg. 4/2010): a
@@ -32,9 +42,8 @@ The wizard's required Si/No (sanatoria) is answered No (`si_no` in the recipe).
   one per fascia for the tutela funzionale. All take plain PDFs (recipe `attachments`,
   `on_page`).
 
-Refused at pre-flight (`supports`): a change of use; a landscape authorization (semplificata
-or ordinaria: on Napoli's SUE it's its own pratica, selected with the SCIA, a combination not
-mapped yet); works not allowed in a cemetery's fascia; acoustics, fire prevention, asbestos, a
+Refused at pre-flight (`supports`): a landscape authorization (semplificata or ordinaria: the
+SCIA with it is its own recipe); works not allowed in a cemetery's fascia; acoustics, fire prevention, asbestos, a
 hygiene derogation, the barriers rules, systems needing a project, energy filings. The
 architect as structural designer too isn't mapped (her studio is the business's).
 
@@ -50,6 +59,9 @@ architect as structural designer too isn't mapped (her studio is the business's)
 | 2026-10-29 | pane | every protection, from scratch | **filled** in 167 s with 22 attachments; fresh load 26 s, every value read back |
 | 2026-10-29 | pane | seismic variant, from scratch | **filled** in 153 s with 11 attachments; fresh load 23 s, every value read back |
 | 2026-10-29 | pane | P6 (plain), from scratch | **filled** in 136 s with 7 attachments; fresh load 23 s, every value read back |
+| 2026-10-29 | pane | variant to a PdC (contributo paid, prospetto), then a change of use alone (unit, CILA works, between categories; contributo worked out by the SUE) | every section filled first time; each stopped at Allega documenti on the slots quadro g) adds (the prospetto, the receipt, the SUE's calculation documents), read and mapped |
+| 2026-10-29 | pane | batch of all six cases from scratch, the three earlier ones now also changing the use (whole building, same category, between categories) | **5 of 6 filled** (P6 206 s, structures 166 s, every protection 218 s, seismic variant 168 s, change of use 155 s), each read back on a fresh load; the PdC variant stopped once on the firms' section, a box not yet on the page |
+| 2026-10-29 | pane | PdC variant, rerun unchanged (after one more stop on the portal's "errore inatteso" page) | **filled** in 205 s, read back on a fresh load (31 s) |
 
 What the 2026-10-28 stops taught (each fixed for every pratica):
 

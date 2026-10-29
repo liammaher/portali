@@ -476,5 +476,19 @@ def _():
     assert filled(steps, p6_values("scia-fittizia", "answers-tutele.json")).get(b, []) == []  # assents asked with it
 
 
+@case("the SCIA with its landscape authorization is one pratica with no start date; a variant names the title it changes")
+def _():
+    steps = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-paesaggistica-semplificata-fittizia" / "recipe.yaml"))
+    names = [s["section"] for s in steps["sections"]]
+    assert any(n.startswith("Asseverazione SCIA") for n in names) and "Ambito dell'intervento" in names, names
+    combo = filled(steps, p6_values("scia-paesaggistica-semplificata-fittizia"))
+    assert combo.get(gen.norm("Presentazione della SCIA/SCIA Unica/SCIA Condizionata"), []) == []
+    assert "PG/2026/0888888" in combo[gen.norm("Qualificazione dell'intervento")]
+    scia = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-fittizia" / "recipe.yaml"))
+    pdc = filled(scia, p6_values("scia-fittizia", "answers-variante-pdc.json"))
+    assert "PDC123" in pdc[gen.norm("Qualificazione dell'intervento")]
+    assert "ART. 17" not in str(pdc[gen.norm("Calcolo del contributo di costruzione")]).upper()  # onerosa: no rule why it's free
+
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

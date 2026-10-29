@@ -49,7 +49,7 @@
  "parti_comuni": "nessuna",
  "lavori_in_proprio": false,
  "scia_tipo": "ristrutturazione",
- "scia_cambio_uso": "false",
+ "scia_cambio_uso": "tra categorie",
  "paesaggio": "no",
  "bene_culturale": "false",
  "area_protetta": "senza alterazione",
@@ -72,5 +72,6 @@
  "denuncia_art65": "rehearsals/scia-fittizia/files/denuncia-art65.pdf",
  "rir_doc": "rehearsals/scia-fittizia/files/documentazione-rir.pdf",
  "altri_vincoli_eco_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf",
- "fascia_altro_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf"
+ "fascia_altro_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf",
+ "scia_onerosa": "false"
 }

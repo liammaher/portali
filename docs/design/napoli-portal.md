@@ -50,8 +50,11 @@ field, exists only once a pratica is sent: the portal offers PDFs before (`rehea
 
 Next: run the six waiting recipes; finish the SUAP batch and import it; the 75 pratiche one
 or two sections short; a company's other partners (their art. 85
-statements); the SUE's last seven pratiche with a professional (asseverazioni, landscape
-classifications).
+statements); the SUE's last five pratiche (permesso di costruire and SCIA alternativa, which
+reuse the SCIA's asseverazioni; the sanatoria and landscape exemptions). The SCIA itself
+(2026-10-29) maps works on structures, every protection, variants, a change of use and the
+contributo, and goes with its semplificata or ordinaria as one pratica
+(`rehearsals/scia-*`).
 
 ## 2. The legal layer: which pratica, which choices, which answers
 

@@ -49,7 +49,7 @@
  "parti_comuni": "nessuna",
  "lavori_in_proprio": false,
  "scia_tipo": "restauro",
- "scia_cambio_uso": "false",
+ "scia_cambio_uso": "stessa categoria",
  "paesaggio": "senza autorizzazione",
  "bene_culturale": "true",
  "area_protetta": "nulla osta",
@@ -89,5 +89,6 @@
  "fascia_gasdotto_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
  "fascia_militare_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
  "fascia_aeroportuale_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
- "fascia_altro_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf"
+ "fascia_altro_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
+ "scia_onerosa": "false"
 }
