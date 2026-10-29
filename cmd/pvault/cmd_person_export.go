@@ -132,7 +132,7 @@ func writePersonExport(dir string, out *vault.PersonExport) (err error) {
 // adds " (2)", " (3)"... before the extension. It returns the name used.
 func writeUniqueFile(folder, name, id string, data []byte) (string, error) {
 	name = strings.TrimLeft(filepath.Base(filepath.Clean("/"+name)), ".")
-	if name == "" || name == "/" {
+	if name == "" || name == "/" || name == string(filepath.Separator) {
 		name = id
 	}
 	ext := filepath.Ext(name)
