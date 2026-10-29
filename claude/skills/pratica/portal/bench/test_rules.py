@@ -163,10 +163,16 @@ def sue_rehearsals_ready():
     names = ["cila-fittizia", "cila-paesaggistica-fittizia", "scia-fittizia", "scia-paesaggistica-semplificata-fittizia",
              "scia-paesaggistica-ordinaria-fittizia", "pdc-fittizio", "scia-alternativa-fittizia",
              "paesaggistica-semplificata-fittizia", "paesaggistica-ordinaria-fittizia"]
+    # A whole building's change of use with CILA works: the national SCIA form has a box for it,
+    # but in Campania it is a SCIA alternativa (art. 2 c. 6 L.R. 13/2022).
+    refused = {("scia-fittizia", "answers-cambio-immobile-6bis.json"): "napoli/comune/scia-alternativa-pdc"}
     for name in names:
         for f in sorted((REHEARSALS / name).glob("answers*.json")):
             r = sue(name, f.name)
-            assert r["ready"], (name, f.name, r)
+            if (name, f.name) in refused:
+                assert r["unsupported"][0].startswith("This case is another pratica: " + refused[name, f.name]), r
+            else:
+                assert r["ready"], (name, f.name, r)
 
 
 def sue_another_pratica():
@@ -178,7 +184,8 @@ def sue_another_pratica():
     ordinaria = "napoli/comune/autorizzazione-paesaggistica-ordinaria"
     later = "answers-proprietario.json"  # works not started yet: no sanatoria
     assert sue("cila-fittizia", later, fatti=["strutture"], sismica="deposito")["unsupported"][0].startswith(other + scia)
-    assert sue("cila-fittizia", later, cambio_uso="stessa_categoria")["unsupported"][0].startswith(other + scia)
+    assert sue("cila-fittizia", later, cambio_uso="stessa_categoria", fatti=["uso_ammesso_prg"])["unsupported"][0].startswith(
+        other + scia)
     assert sue("cila-fittizia", later, paesaggio="semplificata")["unsupported"] == [
         f"This case also needs {semplificata} (autorizzazione), which this pratica doesn't file."]
     assert sue("cila-paesaggistica-fittizia", paesaggio="no")["unsupported"] == [
@@ -206,6 +213,20 @@ def sue_another_pratica():
     assert sue("scia-fittizia", "answers-variante-pdc.json", fatti=["demolizione_zona_a"])["unsupported"][0].startswith(
         other + "napoli/comune/permesso-di-costruire")
     assert "DGC 454/2014" in sue("scia-alternativa-fittizia", fatti=["demolizione_zona_a"])["unsupported"][0]
+    # Changes of use under Campania's laws (circolare regionale CI/2025/3).
+    unit = {"fatti": ["uso_ammesso_prg"]}
+    assert sue("scia-fittizia", "answers-cambio-unita-senza-tra.json", intervento="nessuna_opera")["unsupported"][0].startswith(
+        "This case needs no pratica: ")  # art. 2 c. 5 L.R. 19/2001
+    assert sue("scia-fittizia", cambio_uso="non_rilevante", fatti=["prospetti", "uso_ammesso_prg"])["ready"]  # the facades: a SCIA
+    assert sue("scia-fittizia", cambio_uso="intero_immobile", **unit)["unsupported"][0].startswith(
+        other + "napoli/comune/scia-alternativa-pdc")
+    assert sue("scia-alternativa-fittizia", cambio_uso="intero_tra_categorie", fatti=["uso_ammesso_prg", "cambio_uso_sagoma"])[
+        "unsupported"][0].startswith(other + "napoli/comune/permesso-di-costruire")  # art. 2 c. 6-7 L.R. 19/2001
+    assert sue("scia-fittizia", cambio_uso="zona_agricola", **unit)["unsupported"][0].startswith(
+        other + "napoli/comune/permesso-di-costruire")
+    assert "art. 27 c. 2" in sue("scia-fittizia", cambio_uso="stessa_categoria", fatti=["prospetti"])["unsupported"][0]
+    ground = sue("scia-fittizia", cambio_uso="piano_terra", **unit)["unsupported"]
+    assert len(ground) == 1 and "1-quater" in ground[0] and "va chiesto al SUE" in ground[0], ground
 
 
 def sue_asks_and_apart():
@@ -215,8 +236,8 @@ def sue_asks_and_apart():
     # Then, in one message, the facts the rules for those works still wait on.
     r = sue("cila-fittizia", fatti=None, paesaggio=None, cambio_uso=None)
     assert [q["key"] for q in r["questions"]] == ["fatti", "sismica", "cambio_uso", "paesaggio"], r["questions"]
-    assert [i["key"] for i in r["questions"][0]["items"]] == ["strutture", "prospetti", "paesaggio_eseguiti",
-                                                               "bene_culturale"], r["questions"][0]
+    assert [i["key"] for i in r["questions"][0]["items"]] == ["strutture", "prospetti", "uso_ammesso_prg",
+                                                               "paesaggio_eseguiti", "bene_culturale"], r["questions"][0]
     assert "permesso_per_scelta" not in str(r["questions"])  # the recipe's: a CILA is no choice
     # The seismic filing is the person's, at the Genio Civile: in their steps, never a refusal.
     r = sue("scia-fittizia", "answers-strutture.json")

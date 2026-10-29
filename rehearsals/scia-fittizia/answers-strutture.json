@@ -72,6 +72,8 @@
  "fascia_stradale_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf",
  "scia_onerosa": "false",
  "intervento": "manutenzione_straordinaria",
- "cambio_uso": "intero_immobile",
- "fatti": []
+ "cambio_uso": "non_rilevante",
+ "fatti": [
+  "uso_ammesso_prg"
+ ]
 }

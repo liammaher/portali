@@ -76,5 +76,7 @@
  "scia_onerosa": "false",
  "intervento": "ristrutturazione",
  "cambio_uso": "tra_categorie",
- "fatti": []
+ "fatti": [
+  "uso_ammesso_prg"
+ ]
 }

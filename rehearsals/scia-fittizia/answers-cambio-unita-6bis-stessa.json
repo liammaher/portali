@@ -65,5 +65,7 @@
  "documentazione_calcolo_contributo": "rehearsals/scia-fittizia/files/documentazione-calcolo-contributo.pdf",
  "intervento": "manutenzione_straordinaria",
  "cambio_uso": "stessa_categoria",
- "fatti": []
+ "fatti": [
+  "uso_ammesso_prg"
+ ]
 }

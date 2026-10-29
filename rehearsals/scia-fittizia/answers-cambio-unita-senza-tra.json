@@ -63,7 +63,9 @@
  "contributo_pagamento": "prima dei lavori",
  "contributo_calcolo": "sportello",
  "documentazione_calcolo_contributo": "rehearsals/scia-fittizia/files/documentazione-calcolo-contributo.pdf",
- "intervento": "nessuna_opera",
+ "intervento": "edilizia_libera",
  "cambio_uso": "tra_categorie",
- "fatti": []
+ "fatti": [
+  "uso_ammesso_prg"
+ ]
 }

@@ -93,5 +93,7 @@
  "scia_onerosa": "false",
  "intervento": "restauro",
  "cambio_uso": "stessa_categoria",
- "fatti": []
+ "fatti": [
+  "uso_ammesso_prg"
+ ]
 }

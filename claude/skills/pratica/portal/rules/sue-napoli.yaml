@@ -7,8 +7,9 @@ intro: >-
   l'uso, i vincoli) al titolo da presentare allo Sportello Unico per l'Edilizia di Napoli, a quello
   che va con esso (l'autorizzazione paesaggistica nella stessa pratica) e a quello che si presenta a
   parte (il deposito o l'autorizzazione sismica al Genio Civile). Dove la legge lascia scegliere tra
-  SCIA e permesso, la scelta è una delle risposte. Le sanatorie e i casi che la libreria non copre
-  ancora sono rifiutati, con il motivo.
+  SCIA e permesso, la scelta è una delle risposte. I cambi di destinazione d'uso seguono anche la
+  legge regionale campana, letta con la circolare regionale CI/2025/3. Le sanatorie e i casi che
+  la libreria non copre ancora sono rifiutati, con il motivo.
 facts:
   intervento:
     type: choice
@@ -57,18 +58,35 @@ facts:
     how: Lo stabilisce il progettista delle strutture (art. 94-bis DPR 380/2001 e Regolamento regionale 4/2010).
   cambio_uso:
     type: choice
-    question: "I lavori cambiano la destinazione d'uso?"
+    question: "I lavori cambiano la destinazione d'uso? Si sceglie il primo caso che vale."
     values:
       "no": "No"
+      zona_agricola: "Sì, in una zona agricola (zona E del PRG)"
+      non_rilevante: >-
+        Sì, ma il cambio non aumenta il fabbisogno di standard urbanistici (aree per servizi e
+        parcheggi): in Campania non è urbanisticamente rilevante
       stessa_categoria: "Sì, di una singola unità, restando nella stessa categoria funzionale"
       tra_categorie: >-
         Sì, di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le
         categorie residenziale, turistico-ricettiva, produttiva e direzionale, commerciale (art.
         23-ter c. 1-ter), non al piano terra né seminterrata
+      piano_terra: "Sì, di una singola unità al piano terra (primo piano fuori terra) o seminterrata, verso un'altra categoria funzionale"
       intero_immobile: "Sì, di un intero immobile, restando nella stessa categoria funzionale"
+      intero_tra_categorie: "Sì, di un intero immobile, verso un'altra categoria funzionale"
       altro: >-
-        Sì, in un altro modo: un'unità al piano terra o seminterrata, verso o dalla categoria rurale,
-        fuori delle zone A, B e C, o un intero immobile verso un'altra categoria
+        Sì, in un altro modo: un'unità fuori delle zone A, B e C (o equipollenti) verso un'altra
+        categoria, o verso o dalla categoria rurale fuori della zona E
+    how: >-
+      Le categorie funzionali sono quelle dell'art. 23-ter c. 1 DPR 380/2001 (residenziale,
+      turistico-ricettiva, produttiva e direzionale, commerciale, rurale). Il fabbisogno di
+      standard lo stabilisce il tecnico dalle dotazioni che il PRG chiede per la nuova
+      destinazione (art. 2 c. 4 L.R. Campania 13/2022, art. 27 c. 2 L.R. 31/2021).
+  uso_ammesso_prg:
+    type: yes_no
+    question: "La nuova destinazione d'uso è tra quelle che il PRG ammette in quella zona?"
+  cambio_uso_sagoma:
+    type: yes_no
+    question: "Le opere che accompagnano il cambio d'uso dell'immobile incidono sulla sagoma o ne aumentano i volumi?"
   paesaggio:
     type: choice
     question: "L'immobile è sotto tutela paesaggistica (artt. 136 o 142 D.Lgs. 42/2004), e che cosa chiedono i lavori?"
@@ -120,10 +138,35 @@ rules:
     then: {refuse: "Senza lavori né cambio di destinazione d'uso non c'è una pratica edilizia da presentare."}
     status: verified
   - id: cambio-uso-altro
-    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione], cambio_uso: [altro]}
-    then: {refuse: "Questo cambio di destinazione d'uso (al piano terra o seminterrato, verso o dalla categoria rurale, fuori delle zone A, B e C, o di un intero immobile verso un'altra categoria) segue la legge regionale o il PRG, che la libreria non ha ancora verificato."}
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante], cambio_uso: [altro]}
+    then: {refuse: "Questo cambio di destinazione d'uso (un'unità fuori delle zone A, B e C, o verso o dalla categoria rurale fuori della zona E) non è nei casi che la libreria ha verificato."}
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}]
     status: verified
+  - id: uso-non-ammesso
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante], cambio_uso: [zona_agricola, non_rilevante, stessa_categoria, tra_categorie, piano_terra, intero_immobile, intero_tra_categorie], uso_ammesso_prg: false}
+    then: {refuse: "La nuova destinazione d'uso è ammissibile solo se il PRG la indica come compatibile per quella zona (art. 27 c. 2 L.R. Campania 31/2021): così il cambio non si può fare."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: lr31-2021}]
+    status: verified
+  # Per un'unità al piano terra o seminterrata l'art. 23-ter rimette il cambio alla legge
+  # regionale, e la circolare regionale non ne indica il titolo.
+  - id: cambio-uso-piano-terra
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante], cambio_uso: [piano_terra]}
+    then:
+      role: main
+      procedure: napoli/comune/scia-alternativa-pdc
+      regime: scia
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Segnalazione Certificata Inizio Attività alternativa al Permesso di Costruire (S.C.I.A. alternativa P.d.C.)"}
+    cites:
+      - {procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}
+      - {procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}
+    status: unverified
+    note: >-
+      Per un'unità al piano terra o seminterrata il cambio verso un'altra categoria è rimesso alla
+      legge regionale (art. 23-ter c. 1-quater DPR 380/2001), e la circolare regionale CI/2025/3 non
+      ne indica il titolo. La regola generale della L.R. Campania 13/2022 (art. 2 c. 6) porterebbe
+      alla SCIA alternativa al permesso di costruire, ma non è verificato: va chiesto al SUE. Se il
+      cambio non aumenta il fabbisogno di standard urbanistici non è rilevante ed è libero (art. 2
+      c. 4).
 
   # --- Lavori già eseguiti ---
   - id: sanatoria-titolo
@@ -142,8 +185,8 @@ rules:
     cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
     status: verified
   - id: sanatoria-cambio-uso
-    when: {sanatoria: true, intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria, tra_categorie, intero_immobile]}
-    then: {refuse: "Un cambio di destinazione d'uso già fatto senza SCIA va sanato (accertamento di conformità, art. 36-bis DPR 380/2001), e la libreria non copre ancora la sanatoria."}
+    when: {sanatoria: true, intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [zona_agricola, stessa_categoria, tra_categorie, intero_immobile, intero_tra_categorie]}
+    then: {refuse: "Un cambio di destinazione d'uso già fatto senza titolo va sanato (accertamento di conformità, art. 36-bis DPR 380/2001), e la libreria non copre ancora la sanatoria."}
     cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
     status: verified
   - id: sanatoria-paesaggio
@@ -158,8 +201,23 @@ rules:
     then: {none: "Sono lavori di edilizia libera (art. 6 c. 1 DPR 380/2001): non serve un titolo edilizio né una pratica al SUE."}
     cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}]
     status: verified
+  - id: cambio-uso-non-rilevante-senza-opere
+    when: {intervento: [nessuna_opera], cambio_uso: [non_rilevante], uso_ammesso_prg: true}
+    then: {none: "Un cambio d'uso senza opere che non aumenta il fabbisogno di standard urbanistici non è rilevante in Campania ed è liberamente attuabile (art. 2 c. 4 L.R. 13/2022): non serve una pratica al SUE."}
+    cites:
+      - {procedure: napoli/comune/scia-edilizia, source: lr13-2022}
+      - {procedure: napoli/comune/scia-edilizia, source: circolare-salva-casa-campania}
+    status: verified
+  - id: cambio-uso-non-rilevante-senza-titolo
+    when: {intervento: [edilizia_libera], cambio_uso: [non_rilevante], uso_ammesso_prg: true, paesaggio: ["no", senza_autorizzazione], bene_culturale: false}
+    then: {none: "Un cambio d'uso che non aumenta il fabbisogno di standard urbanistici non è rilevante in Campania ed è liberamente attuabile (art. 2 c. 4 L.R. 13/2022), e i lavori sono di edilizia libera: non serve una pratica al SUE."}
+    cites:
+      - {procedure: napoli/comune/scia-edilizia, source: lr13-2022}
+      - {procedure: napoli/comune/scia-edilizia, source: circolare-salva-casa-campania}
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}
+    status: verified
   - id: edilizia-libera-paesaggistica-semplificata
-    when: {intervento: [edilizia_libera], cambio_uso: ["no"], paesaggio: [semplificata]}
+    when: {intervento: [edilizia_libera], cambio_uso: ["no", non_rilevante], paesaggio: [semplificata]}
     then:
       role: main
       procedure: napoli/comune/autorizzazione-paesaggistica-semplificata
@@ -171,7 +229,7 @@ rules:
       - {procedure: napoli/comune/autorizzazione-paesaggistica-semplificata, source: portale-sue-operazioni}
     status: verified
   - id: edilizia-libera-paesaggistica-ordinaria
-    when: {intervento: [edilizia_libera], cambio_uso: ["no"], paesaggio: [ordinaria]}
+    when: {intervento: [edilizia_libera], cambio_uso: ["no", non_rilevante], paesaggio: [ordinaria]}
     then:
       role: main
       procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria
@@ -183,14 +241,14 @@ rules:
       - {procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: portale-sue-operazioni}
     status: verified
   - id: edilizia-libera-bene-culturale
-    when: {intervento: [edilizia_libera], cambio_uso: ["no"], bene_culturale: true}
+    when: {intervento: [edilizia_libera], cambio_uso: ["no", non_rilevante], bene_culturale: true}
     then: {refuse: "Su un bene culturale anche i lavori senza titolo edilizio chiedono l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004), che la libreria non copre ancora."}
     cites: [{procedure: napoli/comune/scia-edilizia, source: dlgs42-art21}]
     status: verified
 
   # --- CILA ---
   - id: cila-manutenzione
-    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: false, cambio_uso: ["no"]}
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: false, cambio_uso: ["no", non_rilevante]}
     then:
       role: main
       procedure: napoli/comune/cila-lavori-edilizi
@@ -200,9 +258,10 @@ rules:
       - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6bis}
       - {procedure: napoli/comune/cila-lavori-edilizi, source: cila-note}
       - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art22}
+      - {procedure: napoli/comune/scia-edilizia, source: lr13-2022}
     status: verified
   - id: cila-restauro
-    when: {intervento: [restauro], strutture: false, cambio_uso: ["no"]}
+    when: {intervento: [restauro], strutture: false, cambio_uso: ["no", non_rilevante]}
     then:
       role: main
       procedure: napoli/comune/cila-lavori-edilizi
@@ -212,21 +271,22 @@ rules:
       - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6bis}
       - {procedure: napoli/comune/cila-lavori-edilizi, source: cila-note}
       - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art22}
+      - {procedure: napoli/comune/scia-edilizia, source: lr13-2022}
     status: verified
   - id: cila-manutenzione-bene-culturale
-    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: false, cambio_uso: ["no"], bene_culturale: true}
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: false, cambio_uso: ["no", non_rilevante], bene_culturale: true}
     then: {refuse: "Una CILA su un bene culturale chiede anche l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004): la libreria non copre ancora la CILA con quell'autorizzazione."}
     cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dlgs42-art21}]
     status: verified
   - id: cila-restauro-bene-culturale
-    when: {intervento: [restauro], strutture: false, cambio_uso: ["no"], bene_culturale: true}
+    when: {intervento: [restauro], strutture: false, cambio_uso: ["no", non_rilevante], bene_culturale: true}
     then: {refuse: "Una CILA su un bene culturale chiede anche l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004): la libreria non copre ancora la CILA con quell'autorizzazione."}
     cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dlgs42-art21}]
     status: verified
 
   # --- SCIA, o il permesso di costruire per scelta (art. 22 c. 7) ---
   - id: scia-strutture
-    when: {intervento: [manutenzione_straordinaria, restauro], strutture: true, permesso_per_scelta: false}
+    when: {intervento: [manutenzione_straordinaria, restauro], strutture: true, permesso_per_scelta: false, cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie]}
     then: &scia
       role: main
       procedure: napoli/comune/scia-edilizia
@@ -235,7 +295,7 @@ rules:
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
     status: verified
   - id: permesso-per-scelta-strutture
-    when: {intervento: [manutenzione_straordinaria, restauro], strutture: true, permesso_per_scelta: true}
+    when: {intervento: [manutenzione_straordinaria, restauro], strutture: true, permesso_per_scelta: true, cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie]}
     then: &permesso
       role: main
       procedure: napoli/comune/permesso-di-costruire
@@ -244,32 +304,80 @@ rules:
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
     status: verified
   - id: scia-prospetti
-    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: true, permesso_per_scelta: false}
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: true, permesso_per_scelta: false, cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie]}
     then: *scia
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
     status: verified
   - id: permesso-per-scelta-prospetti
-    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: true, permesso_per_scelta: true}
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: true, permesso_per_scelta: true, cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie]}
     then: *permesso
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
     status: verified
+  # A single unit follows art. 23-ter c. 1-quinquies; a whole building the L.R. 13/2022 (circolare
+  # regionale CI/2025/3, punti a-d).
   - id: scia-cambio-uso
-    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria, tra_categorie, intero_immobile], permesso_per_scelta: false}
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria], uso_ammesso_prg: true, permesso_per_scelta: false}
     then: *scia
-    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: circolare-salva-casa-campania}]
     status: verified
   - id: permesso-per-scelta-cambio-uso
-    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria, tra_categorie, intero_immobile], permesso_per_scelta: true}
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria], uso_ammesso_prg: true, permesso_per_scelta: true}
     then: *permesso
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
     status: verified
+  # Edilizia libera works count as "senza opere" for art. 23-ter, not (verified) for art. 2 c. 5
+  # L.R. 19/2001: they stay a SCIA.
+  - id: scia-cambio-uso-tra-categorie
+    when: {intervento: [edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [tra_categorie], uso_ammesso_prg: true, permesso_per_scelta: false}
+    then: *scia
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: circolare-salva-casa-campania}]
+    status: verified
+  - id: permesso-per-scelta-cambio-uso-tra-categorie
+    when: {intervento: [edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [tra_categorie], uso_ammesso_prg: true, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
+    status: verified
+  - id: cambio-uso-tra-categorie-senza-opere
+    when: {intervento: [nessuna_opera], cambio_uso: [tra_categorie, intero_tra_categorie], uso_ammesso_prg: true}
+    then: {none: "Un cambio d'uso senza opere tra categorie compatibili con la zona del PRG è libero in Campania (art. 2 c. 5 L.R. 19/2001): non serve una pratica al SUE."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: lr19-2001}, {procedure: napoli/comune/scia-edilizia, source: circolare-salva-casa-campania}]
+    status: verified
+  - id: scia-alternativa-intero-immobile-senza-opere
+    when: {intervento: [nessuna_opera], cambio_uso: [intero_immobile], uso_ammesso_prg: true, permesso_per_scelta: false}
+    then: &alternativa
+      role: main
+      procedure: napoli/comune/scia-alternativa-pdc
+      regime: scia
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Segnalazione Certificata Inizio Attività alternativa al Permesso di Costruire (S.C.I.A. alternativa P.d.C.)"}
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/scia-alternativa-pdc, source: circolare-salva-casa-campania}]
+    status: verified
+  - id: permesso-per-scelta-intero-immobile-senza-opere
+    when: {intervento: [nessuna_opera], cambio_uso: [intero_immobile], uso_ammesso_prg: true, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/permesso-di-costruire, source: dpr380-art23}]
+    status: verified
+  - id: scia-alternativa-intero-immobile
+    when: {intervento: [edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [intero_immobile, intero_tra_categorie], uso_ammesso_prg: true, permesso_per_scelta: false}
+    then: *alternativa
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/scia-alternativa-pdc, source: circolare-salva-casa-campania}]
+    status: verified
+  - id: permesso-per-scelta-intero-immobile
+    when: {intervento: [edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [intero_immobile, intero_tra_categorie], uso_ammesso_prg: true, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/permesso-di-costruire, source: dpr380-art23}]
+    status: verified
+  - id: permesso-zona-agricola
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante], cambio_uso: [zona_agricola], uso_ammesso_prg: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: lr19-2001}]
+    status: verified
   - id: scia-ristrutturazione
-    when: {intervento: [ristrutturazione], demolizione_zona_a: false, permesso_per_scelta: false}
+    when: {intervento: [ristrutturazione], cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie], demolizione_zona_a: false, permesso_per_scelta: false}
     then: *scia
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
     status: verified
   - id: permesso-per-scelta-ristrutturazione
-    when: {intervento: [ristrutturazione], demolizione_zona_a: false, permesso_per_scelta: true}
+    when: {intervento: [ristrutturazione], cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie], demolizione_zona_a: false, permesso_per_scelta: true}
     then: *permesso
     cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
     status: verified
@@ -288,6 +396,21 @@ rules:
     then: *scia
     cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
     status: verified
+  - id: scia-alternativa-ristrutturazione-intero-immobile
+    when: {intervento: [ristrutturazione], cambio_uso: [intero_immobile, intero_tra_categorie], uso_ammesso_prg: true, cambio_uso_sagoma: false, demolizione_zona_a: false, permesso_per_scelta: false}
+    then: *alternativa
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/scia-alternativa-pdc, source: circolare-salva-casa-campania}]
+    status: verified
+  - id: permesso-per-scelta-ristrutturazione-intero-immobile
+    when: {intervento: [ristrutturazione], cambio_uso: [intero_immobile, intero_tra_categorie], uso_ammesso_prg: true, cambio_uso_sagoma: false, demolizione_zona_a: false, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/permesso-di-costruire, source: dpr380-art23}]
+    status: verified
+  - id: permesso-cambio-uso-sagoma
+    when: {intervento: [ristrutturazione, ristrutturazione_pesante], cambio_uso: [intero_immobile, intero_tra_categorie], uso_ammesso_prg: true, cambio_uso_sagoma: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: lr19-2001}, {procedure: napoli/comune/permesso-di-costruire, source: circolare-salva-casa-campania}]
+    status: verified
   # A Napoli la SCIA è esclusa per la demolizione e ricostruzione, e per le varianti che cambiano la sagoma, in zona A.
   - id: permesso-zona-a
     when: {intervento: [ristrutturazione, variante_pdc], demolizione_zona_a: true}
@@ -300,13 +423,14 @@ rules:
 
   # --- Permesso di costruire, o la SCIA alternativa (art. 23) ---
   - id: scia-alternativa-ristrutturazione
-    when: {intervento: [ristrutturazione_pesante], demolizione_zona_a: false, permesso_per_scelta: false}
-    then: &alternativa
-      role: main
-      procedure: napoli/comune/scia-alternativa-pdc
-      regime: scia
-      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Segnalazione Certificata Inizio Attività alternativa al Permesso di Costruire (S.C.I.A. alternativa P.d.C.)"}
+    when: {intervento: [ristrutturazione_pesante], cambio_uso: ["no", non_rilevante, stessa_categoria, tra_categorie], demolizione_zona_a: false, permesso_per_scelta: false}
+    then: *alternativa
     cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: dpr380-art23}]
+    status: verified
+  - id: scia-alternativa-ristrutturazione-pesante-intero-immobile
+    when: {intervento: [ristrutturazione_pesante], cambio_uso: [intero_immobile, intero_tra_categorie], uso_ammesso_prg: true, cambio_uso_sagoma: false, demolizione_zona_a: false, permesso_per_scelta: false}
+    then: *alternativa
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: dpr380-art23}, {procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}]
     status: verified
   - id: permesso-ristrutturazione
     when: {intervento: [ristrutturazione_pesante], permesso_per_scelta: true}
@@ -316,12 +440,13 @@ rules:
   - id: scia-alternativa-zona-a
     when: {intervento: [ristrutturazione_pesante], demolizione_zona_a: true, permesso_per_scelta: false}
     then: *alternativa
-    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: dpr380-art23}, {procedure: napoli/comune/scia-alternativa-pdc, source: scia-pagina}]
-    status: unverified
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: lr13-2022}, {procedure: napoli/comune/scia-alternativa-pdc, source: scia-pagina}]
+    status: disputed
     note: >-
-      A Napoli la DGC 454/2014 esclude la SCIA per la demolizione e ricostruzione in zona A, e non è
-      verificato se valga anche per la SCIA alternativa: va chiesto al SUE, o si chiede il permesso
-      di costruire.
+      Per una demolizione e ricostruzione in zona A la L.R. Campania 13/2022 (art. 2 c. 8) indica la
+      SCIA alternativa al permesso di costruire, salve le previsioni comunali più restrittive, mentre
+      il Comune riporta che la DGC 454/2014 esclude la SCIA in zona A: va chiesto al SUE, o si chiede
+      il permesso di costruire.
   - id: permesso-nuova-costruzione
     when: {intervento: [nuova_costruzione, ristrutturazione_urbanistica], piano_planovolumetrico: false}
     then: *permesso

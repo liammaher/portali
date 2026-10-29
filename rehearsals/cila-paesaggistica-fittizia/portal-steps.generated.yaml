@@ -133,10 +133,17 @@ asks:
   sismica: {type: choice, question: 'Per le opere strutturali, che cosa chiede la normativa sismica?', options: [deposito, autorizzazione, variante], labels: {deposito: 'Il deposito del progetto (interventi
         di minore rilevanza o privi di rilevanza, art. 94-bis c. 1 b e c)', autorizzazione: 'L''autorizzazione preventiva (interventi rilevanti, art. 94-bis c. 1 a)', variante: Una variante non sostanziale
         a un progetto strutturale già depositato o autorizzato}, how: Lo stabilisce il progettista delle strutture (art. 94-bis DPR 380/2001 e Regolamento regionale 4/2010).}
-  cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso?', options: ['no', stessa_categoria, tra_categorie, intero_immobile, altro], labels: {'no': 'No', stessa_categoria: 'Sì,
-        di una singola unità, restando nella stessa categoria funzionale', tra_categorie: 'Sì, di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le categorie residenziale,
-        turistico-ricettiva, produttiva e direzionale, commerciale (art. 23-ter c. 1-ter), non al piano terra né seminterrata', intero_immobile: 'Sì, di un intero immobile, restando nella stessa categoria
-        funzionale', altro: 'Sì, in un altro modo: un''unità al piano terra o seminterrata, verso o dalla categoria rurale, fuori delle zone A, B e C, o un intero immobile verso un''altra categoria'}}
+  cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso? Si sceglie il primo caso che vale.', options: ['no', zona_agricola, non_rilevante, stessa_categoria, tra_categorie, piano_terra,
+      intero_immobile, intero_tra_categorie, altro], labels: {'no': 'No', zona_agricola: 'Sì, in una zona agricola (zona E del PRG)', non_rilevante: 'Sì, ma il cambio non aumenta il fabbisogno di standard
+        urbanistici (aree per servizi e parcheggi): in Campania non è urbanisticamente rilevante', stessa_categoria: 'Sì, di una singola unità, restando nella stessa categoria funzionale', tra_categorie: 'Sì,
+        di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le categorie residenziale, turistico-ricettiva, produttiva e direzionale, commerciale (art. 23-ter c. 1-ter), non
+        al piano terra né seminterrata', piano_terra: 'Sì, di una singola unità al piano terra (primo piano fuori terra) o seminterrata, verso un''altra categoria funzionale', intero_immobile: 'Sì, di un
+        intero immobile, restando nella stessa categoria funzionale', intero_tra_categorie: 'Sì, di un intero immobile, verso un''altra categoria funzionale', altro: 'Sì, in un altro modo: un''unità fuori
+        delle zone A, B e C (o equipollenti) verso un''altra categoria, o verso o dalla categoria rurale fuori della zona E'}, how: 'Le categorie funzionali sono quelle dell''art. 23-ter c. 1 DPR 380/2001
+      (residenziale, turistico-ricettiva, produttiva e direzionale, commerciale, rurale). Il fabbisogno di standard lo stabilisce il tecnico dalle dotazioni che il PRG chiede per la nuova destinazione (art.
+      2 c. 4 L.R. Campania 13/2022, art. 27 c. 2 L.R. 31/2021).'}
+  uso_ammesso_prg: {group: fatti, type: yes_no, item: 'La nuova destinazione d''uso è tra quelle che il PRG ammette in quella zona?'}
+  cambio_uso_sagoma: {group: fatti, type: yes_no, item: 'Le opere che accompagnano il cambio d''uso dell''immobile incidono sulla sagoma o ne aumentano i volumi?'}
   paesaggio: {type: choice, question: 'L''immobile è sotto tutela paesaggistica (artt. 136 o 142 D.Lgs. 42/2004), e che cosa chiedono i lavori?', options: ['no', senza_autorizzazione, semplificata, ordinaria],
     labels: {'no': Non è sotto tutela paesaggistica, senza_autorizzazione: 'È tutelato, ma i lavori non alterano i luoghi né l''aspetto esteriore degli edifici, o sono nell''Allegato A del D.P.R. 31/2017
         (art. 149 D.Lgs. 42/2004)', semplificata: 'L''autorizzazione semplificata: lavori di lieve entità dell''Allegato B del D.P.R. 31/2017', ordinaria: 'L''autorizzazione ordinaria (art. 146): gli altri
@@ -171,6 +178,8 @@ rules:
     prospetti: '{{ask.prospetti}}'
     sismica: '{{ask.sismica}}'
     cambio_uso: '{{ask.cambio_uso}}'
+    uso_ammesso_prg: '{{ask.uso_ammesso_prg}}'
+    cambio_uso_sagoma: '{{ask.cambio_uso_sagoma}}'
     paesaggio: '{{ask.paesaggio}}'
     paesaggio_eseguiti: '{{ask.paesaggio_eseguiti}}'
     bene_culturale: '{{ask.bene_culturale}}'

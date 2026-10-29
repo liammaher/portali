@@ -204,10 +204,17 @@ asks:
       dalle definizioni dell'art. 3 e dall'elenco dell'art. 6 DPR 380/2001.}
   sanatoria: {group: fatti, type: yes_no, item: 'I lavori sono già iniziati, o già finiti, senza il titolo che serviva?'}
   prospetti: {group: fatti, type: yes_no, item: 'La manutenzione straordinaria modifica i prospetti (le facciate) dell''edificio?'}
-  cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso?', options: ['no', stessa_categoria, tra_categorie, intero_immobile, altro], labels: {'no': 'No', stessa_categoria: 'Sì,
-        di una singola unità, restando nella stessa categoria funzionale', tra_categorie: 'Sì, di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le categorie residenziale,
-        turistico-ricettiva, produttiva e direzionale, commerciale (art. 23-ter c. 1-ter), non al piano terra né seminterrata', intero_immobile: 'Sì, di un intero immobile, restando nella stessa categoria
-        funzionale', altro: 'Sì, in un altro modo: un''unità al piano terra o seminterrata, verso o dalla categoria rurale, fuori delle zone A, B e C, o un intero immobile verso un''altra categoria'}}
+  cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso? Si sceglie il primo caso che vale.', options: ['no', zona_agricola, non_rilevante, stessa_categoria, tra_categorie, piano_terra,
+      intero_immobile, intero_tra_categorie, altro], labels: {'no': 'No', zona_agricola: 'Sì, in una zona agricola (zona E del PRG)', non_rilevante: 'Sì, ma il cambio non aumenta il fabbisogno di standard
+        urbanistici (aree per servizi e parcheggi): in Campania non è urbanisticamente rilevante', stessa_categoria: 'Sì, di una singola unità, restando nella stessa categoria funzionale', tra_categorie: 'Sì,
+        di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le categorie residenziale, turistico-ricettiva, produttiva e direzionale, commerciale (art. 23-ter c. 1-ter), non
+        al piano terra né seminterrata', piano_terra: 'Sì, di una singola unità al piano terra (primo piano fuori terra) o seminterrata, verso un''altra categoria funzionale', intero_immobile: 'Sì, di un
+        intero immobile, restando nella stessa categoria funzionale', intero_tra_categorie: 'Sì, di un intero immobile, verso un''altra categoria funzionale', altro: 'Sì, in un altro modo: un''unità fuori
+        delle zone A, B e C (o equipollenti) verso un''altra categoria, o verso o dalla categoria rurale fuori della zona E'}, how: 'Le categorie funzionali sono quelle dell''art. 23-ter c. 1 DPR 380/2001
+      (residenziale, turistico-ricettiva, produttiva e direzionale, commerciale, rurale). Il fabbisogno di standard lo stabilisce il tecnico dalle dotazioni che il PRG chiede per la nuova destinazione (art.
+      2 c. 4 L.R. Campania 13/2022, art. 27 c. 2 L.R. 31/2021).'}
+  uso_ammesso_prg: {group: fatti, type: yes_no, item: 'La nuova destinazione d''uso è tra quelle che il PRG ammette in quella zona?'}
+  cambio_uso_sagoma: {group: fatti, type: yes_no, item: 'Le opere che accompagnano il cambio d''uso dell''immobile incidono sulla sagoma o ne aumentano i volumi?'}
   paesaggio_eseguiti: {group: fatti, type: yes_no, item: 'Le opere che chiedono l''autorizzazione paesaggistica sono già state eseguite, anche in parte?'}
   demolizione_zona_a: {group: fatti, type: yes_no, item: 'I lavori demoliscono e ricostruiscono un edificio, o la variante cambia la sagoma, in zona A della Variante generale al PRG o della Variante occidentale?',
     how: La zona si legge nella tavola di zonizzazione del PRG di Napoli.}
@@ -259,6 +266,8 @@ rules:
     prospetti: '{{ask.prospetti}}'
     sismica: '{{ask.sismica}}'
     cambio_uso: '{{ask.cambio_uso}}'
+    uso_ammesso_prg: '{{ask.uso_ammesso_prg}}'
+    cambio_uso_sagoma: '{{ask.cambio_uso_sagoma}}'
     paesaggio: '{{ask.paesaggio}}'
     paesaggio_eseguiti: '{{ask.paesaggio_eseguiti}}'
     bene_culturale: '{{ask.bene_culturale}}'
