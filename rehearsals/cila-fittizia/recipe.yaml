@@ -14,17 +14,25 @@ after: [Pagamento degli oneri, Gestione degli allegati]
 attachments:
   Gestione degli allegati:
     - {kind: file, label: Allegati liberi, value: "{{ask.relazione_tecnica}}", describe: Relazione tecnica}
+    # An onerosa CILA's screen adds two slots: the contributo's prospetto di calcolo, and its
+    # receipt once paid (quadro f's "allega la ricevuta di versamento").
+    - {kind: file, label: Prospetto di calcolo preventivo del contributo, value: "{{ask.prospetto_contributo}}", when: "{{ask.cila_onerosa}}", on_page: true}
+    - {kind: file, label: Ricevuta di versamento del contributo, value: "{{ask.ricevuta_contributo}}", when: "{{ask.cila_onerosa}} {{ask.contributo_pagato}}", on_page: true}
 asks:
   descrizione: {default: "PROVA NON INVIARE - CILA {{c:identity.last_name}}"}
   diritti_euro: {default: "151"}
 yours:
   - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
   - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), c) PER PRESA VISIONE, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
-  - "Pay the 151 € diritti (and the 333 € penalty if not yet paid) by bank transfer to the Comune; upload the diritti receipt on Pagamento oneri"
+  - "Pay the 151 € diritti by bank transfer to the Comune; upload the receipt on Pagamento oneri (a late CILA's penalty is paid before the run: its receipt is in quadro d)"
   - "On Allega documenti, once the declarations are ticked (the portal gives the procura only then): download the procura (Scarica il documento), have the client sign it, sign it digitally (.p7m) and attach it"
   - "Attach the CILA DSC that fill.py filled (form quadro-riepilogativo-dsc: a box per document uploaded) in its slot, as a plain PDF"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - value: "{{ask.titolo}}"
-    in: [locatario]
-    else: "So far only a tenant with the owner's assent (a.2) is mapped."
+  - value: "{{ask.direttore_lavori}}"
+    in: [progettista, da nominare]
+    else: "Another technician as direttore dei lavori isn't mapped yet (quadro G1's second block)."
+  - when: "{{ask.altri_tecnici|not}}"
+    else: "Other technicians already appointed (structures, systems, acoustics) aren't mapped yet (quadro G2's rows)."
+  - when: "{{ask.altri_atti|not}}"
+    else: "Other filings or assents with the CILA (Soprintendenza, ASL, fire brigade) aren't mapped yet; a landscape authorization goes in the same pratica (the CILA with its semplificata)."

@@ -26,3 +26,10 @@ made-up answers (whether the Comune charges for a CIL is the person's answer).
 ## Clean reruns (2026-10-29)
 
 In the pane, from run.py's install.js and run.js, nothing touched between runs: first filled in 76.1 s; second, with the runner waiting for a section to open, **filled** in 87.9 s, read back on a fresh load.
+
+## Owner case (2026-10-29)
+
+`answers-proprietario.json`: an usufruttuario holding the title alone, works on parts shared by
+co-owners, done in proprio (D.Lgs. 81 doesn't apply), no co-holders' ID slot. In the pane,
+after the dictionary mapped every title and firm case: **filled** in 59.7 s, 17 sections, fresh
+load 11 s.

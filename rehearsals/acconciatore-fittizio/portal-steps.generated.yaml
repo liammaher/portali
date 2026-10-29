@@ -228,16 +228,15 @@ sections:
   - {id: 'r5c1p8reg:txt', kind: text, value: '{{ask.ente_abilitazione_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}', max: 100, label: rilasciata da}
   - {id: 'r5c2p10reg:calendar_input', kind: date, value: '{{ask.data_abilitazione_professionale|date_it}}', when: '{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}', label: in data}
   - {id: 'r5c3p12reg:txt', kind: text, value: '{{ask.atto_abilitazione_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.abilitazione_professionale}}', max: 10, label: con atto n.}
-  - {id: 'r6c2p16reg:radio:2_clone', kind: radio, when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', label: di essere in possesso di qualifica di acconciatore o di}
-  - {id: 'r15c1p43reg:txt', kind: text, value: '{{ask.ente_qualifica_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', max: 100, label: rilasciata da, nth: 2}
-  - {id: 'r15c2p45reg:calendar_input', kind: date, value: '{{ask.data_qualifica_professionale|date_it}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', label: in data, nth: 2}
-  - {id: 'r15c3p47reg:txt', kind: text, value: '{{ask.atto_qualifica_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', max: 10, label: con atto n., nth: 2}
-  - {id: 'r8c2p23reg:radio:3_clone', kind: radio, when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}', label: di avere conseguito la qualificazione professionale}
-  - {id: 'r17c1p50reg:txt', kind: text, value: '{{ask.atto_qualifica_estero_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}', max: 20, label: con decreto n.}
-  - {id: 'r17c2p52reg:calendar_input', kind: date, value: '{{ask.data_qualifica_estero_professionale|date_it}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}', label: in data,
-    nth: 3}
-  - {id: 'r10c2p29reg:radio:4_clone', kind: radio, when: '{{ask.responsabile_tecnico}} {{ask.altro}}', label: altro}
-  - {id: 'r18c3p57reg:txt', kind: text, value: '{{ask.altro_testo}}', when: '{{ask.responsabile_tecnico}} {{ask.altro}}', max: 200, label: (specificare)}
+  - {kind: radio, when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', label: di essere in possesso di qualifica di acconciatore o di}
+  - {kind: text, value: '{{ask.ente_qualifica_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', max: 100, label: rilasciata da, nth: 2}
+  - {kind: date, value: '{{ask.data_qualifica_professionale|date_it}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', label: in data, nth: 2}
+  - {kind: text, value: '{{ask.atto_qualifica_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale}}', max: 10, label: con atto n., nth: 2}
+  - {kind: radio, when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}', label: di avere conseguito la qualificazione professionale}
+  - {kind: text, value: '{{ask.atto_qualifica_estero_professionale}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}', max: 20, label: con decreto n.}
+  - {kind: date, value: '{{ask.data_qualifica_estero_professionale|date_it}}', when: '{{ask.responsabile_tecnico}} {{ask.qualifica_professionale_estero}}', label: in data, nth: 3}
+  - {kind: radio, when: '{{ask.responsabile_tecnico}} {{ask.altro}}', label: altro}
+  - {kind: text, value: '{{ask.altro_testo}}', when: '{{ask.responsabile_tecnico}} {{ask.altro}}', max: 200, label: (specificare)}
   - {kind: radio, when: '{{ask.multi_responsabili_tecnici}}', label: 'che il/i Responsabile/i tecnico/i è/sono:'}
   - {kind: text, value: '{{ask.cognome}}', when: '{{ask.multi_responsabili_tecnici}}', max: 100, label: Cognome}
   - {kind: text, value: '{{ask.nome}}', when: '{{ask.multi_responsabili_tecnici}}', max: 100, label: Nome}

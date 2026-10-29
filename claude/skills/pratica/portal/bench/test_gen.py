@@ -31,18 +31,97 @@ def case(name):
     return run
 
 
-@case("the CILA comes out as the hand walk found it, field for field")
+# The hand walk was P6's case: a tenant (altro + locatario, the owner company's assent) and
+# works under way (d.2). The dictionary now maps every title and stage under `when`; these
+# entries are P6's alone, as the dictionary had them, so the id arithmetic is still checked.
+P6_ONLY = gen.yaml.safe_load("""
+- section: a) Titolarità dell'intervento
+  fields:
+    - {kind: select, label: "Il richiedente dichiara di avere titolo", value: altro}
+    - {kind: text, label: specificare, value: locatario}
+    - {kind: radio, label: non avere titolarità esclusiva}
+    - {kind: text, label: Cognome, value: "{{r:identity.last_name}}"}
+    - {kind: text, label: Nome, value: "{{r:identity.first_name}}"}
+    - {kind: text, label: C.F., value: "{{r:identity.codice_fiscale}}"}
+    - {kind: date, label: Data di nascita, value: "{{r:identity.date_of_birth|date_it}}"}
+    - {kind: select, label: Sesso, value: "{{r:identity.sex|sesso}}"}
+    - {kind: select, label: Provincia, value: "{{r:identity.birth_province}}"}
+    - {kind: text, label: Comune italiano, value: "{{r:identity.birth_comune|upper}}"}
+    - {kind: select, label: Provincia, nth: 2, value: "{{r:residenza.provincia}}"}
+    - {kind: text, label: Comune italiano, nth: 2, value: "{{r:residenza.comune|upper}}"}
+    - {kind: text, label: "Via, Piazza", value: "{{r:residenza.indirizzo|upper}}"}
+    - {kind: text, label: "N.", value: "{{r:residenza.civico}}"}
+    - {kind: text, label: C.A.P., value: "{{r:residenza.cap}}"}
+    - {kind: text, label: PEC / posta elettronica, value: "{{o:business.pec}}"}
+    - {kind: text, label: Telefono, value: "{{o:business.telefono|phone_it}}"}
+    - {kind: checkbox, label: Da compilare solo nel caso in cui il titolare sia}
+    - {kind: text, label: in qualità di, value: legale rappresentante}
+    - {kind: text, label: della ditta / società, value: "{{o:business.denominazione}}"}
+    - {kind: text, label: con codice fiscale / p. IVA, value: "{{o:business.partita_iva}}"}
+- section: d) Qualificazione dell'intervento
+  fields:
+    - {kind: radio, label: intervento in corso di esecuzione}
+    - {kind: date, label: intervento iniziato in data, value: "{{ask.data_inizio_lavori|date_it}}"}
+    - {kind: file, label: "Tipologie ammesse", value: "{{ask.ricevuta_sanzione}}"}
+- section: e) Destinazione d'uso
+  fields:
+    - {kind: select, label: "L'intervento interessa l'immobile", value: "{{c:immobile.destinazione_uso}}"}
+""")
+
+
+def p6_recipe():
+    return gen.load_yaml(CILA / "recipe.yaml") | {"sections": P6_ONLY}
+
+
+@case("the CILA comes out as the hand walk found it, field for field (P6's own entries)")
 def _():
-    diffs, _ = gen.check(gen.generate(gen.load_yaml(CILA / "recipe.yaml")), gen.load_yaml(CILA / "portal-steps.yaml"))
+    diffs, _ = gen.check(gen.generate(p6_recipe()), gen.load_yaml(CILA / "portal-steps.yaml"))
     assert not diffs, diffs
 
 
 @case("two choices the crawl tried apart add up to the hand walk's ids (a), owner rows)")
 def _():
-    steps = gen.generate(gen.load_yaml(CILA / "recipe.yaml"))
+    steps = gen.generate(p6_recipe())
     a = next(s for s in steps["sections"] if s["section"].startswith("a)"))
     ids = {f["label"]: f["id"] for f in a["fields"]}
     assert ids["Cognome"] == "r11c1p13reg:txt" and ids["con codice fiscale / p. IVA"] == "r32c2p77reg:txt", ids
+
+
+def p6_values(name, answers="answers-p6.json"):
+    import json
+    import run
+    fields = dict(json.loads((CILA / "fixture-p6.json").read_text())["fields"])
+    return lambda steps: run.Values(json.loads((ROOT / "rehearsals" / name / answers).read_text()),
+                                    fields=fields, asks=steps.get("asks"))
+
+
+def filled(steps, values):
+    """Each section's values in order, as run.py's plan fills them for these answers."""
+    import os
+    import run
+    here = os.getcwd()
+    os.chdir(ROOT)  # answers name files from the repo's root
+    try:
+        out, v = {}, values(steps)
+        run.plan(steps, v)  # stops on a missing value
+        for sec in steps["sections"]:
+            for f in sec["fields"]:
+                # A box only some pratiche show is skipped where it isn't, so it isn't compared.
+                if f.get("on_page") or f.get("if_present") or "when" in f and not run.truthy(v.render(f["when"]) or ""):
+                    continue
+                out.setdefault(gen.norm(gen.QUADRO.sub("", sec["section"])), []).append(
+                    v.render(f["value"]) if "value" in f else True)
+        return out
+    finally:
+        os.chdir(here)
+
+
+@case("the dictionary's every-case CILA fills P6 with the hand walk's values, section for section")
+def _():
+    v = p6_values("cila-fittizia")
+    hand, ours = filled(gen.load_yaml(CILA / "portal-steps.yaml"), v), filled(gen.generate(gen.load_yaml(CILA / "recipe.yaml")), v)
+    for sec, vals in hand.items():
+        assert ours.get(sec) == vals, (sec, vals, ours.get(sec))
 
 
 @case("the fine lavori, never walked, comes out whole from the shared sections")
@@ -107,7 +186,8 @@ def _():
     steps = generated("cil-fittizia")
     g = section(steps, "g) Rispetto")  # the CILA's i)
     assert field(g, "dichiara che l'entità presunta")["kind"] == "checkbox"  # a radio in the CILA
-    assert section(steps, "f) Impresa")["fields"][1]["anchor"] == "Ragione sociale"
+    f = section(steps, "f) Impresa")["fields"]
+    assert next(x for x in f if "anchor" in x)["anchor"] == "Ragione sociale"
 
 
 @case("two exclusive branches keep their own crawled ids (agibilità, fine lavori filed or not)")
@@ -359,6 +439,26 @@ def _():
             assert not (catalogue.CAT / "drift.json").exists() or "suap-001-x" not in (catalogue.CAT / "drift.json").read_text()
         finally:
             catalogue.CAT, catalogue.SECTIONS, catalogue.SAME = old
+
+
+@case("a choice made for only some answers inside a branch sends what follows by label (CILA tolerances, d.1)")
+def _():
+    steps = gen.generate(gen.load_yaml(CILA / "recipe.yaml"))
+    rel = section(steps, "Relazione Tecnica")
+    assert field(rel, "2%, per le U.I.")["id"]  # opened by the 1-bis tolerance: its own state
+    assert "id" not in field(rel, "TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 2:")  # after 1-bis's rows, ticked or not
+    d = section(steps, "d) Qualificazione")
+    assert field(d, "data inizio lavori")["id"] and "id" not in field(d, "i lavori avranno inizio dopo")
+
+
+@case("a firm's block is filled only when the job has that firm, and none when the client works in proprio")
+def _():
+    steps = gen.generate(gen.load_yaml(CILA / "recipe.yaml"))
+    p6 = [v for v in filled(steps, p6_values("cila-fittizia"))[gen.norm("Impresa esecutrice dei lavori")] if v]
+    owner = filled(steps, p6_values("cila-fittizia", "answers-proprietario.json"))[gen.norm("Impresa esecutrice dei lavori")]
+    alone = filled(steps, p6_values("cila-fittizia", "answers-comodatario.json"))[gen.norm("Impresa esecutrice dei lavori")]
+    assert "Impianti Fittizi" in str(p6) and "Impianti" not in str(owner) and "Edil" in str(owner), owner
+    assert alone == [True], alone  # just "in proprio"
 
 
 print(f"{sum(results)}/{len(results)} passed")

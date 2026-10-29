@@ -287,17 +287,24 @@ def fill(entry, as_name, c, recipe, name):
                    [{**d, "when": w} for w in entry["branches"]])]
     branch_terms = {re.match(r"\s*(\{\{[^}]*\}\})", w)[1] for w in entry.get("branches", [])}
     for i, role in enumerate(recipe.get("firms", entry.get("firms", [])) if "block" in entry else []):
-        # One block per firm, the second and later added with "+".
+        # One block per firm, the second and later added with "+", and only when the job has
+        # that firm; each also under the entry's `firm_when`.
+        when = " ".join(([entry["firm_when"]] if entry.get("firm_when") else [])
+                        + (["{{%s:business.denominazione|empty|not}}" % role] if i else []))
+        cond = {"when": when} if when else {}
         if i:
-            dfields.append({"kind": "add", "anchor": entry["block"][0]["label"], "block": i + 1})
+            dfields.append({"kind": "add", "anchor": entry["block"][0]["label"], "block": i + 1, **cond})
         for b in entry["block"]:
             g = json.loads(json.dumps(b).replace("{{F:", "{{" + role + ":"))
-            dfields.append({**g, "anchor": entry["block"][0]["label"], "block": i + 1})
+            dfields.append({**g, "anchor": entry["block"][0]["label"], "block": i + 1, **cond})
     last_select = None
     # A field under a `when` lives in its branch of the section (keyed by the condition's
     # first term): "already filed" and "this counts as filing" each open their own rows,
     # and only one is ever ticked, so neither shifts the other's ids.
-    branches, main, changed = {}, sec, {}
+    # `within`: the same, for a choice under a longer condition inside its branch (a tolerance
+    # ticked only for some answers): a later field of that branch goes by label unless its own
+    # condition includes that choice's.
+    branches, main, changed, within = {}, sec, {}, {}
     for d in dfields:
         term = re.match(r"\s*(\{\{[^}]*\}\})", d.get("when", ""))
         sec = main if not term else branches.setdefault(term[1], copy.deepcopy(main))
@@ -351,7 +358,9 @@ def fill(entry, as_name, c, recipe, name):
         exclusive = term and term[1] in branch_terms
         moved = any(t and t["id"] != f["id"] for t in twins) or any(
             k != (term and term[1]) and not (exclusive and k in branch_terms)
-            and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items()) or (
+            and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items()) or term and any(
+            k.split()[0] == term[1] and not set(k.split()) <= set(d["when"].split())
+            and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in within.items()) or (
             d["kind"] in ("radio", "checkbox", "tick") and look.moves_itself(f))
         filled.update((t["id"], t["label"]) for t in twins if t)
         if not look.added and not moved:
@@ -374,6 +383,7 @@ def fill(entry, as_name, c, recipe, name):
                 after = [pos(i) for i, j in zip(ids, [x["id"] for x in st.fields]) if i != j and pos(i)]
                 at = min(after) if after else (10 ** 6, 0)
                 changed[term[1]] = min(changed.get(term[1], at), at)
+                within[d["when"]] = min(within.get(d["when"], at), at)
         if d["kind"] == "select":
             last_select = f
     # What the section shows that the dictionary neither fills nor leaves, in any branch.
@@ -528,6 +538,12 @@ def generate(recipe, base=HERE):
         for d in entry.get("fields", []) + recipe.get("attachments", {}).get(name, []):
             slot = next((s for s in slots if norm(s["title"]).startswith(norm(d["label"]))), None)
             if not slot:
+                if d.get("on_page"):
+                    # A slot only some answers add (an onerosa CILA's contributo receipt): the
+                    # crawl's screen hasn't it, the run finds it by label under its `when`.
+                    fields.append({k: v for k, v in d.items() if k != "on_page"})
+                    for t in re.findall(r"(?:\{\{|[+*])\s*ask\.(\w+)", json.dumps(d)):
+                        asks_used.add(t)
                 continue  # this pratica has no such slot
             if slot.get("accepts") and all(t.endswith(".p7m") for t in slot["accepts"].split(";")):
                 # Signed files only: the person's to sign and attach, never a plain copy.

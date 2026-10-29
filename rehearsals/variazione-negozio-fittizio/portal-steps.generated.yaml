@@ -190,10 +190,10 @@ sections:
   - {kind: text, value: '{{business.sede_legale_comune}}', when: '{{ask.var_sede_legale}}', max: 50, label: Comune, nth: 2}
   - {kind: text, value: '{{business.sede_legale_provincia}}', when: '{{ask.var_sede_legale}}', max: 2, label: prov., nth: 2}
   - {kind: radio, when: '{{ask.var_denominazione}} {{ask.var_atto|is_verbale}}', label: Verbale}
-  - {id: 'r18c1p40reg:radio:1_clone', kind: radio, when: '{{ask.var_denominazione}} {{ask.var_atto|is_delibera}}', label: Delibera societaria del CdA o Assemblea}
-  - {id: 'r19c1p43reg:radio:2_clone', kind: radio, when: '{{ask.var_denominazione}} {{ask.var_atto|is_altro}}', label: Altro}
-  - {id: 'r17c2p37reg:calendar_input', kind: date, value: '{{ask.var_atto_data|date_it}}', when: '{{ask.var_denominazione}} {{ask.var_atto|is_altro|not}}', on_page: true, label: del, nth: 2}
-  - {id: 'r29c2p65reg:txt', kind: text, value: '{{ask.var_atto_altro}}', when: '{{ask.var_denominazione}} {{ask.var_atto|is_altro}}', on_page: true, max: 200, label: specificare}
+  - {kind: radio, when: '{{ask.var_denominazione}} {{ask.var_atto|is_delibera}}', label: Delibera societaria del CdA o Assemblea}
+  - {kind: radio, when: '{{ask.var_denominazione}} {{ask.var_atto|is_altro}}', label: Altro}
+  - {kind: date, value: '{{ask.var_atto_data|date_it}}', when: '{{ask.var_denominazione}} {{ask.var_atto|is_altro|not}}', on_page: true, label: del, nth: 2}
+  - {kind: text, value: '{{ask.var_atto_altro}}', when: '{{ask.var_denominazione}} {{ask.var_atto|is_altro}}', on_page: true, max: 200, label: specificare}
   - {kind: radio, when: '{{ask.var_sede_legale}} {{ask.var_atto|is_verbale}}', label: Verbale}
   - {kind: radio, when: '{{ask.var_sede_legale}} {{ask.var_atto|is_delibera}}', label: Delibera societaria del CdA o Assemblea}
   - {kind: radio, when: '{{ask.var_sede_legale}} {{ask.var_atto|is_altro}}', label: Altro}

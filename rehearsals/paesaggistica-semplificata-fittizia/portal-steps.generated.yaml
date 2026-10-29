@@ -15,7 +15,7 @@ groups:
     question: Which items of DPR 31/2017's Allegato B do the works fall under? Tick every one that applies.
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - paesaggistica {{c:identity.last_name}}'}
-  titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
+  titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   vincolo: {type: choice, question: 'What protects the property''s landscape? (art. 136: a declaration by D.M./D.G.R.; art. 142: by law, e.g. the coast; art. 134: the piano paesaggistico only)', options: [
       art 136, art 142, art 136 and 142, art 134]}

@@ -1,0 +1,32 @@
+{
+ "people": {
+  "c": "luca",
+  "r": "paolo"
+ },
+ "descrizione": "PROVA NON INVIARE - CILA comodatario",
+ "titolo": "comodatario",
+ "titolo_esclusivo": false,
+ "parti_comuni": "art 1102",
+ "cila_stato": "realizzato",
+ "data_lavori_realizzati": "2026-09-30",
+ "ricevuta_sanzione": "rehearsals/cila-fittizia/files/ricevuta-sanzione.pdf",
+ "cila_onerosa": true,
+ "contributo_pagato": false,
+ "direttore_lavori": "progettista",
+ "altri_tecnici": false,
+ "altri_atti": false,
+ "lavori_in_proprio": true,
+ "dlgs81": false,
+ "cila_interventi": [
+  "cila_altri"
+ ],
+ "cila_altri_tipo": "Apertura di un vano porta in tramezzo interno non portante",
+ "tolleranze": false,
+ "oggetto": "CILA per opere già realizzate: apertura di un vano porta in un tramezzo interno non portante.",
+ "dettaglio_intervento": "Apertura di un vano porta di 90 cm in un tramezzo interno non portante tra soggiorno e studio, eseguita in proprio. Nessuna modifica di volume, superficie, prospetti o destinazione d'uso.",
+ "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf",
+ "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
+ "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
+ "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
+ "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf"
+}

@@ -21,9 +21,6 @@ yours:
   - "On Allega documenti: the portal's procura signed by the client, then everything signed digitally (.p7m)"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - value: "{{ask.titolo}}"
-    in: [locatario]
-    else: "So far only a tenant with the owner's assent (a.2) is mapped."
   - value: "{{ask.strutture}}"
     in: ["false"]
     else: "Works on the structure (collaudo statico) aren't mapped yet."

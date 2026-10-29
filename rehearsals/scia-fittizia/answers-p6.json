@@ -48,5 +48,8 @@
  "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
  "documentazione_fotografica": "rehearsals/cila-fittizia/files/documentazione-fotografica.pdf",
  "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf",
- "stato_legittimo_doc": "rehearsals/scia-fittizia/files/stato-legittimo.pdf"
+ "stato_legittimo_doc": "rehearsals/scia-fittizia/files/stato-legittimo.pdf",
+ "titolo_esclusivo": false,
+ "parti_comuni": "nessuna",
+ "lavori_in_proprio": false
 }

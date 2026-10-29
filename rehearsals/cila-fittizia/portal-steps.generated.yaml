@@ -6,17 +6,59 @@ generated: gen.py from cila (2026-10-28) and dictionary/fnsuap.yaml
 yours:
 - Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page
 - 'Tick the dichiarante''s declarations: the awareness box under the PEC (domicilio elettronico), c) PER PRESA VISIONE, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000'
-- Pay the 151 € diritti (and the 333 € penalty if not yet paid) by bank transfer to the Comune; upload the diritti receipt on Pagamento oneri
+- 'Pay the 151 € diritti by bank transfer to the Comune; upload the receipt on Pagamento oneri (a late CILA''s penalty is paid before the run: its receipt is in quadro d)'
 - 'On Allega documenti, once the declarations are ticked (the portal gives the procura only then): download the procura (Scarica il documento), have the client sign it, sign it digitally (.p7m) and attach
   it'
 - 'Attach the CILA DSC that fill.py filled (form quadro-riepilogativo-dsc: a box per document uploaded) in its slot, as a plain PDF'
 - Sign and send (Firma e invio); keep the receipt
+groups:
+  cila_interventi:
+    question: What are the works, for the CILA's relazione tecnica? Tick every line that applies.
+  tolleranze_tipi:
+    question: Which construction tolerances does the relazione declare? Tick every one that applies.
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - CILA {{c:identity.last_name}}'}
-  titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
+  titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
+  titolo_esclusivo: {type: yes_no, question: 'Does the client hold the title alone, with no one else (co-owners, the landlord) whose assent the works need? If not, the other holder is the job''s `r:` person,
+      with `o:` their company if a company owns it', propose: '{{ask.titolo|titolo_solo}}'}
+  parti_comuni: {type: choice, question: 'Do the works touch common parts of the building? nessuna; condominio (common parts of a condominium); comproprieta (a building of several owners that isn''t a condominium,
+      with their approval); art 1102 (common parts used at the client''s expense without changing their purpose, art. 1102 c.c.: no assent needed)', options: [nessuna, condominio, comproprieta, art 1102],
+    propose: nessuna}
+  cila_stato: {type: choice, question: 'Have the works started? da iniziare (not yet); in corso (under way: a late CILA with the 333 € penalty); realizzato (already finished: the 1,000 € penalty)', options: [
+      da iniziare, in corso, realizzato]}
+  inizio_dopo_assensi: {type: yes_no, question: 'Will the works start only once the SUE says the other assents (e.g. the landscape authorization) are in, rather than on a set date?', propose: 'false'}
+  data_lavori_realizzati: {type: date, question: 'When the works were finished (a CILA for works already done, d.3)'}
+  cila_onerosa: {type: yes_no, question: 'Is a contributo di costruzione due (manutenzione straordinaria that adds urban load and floor area)?', propose: 'false'}
+  contributo_pagato: {type: yes_no, question: 'Is the contributo already paid (its receipt attached), rather than to be paid before the works start?'}
+  ricevuta_contributo: {type: file, question: The contributo di costruzione's payment receipt (PDF)}
+  prospetto_contributo: {type: file, question: The prospetto di calcolo preventivo of the contributo di costruzione (PDF)}
+  direttore_lavori: {type: choice, question: 'Who directs the works? progettista (the architect filing the pratica); da nominare (no direttore dei lavori named in the CILA); altro tecnico (another technician)',
+    options: [progettista, da nominare, altro tecnico], propose: progettista}
+  altri_tecnici: {type: yes_no, question: 'Are other technicians (structures, systems, acoustics, safety) already appointed for these works?', propose: 'false'}
+  lavori_in_proprio: {type: yes_no, question: 'Are the works so minor that the client does them without a firm (opere di modesta entità, eseguite in proprio)?', propose: 'false'}
+  cila_manutenzione: {type: yes_no, group: cila_interventi, item: 'Manutenzione straordinaria (art. 3 c.1 b DPR 380/2001), not touching the structure'}
+  cila_restauro: {type: yes_no, group: cila_interventi, item: 'Restauro e risanamento conservativo (art. 3 c.1 c), not touching the structure'}
+  cila_barriere: {type: yes_no, group: cila_interventi, item: Removing architectural barriers with external lifts or works that change the building's shape}
+  cila_sottosuolo: {type: yes_no, group: cila_interventi, item: Temporary geognostic surveys of the subsoil}
+  cila_terra: {type: yes_no, group: cila_interventi, item: Earth moving not for farming}
+  cila_serre: {type: yes_no, group: cila_interventi, item: Seasonal farm greenhouses with masonry parts}
+  cila_pertinenze: {type: yes_no, group: cila_interventi, item: Minor pertinenze the PRG doesn't count as new building}
+  cila_altri: {type: yes_no, group: cila_interventi, item: 'Other works not listed in artt. 6, 10 and 22 DPR 380/2001 (residual CILA)'}
+  cila_altri_tipo: {type: text, question: Which other works (the 'specificare il tipo di intervento' line)}
+  tolleranze: {type: yes_no, question: 'Does the relazione declare construction tolerances (art. 34-bis / 34-ter DPR 380/2001) on the property?', propose: 'false'}
+  toll_34bis_1: {type: yes_no, group: tolleranze_tipi, item: 'Art. 34-bis c. 1 and 1-ter, second period (2% of the measures)'}
+  toll_34bis_1bis: {type: yes_no, group: tolleranze_tipi, item: 'Art. 34-bis c. 1-bis and 1-ter, first period (2–6% by the unit''s floor area, works before 24 May 2024)'}
+  toll_34bis_2: {type: yes_no, group: tolleranze_tipi, item: Art. 34-bis c. 2 (geometric and execution irregularities)}
+  toll_34bis_2bis: {type: yes_no, group: tolleranze_tipi, item: 'Art. 34-bis c. 2-bis (works before 24 May 2024: minor execution irregularities)'}
+  toll_34ter_4: {type: yes_no, group: tolleranze_tipi, item: Art. 34-ter c. 4 (variants made during works before 1977)}
+  toll_superficie: {type: choice, question: 'The unit''s superficie utile, for the art. 34-bis c. 1-bis tolerance: oltre 500 (over 500 m², 2%); 300-500 (3%); 100-300 (4%); 60-100 (5%); sotto 60 (under 60
+      m², 6%)', options: [oltre 500, 300-500, 100-300, 60-100, sotto 60]}
+  toll_strutturale: {type: yes_no, question: 'Is the tolerance structurally relevant (it then complies with the technical rules for construction)?'}
+  altri_atti: {type: yes_no, question: 'Do the works need other filings or assents that this pratica doesn''t file (the Soprintendenza, ASL, fire brigade, a landscape authorization not in this pratica)?',
+    propose: 'false'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
-  data_inizio_lavori: {type: date, question: 'When the works started (they''re already under way: a late CILA, d.2)'}
-  ricevuta_sanzione: {type: file, question: The 333 € penalty receipt (PDF)}
+  data_inizio_lavori: {type: date, question: 'When the works start, or started'}
+  ricevuta_sanzione: {type: file, question: 'The penalty receipt (PDF): 333 € for works under way, 1,000 € for works already done'}
   dettaglio_intervento: {type: text, question: The works for the relazione tecnica (500 characters)}
   dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
   sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
@@ -28,10 +70,15 @@ asks:
   elaborati_grafici: {type: file, question: 'The drawings: stato di fatto, progetto, comparativo (PDF)'}
   relazione_tecnica: {type: file, question: The relazione tecnica (PDF)}
 supports:
-- value: '{{ask.titolo}}'
+- value: '{{ask.direttore_lavori}}'
   in:
-  - locatario
-  else: So far only a tenant with the owner's assent (a.2) is mapped.
+  - progettista
+  - da nominare
+  else: Another technician as direttore dei lavori isn't mapped yet (quadro G1's second block).
+- when: '{{ask.altri_tecnici|not}}'
+  else: Other technicians already appointed (structures, systems, acoustics) aren't mapped yet (quadro G2's rows).
+- when: '{{ask.altri_atti|not}}'
+  else: Other filings or assents with the CILA (Soprintendenza, ASL, fire brigade) aren't mapped yet; a landscape authorization goes in the same pratica (the CILA with its semplificata).
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 wizard:
@@ -122,45 +169,63 @@ sections:
   - {id: r8c1p23reg, kind: select, value: '{{c:immobile.catasto_categoria|categoria}}', label: categoria}
 - section: a) Titolarità dell'intervento
   fields:
-  - {id: r2c1p2reg, kind: select, value: altro, label: Il richiedente dichiara di avere titolo}
-  - {id: 'r4c1p4reg:txt', kind: text, value: locatario, max: 100, label: specificare}
-  - {id: 'r7c1p9reg:radio:1_clone', kind: radio, label: non avere titolarità esclusiva}
-  - {id: 'r11c1p13reg:txt', kind: text, value: '{{r:identity.last_name}}', max: 100, label: Cognome}
-  - {id: 'r11c2p15reg:txt', kind: text, value: '{{r:identity.first_name}}', max: 9999, label: Nome}
-  - {id: 'r13c1p19reg:txt', kind: text, value: '{{r:identity.codice_fiscale}}', max: 16, label: C.F.}
-  - {id: 'r15c1p23reg:calendar_input', kind: date, value: '{{r:identity.date_of_birth|date_it}}', label: Data di nascita}
-  - {id: r15c3p27reg, kind: select, value: '{{r:identity.sex|sesso}}', label: Sesso}
-  - {id: r17c3p35reg, kind: select, value: '{{r:identity.birth_province}}', label: Provincia}
-  - {id: 'r19c1p39reg:txt', kind: text, value: '{{r:identity.birth_comune|upper}}', max: 100, label: Comune italiano}
-  - {id: r21c3p47reg, kind: select, value: '{{r:residenza.provincia}}', label: Provincia, nth: 2}
-  - {id: 'r23c1p51reg:txt', kind: text, value: '{{r:residenza.comune|upper}}', max: 100, label: Comune italiano, nth: 2}
-  - {id: 'r25c1p55reg:txt', kind: text, value: '{{r:residenza.indirizzo|upper}}', max: 100, label: 'Via, Piazza'}
-  - {id: 'r25c2p57reg:txt', kind: text, value: '{{r:residenza.civico}}', max: 6, label: N.}
-  - {id: 'r25c3p59reg:txt', kind: text, value: '{{r:residenza.cap}}', max: 5, label: C.A.P.}
-  - {id: 'r27c1p63reg:txt', kind: text, value: '{{o:business.pec}}', max: 100, label: PEC / posta elettronica}
-  - {id: 'r27c2p65reg:txt', kind: text, value: '{{o:business.telefono|phone_it}}', max: 30, label: Telefono}
-  - {id: 'r28c1p68reg:chk', kind: checkbox, label: Da compilare solo nel caso in cui il titolare sia}
-  - {id: 'r30c1p71reg:txt', kind: text, value: legale rappresentante, max: 100, label: in qualità di}
-  - {id: 'r32c1p75reg:txt', kind: text, value: '{{o:business.denominazione}}', max: 100, label: della ditta / società}
-  - {id: 'r32c2p77reg:txt', kind: text, value: '{{o:business.partita_iva}}', max: 16, label: con codice fiscale / p. IVA}
+  - {id: r2c1p2reg, kind: select, value: altro, when: '{{ask.titolo|titolo_is_altro}}', label: Il richiedente dichiara di avere titolo}
+  - {id: 'r4c1p4reg:txt', kind: text, value: '{{ask.titolo}}', when: '{{ask.titolo|titolo_is_altro}}', max: 100, label: specificare}
+  - {id: r2c1p2reg, kind: select, value: '{{ask.titolo|titolo_pratica}}', when: '{{ask.titolo|titolo_is_altro|not}}', label: Il richiedente dichiara di avere titolo}
+  - {kind: radio, when: '{{ask.titolo_esclusivo}}', label: avere titolarità esclusiva}
+  - {kind: radio, when: '{{ask.titolo_esclusivo|not}}', label: non avere titolarità esclusiva}
+  - {kind: text, value: '{{r:identity.last_name}}', when: '{{ask.titolo_esclusivo|not}}', max: 100, label: Cognome}
+  - {kind: text, value: '{{r:identity.first_name}}', when: '{{ask.titolo_esclusivo|not}}', max: 9999, label: Nome}
+  - {kind: text, value: '{{r:identity.codice_fiscale}}', when: '{{ask.titolo_esclusivo|not}}', max: 16, label: C.F.}
+  - {kind: date, value: '{{r:identity.date_of_birth|date_it}}', when: '{{ask.titolo_esclusivo|not}}', label: Data di nascita}
+  - {kind: select, value: '{{r:identity.sex|sesso}}', when: '{{ask.titolo_esclusivo|not}}', label: Sesso}
+  - {kind: select, value: '{{r:identity.birth_province}}', when: '{{ask.titolo_esclusivo|not}}', label: Provincia}
+  - {kind: text, value: '{{r:identity.birth_comune|upper}}', when: '{{ask.titolo_esclusivo|not}}', max: 100, label: Comune italiano}
+  - {kind: select, value: '{{r:residenza.provincia}}', when: '{{ask.titolo_esclusivo|not}}', label: Provincia, nth: 2}
+  - {kind: text, value: '{{r:residenza.comune|upper}}', when: '{{ask.titolo_esclusivo|not}}', max: 100, label: Comune italiano, nth: 2}
+  - {kind: text, value: '{{r:residenza.indirizzo|upper}}', when: '{{ask.titolo_esclusivo|not}}', max: 100, label: 'Via, Piazza'}
+  - {kind: text, value: '{{r:residenza.civico}}', when: '{{ask.titolo_esclusivo|not}}', max: 6, label: N.}
+  - {kind: text, value: '{{r:residenza.cap}}', when: '{{ask.titolo_esclusivo|not}}', max: 5, label: C.A.P.}
+  - {kind: text, value: '{{o:business.pec}}', when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}', max: 100, label: PEC / posta elettronica}
+  - {kind: text, value: '{{o:business.telefono|phone_it}}', when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}', max: 30, label: Telefono}
+  - {kind: text, value: '{{r:identity.email}}', when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty}}', max: 100, label: PEC / posta elettronica}
+  - {kind: text, value: '{{r:identity.phone|phone_it}}', when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty}}', max: 30, label: Telefono}
+  - {kind: checkbox, when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}', label: Da compilare solo nel caso in cui il titolare sia}
+  - {kind: text, value: legale rappresentante, when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}', max: 100, label: in qualità di}
+  - {kind: text, value: '{{o:business.denominazione}}', when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}', max: 100, label: della ditta / società}
+  - {kind: text, value: '{{o:business.partita_iva}}', when: '{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}', max: 16, label: con codice fiscale / p. IVA}
 - section: b) Opere su parti comuni
   fields:
-  - {id: 'r2c1p2reg:radio:0_clone', kind: radio, label: non riguardano parti comuni}
+  - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.parti_comuni|is_nessuna}}', label: non riguardano parti comuni}
+  - {id: 'r3c1p3reg:radio:1_clone', kind: radio, when: '{{ask.parti_comuni|is_condominio}}', label: riguardano le parti comuni di un fabbricato condominiale}
+  - {id: 'r4c1p4reg:radio:2_clone', kind: radio, when: '{{ask.parti_comuni|is_comproprieta}}', label: riguardano parti comuni di un fabbricato con più proprietà}
+  - {id: 'r5c1p5reg:radio:3_clone', kind: radio, when: '{{ask.parti_comuni|is_art_1102}}', label: riguardano parti dell'edificio di proprietà comune}
 - section: d) Qualificazione dell'intervento
   fields:
-  - {id: 'r3c1p3reg:radio:1_clone', kind: radio, label: intervento in corso di esecuzione}
-  - {id: 'r5c1p5reg:calendar_input', kind: date, value: '{{ask.data_inizio_lavori|date_it}}', label: intervento iniziato in data}
-  - {id: 'r7c1p9reg:upload1_input', kind: file, value: '{{ask.ricevuta_sanzione}}', label: Tipologie ammesse}
+  - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.cila_stato|is_da_iniziare}}', label: intervento descritto di seguito nella dichiarazione del progettista}
+  - {id: 'r3c2p4reg:radio:1_clone', kind: radio, when: '{{ask.cila_stato|is_da_iniziare}} {{ask.inizio_dopo_assensi|not}}', label: i lavori avranno inizio in data}
+  - {id: 'r5c2p9reg:calendar_input', kind: date, value: '{{ask.data_inizio_lavori|date_it}}', when: '{{ask.cila_stato|is_da_iniziare}} {{ask.inizio_dopo_assensi|not}}', label: data inizio lavori}
+  - {kind: radio, when: '{{ask.cila_stato|is_da_iniziare}} {{ask.inizio_dopo_assensi}}', label: i lavori avranno inizio dopo la comunicazione}
+  - {kind: radio, when: '{{ask.cila_stato|is_in_corso}}', label: intervento in corso di esecuzione}
+  - {kind: date, value: '{{ask.data_inizio_lavori|date_it}}', when: '{{ask.cila_stato|is_in_corso}}', label: intervento iniziato in data}
+  - {kind: file, value: '{{ask.ricevuta_sanzione}}', when: '{{ask.cila_stato|is_in_corso}}', label: allegare qui la ricevuta di versamento}
+  - {kind: radio, when: '{{ask.cila_stato|is_realizzato}}', label: intervento realizzato}
+  - {kind: date, value: '{{ask.data_lavori_realizzati|date_it}}', when: '{{ask.cila_stato|is_realizzato}}', label: intervento realizzato in data}
+  - {kind: file, value: '{{ask.ricevuta_sanzione}}', when: '{{ask.cila_stato|is_realizzato}}', label: allegare qui la ricevuta di versamento}
 - section: e) Destinazione d'uso
   fields:
-  - {id: r2c1p2reg, kind: select, value: '{{c:immobile.destinazione_uso}}', label: L'intervento interessa l'immobile}
+  - {id: r2c1p2reg, kind: select, value: '{{c:immobile.destinazione_uso|destinazione}}', label: L'intervento interessa l'immobile}
+  - {id: 'r4c1p4reg:txt', kind: text, value: '{{c:immobile.destinazione_uso}}', when: '{{c:immobile.destinazione_uso|destinazione_is_altro}}', max: 100, label: specificare}
 - section: f) Calcolo del contributo
   fields:
-  - {id: 'r1c1p1reg:radio:0_clone', kind: radio, label: l'intervento da realizzare è a titolo gratuito}
+  - {id: 'r1c1p1reg:radio:0_clone', kind: radio, when: '{{ask.cila_onerosa|not}}', label: l'intervento da realizzare è a titolo gratuito}
+  - {id: 'r2c1p2reg:radio:1_clone', kind: radio, when: '{{ask.cila_onerosa}}', label: l'intervento da realizzare è a titolo oneroso}
+  - {id: 'r4c2p5reg:radio:2_clone', kind: radio, when: '{{ask.cila_onerosa}} {{ask.contributo_pagato}}', label: allega la ricevuta di versamento}
+  - {id: 'r5c2p8reg:radio:3_clone', kind: radio, when: '{{ask.cila_onerosa}} {{ask.contributo_pagato|not}}', label: 'effettuerà, prima dell''inizio dei lavori, il pagamento'}
 - section: G1) Tecnici incaricati
   fields:
   - {id: 'r3c3p7reg:radio:1_clone', kind: radio, label: titolare dell'intervento o procuratore}
-  - {id: 'r5c1p11reg:chk', kind: checkbox, label: incaricato anche come direttore dei lavori}
+  - {id: 'r5c1p11reg:chk', kind: checkbox, when: '{{ask.direttore_lavori|is_progettista}}', label: incaricato anche come direttore dei lavori}
   - {id: r8c3p20reg, kind: select, value: '{{business.sede_legale_provincia}}', label: Provincia}
   - {id: 'r10c1p24reg:txt', kind: text, value: '{{business.sede_legale_comune|upper}}', max: 100, label: Comune italiano}
   - {id: 'r12c1p28reg:txt', kind: text, value: '{{business.sede_legale_indirizzo|upper}}', max: 100, label: 'Via, Piazza'}
@@ -176,66 +241,67 @@ sections:
   fields: []
 - section: h) Impresa esecutrice dei lavori
   fields:
-  - {id: 'r2c1p2reg:radio:1_clone', kind: radio, label: lavori sono/saranno eseguiti dall}
-  - {kind: text, label: Ragione sociale, value: '{{f1:business.denominazione}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: codice fiscale / p. IVA, value: '{{f1:business.partita_iva}}', anchor: Ragione sociale, block: 1}
-  - {kind: select, label: Iscritta alla C.C.I.A.A. di, value: '{{f1:business.cciaa}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: n., nth: 1, value: '{{f1:business.rea|rea_num}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: con sede in, value: '{{f1:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 1}
-  - {kind: select, label: provincia, nth: 1, value: '{{f1:business.sede_legale_provincia}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: 'Via, Piazza', value: '{{f1:business.sede_legale_indirizzo|upper}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: N., nth: 2, value: '{{f1:business.sede_legale_civico}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: C.A.P., value: '{{f1:business.sede_legale_cap}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: Cognome, value: '{{f1:identity.last_name}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: Nome, value: '{{f1:identity.first_name}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: codice fiscale, nth: 2, value: '{{f1:identity.codice_fiscale}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: nato a, value: '{{f1:identity.birth_comune|upper}}', anchor: Ragione sociale, block: 1}
-  - {kind: select, label: provincia, nth: 2, value: '{{f1:identity.birth_province}}', anchor: Ragione sociale, block: 1}
-  - {kind: date, label: nato il, value: '{{f1:identity.date_of_birth|date_it}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: cell., value: '{{f1:identity.phone|phone_it}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: posta elettronica, value: '{{f1:business.pec}}', anchor: Ragione sociale, block: 1}
-  - {kind: checkbox, label: INPS, anchor: Ragione sociale, block: 1}
-  - {kind: text, label: sede di, nth: 1, value: '{{f1:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: Matr./Pos. Contr., value: '{{f1:business.inps_matricola}}', anchor: Ragione sociale, block: 1}
-  - {kind: checkbox, label: INAIL, anchor: Ragione sociale, block: 1}
-  - {kind: text, label: sede di, nth: 2, value: '{{f1:business.inail_codice_sede}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: codice impresa, value: '{{f1:business.inail_codice_ditta}}', anchor: Ragione sociale, block: 1}
-  - {kind: text, label: pos. assicurativa, value: '{{f1:business.inail_pat}}', anchor: Ragione sociale, block: 1}
-  - {kind: add, anchor: Ragione sociale, block: 2}
-  - {kind: text, label: Ragione sociale, value: '{{f2:business.denominazione}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: codice fiscale / p. IVA, value: '{{f2:business.partita_iva}}', anchor: Ragione sociale, block: 2}
-  - {kind: select, label: Iscritta alla C.C.I.A.A. di, value: '{{f2:business.cciaa}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: n., nth: 1, value: '{{f2:business.rea|rea_num}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: con sede in, value: '{{f2:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 2}
-  - {kind: select, label: provincia, nth: 1, value: '{{f2:business.sede_legale_provincia}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: 'Via, Piazza', value: '{{f2:business.sede_legale_indirizzo|upper}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: N., nth: 2, value: '{{f2:business.sede_legale_civico}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: C.A.P., value: '{{f2:business.sede_legale_cap}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: Cognome, value: '{{f2:identity.last_name}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: Nome, value: '{{f2:identity.first_name}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: codice fiscale, nth: 2, value: '{{f2:identity.codice_fiscale}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: nato a, value: '{{f2:identity.birth_comune|upper}}', anchor: Ragione sociale, block: 2}
-  - {kind: select, label: provincia, nth: 2, value: '{{f2:identity.birth_province}}', anchor: Ragione sociale, block: 2}
-  - {kind: date, label: nato il, value: '{{f2:identity.date_of_birth|date_it}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: cell., value: '{{f2:identity.phone|phone_it}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: posta elettronica, value: '{{f2:business.pec}}', anchor: Ragione sociale, block: 2}
-  - {kind: checkbox, label: INPS, anchor: Ragione sociale, block: 2}
-  - {kind: text, label: sede di, nth: 1, value: '{{f2:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: Matr./Pos. Contr., value: '{{f2:business.inps_matricola}}', anchor: Ragione sociale, block: 2}
-  - {kind: checkbox, label: INAIL, anchor: Ragione sociale, block: 2}
-  - {kind: text, label: sede di, nth: 2, value: '{{f2:business.inail_codice_sede}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: codice impresa, value: '{{f2:business.inail_codice_ditta}}', anchor: Ragione sociale, block: 2}
-  - {kind: text, label: pos. assicurativa, value: '{{f2:business.inail_pat}}', anchor: Ragione sociale, block: 2}
+  - {id: 'r1c1p1reg:radio:0_clone', kind: radio, when: '{{ask.lavori_in_proprio}}', label: in quanto opere di modesta entità}
+  - {id: 'r2c1p2reg:radio:1_clone', kind: radio, when: '{{ask.lavori_in_proprio|not}}', label: lavori sono/saranno eseguiti dall}
+  - {kind: text, label: Ragione sociale, value: '{{f1:business.denominazione}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: codice fiscale / p. IVA, value: '{{f1:business.partita_iva}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: select, label: Iscritta alla C.C.I.A.A. di, value: '{{f1:business.cciaa}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: n., nth: 1, value: '{{f1:business.rea|rea_num}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: con sede in, value: '{{f1:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: select, label: provincia, nth: 1, value: '{{f1:business.sede_legale_provincia}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: 'Via, Piazza', value: '{{f1:business.sede_legale_indirizzo|upper}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: N., nth: 2, value: '{{f1:business.sede_legale_civico}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: C.A.P., value: '{{f1:business.sede_legale_cap}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: Cognome, value: '{{f1:identity.last_name}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: Nome, value: '{{f1:identity.first_name}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: codice fiscale, nth: 2, value: '{{f1:identity.codice_fiscale}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: nato a, value: '{{f1:identity.birth_comune|upper}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: select, label: provincia, nth: 2, value: '{{f1:identity.birth_province}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: date, label: nato il, value: '{{f1:identity.date_of_birth|date_it}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: cell., value: '{{f1:identity.phone|phone_it}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: posta elettronica, value: '{{f1:business.pec}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: checkbox, label: INPS, anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: sede di, nth: 1, value: '{{f1:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: Matr./Pos. Contr., value: '{{f1:business.inps_matricola}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: checkbox, label: INAIL, anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: sede di, nth: 2, value: '{{f1:business.inail_codice_sede}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: codice impresa, value: '{{f1:business.inail_codice_ditta}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: text, label: pos. assicurativa, value: '{{f1:business.inail_pat}}', anchor: Ragione sociale, block: 1, when: '{{ask.lavori_in_proprio|not}}'}
+  - {kind: add, anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: Ragione sociale, value: '{{f2:business.denominazione}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: codice fiscale / p. IVA, value: '{{f2:business.partita_iva}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: select, label: Iscritta alla C.C.I.A.A. di, value: '{{f2:business.cciaa}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: n., nth: 1, value: '{{f2:business.rea|rea_num}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: con sede in, value: '{{f2:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: select, label: provincia, nth: 1, value: '{{f2:business.sede_legale_provincia}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: 'Via, Piazza', value: '{{f2:business.sede_legale_indirizzo|upper}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: N., nth: 2, value: '{{f2:business.sede_legale_civico}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: C.A.P., value: '{{f2:business.sede_legale_cap}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: Cognome, value: '{{f2:identity.last_name}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: Nome, value: '{{f2:identity.first_name}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: codice fiscale, nth: 2, value: '{{f2:identity.codice_fiscale}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: nato a, value: '{{f2:identity.birth_comune|upper}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: select, label: provincia, nth: 2, value: '{{f2:identity.birth_province}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: date, label: nato il, value: '{{f2:identity.date_of_birth|date_it}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: cell., value: '{{f2:identity.phone|phone_it}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: posta elettronica, value: '{{f2:business.pec}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: checkbox, label: INPS, anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: sede di, nth: 1, value: '{{f2:business.sede_legale_comune|upper}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: Matr./Pos. Contr., value: '{{f2:business.inps_matricola}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: checkbox, label: INAIL, anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: sede di, nth: 2, value: '{{f2:business.inail_codice_sede}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: codice impresa, value: '{{f2:business.inail_codice_ditta}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
+  - {kind: text, label: pos. assicurativa, value: '{{f2:business.inail_pat}}', anchor: Ragione sociale, block: 2, when: '{{ask.lavori_in_proprio|not}} {{f2:business.denominazione|empty|not}}'}
 - section: i) Rispetto degli obblighi
   fields:
   - {id: 'r2c1p3reg:radio:0_clone', kind: radio, when: '{{ask.dlgs81|not}}', label: non ricade nell'ambito di applicazione delle norme}
   - {id: 'r3c1p4reg:radio:1_clone', kind: radio, when: '{{ask.dlgs81}}', label: ricade nell'ambito di applicazione delle norme}
-  - {id: 'r5c2p8reg:radio:2_clone', kind: radio, when: '{{ask.sotto_200}}', label: dichiara che l'entità presunta del cantiere è inferiore}
-  - {id: 'r6c2p11reg:radio:3_clone', kind: radio, when: '{{ask.sotto_200|not}}', label: dichiara che l'entità presunta del cantiere è pari o superiore}
-  - {id: 'r8c2p15reg:radio:4_clone', kind: radio, when: '{{ask.notifica_dovuta|not}}', label: dichiara che l'intervento non è soggetto all'invio}
-  - {id: 'r9c2p18reg:radio:5_clone', kind: radio, when: '{{ask.notifica_dovuta}}', label: dichiara che l'intervento è soggetto all'invio}
-  - {id: 'r10c2p21reg:chk', kind: checkbox, when: '{{ask.notifica_dovuta}}', label: allega alla presente comunicazione la notifica}
-  - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, when: '{{ask.notifica_dovuta}}'}
+  - {id: 'r5c2p8reg:radio:2_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.sotto_200}}', label: dichiara che l'entità presunta del cantiere è inferiore}
+  - {id: 'r6c2p11reg:radio:3_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.sotto_200|not}}', label: dichiara che l'entità presunta del cantiere è pari o superiore}
+  - {id: 'r8c2p15reg:radio:4_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta|not}}', label: dichiara che l'intervento non è soggetto all'invio}
+  - {id: 'r9c2p18reg:radio:5_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}', label: dichiara che l'intervento è soggetto all'invio}
+  - {id: 'r10c2p21reg:chk', kind: checkbox, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}', label: allega alla presente comunicazione la notifica}
+  - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
 - section: Relazione Tecnica di Asseverazione
   fields:
   - {id: 'r4c1p4reg:txt', kind: text, value: '{{t:identity.last_name}}', max: 9999, label: Cognome}
@@ -243,9 +309,31 @@ sections:
   - {id: 'r6c1p8reg:txt', kind: text, value: '{{t:albo.ordine}}', max: 9999, label: Iscritto all'ordine}
   - {id: 'r8c1p10reg:txt', kind: text, value: '{{t:albo.provincia|provincia_nome}}', max: 9999, label: di}
   - {id: 'r8c2p12reg:txt', kind: text, value: '{{t:albo.numero}}', max: 20, label: al n.}
-  - {id: 'r13c1p19reg:chk', kind: checkbox, label: interventi di manutenzione straordinaria}
+  - {id: 'r13c1p19reg:chk', kind: checkbox, when: '{{ask.cila_manutenzione}}', label: interventi di manutenzione straordinaria}
+  - {id: 'r14c1p20reg:chk', kind: checkbox, when: '{{ask.cila_restauro}}', label: Interventi di restauro e risanamento conservativo}
+  - {id: 'r15c1p21reg:chk', kind: checkbox, when: '{{ask.cila_barriere}}', label: Interventi di eliminazione delle barriere architettoniche}
+  - {id: 'r16c1p22reg:chk', kind: checkbox, when: '{{ask.cila_sottosuolo}}', label: Opere temporanee per attività di ricerca nel sottosuolo}
+  - {id: 'r17c1p23reg:chk', kind: checkbox, when: '{{ask.cila_terra}}', label: Movimenti di terra}
+  - {id: 'r18c1p24reg:chk', kind: checkbox, when: '{{ask.cila_serre}}', label: Serre mobili stagionali}
+  - {id: 'r19c1p25reg:chk', kind: checkbox, when: '{{ask.cila_pertinenze}}', label: Realizzazione di pertinenze minori}
+  - {id: 'r20c1p26reg:chk', kind: checkbox, when: '{{ask.cila_altri}}', label: Altri interventi non riconducibili}
+  - {id: 'r22c1p28reg:txt', kind: text, value: '{{ask.cila_altri_tipo}}', when: '{{ask.cila_altri}}', max: 200, label: specificare il tipo di intervento}
   - {id: 'r24c1p30reg:txta', kind: text, value: '{{ask.dettaglio_intervento}}', max: 500, label: e che consistono in}
-  - {id: 'r27c3p35reg:radio:1_clone', kind: radio, label: 'no'}
+  - {id: 'r27c3p35reg:radio:1_clone', kind: radio, when: '{{ask.tolleranze|not}}', label: 'no'}
+  - {id: 'r27c2p34reg:radio:0_clone', kind: radio, when: '{{ask.tolleranze}}', label: si}
+  - {id: 'r29c1p37reg:chk', kind: checkbox, when: '{{ask.tolleranze}} {{ask.toll_34bis_1}}', label: 'TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 1 E 1-TER'}
+  - {id: 'r31c1p39reg:chk', kind: checkbox, when: '{{ask.tolleranze}} {{ask.toll_34bis_1bis}}', label: 'TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMI 1-BIS'}
+  - {id: 'r33c1p41reg:radio:2_clone', kind: radio, when: '{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_oltre_500}}', label: '2%, per le U.I.'}
+  - {id: 'r34c1p42reg:radio:3_clone', kind: radio, when: '{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_300_500}}', label: '3%, per le U.I.'}
+  - {id: 'r35c1p43reg:radio:4_clone', kind: radio, when: '{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_100_300}}', label: '4%, per le U.I.'}
+  - {id: 'r36c1p45reg:radio:5_clone', kind: radio, when: '{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_60_100}}', label: '5%, per le U.I.'}
+  - {id: 'r37c1p46reg:radio:6_clone', kind: radio, when: '{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_sotto_60}}', label: '6%, per le U.I.'}
+  - {kind: checkbox, when: '{{ask.tolleranze}} {{ask.toll_34bis_2}}', label: 'TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 2:'}
+  - {kind: checkbox, when: '{{ask.tolleranze}} {{ask.toll_34bis_2bis}}', label: 'TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 2-BIS'}
+  - {kind: checkbox, when: '{{ask.tolleranze}} {{ask.toll_34ter_4}}', label: TOLLERANZA DI CUI ALL’ART. 34-TER}
+  - {kind: radio, when: '{{ask.tolleranze}}', label: trattandosi di immobile ubicato in zona sismica a media o alta}
+  - {kind: radio, when: '{{ask.tolleranze}} {{ask.toll_strutturale|not}}', label: non ha rilevanza strutturale}
+  - {kind: radio, when: '{{ask.tolleranze}} {{ask.toll_strutturale}}', label: ha rilevanza strutturale}
 - section: Dichiarazione relativa ai diritti
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.diritti_euro|positive|not}}', label: non sono dovuti oneri}
@@ -264,8 +352,10 @@ sections:
   - Quadro riepilogativo della documentazione
   fields:
   - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}'}
-  - {kind: file, label: Copia dei documenti d'identità del/i titolare/i, value: '{{ask.documento_identita_cliente}}'}
-  - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: '{{ask.assenso_proprietario}}'}
-  - {kind: file, label: Notifica preliminare, value: '{{ask.notifica_preliminare}}'}
+  - {kind: file, label: Copia dei documenti d'identità del/i titolare/i, value: '{{ask.documento_identita_cliente}}', when: '{{ask.titolo_esclusivo|not}}'}
+  - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: '{{ask.assenso_proprietario}}', when: '{{ask.titolo_esclusivo|not}}'}
+  - {kind: file, label: Notifica preliminare, value: '{{ask.notifica_preliminare}}', when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
   - {kind: file, label: Elaborati grafici dello stato di fatto e progetto, value: '{{ask.elaborati_grafici}}'}
   - {kind: file, label: Allegati liberi, value: '{{ask.relazione_tecnica}}', describe: Relazione tecnica}
+  - {kind: file, label: Prospetto di calcolo preventivo del contributo, value: '{{ask.prospetto_contributo}}', when: '{{ask.cila_onerosa}}'}
+  - {kind: file, label: Ricevuta di versamento del contributo, value: '{{ask.ricevuta_contributo}}', when: '{{ask.cila_onerosa}} {{ask.contributo_pagato}}'}

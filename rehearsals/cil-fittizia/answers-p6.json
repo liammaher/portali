@@ -17,5 +17,9 @@
  "notifica_dovuta": "false",
  "diritti_euro": "0",
  "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
- "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf"
+ "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
+ "titolo_esclusivo": false,
+ "parti_comuni": "nessuna",
+ "lavori_in_proprio": false,
+ "altri_atti": false
 }

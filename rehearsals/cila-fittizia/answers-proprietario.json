@@ -1,0 +1,40 @@
+{
+ "people": {
+  "c": "luca",
+  "f1": "edil"
+ },
+ "descrizione": "PROVA NON INVIARE - CILA proprietario",
+ "titolo": "proprietario",
+ "titolo_esclusivo": true,
+ "parti_comuni": "condominio",
+ "cila_stato": "da iniziare",
+ "inizio_dopo_assensi": false,
+ "data_inizio_lavori": "2026-11-16",
+ "cila_onerosa": true,
+ "contributo_pagato": true,
+ "ricevuta_contributo": "rehearsals/cila-fittizia/files/ricevuta-contributo.pdf",
+ "direttore_lavori": "da nominare",
+ "altri_tecnici": false,
+ "altri_atti": false,
+ "lavori_in_proprio": false,
+ "dlgs81": true,
+ "sotto_200": true,
+ "notifica_dovuta": false,
+ "cila_interventi": [
+  "cila_manutenzione",
+  "cila_restauro"
+ ],
+ "tolleranze": true,
+ "tolleranze_tipi": [
+  "toll_34bis_1bis",
+  "toll_34bis_2"
+ ],
+ "toll_superficie": "60-100",
+ "toll_strutturale": false,
+ "oggetto": "Manutenzione straordinaria e risanamento conservativo in appartamento: rifacimento di bagno e cucina, consolidamento non strutturale degli intonaci della facciata condominiale su cortile.",
+ "dettaglio_intervento": "Rifacimento del bagno e della cucina con nuovi impianti idrico ed elettrico; risanamento degli intonaci della facciata su cortile, parte comune condominiale, con approvazione dell'assemblea. Opere non strutturali, senza modifiche di volume, superficie o destinazione d'uso.",
+ "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf",
+ "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
+ "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
+ "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf"
+}

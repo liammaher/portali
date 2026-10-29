@@ -28,5 +28,17 @@
  "vincolo_136_provvedimento": "D.M. fittizio PROVA NON INVIARE del 01/01/1960",
  "vincolo_142_lettera": "a)",
  "paes_variante": false,
- "bollo_marche": false
+ "bollo_marche": false,
+ "titolo_esclusivo": false,
+ "parti_comuni": "nessuna",
+ "lavori_in_proprio": false,
+ "cila_stato": "in corso",
+ "direttore_lavori": "progettista",
+ "altri_tecnici": false,
+ "altri_atti": false,
+ "cila_onerosa": false,
+ "tolleranze": false,
+ "cila_interventi": [
+  "cila_manutenzione"
+ ]
 }

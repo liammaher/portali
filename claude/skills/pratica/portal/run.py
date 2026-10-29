@@ -139,6 +139,20 @@ def _qualita(v):
     return QUALITA.get(v.strip().lower(), "Altro")
 
 
+def _titolo_pratica(v):
+    """A SUE quadro a)'s dropdown option for the title: its own name, else "altro" (a
+    tenant, a comodatario: then + specificare)."""
+    return v.strip().lower() if v.strip().lower() in QUALITA else "altro"
+
+
+# The SUE's destinazione d'uso dropdown: these three, anything else "altro" + its name.
+DESTINAZIONI = {"residenziale", "industriale", "commerciale"}
+
+
+def _destinazione(v):
+    return v.strip().lower() if v.strip().lower() in DESTINAZIONI else "altro"
+
+
 class Filters(dict):
     """`is_<answer>` is true when the value is that answer, spaces as underscores
     ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `atleast_<n>`
@@ -160,6 +174,12 @@ FILTERS = Filters({
     "qualita": _qualita,
     "qualita_is_altro": lambda v: "true" if _qualita(v) == "Altro" else "false",
     "qualita_altro": lambda v: v.strip().capitalize(),
+    "titolo_pratica": _titolo_pratica,
+    "titolo_is_altro": lambda v: "true" if _titolo_pratica(v) == "altro" else "false",
+    # A title usually held alone (a.1): the proposal pre-flight asks to confirm.
+    "titolo_solo": lambda v: "true" if v.strip().lower() in ("proprietario", "usufruttuario", "amministratore di condominio") else "false",
+    "destinazione": _destinazione,
+    "destinazione_is_altro": lambda v: "true" if _destinazione(v) == "altro" else "false",
     "filled": lambda v: "true" if v else "false",
     "rea_num": lambda v: v.split("-")[-1].strip(),
     "date_it": lambda v: "/".join(reversed(v.split("-"))),
@@ -386,6 +406,21 @@ def needed(steps, values):
             need[k] = set() if (k in need and not need[k]) or not deps else need.get(k, set()) | set(deps)
 
     asked = lambda tmpl: [r[4:] for r, _ in refs_in(tmpl) if r.startswith("ask.")]
+
+    def gate(when):
+        """A `when`'s words in order, each a gate for the next ("onerosa, and then paid?"):
+        a later word's asks hang on the earlier ones; a false word ends it. False when this
+        case's answers already make it false."""
+        deps = []
+        for word in re.findall(r"\{\{.+?\}\}", when):
+            add(asked(word), deps)
+            v = values.render(word)
+            if v is None:
+                deps = deps + [k for k in asked(word) if values.field("ask." + k) is None]
+            elif not truthy(v):
+                return False
+        return True
+
     for c in steps.get("supports", []):
         add(asked(c.get("when", c.get("value", ""))))
     for fact in ruled(steps, values)[1]:
@@ -397,10 +432,9 @@ def needed(steps, values):
         for f in sec["fields"]:
             deps = ()
             if "when" in f:
-                add(asked(f["when"]))
-                w = values.render(f["when"])
-                if w is not None and not truthy(w):
+                if not gate(f["when"]):
                     continue
+                w = values.render(f["when"])
                 if w is None:
                     deps = [k for k in asked(f["when"]) if values.field("ask." + k) is None]
             add(asked(f.get("value", "")), deps)
@@ -618,6 +652,9 @@ def preflight(steps, values):
     for sec in steps["sections"]:
         for f in sec["fields"]:
             if f["kind"] == "file":
+                if "when" in f and any(v is not None and not truthy(v) for v in
+                                       map(values.render, re.findall(r"\{\{.+?\}\}", f["when"]))):
+                    continue  # not attached in this case
                 path = values.render(f.get("value", ""))
                 p = Path(path).expanduser() if path else None
                 entry = {"for": f"{sec['section']}: {f.get('label') or f.get('id')}", "path": path,
