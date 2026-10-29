@@ -255,5 +255,52 @@
    "seconds": 0.6,
    "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
- ]
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "id": "r2c1p2reg:upload1_input",
+    "title": "Dichiarazione sostitutiva dell'atto di notorietà, attestante l'avvenuta verifica della documentazione di cui alle lettere a e b dell'art. 90 comma 9 del D.Lgs 8",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r5c1p5reg:upload1_input",
+    "title": "Copia notifica preliminare all'ASL e alla Direzione Provinciale del Lavoro di cui all'art. 99 del D.Lgs. 81/08",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r8c1p8reg:upload1_input",
+    "title": "copia attestazione versamento oneri, diritti e spese",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r13c1p14reg:upload1_input",
+    "title": "Procura speciale",
+    "accepts": "jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r16c1p17reg:upload1_input",
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "accepts": "pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r20c1p22reg:upload1_input",
+    "title": "Allegati liberi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft"
 }

@@ -124,6 +124,49 @@ def _():
     assert "id" not in field(s, "non è soggetto agli obblighi")
 
 
+@case("rerun.py queues each rehearsal with run.js's own values, and check.js names each steps file")
+def _():
+    import json, subprocess, tempfile
+    fixture = json.loads((REH / "cila-fittizia" / "fixture-p6.json").read_text())
+    with tempfile.TemporaryDirectory() as t:
+        t = Path(t)
+        (t / "values.json").write_text(json.dumps(dict(fixture["fields"])))
+        names = ["dau-fittizia", "paesaggistica-semplificata-fittizia"]
+        subprocess.run([sys.executable, str(HERE / "rerun.py"), "--values", str(t / "values.json"), "--out", str(t / "out"), *names],
+                       check=True, capture_output=True)
+        queue = (t / "out" / "queue-0.js").read_text()
+        check = (t / "out" / "check.js").read_text()
+        assert all(f'"steps/{n}.js"' in check for n in names) and '"runner.js"' in check
+        assert '["dau-fittizia","napoli/comune/dichiarazione-avvenuto-utilizzo-terre",{"wizard":["PROVA NON INVIARE - DAU P6 generato"' in queue
+        assert (t / "out" / "steps" / "dau-fittizia.js").read_text().startswith('localStorage.setItem("pv-steps:napoli/comune/dichiarazione-avvenuto-utilizzo-terre"')
+
+
+@case("two operations in one pratica: their sections once each, in the combination's crawl's order, and both ticked")
+def _():
+    steps = generated("cila-paesaggistica-fittizia")
+    names = [x["section"] for x in steps["sections"]]
+    assert len(names) == len(set(n.lower() for n in names)) == 22
+    assert names.index("a) Titolarità dell'intervento") < names.index("Qualificazione dell'intervento") < names.index("Ambito dell'intervento")
+    assert "dichiarazione ubicazione dell'intervento" not in names  # the CILA's Localizzazione, the same section
+    assert steps["wizard"][3]["tree"] == ["Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)",
+                                          "Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)"]
+    recipe = gen.load_yaml(REH / "cila-paesaggistica-fittizia" / "recipe.yaml")
+    recipe["crawl"] = "cila"  # a crawl of the CILA alone is not of both
+    try:
+        gen.generate(recipe)
+        assert False, "generated from the wrong crawl"
+    except gen.GenError as e:
+        assert "isn't a crawl of these operations together" in str(e)
+
+
+@case("two scelte both keep the sections they add, and the wizard ticks both (voltura with a co-holder)")
+def _():
+    steps = generated("voltura-pdc-fittizia")
+    names = [x["section"] for x in steps["sections"]]
+    assert "Informazioni su eventuali altri aventi titolo" in names and "Qualifica e dati del procuratore" in names
+    assert steps["wizard"][-1]["tree"][0] == "ci sono cointestatari" and len(steps["wizard"][-1]["tree"]) == 2
+
+
 @case("a section name two pratiche share takes the entry that fits; a tick that renumbers itself and what follows go by label (paesaggistica semplificata)")
 def _():
     steps = generated("paesaggistica-semplificata-fittizia")

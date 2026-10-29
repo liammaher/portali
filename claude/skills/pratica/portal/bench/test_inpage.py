@@ -213,6 +213,57 @@ def main():
             stops(done, "fresh load of the draft: not kept")
         case("after a resume, a value lost from an earlier section is still caught", lost_before)
 
+        def checked():
+            # check.js names what the pane's storage lacks, byte for byte, and nothing once
+            # install.js has run; a changed steps file makes only steps.js stale again.
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            files = run.page_files(steps(base), values, files_limit=None)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate("localStorage.clear()")
+                assert page.evaluate(files["check.js"]) == "run runner.js, then steps.js, then run.js"
+                page.evaluate(files["install.js"])
+                assert page.evaluate(files["check.js"]) == "run run.js"
+                other = steps(base)
+                other["sections"][1]["fields"][0]["label"] = "Ditta esecutrice"
+                again = run.page_files(other, values, files_limit=None)
+                assert page.evaluate(again["check.js"]) == "run steps.js, then run.js"
+                elsewhere = run.page_files(steps(base) | {"logged_in": "https://example.invalid/"}, values, files_limit=None)
+                assert page.evaluate(elsewhere["check.js"]).startswith("go to https://example.invalid"), "wrong origin passed"
+            finally:
+                page.close()
+        case("check.js says which of runner.js and steps.js the pane lacks", checked)
+
+        def resumed_in_tab():
+            # A stopped run's report and values stay in the tab: a reloaded runner resumes it
+            # on the same draft with one fix, and one frame lies over the page, not two.
+            PORTAL.reset()
+            st = steps(base, start="/portal.html?rename=1")
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            install, run_js = run.page_scripts(st, values, files_limit=None)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while (first := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert first["result"] == "stopped", first
+                page.evaluate("delete window.__pv; (0, eval)(localStorage.getItem('pv-runner'))")
+                assert page.evaluate("__pv.last().result") == "stopped", "the report didn't outlive the runner"
+                page.evaluate('__pv.resume({fixes: [{section: 1, field: 0, set: {label: "Ditta esecutrice"}}]})')
+                while (done := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert done["result"] == "filled" and done["resumed"], done.get("error")
+                assert [x["section"] for x in done["sections"]] == ["Dati tecnici"], "redid a finished section"
+                assert page.evaluate("document.querySelectorAll('iframe').length") == 1, "frames piled up"
+                assert PORTAL.fields.get(IMPRESA) == answers["impresa"], PORTAL.fields
+            finally:
+                page.close()
+        case("a stopped run resumes in the tab after the runner reloads, one frame at a time", resumed_in_tab)
+
         browser.close()
 
     def pane_limit():

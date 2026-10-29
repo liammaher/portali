@@ -1,0 +1,32 @@
+{
+ "people": {
+  "c": "luca",
+  "o": "immobiliare",
+  "r": "giulia",
+  "f1": "edil",
+  "f2": "impianti"
+ },
+ "descrizione": "PROVA NON INVIARE - CILA e paesaggistica P6 generato",
+ "titolo": "locatario",
+ "oggetto": "Manutenzione straordinaria non strutturale in appartamento: demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno, nuovo bagno, rifacimento degli impianti idrico ed elettrico; installazione di un'unità esterna di climatizzazione sul balcone.",
+ "data_inizio_lavori": "2026-10-19",
+ "ricevuta_sanzione": "rehearsals/cila-fittizia/files/ricevuta-sanzione.pdf",
+ "dettaglio_intervento": "Demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno; nuovo bagno; rifacimento degli impianti idrico ed elettrico della cucina e del bagno. Opere interne non strutturali, senza modifiche di volume, superficie o destinazione d'uso.",
+ "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
+ "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
+ "notifica_preliminare": "rehearsals/cila-fittizia/files/notifica-preliminare.pdf",
+ "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
+ "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf",
+ "dlgs81": "true",
+ "sotto_200": "true",
+ "notifica_dovuta": "true",
+ "allegato_b": [
+  "paes_b7"
+ ],
+ "vincolo": "art 136 and 142",
+ "vincolo_136_lettera": "c) e d)",
+ "vincolo_136_provvedimento": "D.M. fittizio PROVA NON INVIARE del 01/01/1960",
+ "vincolo_142_lettera": "a)",
+ "paes_variante": false,
+ "bollo_marche": false
+}

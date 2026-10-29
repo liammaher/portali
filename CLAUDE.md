@@ -77,9 +77,12 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      (one per service); pilot/ has the pilot forms. A real vault only over its socket
   pratica/portal/    run.py: fills a portal pratica from a steps file (rehearsals/*/portal-steps.yaml)
                      with inpage.js, in a Playwright window (`run.py run`) or the Claude browser
-                     pane (`run.py page`); reads every field back, then again on a fresh load of
-                     the draft, attaches the files it names (the pane: 256 KB in all), never
-                     declares, pays or sends. `run.py preflight` first: the steps file's
+                     pane (`run.py page`: its check.js says which of runner.js and steps.js the
+                     pane's storage lacks byte for byte, so only those are sent); reads every
+                     field back, then again on a fresh load of the draft, attaches the files it
+                     names (the pane: 256 KB in all), never declares, pays or sends. A label
+                     names the boxes whose own text it is first (`nth` counts those), and a
+                     section is read only once it is the open one. `run.py preflight` first: the steps file's
                      `supports:` (cases it maps), `rules:` (the library's rules table, copied in
                      `rules/`: whether the law makes the case this pratica, and the others it adds)
                      and `asks:` (questions, asked in one message, or proposed to confirm). A stopped run resumes on its draft (`--resume`, `--fix`).
@@ -93,7 +96,9 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      gen.py and pre-flight refuse.
                      gen.py writes a steps file from a crawl, `dictionary/fnsuap.yaml` (each
                      section's fields by label, shared by every pratica) and a recipe
-                     (rehearsals/*/recipe.yaml); it writes nothing if a field is unaccounted for.
+                     (rehearsals/*/recipe.yaml; `operation` may be a list, the union of their
+                     sections); it writes nothing if a field is unaccounted for. Adding a pratica,
+                     the portal's quirks and clean batch reruns (`bench/rerun.py`): portal/README.md.
                      draft.py drafts dictionary entries for a new section from the national
                      schema (`schema/`, InfoCamere's forms flattened), for a person to check
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
@@ -434,7 +439,8 @@ The portal runner has offline tests on a fake portal: `claude/skills/pratica/por
 run with the pratica venv's Python (`~/.cache/pratica-portal/venv`, Playwright's Chromium, headless; no
 network, vault or model); `bench/test_preflight.py` tests pre-flight on the SCIA rehearsal's files, `bench/test_gen.py`
 gen.py on the crawls in `catalogue/F839/sections`, `bench/test_rules.py` the rules table (with `PRATICHE_NAPOLI_DIR`, `rules/`
-the same bytes as the library's).
+the same bytes as the library's). On the real portal, `bench/rerun.py` reruns the rehearsals
+in the pane after a runner, dictionary or gen.py change (portal/README.md).
 
 ```go
 // Pattern: create temp vault, run test

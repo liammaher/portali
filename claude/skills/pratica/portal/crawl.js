@@ -14,6 +14,9 @@
 //       the crawled pratica it should match)
 //   await __crawl.wait(ms)                               the map so far, once done or after ms
 //   __crawl.slots()                                      the attachments screen's slots
+//   await __crawl.slotsOf(draft)                         a draft's, by its name in Pratiche in bozza:
+//       opened from the list, then its Allega Documenti step (from the menu at the top, so the
+//       sections need not be complete; an empty "catalogo" draft shows the base slots)
 //
 // A choice's node says what it reveals, hides and moves (old id → new id); gen.py reads them.
 // Each section carries a fingerprint of what it shows before any choice (ids, kinds, labels):
@@ -160,9 +163,13 @@
   async function open(name) {
     const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(name)));
     if (!a) return false; // already open, or not in this pratica
+    const before = current();
     await act(() => a.click());
-    // Scheda anagrafica reloads the whole page, which act() can't see starting.
-    for (let end = performance.now() + 10000; performance.now() < end && !norm(current()).startsWith(norm(name).slice(0, 20));) await sleep(200);
+    // Scheda anagrafica reloads the whole page, which act() can't see starting. The title must
+    // change too: two sections can share their first 20 characters ("dichiarazione relativa
+    // alla conoscenza d...": the voltura's prescrizioni and soggetti).
+    for (let end = performance.now() + 10000; performance.now() < end &&
+      (current() === before || !norm(current()).startsWith(norm(name).slice(0, 20)));) await sleep(200);
     await idle();
     return true;
   }
@@ -407,8 +414,41 @@
     });
   }
 
+  // A draft opened from Pratiche in bozza (ten a page, the newest first), then its Allega
+  // Documenti step from the menu at the top. The step can need a second press, and may ask
+  // "Proseguire senza salvare?" (nothing to save: confirm).
+  async function slotsOf(draft) {
+    await newFrame(location.origin + "/fnsuap/cmd/home");
+    await idle();
+    const row = () => [...doc().querySelectorAll("tr")].find((t) => t.innerText.includes(draft));
+    for (let p = 2; !row(); p++) {
+      const next = [...doc().querySelectorAll(".ui-paginator-page")].find((a) => a.textContent.trim() === String(p));
+      if (!next) throw new Error(`no draft named ${draft} in Pratiche in bozza`);
+      await act(() => next.click());
+    }
+    const open = [...row().querySelectorAll("a, button")].find((b) => /^apri$/i.test((b.title || b.textContent).trim()));
+    await act(() => open.click());
+    for (let end = performance.now() + 20000; !doc().querySelector("li#corrente");) {
+      if (performance.now() > end) throw new Error(`${draft}: the draft didn't open`);
+      await sleep(250);
+    }
+    await idle();
+    for (let t = 0; t < 3 && !doc().querySelector("input[type=file]"); t++) {
+      const step = [...doc().querySelectorAll("button, a")].filter((e) => e.offsetParent && e.textContent.trim() === "Allega Documenti").pop();
+      if (!step) break;
+      await act(() => step.click());
+      await sleep(1000);
+      await idle();
+    }
+    const title = norm((doc().querySelector(".content-title") || {}).innerText);
+    if (!doc().querySelector("input[type=file]")) throw new Error(`${draft}: Allega Documenti didn't open (on ${title})`);
+    return { draft, title, slots: slots() };
+  }
+
   window.__crawl = {
-    slots: () => { frame = frame || document.querySelector("iframe"); return slots(); },
+    // The frame of the page's own run (or of a run that ended): never one already removed.
+    slots: () => { if (!frame || !frame.isConnected) frame = document.querySelector("iframe"); return slots(); },
+    slotsOf,
     report: () => report,
     // Ends a batch after the pratica under way (await __crawl.wait() for it): before another
     // script drives the portal, so two never drive one draft through wizard.js's shared frame.

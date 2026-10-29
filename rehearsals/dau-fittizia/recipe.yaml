@@ -1,0 +1,22 @@
+# Dichiarazione di avvenuto utilizzo delle terre e rocce da scavo (art. 7 DPR 120/2017) on Napoli's SUE, as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-dichiarazione-di-avvenuto-utilizzo-ai-sensi-dell-art-7-del-dpr-n-120-201.json). The CILA rehearsal's architect (with procura) and
+# client (rehearsals/cila-fittizia).
+procedure: napoli/comune/dichiarazione-avvenuto-utilizzo-terre
+title: "Dichiarazione di avvenuto utilizzo delle terre e rocce da scavo (art. 7 DPR 120/2017), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-dichiarazione-di-avvenuto-utilizzo-ai-sensi-dell-art-7-del-dpr-n-120-201
+operation: "Dichiarazione di avvenuto utilizzo (D.A.U.) ai sensi dell'art. 7 del DPR n. 120/2017"
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - DAU {{c:identity.last_name}}"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: consapevolezza (artt. 46-47), informativa privacy, tasse comunali, and any acknowledgement in the client's name"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it, with the pratica's other documents"
+  - "Pay any bollo and diritti on pagoPA after sending"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

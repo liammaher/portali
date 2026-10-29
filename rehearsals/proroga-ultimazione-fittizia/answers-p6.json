@@ -1,0 +1,22 @@
+{
+ "people": {
+  "c": "luca",
+  "f1": "edil"
+ },
+ "descrizione": "PROVA NON INVIARE - proroga ultimazione P6 generato",
+ "oggetto": "Proroga del termine di ultimazione lavori ai sensi dell'art. 10 septies della L. 51/2022.",
+ "titolo": "proprietario",
+ "pdc_numero": "999/2026",
+ "pdc_anno": "2026",
+ "pdc_data": "2026-03-15",
+ "pdc_protocollo": "PG/2026/0888888",
+ "titolo_id_pratica": "FTTLCU91L02F839F-15032026-1012",
+ "pdc_interventi": "ampliamento di un locale accessorio",
+ "bollo_marche": false,
+ "diritti_euro": "0",
+ "proroga_data_prevista": "2030-03-15",
+ "proroga_tipo_lavori": "finiture interne",
+ "fine_termine": "2029-03-15",
+ "proroga_giorni": "365",
+ "proroga_motivo": "Ritardo nella consegna dei materiali da parte del fornitore, per cause non imputabili al titolare."
+}

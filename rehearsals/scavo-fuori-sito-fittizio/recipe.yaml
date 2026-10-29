@@ -1,0 +1,22 @@
+# Dichiarazione di utilizzo del materiale di scavo fuori del sito di produzione (art. 21 DPR 120/2017) on Napoli's SUE, as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-dichiarazione-di-utilizzo-del-materiale-di-scavo-fuori-del-sito-di-produ.json). The CILA rehearsal's architect (with procura) and
+# client (rehearsals/cila-fittizia).
+procedure: napoli/comune/utilizzo-materiale-scavo-fuori-sito
+title: "Dichiarazione di utilizzo del materiale di scavo fuori del sito di produzione (art. 21 DPR 120/2017), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-dichiarazione-di-utilizzo-del-materiale-di-scavo-fuori-del-sito-di-produ
+operation: "Dichiarazione di utilizzo del materiale di scavo fuori del sito di produzione ai sensi dell'art. 21 del DPR n.120/2017 (da trasmettere almeno 15 giorni prima dell'inizio dei lavori di scavo)"
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - scavo fuori sito {{c:identity.last_name}}"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: consapevolezza (artt. 46-47), informativa privacy, tasse comunali, and any acknowledgement in the client's name"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it, with the pratica's other documents"
+  - "Pay any bollo and diritti on pagoPA after sending"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

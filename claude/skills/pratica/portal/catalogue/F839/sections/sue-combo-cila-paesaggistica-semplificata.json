@@ -1,0 +1,139 @@
+{
+ "crawled": "2026-10-29",
+ "by": "crawl.js check (fingerprints) on an empty draft, in the pane",
+ "pratica": "SUE: two operations in one pratica: Comunicazione Inizio Lavoro Asseverata (C.I.L.A.) + Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune), with the procura scelta",
+ "note": "Every section is one of the CILA's or the semplificata's, the same fingerprint: the combination is their union, in this order. A recipe names both operations: rehearsals/cila-paesaggistica-fittizia.",
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "cila#Scheda anagrafica"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "cila#Qualifica e dati del procuratore"
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "cila#Oggetto della pratica"
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "cila#DOMICILIO DIGITALE"
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "cila#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)"
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Localizzazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "cila#Localizzazione dell'intervento"
+  },
+  {
+   "section": "Dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "cila#Dati catastali"
+  },
+  {
+   "section": "a) Titolarità dell'intervento",
+   "fingerprint": "3e5d5f463d6964d8",
+   "same_as": "cila#a) Titolarità dell'intervento"
+  },
+  {
+   "section": "dati relativi al nome del tecnico",
+   "fingerprint": "ffddb90f4d2ab273",
+   "same_as": "sue-autorizzazione-paesaggistica-semplificata#dati relativi al nome del tecnico"
+  },
+  {
+   "section": "Qualificazione dell'intervento",
+   "fingerprint": "24951c61da272643",
+   "same_as": "sue-autorizzazione-paesaggistica-semplificata#Qualificazione dell'intervento"
+  },
+  {
+   "section": "b) Opere su parti comuni o modifiche esterne",
+   "fingerprint": "a9ea4400694734ae",
+   "same_as": "cila#b) Opere su parti comuni o modifiche esterne"
+  },
+  {
+   "section": "c) Presentazione della comunicazione di inizio dei lavori asseverata",
+   "fingerprint": "5fd26cd9cfe7490f",
+   "same_as": "cila#c) Presentazione della comunicazione di inizio dei lavori asseverata"
+  },
+  {
+   "section": "d) Qualificazione dell'intervento",
+   "fingerprint": "832737a495810e11",
+   "same_as": "cila#d) Qualificazione dell'intervento"
+  },
+  {
+   "section": "e) Destinazione d'uso",
+   "fingerprint": "167628390a2f0298",
+   "same_as": "cila#e) Destinazione d'uso"
+  },
+  {
+   "section": "f) Calcolo del contributo di costruzione",
+   "fingerprint": "21097c9079919b29",
+   "same_as": "cila#f) Calcolo del contributo di costruzione"
+  },
+  {
+   "section": "G1) Tecnici incaricati",
+   "fingerprint": "1be8307fee60b434",
+   "same_as": "cila#G1) Tecnici incaricati"
+  },
+  {
+   "section": "G2) Altri tecnici incaricati",
+   "fingerprint": "124292a24c7f627e",
+   "same_as": "cila#G2) Altri tecnici incaricati"
+  },
+  {
+   "section": "h) Impresa esecutrice dei lavori",
+   "fingerprint": "87750e169754bf96",
+   "same_as": "cila#h) Impresa esecutrice dei lavori"
+  },
+  {
+   "section": "i) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+   "fingerprint": "f78a3b9830a43287",
+   "same_as": "cila#i) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro"
+  },
+  {
+   "section": "Ambito dell'intervento",
+   "fingerprint": "8cbcfdd54fdcde26",
+   "same_as": "sue-autorizzazione-paesaggistica-semplificata#Ambito dell'intervento"
+  },
+  {
+   "section": "Relazione Tecnica di Asseverazione C.I.L.A.",
+   "fingerprint": "109f43479fa7d1b8",
+   "same_as": "cila#Relazione Tecnica di Asseverazione C.I.L.A."
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "cila#Dichiarazione relativa ai diritti di segreteria/istruttori"
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-autorizzazione-paesaggistica-semplificata#Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  }
+ ]
+}

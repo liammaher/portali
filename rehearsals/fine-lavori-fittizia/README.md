@@ -46,3 +46,7 @@ portal documents, signed), the declarations, signing and sending.
   before it.
 - Supported: a tenant (title "altro" + locatario, the owner's assent), works finished
   completely. A partial fine lavori needs a planimetria, not mapped; pre-flight refuses it.
+
+## Clean reruns (2026-10-29)
+
+In the pane, from run.py's install.js and run.js, nothing touched between runs: first filled in 60 s; second, with the runner waiting for a section to open, **filled** in 55.1 s, read back on a fresh load.

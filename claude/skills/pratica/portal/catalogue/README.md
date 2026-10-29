@@ -46,13 +46,22 @@ catalogo <sportello>" (Liam deletes it afterwards):
 
 Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
-## Where it stands (2026-10-28, `catalogue.py count --summary`)
+## Where it stands (2026-10-29, `catalogue.py count --summary`)
 
-- **SUE**: all 27 pratiche crawled; **127 distinct sections**, 90 filled by the dictionary,
-  88% of section uses. 21 of the 27 pratiche have every section filled (the paesaggistica
-  semplificata the latest: Allegato B and the vincoli); the other six (permesso di costruire,
-  SCIA alternativa, the other landscape ones) need the asseverazioni and the remaining
-  landscape declarations: legal and technical choices more than mapping.
+- **SUE**: all 27 pratiche crawled, and one combination (below); **128 distinct sections**,
+  94 filled by the dictionary, 90% of section uses. 22 of the 27 pratiche have every section
+  filled, and all 22 have run on the portal with made-up data; the other five (permesso di
+  costruire, SCIA, SCIA alternativa, the accertamento di compatibilità paesaggistica, the
+  parere for an exemption) need the asseverazioni, the sanatoria and the exemptions' own
+  declarations: legal and technical choices more than mapping. Every SUE crawl has its
+  attachments screen (`slots`): the four not yet fillable read on an empty draft, so slots
+  their sections' answers add may be missing. A slot reads `required` only once the portal has
+  checked the screen (after an upload or Prosegui), so a fresh read marks none.
+- **A combination**: a CILA with an autorizzazione paesaggistica semplificata in one pratica
+  (`sue-combo-cila-paesaggistica-semplificata`) has the union of their sections, each the same
+  section as alone (fingerprints), in its own order. A recipe can name both operations
+  (`rehearsals/cila-paesaggistica-fittizia`), run to the declarations; its attachments screen
+  isn't read yet.
 - **SUAP**: 278 pratiche crawled so far (the batch stands at about half of its 1,028 trips:
   the priority sectors, the common operations, part of the other sectors); **477 distinct
   sections**, 67 filled, 71% of section uses, counted under each title a section has. 107
@@ -65,14 +74,19 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns into
   `same.json`. Each scelta is tried once (`variants: "new"`); `gen.py` takes a scelta's sections
   from the pratica where it was tried.
+- **Clean reruns** (2026-10-29): every SUE recipe (22 pratiche and the combination), from
+  run.py's install.js and run.js in the pane, one after another with nothing touched between
+  runs. First: 20 of 23 filled; the three stopped on the fresh load, reading a section before
+  it had opened (the Scheda anagrafica's link reloads the whole page), and filled when run again
+  unchanged. With the runner waiting for each section to open: 23 of 23 filled, 40 to 150 s
+  each.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
 - Proven on the portal with made-up data, generated from a batch crawl: the openings of a
   restaurant, a non-food shop, a bakery and rooms to let, the takeover (subingresso) and the
   suspension of a shop and of a restaurant, a restaurant's new name, a shop's bigger sales area,
-  a restaurant's alcohol notice, and a restaurant's closure (SUAP), the
-  proroga di inizio lavori and the autorizzazione paesaggistica semplificata (SUE), besides the
-  seven run before.
+  a restaurant's alcohol notice, and a restaurant's closure (SUAP); on the SUE all 22 pratiche
+  with every section filled and the CILA with its semplificata (the clean reruns above).
 
 ## Drift
 
@@ -89,6 +103,6 @@ by `run.py preflight` until it is crawled again (`import` clears it).
 - The fingerprint is the section before any choice: a change only inside a branch is caught by
   the runner, not by the check.
 - Operations are crawled one at a time; combinations (two operations in one pratica, an
-  intervento eventuale) are only what each adds on its own.
+  intervento eventuale) are only what each adds on its own, except the one checked above.
 - Names aren't identity: two sections with different titles can hold the same fields, which
   the section crawl settles.

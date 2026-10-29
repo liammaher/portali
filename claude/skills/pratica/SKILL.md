@@ -353,12 +353,28 @@ When there is one, follow it instead of exploring the portal:
    need real key presses).
 
    In the built-in browser instead (the user is logged in there, or asks): `run.py page`
-   (same arguments, `--out DIR`) writes `install.js` and `run.js`; run each on the portal's
-   page with one `javascript_tool` call (install once per browser profile; it stores no
-   personal data), poll `await __pv.wait(40000)` until `result` is `filled` or `stopped`, and
-   `__pv.open()` shows the draft. One run per login at a time, in any tab or window: the
-   portal keeps one pratica in progress per login, so a second run (or a crawl) moves the
-   first one's draft back a screen or shows its error page.
+   (same arguments, `--out DIR`) writes the scripts, each run on the portal's page with one
+   `javascript_tool` call:
+   - First go to the portal's own origin (`https://suap.impresainungiorno.gov.it/fnsuap/cmd/home`
+     for the SUAP/SUE): the runner lives in that origin's storage, not www's.
+   - `check.js` returns what to run next: `runner.js` and `steps.js` only when the pane's
+     storage doesn't hold them byte for byte (each is tens of KB: never send one it doesn't
+     name), then `run.js`. `install.js` is both, for a pane that has neither.
+   - A call ends after 45 s: run.js returns at once; poll `await __pv.wait(40000)` until
+     `result` is `filled` or `stopped`. `__pv.open()` shows the draft.
+   - One run per login at a time, in any tab or window: the portal keeps one pratica in
+     progress per login, so a second run (or a crawl) moves the first one's draft back a
+     screen or shows its error page. A batch (`bench/rerun.py`) runs them one after another.
+   - Stopped: `__pv.last()` is the report (kept in the tab, so it outlives a reload of the
+     runner); work out the fix as above and `__pv.resume({fixes: [...]})` carries on on the
+     same draft, with the same values. Write the fix into the steps file (or the dictionary
+     and regenerate) afterwards. A draft whose address has expired (`/cmd/error`): `url =
+     await __pv.reopen("<the draft's name>")` opens it from Pratiche in bozza, then
+     `__pv.resume({url})`.
+   - "0 fields with this label" usually means the section wasn't on the page yet or another
+     one was open, not that the label changed: look at the page before fixing anything.
+   - After a change to inpage.js, the dictionary or gen.py, rerun the rehearsals that use it
+     with `bench/rerun.py` (check.js, the queue files, loop.js, results.js: portal/README.md).
 3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
    Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand.
    Attachments: a field `{id: ..., kind: file, label: ..., value: "{{ask.x}}"}` (or `css:`

@@ -1,0 +1,22 @@
+# Trasmissione del piano di utilizzo delle terre e rocce da scavo (art. 9 DPR 120/2017) on Napoli's SUE, as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-trasmissione-del-piano-di-utilizzo-delle-terre-e-rocce-da-scavo-ai-sensi.json). The CILA rehearsal's architect (with procura) and
+# client (rehearsals/cila-fittizia).
+procedure: napoli/comune/piano-utilizzo-terre-rocce
+title: "Trasmissione del piano di utilizzo delle terre e rocce da scavo (art. 9 DPR 120/2017), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-trasmissione-del-piano-di-utilizzo-delle-terre-e-rocce-da-scavo-ai-sensi
+operation: "Trasmissione del Piano di utilizzo delle terre e rocce da scavo ai sensi dell'art. 9 del DPR n. 120/2017 (da trasmettere almeno novanta giorni prima dell'inizio dei lavori e, in ogni caso, prima della conclusione dell'eventuale procedimento di VIA o AIA)"
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - piano terre e rocce {{c:identity.last_name}}"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: consapevolezza (artt. 46-47), informativa privacy, tasse comunali, and any acknowledgement in the client's name"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it, with the pratica's other documents"
+  - "Pay any bollo and diritti on pagoPA after sending"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."

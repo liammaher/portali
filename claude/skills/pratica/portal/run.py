@@ -14,9 +14,11 @@
       Resolves every value the steps need and prints what goes where. No browser.
 
   run.py page --steps STEPS.yaml --answers A.json VAULT --out DIR
-      Writes DIR/install.js and DIR/run.js for the Claude browser pane, where each runs
-      with one call on the portal's page: install.js stores inpage.js and the steps (no
-      personal data), run.js starts a run with the person's values. inpage.js says more.
+      Writes the scripts for the Claude browser pane, each run with one call on the
+      portal's page: check.js says which of runner.js (inpage.js) and steps.js (the steps,
+      no personal data) the pane's storage doesn't already hold byte for byte; run.js starts
+      a run with the person's values; install.js is runner.js and steps.js together.
+      bench/rerun.py does it for many rehearsals at once. inpage.js says more.
 
   run.py run  --steps STEPS.yaml --answers A.json VAULT --out DIR
               [--cdp URL | --profile DIR] [--close]
@@ -58,6 +60,7 @@ that is the point where Claude looks at the page and fixes the steps file.
 
 import argparse
 import base64
+import hashlib
 import json
 import mimetypes
 import re
@@ -284,6 +287,10 @@ class Values:
 def plan(steps, values):
     """Each field with its value; raises on a missing required value."""
     out, missing = [], []
+    for w in steps.get("wizard", []):
+        v = values.render(w["fill"]["value"]) if "fill" in w else None
+        if v and w["fill"].get("max") and len(v) > w["fill"]["max"]:
+            missing.append(f"{w['screen']}: {v!r} is longer than the portal takes ({w['fill']['max']})")
     for sec in steps["sections"]:
         for f in sec["fields"]:
             if "when" in f and not truthy(values.render(f["when"]) or ""):
@@ -649,6 +656,18 @@ def resumption(report, fixes=None):
 
 def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
     """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
+    files = page_files(steps, values, files_limit, resume)
+    return files["install.js"], files["run.js"]
+
+
+def page_files(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
+    """Every file `run.py page` writes, by name: install.js is runner.js and steps.js, and
+    check.js says which of those two the pane's storage lacks."""
+    return page_bundle(steps, values, files_limit, resume)[0]
+
+
+def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
+    """page_files, and what runner.js and steps.js leave in the pane's localStorage."""
     require_supported(steps, values)
     plan(steps, values)  # stops on a missing required value
     skeleton = {
@@ -686,16 +705,47 @@ def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
             raise StepError(f"the attachments come to {size // 1024} KB, more than the {files_limit // 1024} KB "
                             "run.js can carry in the pane: use `run` (a Playwright window) or attach them by hand")
     proc = steps["procedure"]
-    runner = Path(__file__).with_name("inpage.js").read_text()
-    # A function's source is its text, so neither part needs escaping into a string.
-    install = (f"localStorage.setItem('pv-runner', '(' + function () {{\n{runner}}} + ')()');\n"
-               f"localStorage.setItem({json.dumps('pv-steps:' + proc)}, JSON.stringify("
-               f"{json.dumps(skeleton, ensure_ascii=False, separators=(',', ':'))}));\n"
-               "'installed'\n")
+    runner_js, steps_js, stored = pane_parts(proc, skeleton)
     run_js = ("if (!window.__pv) (0, eval)(localStorage.getItem('pv-runner'));\n"
               f"__pv.start({json.dumps(proc)}, {json.dumps(vals, ensure_ascii=False, separators=(',', ':'))}"
               + (f", {json.dumps(resume, ensure_ascii=False, separators=(',', ':'))}" if resume else "") + ")\n")
-    return install, run_js
+    origin = re.match(r"https?://[^/]+", steps["logged_in"])[0]
+    return {"install.js": runner_js + steps_js + "'installed'\n", "runner.js": runner_js, "steps.js": steps_js,
+            "check.js": check_script(stored, origin), "run.js": run_js}, stored
+
+
+def pane_parts(proc, skeleton):
+    """runner.js (inpage.js) and steps.js (the steps, no personal data) as install.js holds
+    them, and what each leaves in the pane's localStorage, for check.js."""
+    runner = Path(__file__).with_name("inpage.js").read_text()
+    steps_json = json.dumps(skeleton, ensure_ascii=False, separators=(',', ':'))
+    # A function's source is its text, so neither part needs escaping into a string.
+    # The runner a page already loaded stays loaded: drop it, so run.js loads this one.
+    runner_js = f"localStorage.setItem('pv-runner', '(' + function () {{\n{runner}}} + ')()');\ndelete window.__pv;\n"
+    steps_js = f"localStorage.setItem({json.dumps('pv-steps:' + proc)}, JSON.stringify({steps_json}));\n"
+    # JSON.stringify of that literal gives back these same bytes; the runner is stored as its source.
+    stored = {"pv-runner": "(function () {\n" + runner + "})()", "pv-steps:" + proc: steps_json}
+    return runner_js, steps_js, stored
+
+
+def check_script(stored, origin, files=None, then="run.js"):
+    """check.js: on the portal's page, which of runner.js and the steps the pane must still run
+    (its localStorage holds something else), and whether the page is on the portal's origin,
+    the only one whose storage has them. The rest of install.js need not be sent again.
+    files: the file that writes each key (default runner.js, steps.js); then: what follows."""
+    want = {k: hashlib.sha256(v.encode()).hexdigest() for k, v in stored.items()}
+    files = files or {k: "runner.js" if k == "pv-runner" else "steps.js" for k in stored}
+    return ("(async () => {\n"
+            "  const sha = async (s) => s === null ? null : Array.from(new Uint8Array(await crypto.subtle.digest(\"SHA-256\", new TextEncoder().encode(s)))).map((b) => b.toString(16).padStart(2, \"0\")).join(\"\");\n"
+            f"  const want = {json.dumps(want)};\n"
+            "  const stale = [];\n"
+            "  for (const [k, v] of Object.entries(want)) if (await sha(localStorage.getItem(k)) !== v) stale.push(k);\n"
+            f"  if (location.origin !== {json.dumps(origin)}) return {json.dumps('go to ' + origin + ' first: its storage holds the runner')};\n"
+            f"  const files = {json.dumps(files)};\n"
+            f"  return \"run \" + stale.map((k) => files[k]).concat([{json.dumps(then)}]).join(\", then \");\n"
+            "})()\n")
+
+
 
 
 # --- browser ----------------------------------------------------------------------
@@ -853,11 +903,12 @@ def main():
             ap.error(f"{a.command} needs --out")
         if a.command == "page":
             a.out.mkdir(parents=True, exist_ok=True)
-            install, run_js = page_scripts(steps, values, resume=resume)
+            files = page_files(steps, values, resume=resume)
             drift(a.out, steps, resume)
-            (a.out / "install.js").write_text(install)
-            (a.out / "run.js").write_text(run_js)
-            print(f"{a.out / 'install.js'} ({len(install)} bytes), {a.out / 'run.js'} ({len(run_js)} bytes)")
+            for name, text in files.items():
+                (a.out / name).write_text(text)
+            print(f"{a.out}: check.js first (which of runner.js, steps.js the pane lacks), then run.js; "
+                  f"install.js is both. " + ", ".join(f"{n} {len(t)} bytes" for n, t in files.items()))
             return 0
         return run(steps, values, a.out, a.cdp, a.profile, a.close, resume)
     except StepError as e:

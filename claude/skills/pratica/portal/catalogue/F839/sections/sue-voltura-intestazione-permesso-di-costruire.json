@@ -332,9 +332,52 @@
   },
   {
    "section": "dichiarazione relativa alla conoscenza dei soggetti che intervengono nella realizzazione dell'intervento",
-   "fingerprint": "923f0a595e17ec6b",
-   "same_as": "sue-voltura-intestazione-permesso-di-costruire#dichiarazione relativa alla conoscenza delle prescrizioni e condizioni da rispettare",
-   "seconds": 0.6
+   "by_hand": "2026-10-29: the batch read the prescrizioni section again here (crawl.js waited on the first 20 characters of the title, which both share); read in the pane, labels from the radios' own cells",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di essere a conoscenza dei nominativi del Progettista, del Direttore dei Lavori, del Coordinatore per la sicurezza, dell'Esecutore ed altri soggetti che interve",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "la direzione e/o l'esecuzione dei lavori saranno assunte dai soggetti di seguito indicati",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "direttore dei lavori",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:txt",
+     "kind": "text",
+     "label": "coordinatore per la sicurezza",
+     "max": 50
+    },
+    {
+     "id": "r8c1p8reg:txt",
+     "kind": "text",
+     "label": "esecutore",
+     "max": 50
+    }
+   ],
+   "fingerprint": "5fb787b8c572e94b",
+   "branches": [
+    {
+     "choice": "di essere a conoscenza dei nominativi del Progettista, del Direttore dei Lavori, del Coordinatore per la sicurezza, dell'Esecutore ed altri soggetti che interve",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "la direzione e/o l'esecuzione dei lavori saranno assunte dai soggetti di seguito indicati",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ]
   },
   {
    "section": "Contributo di Costruzione",
@@ -551,5 +594,59 @@
    "seconds": 0.9,
    "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
- ]
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "id": "r2c1p2reg:upload1_input",
+    "title": "copia attestazione versamento oneri, diritti e spese",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r6c1p7reg:upload1_input",
+    "title": "dichiarazione sostitutiva dell'atto di notorietà corredata da copia di documento di identità, attestante il diritto reale a presentare il titolo abilitativo",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r10c1p12reg:upload1_input",
+    "title": "fotocopia con estremi di registrazione dell'atto di alienazione con il quale è avvenuto il trasferimento del titolo stesso",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r14c1p17reg:upload1_input",
+    "title": "polizza fidejussoria a garanzia del pagamento delle quote residue del Contributo di Costruzione intestata al nuovo titolo o voltura della precedente fidejussion",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r19c1p23reg:upload1_input",
+    "title": "Procura speciale",
+    "accepts": "jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r22c1p26reg:upload1_input",
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "accepts": "pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r26c1p31reg:upload1_input",
+    "title": "Allegati liberi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft"
 }
