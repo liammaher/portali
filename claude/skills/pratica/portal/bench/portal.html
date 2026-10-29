@@ -54,6 +54,36 @@ if (location.search.includes("fade=1")) {
       width: `${r.width + 20}px`, height: `${r.height + 20}px` });
   });
 }
+// ?decl=1: a declarations section (its link in the menu, its text and a tick box in li#corrente
+// as the real portal shows the open section) and a Visualizza anteprima button. ?decl=1&stuck=1:
+// the declarations link opens nothing, as when the portal doesn't answer.
+if (location.search.includes("decl=1")) {
+  const cur = document.createElement("ul");
+  cur.innerHTML = "<li id='corrente'></li>";
+  document.body.append(cur);
+  const link = document.createElement("a");
+  link.className = "linkmenu";
+  link.href = "#consapevolezza";
+  link.textContent = "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000";
+  document.querySelector("nav").append(link);
+  const open = (a) => {
+    const li = document.getElementById("corrente");
+    li.textContent = a.textContent;
+    if (a === link) {
+      li.insertAdjacentHTML("beforeend", "<p>Il sottoscritto, consapevole delle sanzioni penali previste dall'art. 76\n" +
+        "del D.P.R. 445/2000, dichiara quanto segue.</p><label><input type='checkbox' id='form:r9c1:dynaForm:consap_chk'" +
+        (location.search.includes("ticked=1") ? " checked" : "") + "> Per presa visione</label>");
+    }
+  };
+  for (const a of document.querySelectorAll("a.linkmenu")) {
+    a.addEventListener("click", () => { if (!(a === link && location.search.includes("stuck=1"))) open(a); });
+  }
+  const preview = document.createElement("button");
+  preview.type = "button";
+  preview.textContent = "VISUALIZZA ANTEPRIMA";
+  preview.addEventListener("click", () => window.open("/anteprima.pdf"));
+  document.getElementById("form").append(preview);
+}
 const texts = () => [...document.querySelectorAll("input[type=text]")];
 const list = (name) => {
   const li = document.createElement("li");

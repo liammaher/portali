@@ -34,10 +34,14 @@
       doesn't name, the payment, signing and sending, and shows the draft, left open for
       them unless --close. Writes DIR/report.json (timings, what each section kept, and when
       it stops a `snapshot` of the page with no value in it): no value is in it, so Claude
-      may read it. DIR/private/ (kept.json, held.json, shown.json) and DIR/review.html (the page
-      the person reviews: what's left for them, the steps file's `yours`, every value, and
-      what a failed read-back wanted and found) are the person's, for Claude to send and
-      never to read. There is no screenshot: a failed page holds the person's data.
+      may read it. DIR/private/ (kept.json, held.json, shown.json, declarations.json,
+      anteprima.pdf) and DIR/review.html (the page the person reviews: what's left for them,
+      the steps file's `yours`, the declarations' own text, the portal's PDF preview, every
+      value, and what a failed read-back wanted and found) are the person's, for Claude to
+      send and never to read. There is no screenshot: a failed page holds the person's data.
+      Reading the declarations opens their sections and copies their text, ticking nothing;
+      the preview is the PDF "Visualizza anteprima" opens. Neither can stop a saved draft:
+      a failure is a note (`declarations_note`, `preview_note`) in the report and the page.
 
 A run that stops says where (report.json `at`: the wizard screen, or the section and
 field). `page` or `run` with --resume REPORT picks it up on the same draft, from that
@@ -99,6 +103,12 @@ FORBIDDEN = re.compile(r"pago\s*pa|\binvia\b|\bpaga\b|procedi con il pagamento|f
 DECLARATIONS = re.compile(
     r"consapevolezza|informativa sulla privacy|requisiti di o|altre dichiarazioni|"
     r"dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75", re.I)
+
+# A codice fiscale as it sits in a firma digitale certificate's subject ("TINIT-RSSMRA80A01H501U").
+CF = re.compile(r"\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b")
+# Choices the form takes in the person's name and the review page lists apart from the long table:
+# how the imposta di bollo is settled (pagoPA, or marche whose serial numbers go in the form).
+DECIDED = re.compile(r"imposta di bollo", re.I)
 
 DUG = {"VIA", "VIALE", "PIAZZA", "CORSO", "LARGO"}
 # run.js for the pane is one tool call's text: a receipt or a small scan, not a planimetria.
@@ -575,7 +585,7 @@ def preflight(steps, values, urls=None):
     order = check_asks(steps)
     asks = steps.get("asks", {})
     report = {"ready": False, "unsupported": [], "proposals": [], "questions": [], "missing": [], "files": [],
-              "yours": []}
+              "warnings": [], "yours": []}
     if any(r.startswith("t:") for _, t, _ in templates(steps) for r, _ in refs_in(t)):
         try:
             values.titolare
@@ -686,12 +696,59 @@ def preflight(steps, values, urls=None):
                                             "compress it or split it across the slot's +")
                     elif takes and not any(p.name.lower().endswith("." + t) for t in takes):
                         entry["problem"] = f"the slot takes only {', '.join(takes)}"
+                    if p.name.lower().endswith(".p7m") and "problem" not in entry:
+                        signers, why = p7m_signers(p)
+                        if why:
+                            entry["problem"] = why
+                        elif signers is not None:
+                            # Counts and a yes/no, never the codici fiscali: Claude reads this report.
+                            try:
+                                cf = values.field("t:identity.codice_fiscale")
+                            except StepError:
+                                cf = None
+                            entry["signers"] = len(signers)
+                            if not signers:
+                                report["warnings"].append(f"{entry['for']}: the .p7m carries no certificate with a "
+                                                          "codice fiscale, so who signed it can't be told")
+                            elif cf:
+                                entry["signed_by_dichiarante"] = cf.upper() in signers
+                                if not entry["signed_by_dichiarante"]:
+                                    report["warnings"].append(
+                                        f"{entry['for']}: signed by {len(signers)} other person(s), not by the "
+                                        "dichiarante: right if someone else must sign it, otherwise sign it again")
                 report["files"].append(entry)
     report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"] if "link" not in x) <= PAGE_FILES_LIMIT
     report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
     report["ready"] = not (report["questions"] or report["proposals"] or report["missing"]
                            or any(not x["exists"] or x.get("problem") for x in report["files"] if x["path"]))
     return report
+
+
+def p7m_signers(path):
+    """The codici fiscali in the certificates a .p7m (CAdES, PKCS#7) carries, read with openssl:
+    (set, None); (None, why) when it isn't a readable one; (None, None) with no openssl to ask.
+    Who signed it is a name in a certificate, not proof the signature holds: the portal checks
+    that, and so does the person's own signing software. This catches the wrong file, an
+    unsigned copy renamed, and a signature by someone other than the dichiarante, before upload."""
+    openssl = shutil.which("openssl")
+    if not openssl:
+        return None, None
+    raw = Path(path).read_bytes()
+    forms = [("DER", raw), ("PEM", raw)]
+    try:  # some tools save the DER as base64 text
+        forms.append(("DER", base64.b64decode(b"".join(raw.split()), validate=True)))
+    except ValueError:
+        pass
+    for form, data in forms:
+        try:
+            r = subprocess.run([openssl, "pkcs7", "-inform", form, "-print_certs"], input=data,
+                               capture_output=True, timeout=20)
+        except subprocess.TimeoutExpired:
+            continue
+        if r.returncode == 0:
+            subjects = [x for x in r.stdout.decode(errors="replace").splitlines() if x.startswith("subject=")]
+            return {cf for x in subjects for cf in CF.findall(x)}, None
+    return None, "not a readable .p7m (CAdES) file: sign the document again with your firma digitale"
 
 
 def attachment(path, url=None):
@@ -951,28 +1008,107 @@ def drift(out, steps, resume):
 
 
 def review_shown(steps, values):
-    """What the review page shows besides the run: each value, and the person's own steps."""
+    """What the review page shows besides the run: each value, the choices made in the person's
+    name (DECIDED), and the person's own steps."""
+    rows = plan(steps, values)
+    decisions = {}
+    for v in rows:
+        if DECIDED.search(v["section"]):
+            what = v["label"] or v["id"]
+            decisions.setdefault(v["section"], []).append(what if v["value"] is None else f"{what}: {v['value']}")
     return {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
+            "decisions": [{"section": s, "choices": c} for s, c in decisions.items()],
             "values": [{"section": v["section"], "label": v["label"] or v["id"],
                         "value": "chosen" if v["value"] is None
                         else "attached: " + Path(v["value"]).name if v["kind"] == "file" else v["value"]}
-                       for v in plan(steps, values)]}
+                       for v in rows]}
+
+
+def private_dir(out):
+    folder = out / "private"
+    folder.mkdir(mode=0o700, exist_ok=True)
+    folder.chmod(0o700)
+    return folder
 
 
 def private(out, shown, held=None):
     """What no report holds: what each section typed (to resume), what a failed read-back wanted
-    and found, and every value for the review page. A folder only the person reads; the skill
-    tells Claude to send the review page and never to open these."""
-    folder = out / "private"
-    folder.mkdir(mode=0o700, exist_ok=True)
-    folder.chmod(0o700)
+    and found, every value for the review page, and the declarations' own text. A folder only the
+    person reads; the skill tells Claude to send the review page and never to open these."""
+    folder = private_dir(out)
     parts = [("shown", shown)]
     if held is not None:  # a run in the pane has only shown: __pv.held() stays in its tab
         parts += [("kept", held.get("kept", [])), ("held", held.get("details", []))]
+        # A resume past the declarations reads none: it must not blank what an earlier run kept.
+        if held.get("declarations") or not (folder / "declarations.json").exists():
+            parts.append(("declarations", held.get("declarations", [])))
     for name, data in parts:
         f = folder / f"{name}.json"
         f.write_text(json.dumps(data, indent=2, ensure_ascii=False))
         f.chmod(0o600)
+
+
+def capture_preview(ctx, page, folder, seconds=20):
+    """The portal's own PDF preview of the draft (Visualizza anteprima), copied to
+    folder/anteprima.pdf for the review page: what the person declares is the portal's rendering,
+    not our list of values. Whatever the button opens (a window with the PDF, or a download) is
+    fetched here, in the person's logged-in browser, so none of it passes through Claude. Best
+    effort: returns (True, "") or (False, why), and never stops a filled draft."""
+    seen, files = [], []
+
+    # Named functions: Playwright wraps a handler and can't attach to a builtin like list.append.
+    def download(d):
+        files.append(d)
+
+    def popup(p):
+        seen.append(p)
+        p.on("download", download)
+    ctx.on("page", popup)
+    page.on("download", download)
+    body, why = None, "the preview didn't open a window or a download"
+    try:
+        page.evaluate("__pv.preview()")
+        end = time.monotonic() + seconds
+        while body is None and time.monotonic() < end:
+            page.wait_for_timeout(250)
+            if files:
+                tmp = folder / "anteprima.download"
+                files[0].save_as(tmp)
+                body = tmp.read_bytes()
+                tmp.unlink()
+                break
+            for p in seen:
+                u = p.url
+                if u.startswith("blob:"):
+                    b64 = p.evaluate("fetch(location.href).then(r => r.blob()).then(b => new Promise(ok => {"
+                                     "const f = new FileReader(); f.onload = () => ok(f.result.split(',')[1]); f.readAsDataURL(b); }))")
+                    body = base64.b64decode(b64)
+                elif u.startswith(("http://", "https://")):
+                    r = ctx.request.get(u)
+                    body = r.body() if r.ok else None
+                    if body is None:
+                        why = f"the preview's address answered {r.status}"
+                        break
+                if body is not None:
+                    break
+        if body is not None and not body.startswith(b"%PDF-"):
+            body, why = None, "what the preview opened isn't a PDF"
+    except Exception as e:
+        body, why = None, f"{type(e).__name__}: {str(e).splitlines()[0][:160]}"
+    finally:
+        ctx.remove_listener("page", popup)
+        page.remove_listener("download", download)
+        for p in seen:
+            try:
+                p.close()
+            except Exception:
+                pass
+    if body is None:
+        return False, why
+    f = folder / "anteprima.pdf"
+    f.write_bytes(body)
+    f.chmod(0o600)
+    return True, ""
 
 
 def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
@@ -1032,11 +1168,16 @@ def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
                     held = page.evaluate("__pv.held()")
                 except Exception:
                     pass
+            if report.get("result") == "filled" and not page.is_closed():
+                ok, why = capture_preview(ctx, page, private_dir(out))
+                report["preview_pdf"] = ok
+                if why:
+                    report["preview_note"] = why
             # report.json holds no value, so Claude may read it; what the person needs is
             # kept apart and goes to them, never into the conversation.
             (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
             private(out, shown, held)
-            (out / "review.html").write_text(review.portal_review(report | shown | {"details": held.get("details", [])}),
+            (out / "review.html").write_text(review.portal_review(report | shown | {"details": held.get("details", [])}, out),
                                              encoding="utf-8")
             (out / "review.html").chmod(0o600)
             print(f"review: {out / 'review.html'}", flush=True)

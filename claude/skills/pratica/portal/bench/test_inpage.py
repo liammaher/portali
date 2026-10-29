@@ -70,6 +70,8 @@ class Handler(BaseHTTPRequestHandler):
                                     b'        <td><input type="text" id="form:r4c1:dynaForm:impresa_txt"></td></tr>', b"")
                 assert b"impresa_txt" not in html, "the bench page changed: update the flaky cut"
             self.send(html, "text/html; charset=utf-8")
+        elif path == "/anteprima.pdf":
+            self.send(b"%PDF-1.4\nl'anteprima del portale finto\n", "application/pdf")
         elif path.startswith("/files/") and path[7:] in LINKED:
             self.send(LINKED[path[7:]], "application/pdf")
         elif path == "/state":
@@ -215,6 +217,90 @@ def main():
             PORTAL.reset()
             stops(fill(browser, base, steps(base, save="Firma e invio"), answers), "refused to click")
         case("the person's Firma e invio is never clicked", theirs)
+
+        decl_start = "/portal.html?decl=1"
+
+        def declarations_read():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base, start=decl_start), answers, held=held)
+            assert r["result"] == "filled", r.get("error")
+            assert r["declarations_read"] == 1 and "declarations_note" not in r, r
+            d = held[0]["declarations"]
+            assert len(d) == 1 and "consapevolezza" in d[0]["section"], d
+            assert "dichiara quanto segue" in d[0]["text"] and "art. 76" in d[0]["text"], d[0]["text"]
+            assert d[0]["boxes"] == [{"label": "Per presa visione", "kind": "checkbox", "ticked": False}], d[0]["boxes"]
+            assert "sanzioni penali" not in json.dumps(r), "the report carries the declaration's own text"
+            assert not PORTAL.sent, "Firma e invio was clicked"
+        case("the declarations' own text is copied into held(), ticked by nothing, and not into the report", declarations_read)
+
+        def declarations_already_ticked():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base, start=decl_start + "&ticked=1"), answers, held=held)
+            assert r["result"] == "filled", r.get("error")
+            assert held[0]["declarations"][0]["boxes"][0]["ticked"] is True, held[0]["declarations"]
+        case("a declaration the portal already shows ticked is reported as ticked", declarations_already_ticked)
+
+        def declarations_stuck():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base, start=decl_start + "&stuck=1"), answers, held=held)
+            assert r["result"] == "filled", f"a declaration that won't open stopped the run: {r.get('error')}"
+            assert r["declarations_read"] == 0 and "didn't open" in r["declarations_note"], r
+            assert held[0]["declarations"] == []
+        case("a declarations section that won't open is a note, not a stop", declarations_stuck)
+
+        def no_declarations():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base), answers, held=held)
+            assert r["result"] == "filled" and r["declarations_read"] == 0 and held[0]["declarations"] == [], r
+        case("a portal with no declarations in its menu reads none", no_declarations)
+
+        def preview_copied():
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            install, run_js = run.page_scripts(steps(base, start=decl_start), values, None)
+            folder = tmp / "preview"
+            folder.mkdir(exist_ok=True)
+            (folder / "anteprima.pdf").unlink(missing_ok=True)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert report["result"] == "filled", report.get("error")
+                ok, why = run.capture_preview(page.context, page, folder)
+                assert ok, why
+                assert (folder / "anteprima.pdf").read_bytes().startswith(b"%PDF-1.4\n"), "not the portal's PDF"
+                assert (folder / "anteprima.pdf").stat().st_mode & 0o777 == 0o600
+                assert len(page.context.pages) == 1, "the preview's window was left open"
+            finally:
+                page.close()
+        case("the portal's PDF preview is fetched by the person's own browser and kept private", preview_copied)
+
+        def preview_missing():
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            install, run_js = run.page_scripts(steps(base), values, None)
+            folder = tmp / "no-preview"
+            folder.mkdir(exist_ok=True)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while page.evaluate("__pv.wait(5000)")["result"] == "running":
+                    pass
+                ok, why = run.capture_preview(page.context, page, folder)
+                assert not ok and "anteprima" in why, (ok, why)
+                assert not (folder / "anteprima.pdf").exists()
+            finally:
+                page.close()
+        case("a portal with no preview button gives a reason, not a stop", preview_missing)
 
 
         def recovered():
@@ -575,6 +661,33 @@ def main():
         else:
             raise AssertionError("a missing file passed the plan")
     case("a file that isn't there stops the plan", missing)
+
+    def reviewed():
+        filled = {"procedure": "test/allegati", "result": "filled", "sections": [], "total_seconds": 3.0,
+                  "url": "https://example.invalid/d", "values": [], "yours": ["Firmare"]}
+        folder = tmp / "review"
+        (folder / "private").mkdir(parents=True, exist_ok=True)
+        decl = [{"section": "Dichiarazione di consapevolezza", "text": "Il sottoscritto dichiara il vero.",
+                 "boxes": [{"label": "Per presa visione", "kind": "checkbox", "ticked": False}]}]
+        (folder / "private" / "declarations.json").write_text(json.dumps(decl))
+        (folder / "private" / "anteprima.pdf").write_bytes(b"%PDF-1.4\nfinto\n")
+        page = run.review.portal_review(filled | {"declarations_read": 1, "preview_pdf": True}, folder)
+        assert "Il sottoscritto dichiara il vero." in page and "The declarations you will tick" in page
+        assert "1 copied word for word from the portal; none ticked" in page, "no check that none is ticked"
+        assert "Download the PDF" in page and "The portal&#x27;s own PDF preview copied" in page
+        decl[0]["boxes"][0]["ticked"] = True
+        (folder / "private" / "declarations.json").write_text(json.dumps(decl))
+        page = run.review.portal_review(filled | {"declarations_read": 1}, folder)
+        assert "already ticked before you opened them" in page and "Dichiarazione di consapevolezza" in page
+        # Nothing copied (the pane, or an older run): the page says so, and never shows a stand-in.
+        pane = run.review.portal_review(filled | {"declarations_read": 2}, tmp / "nowhere")
+        assert "Declarations: not copied in this run (read in the pane" in pane, "no note for the pane"
+        assert "was not copied in this run" in pane and "The declarations you will tick" not in pane
+        assert "couldn&#x27;t be copied (the portal said no)" in run.review.portal_review(
+            filled | {"preview_note": "the portal said no"}, tmp / "nowhere")
+        stopped = run.review.portal_review(filled | {"result": "stopped", "error": "x"}, tmp / "nowhere")
+        assert "Declarations" not in stopped and "preview" not in stopped.lower(), "a stopped run reports on what it never reached"
+    case("the review page shows the declarations' text and the portal's PDF, or says it has neither", reviewed)
 
     server.shutdown()
     shutil.rmtree(tmp)

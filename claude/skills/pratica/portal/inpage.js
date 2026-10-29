@@ -28,8 +28,12 @@
 //                                  and whether it holds anything, the portal's messages. A
 //                                  stopped run's report carries it as `snapshot`
 //   __pv.held()                    what the reports leave out (the values each section typed,
-//                                  what a failed read-back wanted and found): for run.py to
-//                                  write where only the person reads it, never for Claude
+//                                  what a failed read-back wanted and found, the declarations'
+//                                  own text): for run.py to write where only the person reads
+//                                  it, never for Claude
+//   __pv.preview()                 presses the portal's "Visualizza anteprima" so run.py can copy
+//                                  the PDF it opens (capture_preview): the document the person
+//                                  declares is the portal's rendering, not our list of values
 //
 // No report holds a value: a failed read-back says why ("empty", "different"), an error
 // names the box and never what was typed, and a portal message that echoes a value is
@@ -49,7 +53,7 @@
   const norm = (s) => (s || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "")
     .replace(/\s+/g, " ").trim().toLowerCase();
 
-  let steps, frame, report, kept, secrets = [], details = [], sealedRun = null;
+  let steps, frame, report, kept, secrets = [], details = [], declared = [], sealedRun = null;
 
   // The person's values, as patterns to scrub from anything a report says. Four characters
   // or more, in the text as given and as norm() would show it (the portal's messages are
@@ -681,6 +685,43 @@
     }
   }
 
+  // The declarations are the person's to tick, so they should read the portal's own words, not
+  // a summary of them. Each declarations section is opened (a link, as a person opens it) and
+  // its text copied, with every tick box's label and whether it is ticked. Nothing in it is
+  // clicked, typed or saved. A failure is a note in the report, never a stop: this can't stand
+  // between a saved draft and the person. The text may carry their name, so it is held like the
+  // values (held(), not the report) and run.py writes it only for the review page.
+  async function readDeclarations() {
+    const names = [...doc().querySelectorAll("a.linkmenu")].map((a) => a.textContent.replace(/\s+/g, " ").trim())
+      .filter((n) => steps.declarations.test(n));
+    const back = kept.filter((k) => !k.sec.go).map((k) => k.sec.section).pop();
+    declared = [];
+    try {
+      for (const name of names) {
+        await openSection(linkTo(name), name, 8000);
+        const cur = doc().querySelector("li#corrente");
+        if (!cur) fail(`${name}: no open section to read`);
+        // A box's own <label> first; the steps' label_js finds the portal's, which sit in the row.
+        const label = (e) => {
+          if (e.labels && e.labels[0] && e.labels[0].innerText.trim()) return e.labels[0].innerText;
+          try { return win().eval(`(${steps.label_js})`)(e)[0] || ""; } catch (x) { return ""; }
+        };
+        declared.push({ section: name, text: cur.innerText.replace(/\n{3,}/g, "\n\n").trim().slice(0, 20000),
+          boxes: [...cur.querySelectorAll("input[type=checkbox], input[type=radio]")]
+            .map((e) => ({ label: label(e).replace(/\s+/g, " ").trim().slice(0, 300), kind: e.type, ticked: e.checked })) });
+      }
+      report.declarations_read = declared.length;
+    } catch (e) {
+      report.declarations_read = declared.length;
+      report.declarations_note = scrub(e instanceof StepError ? e.message : `${e.name}: ${e.message}`);
+    }
+    // Back on the section the steps left open, whatever happened above.
+    try {
+      const a = names.length && back && linkTo(back);
+      if (a) await openSection(a, back, 8000);
+    } catch (e) { report.declarations_note = report.declarations_note || scrub(`could not go back to ${back}: ${e.message}`); }
+  }
+
   async function run(values, resume) {
     const t0 = performance.now();
     const secs = () => +((performance.now() - t0) / 1000).toFixed(1);
@@ -710,7 +751,10 @@
       for (const [i, s] of steps.sections.entries()) {
         if (!s.go && i >= (from.section || 0)) await section(s, values.sections[i], i);
       }
-      if (steps.sections.some((s, i) => !s.go && i >= (from.section || 0)) || !steps.sections.some((s) => s.go)) await verify();
+      if (steps.sections.some((s, i) => !s.go && i >= (from.section || 0)) || !steps.sections.some((s) => s.go)) {
+        await verify();
+        await readDeclarations();
+      }
       for (const [i, s] of steps.sections.entries()) {
         if (s.go && i >= (from.section || 0)) await section(s, values.sections[i], i);
       }
@@ -843,6 +887,7 @@
       steps.declarations = new RegExp(steps.declarations, "i");
       hide(values);
       details = [];
+      declared = [];
       // A fix is what Claude found the page really has for one field (a moved id, a renamed
       // label): this run uses it, and run.py writes it down for the steps file.
       for (const x of resume.fixes || []) Object.assign(steps.sections[x.section].fields[x.field], x.set);
@@ -873,7 +918,12 @@
       return report && publicReport();
     },
     open() {
-      location.href = doc().location.href;
+      // The draft's own address: a preview that loaded in the frame would have moved it.
+      location.href = (this.last() || {}).url || doc().location.href;
+    },
+    preview() {
+      press(button("Visualizza anteprima"), "Visualizza anteprima");
+      return "pressed";
     },
     last() {
       return report ? publicReport() : JSON.parse(sessionStorage.getItem("pv-report") || "null");
@@ -881,7 +931,7 @@
     look,
     // What the reports leave out. run.py writes it for the person; Claude doesn't read it.
     held() {
-      return { kept: report ? report.kept || [] : [], details };
+      return { kept: report ? report.kept || [] : [], details, declarations: declared };
     },
     resume({ fixes = [], url } = {}) {
       // As run.py's resumption(): the draft, the section it stopped in, what came before.

@@ -72,6 +72,37 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
   `retries`. A value the portal refuses or doesn't keep, or a renamed label, still stops.
   Two runs on one login (another session's, a crawl) make these errors: one at a time.
 
+## What pre-flight checks in a signed file
+
+A `.p7m` is read with openssl (`p7m_signers`; PEM, DER and base64 text) before any browser
+opens: unreadable is `not ready`; no codice fiscale in its certificates, or none of the
+dichiarante's (`t:identity.codice_fiscale`), is a `warnings` entry. Counts and a yes/no only: Claude
+reads the report, so no codice fiscale is in it. It does not verify the signature or the
+certificate's validity at signing time; the portal does.
+
+## What the person reads before they declare
+
+The review page is where the person reads, not where Claude summarizes. `run.py run` adds two
+things the portal itself says, copied by the program and never read by Claude:
+
+- **The declarations.** After the fresh load, `readDeclarations` (inpage.js) opens each section
+  the steps file leaves out (`DECLARATIONS`) by its menu link, copies the open section's text
+  (`li#corrente`'s `innerText`) and each tick box's label and state, ticks nothing, and goes back
+  to the section the steps left open. The text is held (`__pv.held().declarations`, may carry the
+  person's name), written to `private/declarations.json`, and shown word for word. A box already
+  ticked is flagged. A section that won't open is `declarations_note` in the report, not a stop.
+- **The portal's PDF preview.** `capture_preview` presses "Visualizza anteprima" (`__pv.preview()`),
+  fetches the PDF the button opens (a window, a blob or a download) in the person's own browser,
+  and keeps it as `private/anteprima.pdf`; the page draws its pages when PyMuPDF is there and always
+  offers the PDF to download. Not a PDF, or no window: `preview_note`, and the page says to open it in
+  the portal.
+
+The pane (`run.py page`) copies neither: the text would pass through Claude. The page then says so.
+**Not yet seen on the real portal:** both are proven on the bench's fake portal only. First real run:
+check that `li#corrente` holds a declaration's whole text, that a section's tick box labels are its
+own, and what Visualizza anteprima opens (a PDF at an address, a blob, a download, or the frame
+itself), then record it here and in the map (`seen:`).
+
 ## Made-up data and the code window
 
 `run.py page` seals `run.js` and opens a window with the code, which the person types into the

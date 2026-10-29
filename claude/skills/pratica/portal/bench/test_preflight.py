@@ -139,10 +139,84 @@ def files():
     signed = tmp / "planimetria.pdf.p7m"
     signed.write_bytes(b"0")
     r = run.preflight(steps, values(steps=steps, answers=ANSWERS | {"planimetria": str(signed)}))
-    assert r["ready"] and "problem" not in r["files"][0], r["files"]
+    assert not r["ready"] and "not a readable .p7m" in r["files"][0]["problem"], r["files"]
     for f in (big, huge, signed):
         f.unlink()
     tmp.rmdir()
+
+
+def signed_file(tmp, name, cf, base64_text=False):
+    """A real CAdES .p7m (a self-signed certificate carrying cf as TINIT-cf, as a firma digitale's does)."""
+    import base64
+    import shutil
+    import subprocess
+    openssl = shutil.which("openssl")
+    key, crt, doc, out = tmp / "k.pem", tmp / "c.pem", tmp / "doc.pdf", tmp / name
+    doc.write_bytes(b"%PDF-1.4 finto\n")
+    subprocess.run([openssl, "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-keyout", str(key), "-out", str(crt),
+                    "-days", "2", "-subj", f"/C=IT/O=Fittizio/CN=Firma Finta/serialNumber=TINIT-{cf}"],
+                   check=True, capture_output=True)
+    subprocess.run([openssl, "cms", "-sign", "-signer", str(crt), "-inkey", str(key), "-in", str(doc),
+                    "-outform", "DER", "-out", str(out), "-nodetach", "-binary"], check=True, capture_output=True)
+    if base64_text:
+        out.write_bytes(base64.encodebytes(out.read_bytes()))
+    for f in (key, crt, doc):
+        f.unlink()
+    return out
+
+
+def p7m_signer():
+    import shutil
+    if not shutil.which("openssl"):
+        return  # nothing to check with: p7m_signers says so and pre-flight lets the file through
+    steps = copy.deepcopy(STEPS)
+    steps["asks"]["planimetria"] = {"type": "file", "question": "The planimetria (signed)"}
+    steps["sections"][-1]["fields"].append({"id": "p", "kind": "file", "label": "Planimetria",
+                                            "value": "{{ask.planimetria}}"})
+    tmp = Path(tempfile.mkdtemp(prefix="preflight-p7m-"))
+    own, other = "FTTGNR90E12F839R", "RSSMRA80A01H501U"
+
+    def check(path):
+        return run.preflight(steps, values(steps=steps, answers=ANSWERS | {"planimetria": str(path)}))
+    r = check(signed_file(tmp, "mio.pdf.p7m", own))
+    assert r["ready"] and r["files"][0]["signed_by_dichiarante"] is True and not r["warnings"], r
+    r = check(signed_file(tmp, "mio-b64.pdf.p7m", own, base64_text=True))
+    assert r["ready"] and r["files"][0]["signed_by_dichiarante"] is True, "a base64 .p7m wasn't read"
+    # Someone else's signature: a warning (a technician may be the one who signs), never a block,
+    # and never the codici fiscali themselves: Claude reads this report.
+    r = check(signed_file(tmp, "altro.pdf.p7m", other))
+    assert r["ready"] and r["files"][0]["signed_by_dichiarante"] is False, r["files"]
+    assert len(r["warnings"]) == 1 and "not by the dichiarante" in r["warnings"][0], r["warnings"]
+    assert other not in json.dumps(r) and own not in json.dumps(r["files"]) + json.dumps(r["warnings"]), "a codice fiscale in the report"
+    # Not a signature at all (an unsigned file renamed, a truncated download): not ready, and why.
+    junk = tmp / "finto.pdf.p7m"
+    junk.write_bytes(b"%PDF-1.4 non firmato\n")
+    r = check(junk)
+    assert not r["ready"] and "not a readable .p7m" in r["files"][0]["problem"], r["files"]
+    shutil_rmtree(tmp)
+
+
+def shutil_rmtree(p):
+    import shutil
+    shutil.rmtree(p, ignore_errors=True)
+
+
+def bollo_chosen():
+    # The imposta di bollo route is a choice made in the person's name: the review lists it
+    # apart from the table of values, with the serials when marche are used.
+    steps = copy.deepcopy(STEPS)
+    steps["asks"]["serial"] = {"type": "text", "question": "Serial?"}
+    steps["sections"].append({"section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo", "fields": [
+        {"kind": "radio", "label": "Il pagamento è dovuto e si intende assolvere l'obbligo tramite pagoPA"},
+        {"kind": "text", "label": "numero seriale (1)", "value": "{{ask.serial}}"}]})
+    shown = run.review_shown(steps, values(steps=steps, answers=ANSWERS | {"serial": "01234567890123"}))
+    assert shown["decisions"] == [{"section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo", "choices": [
+        "Il pagamento è dovuto e si intende assolvere l'obbligo tramite pagoPA", "numero seriale (1): 01234567890123"]}], shown["decisions"]
+    assert not run.review_shown(STEPS, values())["decisions"], "a pratica with no bollo section lists a decision"
+    filled = {"procedure": "x", "result": "filled", "sections": [], "total_seconds": 1, "values": [], "yours": []}
+    page = run.review.portal_review(filled | shown)
+    assert "Chosen in your name" in page and "tramite pagoPA" in page and "01234567890123" in page
+    assert "Chosen in your name" not in run.review.portal_review(filled | {"decisions": []})
 
 
 def checklist_forms():
@@ -281,6 +355,8 @@ CASES = [
     ("a sum of answers renders, needs every term, and each term is asked", sums),
     ("a value longer than its box is asked again, or named in the vault, before the run", too_long),
     ("a file over the pane's 256 KB is pane_ok once it goes by link", linked_files),
+    ("a .p7m is read: signed by the dichiarante, by someone else (a warning without any codice fiscale), or not a signature (not ready)", p7m_signer),
+    ("the imposta di bollo route is listed as a choice made in the person's name", bollo_chosen),
     ("a condition's words gate each other: a later question waits on the earlier answer (CILA contributo)", nested_when),
 ]
 
