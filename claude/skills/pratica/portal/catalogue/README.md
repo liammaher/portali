@@ -47,11 +47,11 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
 ## Where it stands (2026-10-28, `catalogue.py count --summary`)
 
-- **SUE**: all 27 pratiche crawled; **127 distinct sections**, 88 filled by the dictionary,
-  88% of section uses. 20 of the 27 pratiche have every section filled; the other seven
-  (permesso di costruire, SCIA alternativa, the landscape ones) need the asseverazioni and the
-  landscape classifications (DPR 31/2017's lists, the art. 136/142 vincoli): legal and
-  technical choices more than mapping.
+- **SUE**: all 27 pratiche crawled; **127 distinct sections**, 90 filled by the dictionary,
+  88% of section uses. 21 of the 27 pratiche have every section filled (the paesaggistica
+  semplificata the latest: Allegato B and the vincoli); the other six (permesso di costruire,
+  SCIA alternativa, the other landscape ones) need the asseverazioni and the remaining
+  landscape declarations: legal and technical choices more than mapping.
 - **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
   B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
   21 filled, 71% of section uses (the shared ones). The whole tree is 2,333 sector-and-operation
@@ -69,8 +69,8 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
 - Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening
-  and a restaurant's closure (SUAP), the proroga di inizio lavori (SUE), besides the seven run
-  before.
+  and a restaurant's closure (SUAP), the proroga di inizio lavori and the autorizzazione
+  paesaggistica semplificata (SUE), besides the seven run before.
 
 ## Drift
 

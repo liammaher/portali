@@ -130,6 +130,14 @@ class Section:
                 return n
         return None
 
+    def moves_itself(self, f):
+        """A box whose tick opens rows above it renumbers itself (the paesaggistica's art.
+        136): its id before the tick isn't its id after, so it goes by label. A pair whose
+        new id was on the page already is crawl.js pairing two same-label boxes, not a move."""
+        base, ids = f.get("base_id", f["id"]), {x["id"] for x in self.base}
+        n = self.node(self.avail, f, None) or self.node(self.branches, {**f, "id": base}, None)
+        return bool(n) and any(old == base and new != old and new not in ids for old, new in n.get("moved") or [])
+
     def choose(self, f, option=None):
         """The state after a tick or a dropdown option; a templated option opens nothing
         the generator can know, so a dropdown whose options open fields must be literal."""
@@ -279,7 +287,8 @@ def fill(entry, as_name, c, recipe, name):
         # depends on that answer.
         twins = [] if term else [b.find(d["kind"], d["label"], d.get("nth", 1))[0] for b in branches.values()]
         moved = any(t and t["id"] != f["id"] for t in twins) or any(
-            k != (term and term[1]) and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items())
+            k != (term and term[1]) and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in changed.items()) or (
+            d["kind"] in ("radio", "checkbox", "tick") and look.moves_itself(f))
         filled.update((t["id"], t["label"]) for t in twins if t)
         if not look.added and not moved:
             g = {"id": f["id"], **g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}

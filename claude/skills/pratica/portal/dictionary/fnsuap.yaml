@@ -22,6 +22,8 @@
 groups:
   attivita_852:
     question: "What does the food business do? Tick every line that applies."
+  allegato_b:
+    question: "Which items of DPR 31/2017's Allegato B do the works fall under? Tick every one that applies."
 
 asks:
   descrizione:
@@ -73,6 +75,59 @@ asks:
   paes_protocollo: {type: text, question: "The landscape authorization's P.G. (protocollo) number"}
   paes_data: {type: date, question: "Its date"}
   paes_scadenza: {type: date, question: "The date it was to stop being valid"}
+  # The autorizzazione paesaggistica semplificata (DPR 31/2017): the protection the property
+  # is under (art. 136: a declaration by D.M. or D.G.R.; art. 142: by law, e.g. the coast) and
+  # what the works are in the decree's Allegato B, the architect's to say.
+  vincolo:
+    type: choice
+    question: "What protects the property's landscape? (art. 136: a declaration by D.M./D.G.R.; art. 142: by law, e.g. the coast; art. 134: the piano paesaggistico only)"
+    options: [art 136, art 142, art 136 and 142, art 134]
+  vincolo_136_lettera: {type: text, question: "Which letter(s) of art. 136 c.1 (a, b, c, d)?"}
+  vincolo_136_provvedimento: {type: text, question: "The D.M. or D.G.R. that declared it (e.g. D.M. 28/03/1985)"}
+  vincolo_142_lettera: {type: text, question: "Which letter(s) of art. 142 c.1 (a: coast within 300 m, c: rivers, f: parks, g: woods, m: archaeological)?"}
+  paes_variante: {type: yes_no, question: "Is this a variant of a landscape authorization already issued?", default: "false"}
+  paes_b1: {type: yes_no, group: allegato_b, item: "B.1 Volume increase up to 10% of the original building, and at most 100 m³"}
+  paes_b2: {type: yes_no, group: allegato_b, item: "B.2 New or changed external openings or roof windows on buildings protected under art. 136 c.1 a), b), c)"}
+  paes_b3: {type: yes_no, group: allegato_b, item: "B.3 Facade changes that alter the building's look (other than B.2)"}
+  paes_b4: {type: yes_no, group: allegato_b, item: "B.4 Roof changes that alter the building's look (other than B.2)"}
+  paes_b5: {type: yes_no, group: allegato_b, item: "B.5 Seismic or energy-saving upgrades that change the building's look"}
+  paes_b6: {type: yes_no, group: allegato_b, item: "B.6 Accessibility works: ramps over 60 cm, external lifts or volumes visible from outside"}
+  paes_b7: {type: yes_no, group: allegato_b, item: "B.7 External plant serving one building: air-conditioning units, boilers, tanks and the like"}
+  paes_b8: {type: yes_no, group: allegato_b, item: "B.8 Solar panels (thermal or photovoltaic) serving one building"}
+  paes_b9: {type: yes_no, group: allegato_b, item: "B.9 Micro wind turbines up to 1.50 m high and 1.00 m across"}
+  paes_b10: {type: yes_no, group: allegato_b, item: "B.10 Cabins or modular columns for network utilities, or replacing them with different ones"}
+  paes_b11: {type: yes_no, group: allegato_b, item: "B.11 Local road changes: roundabouts, junctions, lay-bys, pavements"}
+  paes_b12: {type: yes_no, group: allegato_b, item: "B.12 Systematic street furniture, public lighting included"}
+  paes_b13: {type: yes_no, group: allegato_b, item: "B.13 Primary urbanisation works in implementation plans already assessed for landscape"}
+  paes_b14: {type: yes_no, group: allegato_b, item: "B.14 Works of item A.12 (Allegato A) in a protected building's grounds"}
+  paes_b15: {type: yes_no, group: allegato_b, item: "B.15 Demolition without rebuilding of buildings with no architectural, historic or witness value"}
+  paes_b16: {type: yes_no, group: allegato_b, item: "B.16 Garages above ground or partly underground, up to 50 m³ above ground"}
+  paes_b17: {type: yes_no, group: allegato_b, item: "B.17 Permanent canopies, porticoes, garden kiosks open on several sides, of limited size"}
+  paes_b18: {type: yes_no, group: allegato_b, item: "B.18 Systematic layout of a building's grounds: new paving, ramps, steps (other than B.14)"}
+  paes_b19: {type: yes_no, group: allegato_b, item: "B.19 Open canopies serving production sheds, or linking them"}
+  paes_b20: {type: yes_no, group: allegato_b, item: "B.20 External plant for existing production buildings: storage, ducts and the like"}
+  paes_b21: {type: yes_no, group: allegato_b, item: "B.21 Gates, fences, boundary or retaining walls, anti-intrusion elements"}
+  paes_b22: {type: yes_no, group: allegato_b, item: "B.22 Felling trees without replacement; replacing or planting trees and shrubs"}
+  paes_b23: {type: yes_no, group: allegato_b, item: "B.23 Above-ground works for local utility networks or sewers"}
+  paes_b24: {type: yes_no, group: allegato_b, item: "B.24 Underground tanks and cisterns that permanently change the ground"}
+  paes_b25: {type: yes_no, group: allegato_b, item: "B.25 Temporary occupation of land with structures simply anchored to the ground"}
+  paes_b26: {type: yes_no, group: allegato_b, item: "B.26 Verandas and closed outdoor structures (dehors) for businesses such as bars and restaurants"}
+  paes_b27: {type: yes_no, group: allegato_b, item: "B.27 Above-ground structures for domestic wells and water intakes"}
+  paes_b28: {type: yes_no, group: allegato_b, item: "B.28 Small bridges over watercourses, or partly covering them, to give access"}
+  paes_b29: {type: yes_no, group: allegato_b, item: "B.29 Masonry shelters for farm tools, up to 10 m²"}
+  paes_b30: {type: yes_no, group: allegato_b, item: "B.30 New fishing structures up to 30 m²"}
+  paes_b31: {type: yes_no, group: allegato_b, item: "B.31 Upgrading local and farm roads"}
+  paes_b32: {type: yes_no, group: allegato_b, item: "B.32 Restoring farming or grazing on rural land overgrown by scrub or woodland"}
+  paes_b33: {type: yes_no, group: allegato_b, item: "B.33 Thinning woodland to bring in clearing crops"}
+  paes_b34: {type: yes_no, group: allegato_b, item: "B.34 Reducing woodland in an existing building's grounds, up to 2,000 m²"}
+  paes_b35: {type: yes_no, group: allegato_b, item: "B.35 Forest roads where no regional forest plan is approved"}
+  paes_b36: {type: yes_no, group: allegato_b, item: "B.36 Permanent signs and advertising under 18 m² (art. 153 c.1)"}
+  paes_b37: {type: yes_no, group: allegato_b, item: "B.37 Electricity and telephone lines on poles for single users"}
+  paes_b38: {type: yes_no, group: allegato_b, item: "B.38 Electronic communication or radio installations (other than the exempt ones)"}
+  paes_b39: {type: yes_no, group: allegato_b, item: "B.39 Changes to flood defences on river and lake banks"}
+  paes_b40: {type: yes_no, group: allegato_b, item: "B.40 Systematic natural-engineering works for water, soil or landslide protection"}
+  paes_b41: {type: yes_no, group: allegato_b, item: "B.41 Demolition and rebuilding with the same volume, shape and footprint"}
+  paes_b42: {type: yes_no, group: allegato_b, item: "B.42 Beach nourishment, artificial dunes, restoring coastal works"}
   precedente_cognome: {type: text, question: "The permit's holder until now: surname, or the company's name"}
   precedente_nome: {type: text, question: "Their first name (none for a company)", default: ""}
   precedente_cf: {type: text, question: "Their codice fiscale or partita IVA"}
@@ -586,6 +641,69 @@ sections:
       - {kind: text, label: intestato a, value: "{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}"}
       - {kind: date, label: la cui data di scadenza dell'efficacia dovrebbe essere il, value: "{{ask.paes_scadenza|date_it}}"}
       - {kind: date, label: ed è invece prevista per il, value: "{{ask.proroga_data_prevista|date_it}}"}
+
+  # Autorizzazione paesaggistica semplificata (DPR 31/2017): what the works are in Allegato B
+  # (a box per item; a pratica may fall under several) and the protection the property is under.
+  # Its other sections are the CILA's and the proroga's.
+  - section: Qualificazione dell'intervento
+    fields:
+      - {kind: checkbox, label: "B.1.", when: "{{ask.paes_b1}}"}
+      - {kind: checkbox, label: "B.2.", when: "{{ask.paes_b2}}"}
+      - {kind: checkbox, label: "B.3.", when: "{{ask.paes_b3}}"}
+      - {kind: checkbox, label: "B.4.", when: "{{ask.paes_b4}}"}
+      - {kind: checkbox, label: "B.5.", when: "{{ask.paes_b5}}"}
+      - {kind: checkbox, label: "B.6.", when: "{{ask.paes_b6}}"}
+      - {kind: checkbox, label: "B.7.", when: "{{ask.paes_b7}}"}
+      - {kind: checkbox, label: "B.8.", when: "{{ask.paes_b8}}"}
+      - {kind: checkbox, label: "B.9.", when: "{{ask.paes_b9}}"}
+      - {kind: checkbox, label: "B.10.", when: "{{ask.paes_b10}}"}
+      - {kind: checkbox, label: "B.11.", when: "{{ask.paes_b11}}"}
+      - {kind: checkbox, label: "B.12.", when: "{{ask.paes_b12}}"}
+      - {kind: checkbox, label: "B.13.", when: "{{ask.paes_b13}}"}
+      - {kind: checkbox, label: "B.14.", when: "{{ask.paes_b14}}"}
+      - {kind: checkbox, label: "B.15.", when: "{{ask.paes_b15}}"}
+      - {kind: checkbox, label: "B.16.", when: "{{ask.paes_b16}}"}
+      - {kind: checkbox, label: "B.17.", when: "{{ask.paes_b17}}"}
+      - {kind: checkbox, label: "B.18.", when: "{{ask.paes_b18}}"}
+      - {kind: checkbox, label: "B.19.", when: "{{ask.paes_b19}}"}
+      - {kind: checkbox, label: "B.20.", when: "{{ask.paes_b20}}"}
+      - {kind: checkbox, label: "B.21.", when: "{{ask.paes_b21}}"}
+      - {kind: checkbox, label: "B.22.", when: "{{ask.paes_b22}}"}
+      - {kind: checkbox, label: "B.23.", when: "{{ask.paes_b23}}"}
+      - {kind: checkbox, label: "B.24.", when: "{{ask.paes_b24}}"}
+      - {kind: checkbox, label: "B.25.", when: "{{ask.paes_b25}}"}
+      - {kind: checkbox, label: "B.26.", when: "{{ask.paes_b26}}"}
+      - {kind: checkbox, label: "B.27.", when: "{{ask.paes_b27}}"}
+      - {kind: checkbox, label: "B.28.", when: "{{ask.paes_b28}}"}
+      - {kind: checkbox, label: "B.29.", when: "{{ask.paes_b29}}"}
+      - {kind: checkbox, label: "B.30.", when: "{{ask.paes_b30}}"}
+      - {kind: checkbox, label: "B.31.", when: "{{ask.paes_b31}}"}
+      - {kind: checkbox, label: "B.32.", when: "{{ask.paes_b32}}"}
+      - {kind: checkbox, label: "B.33.", when: "{{ask.paes_b33}}"}
+      - {kind: checkbox, label: "B.34.", when: "{{ask.paes_b34}}"}
+      - {kind: checkbox, label: "B.35.", when: "{{ask.paes_b35}}"}
+      - {kind: checkbox, label: "B.36.", when: "{{ask.paes_b36}}"}
+      - {kind: checkbox, label: "B.37.", when: "{{ask.paes_b37}}"}
+      - {kind: checkbox, label: "B.38.", when: "{{ask.paes_b38}}"}
+      - {kind: checkbox, label: "B.39.", when: "{{ask.paes_b39}}"}
+      - {kind: checkbox, label: "B.40.", when: "{{ask.paes_b40}}"}
+      - {kind: checkbox, label: "B.41.", when: "{{ask.paes_b41}}"}
+      - {kind: checkbox, label: "B.42.", when: "{{ask.paes_b42}}"}
+  # Ticking art. 136 opens its letter and the declaring D.M. and moves the boxes below, so the
+  # protection is one answer: each branch ticks its boxes in page order, then fills what they opened.
+  - section: Ambito dell'intervento
+    fields:
+      - {kind: checkbox, label: "dell'art. 136", when: "{{ask.vincolo|is_art_136}}"}
+      - {kind: text, label: "dell'art. 136", value: "{{ask.vincolo_136_lettera}}", when: "{{ask.vincolo|is_art_136}}"}
+      - {kind: text, label: Citare estremi del provvedimento, value: "{{ask.vincolo_136_provvedimento}}", when: "{{ask.vincolo|is_art_136}}"}
+      - {kind: checkbox, label: "dell'art. 142", when: "{{ask.vincolo|is_art_142}}"}
+      - {kind: text, label: "dell'art. 142", value: "{{ask.vincolo_142_lettera}}", when: "{{ask.vincolo|is_art_142}}"}
+      - {kind: checkbox, label: "dell'art. 136", when: "{{ask.vincolo|is_art_136_and_142}}"}
+      - {kind: checkbox, label: "dell'art. 142", when: "{{ask.vincolo|is_art_136_and_142}}"}
+      - {kind: text, label: "dell'art. 136", value: "{{ask.vincolo_136_lettera}}", when: "{{ask.vincolo|is_art_136_and_142}}"}
+      - {kind: text, label: Citare estremi del provvedimento, value: "{{ask.vincolo_136_provvedimento}}", when: "{{ask.vincolo|is_art_136_and_142}}"}
+      - {kind: text, label: "dell'art. 142", value: "{{ask.vincolo_142_lettera}}", when: "{{ask.vincolo|is_art_136_and_142}}"}
+      - {kind: checkbox, label: "dell'art. 134", when: "{{ask.vincolo|is_art_134}}"}
 
   # Voltura of a permesso di costruire to a new holder (the client, `c:`): the permit and its
   # holder until now, the deed that passed the property, the property, where the new holder

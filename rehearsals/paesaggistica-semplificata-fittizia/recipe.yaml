@@ -1,0 +1,27 @@
+# Autorizzazione paesaggistica semplificata (DPR 31/2017) from the Comune of Napoli, on its SUE,
+# as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/sue-autorizzazione-paesaggistica-semplificata.json). The CILA
+# rehearsal's architect (with procura) and client (rehearsals/cila-fittizia).
+procedure: napoli/comune/autorizzazione-paesaggistica-semplificata
+title: "Autorizzazione paesaggistica semplificata (DPR 31/2017), SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-autorizzazione-paesaggistica-semplificata
+operation: Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - paesaggistica {{c:identity.last_name}}"}
+  oggetto: {question: "The works in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: consapevolezza (artt. 46-47), informativa privacy, tasse comunali"
+  - "On Allega documenti: the relazione paesaggistica semplificata (DPR 31/2017, Allegato D), the drawings and the photos, signed digitally"
+  - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Pay the imposta di bollo (two marche da 16 €) and any diritti on pagoPA after sending"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - when: "{{ask.paes_variante|not}}"
+    else: "So far only for a new authorization: the variant of one already issued isn't run yet."
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."
