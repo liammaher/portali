@@ -3,7 +3,8 @@
 
   run.py preflight --steps STEPS.yaml [--answers A.json] VAULT
       Before anything opens: prints JSON with why this case isn't supported (the steps
-      file's `supports:`), the answers it proposes for the person to confirm (an ask's
+      file's `supports:`, and its `rules:` table, which says whether the case is this pratica
+      at all), the answers it proposes for the person to confirm (an ask's
       `propose:`), the questions still to ask (its `asks:`, branch questions first), the
       vault fields missing or expired, the files to attach and whether they fit the pane,
       and the person's own steps. Exits 0 when `ready`, 3 when not.
@@ -70,6 +71,7 @@ sys.path[:0] = [str(Path(__file__).resolve().parent.parent / "fill"), str(Path(_
                 str(Path(__file__).resolve().parent)]
 sys.dont_write_bytecode = True  # no __pycache__ in the skill's folder
 import fill  # noqa: E402  (its vault client: the pilot over TCP, a real vault over its socket)
+import rules  # noqa: E402  (the library's rules tables: which pratica a case needs)
 import review  # noqa: E402  (the page the person reviews)
 
 # Never clicked, whatever a steps file says: these are the person's taps.
@@ -134,8 +136,11 @@ def _qualita(v):
 
 class Filters(dict):
     """`is_<answer>` is true when the value is that answer, spaces as underscores
-    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`."""
+    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `atleast_<n>`
+    is true when the number is n or more (the 20 m² the historic centre's Piano requires)."""
     def __missing__(self, name):
+        if name.startswith("atleast_") and name[8:].isdigit():
+            return lambda v: "true" if float(str(v or 0).replace(",", ".")) >= int(name[8:]) else "false"
         if not name.startswith("is_"):
             raise KeyError(name)
         return lambda v: "true" if re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_") == name[3:] else "false"
@@ -244,11 +249,22 @@ class Values:
         cat = ref.rsplit(".", 1)[0]
         return self.category(cat).get(ref)
 
+    def sum(self, ref):
+        """`ask.a+2*ask.b`: a box the portal wants as a total of what was asked (rooms, beds)."""
+        total = 0
+        for term in ref.split("+"):
+            n, _, r = term.strip().rpartition("*")
+            v = self.field(r.strip())
+            if v is None:
+                return None
+            total += int(n or 1) * float(str(v or 0).replace(",", "."))
+        return f"{total:g}"
+
     def render(self, template):
         """A template's value, or None when a field it names is missing."""
         def one(m):
             ref, *filters = [p.strip() for p in m.group(1).split("|")]
-            v = self.field(ref)
+            v = self.sum(ref) if "+" in ref or "*" in ref else self.field(ref)
             if v is None:
                 if "empty" in filters:
                     v = ""
@@ -291,9 +307,10 @@ ASK_TYPES = {"text", "number", "yes_no", "date", "choice", "file"}
 
 
 def refs_in(template):
-    """The fields a template reads, each with its filters."""
-    return [(parts[0], parts[1:]) for parts in
-            ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))]
+    """The fields a template reads, each with its filters (each term of a sum on its own)."""
+    return [(t.strip().rpartition("*")[2].strip(), parts[1:]) for parts in
+            ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))
+            for t in parts[0].split("+")]
 
 
 def templates(steps):
@@ -312,6 +329,8 @@ def templates(steps):
         for k in ("when", "value", "else"):
             if k in c:
                 yield "supports", c[k], {}
+    for v in steps.get("rules", {}).get("facts", {}).values():
+        yield "rules", v, {}
 
 
 def check_asks(steps):
@@ -343,6 +362,7 @@ def check_asks(steps):
     # The asks that decide the branch come first: their answers can end the pratica here.
     branch = {r[4:] for c in steps.get("supports", []) for k in ("when", "value")
               for r, _ in refs_in(c.get(k, "")) if r.startswith("ask.")}
+    branch |= {r[4:] for where, t, _ in templates(steps) if where == "rules" for r, _ in refs_in(t) if r.startswith("ask.")}
     return sorted(asks, key=lambda k: k not in branch)
 
 
@@ -359,6 +379,8 @@ def needed(steps, values):
     asked = lambda tmpl: [r[4:] for r, _ in refs_in(tmpl) if r.startswith("ask.")]
     for c in steps.get("supports", []):
         add(asked(c.get("when", c.get("value", ""))))
+    for fact in ruled(steps, values)[1]:
+        add(asked(steps["rules"]["facts"][fact]))
     for w in steps.get("wizard", []):
         if "fill" in w:
             add(asked(w["fill"]["value"]))
@@ -376,9 +398,57 @@ def needed(steps, values):
     return need
 
 
+def ruled(steps, values):
+    """What the rules table (steps `rules:`) says of this case: why it isn't this pratica,
+    and the facts it still waits on. Each fact is the recipe's value or an ask's answer.
+    The table's main pratica must be this steps file's procedure, at its wizard's sector
+    and operation; every other pratica it adds must be one this pratica files (`handles`),
+    and every one this pratica files one the case needs."""
+    r = steps.get("rules")
+    if not r:
+        return [], []
+    t = rules.table(r["table"])
+    facts = {}
+    for name, fact in t["facts"].items():
+        v = r["facts"][name]
+        v = values.render(v) if isinstance(v, str) and "{{" in v else v
+        if v is not None and rules.fact_value(fact, v) is not None:
+            facts[name] = rules.fact_value(fact, v)
+    d = rules.decide(t, facts)
+    if d["conflict"]:
+        raise StepError(f"rules table {r['table']}: rules {', '.join(d['conflict'])} disagree (validate the library)")
+    out = [x["reason"] for x in d["refused"]]
+    if d["ask"]:
+        return out, d["ask"]
+    m = d["main"]
+    where = lambda o: " at " + " › ".join(o["portal"][k] for k in ("settore", "operazione") if k in o["portal"]) \
+        if "portal" in o else ""
+    if not m:
+        return out or [f"The rules table {r['table']} names no pratica for this case."], []
+    labels = {x if isinstance(x, str) else x.get("leaf") for w in steps.get("wizard", []) for x in w.get("tree", [])}
+    seen = m.get("portal", {})
+    if m["procedure"] != steps["procedure"] or any(seen[k] not in labels for k in ("settore", "operazione") if k in seen):
+        out.append(f"This case is another pratica: {m['procedure']} ({m['regime']}){where(m)}.")
+    handles = r.get("handles", [])
+    for a in d["also"]:
+        if a["procedure"] not in handles:
+            out.append(f"This case also needs {a['procedure']} ({a['regime']}), which this pratica doesn't file.")
+    for h in handles:
+        if h not in [a["procedure"] for a in d["also"]]:
+            out.append(f"This pratica also files {h}, which this case doesn't need.")
+    return out, []
+
+
 def supported(steps, values):
     """Why this case isn't mapped, and the asks still needed to tell."""
-    out, need = [], []
+    out, waiting = ruled(steps, values)
+    need = []
+    for f in waiting:
+        tmpl = steps["rules"]["facts"][f]
+        asked = [r for r, _ in refs_in(tmpl) if r.startswith("ask.")]
+        need += asked
+        if not asked:  # read from the vault, and empty there
+            out.append(f"The rules need {f}, read from {tmpl}: empty in the vault.")
     for c in steps.get("supports", []):
         tmpl = c.get("when", c.get("value"))
         unknown = [r for r, f in refs_in(tmpl) if r.startswith("ask.") and values.field(r) is None]
@@ -480,10 +550,10 @@ def preflight(steps, values):
                 lists[g] = {"key": g, "type": "checklist", "question": values.render(groups[g]["question"])
                             or groups[g]["question"], "items": []}
                 report["questions"].append(lists[g])
-            lists[g]["items"].append({"key": k, "item": a["item"]} | {x: a[x] for x in ("why",) if x in a} | hangs)
+            lists[g]["items"].append({"key": k, "item": a["item"]} | {x: a[x] for x in ("how", "why") if x in a} | hangs)
             continue
         report["questions"].append({"key": k, "type": a["type"], "question": a["question"]}
-                                   | {x: a[x] for x in ("options", "why") if x in a} | hangs
+                                   | {x: a[x] for x in ("options", "labels", "how", "why") if x in a} | hangs
                                    | ({"error": why} if v is not None else {}))
     for g in groups:
         ticked = values.answers.get(g)
@@ -496,7 +566,7 @@ def preflight(steps, values):
             lists[g]["error"] = "answer with a list of the keys of the items that apply ([] for none)"
     missing, read = {}, set()
     for where, tmpl, f in templates(steps):
-        if where in ("supports", "yours") or (f.get("optional") and tmpl == f.get("value")):
+        if where in ("supports", "rules", "yours") or (f.get("optional") and tmpl == f.get("value")):
             continue
         if f and tmpl == f.get("value") and "when" in f:
             w = values.render(f["when"])
@@ -515,6 +585,26 @@ def preflight(steps, values):
         if end and end < today:
             missing.setdefault(cat + ".data_scadenza", {"field": cat + ".data_scadenza", "why": f"expired on {end}",
                                                        "for": cat})
+    # A value longer than its box (a protocol "PG/2026/0666666" where the shop's form takes 10)
+    # is asked again, or named as the vault field to shorten, before the run instead of by it.
+    asked = {q["key"] for q in report["questions"]}
+    for sec in steps["sections"]:
+        for f in sec["fields"]:
+            if not f.get("max") or "value" not in f or ("when" in f and not truthy(values.render(f["when"]) or "")):
+                continue
+            v = values.render(f["value"])
+            if v is None or len(v) <= f["max"]:
+                continue
+            why = f"{sec['section']}: {f.get('label') or f.get('id')} takes at most {f['max']} characters"
+            refs = refs_in(f["value"])
+            if len(refs) == 1 and refs[0][0].startswith("ask.") and refs[0][0][4:] in asks:
+                k = refs[0][0][4:]
+                if k not in asked:
+                    asked.add(k)
+                    report["questions"].append({"key": k, "type": asks[k]["type"], "question": asks[k]["question"],
+                                                "error": why})
+            else:
+                missing.setdefault(f["value"], {"field": f["value"], "why": why, "for": sec["section"]})
     report["missing"] = list(missing.values())
     for sec in steps["sections"]:
         for f in sec["fields"]:

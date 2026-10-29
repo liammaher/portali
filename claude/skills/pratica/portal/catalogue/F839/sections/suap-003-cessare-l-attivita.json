@@ -1,0 +1,282 @@
+{
+ "crawled": "2026-10-28T20:35:43.557Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Cessare l'attività (sector Agriturismo)",
+ "seconds": 26.3,
+ "generated": {
+  "interventi": "Cessazione attività di agriturismo",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per cessazione attività per attività agrituristica",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione dell'insegna dell'esercizio",
+   "dichiarazione relativa alla cessazione dell'attività",
+   "Dichiarazione in materia di rispetto sulle tasse comunali"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione dell'insegna dell'esercizio",
+   "fingerprint": "91770c2e0f55753b",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione dell'insegna dell'esercizio",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla cessazione dell'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Cessazione definitiva",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Trasferimento in proprietà o gestione",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:txt",
+     "kind": "text",
+     "label": "Denominazione ditta subentrante (in caso di fallimento specificare 'nessuno'):",
+     "max": 100
+    },
+    {
+     "id": "r7c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Compravendita",
+     "group": "r7c1p7reg:radio"
+    },
+    {
+     "id": "r8c1p8reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Affitto d'azienda",
+     "group": "r8c1p8reg:radio"
+    },
+    {
+     "id": "r9c1p9reg:radio:4_clone",
+     "kind": "radio",
+     "label": "Donazione",
+     "group": "r9c1p9reg:radio"
+    },
+    {
+     "id": "r10c1p10reg:radio:5_clone",
+     "kind": "radio",
+     "label": "Fusione",
+     "group": "r10c1p10reg:radio"
+    },
+    {
+     "id": "r11c1p11reg:radio:6_clone",
+     "kind": "radio",
+     "label": "Fallimento",
+     "group": "r11c1p11reg:radio"
+    },
+    {
+     "id": "r12c1p12reg:radio:7_clone",
+     "kind": "radio",
+     "label": "Reintestazione",
+     "group": "r12c1p12reg:radio"
+    },
+    {
+     "id": "r13c1p13reg:radio:8_clone",
+     "kind": "radio",
+     "label": "Conferimento d'azienda",
+     "group": "r13c1p13reg:radio"
+    },
+    {
+     "id": "r15c1p15reg:radio:9_clone",
+     "kind": "radio",
+     "label": "Altre cause",
+     "group": "r15c1p15reg:radio"
+    },
+    {
+     "id": "r15c2p17reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "Altre cause",
+     "max": 200
+    },
+    {
+     "id": "r17c1p19reg:radio:10_clone",
+     "kind": "radio",
+     "label": "successione",
+     "group": "r17c1p19reg:radio"
+    },
+    {
+     "id": "r17c2p21reg:calendar_input",
+     "kind": "date",
+     "label": "data di decesso del titolare"
+    },
+    {
+     "id": "r19c1p23reg:calendar_input",
+     "kind": "date",
+     "label": "Data cessazione attività:"
+    }
+   ],
+   "fingerprint": "fc44a8a7dd571a62",
+   "text": "dichiarazione relativa alla cessazione dell'attività L'attività cessa per: Cessazione definitiva Trasferimento in proprietà o gestione Denominazione ditta subentrante (in caso di fallimento specificare 'nessuno'): A seguito di: Compravendita Affitto d'azienda Donazione Fusione Fallimento Reintestazione Conferimento d'azienda (specificare) Altre cause data di decesso del titolare successione Data cessazione attività:",
+   "branches": [
+    {
+     "choice": "Cessazione definitiva",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Trasferimento in proprietà o gestione",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Compravendita",
+     "id": "r7c1p7reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Affitto d'azienda",
+     "id": "r8c1p8reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Donazione",
+     "id": "r9c1p9reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Fusione",
+     "id": "r10c1p10reg:radio:5_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Fallimento",
+     "id": "r11c1p11reg:radio:6_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Reintestazione",
+     "id": "r12c1p12reg:radio:7_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Conferimento d'azienda",
+     "id": "r13c1p13reg:radio:8_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Altre cause",
+     "id": "r15c1p15reg:radio:9_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "successione",
+     "id": "r17c1p19reg:radio:10_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 12.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  }
+ ]
+}

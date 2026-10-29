@@ -1,0 +1,358 @@
+{
+ "crawled": "2026-10-28T20:39:45.669Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Variazioni soggetti (sector Autoriparazione)",
+ "seconds": 28.7,
+ "generated": {
+  "interventi": "Variazioni soggetti in attività di autoriparatore",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per variazioni soggetti in attività di autoriparatore",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "INDIRIZZO DELL'ATTIVITA'",
+   "dati catastali",
+   "estremi titolo abilitativo",
+   "variazioni della società o dei soggetti",
+   "dichiarazione della user Telemaco",
+   "variazione del/dei soggetti in possesso dei requisiti professionali per l'esercizio dell'attività",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.2
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.3
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INDIRIZZO DELL'ATTIVITA'",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.4
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.3
+  },
+  {
+   "section": "estremi titolo abilitativo",
+   "fingerprint": "2a5e5f2dfd5d1a69",
+   "same_as": "suap-060-variazione-del-preposto-in-attivita-di-somministra#estremi del/i titolo/i autorizzatorio/i posseduto/i",
+   "seconds": 1
+  },
+  {
+   "section": "variazioni della società o dei soggetti",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE"
+    },
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "CESSIONE DI QUOTE"
+    },
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA SEDE LEGALE"
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DEL LEGALE RAPPRESENTANTE (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti di onorabilità\")"
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA COMPAGINE SOCIALE (entrata nuovi soci o amministratori, da indicare nella dichiarazione relativa ai soggetti ex art. 85 del D.L.vo 159/2011)"
+    }
+   ],
+   "fingerprint": "40e1ad323aadc789",
+   "text": "variazioni della società o dei soggetti VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE CESSIONE DI QUOTE VARIAZIONE DELLA SEDE LEGALE VARIAZIONE DEL LEGALE RAPPRESENTANTE (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti di onorabilità\") VARIAZIONE DELLA COMPAGINE SOCIALE (entrata nuovi soci o amministratori, da indicare nella dichiarazione relativa ai soggetti ex art. 85 del D.L.vo 159/2011)",
+   "branches": [
+    {
+     "choice": "VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r2c2p4reg:calendar_input",
+       "kind": "date",
+       "label": "con decorrenza dal"
+      },
+      {
+       "id": "r4c1p6reg:txt",
+       "kind": "text",
+       "label": "precedente",
+       "max": 50
+      },
+      {
+       "id": "r4c2p8reg:txt",
+       "kind": "text",
+       "label": "nuova",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r1c1p1reg:chk",
+       "r2c1p2reg:chk"
+      ],
+      [
+       "r2c1p3reg:chk",
+       "r5c1p9reg:chk"
+      ],
+      [
+       "r3c1p5reg:chk",
+       "r6c1p11reg:chk"
+      ],
+      [
+       "r4c1p6reg:chk",
+       "r7c1p12reg:chk"
+      ],
+      [
+       "r5c1p7reg:chk",
+       "r8c1p13reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "CESSIONE DI QUOTE",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r3c2p6reg:calendar_input",
+       "kind": "date",
+       "label": "come da atto notarile del"
+      }
+     ],
+     "moved": [
+      [
+       "r2c1p3reg:chk",
+       "r3c1p4reg:chk"
+      ],
+      [
+       "r3c1p5reg:chk",
+       "r4c1p7reg:chk"
+      ],
+      [
+       "r4c1p6reg:chk",
+       "r5c1p8reg:chk"
+      ],
+      [
+       "r5c1p7reg:chk",
+       "r6c1p9reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA SEDE LEGALE",
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r5c1p7reg:txt",
+       "kind": "text",
+       "label": "da via o...",
+       "max": 50
+      },
+      {
+       "id": "r5c2p9reg:txt",
+       "kind": "text",
+       "label": "comune",
+       "max": 50
+      },
+      {
+       "id": "r5c3p11reg:number",
+       "kind": "text",
+       "label": "C.A.P.",
+       "max": 5
+      },
+      {
+       "id": "r7c1p13reg:txt",
+       "kind": "text",
+       "label": "a via o",
+       "max": 100
+      },
+      {
+       "id": "r7c2p15reg:txt",
+       "kind": "text",
+       "label": "comune",
+       "max": 100
+      },
+      {
+       "id": "r7c3p17reg:number",
+       "kind": "text",
+       "label": "C.A.P.",
+       "max": 5
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p6reg:chk",
+       "r8c1p18reg:chk"
+      ],
+      [
+       "r5c1p7reg:chk",
+       "r9c1p19reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DEL LEGALE RAPPRESENTANTE (che compila l'apposita dichiarazione relativa al \"possesso dei requisiti di onorabilità\")",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r6c1p8reg:txt",
+       "kind": "text",
+       "label": "dal/ la sig./ ra cognome",
+       "max": 35
+      },
+      {
+       "id": "r6c2p10reg:txt",
+       "kind": "text",
+       "label": "nome",
+       "max": 35
+      },
+      {
+       "id": "r8c1p12reg:txt",
+       "kind": "text",
+       "label": "a sig./ ra cognome",
+       "max": 100
+      },
+      {
+       "id": "r8c2p14reg:txt",
+       "kind": "text",
+       "label": "nome",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r5c1p7reg:chk",
+       "r9c1p15reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA COMPAGINE SOCIALE (entrata nuovi soci o amministratori, da indicare nella dichiarazione relativa ai soggetti ex art. 85 del D.L.vo 159/2011)",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c1p11reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Allegare il documento compilato e firmato e la copia di un documento di identità in corso di validità, per ogni socio",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    }
+   ],
+   "seconds": 10.6
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 1.2
+  },
+  {
+   "section": "variazione del/dei soggetti in possesso dei requisiti professionali per l'esercizio dell'attività",
+   "fingerprint": "0037934b90bb2c36",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazioni sul possesso dei requisiti",
+   "seconds": 1.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

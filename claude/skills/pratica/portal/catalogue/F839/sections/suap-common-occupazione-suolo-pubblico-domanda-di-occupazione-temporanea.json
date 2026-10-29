@@ -1,0 +1,617 @@
+{
+ "crawled": "2026-10-28T20:02:06.158Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Domanda di occupazione temporanea di suolo pubblico inferiore ai 500 mq per eventi di natura commerciale / promozionale/imprenditoriale (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 35.4,
+ "generated": {
+  "interventi": "Domanda di occupazione temporanea di suolo pubblico inferiore ai 500 mq per eventi di natura commerciale / promozionale/imprenditoriale",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di occupazione temporanea di suolo pubblico inferiore ai 500 mq per eventi di natura commerciale / promozionale/imprenditoriale",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "ulteriori dichiarazioni",
+   "attività svolte nell'ambito dell'iniziativa promozionale",
+   "mezzi di emergenza",
+   "richiesta occupazione suolo pubblico",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Avvertenza per le domande di concessione",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "per gli hobbisti (anche in forma associata), venditori dell'ingegno (anche in forma associata) e artigiani senza P.IVA (anche in forma associata)"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "per gli hobbisti (anche in forma associata), venditori dell'ingegno (anche in forma associata) e artigiani senza P.IVA (anche in forma associata)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "il dichiarante",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "persona diversa dal dichiarante",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "Sig. (nome, cognome)",
+     "context": "persona diversa dal dichiarante",
+     "max": 30
+    },
+    {
+     "id": "r4c3p8reg:txt",
+     "kind": "text",
+     "label": "Recapito telefonico",
+     "context": "persona diversa dal dichiarante",
+     "max": 20
+    },
+    {
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar"
+    },
+    {
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o pri"
+    },
+    {
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie)"
+    },
+    {
+     "id": "r9c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire eventuali ulteriori autorizzazioni prescritte dalla legge"
+    },
+    {
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus"
+    },
+    {
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge;"
+    },
+    {
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici S"
+    },
+    {
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune"
+    },
+    {
+     "id": "r16c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "le attrezzature verranno trasportate con il seguente mezzo"
+    },
+    {
+     "id": "r16c2p22reg:txt",
+     "kind": "text",
+     "label": "specificare tipo",
+     "context": "le attrezzature verranno trasportate con il seguente mezzo",
+     "max": 30
+    },
+    {
+     "id": "r16c3p24reg:txt",
+     "kind": "text",
+     "label": "targa",
+     "context": "le attrezzature verranno trasportate con il seguente mezzo",
+     "max": 10
+    },
+    {
+     "id": "r18c1p26reg:txta",
+     "kind": "textarea",
+     "label": "1000 Caratteri restanti",
+     "context": "I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area:",
+     "max": 1000
+    }
+   ],
+   "fingerprint": "291bb329d33ad373",
+   "text": "ulteriori dichiarazioni La persona che dovrà essere presente o reperibile fino al termine della manifestazione è: il dichiarante Sig. (nome, cognome) Recapito telefonico persona diversa dal dichiarante INOLTRE: si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivare a persone o cose per effetto dell'occupazione stessa e delle attività svolte si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o privata, al termine dell'occupazione si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie) si impegna ad acquisire eventuali ulteriori autorizzazioni prescritte dalla legge si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni causati (se previsto) si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge; si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici Spettacoli. RELATIVAMENTE ALLE ATTREZZATURE UTILIZZATE E AI MEZZI DI TRASPORTO UTILIZZATI: provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune specificare tipo targa le attrezzature verranno trasportate con il seguente mezzo I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area: 1000 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "il dichiarante",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "persona diversa dal dichiarante",
+     "id": "r4c1p4reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar",
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a rimuovere ogni attrezzatura e a lasciare l'area in concessione perfettamente pulita, in ordine e senza danno alcuno alla proprietà pubblica e/o pri",
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire le eventuali licenze di pubblica sicurezza e/o di commercio (se necessarie)",
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus",
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire le certificazioni igienico-sanitarie richieste dalla legge;",
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a realizzare le condizioni di sicurezza prescritte per legge e quelle che saranno stabilite dalla Commissione Provinciale di Vigilanza sui Pubblici S",
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "provvederà con proprio personale alla custodia delle attrezzature fornite dal Comune",
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "le attrezzature verranno trasportate con il seguente mezzo",
+     "id": "r16c1p20reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 7.8
+  },
+  {
+   "section": "attività svolte nell'ambito dell'iniziativa promozionale",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "stand gastronomico"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "somministrazione alimenti e bevande"
+    },
+    {
+     "id": "r2c2p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "vendita",
+     "group": "r2c2p3reg:radio"
+    },
+    {
+     "id": "r2c3p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "gratuita",
+     "group": "r2c3p4reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "distribuzione materiale promozionale"
+    },
+    {
+     "id": "r3c2p6reg:radio:2_clone",
+     "kind": "radio",
+     "label": "vendita",
+     "group": "r3c2p6reg:radio"
+    },
+    {
+     "id": "r3c3p7reg:radio:3_clone",
+     "kind": "radio",
+     "label": "gratuita",
+     "group": "r3c3p7reg:radio"
+    },
+    {
+     "id": "r5c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r5c2p11reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 50
+    }
+   ],
+   "fingerprint": "da8f6a9082a7823a",
+   "text": "attività svolte nell'ambito dell'iniziativa promozionale stand gastronomico somministrazione alimenti e bevande vendita gratuita distribuzione materiale promozionale vendita gratuita specificare altro",
+   "branches": [
+    {
+     "choice": "stand gastronomico",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "somministrazione alimenti e bevande",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "vendita",
+     "id": "r2c2p3reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "gratuita",
+     "id": "r2c3p4reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "distribuzione materiale promozionale",
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "vendita",
+     "id": "r3c2p6reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "gratuita",
+     "id": "r3c3p7reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "altro",
+     "id": "r5c1p9reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c2p6reg:radio:2_clone",
+       "r2c2p3reg:radio:0_clone"
+      ],
+      [
+       "r3c3p7reg:radio:3_clone",
+       "r2c3p4reg:radio:1_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 5.7
+  },
+  {
+   "section": "mezzi di emergenza",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "ambulanza"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "precisare",
+     "context": "ambulanza",
+     "max": 30
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "vigili del fuoco"
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "precisare",
+     "context": "vigili del fuoco",
+     "max": 30
+    },
+    {
+     "id": "r5c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "non sono presenti mezzi di emergenza"
+    }
+   ],
+   "fingerprint": "923fbe27a8424e02",
+   "text": "mezzi di emergenza precisare ambulanza precisare vigili del fuoco non sono presenti mezzi di emergenza",
+   "branches": [
+    {
+     "choice": "ambulanza",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "vigili del fuoco",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "non sono presenti mezzi di emergenza",
+     "id": "r5c1p9reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 3.3
+  },
+  {
+   "section": "richiesta occupazione suolo pubblico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "l'autorizzazione ad occupare il suolo pubblico per (specificare il tipo di iniziativa e allegare il programma):",
+     "max": 50
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "su Via/Viale/Piazza",
+     "max": 30
+    },
+    {
+     "id": "r4c2p6reg:number",
+     "kind": "text",
+     "label": "per un'area totale di mq:",
+     "max": 10
+    },
+    {
+     "id": "r7c1p11reg:txt",
+     "kind": "text",
+     "label": "per il periodo dalle ore:",
+     "max": 5
+    },
+    {
+     "id": "r7c2p13reg:calendar_input",
+     "kind": "date",
+     "label": "del giorno"
+    },
+    {
+     "id": "r7c3p15reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 5
+    },
+    {
+     "id": "r7c4p17reg:calendar_input",
+     "kind": "date",
+     "label": "del giorno"
+    },
+    {
+     "id": "r10c1p23reg:txt",
+     "kind": "text",
+     "label": "con le seguente attrezzature / strutture",
+     "max": 100
+    },
+    {
+     "id": "r12c1p25reg:radio:0_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r12c1p25reg:radio"
+    },
+    {
+     "id": "r12c2p26reg:radio:1_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r12c2p26reg:radio"
+    }
+   ],
+   "fingerprint": "a000eb4b4f7ddbd7",
+   "text": "richiesta occupazione suolo pubblico l'autorizzazione ad occupare il suolo pubblico per (specificare il tipo di iniziativa e allegare il programma): su Via/Viale/Piazza per un'area totale di mq: Per consentire la conclusione del procedimento entro i termini previsti dalla normativa vigente l'istanza deve essere presentata inderogabilmente almeno 30 giorni prima dell’evento. Il mancato rispetto del termine di presentazione dell'istanza, comporterà l'annullamento della stessa per il periodo dalle ore: del giorno alle ore del giorno con le seguente attrezzature / strutture Per l'iniziativa si richiede il patrocinio al comune si no",
+   "branches": [
+    {
+     "choice": "si",
+     "id": "r12c1p25reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r7c4p17reg:calendar_input",
+       "r7c2p13reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "per il periodo dalle ore:",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r12c2p26reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r7c4p17reg:calendar_input",
+       "r7c2p13reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "per il periodo dalle ore:",
+      "adds": 8
+     }
+    }
+   ],
+   "seconds": 3.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Avvertenza per le domande di concessione",
+   "fingerprint": "97944b936f875c7c",
+   "same_as": "suap-common-occupazione-suolo-pubblico-richiesta-di-occupazione-suolo-pu#Avvertenza per le domande di concessione",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  }
+ ]
+}

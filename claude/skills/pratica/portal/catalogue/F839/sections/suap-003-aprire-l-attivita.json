@@ -1,0 +1,2173 @@
+{
+ "crawled": "2026-10-28T20:32:49.218Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector Agriturismo)",
+ "seconds": 140.2,
+ "generated": {
+  "interventi": "Nuova apertura attività di agriturismo",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per apertura attività per attività agrituristica",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Comunicazione alla Regione - Direzione Generale per le Politiche agricole, alimentari e forestali",
+    "amministrazione": "Regione Campania - UOD Ufficio centrale di supporto alle imprese del settore agro-alimentare"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "dati catastali",
+   "dichiarazione relativa all'insegna/denominazione attività",
+   "dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "dichiarazione di disponibilità dei terreni e degli edifici",
+   "dichiarazione di utilizzo di edifici nel fondo",
+   "dichiarazione di svolgimento di attività agrituristica",
+   "Manodopera impiegata nell'attività agrituristica",
+   "dichiarazione relativa al periodo di apertura",
+   "Idoneità dei locali da adibire ad attività agrituristiche",
+   "dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "dichiarazione di conoscenza di obblighi per il richiedente",
+   "dichiarazione relativa alla Prevenzione Incendi",
+   "dichiarazione relativa alla presentazione dell'intervento",
+   "Dichiarazione in materia di rispetto sulle tasse comunali"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività prevede la vendita di generi alimentari ed artigianali tipici, prodotti dall'azienda"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "l'attività comprende servizio di ospitalità (in piazzole e/o camere munite di bagno e/o appartamenti)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "l'attività prevede la vendita di generi alimentari ed artigianali tipici, prodotti dall'azienda",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione del tipo di prodotti venduti"
+   ],
+   "drops": []
+  },
+  {
+   "option": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione relativa alla provenienza e alla somministrazione dei pasti e delle bevande",
+    "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+    "Addetti alle attività connesse all'igiene degli alimenti"
+   ],
+   "drops": []
+  },
+  {
+   "option": "l'attività comprende servizio di ospitalità (in piazzole e/o camere munite di bagno e/o appartamenti)",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione di sussistenza dei requisiti strutturali ed igienico sanitari per l'attività ricettiva"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa all'insegna/denominazione attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "DENOMINAZIONE/INSEGNA (nome del locale):",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:number",
+     "kind": "text",
+     "label": "recapito telefonico",
+     "max": 15
+    },
+    {
+     "id": "r2c3p6reg:number",
+     "kind": "text",
+     "label": "fax",
+     "max": 15
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "sito internet",
+     "max": 30
+    },
+    {
+     "id": "r4c2p10reg:txt",
+     "kind": "text",
+     "label": "e-mail",
+     "max": 100
+    }
+   ],
+   "fingerprint": "3a6319ce1cee2035",
+   "text": "dichiarazione relativa all'insegna/denominazione attività DENOMINAZIONE/INSEGNA (nome del locale): recapito telefonico fax sito internet e-mail",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "fields": [
+    {
+     "id": "r4c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "numero camere",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r4c3p8reg:txt",
+     "kind": "text",
+     "label": "numero posti letto",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r4c4p10reg:txt",
+     "kind": "text",
+     "label": "per un prezzo massimo di euro",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r5c1p11reg:radio"
+    },
+    {
+     "id": "r8c1p14reg:radio:2_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r8c1p14reg:radio"
+    },
+    {
+     "id": "r8c2p16reg:txt",
+     "kind": "text",
+     "label": "numero alloggi",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r8c3p18reg:txt",
+     "kind": "text",
+     "label": "numero camere",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r8c4p20reg:txt",
+     "kind": "text",
+     "label": "numero posti letto",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r8c5p22reg:txt",
+     "kind": "text",
+     "label": "per un prezzo massimo di euro",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r9c1p23reg:radio:3_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r9c1p23reg:radio"
+    },
+    {
+     "id": "r12c1p26reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r12c1p26reg:radio"
+    },
+    {
+     "id": "r12c2p28reg:txt",
+     "kind": "text",
+     "label": "numero piazzole",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r12c3p30reg:number",
+     "kind": "text",
+     "label": "per numero tende",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r12c4p32reg:number",
+     "kind": "text",
+     "label": "per numero roulotte e/o caravans",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r12c5p34reg:txt",
+     "kind": "text",
+     "label": "prezzi massimi per piazzole",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r13c1p35reg:radio:5_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r13c1p35reg:radio"
+    },
+    {
+     "id": "r17c1p39reg:radio:6_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r17c1p39reg:radio"
+    },
+    {
+     "id": "r17c2p41reg:txt",
+     "kind": "text",
+     "label": "per n. pasti al mese",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r17c3p43reg:txt",
+     "kind": "text",
+     "label": "prezzi massimi pari a euro",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r18c1p44reg:radio:7_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r18c1p44reg:radio"
+    },
+    {
+     "id": "r19c1p45reg:chk",
+     "kind": "checkbox",
+     "label": "il richiedente dichiara inoltre che i pasti e le bevande preparati e somministrati nei locali dell'azienda verranno ottenuti per almeno il 35% di prodotto total"
+    },
+    {
+     "id": "r22c1p48reg:radio:8_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r22c1p48reg:radio"
+    },
+    {
+     "id": "r23c1p49reg:radio:9_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r23c1p49reg:radio"
+    },
+    {
+     "id": "r24c1p50reg:chk",
+     "kind": "checkbox",
+     "label": "il sottoscritto dichiara di organizzare attività rivolte alla valorizzazione dell'ambiente, del patrimonio storico e rurale o delle proprie risorse agricole, pe"
+    },
+    {
+     "id": "r25c1p51reg:chk",
+     "kind": "checkbox",
+     "label": "il sottoscritto dichiara che l'azienda potrà organizzare attività che non realizzano le finalità di valorizzazione dell'ambiente, del patrimonio storico e rural"
+    },
+    {
+     "id": "r26c1p52reg:chk",
+     "kind": "checkbox",
+     "label": "il sottoscritto dichiara che verranno organizzate attività sociali rivolte all'ospitalità della prima infanzia, alla riabilitazione e all'inclusione lavorativa "
+    },
+    {
+     "id": "r27c1p53reg:chk",
+     "kind": "checkbox",
+     "label": "nell'azienda esistono strutture e dotazioni per il tempo libero"
+    },
+    {
+     "id": "r29c1p55reg:txt",
+     "kind": "text",
+     "label": "specificare se esistono campi di bocce, stagni o fiumi per la pesca sportiva, maneggi, piste per mountain bike,etc.:",
+     "max": 100
+    }
+   ],
+   "fingerprint": "afee07032cfc00d5",
+   "text": "dichiarazione del tipo di attività esercitate nell'azienda agrituristica OSPITALITÁ l'attività comprende ospitalità nell'azienda agricola strutturata in camere? numero camere numero posti letto per un prezzo massimo di euro SI NO sono previsti alloggi per l'ospitalità? numero alloggi numero camere numero posti letto per un prezzo massimo di euro SI NO agricampeggio: sono previste piazzole in spazi aperti attrezzati (dotate di servizi igienici e allacciamenti elettrici)? numero piazzole per numero tende per numero roulotte e/o caravans prezzi massimi per piazzole SI NO SOMMINISTRAZIONE PASTI E BEVANDE l'attività comprende la somministrazione di pasti e bevande nei locali dell'azienda secondo le seguenti specifiche (si dichiara inoltre di non superare la media su base mensile di 50 pasti giornalieri aumentati di ulteriori 2 pasti per ogni camera / alloggio)? per n. pasti al mese prezzi massimi pari a euro SI NO il richiedente dichiara inoltre che i pasti e le bevande preparati e somministrati nei locali dell'azienda verranno ottenuti per almeno il 35% di prodotto totale annuo utilizzando prodotti propri dell'azienda agricola e/o ricavati da materie prime dell'azienda anche attraverso lavorazioni effettuate da terzi; che inoltre, fino a superare complessivamente l'80%, verranno utilizzati prodotti regionali con marchio DOP, IGP, IGT, DOC, DOCG, QC e tipici regionali inseriti nell'apposito Albo ministeriale, prodotti biologici regionali acquistati da aziende agricole del territorio regionale o loro consorzi, nonchè prodotti di altre aziende agricole regionali acquistati direttamente dai produttori, con preferenza a quelli della zona, o da loro strutture collettive di trasformazione e commercializzazione; dichiara infine che la rimanente quota di prodotto proverrà preferibilmente e per quanto possibile da artigiani alimentari della zona e sarà riferita a produzioni agricole regionali ATTIVITÁ RICREATIVE l'attività comprende l'organizzazione di attività ricreative, culturali, sociali, didattiche, di pratica sportiva, escursionistiche e di ippoturismo finalizzate al trattenimento degli ospiti dell'azienda? SI NO il sottoscritto dichiara di organizzare attività rivolte alla valorizzazione dell'ambiente, del patrimonio storico e rurale o delle proprie risorse agricole, per tutti gli ospiti aziendali, con possibilità di dare luogo ad un corrispettivo autonomo per l'effettuazione delle stesse il sottoscritto dichiara che l'azienda potrà organizzare attività che non realizzano le finalità di valorizzazione dell'ambiente, del patrimonio storico e rurale o delle risorse agricole aziendali, per le quali non potrà dare luogo ad un autonomo corrispettivo ed inoltre le stesse saranno offerte solo gli ospiti che usufruiscono dell'ospitalità o della ristorazione agrituristica il sottoscritto dichiara che verranno organizzate attività sociali rivolte all'ospitalità della prima infanzia, alla riabilitazione e all'inclusione lavorativa dei soggetti a bassa contrattuali",
+   "branches": [
+    {
+     "choice": "SI",
+     "id": "r4c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r8c1p14reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r9c1p23reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r12c1p26reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r13c1p35reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r17c1p39reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r18c1p44reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "il richiedente dichiara inoltre che i pasti e le bevande preparati e somministrati nei locali dell'azienda verranno ottenuti per almeno il 35% di prodotto total",
+     "id": "r19c1p45reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r22c1p48reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r23c1p49reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "nell'azienda esistono strutture e dotazioni per il tempo libero",
+     "id": "r27c1p53reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r13c1p35reg:radio:5_clone"
+      ],
+      [
+       "r22c1p48reg:radio:8_clone",
+       "r17c1p39reg:radio:6_clone"
+      ],
+      [
+       "r23c1p49reg:radio:9_clone",
+       "r18c1p44reg:radio:7_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 16.1
+  },
+  {
+   "section": "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "di possedere i requisiti indicati nel ''Prospetto per sezioni tematiche: requisiti e punteggi'' proposto nell'allegato A;"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della "
+    },
+    {
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "label": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della ",
+     "options": [
+      "1 girasole",
+      "2 girasoli",
+      "3 girasoli",
+      "4 girasoli",
+      "5 girasoli"
+     ]
+    }
+   ],
+   "fingerprint": "48b1324c2011e58d",
+   "text": "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica Dichiara che si intende esercitare l'attività agrituristica ai sensi della legge regionale n.15/2008 e, pertanto, di possedere i requisiti indicati nel ''Prospetto per sezioni tematiche: requisiti e punteggi'' proposto nell'allegato A; che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della categoria Note: L'attribuzione della categoria avviene attraverso la compilazione delle tabelle tematiche (allegato A), mentre i punteggi minimi per l'attribuzione della categoria sono nella Circolare prot. n. 0750651 del 4.11.2015. Per il manuale del marchio si rimanda al portale istituzionale dell'agriturismo (www.agriturismoitalia.gov.it).",
+   "branches": [
+    {
+     "choice": "di possedere i requisiti indicati nel ''Prospetto per sezioni tematiche: requisiti e punteggi'' proposto nell'allegato A;",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della ",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della  = 1 girasole",
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "option": "1 girasole"
+    },
+    {
+     "choice": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della  = 2 girasoli",
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "option": "2 girasoli"
+    },
+    {
+     "choice": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della  = 3 girasoli",
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "option": "3 girasoli"
+    },
+    {
+     "choice": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della  = 4 girasoli",
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "option": "4 girasoli"
+    },
+    {
+     "choice": "che a seguito della compilazione del Prospetto, l'azienda agrituristica consegue i punteggi riportati per i quali ottiene il punteggio per l'attribuzione della  = 5 girasoli",
+     "id": "r5c1p5reg",
+     "kind": "select",
+     "option": "5 girasoli"
+    }
+   ],
+   "seconds": 9.8
+  },
+  {
+   "section": "dichiarazione di disponibilità dei terreni e degli edifici",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "dichiara di avere la disponibilità degli edifici a titolo di (proprietà / affitto / comodato / altro):",
+     "max": 50
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "e di avere la disponibilità dei terreni a titolo di (proprietà / affitto / comodato / altro):",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:number",
+     "kind": "text",
+     "label": "per complessivi Ha",
+     "max": 5
+    },
+    {
+     "id": "r9c1p11reg:number",
+     "kind": "text",
+     "label": "Ha",
+     "max": 5
+    },
+    {
+     "id": "r9c2p13reg:txt",
+     "kind": "text",
+     "label": "siti nel Comune di",
+     "max": 50
+    },
+    {
+     "id": "r9c3p15reg:txt",
+     "kind": "text",
+     "label": "località",
+     "max": 50
+    },
+    {
+     "id": "r11c1p17reg:txt",
+     "kind": "text",
+     "label": "coltivati a",
+     "max": 100
+    }
+   ],
+   "fingerprint": "579083fbed6521c2",
+   "text": "dichiarazione di disponibilità dei terreni e degli edifici dichiara di avere la disponibilità degli edifici a titolo di (proprietà / affitto / comodato / altro): e di avere la disponibilità dei terreni a titolo di (proprietà / affitto / comodato / altro): per complessivi Ha di cui Ha siti nel Comune di località coltivati a",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione di utilizzo di edifici nel fondo",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "abitazioni"
+    },
+    {
+     "id": "r4c1p4reg:number",
+     "kind": "text",
+     "label": "numero",
+     "max": 3
+    },
+    {
+     "id": "r4c2p6reg:number",
+     "kind": "text",
+     "label": "numero complessivo di vani catastali",
+     "max": 3
+    },
+    {
+     "id": "r4c3p8reg:real",
+     "kind": "text",
+     "label": "per complessivi mq",
+     "max": 8
+    },
+    {
+     "id": "r5c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "annessi rustici"
+    },
+    {
+     "id": "r7c1p13reg:number",
+     "kind": "text",
+     "label": "numero",
+     "max": 3
+    },
+    {
+     "id": "r7c2p15reg:real",
+     "kind": "text",
+     "label": "per complessivi mq",
+     "max": 8
+    },
+    {
+     "id": "r9c1p19reg:radio:0_clone",
+     "kind": "radio",
+     "label": "abitazione",
+     "group": "r9c1p19reg:radio"
+    },
+    {
+     "id": "r9c2p20reg:radio:1_clone",
+     "kind": "radio",
+     "label": "annesso rustico",
+     "group": "r9c2p20reg:radio"
+    },
+    {
+     "id": "r11c1p22reg:txt",
+     "kind": "text",
+     "label": "caratteristiche architettoniche (stile, muratura, tipo pianta, tipo copertura, etc):",
+     "max": 500
+    },
+    {
+     "id": "r13c1p24reg:txt",
+     "kind": "text",
+     "label": "numero piani dentro e fuori terra:",
+     "max": 100
+    },
+    {
+     "id": "r13c2p26reg",
+     "kind": "select",
+     "label": "presenza di servizi igienici",
+     "options": [
+      "SI",
+      "NO"
+     ]
+    },
+    {
+     "id": "r15c1p28reg:txt",
+     "kind": "text",
+     "label": "condizioni statiche e stato di manutenzione e d'uso:",
+     "max": 500
+    },
+    {
+     "id": "r17c1p30reg:txt",
+     "kind": "text",
+     "label": "destinazione produttiva (stalla, scuderia, porcilaia, ovile, fienile, deposito, etc.):",
+     "max": 50
+    }
+   ],
+   "fingerprint": "3861b0b041e8b98e",
+   "text": "dichiarazione di utilizzo di edifici nel fondo dispone dei seguenti fabbricati rurali: abitazioni numero numero complessivo di vani catastali per complessivi mq annessi rustici numero per complessivi mq ciascun fabbricato con le caratteristiche costruttive appresso riportate: abitazione annesso rustico caratteristiche architettoniche (stile, muratura, tipo pianta, tipo copertura, etc): numero piani dentro e fuori terra: presenza di servizi igienici condizioni statiche e stato di manutenzione e d'uso: destinazione produttiva (stalla, scuderia, porcilaia, ovile, fienile, deposito, etc.): ____________________________________",
+   "branches": [
+    {
+     "choice": "abitazioni",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r7c1p13reg:number",
+       "r4c1p4reg:number"
+      ],
+      [
+       "r7c2p15reg:real",
+       "r4c3p8reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "abitazione",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "annessi rustici",
+     "id": "r5c1p11reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r7c1p13reg:number",
+       "r4c1p4reg:number"
+      ],
+      [
+       "r7c2p15reg:real",
+       "r4c3p8reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "abitazione",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "abitazione",
+     "id": "r9c1p19reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r7c1p13reg:number",
+       "r4c1p4reg:number"
+      ],
+      [
+       "r7c2p15reg:real",
+       "r4c3p8reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "abitazione",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "annesso rustico",
+     "id": "r9c2p20reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r7c1p13reg:number",
+       "r4c1p4reg:number"
+      ],
+      [
+       "r7c2p15reg:real",
+       "r4c3p8reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "abitazione",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "presenza di servizi igienici = SI",
+     "id": "r13c2p26reg",
+     "kind": "select",
+     "option": "SI",
+     "moved": [
+      [
+       "r7c1p13reg:number",
+       "r4c1p4reg:number"
+      ],
+      [
+       "r7c2p15reg:real",
+       "r4c3p8reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "abitazione",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "presenza di servizi igienici = NO",
+     "id": "r13c2p26reg",
+     "kind": "select",
+     "option": "NO",
+     "moved": [
+      [
+       "r7c1p13reg:number",
+       "r4c1p4reg:number"
+      ],
+      [
+       "r7c2p15reg:real",
+       "r4c3p8reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "abitazione",
+      "adds": 14
+     }
+    }
+   ],
+   "seconds": 12.8
+  },
+  {
+   "section": "dichiarazione di svolgimento di attività agrituristica",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "attività agricole"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "attività di allevamento di animali"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "attività di allevamento di animali",
+     "max": 150
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "attività di silvicoltura"
+    },
+    {
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r6c2p10reg:txt",
+     "kind": "text",
+     "label": "(specificare)",
+     "context": "altro",
+     "max": 150
+    }
+   ],
+   "fingerprint": "033c232227149ee5",
+   "text": "dichiarazione di svolgimento di attività agrituristica attività agricole (specificare) attività di allevamento di animali attività di silvicoltura (specificare) altro",
+   "branches": [
+    {
+     "choice": "attività agricole",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "attività di allevamento di animali",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "attività di silvicoltura",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.8
+  },
+  {
+   "section": "Manodopera impiegata nell'attività agrituristica",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "familiare"
+    },
+    {
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "label": "extrafamiliare"
+    },
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "salariati fissi"
+    },
+    {
+     "id": "r3c2p5reg:chk",
+     "kind": "checkbox",
+     "label": "avventizi"
+    },
+    {
+     "id": "r5c1p7reg",
+     "kind": "select",
+     "label": "in azienda risiede",
+     "options": [
+      "la famiglia del conduttore",
+      "la famiglia del salariato fisso",
+      "altra",
+      "nessuno"
+     ]
+    },
+    {
+     "id": "r5c2p9reg",
+     "kind": "select",
+     "label": "avventizi",
+     "options": [
+      "abitualmente",
+      "solo stagionalmente",
+      "-"
+     ]
+    },
+    {
+     "id": "r7c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "colui che presenta la pratica"
+    },
+    {
+     "id": "r9c1p15reg:txt",
+     "kind": "text",
+     "label": "estremi dell'attestato",
+     "max": 100
+    },
+    {
+     "id": "r10c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "altra persona"
+    },
+    {
+     "id": "r12c1p18reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 50
+    },
+    {
+     "id": "r12c2p20reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 50
+    },
+    {
+     "id": "r14c1p22reg:txt",
+     "kind": "text",
+     "label": "estremi dell'attestato",
+     "max": 100
+    }
+   ],
+   "fingerprint": "715bb39de173f35a",
+   "text": "Manodopera impiegata nell'attività agrituristica ci si avvale della seguente manodopera: familiare extrafamiliare salariati fissi avventizi in azienda risiede Gli addetti interessati all'esercizio delle attività agrituristiche sono colui che presenta la pratica estremi dell'attestato altra persona cognome nome estremi dell'attestato",
+   "branches": [
+    {
+     "choice": "familiare",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "extrafamiliare",
+     "id": "r2c2p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "salariati fissi",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "avventizi",
+     "id": "r3c2p5reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "in azienda risiede = la famiglia del conduttore",
+     "id": "r5c1p7reg",
+     "kind": "select",
+     "option": "la famiglia del conduttore",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "in azienda risiede = la famiglia del salariato fisso",
+     "id": "r5c1p7reg",
+     "kind": "select",
+     "option": "la famiglia del salariato fisso",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "in azienda risiede = altra",
+     "id": "r5c1p7reg",
+     "kind": "select",
+     "option": "altra",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "in azienda risiede = nessuno",
+     "id": "r5c1p7reg",
+     "kind": "select",
+     "option": "nessuno",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "avventizi = abitualmente",
+     "id": "r5c2p9reg",
+     "kind": "select",
+     "option": "abitualmente",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "avventizi = solo stagionalmente",
+     "id": "r5c2p9reg",
+     "kind": "select",
+     "option": "solo stagionalmente",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "avventizi = -",
+     "id": "r5c2p9reg",
+     "kind": "select",
+     "option": "-",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "colui che presenta la pratica",
+     "id": "r7c1p13reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "altra persona",
+     "id": "r10c1p16reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c1p22reg:txt",
+       "r9c1p15reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "estremi dell'attestato",
+      "adds": 7
+     }
+    }
+   ],
+   "seconds": 26.7
+  },
+  {
+   "section": "dichiarazione relativa al periodo di apertura",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "annuale",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "stagionale",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r4c2p6reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    }
+   ],
+   "fingerprint": "606979f90c14465e",
+   "text": "dichiarazione relativa al periodo di apertura annuale stagionale dal al",
+   "branches": [
+    {
+     "choice": "annuale",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "stagionale",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 4.8
+  },
+  {
+   "section": "Idoneità dei locali da adibire ad attività agrituristiche",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "L'Ufficiale Sanitario di",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    }
+   ],
+   "fingerprint": "81ee3e7d5f91e1f8",
+   "text": "Idoneità dei locali da adibire ad attività agrituristiche L'Ufficiale Sanitario di in data ha espresso parere favorevole in ordine all'idoneità dei locali da adibire ad attività agrituristiche.",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che la fruizione delle strutture e dei servizi connessi alle attività agrituristiche è garantita anche alle persone disabili con almeno l'accessibilità ad una c"
+    }
+   ],
+   "fingerprint": "9a5af7223e50a59d",
+   "text": "dichiarazione relativa all'accessibilità da parte di persone disabili che la fruizione delle strutture e dei servizi connessi alle attività agrituristiche è garantita anche alle persone disabili con almeno l'accessibilità ad una camera con relativo bagno, nell'ambito della ricettività, ed alla sala ristorazione e ad un bagno nel caso di attività di somministrazione",
+   "branches": [
+    {
+     "choice": "che la fruizione delle strutture e dei servizi connessi alle attività agrituristiche è garantita anche alle persone disabili con almeno l'accessibilità ad una c",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è in possesso del certificato",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:number",
+     "kind": "text",
+     "label": "n.",
+     "max": 10
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "rilasciato in data"
+    },
+    {
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "ha presentato la domanda ai fini dell'ottenimento del certificato",
+     "group": "r4c1p8reg:radio"
+    },
+    {
+     "id": "r6c1p10reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r6c2p12reg:number",
+     "kind": "text",
+     "label": "numero P.G.",
+     "max": 10
+    },
+    {
+     "id": "r7c1p15reg:radio:2_clone",
+     "kind": "radio",
+     "label": "è in possesso di altra documentazione equipollente (dichiarazione di conformità di un professionista abilitato) che allega in copia alla presente Segnalazione",
+     "group": "r7c1p15reg:radio"
+    }
+   ],
+   "fingerprint": "1c9fa01530d715d4",
+   "text": "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità è in possesso del certificato n. rilasciato in data ha presentato la domanda ai fini dell'ottenimento del certificato in data numero P.G. è in possesso di altra documentazione equipollente (dichiarazione di conformità di un professionista abilitato) che allega in copia alla presente Segnalazione",
+   "branches": [
+    {
+     "choice": "è in possesso del certificato",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "ha presentato la domanda ai fini dell'ottenimento del certificato",
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "è in possesso di altra documentazione equipollente (dichiarazione di conformità di un professionista abilitato) che allega in copia alla presente Segnalazione",
+     "id": "r7c1p15reg:radio:2_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 4.6
+  },
+  {
+   "section": "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che, come previsto dall'art.6 della L. 20.02.2006 n. 96, è esente da una qualsiasi causa ostativa all'esercizio dell'attività agrituristica o di ospitalità rura"
+    }
+   ],
+   "fingerprint": "8467c3da5ba45e1e",
+   "text": "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96 che, come previsto dall'art.6 della L. 20.02.2006 n. 96, è esente da una qualsiasi causa ostativa all'esercizio dell'attività agrituristica o di ospitalità rurale familiare e cioè: \"che l'esercizio dell'attività agrituristica non è consentito, salvo che abbiano ottenuto la riabilitazione a : a) coloro che hanno riportato nell'ultimo triennio, con sentenza passata in giudicato, condanna per uno dei delitti previsti dagli art. 442, 444, 513, 515 e 517 del Codice Penale, o per uno dei delitti in materia di igiene e di sanità o di frode nella preparazione degli alimenti previsti da leggi speciali; b)coloro che sono sottoposti a misure di prevenzione ai sensi della L. 27.12.1956, n. 1423, e successive modificazioni, o sono stati dichiarati delinquenti abituali.\"",
+   "branches": [
+    {
+     "choice": "che, come previsto dall'art.6 della L. 20.02.2006 n. 96, è esente da una qualsiasi causa ostativa all'esercizio dell'attività agrituristica o di ospitalità rura",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "fingerprint": "9962035d59522261",
+   "same_as": "suap-002-iniziare-l-attivita-di-vendita-di-prodotti-agricol#dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di essere in possesso della certificazione di Imprenditore Agricolo Professionale (IAP) di cui all'articolo 2135 del codice civile al fine di esercitare l'attiv"
+    }
+   ],
+   "fingerprint": "922c94dd5f5a6d6f",
+   "text": "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale di essere in possesso della certificazione di Imprenditore Agricolo Professionale (IAP) di cui all'articolo 2135 del codice civile al fine di esercitare l'attività",
+   "branches": [
+    {
+     "choice": "di essere in possesso della certificazione di Imprenditore Agricolo Professionale (IAP) di cui all'articolo 2135 del codice civile al fine di esercitare l'attiv",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.9
+  },
+  {
+   "section": "dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza dell'obbligo di affiggere, su targa, all'ingresso dell'azienda agrituristica, la classificazione ai sensi dell'art. 9 della Legge 20.02.2"
+    }
+   ],
+   "fingerprint": "c0dab2822039b881",
+   "text": "dichiarazione di obbligo di affissione della classificazione dell'agriturismo di essere a conoscenza dell'obbligo di affiggere, su targa, all'ingresso dell'azienda agrituristica, la classificazione ai sensi dell'art. 9 della Legge 20.02.2006 n. 96",
+   "branches": [
+    {
+     "choice": "di essere a conoscenza dell'obbligo di affiggere, su targa, all'ingresso dell'azienda agrituristica, la classificazione ai sensi dell'art. 9 della Legge 20.02.2",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazione di conoscenza di obblighi per il richiedente",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "di comunicare, entro il 1° ottobre di ogni anno, al Comune i prezzi praticati utilizzando gli schemi approvati con le norme di attuazione"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "di presentare al Comune e/o alla Questura le apposite schede di dichiarazione relative agli ospiti che usufruiscono dell'attività ricettiva di alloggio, entro 2"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "di esporre al pubblico la presente SCIA nonchè i prezzi praticati per ogni singola attività svolta se previsti"
+    }
+   ],
+   "fingerprint": "53fba4cb1b7a5935",
+   "text": "dichiarazione di conoscenza di obblighi per il richiedente di comunicare, entro il 1° ottobre di ogni anno, al Comune i prezzi praticati utilizzando gli schemi approvati con le norme di attuazione di presentare al Comune e/o alla Questura le apposite schede di dichiarazione relative agli ospiti che usufruiscono dell'attività ricettiva di alloggio, entro 24 ore dal loro arrivo, ai sensi dell'art. 109 del TULPS di esporre al pubblico la presente SCIA nonchè i prezzi praticati per ogni singola attività svolta se previsti",
+   "branches": [
+    {
+     "choice": "di comunicare, entro il 1° ottobre di ogni anno, al Comune i prezzi praticati utilizzando gli schemi approvati con le norme di attuazione",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di presentare al Comune e/o alla Questura le apposite schede di dichiarazione relative agli ospiti che usufruiscono dell'attività ricettiva di alloggio, entro 2",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di esporre al pubblico la presente SCIA nonchè i prezzi praticati per ogni singola attività svolta se previsti",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 4.7
+  },
+  {
+   "section": "dichiarazione relativa alla Prevenzione Incendi",
+   "fingerprint": "649d2ecfac75455e",
+   "same_as": "suap-004-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla Prevenzione Incendi",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla presentazione dell'intervento",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che l'intervento viene presentato alla Regione Campania - Direzione Generale per le Politiche agricole, alimentari e forestali"
+    }
+   ],
+   "fingerprint": "2b404e33fcb0ed13",
+   "text": "dichiarazione relativa alla presentazione dell'intervento che l'intervento viene presentato alla Regione Campania - Direzione Generale per le Politiche agricole, alimentari e forestali",
+   "branches": [
+    {
+     "choice": "che l'intervento viene presentato alla Regione Campania - Direzione Generale per le Politiche agricole, alimentari e forestali",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione del tipo di prodotti venduti",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che i prodotti venduti agli ospiti e al pubblico sono dei generi alimentari ed artigianali tipici prodotti dall'azienda o ricavati anche attraverso lavorazioni "
+    }
+   ],
+   "fingerprint": "df93b20f71d3927a",
+   "text": "dichiarazione del tipo di prodotti venduti che i prodotti venduti agli ospiti e al pubblico sono dei generi alimentari ed artigianali tipici prodotti dall'azienda o ricavati anche attraverso lavorazioni esterne da materie prime prodotte nell'azienda",
+   "branches": [
+    {
+     "choice": "che i prodotti venduti agli ospiti e al pubblico sono dei generi alimentari ed artigianali tipici prodotti dall'azienda o ricavati anche attraverso lavorazioni ",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.9,
+   "scelta": "l'attività prevede la vendita di generi alimentari ed artigianali tipici, prodotti dall'azienda"
+  },
+  {
+   "section": "dichiarazione relativa alla provenienza e alla somministrazione dei pasti e delle bevande",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "numero pasti e bevande annue",
+     "max": 10
+    },
+    {
+     "id": "r4c1p6reg:number",
+     "kind": "text",
+     "label": "per numero giornate lavorative annue",
+     "max": 3
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "prezzi massimi",
+     "max": 50
+    }
+   ],
+   "fingerprint": "0d49697fe1a67dc1",
+   "text": "dichiarazione relativa alla provenienza e alla somministrazione dei pasti e delle bevande numero pasti e bevande annue per numero giornate lavorative annue prezzi massimi Il richiedente dichiara inoltre che i pasti e le bevande preparati e somministrati nei locali dell'azienda verranno ottenuti per almeno il 35% di prodotto totale annuo utilizzando prodotti propri dell'azienda agricola e/o ricavati da materie prime dell'azienda anche attraverso lavorazioni effettuate da terzi; che inoltre, fino a superare complessivamente l'80%, verranno utilizzati prodotti regionali con marchio DOP, IGP, IGT, DOC, DOCG, QC e tipici regionali inseriti nell'apposito Albo ministeriale, prodotti biologici regionali acquistati da aziende agricole del territorio regionale o loro consorzi, nonchè prodotti di altre aziende agricole regionali acquistati direttamente dai produttori, con preferenza a quelli della zona, o da loro strutture collettive di trasformazione e commercializzazione; dichiara infine che la rimanente quota di prodotto proverrà preferibilmente e per quanto possibile da artigiani alimentari della zona e sarà riferita a produzioni agricole regionali",
+   "branches": [],
+   "seconds": 0.9,
+   "scelta": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona"
+  },
+  {
+   "section": "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "fingerprint": "94f9e919eed08517",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "seconds": 0.9,
+   "scelta": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona"
+  },
+  {
+   "section": "Addetti alle attività connesse all'igiene degli alimenti",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "colui che presenta la pratica"
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "attestato rilasciato in data"
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "altra persona"
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 50
+    },
+    {
+     "id": "r6c2p10reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 50
+    },
+    {
+     "id": "r8c1p12reg:calendar_input",
+     "kind": "date",
+     "label": "attestato rilasciato in data"
+    }
+   ],
+   "fingerprint": "bdef9db81afdab42",
+   "text": "Addetti alle attività connesse all'igiene degli alimenti sono in possesso dell'attestato per addetti alle attività connesse all'igiene degli alimenti attestato rilasciato in data colui che presenta la pratica altra persona cognome nome attestato rilasciato in data",
+   "branches": [
+    {
+     "choice": "colui che presenta la pratica",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c1p12reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "attestato rilasciato in data",
+      "adds": 7
+     }
+    },
+    {
+     "choice": "altra persona",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c1p12reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "attestato rilasciato in data",
+      "adds": 7
+     }
+    }
+   ],
+   "seconds": 5.3,
+   "scelta": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona"
+  },
+  {
+   "section": "dichiarazione di sussistenza dei requisiti strutturali ed igienico sanitari per l'attività ricettiva",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che le strutture, le camere/ gli appartamenti / le piazzole utilizzate per l'attività agrituristica possiedono i requisiti strutturali ed igienico-sanitari prev"
+    }
+   ],
+   "fingerprint": "21c12e9ea0373d77",
+   "text": "dichiarazione di sussistenza dei requisiti strutturali ed igienico sanitari per l'attività ricettiva che le strutture, le camere/ gli appartamenti / le piazzole utilizzate per l'attività agrituristica possiedono i requisiti strutturali ed igienico-sanitari previsti per i locali di abitazione dai regolamenti comunali di igiene ed edilizio e che non superano i limiti di capacità ricettiva previsti dagli stessi",
+   "branches": [
+    {
+     "choice": "che le strutture, le camere/ gli appartamenti / le piazzole utilizzate per l'attività agrituristica possiedono i requisiti strutturali ed igienico-sanitari prev",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.9,
+   "scelta": "l'attività comprende servizio di ospitalità (in piazzole e/o camere munite di bagno e/o appartamenti)"
+  }
+ ]
+}

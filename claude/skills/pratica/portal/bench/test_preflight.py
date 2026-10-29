@@ -183,6 +183,32 @@ def proposals():
     raises(lambda: run.preflight(steps, values(steps=steps)), "no propose")
 
 
+def sums():
+    # A total the portal wants (rooms, beds) from what was asked: each term is a question.
+    asks = {"a": {"type": "number", "question": "a", "default": "0"}, "b": {"type": "number", "question": "b"}}
+    v = run.Values({"b": "3"}, fields={}, asks=asks)
+    assert v.render("{{ask.a+2*ask.b}}") == "6", v.render("{{ask.a+2*ask.b}}")
+    assert v.render("{{ask.a+ask.b|positive}}") == "true"
+    assert run.Values({}, fields={}, asks=asks).render("{{ask.a+ask.b}}") is None  # b unanswered
+    assert [r for r, _ in run.refs_in("{{ask.a+2*ask.b|positive}}")] == ["ask.a", "ask.b"]
+    assert v.render("{{ask.b|atleast_3}} {{ask.b|atleast_4}}") == "true false"
+
+
+def too_long():
+    # A box's max is checked before the run: an answer is asked again, a vault value named.
+    steps = copy.deepcopy(STEPS)
+    asked = next(f for sec in steps["sections"] for f in sec["fields"]
+                 if str(f.get("value", "")).startswith("{{ask.") and "when" not in f and "|" not in f["value"])
+    vault = next(f for sec in steps["sections"] for f in sec["fields"]
+                 if str(f.get("value", "")).startswith("{{business.denominazione") and "when" not in f)
+    asked["max"], vault["max"] = 3, 3
+    r = run.preflight(steps, values(steps=steps))
+    key = asked["value"][6:].split("}")[0]
+    assert any(q["key"] == key and "at most 3" in q.get("error", "") for q in r["questions"]), r["questions"]
+    assert any("at most 3" in m["why"] for m in r["missing"]), r["missing"]
+    assert not r["ready"]
+
+
 CASES = [
     ("the SCIA with its answers is ready", ready),
     ("no answers: one checklist, branch items first, then two questions, no defaults", all_questions),
@@ -200,6 +226,8 @@ CASES = [
     ("a question no field reads is a steps-file error", unused_ask),
     ("a question this case doesn't need isn't asked; a conditional one says on what", not_needed_here),
     ("a proposal is offered to confirm, used once confirmed, and asked when the vault can't fill it", proposals),
+    ("a sum of answers renders, needs every term, and each term is asked", sums),
+    ("a value longer than its box is asked again, or named in the vault, before the run", too_long),
 ]
 
 

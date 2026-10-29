@@ -1,0 +1,48 @@
+# Taking over a non-food shop (comunicazione di subingresso nell'esercizio di vicinato), as
+# gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-016-subentrare-nell-esercizio-dell-attivita.json), for the shop
+# rehearsal's made-up ditta individuale (rehearsals/negozio-fittizio/fixture.json) taking over an
+# existing shop. Its three own sections are the subingresso's, shared by every sector.
+procedure: napoli/comune/subingresso-attivita-commerciale
+title: "Subingresso in un negozio di vicinato non alimentare, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-016-subentrare-nell-esercizio-dell-attivita
+subject: impresa
+operation: Subentrare nell'esercizio dell'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+after: [Pagamento degli oneri, Gestione degli allegati]
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Vicinato - settore merceologico NON alimentare], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Subentrare nell'esercizio dell'attività"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+groups:
+  extras:
+    question: "Does any of this apply to the shop? Tick all that do, or none."
+asks:
+  altri_soggetti: {group: extras, type: yes_no, item: "It's a company with other partners or administrators besides the one who declares", why: "Each files a signed antimafia statement of their own (art. 85 D.Lgs. 159/2011), not mapped yet."}
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - subingresso {{business.denominazione}}"}
+  diritti_euro: {type: number, question: "The SUAP fees in euro", default: "80", why: "The 2026 table's VCA column for a non-food shop (S1)."}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, requisiti di onorabilità, altre dichiarazioni, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen"
+  - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: vicinato_non_alimentare, evento: subingresso}
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale, srl, srls, snc, sas, spa]
+    else: "So far for a ditta individuale or an srl, srls, snc, sas or spa."
+  - {when: "{{ask.altri_soggetti|not}}", else: "Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet."}
+  - {when: "{{ask.atto_registrato}}", else: "A deed still being registered isn't supported yet: the portal then takes its signed copy, which is yours to upload. File once it's registered."}

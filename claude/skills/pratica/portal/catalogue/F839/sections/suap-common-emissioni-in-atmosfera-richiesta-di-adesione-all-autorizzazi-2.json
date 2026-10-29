@@ -1,0 +1,256 @@
+{
+ "crawled": "2026-10-28T19:43:59.972Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Emissioni in atmosfera › Richiesta di adesione all'autorizzazione di carattere generale per gli impianti a ciclo chiuso di pulizia a secco di tessuti e di pellami, escluse le pellicce e per le pulitintolavanderie a ciclo chiuso (nuovo impianto, trasferimento, modifica sostanziale. Art. 275, comma 20 e 272, comma 3 D.Lgs. 152/2006) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 19.8,
+ "generated": {
+  "interventi": "Domanda di autorizzazione in via generale per la costruzione, la modifica e il trasferimento di impianti a ciclo chiuso per la pulizia a secco ditessuti e di pellami, escluse le pellicce, e per le pulitintolavanderie a ciclo chiuso",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di autorizzazione in via generale per la costruzione, la modifica e il trasferimento di impianti a ciclo chiuso per la pulizia a secco di tessuti e di pellami, escluse le pellicce, e per le pulitintolavanderie a ciclo chiuso. (art. 275, comma 20, D.Lgs. n° 152/06 e s.m.i. - Parte quinta)",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa all'ubicazione dell'impianto produttivo",
+   "dati impianto",
+   "dichiarazione relativa alla tipologia di intervento oggetto della domanda (attività in deroga/tintolavanderie)",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa all'ubicazione dell'impianto produttivo",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati impianto",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "L'impianto è costituito da macchine di lavaggio a ciclo chiuso n°",
+     "max": 2
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "N° e modello dellla macchina",
+     "max": 30
+    },
+    {
+     "id": "r5c2p9reg:real",
+     "kind": "text",
+     "label": "Volume del tamburo (metri cubi)",
+     "max": 5
+    },
+    {
+     "id": "r5c3p11reg:txt",
+     "kind": "text",
+     "label": "Tipo di sovente utilizzato",
+     "max": 30
+    },
+    {
+     "id": "r5c4p13reg:real",
+     "kind": "text",
+     "label": "Quantità annua massima di solvente utilizzato (Kg)",
+     "max": 9
+    },
+    {
+     "id": "r5c5p15reg:number",
+     "kind": "text",
+     "label": "Quantità annua massima di prodotto pulito e asciugato (Kg)",
+     "max": 6
+    },
+    {
+     "id": "r7c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "Si impegna a rispettare i requisiti tecnico costruttivi e gestionali nonché le prescrizioni previste dalla vigente normativa di attuazione della direttiva 1999/"
+    }
+   ],
+   "fingerprint": "0c739d8b8ec8929d",
+   "text": "dati impianto L'impianto è costituito da macchine di lavaggio a ciclo chiuso n° CARATTERISTICHE TECNICHE N° e modello dellla macchina Volume del tamburo (metri cubi) Tipo di sovente utilizzato Quantità annua massima di solvente utilizzato (Kg) Quantità annua massima di prodotto pulito e asciugato (Kg) Si impegna a rispettare i requisiti tecnico costruttivi e gestionali nonché le prescrizioni previste dalla vigente normativa di attuazione della direttiva 1999/13/CE ed individuati all'appendice della sezione 2 della parte VII dell'allegato III alla parte quinta del D.Lgs. 3 aprile 2006, n.152.",
+   "branches": [
+    {
+     "choice": "Si impegna a rispettare i requisiti tecnico costruttivi e gestionali nonché le prescrizioni previste dalla vigente normativa di attuazione della direttiva 1999/",
+     "id": "r7c1p18reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "N° e modello dellla macchina",
+      "adds": 10
+     }
+    }
+   ],
+   "seconds": 2.2
+  },
+  {
+   "section": "dichiarazione relativa alla tipologia di intervento oggetto della domanda (attività in deroga/tintolavanderie)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "l'installazione di un nuovo stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "l'autorizzazione al trasferimento dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "attualmente ubicato nel comune di",
+     "context": "l'autorizzazione al trasferimento dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "max": 70
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "via",
+     "max": 70
+    },
+    {
+     "id": "r5c2p9reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 20
+    },
+    {
+     "id": "r5c3p11reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r6c1p12reg:radio:2_clone",
+     "kind": "radio",
+     "label": "la modifica sostanziale dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "group": "r6c1p12reg:radio"
+    },
+    {
+     "id": "r7c1p13reg:radio:3_clone",
+     "kind": "radio",
+     "label": "stabilimento esistente al 12.03.2004",
+     "group": "r7c1p13reg:radio"
+    },
+    {
+     "id": "r9c1p15reg:number",
+     "kind": "text",
+     "label": "costituito da n° macchine",
+     "max": 20
+    }
+   ],
+   "fingerprint": "1e2e072991b4385f",
+   "text": "dichiarazione relativa alla tipologia di intervento oggetto della domanda (attività in deroga/tintolavanderie) l'installazione di un nuovo stabilimento (art. 272, comma 3 D.lgs n. 152/2006) attualmente ubicato nel comune di l'autorizzazione al trasferimento dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006) via numero civico CAP la modifica sostanziale dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006) stabilimento esistente al 12.03.2004 costituito da n° macchine N.B. Negli impianti a ciclo chiuso per la pulizia a secco di tessuti e pellami, escluse le pellicce, e nelle pulitintolavanderie a ciclo chiuso, possono essere utilizzati solventi organici o solventi organici clorurati con esclusione delle sostanze di cui alla legge 28 dicembre 1993 n. 549 e delle sostanze o preparati classificati ai sensi del decreto legislativo 3 febbraio 1997 n. 52, come cancerogeni, mutageni o tossici per la riproduzione, ai quali sono state assegnate etichette con le frasi di rischio R45, R46, R49, R60, R61.",
+   "branches": [
+    {
+     "choice": "l'installazione di un nuovo stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "l'autorizzazione al trasferimento dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "la modifica sostanziale dello stabilimento (art. 272, comma 3 D.lgs n. 152/2006)",
+     "id": "r6c1p12reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "stabilimento esistente al 12.03.2004",
+     "id": "r7c1p13reg:radio:3_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 5.5
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.9
+  }
+ ]
+}

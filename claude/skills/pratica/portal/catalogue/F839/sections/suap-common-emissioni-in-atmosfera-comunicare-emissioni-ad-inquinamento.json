@@ -1,0 +1,513 @@
+{
+ "crawled": "2026-10-28T19:44:53.534Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Emissioni in atmosfera › Comunicare emissioni ad inquinamento atmosferico scarsamente rilevante (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 64.6,
+ "generated": {
+  "interventi": "Emissioni ad inquinamento atmosferico scarsamente rilevante",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per emissioni ad inquinamento atmosferico scarsamente rilevante",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "dati catastali",
+   "Tipologia di attività svolta e utilizzo sostanze generate dagli impianti",
+   "dichiarazione su impianti e categorie di attività ad inquinamento atmosferico scarsamente rilevante",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "Tipologia di attività svolta e utilizzo sostanze generate dagli impianti",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Il sottoscritto dichiara che la tipologia di attività svolta nell'insediamento è:",
+     "max": 200
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "Dichiara inoltre di NON utilizzare sostanze o preparati classificati come cancerogeni, mutageni e tossici per la riproduzione e ai quali sono state assegnate et"
+    }
+   ],
+   "fingerprint": "a1fb156a483f829a",
+   "text": "Tipologia di attività svolta e utilizzo sostanze generate dagli impianti Il sottoscritto dichiara che la tipologia di attività svolta nell'insediamento è: Dichiara inoltre di NON utilizzare sostanze o preparati classificati come cancerogeni, mutageni e tossici per la riproduzione e ai quali sono state assegnate etichette con le frasi di rischio R45, R46, R49, R60, R61, R68; OVVERO per le attività di cui al punto jj), di utilizzarne in quantitativi e con modalità tali da non prevederne la presenza (la rilevabilità) nelle emissioni derivanti dal laboratorio stesso.",
+   "branches": [
+    {
+     "choice": "Dichiara inoltre di NON utilizzare sostanze o preparati classificati come cancerogeni, mutageni e tossici per la riproduzione e ai quali sono state assegnate et",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.4
+  },
+  {
+   "section": "dichiarazione su impianti e categorie di attività ad inquinamento atmosferico scarsamente rilevante",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "a) Lavorazioni meccaniche dei metalli, con esclusione di attività di verniciatura e trattamento superficiale e smerigliature con consumo complessivo di olio (co"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "b) Laboratori orafi in cui non è effettuata la fusione di metalli, laboratori odontotecnici, esercizi in cui viene svolta attività estetica, sanitaria e di serv"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "c) Decorazione di piastrelle ceramiche senza procedimento di cottura."
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "d) Le seguenti lavorazioni tessili:"
+    },
+    {
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "e) Cucine, esercizi di ristorazione collettiva, mense, rosticcerie e friggitorie."
+    },
+    {
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "f) Panetterie, pasticcerie ed affini con un utilizzo complessivo giornaliero di farina non superiore a 300 kg."
+    },
+    {
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "g) Stabulari acclusi a laboratori di ricerca e di analisi."
+    },
+    {
+     "id": "r13c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "h) Serre"
+    },
+    {
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "i) Stirerie"
+    },
+    {
+     "id": "r15c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "j) Laboratori fotografici"
+    },
+    {
+     "id": "r16c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "k) Autorimesse e officine meccaniche di riparazioni veicoli, escluse quelle in cui si effettuano operazioni di verniciatura."
+    },
+    {
+     "id": "r17c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "l) Autolavaggi"
+    },
+    {
+     "id": "r18c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "m) Silos per materiali da costruzione ad esclusione di quelli asserviti ad altri impianti"
+    },
+    {
+     "id": "r19c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "n) Macchine per eliografia"
+    },
+    {
+     "id": "r20c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "o) Stoccaggio e movimentazione di prodotti petrolchimici ed idrocarburi naturali estratti da giacimento, stoccati e movimentati a ciclo chiuso o protetti da gas"
+    },
+    {
+     "id": "r21c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "p) Impianti di trattamento delle acque, escluse le linee di trattamento dei fanghi, fatto salvo quanto previsto dalla lettera p-bis)."
+    },
+    {
+     "id": "r22c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "p-bis) Linee di trattamento dei fanghi che operano nell'ambito di impianti di trattamento delle acque reflue con potenzialità inferiore a 10.000 abitanti equiva"
+    },
+    {
+     "id": "r23c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "q) Macchinari a ciclo chiuso di concerie e pelliccerie"
+    },
+    {
+     "id": "r24c1p28reg:chk",
+     "kind": "checkbox",
+     "label": "r) Attività di seconde lavorazioni del vetro, successive alle fasi iniziali di fusione, formatura e tempera, ad esclusione di quelle comportanti operazioni di a"
+    },
+    {
+     "id": "r25c1p29reg:chk",
+     "kind": "checkbox",
+     "label": "s) Forni elettrici a volta fredda destinati alla produzione di vetro"
+    },
+    {
+     "id": "r26c1p30reg:chk",
+     "kind": "checkbox",
+     "label": "t) Trasformazione e conservazione, esclusa la surgelazione, di frutta, ortaggi, funghi con produzione giornaliera massima non superiore a 350 kg."
+    },
+    {
+     "id": "r27c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "u) Trasformazione e conservazione, esclusa la surgelazione, di carne con produzione giornaliera massima non superiore a 350 kg."
+    },
+    {
+     "id": "r28c1p32reg:chk",
+     "kind": "checkbox",
+     "label": "v) Molitura di cereali con produzione giornaliera massima non superiore a 500 kg."
+    },
+    {
+     "id": "r29c1p33reg:chk",
+     "kind": "checkbox",
+     "label": "v-bis) impianti di essiccazione di materiali vegetali impiegati da imprese agricole o a servizio delle stesse con potenza termica nominale uguale o inferiore a "
+    },
+    {
+     "id": "r30c1p34reg:chk",
+     "kind": "checkbox",
+     "label": "w) Lavorazione e conservazione, esclusa surgelazione, di pesce ed altri prodotti alimentari marini con produzione giornaliera massima non superiore a 350 kg."
+    },
+    {
+     "id": "r31c1p35reg:chk",
+     "kind": "checkbox",
+     "label": "x) Lavorazioni manifatturiere alimentari con utilizzo giornaliero di materie prime non superiore a 350 kg."
+    },
+    {
+     "id": "r32c1p36reg:chk",
+     "kind": "checkbox",
+     "label": "y) Trasformazioni lattiero-casearie con produzione giornaliera massima non superiore a 350 kg."
+    },
+    {
+     "id": "r33c1p37reg:chk",
+     "kind": "checkbox",
+     "label": "z) Allevamenti effettuati in ambienti confinati in cui il numero di capi presenti è inferiore a quello indicato, per le diverse categorie di animali, nella segu"
+    },
+    {
+     "id": "r53c1p76reg:chk",
+     "kind": "checkbox",
+     "label": "aa) Allevamenti effettuati in ambienti non confinati."
+    },
+    {
+     "id": "r54c1p77reg:chk",
+     "kind": "checkbox",
+     "label": "bb) Impianti di combustione, compresi i gruppi elettrogeni e i gruppi elettrogeni di cogenerazione, di potenza termica nominale inferiore a 1 MW, alimentati a b"
+    },
+    {
+     "id": "r55c1p78reg:chk",
+     "kind": "checkbox",
+     "label": "cc) Impianti di combustione alimentati ad olio combustibile, come tale o in emulsione, di potenza termica nominale inferiore a 0,3 MW."
+    },
+    {
+     "id": "r56c1p79reg:chk",
+     "kind": "checkbox",
+     "label": "dd) Impianti di combustione alimentati a metano o a GPL, di potenza termica nominale inferiore a 1 MW."
+    },
+    {
+     "id": "r57c1p80reg:chk",
+     "kind": "checkbox",
+     "label": "ee) Impianti di combustione, compresi i gruppi elettrogeni e i gruppi elettrogeni di cogenerazione, ubicati all'interno di impianti di smaltimento dei rifiuti, "
+    },
+    {
+     "id": "r58c1p81reg:chk",
+     "kind": "checkbox",
+     "label": "ff) Impianti di combustione, compresi i gruppi elettrogeni e i gruppi elettrogeni di cogenerazione, alimentati a biogas di cui all'allegato X alla parte quinta "
+    },
+    {
+     "id": "r59c1p82reg:chk",
+     "kind": "checkbox",
+     "label": "gg) Gruppi elettrogeni e gruppi elettrogeni di cogenerazione alimentati a metano o a GPL, di potenza termica nominale inferiore a 1 MW."
+    },
+    {
+     "id": "r60c1p83reg:chk",
+     "kind": "checkbox",
+     "label": "hh) Gruppi elettrogeni e gruppi elettrogeni di cogenerazione alimentati a benzina di potenza termica nominale inferiore a 1 MW."
+    },
+    {
+     "id": "r61c1p84reg:chk",
+     "kind": "checkbox",
+     "label": "ii) Impianti di combustione connessi alle attività di stoccaggio dei prodotti petroliferi funzionanti per meno di 2200 ore annue, di potenza termica nominale in"
+    },
+    {
+     "id": "r62c1p85reg:chk",
+     "kind": "checkbox",
+     "label": "jj) Laboratori di analisi e ricerca, impianti pilota per prove, ricerche, sperimentazioni, individuazione di prototipi."
+    },
+    {
+     "id": "r63c1p86reg:chk",
+     "kind": "checkbox",
+     "label": "kk) Dispostivi mobili utilizzati all'interno di uno stabilimento da un gestore diverso da quello dello stabilimento o non utilizzati all'interno di uno stabilim"
+    },
+    {
+     "id": "r64c1p87reg:chk",
+     "kind": "checkbox",
+     "label": "kk-bis) Cantine che trasformano fino a 600 tonnellate l'anno di uva nonché stabilimenti di produzione di aceto o altre bevande fermentate, con una produzione an"
+    },
+    {
+     "id": "r65c1p88reg:chk",
+     "kind": "checkbox",
+     "label": "kk-ter) Frantoi di materiali vegetali."
+    },
+    {
+     "id": "r66c1p89reg:chk",
+     "kind": "checkbox",
+     "label": "kk-quater) Attività di stampa «3d» e stampa «ink jet»."
+    },
+    {
+     "id": "r67c1p90reg:chk",
+     "kind": "checkbox",
+     "label": "kk-quinquies) Attività di taglio, incisione e marcatura laser su carta o tessuti."
+    }
+   ],
+   "fingerprint": "e10aac38bbf9d011",
+   "text": "dichiarazione su impianti e categorie di attività ad inquinamento atmosferico scarsamente rilevante Comunica di esercitare l'attività classificata ad inquinamento scarsamente rilevante ai sensi dell'art. 272 comma 1 del D.Lgs 152/06, di seguito specificata (indicare la/e casistica/e di interesse): a) Lavorazioni meccaniche dei metalli, con esclusione di attività di verniciatura e trattamento superficiale e smerigliature con consumo complessivo di olio (come tale o come frazione oleosa delle emulsioni) inferiore a 500 kg/anno. b) Laboratori orafi in cui non è effettuata la fusione di metalli, laboratori odontotecnici, esercizi in cui viene svolta attività estetica, sanitaria e di servizio e cura della persona, officine ed altri laboratori annessi a scuole. c) Decorazione di piastrelle ceramiche senza procedimento di cottura. d) Le seguenti lavorazioni tessili: - preparazione, filatura, tessitura della trama, della catena o della maglia di fibre naturali, artificiali o sintetiche, con eccezione dell'operazione di testurizzazione delle fibre sintetiche e del bruciapelo; - nobilitazione di fibre, di filati, di tessuti limitatamente alle fasi di purga, lavaggio, candeggio (ad eccezione dei candeggi effettuati con sostanze in grado di liberare cloro e/o suoi composti), tintura e finissaggio a condizione che tutte le citate fasi della nobilitazione siano effettuate nel rispetto delle seguenti condizioni: 1) le operazioni in bagno acquoso devono essere condotte a temperatura inferiore alla temperatura di ebollizione del bagno, oppure, nel caso in cui siano condotte alla temperatura di ebollizione del bagno, ciò deve avvenire senza utilizzazione di acidi, di alcali o di prodotti volatili, organici o inorganici, o, in alternativa, all'interno di macchinari chiusi; 2) le operazioni di asciugamento o essiccazione e i trattamenti con vapore espanso o a bassa pressione devono essere effettuate a temperatura inferiore a 150°(gradi) e nell'ultimo bagno acquoso applicato alla merce non devono essere stati utilizzati acidi, alcali o prodotti volatili, organici od inorganici. e) Cucine, esercizi di ristorazione collettiva, mense, rosticcerie e friggitorie. f) Panetterie, pasticcerie ed affini con un utilizzo complessivo giornaliero di farina non superiore a 300 kg. g) Stabulari acclusi a laboratori di ricerca e di analisi. h) Serre i) Stirerie j) Laboratori fotografici k) Autorimesse e officine meccaniche di riparazioni veicoli, escluse quelle in cui si effettuano operazioni di verniciatura. l) Autolavaggi m) Silos per materiali da costruzione ad esclusione di quelli asserviti ad altri impianti n) Macchine per eliografia o) Stoccaggio e movimentazione di prodotti petrolchimici ed idrocarburi naturali estratti da giacimento, stoccati e movimentati a ciclo chiuso o protetti da gas inerte. p) Impianti di trattamento delle acque, escluse le linee di trattamento dei fanghi, fatto salvo quanto previsto dalla lettera p-bis). p-bis) Linee di trattamento dei fanghi che oper",
+   "branches": [
+    {
+     "choice": "a) Lavorazioni meccaniche dei metalli, con esclusione di attività di verniciatura e trattamento superficiale e smerigliature con consumo complessivo di olio (co",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "b) Laboratori orafi in cui non è effettuata la fusione di metalli, laboratori odontotecnici, esercizi in cui viene svolta attività estetica, sanitaria e di serv",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "c) Decorazione di piastrelle ceramiche senza procedimento di cottura.",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "d) Le seguenti lavorazioni tessili:",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "e) Cucine, esercizi di ristorazione collettiva, mense, rosticcerie e friggitorie.",
+     "id": "r10c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "f) Panetterie, pasticcerie ed affini con un utilizzo complessivo giornaliero di farina non superiore a 300 kg.",
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "g) Stabulari acclusi a laboratori di ricerca e di analisi.",
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "h) Serre",
+     "id": "r13c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "i) Stirerie",
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "j) Laboratori fotografici",
+     "id": "r15c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "k) Autorimesse e officine meccaniche di riparazioni veicoli, escluse quelle in cui si effettuano operazioni di verniciatura.",
+     "id": "r16c1p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "l) Autolavaggi",
+     "id": "r17c1p21reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "m) Silos per materiali da costruzione ad esclusione di quelli asserviti ad altri impianti",
+     "id": "r18c1p22reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "n) Macchine per eliografia",
+     "id": "r19c1p23reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "o) Stoccaggio e movimentazione di prodotti petrolchimici ed idrocarburi naturali estratti da giacimento, stoccati e movimentati a ciclo chiuso o protetti da gas",
+     "id": "r20c1p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "p) Impianti di trattamento delle acque, escluse le linee di trattamento dei fanghi, fatto salvo quanto previsto dalla lettera p-bis).",
+     "id": "r21c1p25reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "p-bis) Linee di trattamento dei fanghi che operano nell'ambito di impianti di trattamento delle acque reflue con potenzialità inferiore a 10.000 abitanti equiva",
+     "id": "r22c1p26reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "q) Macchinari a ciclo chiuso di concerie e pelliccerie",
+     "id": "r23c1p27reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "r) Attività di seconde lavorazioni del vetro, successive alle fasi iniziali di fusione, formatura e tempera, ad esclusione di quelle comportanti operazioni di a",
+     "id": "r24c1p28reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "s) Forni elettrici a volta fredda destinati alla produzione di vetro",
+     "id": "r25c1p29reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "t) Trasformazione e conservazione, esclusa la surgelazione, di frutta, ortaggi, funghi con produzione giornaliera massima non superiore a 350 kg.",
+     "id": "r26c1p30reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "u) Trasformazione e conservazione, esclusa la surgelazione, di carne con produzione giornaliera massima non superiore a 350 kg.",
+     "id": "r27c1p31reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "v) Molitura di cereali con produzione giornaliera massima non superiore a 500 kg.",
+     "id": "r28c1p32reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "v-bis) impianti di essiccazione di materiali vegetali impiegati da imprese agricole o a servizio delle stesse con potenza termica nominale uguale o inferiore a ",
+     "id": "r29c1p33reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "w) Lavorazione e conservazione, esclusa surgelazione, di pesce ed altri prodotti alimentari marini con produzione giornaliera massima non superiore a 350 kg.",
+     "id": "r30c1p34reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "x) Lavorazioni manifatturiere alimentari con utilizzo giornaliero di materie prime non superiore a 350 kg.",
+     "id": "r31c1p35reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "y) Trasformazioni lattiero-casearie con produzione giornaliera massima non superiore a 350 kg.",
+     "id": "r32c1p36reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "z) Allevamenti effettuati in ambienti confinati in cui il numero di capi presenti è inferiore a quello indicato, per le diverse categorie di animali, nella segu",
+     "id": "r33c1p37reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "aa) Allevamenti effettuati in ambienti non confinati.",
+     "id": "r53c1p76reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "bb) Impianti di combustione, compresi i gruppi elettrogeni e i gruppi elettrogeni di cogenerazione, di potenza termica nominale inferiore a 1 MW, alimentati a b",
+     "id": "r54c1p77reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "truncated": 43,
+   "seconds": 49
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

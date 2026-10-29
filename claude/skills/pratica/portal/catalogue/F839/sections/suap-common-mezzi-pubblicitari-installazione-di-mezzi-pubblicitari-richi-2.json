@@ -1,0 +1,206 @@
+{
+ "crawled": "2026-10-28T20:29:40.617Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › Richiedere l'autorizzazione per la pubblicità/propaganda fonica (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 17.2,
+ "generated": {
+  "interventi": "Richiedere l'autorizzazione per la pubblicità/propaganda fonica",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di autorizzazione per la pubblicità/propaganda fonica",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa al tipo di pubblicità",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa al tipo di pubblicità",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "A) pubblicità fonica su tutte le vie all'interno dei centri abitati e vie comunali fuori dei centri abitati (art. 59, co. 3, DPR 495/92) (1)",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "dalle ore/alle ore",
+     "max": 50
+    },
+    {
+     "id": "r3c2p5reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "sintesi del messaggio",
+     "max": 300
+    },
+    {
+     "id": "r4c1p6reg:radio:1_clone",
+     "kind": "radio",
+     "label": "B) pubblicità fonica elettorale sull'intero territorio comunale (art. 59, co. 4, DPR 495/92 e art. 7/2° L. 130/75) (2)",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "(solo il giorno della manifestazione e quello precedente) dalle ore 09.00 alle ore 21.30 per il preannuncio dell'ora e del luogo in cui si terrà il comizio e/o ",
+     "max": 70
+    },
+    {
+     "id": "r8c1p10reg:txta",
+     "kind": "textarea",
+     "label": "150 Caratteri restanti",
+     "context": "in via/viale/piazza",
+     "max": 150
+    },
+    {
+     "id": "r10c1p12reg:calendar_input",
+     "kind": "date",
+     "label": "il/i giorno/i"
+    },
+    {
+     "id": "r13c1p18reg:txt",
+     "kind": "text",
+     "label": "con il veicolo (tipo e marca)",
+     "max": 50
+    },
+    {
+     "id": "r13c2p20reg:txt",
+     "kind": "text",
+     "label": "modello",
+     "max": 40
+    },
+    {
+     "id": "r13c3p22reg:txt",
+     "kind": "text",
+     "label": "targa",
+     "max": 15
+    },
+    {
+     "id": "r14c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "A tal fine DICHIARA di essere a conoscenza che l'effettuazione di pubblicità fonica o di diffusione amplificata di messaggi genericamente intesi a bordo di veic"
+    }
+   ],
+   "fingerprint": "3ba89c3485317ea4",
+   "text": "dichiarazione relativa al tipo di pubblicità A) pubblicità fonica su tutte le vie all'interno dei centri abitati e vie comunali fuori dei centri abitati (art. 59, co. 3, DPR 495/92) (1) dalle ore/alle ore sintesi del messaggio 300 Caratteri restanti B) pubblicità fonica elettorale sull'intero territorio comunale (art. 59, co. 4, DPR 495/92 e art. 7/2° L. 130/75) (2) (solo il giorno della manifestazione e quello precedente) dalle ore 09.00 alle ore 21.30 per il preannuncio dell'ora e del luogo in cui si terrà il comizio e/o la riunione di propaganda elettorale denominato/a (salvo diverse motivate determinazioni più restrittive adottate da parte degli enti locali interessati relativamente agli orari anzidetti) in via/viale/piazza 150 Caratteri restanti il/i giorno/i con il veicolo (tipo e marca) modello targa A tal fine DICHIARA di essere a conoscenza che l'effettuazione di pubblicità fonica o di diffusione amplificata di messaggi genericamente intesi a bordo di veicoli, esclusi i messaggi di pubblico interesse, deve avvenire nel pieno rispetto del vigente Codice della strada ed, in particolare, delle disposizioni di cui all'art. 155 del medesimo Codice. (1) Sui tratti di strade provinciali, regionali e statali posti fuori dei centri abitati, l'autorizzazione va chiesta al rispettivo ente proprietario della strada. (2) Il sindaco, in qualità di ufficiale di governo, è competente al rilascio dell'autorizzazione per l'intero territorio comunale senza alcun nulla osta tecnico da parte degli enti proprietari di strade che attraversano il territorio comunale. (3) Qualora siano interessati più Comuni, la domanda va inoltrata al Prefetto competente per territorio.",
+   "branches": [
+    {
+     "choice": "A) pubblicità fonica su tutte le vie all'interno dei centri abitati e vie comunali fuori dei centri abitati (art. 59, co. 3, DPR 495/92) (1)",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "il/i giorno/i",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "B) pubblicità fonica elettorale sull'intero territorio comunale (art. 59, co. 4, DPR 495/92 e art. 7/2° L. 130/75) (2)",
+     "id": "r4c1p6reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "il/i giorno/i",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "A tal fine DICHIARA di essere a conoscenza che l'effettuazione di pubblicità fonica o di diffusione amplificata di messaggi genericamente intesi a bordo di veic",
+     "id": "r14c1p23reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "il/i giorno/i",
+      "adds": 2
+     }
+    }
+   ],
+   "seconds": 5.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1
+  }
+ ]
+}

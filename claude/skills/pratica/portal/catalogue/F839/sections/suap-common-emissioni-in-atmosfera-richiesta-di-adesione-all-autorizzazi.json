@@ -1,0 +1,902 @@
+{
+ "crawled": "2026-10-28T19:42:48.454Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Emissioni in atmosfera › Richiesta di adesione all'autorizzazione in via generale per installazione nuovo impianto, modifica sostanziale, rinnovo dell'adesione, trasferimento di impianto esistente - Attività in deroga (art. 272 commi 2 e 3 D.Lgs. 152/2006) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 71.5,
+ "generated": {
+  "interventi": "Domanda di adesione all'autorizzazione di carattere generale (attività in deroga di cui all'art. 272 comma 2 del D.Lgs. 3 aprile 2006 n. 152",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di adesione all'autorizzazione di carattere generale (attività in deroga di cui all'art. 272 comma 2 del D.Lgs. 3 aprile 2006 n. 152",
+    "amministrazione": "Regione Campania - (UOD) Unità Operativa Dirigenziale Autorizzazioni ambientali e rifiuti Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa all'ubicazione dell'impianto produttivo",
+   "tipologie attività autorizzazione generale (Allegato IV Parte II alla Parte Quinta)",
+   "ulteriori dichiarazioni",
+   "dichiarazione relativa all'oggetto dell'adesione",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa all'ubicazione dell'impianto produttivo",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "tipologie attività autorizzazione generale (Allegato IV Parte II alla Parte Quinta)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "a) Riparazione e verniciatura di carrozzerie di autoveicoli, mezzi e macchine agricole con utilizzo di impianti a ciclo aperto e utilizzo complessivo di prodott"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "b) Tipografia, litografia, serigrafia, con utilizzo di prodotti per la stampa (inchiostri, vernici e similari) giornaliero massimo complessivo non superiore a 3"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "c) Produzione di prodotti in vetroresine con utilizzo giornaliero massimo complessivo di resina pronta all'uso non superiore a 200 kg."
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "d) Produzione di articoli in gomma e prodotti delle materie plastiche con utilizzo giornaliero massimo complessivo di materie prime non superiore a 500 kg."
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "e) Produzione di mobili, oggetti, imballaggi, prodotti semifiniti in materiale a base di legno con utilizzo giornaliero massimo complessivo di materie prime non"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "f) Verniciatura, laccatura, doratura di mobili ed altri oggetti in legno con utilizzo complessivo di prodotti vernicianti pronti all'uso non superiore a 50 kg/g"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "g) Verniciatura di oggetti vari in metalli o vetro con utilizzo complessivo di prodotti vernicianti pronti all'uso non superiore a 50 kg/ g."
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "h) Panificazione, pasticceria e affini con consumo di farina non superiore a 1500 kg/g."
+    },
+    {
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "i) Torrefazione di caffè ed altri prodotti tostati con produzione non superiore a 450 kg/g."
+    },
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "l) Produzione di mastici, pitture, vernici, cere, inchiostri e affini con produzione complessiva non superiore a 500 kg/h."
+    },
+    {
+     "id": "r11c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "m) Sgrassaggio superficiale dei metalli con consumo complessivo di solventi non superiore a 10 kg/g."
+    },
+    {
+     "id": "r12c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "n) Laboratori orafi con fusione di metalli con meno di venticinque addetti."
+    },
+    {
+     "id": "r13c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "o) Anodizzazione, galvanotecnica, fosfatazione di superfici metalliche con consumo di prodotti chimici non superiore a 10 kg/ g."
+    },
+    {
+     "id": "r14c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "p) Utilizzazione di mastici e colle con consumo complessivo di sostanze collanti non superiore a 100 kg/g."
+    },
+    {
+     "id": "r15c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "q) Produzione di sapone e detergenti sintetici prodotti per l'igiene e la profumeria con utilizzo di materie prime non superiori a 200 kg/g."
+    },
+    {
+     "id": "r16c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "r) Produzione di sapone e detergenti sintetici prodotti per l'igiene e la profumeria con utilizzo di materie prime non superiori a 200 kg/g."
+    },
+    {
+     "id": "r17c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "s) Produzione di oggetti artistici in ceramica, terracotta o vetro in forni in muffola discontinua con utilizzo nel ciclo produttivo di smalti, colori e affini "
+    },
+    {
+     "id": "r18c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "t) Trasformazione e conservazione, esclusa la surgelazione, di frutta, ortaggi, funghi con produzione non superiore a 1000 kg/g."
+    },
+    {
+     "id": "r19c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "u) Trasformazione e conservazione, esclusa la surgelazione, di carne con produzione non superiore a 1000 kg/g."
+    },
+    {
+     "id": "r20c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "v) Molitura cereali con produzione non superiore a 1500 kg/g."
+    },
+    {
+     "id": "r21c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "v-bis) Impianti di essiccazione di materiali vegetali impiegati o a servizio di imprese agricole non ricompresi nella parte I del presente allegato."
+    },
+    {
+     "id": "r22c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "z) Lavorazione e conservazione, esclusa la surgelazione, di pesce ed altri prodotti alimentari marini con produzione non superiore a 1000 kg/g."
+    },
+    {
+     "id": "r23c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "aa) Prodotti in calcestruzzo e gesso in quantità non superiore a 1500 kg/g."
+    },
+    {
+     "id": "r24c1p24reg:chk",
+     "kind": "checkbox",
+     "label": "bb) Pressofusione con utilizzo di metalli e leghe in quantità non superiore a 100 kg/g."
+    },
+    {
+     "id": "r25c1p25reg:chk",
+     "kind": "checkbox",
+     "label": "cc) Lavorazioni manifatturiere alimentari con utilizzo di materie prime non superiori a 1000 kg/ g."
+    },
+    {
+     "id": "r26c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "dd) Lavorazioni conciarie con utilizzo di prodotti vernicianti pronti all'uso giornaliero massimo non superiore a 50 kg."
+    },
+    {
+     "id": "r27c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "ee) Fonderie di metalli con produzione di oggetti metallici giornaliero massimo non superiore a 100 kg."
+    },
+    {
+     "id": "r28c1p28reg:chk",
+     "kind": "checkbox",
+     "label": "ff) Produzione di ceramiche artistiche esclusa la decoratura con utilizzo di materia prima giornaliero massimo non superiore a 3.000 kg."
+    },
+    {
+     "id": "r29c1p29reg:chk",
+     "kind": "checkbox",
+     "label": "gg) Produzione di carta, cartone e similari con utilizzo di materie prime giornaliero massimo non superiore a 4000 kg."
+    },
+    {
+     "id": "r30c1p30reg:chk",
+     "kind": "checkbox",
+     "label": "hh) Saldatura di oggetti e superfici metalliche."
+    },
+    {
+     "id": "r31c1p31reg:chk",
+     "kind": "checkbox",
+     "label": "ii) Trasformazioni lattiero-casearie con produzione giornaliera non superiore a 1000 kg."
+    },
+    {
+     "id": "r32c1p32reg:chk",
+     "kind": "checkbox",
+     "label": "ll) Impianti termici civili aventi potenza termica nominale non inferiore a 3 MW e inferiore a 10 50 MW mm) impianti a ciclo chiuso per la pulizia a secco di te"
+    },
+    {
+     "id": "r33c1p33reg:chk",
+     "kind": "checkbox",
+     "label": "nn) Allevamenti effettuati in ambienti confinati in cui il numero di capi potenzialmente presenti è compreso nell'intervallo indicato, per le diverse categorie "
+    },
+    {
+     "id": "r34c1p34reg:chk",
+     "kind": "checkbox",
+     "label": "oo) Lavorazioni meccaniche dei metalli con consumo complessivo di olio (come tale o come frazione oleosa delle emulsioni) uguale o superiore a 500 kg/anno."
+    },
+    {
+     "id": "r35c1p35reg:chk",
+     "kind": "checkbox",
+     "label": "oo-bis) Stabilimenti di produzione di vino, aceto o altre bevande fermentate non ricompresi nella parte I del presente allegato."
+    }
+   ],
+   "fingerprint": "36dc3294da7db374",
+   "text": "tipologie attività autorizzazione generale (Allegato IV Parte II alla Parte Quinta) a) Riparazione e verniciatura di carrozzerie di autoveicoli, mezzi e macchine agricole con utilizzo di impianti a ciclo aperto e utilizzo complessivo di prodotti vernicianti pronti all'uso giornaliero massimo complessivo non superiore a 20 kg. b) Tipografia, litografia, serigrafia, con utilizzo di prodotti per la stampa (inchiostri, vernici e similari) giornaliero massimo complessivo non superiore a 30 kg. c) Produzione di prodotti in vetroresine con utilizzo giornaliero massimo complessivo di resina pronta all'uso non superiore a 200 kg. d) Produzione di articoli in gomma e prodotti delle materie plastiche con utilizzo giornaliero massimo complessivo di materie prime non superiore a 500 kg. e) Produzione di mobili, oggetti, imballaggi, prodotti semifiniti in materiale a base di legno con utilizzo giornaliero massimo complessivo di materie prime non superiore a 2000 kg. f) Verniciatura, laccatura, doratura di mobili ed altri oggetti in legno con utilizzo complessivo di prodotti vernicianti pronti all'uso non superiore a 50 kg/g. g) Verniciatura di oggetti vari in metalli o vetro con utilizzo complessivo di prodotti vernicianti pronti all'uso non superiore a 50 kg/ g. h) Panificazione, pasticceria e affini con consumo di farina non superiore a 1500 kg/g. i) Torrefazione di caffè ed altri prodotti tostati con produzione non superiore a 450 kg/g. l) Produzione di mastici, pitture, vernici, cere, inchiostri e affini con produzione complessiva non superiore a 500 kg/h. m) Sgrassaggio superficiale dei metalli con consumo complessivo di solventi non superiore a 10 kg/g. n) Laboratori orafi con fusione di metalli con meno di venticinque addetti. o) Anodizzazione, galvanotecnica, fosfatazione di superfici metalliche con consumo di prodotti chimici non superiore a 10 kg/ g. p) Utilizzazione di mastici e colle con consumo complessivo di sostanze collanti non superiore a 100 kg/g. q) Produzione di sapone e detergenti sintetici prodotti per l'igiene e la profumeria con utilizzo di materie prime non superiori a 200 kg/g. r) Produzione di sapone e detergenti sintetici prodotti per l'igiene e la profumeria con utilizzo di materie prime non superiori a 200 kg/g. s) Produzione di oggetti artistici in ceramica, terracotta o vetro in forni in muffola discontinua con utilizzo nel ciclo produttivo di smalti, colori e affini non superiore a 50 kg/g. t) Trasformazione e conservazione, esclusa la surgelazione, di frutta, ortaggi, funghi con produzione non superiore a 1000 kg/g. u) Trasformazione e conservazione, esclusa la surgelazione, di carne con produzione non superiore a 1000 kg/g. v) Molitura cereali con produzione non superiore a 1500 kg/g. v-bis) Impianti di essiccazione di materiali vegetali impiegati o a servizio di imprese agricole non ricompresi nella parte I del presente allegato. z) Lavorazione e conservazione, esclusa la surgelazione, di pesce ed altri prodotti alimentari m",
+   "branches": [
+    {
+     "choice": "a) Riparazione e verniciatura di carrozzerie di autoveicoli, mezzi e macchine agricole con utilizzo di impianti a ciclo aperto e utilizzo complessivo di prodott",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "b) Tipografia, litografia, serigrafia, con utilizzo di prodotti per la stampa (inchiostri, vernici e similari) giornaliero massimo complessivo non superiore a 3",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "c) Produzione di prodotti in vetroresine con utilizzo giornaliero massimo complessivo di resina pronta all'uso non superiore a 200 kg.",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "d) Produzione di articoli in gomma e prodotti delle materie plastiche con utilizzo giornaliero massimo complessivo di materie prime non superiore a 500 kg.",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "e) Produzione di mobili, oggetti, imballaggi, prodotti semifiniti in materiale a base di legno con utilizzo giornaliero massimo complessivo di materie prime non",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "f) Verniciatura, laccatura, doratura di mobili ed altri oggetti in legno con utilizzo complessivo di prodotti vernicianti pronti all'uso non superiore a 50 kg/g",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "g) Verniciatura di oggetti vari in metalli o vetro con utilizzo complessivo di prodotti vernicianti pronti all'uso non superiore a 50 kg/ g.",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "h) Panificazione, pasticceria e affini con consumo di farina non superiore a 1500 kg/g.",
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "i) Torrefazione di caffè ed altri prodotti tostati con produzione non superiore a 450 kg/g.",
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "l) Produzione di mastici, pitture, vernici, cere, inchiostri e affini con produzione complessiva non superiore a 500 kg/h.",
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "m) Sgrassaggio superficiale dei metalli con consumo complessivo di solventi non superiore a 10 kg/g.",
+     "id": "r11c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "n) Laboratori orafi con fusione di metalli con meno di venticinque addetti.",
+     "id": "r12c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "o) Anodizzazione, galvanotecnica, fosfatazione di superfici metalliche con consumo di prodotti chimici non superiore a 10 kg/ g.",
+     "id": "r13c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "p) Utilizzazione di mastici e colle con consumo complessivo di sostanze collanti non superiore a 100 kg/g.",
+     "id": "r14c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "q) Produzione di sapone e detergenti sintetici prodotti per l'igiene e la profumeria con utilizzo di materie prime non superiori a 200 kg/g.",
+     "id": "r15c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "r) Produzione di sapone e detergenti sintetici prodotti per l'igiene e la profumeria con utilizzo di materie prime non superiori a 200 kg/g.",
+     "id": "r16c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "s) Produzione di oggetti artistici in ceramica, terracotta o vetro in forni in muffola discontinua con utilizzo nel ciclo produttivo di smalti, colori e affini ",
+     "id": "r17c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "t) Trasformazione e conservazione, esclusa la surgelazione, di frutta, ortaggi, funghi con produzione non superiore a 1000 kg/g.",
+     "id": "r18c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "u) Trasformazione e conservazione, esclusa la surgelazione, di carne con produzione non superiore a 1000 kg/g.",
+     "id": "r19c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "v) Molitura cereali con produzione non superiore a 1500 kg/g.",
+     "id": "r20c1p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "v-bis) Impianti di essiccazione di materiali vegetali impiegati o a servizio di imprese agricole non ricompresi nella parte I del presente allegato.",
+     "id": "r21c1p21reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "z) Lavorazione e conservazione, esclusa la surgelazione, di pesce ed altri prodotti alimentari marini con produzione non superiore a 1000 kg/g.",
+     "id": "r22c1p22reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "aa) Prodotti in calcestruzzo e gesso in quantità non superiore a 1500 kg/g.",
+     "id": "r23c1p23reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "bb) Pressofusione con utilizzo di metalli e leghe in quantità non superiore a 100 kg/g.",
+     "id": "r24c1p24reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "cc) Lavorazioni manifatturiere alimentari con utilizzo di materie prime non superiori a 1000 kg/ g.",
+     "id": "r25c1p25reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "dd) Lavorazioni conciarie con utilizzo di prodotti vernicianti pronti all'uso giornaliero massimo non superiore a 50 kg.",
+     "id": "r26c1p26reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ee) Fonderie di metalli con produzione di oggetti metallici giornaliero massimo non superiore a 100 kg.",
+     "id": "r27c1p27reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ff) Produzione di ceramiche artistiche esclusa la decoratura con utilizzo di materia prima giornaliero massimo non superiore a 3.000 kg.",
+     "id": "r28c1p28reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "gg) Produzione di carta, cartone e similari con utilizzo di materie prime giornaliero massimo non superiore a 4000 kg.",
+     "id": "r29c1p29reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "hh) Saldatura di oggetti e superfici metalliche.",
+     "id": "r30c1p30reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "truncated": 35,
+   "seconds": 39.7
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "di essere gestore dello stabilimento appresso individuato, con i poteri decisionali e le responsabilità di cui all'art.268 lett. n) D. Lgs. 152/2006 s.m.i."
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "di non generare emissioni di sostanze cancerogene, tossiche per la riproduzione o mutagene o di sostanze di tossicità e cumulabilità particolarmente elevate, co"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "di non impiegare le sostanze o i preparati classificati dal D.Lgs. 03/02/1997 n. 52, come cancerogeni, tossici o mutageni, a causa del loro tenore di COV, e ai "
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che non utilizza solventi, e pertanto, non è tenuta agli obblighi di cui al D. lgs. n. 152/2006, s.m.i. art. 275 o utilizza solventi con consumo inferiore alle "
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "che, sotto i profili urbanistico-edilizio ed igienico-sanitario l'immobile aziendale è compatibile con l'uso cui è destinato e rispetta tutte le condizioni prev"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a dare all'autorita competente, nelle svariate eventualità, comunicazioni su mutamenti della sede legale e/o della ragione sociale e/o della natura g"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a rispettare i limiti e le prescrizioni contenute nello/negli specifico/i disciplinare/i tecnico/i per l'attività in oggetto;"
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire, preventivamente all'installazione dell'impianto o all'avvio dell'attività, ogni altra eventuale legittimazione necessaria all'insediame"
+    }
+   ],
+   "fingerprint": "b7581292b53ee63a",
+   "text": "ulteriori dichiarazioni di essere gestore dello stabilimento appresso individuato, con i poteri decisionali e le responsabilità di cui all'art.268 lett. n) D. Lgs. 152/2006 s.m.i. di non generare emissioni di sostanze cancerogene, tossiche per la riproduzione o mutagene o di sostanze di tossicità e cumulabilità particolarmente elevate, come individuate dalla parte II dell'Allegato I alla parte quinta del D.Lgs. 152/06; di non impiegare le sostanze o i preparati classificati dal D.Lgs. 03/02/1997 n. 52, come cancerogeni, tossici o mutageni, a causa del loro tenore di COV, e ai quali sono state assegnate etichette con le frasi di rischio R45, R46, R49, R60, R61. che non utilizza solventi, e pertanto, non è tenuta agli obblighi di cui al D. lgs. n. 152/2006, s.m.i. art. 275 o utilizza solventi con consumo inferiore alle soglie indicate nella predetta normativa, art. 275, p. II dell'allegato III alla Parte Quinta D. Lgs. n. 152/2006 s.m.i. che, sotto i profili urbanistico-edilizio ed igienico-sanitario l'immobile aziendale è compatibile con l'uso cui è destinato e rispetta tutte le condizioni previste dalle rispettive vigenti normative di riferimento si impegna a dare all'autorita competente, nelle svariate eventualità, comunicazioni su mutamenti della sede legale e/o della ragione sociale e/o della natura giuridica, sulla cessazione e/o disattivazione d'impianti/attività, su cessione d'azienda, nonché su ogni previsione di modifica comportante la domanda d'autorizzazione alle emissioni in atmosfera ex art. 269 D. Lgs. n. 152/2006 s.m.i. si impegna a rispettare i limiti e le prescrizioni contenute nello/negli specifico/i disciplinare/i tecnico/i per l'attività in oggetto; si impegna ad acquisire, preventivamente all'installazione dell'impianto o all'avvio dell'attività, ogni altra eventuale legittimazione necessaria all'insediamento ed all'esercizio dell'attività;",
+   "branches": [
+    {
+     "choice": "di essere gestore dello stabilimento appresso individuato, con i poteri decisionali e le responsabilità di cui all'art.268 lett. n) D. Lgs. 152/2006 s.m.i.",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non generare emissioni di sostanze cancerogene, tossiche per la riproduzione o mutagene o di sostanze di tossicità e cumulabilità particolarmente elevate, co",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non impiegare le sostanze o i preparati classificati dal D.Lgs. 03/02/1997 n. 52, come cancerogeni, tossici o mutageni, a causa del loro tenore di COV, e ai ",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che non utilizza solventi, e pertanto, non è tenuta agli obblighi di cui al D. lgs. n. 152/2006, s.m.i. art. 275 o utilizza solventi con consumo inferiore alle ",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che, sotto i profili urbanistico-edilizio ed igienico-sanitario l'immobile aziendale è compatibile con l'uso cui è destinato e rispetta tutte le condizioni prev",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a dare all'autorita competente, nelle svariate eventualità, comunicazioni su mutamenti della sede legale e/o della ragione sociale e/o della natura g",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna a rispettare i limiti e le prescrizioni contenute nello/negli specifico/i disciplinare/i tecnico/i per l'attività in oggetto;",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "si impegna ad acquisire, preventivamente all'installazione dell'impianto o all'avvio dell'attività, ogni altra eventuale legittimazione necessaria all'insediame",
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 10.2
+  },
+  {
+   "section": "dichiarazione relativa all'oggetto dell'adesione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "continuare ad esercire l'attività in quanto stabilimento già autorizzato:",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "ai sensi dell'ex D.P.R. 203/1988",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "con D.G.R./decreto n.",
+     "context": "ai sensi dell'ex D.P.R. 203/1988",
+     "max": 30
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p9reg:radio:2_clone",
+     "kind": "radio",
+     "label": "ai sensi del D.Lgs. 152/2006",
+     "group": "r5c1p9reg:radio"
+    },
+    {
+     "id": "r5c2p11reg:txt",
+     "kind": "text",
+     "label": "con D.G.R./decreto/determinazione dirigenziale n",
+     "context": "ai sensi del D.Lgs. 152/2006",
+     "max": 30
+    },
+    {
+     "id": "r5c3p13reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c1p15reg:radio:3_clone",
+     "kind": "radio",
+     "label": "con autorizzazione di carattere generale emanata dalla Provincia",
+     "group": "r7c1p15reg:radio"
+    },
+    {
+     "id": "r7c2p17reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "context": "con autorizzazione di carattere generale emanata dalla Provincia",
+     "max": 30
+    },
+    {
+     "id": "r7c3p19reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r8c1p20reg:radio:4_clone",
+     "kind": "radio",
+     "label": "l'installazione di un nuovo stabilimento (art. 269, comma 2 D.lgs n. 152/2006)",
+     "group": "r8c1p20reg:radio"
+    },
+    {
+     "id": "r10c1p22reg:radio:5_clone",
+     "kind": "radio",
+     "label": "il trasferimento dello stabilimento già autorizzato (art. 269, comma 2 D.lgs n. 152/2006)",
+     "group": "r10c1p22reg:radio"
+    },
+    {
+     "id": "r10c2p24reg:txt",
+     "kind": "text",
+     "label": "attualmente ubicato nel comune di",
+     "context": "il trasferimento dello stabilimento già autorizzato (art. 269, comma 2 D.lgs n. 152/2006)",
+     "max": 70
+    },
+    {
+     "id": "r12c1p26reg:txt",
+     "kind": "text",
+     "label": "via",
+     "max": 70
+    },
+    {
+     "id": "r12c2p28reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 20
+    },
+    {
+     "id": "r12c3p30reg:txt",
+     "kind": "text",
+     "label": "CAP",
+     "max": 5
+    },
+    {
+     "id": "r14c1p32reg:txt",
+     "kind": "text",
+     "label": "autorizzazione prot. n°",
+     "max": 30
+    },
+    {
+     "id": "r14c2p34reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r14c3p36reg:txt",
+     "kind": "text",
+     "label": "rilasciata da",
+     "max": 30
+    },
+    {
+     "id": "r15c1p37reg:radio:6_clone",
+     "kind": "radio",
+     "label": "la modifica sostanziale dello stabilimento già autorizzato (art. 269, comma 8 D.lgs n. 152/2006)",
+     "group": "r15c1p37reg:radio"
+    },
+    {
+     "id": "r17c1p39reg:txt",
+     "kind": "text",
+     "label": "autorizzazione prot. n°",
+     "max": 20
+    },
+    {
+     "id": "r17c2p41reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r17c3p43reg:txt",
+     "kind": "text",
+     "label": "rilasciata da",
+     "max": 30
+    }
+   ],
+   "fingerprint": "363f1f641d4978be",
+   "text": "dichiarazione relativa all'oggetto dell'adesione continuare ad esercire l'attività in quanto stabilimento già autorizzato: con D.G.R./decreto n. del ai sensi dell'ex D.P.R. 203/1988 con D.G.R./decreto/determinazione dirigenziale n del ai sensi del D.Lgs. 152/2006 n. del con autorizzazione di carattere generale emanata dalla Provincia l'installazione di un nuovo stabilimento (art. 269, comma 2 D.lgs n. 152/2006) attualmente ubicato nel comune di il trasferimento dello stabilimento già autorizzato (art. 269, comma 2 D.lgs n. 152/2006) via numero civico CAP autorizzazione prot. n° del rilasciata da la modifica sostanziale dello stabilimento già autorizzato (art. 269, comma 8 D.lgs n. 152/2006) autorizzazione prot. n° del rilasciata da N.B. La richiesta di rinnovo può essere presentata fino al 31.12.2013 e può essere abbinata unicamente alla richiesta di modifica sostanziale dello stabilimento.",
+   "branches": [
+    {
+     "choice": "continuare ad esercire l'attività in quanto stabilimento già autorizzato:",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ai sensi dell'ex D.P.R. 203/1988",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ai sensi del D.Lgs. 152/2006",
+     "id": "r5c1p9reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "con autorizzazione di carattere generale emanata dalla Provincia",
+     "id": "r7c1p15reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "l'installazione di un nuovo stabilimento (art. 269, comma 2 D.lgs n. 152/2006)",
+     "id": "r8c1p20reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "il trasferimento dello stabilimento già autorizzato (art. 269, comma 2 D.lgs n. 152/2006)",
+     "id": "r10c1p22reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "la modifica sostanziale dello stabilimento già autorizzato (art. 269, comma 8 D.lgs n. 152/2006)",
+     "id": "r15c1p37reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r17c2p41reg:calendar_input",
+       "r3c3p7reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r5c3p13reg:calendar_input"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r7c3p19reg:calendar_input"
+      ],
+      [
+       "r17c1p39reg:txt",
+       "r14c1p32reg:txt"
+      ],
+      [
+       "r17c2p41reg:calendar_input",
+       "r14c2p34reg:calendar_input"
+      ],
+      [
+       "r17c3p43reg:txt",
+       "r14c3p36reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 8.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.9
+  }
+ ]
+}

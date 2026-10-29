@@ -1,0 +1,354 @@
+{
+ "crawled": "2026-10-28T20:30:50.345Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › SCIA per il subentro in insegne di esercizio (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 31.1,
+ "generated": {
+  "interventi": "SCIA per il subentro in insegne di esercizio",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per il subentro in insegne di esercizio",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'impianto pubblicitario",
+   "DICHIARAZIONE RELATIVA AL SUBENTRO",
+   "DICHIARAZIONE DEGLI ESTREMI DELL'ATTIVITÀ DEL SUBENTRANTE",
+   "mancanza di variazioni dell'impianto",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'impianto pubblicitario",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "DICHIARAZIONE RELATIVA AL SUBENTRO",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Denominazione ditta cedente",
+     "max": 100
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "Codice Fiscale",
+     "max": 16
+    },
+    {
+     "id": "r5c1p7reg:txt",
+     "kind": "text",
+     "label": "SCIA per insegna n°",
+     "max": 30
+    },
+    {
+     "id": "r5c2p9reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r8c1p13reg:radio:0_clone",
+     "kind": "radio",
+     "label": "atto di trasferimento d'azienda o di ramo d'azienda:",
+     "group": "r8c1p13reg:radio"
+    },
+    {
+     "id": "r9c1p14reg:radio:1_clone",
+     "kind": "radio",
+     "label": "compravendita",
+     "group": "r9c1p14reg:radio"
+    },
+    {
+     "id": "r9c2p15reg:radio:2_clone",
+     "kind": "radio",
+     "label": "affitto",
+     "group": "r9c2p15reg:radio"
+    },
+    {
+     "id": "r9c3p16reg:radio:3_clone",
+     "kind": "radio",
+     "label": "fusione",
+     "group": "r9c3p16reg:radio"
+    },
+    {
+     "id": "r10c1p17reg:radio:4_clone",
+     "kind": "radio",
+     "label": "conferimento",
+     "group": "r10c1p17reg:radio"
+    },
+    {
+     "id": "r10c2p18reg:radio:5_clone",
+     "kind": "radio",
+     "label": "fallimento",
+     "group": "r10c2p18reg:radio"
+    },
+    {
+     "id": "r10c3p19reg:radio:6_clone",
+     "kind": "radio",
+     "label": "donazione",
+     "group": "r10c3p19reg:radio"
+    },
+    {
+     "id": "r12c1p21reg:radio:7_clone",
+     "kind": "radio",
+     "label": "reintestazione",
+     "group": "r12c1p21reg:radio"
+    },
+    {
+     "id": "r12c2p23reg:radio:8_clone",
+     "kind": "radio",
+     "label": "altre cause",
+     "group": "r12c2p23reg:radio"
+    },
+    {
+     "id": "r12c3p25reg:txt",
+     "kind": "text",
+     "label": "specificare:",
+     "context": "altre cause",
+     "max": 100
+    },
+    {
+     "id": "r14c1p27reg:calendar_input",
+     "kind": "date",
+     "label": "stipulato/ autenticato in data"
+    },
+    {
+     "id": "r14c2p29reg:calendar_input",
+     "kind": "date",
+     "label": "con decorrenza"
+    },
+    {
+     "id": "r16c1p33reg:txt",
+     "kind": "text",
+     "label": "presso il notaio",
+     "max": 100
+    },
+    {
+     "id": "r16c2p35reg:txt",
+     "kind": "text",
+     "label": "con sede a",
+     "max": 100
+    },
+    {
+     "id": "r18c1p37reg:radio:9_clone",
+     "kind": "radio",
+     "label": "successione mortis causa",
+     "group": "r18c1p37reg:radio"
+    },
+    {
+     "id": "r18c2p39reg:calendar_input",
+     "kind": "date",
+     "label": "data di decesso del titolare"
+    }
+   ],
+   "fingerprint": "4d76ccae1624f698",
+   "text": "DICHIARAZIONE RELATIVA AL SUBENTRO Denominazione ditta cedente Codice Fiscale In possesso di: SCIA per insegna n° data A seguito di: atto di trasferimento d'azienda o di ramo d'azienda: compravendita affitto fusione conferimento fallimento donazione specificare: reintestazione altre cause stipulato/ autenticato in data con decorrenza presso il notaio con sede a data di decesso del titolare successione mortis causa **A norma dell'art.2556 del codice civile i contratti di trasferimento di proprietà o gestione di un'azienda commerciale sono stipulati presso un notaio.",
+   "branches": [
+    {
+     "choice": "atto di trasferimento d'azienda o di ramo d'azienda:",
+     "id": "r8c1p13reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "compravendita",
+     "id": "r9c1p14reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "affitto",
+     "id": "r9c2p15reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "fusione",
+     "id": "r9c3p16reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "conferimento",
+     "id": "r10c1p17reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "fallimento",
+     "id": "r10c2p18reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "donazione",
+     "id": "r10c3p19reg:radio:6_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "reintestazione",
+     "id": "r12c1p21reg:radio:7_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "altre cause",
+     "id": "r12c2p23reg:radio:8_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "successione mortis causa",
+     "id": "r18c1p37reg:radio:9_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "SCIA per insegna n°",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 18.2
+  },
+  {
+   "section": "DICHIARAZIONE DEGLI ESTREMI DELL'ATTIVITÀ DEL SUBENTRANTE",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "per l'attività di",
+     "max": 200
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "Avente: SCIA/DIA/AUTORIZZAZIONE prot. n°",
+     "max": 100
+    },
+    {
+     "id": "r4c2p6reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    }
+   ],
+   "fingerprint": "6b44e9f3123745ee",
+   "text": "DICHIARAZIONE DEGLI ESTREMI DELL'ATTIVITÀ DEL SUBENTRANTE per l'attività di Avente: SCIA/DIA/AUTORIZZAZIONE prot. n° del",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "mancanza di variazioni dell'impianto",
+   "fingerprint": "e3491a1573bba012",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-voltu#mancanza di variazioni dell'impianto",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  }
+ ]
+}

@@ -1,0 +1,709 @@
+{
+ "crawled": "2026-10-28T20:42:00.751Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector Tintolavanderia a lavorazione manuale/meccanica)",
+ "seconds": 31.9,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività di Tintolavanderia",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per apertura attività di Tintolavanderia",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "dati relativi all'attività",
+   "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E PROFESSIONALI",
+   "Altre dichiarazioni",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "dichiarazione della user Telemaco",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "nel caso di impianti di produzione di calore alimentati a combustibile solido, liquido o gassoso"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Nel caso di impianti a ciclo chiuso per la pulizia a secco di tessuti e di pellami, escluse le pellicce, e delle pulitintolavanderie a ciclo chiuso"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna"
+    },
+    {
+     "key": "3_0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "3_1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati relativi all'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "Tintolavanderia ¹"
+    },
+    {
+     "id": "r4c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r4c2p6reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r4c2p6reg:radio"
+    },
+    {
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "Superficie destinata all'attività di tintolavanderia"
+    },
+    {
+     "id": "r8c2p14reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie destinata all'attività di tintolavanderia",
+     "max": 8
+    },
+    {
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "Superficie adibita ad altri usi"
+    },
+    {
+     "id": "r10c2p20reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie adibita ad altri usi",
+     "max": 8
+    },
+    {
+     "id": "r12c2p26reg:real",
+     "kind": "text",
+     "label": "mq",
+     "context": "Superficie complessiva",
+     "max": 8
+    },
+    {
+     "id": "r15c1p31reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Permanente",
+     "group": "r15c1p31reg:radio"
+    },
+    {
+     "id": "r16c1p33reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Stagionale",
+     "group": "r16c1p33reg:radio"
+    }
+   ],
+   "fingerprint": "11d0a2a37a29c5b0",
+   "text": "dati relativi all'attività Il/la sottoscritto/a, SEGNALA l'avvio dell'attività di: Tintolavanderia ¹ Attività collocata in centro commerciale: Si No Superficie di esercizio dell'attività: mq Superficie destinata all'attività di tintolavanderia mq Superficie adibita ad altri usi mq Superficie complessiva (la superficie da indicare deve essere uguale alla somma delle superfici sopra riportate) Esercizio a carattere Permanente Stagionale ___________________________________ ¹ Come previsto dall'art. 79, comma 1, del D.Lgs. n. 59 del 2010 e dalle disposizioni regionali di settore.",
+   "branches": [
+    {
+     "choice": "Tintolavanderia ¹",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Si",
+     "id": "r4c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c1p9reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p12reg:chk",
+       "r9c1p14reg:chk"
+      ],
+      [
+       "r8c2p14reg:real",
+       "r9c2p16reg:real"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r11c1p20reg:chk"
+      ],
+      [
+       "r10c2p20reg:real",
+       "r11c2p22reg:real"
+      ],
+      [
+       "r12c2p26reg:real",
+       "r13c2p28reg:real"
+      ],
+      [
+       "r15c1p31reg:radio:2_clone",
+       "r16c1p33reg:radio:2_clone"
+      ],
+      [
+       "r16c1p33reg:radio:3_clone",
+       "r17c1p35reg:radio:3_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r4c2p6reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Superficie destinata all'attività di tintolavanderia",
+     "id": "r8c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Superficie adibita ad altri usi",
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Permanente",
+     "id": "r15c1p31reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "Stagionale",
+     "id": "r16c1p33reg:radio:3_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r18c1p36reg:txt",
+       "kind": "text",
+       "label": "dal (gg/mm)",
+       "max": 5
+      },
+      {
+       "id": "r18c2p38reg:txt",
+       "kind": "text",
+       "label": "al (gg/mm)",
+       "max": 5
+      }
+     ],
+     "plus": {
+      "anchor": "dal (gg/mm)",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 6.3
+  },
+  {
+   "section": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E PROFESSIONALI",
+   "fields": [
+    {
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti de"
+    },
+    {
+     "id": "r5c1p7reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di essere il/la responsabile tecnico/a e di essere in possesso di apposita idoneità professionale, comprovata dal possesso di almeno uno dei seguenti requisiti ",
+     "group": "r5c1p7reg:radio"
+    },
+    {
+     "id": "r7c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "label": "che il/la responsabile tecnico/a è",
+     "group": "r7c1p10reg:radio"
+    }
+   ],
+   "fingerprint": "168c9742fccf7f9f",
+   "text": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E PROFESSIONALI Il/la sottoscritto/a, consapevole delle sanzioni penali previste dalla legge per le false dichiarazioni e attestazioni (art. 76 del DPR n. 445 del 2000 e Codice penale e art.19, comma 6, della L. n. 241 del 1990), sotto la propria responsabilità, dichiara: che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti delle misure di prevenzione previste dal Codice delle leggi antimafia e delle misure di prevenzione, nonché nuove disposizioni in materia di documentazione antimafia”). Solo per le tintolavanderie: di essere il/la responsabile tecnico/a e di essere in possesso di apposita idoneità professionale, comprovata dal possesso di almeno uno dei seguenti requisiti (art. 2, comma 2, della L. n. 84 del 2006 e specifiche disposizioni regionali di settore): OPPURE (sia per le imprese individuali sia per le società) che il/la responsabile tecnico/a è",
+   "branches": [
+    {
+     "choice": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione previste dalla legge (art. 67 del D.Lgs. 06/09/2011, n. 159, “Effetti de",
+     "id": "r3c1p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r5c1p7reg:radio:0_clone",
+       "r8c1p10reg:radio:0_clone"
+      ],
+      [
+       "r7c1p10reg:radio:1_clone",
+       "r10c1p13reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "di essere il/la responsabile tecnico/a e di essere in possesso di apposita idoneità professionale, comprovata dal possesso di almeno uno dei seguenti requisiti ",
+     "id": "r5c1p7reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r6c2p10reg:radio:1_clone",
+       "kind": "radio",
+       "label": "frequenza di corsi di qualificazione tecnico-professionale della durata di almeno 450 ore complessive svolte nell'arco di un anno",
+       "group": "r6c2p10reg:radio"
+      },
+      {
+       "id": "r7c2p13reg:radio:2_clone",
+       "kind": "radio",
+       "label": "attestato di qualifica in materia attinente l'attività, conseguito secondo la legislazione vigente in materia di formazione professionale, integrato da un perio",
+       "group": "r7c2p13reg:radio"
+      },
+      {
+       "id": "r9c2p19reg:radio:3_clone",
+       "kind": "radio",
+       "label": "diploma di maturità tecnica o professionale o di livello post-secondario superiore o universitario, in materie inerenti l'attività",
+       "group": "r9c2p19reg:radio"
+      },
+      {
+       "id": "r10c2p22reg:radio:4_clone",
+       "kind": "radio",
+       "label": "periodo di inserimento¹ presso imprese del settore, non inferiore a:",
+       "group": "r10c2p22reg:radio"
+      },
+      {
+       "id": "r14c2p32reg:radio:5_clone",
+       "kind": "radio",
+       "label": "che il proprio titolo professionale è stato riconosciuto con provvedimento del Ministero dello sviluppo economico²",
+       "group": "r14c2p32reg:radio"
+      }
+     ],
+     "moved": [
+      [
+       "r7c1p10reg:radio:1_clone",
+       "r24c1p48reg:radio:6_clone"
+      ]
+     ],
+     "then": [
+      {
+       "choice": "frequenza di corsi di qualificazione tecnico-professionale della durata di almeno 450 ore complessive svolte nell'arco di un anno",
+       "id": "r6c2p10reg:radio:1_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r8c1p13reg:txt",
+         "kind": "text",
+         "label": "presso l'Istituto",
+         "max": 100
+        },
+        {
+         "id": "r10c1p17reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r12c1p21reg:txt",
+         "kind": "text",
+         "label": "oggetto corso",
+         "max": 100
+        },
+        {
+         "id": "r14c1p25reg:number",
+         "kind": "text",
+         "label": "anno di conclusione",
+         "max": 4
+        }
+       ],
+       "moved": [
+        [
+         "r7c2p13reg:radio:2_clone",
+         "r15c2p29reg:radio:2_clone"
+        ],
+        [
+         "r9c2p19reg:radio:3_clone",
+         "r17c2p35reg:radio:3_clone"
+        ],
+        [
+         "r10c2p22reg:radio:4_clone",
+         "r18c2p38reg:radio:4_clone"
+        ],
+        [
+         "r14c2p32reg:radio:5_clone",
+         "r22c2p48reg:radio:5_clone"
+        ],
+        [
+         "r24c1p48reg:radio:6_clone",
+         "r32c1p64reg:radio:6_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "attestato di qualifica in materia attinente l'attività, conseguito secondo la legislazione vigente in materia di formazione professionale, integrato da un perio",
+       "id": "r7c2p13reg:radio:2_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r9c1p16reg:txt",
+         "kind": "text",
+         "label": "presso l'Istituto",
+         "max": 100
+        },
+        {
+         "id": "r11c1p20reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r13c1p24reg:txt",
+         "kind": "text",
+         "label": "oggetto corso",
+         "max": 100
+        },
+        {
+         "id": "r15c1p28reg:number",
+         "kind": "text",
+         "label": "anno di conclusione",
+         "max": 4
+        },
+        {
+         "id": "r17c1p32reg:txt",
+         "kind": "text",
+         "label": "tipo di attività",
+         "max": 100
+        },
+        {
+         "id": "r17c2p34reg:calendar_input",
+         "kind": "date",
+         "label": "dal"
+        },
+        {
+         "id": "r17c3p36reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        },
+        {
+         "id": "r20c1p42reg",
+         "kind": "select",
+         "label": "iscrizione Registro Imprese della Camera di Commercio (C.C.I.A.A.) di",
+         "options": "112 options"
+        },
+        {
+         "id": "r20c2p44reg:number",
+         "kind": "text",
+         "label": "n. R.E.A.",
+         "max": 7
+        }
+       ],
+       "moved": [
+        [
+         "r9c2p19reg:radio:3_clone",
+         "r21c2p48reg:radio:3_clone"
+        ],
+        [
+         "r10c2p22reg:radio:4_clone",
+         "r22c2p51reg:radio:4_clone"
+        ],
+        [
+         "r14c2p32reg:radio:5_clone",
+         "r26c2p61reg:radio:5_clone"
+        ],
+        [
+         "r24c1p48reg:radio:6_clone",
+         "r36c1p77reg:radio:6_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "diploma di maturità tecnica o professionale o di livello post-secondario superiore o universitario, in materie inerenti l'attività",
+       "id": "r9c2p19reg:radio:3_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r11c1p22reg:txt",
+         "kind": "text",
+         "label": "presso l'Istituto",
+         "max": 100
+        },
+        {
+         "id": "r13c1p26reg:txt",
+         "kind": "text",
+         "label": "con sede in",
+         "max": 100
+        },
+        {
+         "id": "r15c1p30reg:txt",
+         "kind": "text",
+         "label": "oggetto corso",
+         "max": 100
+        },
+        {
+         "id": "r17c1p34reg:number",
+         "kind": "text",
+         "label": "anno di conclusione",
+         "max": 4
+        }
+       ],
+       "moved": [
+        [
+         "r10c2p22reg:radio:4_clone",
+         "r18c2p38reg:radio:4_clone"
+        ],
+        [
+         "r14c2p32reg:radio:5_clone",
+         "r22c2p48reg:radio:5_clone"
+        ],
+        [
+         "r24c1p48reg:radio:6_clone",
+         "r32c1p64reg:radio:6_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "periodo di inserimento¹ presso imprese del settore, non inferiore a:",
+       "id": "r10c2p22reg:radio:4_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r11c1p23reg:radio:5_clone",
+         "kind": "radio",
+         "label": "un anno, se preceduto dallo svolgimento di un rapporto di apprendistato della durata prevista dalla contrattazione collettiva;",
+         "group": "r11c1p23reg:radio"
+        },
+        {
+         "id": "r12c1p25reg:radio:6_clone",
+         "kind": "radio",
+         "label": "due anni in qualità di titolare, di socio partecipante al lavoro o di collaboratore familiare degli stessi;",
+         "group": "r12c1p25reg:radio"
+        },
+        {
+         "id": "r13c1p26reg:radio:7_clone",
+         "kind": "radio",
+         "label": "tre anni, anche non consecutivi ma comunque nell'arco di cinque anni, nei casi di attività lavorativa Subordinata;",
+         "group": "r13c1p26reg:radio"
+        },
+        {
+         "id": "r15c1p28reg:txt",
+         "kind": "text",
+         "label": "tipo di attività",
+         "max": 100
+        },
+        {
+         "id": "r15c2p30reg:calendar_input",
+         "kind": "date",
+         "label": "dal"
+        },
+        {
+         "id": "r15c3p32reg:calendar_input",
+         "kind": "date",
+         "label": "al"
+        },
+        {
+         "id": "r18c1p38reg",
+         "kind": "select",
+         "label": "iscrizione Registro Imprese della Camera di Commercio (C.C.I.A.A.) di",
+         "options": "112 options"
+        },
+        {
+         "id": "r18c2p40reg:number",
+         "kind": "text",
+         "label": "n. R.E.A.",
+         "max": 7
+        }
+       ],
+       "moved": [
+        [
+         "r14c2p32reg:radio:5_clone",
+         "r20c2p47reg:radio:8_clone"
+        ],
+        [
+         "r24c1p48reg:radio:6_clone",
+         "r30c1p63reg:radio:9_clone"
+        ]
+       ]
+      },
+      {
+       "choice": "che il proprio titolo professionale è stato riconosciuto con provvedimento del Ministero dello sviluppo economico²",
+       "id": "r14c2p32reg:radio:5_clone",
+       "kind": "radio",
+       "reveals": [
+        {
+         "id": "r16c2p36reg:calendar_input",
+         "kind": "date",
+         "label": "in data"
+        }
+       ],
+       "moved": [
+        [
+         "r24c1p48reg:radio:6_clone",
+         "r25c1p51reg:radio:6_clone"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "choice": "che il/la responsabile tecnico/a è",
+     "id": "r7c1p10reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r9c1p12reg:txt",
+       "kind": "text",
+       "label": "il/la Sig./ra",
+       "max": 9999
+      },
+      {
+       "id": "r13c1p16reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allegato B e copia del documento di identità:",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    }
+   ],
+   "seconds": 8.4
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

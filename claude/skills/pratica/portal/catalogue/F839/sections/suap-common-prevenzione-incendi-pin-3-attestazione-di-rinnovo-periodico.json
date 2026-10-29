@@ -1,0 +1,932 @@
+{
+ "crawled": "2026-10-28T19:52:14.582Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRI ADEMPIMENTI (Prevenzione Incendi) › Prevenzione incendi › PIN 3 - Attestazione di rinnovo periodico di conformità antincendio (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 96.2,
+ "generated": {
+  "interventi": "Presentazione dell'attestazione di rinnovo periodico di conformità antincendio",
+  "adempimenti": [
+   {
+    "adempimento": "Attestazione di rinnovo periodico di conformità antincendio",
+    "amministrazione": "Comando dei Vigili del Fuoco - PRINCE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "Rif. Pratica VVF",
+   "Dichiarazione del responsabile dell'attività",
+   "distinta di versamento",
+   "dati per la corrispondenza",
+   "dati del delegato",
+   "documentazione allegata",
+   "dichiarazione relativa all'asseverazione",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "Presenta l'asseverazione ai fini di sicurezza antincendio"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "Presenta l'asseverazione ai fini di sicurezza antincendio",
+   "type": "CHK",
+   "adds": [
+    "ASSEVERAZIONE DEL PROFESSIONISTA AI FINI DELLA SICUREZZA ANTINCENDIO (art. 5 del Decreto del Ministro dell'Interno 7.8.2012"
+   ],
+   "drops": [
+    "dichiarazione relativa all'asseverazione"
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.5
+  },
+  {
+   "section": "Rif. Pratica VVF",
+   "fingerprint": "c7feb9eebcab49f1",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - intestazione",
+   "seconds": 1.2
+  },
+  {
+   "section": "Dichiarazione del responsabile dell'attività",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "l'assenza di variazione delle condizioni di sicurezza antincendio rispetto a quanto in precedenza segnalato"
+    },
+    {
+     "id": "r6c1p6reg:calendar_input",
+     "kind": "date",
+     "label": "con la/e SCIA¹ presentate il"
+    },
+    {
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archiv"
+    },
+    {
+     "id": "r10c1p12reg:txt",
+     "kind": "text",
+     "label": "relative e/o ricomprese all'attività principale di:",
+     "max": 100
+    },
+    {
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "di avere assolto gli obblighi gestionali connessi con l'esercizio dell'attività previsti dalla normativa vigente, nonché di aver osservato i divieti, le limitaz"
+    },
+    {
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "di aver adempiuto l'obbligo di mantenere in stato di efficienza i sistemi, gli impianti, i dispositivi, le attrezzature, rilevanti ai fini della sicurezza antin"
+    }
+   ],
+   "fingerprint": "19f9ce8b74430add",
+   "text": "Dichiarazione del responsabile dell'attività In qualità di responsabile dell'attività sotto specificata, consapevole delle conseguenze penali e amministrative previste dagli artt. 75 e 76 del D.P.R. 445/2000 in caso di dichiarazioni mendaci e formazione o uso di atti falsi, Dichiara l'assenza di variazione delle condizioni di sicurezza antincendio rispetto a quanto in precedenza segnalato Per maggiori informazioni, consultare la nota informativa predisposta dal Comando dei Vigili del Fuoco per la VERIFICA PRELIMINARE dei riferimenti a pratiche già presentate scaricando il documento sottostante Scarica il documento con la/e SCIA¹ presentate il Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archivio PRINCE dei VV.F. Sono consapevole che la verifica della correttezza formale verrà effettuata dagli Uffici Competenti al ricevimento della pratica. ¹ certificato di prevenzione incendi per le attività di cui all'art.11, commi 5 e 6, del DPR 01/08/2011 n.151. Può essere indicata, in alternativa, l'ultima attestazione di rinnovo periodico presentata. relative e/o ricomprese all'attività principale di: di avere assolto gli obblighi gestionali connessi con l'esercizio dell'attività previsti dalla normativa vigente, nonché di aver osservato i divieti, le limitazioni e le prescrizioni delle disposizioni di prevenzione incendi e di sicurezza antincendio disciplinanti l'attività medesima; di aver adempiuto l'obbligo di mantenere in stato di efficienza i sistemi, gli impianti, i dispositivi, le attrezzature, rilevanti ai fini della sicurezza antincendi, e le altre misure di sicurezza antincendio adottate e di aver effettuato le verifiche di controllo e gli interventi di manutenzione in accordo alla regolamentazione vigente, a quanto indicato nelle pertinenti norme tecniche e nelle istruzioni di uso e manutenzione del fabbricante e/o installatore.",
+   "branches": [
+    {
+     "choice": "l'assenza di variazione delle condizioni di sicurezza antincendio rispetto a quanto in precedenza segnalato",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r10c1p12reg:txt",
+       "r11c1p14reg:txt"
+      ],
+      [
+       "r11c1p15reg:chk",
+       "r12c1p17reg:chk"
+      ],
+      [
+       "r12c1p16reg:chk",
+       "r13c1p18reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "Il valore è obbligatorio",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archiv",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di avere assolto gli obblighi gestionali connessi con l'esercizio dell'attività previsti dalla normativa vigente, nonché di aver osservato i divieti, le limitaz",
+     "id": "r11c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di aver adempiuto l'obbligo di mantenere in stato di efficienza i sistemi, gli impianti, i dispositivi, le attrezzature, rilevanti ai fini della sicurezza antin",
+     "id": "r12c1p16reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 8.6
+  },
+  {
+   "section": "distinta di versamento",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Attestato di versamento n.¹",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r4c1p8reg",
+     "kind": "select",
+     "label": "intestato alla Tesoreria Provinciale dello Stato di",
+     "options": "112 options",
+     "value": "NAPOLI"
+    },
+    {
+     "id": "r4c2p10reg:real",
+     "kind": "text",
+     "label": "per un totale di euro",
+     "max": 10
+    },
+    {
+     "id": "r6c1p14reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+     "context": "allega copia del versamento",
+     "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+    },
+    {
+     "id": "r10c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio di cui al decreto del Ministero dell'interno 9 maggio 2007, allegare anche la dichi"
+    },
+    {
+     "id": "r13c1p23reg:txt",
+     "kind": "text",
+     "label": "L'attività principale",
+     "max": 250
+    },
+    {
+     "id": "r15c3p27reg:radio:0_clone",
+     "kind": "radio",
+     "label": "A",
+     "group": "r15c3p27reg:radio"
+    },
+    {
+     "id": "r15c4p28reg:radio:1_clone",
+     "kind": "radio",
+     "label": "B",
+     "group": "r15c4p28reg:radio"
+    },
+    {
+     "id": "r15c5p29reg:radio:2_clone",
+     "kind": "radio",
+     "label": "C",
+     "group": "r15c5p29reg:radio"
+    },
+    {
+     "id": "r20c1p38reg",
+     "kind": "select",
+     "label": "Approccio tecnico",
+     "options": [
+      "Modalità Standard",
+      "RTO/RTV ⁴ soluzione conforme",
+      "DM 09-05-2007 (ingegneria della sicurezza) ⁵",
+      "RTO/RTV ⁴ soluzione alternativa",
+      "RTO/RTV ⁴ soluzione in deroga"
+     ],
+     "value": "Modalità Standard"
+    },
+    {
+     "id": "r23c1p44reg:real",
+     "kind": "text",
+     "label": "euro",
+     "max": 10
+    },
+    {
+     "id": "r23c3p48reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r23c3p48reg:radio"
+    },
+    {
+     "id": "r23c4p50reg:radio:4_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r23c4p50reg:radio"
+    }
+   ],
+   "fingerprint": "4ffa8e167cda75e4",
+   "text": "distinta di versamento Attestato di versamento n.¹ del intestato alla Tesoreria Provinciale dello Stato di per un totale di euro allega copia del versamento Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio di cui al decreto del Ministero dell'interno 9 maggio 2007, allegare anche la dichiarazione, a firma del responsabile dell'attività, in merito all'attuazione del sistema di gestione della sicurezza antincendio di cui all'articolo 6 dello stesso decreto; per la definizione del relativo importo, si applica l'art 6 , comma 4, dello stesso decreto. CATEGORIA, NUMERO E SOTTOCLASSE dell'attività L'attività principale è individuata ² al n./sotto classe/ cat.*: categoria A B C Approccio tecnico euro FV ³ Si No ___________ ¹ In caso di utilizzo dell’approccio ingegneristico alla sicurezza antincendio, di cui al Decreto del Ministero dell’Interno 9-5-2007, per la definizione dell’importo, si applica l’art. 6, comma 4, dello stesso decreto. ² Al fine di definire il relativo importo, riportare il numero e la categoria corrispondente (A/B/C) individuata sulla base dell'elenco contenuto nell'Allegato I del DPR 01/08/2011 n.151 e la sottoclasse di cui al Decreto del Ministro dell'Interno del 7-8-2012. * N.B. nel campo categoria il primo inserimento dei dati fa riferimento all'attività principale mentre cliccando + è possibile inserire altre attività oltre alla principale ³ Selezionare solo nel caso in cui sia prevista l’installazione di un impianto fotovoltaico (FV) presso la specifica attività (Decreto Legge 23 settembre 2022, n. 144). ⁴ Selezionare solo nel caso in cui si sia fatto ricorso alle norme tecniche allegate al decreto del Ministro dell’Interno 3 agosto 2015 e s.m.i. (RTO) e/o alle regole tecniche verticali della sezione V (RTV) dello stesso decreto. ⁵ Selezionare solo nel caso in cui si sia fatto ricorso al Decreto del Ministero dell’Interno 09-05-2007. ⁶ Selezionare le misure antincendio (S1, S2,..., S10) per cui si è fatto eventuale ricorso alle soluzioni alternative di cui al decreto del Ministro dell’Interno 3 agosto 2015 e s.m.i..",
+   "branches": [
+    {
+     "choice": "In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio di cui al decreto del Ministero dell'interno 9 maggio 2007, allegare anche la dichi",
+     "id": "r10c1p20reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r12c1p22reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allega dichiarazione",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r13c1p23reg:txt",
+       "r17c1p28reg:txt"
+      ],
+      [
+       "r15c3p27reg:radio:0_clone",
+       "r19c3p32reg:radio:0_clone"
+      ],
+      [
+       "r15c4p28reg:radio:1_clone",
+       "r19c4p33reg:radio:1_clone"
+      ],
+      [
+       "r15c5p29reg:radio:2_clone",
+       "r19c5p34reg:radio:2_clone"
+      ],
+      [
+       "r20c1p38reg",
+       "r24c1p43reg"
+      ],
+      [
+       "r23c1p44reg:real",
+       "r27c1p49reg:real"
+      ],
+      [
+       "r23c3p48reg:radio:3_clone",
+       "r27c3p53reg:radio:3_clone"
+      ],
+      [
+       "r23c4p50reg:radio:4_clone",
+       "r27c4p55reg:radio:4_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "A",
+     "id": "r15c3p27reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r17c1p32reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": [
+        "03 _ 5 _ A: Depositi di GPL in recipienti mobili (massa complessiva da 75 a 300 kg)",
+        "04 _ 3 _ A: Depositi di GPL (serbatoi fissi da 0,3 a 5 mc)",
+        "06 _ 1 _ A: Reti di trasporto gas infiamm. di densità rel. <0,8 (pressione da 0,5 a 2,4MPa)",
+        "12 _ 1 _ A: Depositi, rivendite liquidi infiamm. e/o combust. e/o oli e simili, da 1 a 9 mc",
+        "13 _ 1 _ A: Distributori di carburanti liquidi (P.I.> 65 °C), tramite contenitori < 9 mc",
+        "15 _ 1 _ A: Depositi, rivendite di alcoli (concentr. > 60% in volume), capacità da 1 a 10mc",
+        "41 _ 1 _ A: Teatri di posa per riprese cinematografiche e televisive, fino a 25 persone",
+        "49 _ 1 _ A: Gruppi elettrogeni e/o di cogenerazione con motori di potenza da 25 a 350 kW",
+        "66 _ 1 _ A: Strutture ricettive e simili, con numero di posti letto > 25 (fino a 50 posti)",
+        "67 _ 1 _ A: Scuole e simili, con numero di persone presenti > 100 (fino a 150 persone)",
+        "68 _ 1 _ A: Ospedali, RSA, case di cura e simili, da 25 a 50 posti letto",
+        "68 _ 2 _ A: Strutture ambulatoriali, riabilitative, diagnostica e simili, da 500 a 1000mq",
+        "69 _ 1 _ A: Locali di esposizione e/o vendita, ingrosso e/o dettaglio, sup. da 400 a 600mq",
+        "71 _ 1 _ A: Aziende ed uffici, con oltre 300 persone presenti (fino a 500 persone)",
+        "74 _ 1 _ A: Impianti produzione calore con potenzialità superiore a 116 KW (fino a 350 KW)",
+        "75 _ 1 _ A: Autorimesse e simili, con superficie compresa tra 200 mq a 1000 mq",
+        "77 _ 1 _ A: Edifici ad uso civile, con altezza antincendi superiore a 24 m (fino a 32 m)",
+        "80 _ 1 _ A: Gallerie stradali (lunghezza > 500m) e ferroviarie (lunghezza > 2000m)"
+       ]
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p38reg",
+       "r21c1p40reg"
+      ],
+      [
+       "r23c1p44reg:real",
+       "r24c1p46reg:real"
+      ],
+      [
+       "r23c3p48reg:radio:3_clone",
+       "r24c3p50reg:radio:3_clone"
+      ],
+      [
+       "r23c4p50reg:radio:4_clone",
+       "r24c4p52reg:radio:4_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "B",
+     "id": "r15c4p28reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r18c1p34reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": "64 options"
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p38reg",
+       "r21c1p40reg"
+      ],
+      [
+       "r23c1p44reg:real",
+       "r24c1p46reg:real"
+      ],
+      [
+       "r23c3p48reg:radio:3_clone",
+       "r24c3p50reg:radio:3_clone"
+      ],
+      [
+       "r23c4p50reg:radio:4_clone",
+       "r24c4p52reg:radio:4_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "C",
+     "id": "r15c5p29reg:radio:2_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r19c1p36reg",
+       "kind": "select",
+       "label": "attività - sotto classe - categoria - descrizione",
+       "options": "91 options"
+      }
+     ],
+     "moved": [
+      [
+       "r20c1p38reg",
+       "r21c1p40reg"
+      ],
+      [
+       "r23c1p44reg:real",
+       "r24c1p46reg:real"
+      ],
+      [
+       "r23c3p48reg:radio:3_clone",
+       "r24c3p50reg:radio:3_clone"
+      ],
+      [
+       "r23c4p50reg:radio:4_clone",
+       "r24c4p52reg:radio:4_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "Approccio tecnico = RTO/RTV ⁴ soluzione conforme",
+     "id": "r20c1p38reg",
+     "kind": "select",
+     "option": "RTO/RTV ⁴ soluzione conforme",
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "Approccio tecnico = DM 09-05-2007 (ingegneria della sicurezza) ⁵",
+     "id": "r20c1p38reg",
+     "kind": "select",
+     "option": "DM 09-05-2007 (ingegneria della sicurezza) ⁵",
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "Approccio tecnico = RTO/RTV ⁴ soluzione alternativa",
+     "id": "r20c1p38reg",
+     "kind": "select",
+     "option": "RTO/RTV ⁴ soluzione alternativa",
+     "reveals": [
+      {
+       "id": "r22c1p42reg:multiCombo_focus",
+       "kind": "text",
+       "label": "RTO/RTV soluzione alternativa ⁶"
+      }
+     ],
+     "moved": [
+      [
+       "r23c1p44reg:real",
+       "r24c1p46reg:real"
+      ],
+      [
+       "r23c3p48reg:radio:3_clone",
+       "r24c3p50reg:radio:3_clone"
+      ],
+      [
+       "r23c4p50reg:radio:4_clone",
+       "r24c4p52reg:radio:4_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "Approccio tecnico = RTO/RTV ⁴ soluzione in deroga",
+     "id": "r20c1p38reg",
+     "kind": "select",
+     "option": "RTO/RTV ⁴ soluzione in deroga",
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "Si",
+     "id": "r23c3p48reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "No",
+     "id": "r23c4p50reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    }
+   ],
+   "seconds": 34.9
+  },
+  {
+   "section": "dati per la corrispondenza",
+   "fingerprint": "572a85fbc3ea16c6",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati per la corrispondenza",
+   "seconds": 1
+  },
+  {
+   "section": "dati del delegato",
+   "fingerprint": "ac3b7a8792f93e89",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati del delegato",
+   "seconds": 1
+  },
+  {
+   "section": "documentazione allegata",
+   "fields": [
+    {
+     "id": "r3c1p3reg:number",
+     "kind": "text",
+     "label": "numero",
+     "max": 2,
+     "prefilled": true
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "specificare tipologia dei documenti allegati",
+     "max": 100
+    }
+   ],
+   "fingerprint": "fc1d75134721cd94",
+   "text": "documentazione allegata Allega la seguente documentazione ai fini delle modifiche di cui all'art. 4, comma 8, del Decreto del Ministro dell'Interno del 7.8.2012: numero specificare tipologia dei documenti allegati",
+   "branches": [],
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione relativa all'asseverazione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "Non presenta “ Asseverazione”, a firma di professionista antincendio, in quanto non sono presenti impianti finalizzati alla protezione attiva antincendi né prod"
+    }
+   ],
+   "fingerprint": "c0131a8db283ead3",
+   "text": "dichiarazione relativa all'asseverazione Non presenta “ Asseverazione”, a firma di professionista antincendio, in quanto non sono presenti impianti finalizzati alla protezione attiva antincendi né prodotti e sistemi per la protezione di parti o elementi portanti delle opere di costruzione finalizzati ad assicurare la prescritta caratteristica di resistenza al fuoco",
+   "branches": [
+    {
+     "choice": "Non presenta “ Asseverazione”, a firma di professionista antincendio, in quanto non sono presenti impianti finalizzati alla protezione attiva antincendi né prod",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 3.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.4
+  },
+  {
+   "section": "ASSEVERAZIONE DEL PROFESSIONISTA AI FINI DELLA SICUREZZA ANTINCENDIO (art. 5 del Decreto del Ministro dell'Interno 7.8.2012",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "Titolo professionale",
+     "max": 100
+    },
+    {
+     "id": "r3c2p6reg:txt",
+     "kind": "text",
+     "label": "Cognome",
+     "max": 100
+    },
+    {
+     "id": "r3c3p8reg:txt",
+     "kind": "text",
+     "label": "Nome",
+     "max": 100
+    },
+    {
+     "id": "r3c4p10reg:txt",
+     "kind": "text",
+     "label": "C.F.",
+     "max": 16
+    },
+    {
+     "id": "r5c1p14reg:txt",
+     "kind": "text",
+     "label": "iscritto all'ordine / collegio professionale",
+     "max": 100
+    },
+    {
+     "id": "r5c2p16reg",
+     "kind": "select",
+     "label": "della Provincia di",
+     "options": "112 options"
+    },
+    {
+     "id": "r5c3p18reg:txt",
+     "kind": "text",
+     "label": "n. iscrizione",
+     "max": 20
+    },
+    {
+     "id": "r7c2p22reg:txt",
+     "kind": "text",
+     "label": "n° codice iscrizione M.I",
+     "context": "iscritto negli elenchi del Ministero dell'Interno di cui all'art. 16 comma 4 del DLgs 139/06,",
+     "max": 20
+    },
+    {
+     "id": "r9c2p26reg:txt",
+     "kind": "text",
+     "label": "indirizzo",
+     "context": "con ufficio in",
+     "max": 100
+    },
+    {
+     "id": "r9c3p28reg:txt",
+     "kind": "text",
+     "label": "n. civico",
+     "context": "con ufficio in",
+     "max": 20
+    },
+    {
+     "id": "r11c1p32reg:txt",
+     "kind": "text",
+     "label": "c.a.p.",
+     "max": 5
+    },
+    {
+     "id": "r11c2p34reg",
+     "kind": "select",
+     "label": "comune",
+     "options": []
+    },
+    {
+     "id": "r11c3p36reg",
+     "kind": "select",
+     "label": "provincia",
+     "options": "111 options"
+    },
+    {
+     "id": "r13c1p40reg:number",
+     "kind": "text",
+     "label": "telefono",
+     "max": 15
+    },
+    {
+     "id": "r13c2p42reg:txt",
+     "kind": "text",
+     "label": "indirizzo di posta elettronica",
+     "max": 200
+    },
+    {
+     "id": "r13c3p44reg:txt",
+     "kind": "text",
+     "label": "indirizzo di posta elettronica certificata",
+     "max": 200
+    },
+    {
+     "id": "r16c1p50reg:txt",
+     "kind": "text",
+     "label": "relativi all'attività",
+     "max": 200
+    },
+    {
+     "id": "r21c1p57reg:calendar_input",
+     "kind": "date",
+     "label": "data presentazione"
+    },
+    {
+     "id": "r21c2p59reg:txt",
+     "kind": "text",
+     "label": "a firma di",
+     "max": 100
+    },
+    {
+     "id": "r22c1p60reg:chk",
+     "kind": "checkbox",
+     "label": "Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archiv"
+    },
+    {
+     "id": "r26c1p66reg:calendar_input",
+     "kind": "date",
+     "label": "ha effettuato in data"
+    },
+    {
+     "id": "r29c1p72reg:chk",
+     "kind": "checkbox",
+     "label": "Estinzione o controllo incendi/esplosioni, di tipo automatico e manuale, della seguente tipologia"
+    },
+    {
+     "id": "r30c1p73reg:chk",
+     "kind": "checkbox",
+     "label": "Controllo del fumo e del calore, della seguente tipologia"
+    },
+    {
+     "id": "r31c1p75reg:chk",
+     "kind": "checkbox",
+     "label": "Rivelazione di fumo, calore, gas,incendio, della seguente tipologia"
+    },
+    {
+     "id": "r33c1p79reg:chk",
+     "kind": "checkbox",
+     "label": "Segnalazione e allarme incendio, della seguente tipologia"
+    },
+    {
+     "id": "r34c1p81reg:chk",
+     "kind": "checkbox",
+     "label": "Altro"
+    },
+    {
+     "id": "r39c1p88reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 200
+    }
+   ],
+   "fingerprint": "569db6100398f151",
+   "text": "ASSEVERAZIONE DEL PROFESSIONISTA AI FINI DELLA SICUREZZA ANTINCENDIO (art. 5 del Decreto del Ministro dell'Interno 7.8.2012 Il sottoscritto professionista antincendio Titolo professionale Cognome Nome C.F. iscritto all'ordine / collegio professionale della Provincia di n. iscrizione n° codice iscrizione M.I iscritto negli elenchi del Ministero dell'Interno di cui all'art. 16 comma 4 del DLgs 139/06, indirizzo n. civico con ufficio in c.a.p. comune provincia telefono indirizzo di posta elettronica indirizzo di posta elettronica certificata a seguito dell'incarico conferitogli dal responsabile dell'attività di seguito specificata: relativi all'attività soggetta ai controlli dei Vigili del Fuoco ai sensi dell'allegato I del DPR 151/2011, in relazione alla quale è/sono stata/e presentata/e la/e SCIA¹: Per maggiori informazioni, consultare la nota informativa predisposta dal Comando dei Vigili del Fuoco per la VERIFICA PRELIMINARE dei riferimenti a pratiche già presentate scaricando il documento sottostante Scarica il documento data presentazione a firma di Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archivio PRINCE dei VV.F. Sono consapevole che la verifica della correttezza formale verrà effettuata dagli Uffici Competenti al ricevimento della pratica. ¹ e/o autorizzazione antincendio per le attività di cui all'art.11, commi 5 e 6, del DPR 01/08/2011 n.151. ha effettuato in data un sopralluogo presso l'indirizzo della medesima, verificando la presenza di impianti finalizzati alla protezione attiva antincendio e/o dei prodotti e sistemi per la protezione di parti o elementi portanti delle opere di costruzione, finalizzati ad assicurare la caratteristica di resistenza al fuoco, di seguito specificati: A-IMPIANTO/I FINALIZZATO/I ALLA PROTEZIONE ATTIVA ANTINCENDIO ²: Estinzione o controllo incendi/esplosioni, di tipo automatico e manuale, della seguente tipologia Controllo del fumo e del calore, della seguente tipologia Rivelazione di fumo, calore, gas,incendio, della seguente tipologia Segnalazione e allarme incendio, della seguente tipologia Altro ² con esclusione delle attrezzature mobili di estinzione. B- PRODOTTI E SISTEMI PER LA PROTEZIONE PASSIVA DI CUI AL DM 16.2.2007, PUNTO A.3 DELL'ALLEGATO “Prodotti e sistemi per la protezione di parti o elementi portanti delle opere di costruzione” specificare Visti i risultati dei controlli e delle verifiche effettuate, il sottoscritto ASSEVERA che per gli impianti finalizzati alla protezione attiva antincendio e/o prodotti e sistemi per la protezione passiva, sopra specificati, sono garantiti i requisiti di efficienza e funzionalità, di cui alla/e SCIA¹ richiamate in precedenza. Le risultanze dei controlli e delle verifiche, nonché gli atti relativi alle modalità attraverso cui sono stati condotti i medesimi controlli/verifiche sono stati consegnati al responsabile dell'attività ed inseriti all'inte",
+   "branches": [
+    {
+     "choice": "Dichiaro che i dati riportati corrispondono alla documentazione in mio possesso e sono quindi corretti anche se non superano i controlli informatici sull'archiv",
+     "id": "r22c1p60reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Il valore è obbligatorio",
+      "adds": 48
+     }
+    },
+    {
+     "choice": "Estinzione o controllo incendi/esplosioni, di tipo automatico e manuale, della seguente tipologia",
+     "id": "r29c1p72reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r39c1p88reg:txt",
+       "r31c1p74reg:txt"
+      ],
+      [
+       "r30c1p73reg:chk",
+       "r32c1p75reg:chk"
+      ],
+      [
+       "r31c1p75reg:chk",
+       "r33c1p77reg:chk"
+      ],
+      [
+       "r33c1p79reg:chk",
+       "r35c1p81reg:chk"
+      ],
+      [
+       "r34c1p81reg:chk",
+       "r36c1p83reg:chk"
+      ],
+      [
+       "r39c1p88reg:txt",
+       "r41c1p90reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "specificare",
+      "adds": 3
+     }
+    },
+    {
+     "choice": "Controllo del fumo e del calore, della seguente tipologia",
+     "id": "r30c1p73reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r39c1p88reg:txt",
+       "r32c1p76reg:txt"
+      ],
+      [
+       "r31c1p75reg:chk",
+       "r33c1p77reg:chk"
+      ],
+      [
+       "r33c1p79reg:chk",
+       "r35c1p81reg:chk"
+      ],
+      [
+       "r34c1p81reg:chk",
+       "r36c1p83reg:chk"
+      ],
+      [
+       "r39c1p88reg:txt",
+       "r41c1p90reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "specificare",
+      "adds": 3
+     }
+    },
+    {
+     "choice": "Rivelazione di fumo, calore, gas,incendio, della seguente tipologia",
+     "id": "r31c1p75reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r39c1p88reg:txt",
+       "r33c1p78reg:txt"
+      ],
+      [
+       "r33c1p79reg:chk",
+       "r34c1p81reg:chk"
+      ],
+      [
+       "r34c1p81reg:chk",
+       "r35c1p83reg:chk"
+      ],
+      [
+       "r39c1p88reg:txt",
+       "r40c1p90reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "specificare",
+      "adds": 3
+     }
+    },
+    {
+     "choice": "Segnalazione e allarme incendio, della seguente tipologia",
+     "id": "r33c1p79reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r39c1p88reg:txt",
+       "r35c1p82reg:txt"
+      ],
+      [
+       "r34c1p81reg:chk",
+       "r36c1p83reg:chk"
+      ],
+      [
+       "r39c1p88reg:txt",
+       "r41c1p90reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "specificare",
+      "adds": 3
+     }
+    },
+    {
+     "choice": "Altro",
+     "id": "r34c1p81reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r39c1p88reg:txt",
+       "r36c1p84reg:txt"
+      ],
+      [
+       "r39c1p88reg:txt",
+       "r41c1p90reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "specificare",
+      "adds": 3
+     }
+    }
+   ],
+   "seconds": 17.4,
+   "scelta": "Presenta l'asseverazione ai fini di sicurezza antincendio"
+  }
+ ]
+}

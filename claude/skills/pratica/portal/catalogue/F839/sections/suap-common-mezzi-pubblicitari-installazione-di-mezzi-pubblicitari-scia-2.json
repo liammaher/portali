@@ -1,0 +1,337 @@
+{
+ "crawled": "2026-10-28T20:07:10.137Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › SCIA per l'installazione di impianti pubblicitari a carattere temporaneo (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 28.8,
+ "generated": {
+  "interventi": "SCIA per installazione di pubblicità temporanea",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per installazione di pubblicità temporanea",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "luogo dell'installazione",
+   "Tipologia del mezzo pubblicitario (pubblicità temporanea)",
+   "Caratteristiche del manufatto da installare",
+   "Periodo e luogo di esposizione",
+   "Dichiarazione relativa alla posizione del mezzo pubblicitario",
+   "Ulteriori dichiarazioni (mezzi pubblicitari temporanei)",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA all'ANAS in quanto proprietario della strada da cui è visibile il mezzo pubblicitario"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "Si presenta contestuale SCIA alla PROVINCIA / CITTA' METROPOLITANA in quanto proprietaria della strada da cui è visibile il mezzo pubblicitario"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "l'installazione ricade in zona sottoposta a vincolo paesaggistico e si possiede già la relativa autorizzazione",
+     "selected": true
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "luogo dell'installazione",
+   "fingerprint": "ffaa3deb7ac5ae7f",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia#luogo dell'installazione",
+   "seconds": 0.8
+  },
+  {
+   "section": "Tipologia del mezzo pubblicitario (pubblicità temporanea)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "numero progressivo del mezzo pubblicitario",
+     "max": 3
+    },
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "pubblicità riguardanti la locazione o la compravendita di immobili sui quali sono affissi"
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "pubblicità collegata a manifestazioni o eventi"
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "cartelli di tipo immobiliare opachi installabili solo nel ristretto ambito dell'immobile cui si riferiscono"
+    },
+    {
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "cartelli di cantiere pubblicitari, installabili esclusivamente su ponteggi o su fronte fabbricati"
+    },
+    {
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "messaggi temporanei non luminosi effettutati sulle vetrine e sulle porte d'ingresso degli esercizi cui si riferiscono e relativi agli esercizi stessi"
+    },
+    {
+     "id": "r9c1p11reg:txt",
+     "kind": "text",
+     "label": "tipo di sostegno",
+     "max": 30
+    },
+    {
+     "id": "r11c2p17reg:number",
+     "kind": "text",
+     "label": "lunghezza cm",
+     "context": "dimensioni",
+     "max": 5
+    },
+    {
+     "id": "r11c3p19reg:number",
+     "kind": "text",
+     "label": "altezza cm",
+     "context": "dimensioni",
+     "max": 5
+    },
+    {
+     "id": "r11c4p21reg:number",
+     "kind": "text",
+     "label": "spessore cm",
+     "context": "dimensioni",
+     "max": 5
+    },
+    {
+     "id": "r13c1p23reg:number",
+     "kind": "text",
+     "label": "numero mezzi pubblicitari",
+     "max": 5
+    }
+   ],
+   "fingerprint": "68d32329445ef7d1",
+   "text": "Tipologia del mezzo pubblicitario (pubblicità temporanea) numero progressivo del mezzo pubblicitario pubblicità riguardanti la locazione o la compravendita di immobili sui quali sono affissi pubblicità collegata a manifestazioni o eventi cartelli di tipo immobiliare opachi installabili solo nel ristretto ambito dell'immobile cui si riferiscono cartelli di cantiere pubblicitari, installabili esclusivamente su ponteggi o su fronte fabbricati messaggi temporanei non luminosi effettutati sulle vetrine e sulle porte d'ingresso degli esercizi cui si riferiscono e relativi agli esercizi stessi tipo di sostegno lunghezza cm altezza cm spessore cm dimensioni numero mezzi pubblicitari",
+   "branches": [
+    {
+     "choice": "pubblicità riguardanti la locazione o la compravendita di immobili sui quali sono affissi",
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "numero progressivo del mezzo pubblicitario",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "pubblicità collegata a manifestazioni o eventi",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "numero progressivo del mezzo pubblicitario",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "cartelli di tipo immobiliare opachi installabili solo nel ristretto ambito dell'immobile cui si riferiscono",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "numero progressivo del mezzo pubblicitario",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "cartelli di cantiere pubblicitari, installabili esclusivamente su ponteggi o su fronte fabbricati",
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "numero progressivo del mezzo pubblicitario",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "messaggi temporanei non luminosi effettutati sulle vetrine e sulle porte d'ingresso degli esercizi cui si riferiscono e relativi agli esercizi stessi",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "numero progressivo del mezzo pubblicitario",
+      "adds": 22
+     }
+    }
+   ],
+   "seconds": 9
+  },
+  {
+   "section": "Caratteristiche del manufatto da installare",
+   "fingerprint": "f009f20d2f162e67",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia#Caratteristiche del manufatto da installare",
+   "seconds": 0.9
+  },
+  {
+   "section": "Periodo e luogo di esposizione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:calendar_input",
+     "kind": "date",
+     "label": "Periodo di esposizione, dal:"
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "al:"
+    },
+    {
+     "id": "r4c1p8reg:txt",
+     "kind": "text",
+     "label": "Luogo di esposizione:",
+     "max": 50
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "Periodo di svolgimento della manifestazione/spettacolo/iniziativa",
+     "max": 50
+    }
+   ],
+   "fingerprint": "a1792e3b360e1c53",
+   "text": "Periodo e luogo di esposizione Periodo di esposizione, dal: al: Luogo di esposizione: Periodo di svolgimento della manifestazione/spettacolo/iniziativa",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione relativa alla posizione del mezzo pubblicitario",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "L'EDIFICIO E L'AREA dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i NON SONO TUTELATI né come beni culturali né come beni paesaggisti"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "L'EDIFICIO dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i, È TUTELATO in quanto bene culturale ai sensi dell'art. 49 del D.Lgs. n°42"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "L'AREA dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i, È TUTELATA in quanto bene paesaggistico ai sensi degli artt. 146 e 153 del D."
+    }
+   ],
+   "fingerprint": "cbcb6b4d21db0930",
+   "text": "Dichiarazione relativa alla posizione del mezzo pubblicitario L'EDIFICIO E L'AREA dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i NON SONO TUTELATI né come beni culturali né come beni paesaggistici ai sensi degli artt. 49, 146 e 153 del D.Lgs. n°42/2004; L'EDIFICIO dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i, È TUTELATO in quanto bene culturale ai sensi dell'art. 49 del D.Lgs. n°42/2004; L'AREA dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i, È TUTELATA in quanto bene paesaggistico ai sensi degli artt. 146 e 153 del D.Lgs. n°42/2004.",
+   "branches": [
+    {
+     "choice": "L'EDIFICIO E L'AREA dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i NON SONO TUTELATI né come beni culturali né come beni paesaggisti",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "L'EDIFICIO dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i, È TUTELATO in quanto bene culturale ai sensi dell'art. 49 del D.Lgs. n°42",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "L'AREA dove verrà/verranno posizionato/i il/i mezzo/i pubblicitario/i richiesto/i, È TUTELATA in quanto bene paesaggistico ai sensi degli artt. 146 e 153 del D.",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 3.8
+  },
+  {
+   "section": "Ulteriori dichiarazioni (mezzi pubblicitari temporanei)",
+   "fingerprint": "21044d2989d11e10",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia#ulteriori dichiarazioni (mezzi pubblicitari)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  }
+ ]
+}

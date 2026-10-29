@@ -1,0 +1,1155 @@
+{
+ "crawled": "2026-10-28T20:01:18.375Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Domanda di occupazione suolo/area (tende, vasi, ecc.) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 25.1,
+ "generated": {
+  "interventi": "Autorizzazione per occupazione suolo ed occupazione area (tende, vasi, ecc.)",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione per occupazione suolo ed occupazione area (tende, vasi, ecc.)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dll'attività",
+   "Tipologia di area",
+   "dichiarazione della tipologia di arredi installati",
+   "dichiarazione delle misure dell'area richiesta",
+   "dichiarazione del periodo di effettiva occupazione",
+   "dichiarazione del tipo di ente / associazione / società in nome e per conto del quale si agisce",
+   "dichiarazione relativa all'inquinamento acustico",
+   "Dichiarazione di rispetto delle norme relative alla concessione del suolo pubblico",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dll'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "Tipologia di area",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "area pubblica",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "area privata ad uso pubblico",
+     "group": "r1c2p2reg:radio"
+    }
+   ],
+   "fingerprint": "50be0007307b250e",
+   "text": "Tipologia di area area pubblica area privata ad uso pubblico",
+   "branches": [
+    {
+     "choice": "area pubblica",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "area privata ad uso pubblico",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione della tipologia di arredi installati",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "sedie"
+    },
+    {
+     "id": "r2c2p4reg:number",
+     "kind": "text",
+     "label": "numero",
+     "context": "sedie",
+     "max": 5
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "banchetto"
+    },
+    {
+     "id": "r6c2p12reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "banchetto",
+     "max": 13
+    },
+    {
+     "id": "r6c3p14reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "banchetto",
+     "max": 13
+    },
+    {
+     "id": "r8c1p16reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r8c2p18reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r10c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "tavoli"
+    },
+    {
+     "id": "r10c2p22reg:number",
+     "kind": "text",
+     "label": "numero",
+     "context": "tavoli",
+     "max": 5
+    },
+    {
+     "id": "r10c3p24reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "tavoli",
+     "max": 13
+    },
+    {
+     "id": "r10c4p26reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "tavoli",
+     "max": 13
+    },
+    {
+     "id": "r12c1p28reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r12c2p30reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r14c1p32reg:chk",
+     "kind": "checkbox",
+     "label": "gazebo"
+    },
+    {
+     "id": "r14c2p34reg:number",
+     "kind": "text",
+     "label": "numero",
+     "context": "gazebo",
+     "max": 5
+    },
+    {
+     "id": "r14c3p36reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "gazebo",
+     "max": 13
+    },
+    {
+     "id": "r14c4p38reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "gazebo",
+     "max": 13
+    },
+    {
+     "id": "r16c1p40reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r16c2p42reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r18c1p44reg:chk",
+     "kind": "checkbox",
+     "label": "ombrelloni"
+    },
+    {
+     "id": "r18c2p46reg:number",
+     "kind": "text",
+     "label": "numero",
+     "context": "ombrelloni",
+     "max": 5
+    },
+    {
+     "id": "r18c3p48reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "ombrelloni",
+     "max": 13
+    },
+    {
+     "id": "r18c4p50reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "ombrelloni",
+     "max": 13
+    },
+    {
+     "id": "r20c1p52reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r20c2p54reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r22c1p56reg:chk",
+     "kind": "checkbox",
+     "label": "stand"
+    },
+    {
+     "id": "r22c2p58reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "stand",
+     "max": 13
+    },
+    {
+     "id": "r22c3p60reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "stand",
+     "max": 13
+    },
+    {
+     "id": "r24c1p62reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r24c2p64reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r26c1p66reg:chk",
+     "kind": "checkbox",
+     "label": "tenda"
+    },
+    {
+     "id": "r26c2p68reg:txt",
+     "kind": "text",
+     "label": "specificare tipologia (fissa, spiovente, avvolgibile, a capotte, altro)",
+     "context": "tenda",
+     "max": 50
+    },
+    {
+     "id": "r26c3p70reg:txt",
+     "kind": "text",
+     "label": "scritte presenti sulla tenda",
+     "context": "tenda",
+     "max": 50
+    },
+    {
+     "id": "r26c4p72reg:real",
+     "kind": "text",
+     "label": "max estensione della tenda",
+     "context": "tenda",
+     "max": 13
+    },
+    {
+     "id": "r28c1p74reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r28c2p76reg:txt",
+     "kind": "text",
+     "label": "colore sella struttura",
+     "max": 30
+    },
+    {
+     "id": "r30c1p78reg:chk",
+     "kind": "checkbox",
+     "label": "vasi/fioriere"
+    },
+    {
+     "id": "r30c2p80reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "vasi/fioriere",
+     "max": 13
+    },
+    {
+     "id": "r30c3p82reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "vasi/fioriere",
+     "max": 13
+    },
+    {
+     "id": "r30c4p84reg:txt",
+     "kind": "text",
+     "label": "specificare la tipologia di piante ornamentali contenute",
+     "context": "vasi/fioriere",
+     "max": 100
+    },
+    {
+     "id": "r32c1p86reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r32c2p88reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    },
+    {
+     "id": "r34c1p90reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r34c2p92reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 50
+    },
+    {
+     "id": "r34c3p94reg:real",
+     "kind": "text",
+     "label": "larghezza",
+     "context": "altro",
+     "max": 13
+    },
+    {
+     "id": "r34c4p96reg:real",
+     "kind": "text",
+     "label": "x lunghezza",
+     "context": "altro",
+     "max": 13
+    },
+    {
+     "id": "r36c1p98reg:txt",
+     "kind": "text",
+     "label": "materiale della struttura",
+     "max": 30
+    },
+    {
+     "id": "r36c2p100reg:txt",
+     "kind": "text",
+     "label": "colore della struttura",
+     "max": 30
+    }
+   ],
+   "fingerprint": "f626849b59eef711",
+   "text": "dichiarazione della tipologia di arredi installati numero sedie materiale della struttura colore della struttura larghezza x lunghezza banchetto materiale della struttura colore della struttura numero larghezza x lunghezza tavoli materiale della struttura colore della struttura numero larghezza x lunghezza gazebo materiale della struttura colore della struttura numero larghezza x lunghezza ombrelloni materiale della struttura colore della struttura larghezza x lunghezza stand materiale della struttura colore della struttura specificare tipologia (fissa, spiovente, avvolgibile, a capotte, altro) scritte presenti sulla tenda max estensione della tenda tenda materiale della struttura colore sella struttura larghezza x lunghezza specificare la tipologia di piante ornamentali contenute vasi/fioriere materiale della struttura colore della struttura specificare larghezza x lunghezza altro materiale della struttura colore della struttura",
+   "branches": [
+    {
+     "choice": "sedie",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "banchetto",
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "tavoli",
+     "id": "r10c1p20reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "gazebo",
+     "id": "r14c1p32reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ombrelloni",
+     "id": "r18c1p44reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "stand",
+     "id": "r22c1p56reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "tenda",
+     "id": "r26c1p66reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "vasi/fioriere",
+     "id": "r30c1p78reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "altro",
+     "id": "r34c1p90reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r36c1p98reg:txt",
+       "r4c1p6reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r4c2p8reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r8c1p16reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r8c2p18reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r12c1p28reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r12c2p30reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r16c1p40reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r16c2p42reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r20c1p52reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r20c2p54reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r24c1p62reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r24c2p64reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r28c1p74reg:txt"
+      ],
+      [
+       "r36c1p98reg:txt",
+       "r32c1p86reg:txt"
+      ],
+      [
+       "r36c2p100reg:txt",
+       "r32c2p88reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 7.9
+  },
+  {
+   "section": "dichiarazione delle misure dell'area richiesta",
+   "fields": [
+    {
+     "id": "r2c1p2reg:real",
+     "kind": "text",
+     "label": "lunghezza area occupata in mt. lineari",
+     "max": 13
+    },
+    {
+     "id": "r4c1p6reg:real",
+     "kind": "text",
+     "label": "larghezza area occupata in mt. lineari",
+     "max": 13
+    },
+    {
+     "id": "r6c1p10reg:real",
+     "kind": "text",
+     "label": "totale in mq",
+     "max": 13
+    }
+   ],
+   "fingerprint": "e30e126d47679822",
+   "text": "dichiarazione delle misure dell'area richiesta lunghezza area occupata in mt. lineari larghezza area occupata in mt. lineari totale in mq",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del periodo di effettiva occupazione",
+   "fingerprint": "d68d344a25139fe6",
+   "same_as": "suap-common-occupazione-suolo-pubblico-domanda-di-occupazione-suolo-pubb#dichiarazione del periodo di effettiva occupazione",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del tipo di ente / associazione / società in nome e per conto del quale si agisce",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "in nome e per conto dell'impresa",
+     "max": 200
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "esercente l'attività di",
+     "max": 200
+    }
+   ],
+   "fingerprint": "f429751f1aeace24",
+   "text": "dichiarazione del tipo di ente / associazione / società in nome e per conto del quale si agisce in nome e per conto dell'impresa esercente l'attività di",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa all'inquinamento acustico",
+   "fingerprint": "dc284eb6e34b1ea6",
+   "same_as": "suap-common-occupazione-suolo-pubblico-domanda-di-occupazione-suolo-pubb#dichiarazione relativa all'inquinamento acustico",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di rispetto delle norme relative alla concessione del suolo pubblico",
+   "fields": [
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "di accettare senza riserva alcuna il regolamento comunale riferito alla materia oggetto della presente istanza"
+    }
+   ],
+   "fingerprint": "571b731614fd92eb",
+   "text": "Dichiarazione di rispetto delle norme relative alla concessione del suolo pubblico IL/ LA SOTTOSCRITTO/ A consapevole che le dichiarazioni false, la falsità negli atti e l'uso di atti falsi comportano l'applicazione delle sanzioni penali previste dall'art.76 del DPR 28/12/2000, n. 445, nonché la decadenza dei benefici prodotti da provvedimenti emanati sulla base di dichiarazioni non veritiere ai sensi dell'art.75, del medesimo decreto DICHIARA di accettare senza riserva alcuna il regolamento comunale riferito alla materia oggetto della presente istanza",
+   "branches": [
+    {
+     "choice": "di accettare senza riserva alcuna il regolamento comunale riferito alla materia oggetto della presente istanza",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.5
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.7
+  }
+ ]
+}

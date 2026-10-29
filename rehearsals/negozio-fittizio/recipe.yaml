@@ -1,0 +1,54 @@
+# The SUAP's opening of a non-food shop (SCIA per l'esercizio di vicinato, settore NON
+# alimentare), as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-016-aprire-l-attivita.json), for this folder's made-up ditta
+# individuale (fixture.json). Its one own section, the shop's data, was drafted by draft.py from
+# mod_esercizio_vicinato_apertura and checked by hand.
+procedure: napoli/comune/scia-esercizio-vicinato
+title: "SCIA: apertura di un negozio di vicinato non alimentare, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-016-aprire-l-attivita
+subject: impresa
+operation: Aprire l'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+after: [Pagamento degli oneri, Gestione degli allegati]
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Vicinato - settore merceologico NON alimentare], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Aprire l'attività"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+groups:
+  extras:
+    question: "Does any of this apply to the shop? Tick all that do, or none."
+asks:
+  altri_soggetti: {group: extras, type: yes_no, item: "It's a company with other partners or administrators besides the one who declares", why: "Each files a signed antimafia statement of their own (art. 85 D.Lgs. 159/2011), not mapped yet."}
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - negozio {{business.denominazione}}"}
+  alcolici: {group: extras, type: yes_no, item: "It will sell alcoholic drinks", why: "Selling alcohol adds the Dogane notice, a branch not mapped yet."}
+  speciali: {group: extras, type: yes_no, item: "It will sell weapons, precious metals, plant-protection products, medicines or animal feed", why: "Each adds its own authorization or SCIA to the pratica, branches not mapped yet."}
+  in_centro_commerciale: {type: yes_no, question: "Is the shop inside a shopping centre?", default: "false", why: "Napoli asks the shopping centre's type, not mapped yet."}
+  diritti_euro: {type: number, question: "The SUAP fees in euro", default: "100", why: "The 2026 table's line for a non-food shop's opening (DGC 239/2026)."}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, requisiti di onorabilità, altre dichiarazioni, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen"
+  - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: vicinato_non_alimentare, evento: apertura}
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale, srl, srls, snc, sas, spa]
+    else: "So far for a ditta individuale or an srl, srls, snc, sas or spa."
+  - {when: "{{ask.altri_soggetti|not}}", else: "Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet."}
+  - {when: "{{ask.speciali|not}}", else: "Weapons, precious metals, plant-protection products, medicines or animal feed aren't supported yet."}
+  - {when: "{{ask.in_centro_commerciale|not}}", else: "A shop inside a shopping centre isn't supported yet: Napoli asks the centre's type."}
+  - {when: "{{ask.in_factory_outlet|not}}", else: "A shop in a factory outlet centre isn't supported yet."}
+  - {when: "{{ask.superficie_alimentare_mq|positive|not}}", else: "This is the non-food shop's pratica: a shop selling food files the food sector's (with the Reg. 852 notifica)."}

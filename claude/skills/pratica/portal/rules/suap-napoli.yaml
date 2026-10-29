@@ -1,0 +1,361 @@
+schema_version: 0
+id: suap-napoli
+title: "SUAP di Napoli: quale pratica presentare per un negozio, un bar o ristorante, un acconciatore o un B&B"
+updated: 2026-10-29
+intro: >-
+  Da poche risposte sull'attività (che cosa è, che cosa succede, dove si trova) alle pratiche da
+  presentare al SUAP di Napoli e al loro regime. Ogni regola rimanda a quanto è verificato nella
+  pagina della procedura; i casi che la libreria non copre ancora sono rifiutati, con il motivo.
+facts:
+  attivita:
+    type: choice
+    question: "Che attività è?"
+    values:
+      somministrazione: "Bar, ristorante, pizzeria o altro locale dove i clienti mangiano o bevono sul posto, con servizio"
+      vicinato_alimentare: "Negozio che vende alimenti (anche insieme ad altro)"
+      vicinato_non_alimentare: "Negozio che non vende alimenti"
+      acconciatore_estetista: "Acconciatore, barbiere o estetista (non tatuaggio o piercing)"
+      bed_and_breakfast: "Bed and breakfast in una parte della casa in cui si vive"
+  evento:
+    type: choice
+    question: "Che cosa succede all'attività?"
+    values:
+      apertura: "Apre per la prima volta"
+      trasferimento: "Si sposta in un altro locale"
+      ampliamento: "Si ingrandisce la superficie"
+      subingresso: "Un'altra impresa la rileva, per cessione o affitto d'azienda"
+      cessazione: "Chiude"
+  zona:
+    type: choice
+    question: "In quale zona del Piano del Comune si trova il locale?"
+    values:
+      a: "Zona A: centro storico UNESCO (aree 1 rossa, 2 arancione, 3 gialla)"
+      b: "Zona B: buffer zone (blu)"
+      c: "Zona C: il resto della città"
+    how: >-
+      Dalla mappa delle zone tutelate allegata al Piano (delibera di Consiglio comunale n. 79/2026),
+      o chiedendo al SUAP.
+  superficie_vendita_mq:
+    type: number
+    question: "Quanti metri quadri di vendita ha il negozio (dopo il trasferimento o l'ampliamento, se è il caso)?"
+    unit: mq
+    how: >-
+      L'area dove entrano i clienti, banchi e scaffali compresi; senza magazzini, depositi,
+      laboratori, uffici e servizi.
+  consumo_sul_posto:
+    type: yes_no
+    question: "Il negozio di alimenti fa consumare sul posto quello che vende (senza servizio ai tavoli)?"
+  somministrazione_particolare:
+    type: yes_no
+    question: >-
+      Il locale è in un'area di servizio autostradale, in una stazione, in una mensa aziendale, in
+      un ospedale o in una scuola, su un mezzo di trasporto, fa catering, o serve solo gli alloggiati
+      di una struttura ricettiva?
+  prevenzione_incendi:
+    type: yes_no
+    question: >-
+      L'attività è nell'elenco dell'Allegato I del D.P.R. 151/2011 (per esempio un negozio con più di
+      400 mq lordi, servizi e depositi compresi, o una centrale termica oltre 116 kW)?
+    how: Lo stabilisce il tecnico abilitato, o il Comando dei Vigili del Fuoco.
+  alcolici:
+    type: yes_no
+    question: "Venderà o servirà bevande alcoliche?"
+  insegna:
+    type: yes_no
+    question: "Avrà un'insegna, una targa o una vetrofania?"
+  musica:
+    type: yes_no
+    question: "Userà impianti di diffusione sonora, o farà eventi con musica o strumenti musicali?"
+  dehors:
+    type: yes_no
+    question: "Vuole tavoli e sedie all'aperto, su suolo pubblico?"
+rules:
+  # --- Bar e ristoranti ---
+  - id: somministrazione-apertura-zona-c
+    when: {attivita: [somministrazione], evento: [apertura], zona: [c]}
+    then:
+      role: main
+      procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+      regime: scia
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone NON tutelate", operazione: "Aprire l'attività"}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-trasferimento-zona-c
+    when: {attivita: [somministrazione], evento: [trasferimento], zona: [c]}
+    then:
+      role: main
+      procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+      regime: scia
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone NON tutelate", operazione: "Trasferire la sede dell'attività"}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-ampliamento-zona-c
+    when: {attivita: [somministrazione], evento: [ampliamento], zona: [c]}
+    then: {role: main, procedure: napoli/comune/scia-somministrazione-alimenti-bevande, regime: scia}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-apertura-zone-tutelate
+    when: {attivita: [somministrazione], evento: [apertura], zona: [a, b], somministrazione_particolare: false}
+    then:
+      role: main
+      procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+      regime: autorizzazione
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone tutelate", operazione: "Aprire l'attività"}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-trasferimento-zone-tutelate
+    when: {attivita: [somministrazione], evento: [trasferimento], zona: [a, b], somministrazione_particolare: false}
+    then:
+      role: main
+      procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+      regime: autorizzazione
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone tutelate", operazione: "Trasferire la sede dell'attività"}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-ampliamento-zone-tutelate
+    when: {attivita: [somministrazione], evento: [ampliamento], zona: [a, b], somministrazione_particolare: false}
+    then: {role: main, procedure: napoli/comune/scia-somministrazione-alimenti-bevande, regime: autorizzazione}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-particolare-zone-tutelate
+    when: {attivita: [somministrazione], evento: [apertura, trasferimento, ampliamento], zona: [a, b], somministrazione_particolare: true}
+    then: {role: main, procedure: napoli/comune/scia-somministrazione-alimenti-bevande, regime: scia}
+    cites: [{procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}]
+    status: verified
+  - id: somministrazione-nulla-osta-zone-tutelate
+    when: {attivita: [somministrazione], evento: [apertura, trasferimento, ampliamento], zona: [a, b], somministrazione_particolare: false}
+    then: {role: also, procedure: napoli/comune/nulla-osta-impatto-acustico, regime: nulla_osta}
+    cites:
+      - {procedure: napoli/comune/scia-somministrazione-alimenti-bevande, source: piano-2026}
+      - {procedure: napoli/comune/nulla-osta-impatto-acustico, source: piano-2026}
+    status: verified
+  - id: somministrazione-subingresso-zona-c
+    when: {attivita: [somministrazione], evento: [subingresso], zona: [c]}
+    then:
+      role: main
+      procedure: napoli/comune/subingresso-attivita-commerciale
+      regime: scia_unica
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone NON tutelate", operazione: "Subentrare nell'esercizio dell'attività"}
+    cites: [{procedure: napoli/comune/subingresso-attivita-commerciale, source: lr7-allegati}]
+    status: verified
+  - id: somministrazione-subingresso-zone-tutelate
+    when: {attivita: [somministrazione], evento: [subingresso], zona: [a, b]}
+    then: {refuse: "Nelle zone A e B il regime del subingresso in un bar o ristorante è controverso: va chiesto al SUAP."}
+    cites:
+      - {procedure: napoli/comune/subingresso-attivita-commerciale, source: piano-zone}
+      - {procedure: napoli/comune/subingresso-attivita-commerciale, source: avviso-zone-tutelate}
+    status: verified
+  - id: somministrazione-cessazione-zona-c
+    when: {attivita: [somministrazione], evento: [cessazione], zona: [c]}
+    then:
+      role: main
+      procedure: napoli/comune/cessazione-attivita-commerciale
+      regime: comunicazione
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone NON tutelate", operazione: "Cessare l'attività"}
+    cites: [{procedure: napoli/comune/cessazione-attivita-commerciale, source: lr7-pdf}]
+    status: verified
+  - id: somministrazione-cessazione-zone-tutelate
+    when: {attivita: [somministrazione], evento: [cessazione], zona: [a, b]}
+    then:
+      role: main
+      procedure: napoli/comune/cessazione-attivita-commerciale
+      regime: comunicazione
+      portal: {settore: "Esercizio di somministrazione di alimenti e bevande in zone tutelate", operazione: "Cessare l'attività"}
+    cites: [{procedure: napoli/comune/cessazione-attivita-commerciale, source: lr7-pdf}]
+    status: verified
+  - id: somministrazione-musica
+    when: {attivita: [somministrazione], evento: [apertura, trasferimento, ampliamento], musica: true}
+    then: {role: also, procedure: napoli/comune/nulla-osta-impatto-acustico, regime: nulla_osta}
+    cites:
+      - {procedure: napoli/comune/nulla-osta-impatto-acustico, source: dpr227-art4}
+      - {procedure: napoli/comune/nulla-osta-impatto-acustico, source: esercizi-pubblici}
+    status: verified
+  - id: somministrazione-dehors
+    when: {attivita: [somministrazione], evento: [apertura], dehors: true}
+    then: {role: also, procedure: napoli/comune/concessione-suolo-pubblico-dehors, regime: concessione}
+    cites: [{procedure: napoli/comune/concessione-suolo-pubblico-dehors, source: regolamento-dehors}]
+    status: verified
+
+  # --- Negozi (esercizi di vicinato) ---
+  - id: vicinato-oltre-250-mq
+    when: {attivita: [vicinato_alimentare, vicinato_non_alimentare], superficie_vendita_mq: {over: 250}}
+    then: {refuse: "Con più di 250 mq di vendita non è un esercizio di vicinato ma una media o grande struttura di vendita, che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-114-art4}]
+    status: verified
+  - id: vicinato-non-alimentare-apertura
+    when: {attivita: [vicinato_non_alimentare], evento: [apertura], superficie_vendita_mq: {upto: 250}}
+    then:
+      role: main
+      procedure: napoli/comune/scia-esercizio-vicinato
+      regime: scia
+      portal: {settore: "Vicinato - settore merceologico NON alimentare", operazione: "Aprire l'attività"}
+    cites:
+      - {procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-114-art4}
+      - {procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-59-art65}
+    status: verified
+  - id: vicinato-non-alimentare-trasferimento
+    when: {attivita: [vicinato_non_alimentare], evento: [trasferimento], superficie_vendita_mq: {upto: 250}}
+    then:
+      role: main
+      procedure: napoli/comune/scia-esercizio-vicinato
+      regime: scia
+      portal: {settore: "Vicinato - settore merceologico NON alimentare", operazione: "Trasferire la sede dell'attività"}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-59-art65}]
+    status: verified
+  - id: vicinato-non-alimentare-ampliamento
+    when: {attivita: [vicinato_non_alimentare], evento: [ampliamento], superficie_vendita_mq: {upto: 250}}
+    then:
+      role: main
+      procedure: napoli/comune/scia-esercizio-vicinato
+      regime: scia
+      portal: {settore: "Vicinato - settore merceologico NON alimentare", operazione: "Variazioni strutturali"}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-59-art65}]
+    status: verified
+  - id: vicinato-alimentare-senza-consumo
+    when: {attivita: [vicinato_alimentare], evento: [apertura], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: false}
+    then:
+      role: main
+      procedure: napoli/comune/scia-esercizio-vicinato
+      regime: scia
+      portal: {settore: "Vicinato - settore merceologico Alimentare o Misto", operazione: "Aprire l'attività"}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-59-art65}]
+    status: verified
+  - id: vicinato-alimentare-variazioni-senza-consumo
+    when: {attivita: [vicinato_alimentare], evento: [trasferimento, ampliamento], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: false}
+    then: {role: main, procedure: napoli/comune/scia-esercizio-vicinato, regime: scia}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: dlgs-59-art65}]
+    status: verified
+  - id: vicinato-alimentare-consumo-zona-c
+    when: {attivita: [vicinato_alimentare], evento: [apertura, trasferimento, ampliamento], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: true, zona: [c]}
+    then: {role: main, procedure: napoli/comune/scia-esercizio-vicinato, regime: scia}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: zone-tutelate}]
+    status: verified
+  - id: vicinato-alimentare-consumo-apertura-zone-tutelate
+    when: {attivita: [vicinato_alimentare], evento: [apertura], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: true, zona: [a, b]}
+    then:
+      role: main
+      procedure: napoli/comune/scia-esercizio-vicinato
+      regime: autorizzazione
+      portal: {settore: "Vicinato - settore alimentare consumo immediato (zone tutelate)", operazione: "Aprire l'attività"}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: zone-tutelate}]
+    status: verified
+  - id: vicinato-alimentare-consumo-variazioni-zone-tutelate
+    when: {attivita: [vicinato_alimentare], evento: [trasferimento, ampliamento], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: true, zona: [a, b]}
+    then: {role: main, procedure: napoli/comune/scia-esercizio-vicinato, regime: autorizzazione}
+    cites: [{procedure: napoli/comune/scia-esercizio-vicinato, source: zone-tutelate}]
+    status: verified
+  - id: vicinato-non-alimentare-subingresso
+    when: {attivita: [vicinato_non_alimentare], evento: [subingresso], superficie_vendita_mq: {upto: 250}}
+    then:
+      role: main
+      procedure: napoli/comune/subingresso-attivita-commerciale
+      regime: comunicazione
+      portal: {settore: "Vicinato - settore merceologico NON alimentare", operazione: "Subentrare nell'esercizio dell'attività"}
+    cites: [{procedure: napoli/comune/subingresso-attivita-commerciale, source: lr7-allegati}]
+    status: verified
+  - id: vicinato-alimentare-subingresso-senza-consumo
+    when: {attivita: [vicinato_alimentare], evento: [subingresso], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: false}
+    then:
+      role: main
+      procedure: napoli/comune/subingresso-attivita-commerciale
+      regime: scia_unica
+      portal: {settore: "Vicinato - settore merceologico Alimentare o Misto", operazione: "Subentrare nell'esercizio dell'attività"}
+    cites: [{procedure: napoli/comune/subingresso-attivita-commerciale, source: lr7-allegati}]
+    status: verified
+  - id: vicinato-alimentare-subingresso-consumo-zona-c
+    when: {attivita: [vicinato_alimentare], evento: [subingresso], superficie_vendita_mq: {upto: 250}, consumo_sul_posto: true, zona: [c]}
+    then: {role: main, procedure: napoli/comune/subingresso-attivita-commerciale, regime: scia_unica}
+    cites: [{procedure: napoli/comune/subingresso-attivita-commerciale, source: lr7-allegati}]
+    status: verified
+  - id: vicinato-alimentare-subingresso-consumo-zone-tutelate
+    when: {attivita: [vicinato_alimentare], evento: [subingresso], consumo_sul_posto: true, zona: [a, b]}
+    then: {refuse: "Nelle zone A e B il regime del subingresso in un negozio di alimenti con consumo sul posto è controverso: va chiesto al SUAP."}
+    cites: [{procedure: napoli/comune/subingresso-attivita-commerciale, source: piano-zone}]
+    status: verified
+  - id: vicinato-cessazione-non-alimentare
+    when: {attivita: [vicinato_non_alimentare], evento: [cessazione], superficie_vendita_mq: {upto: 250}}
+    then:
+      role: main
+      procedure: napoli/comune/cessazione-attivita-commerciale
+      regime: comunicazione
+      portal: {settore: "Vicinato - settore merceologico NON alimentare", operazione: "Cessare l'attività"}
+    cites: [{procedure: napoli/comune/cessazione-attivita-commerciale, source: lr7-pdf}]
+    status: verified
+  - id: vicinato-cessazione-alimentare
+    when: {attivita: [vicinato_alimentare], evento: [cessazione], superficie_vendita_mq: {upto: 250}}
+    then: {role: main, procedure: napoli/comune/cessazione-attivita-commerciale, regime: comunicazione}
+    cites: [{procedure: napoli/comune/cessazione-attivita-commerciale, source: lr7-pdf}]
+    status: verified
+  - id: vicinato-dehors
+    when: {attivita: [vicinato_alimentare, vicinato_non_alimentare], evento: [apertura], dehors: true}
+    then: {refuse: "Un negozio può avere solo un dehors di tipo A (tavolini alti e sgabelli, fino a 10 mq, senza servizio): la libreria non lo copre ancora."}
+    cites: [{procedure: napoli/comune/concessione-suolo-pubblico-dehors, source: regolamento-dehors}]
+    status: verified
+
+  # --- Alimenti: notifica sanitaria ---
+  - id: alimenti-notifica
+    when: {attivita: [somministrazione, vicinato_alimentare], evento: [apertura, trasferimento]}
+    then: {role: also, procedure: napoli/asl-napoli-1/registrazione-attivita-alimentare, regime: notifica}
+    cites: [{procedure: napoli/asl-napoli-1/registrazione-attivita-alimentare, source: dd117}]
+    status: verified
+  - id: alcolici
+    when: {attivita: [somministrazione, vicinato_alimentare, vicinato_non_alimentare], evento: [apertura, trasferimento, subingresso], alcolici: true}
+    then: {refuse: "La comunicazione all'Agenzia delle Dogane per vendere o servire alcolici non è ancora nella libreria."}
+    status: verified
+
+  # --- Acconciatori ed estetisti ---
+  - id: acconciatore-estetista-scia
+    when: {attivita: [acconciatore_estetista], evento: [apertura, trasferimento, subingresso]}
+    then: {role: main, procedure: napoli/comune/scia-acconciatore-estetista, regime: scia}
+    cites: [{procedure: napoli/comune/scia-acconciatore-estetista, source: regolamento-napoli}]
+    status: verified
+  - id: acconciatore-estetista-ampliamento
+    when: {attivita: [acconciatore_estetista], evento: [ampliamento]}
+    then: {refuse: "Le variazioni strutturali di un acconciatore o di un estetista non sono ancora nella libreria."}
+    status: verified
+  - id: acconciatore-estetista-cessazione
+    when: {attivita: [acconciatore_estetista], evento: [cessazione]}
+    then: {role: main, procedure: napoli/comune/cessazione-attivita-commerciale, regime: comunicazione}
+    cites: [{procedure: napoli/comune/cessazione-attivita-commerciale, source: regolamento-acconciatori}]
+    status: verified
+
+  # --- Bed and breakfast ---
+  - id: bed-and-breakfast-apertura-zona-c
+    when: {attivita: [bed_and_breakfast], evento: [apertura], zona: [c]}
+    then:
+      role: main
+      procedure: napoli/comune/avvio-bed-and-breakfast
+      regime: scia
+      portal:
+        settore: "Strutture ricettive extralberghiere (affittacamere, bed and breakfast, case e appartamenti per vacanze, case per ferie, case religiose di ospitalità, ostelli per la gioventù, residenze rurali o country house, rifugi di montagna)"
+        operazione: "Aprire l'attività"
+    cites:
+      - {procedure: napoli/comune/avvio-bed-and-breakfast, source: guida-regione-2025}
+      - {procedure: napoli/comune/avvio-bed-and-breakfast, source: l241-art19}
+    status: verified
+  - id: bed-and-breakfast-zone-tutelate
+    when: {attivita: [bed_and_breakfast], evento: [apertura], zona: [a, b]}
+    then: {refuse: "Nel centro storico la variante urbanistica del 2026 limita i nuovi B&B, e non è verificato se sia già efficace: va chiesto al SUAP o al Servizio Pianificazione urbanistica."}
+    cites: [{procedure: napoli/comune/avvio-bed-and-breakfast, source: variante-dcc-129}]
+    status: verified
+  - id: bed-and-breakfast-altro
+    when: {attivita: [bed_and_breakfast], evento: [trasferimento, ampliamento, subingresso, cessazione]}
+    then: {refuse: "Per un B&B la libreria copre solo l'apertura."}
+    status: verified
+
+  # --- Per tutti ---
+  - id: prevenzione-incendi
+    when: {evento: [apertura, trasferimento, ampliamento], prevenzione_incendi: true}
+    then: {role: also, procedure: napoli/vigili-del-fuoco/scia-prevenzione-incendi, regime: scia}
+    cites: [{procedure: napoli/vigili-del-fuoco/scia-prevenzione-incendi, source: dpr151-art2}]
+    status: verified
+  - id: prevenzione-incendi-subingresso
+    when: {evento: [subingresso], prevenzione_incendi: true}
+    then: {refuse: "Nel subingresso un'attività soggetta a prevenzione incendi presenta anche la sua comunicazione ai Vigili del Fuoco, che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/subingresso-attivita-commerciale, source: lr7-allegati}]
+    status: verified
+  - id: insegna
+    when: {evento: [apertura, trasferimento, subingresso], insegna: true}
+    then: {role: also, procedure: napoli/comune/insegna-esercizio, regime: scia}
+    cites: [{procedure: napoli/comune/insegna-esercizio, source: regolamento-cup}]
+    status: verified

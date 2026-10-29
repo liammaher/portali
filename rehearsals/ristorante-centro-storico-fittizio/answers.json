@@ -1,0 +1,20 @@
+{
+ "extras": [],
+ "attivita_852": [
+  "ristorazione",
+  "ristorante"
+ ],
+ "descrizione": "PROVA NON INVIARE - centro storico generato",
+ "oggetto": "Apertura di una pizzeria con somministrazione nella zona A area 3 del centro storico (autorizzazione, notifica sanitaria, nulla osta di impatto acustico).",
+ "insegna": "Pizzeria Fittizia",
+ "superficie_somministrazione_mq": "35",
+ "in_centro_commerciale": "false",
+ "diritti_euro": "420",
+ "piano": [
+  "accessibile",
+  "sicurezza",
+  "punteggio"
+ ],
+ "zona": "a",
+ "fatti": []
+}

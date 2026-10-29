@@ -1,0 +1,2118 @@
+{
+ "crawled": "2026-10-28T20:10:45.577Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › SCIA per installazione insegna di esercizio (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 114.7,
+ "generated": {
+  "interventi": "SCIA per installazione insegna di esercizio",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per installazione insegna di esercizio",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'impianto pubblicitario",
+   "dichiarazione relativa al direttore dei lavori",
+   "luogo dell'installazione",
+   "ulteriori dichiarazioni (mezzi pubblicitari)",
+   "Caratteristiche del manufatto da installare",
+   "dichiarazione relativa all'installazione",
+   "dichiarazione relativa alla redazione del progetto",
+   "DICHIARAZIONE RELATIVA AI TITOLI ABILITANTI DELL'ATTIVITA' COMMERCIALE",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'impianto pubblicitario",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa al direttore dei lavori",
+   "fields": [
+    {
+     "id": "r1c2p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r1c3p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r1c3p3reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r3c2p7reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    },
+    {
+     "id": "r7c1p13reg:txt",
+     "kind": "text",
+     "label": "via, viale, piazza",
+     "max": 50
+    },
+    {
+     "id": "r7c2p15reg:txt",
+     "kind": "text",
+     "label": "numero civico",
+     "max": 5
+    },
+    {
+     "id": "r9c1p17reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r9c2p19reg:txt",
+     "kind": "text",
+     "label": "provincia",
+     "max": 2
+    },
+    {
+     "id": "r11c1p21reg:txt",
+     "kind": "text",
+     "label": "telefono",
+     "max": 30
+    },
+    {
+     "id": "r11c2p23reg:txt",
+     "kind": "text",
+     "label": "fax",
+     "max": 30
+    },
+    {
+     "id": "r13c1p25reg:txt",
+     "kind": "text",
+     "label": "ordine/collegio/albo",
+     "max": 30
+    },
+    {
+     "id": "r15c1p29reg:txt",
+     "kind": "text",
+     "label": "della Provincia di",
+     "max": 30
+    },
+    {
+     "id": "r17c1p33reg:txt",
+     "kind": "text",
+     "label": "numero iscrizione",
+     "max": 15
+    },
+    {
+     "id": "r18c1p36reg:chk",
+     "kind": "checkbox",
+     "label": "è anche il responsabile della sicurezza"
+    }
+   ],
+   "fingerprint": "9f7b0522fce10de1",
+   "text": "dichiarazione relativa al direttore dei lavori E' prevista la nomina di un Direttore dei Lavori? SI NO cognome nome codice fiscale via, viale, piazza numero civico comune provincia telefono fax ordine/collegio/albo della Provincia di numero iscrizione è anche il responsabile della sicurezza",
+   "branches": [
+    {
+     "choice": "SI",
+     "id": "r1c2p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "NO",
+     "id": "r1c3p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "è anche il responsabile della sicurezza",
+     "id": "r18c1p36reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 4.2
+  },
+  {
+   "section": "luogo dell'installazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "num. progressivo",
+     "max": 2
+    },
+    {
+     "id": "r3c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "label": "in area privata",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r3c2p6reg:radio:1_clone",
+     "kind": "radio",
+     "label": "in area pubblica",
+     "group": "r3c2p6reg:radio"
+    },
+    {
+     "id": "r4c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "insegne incassate nel vano di esercizio"
+    },
+    {
+     "id": "r5c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "sulla facciata del fabbricato / presso il locale"
+    },
+    {
+     "id": "r9c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "Lungo la strada/area:"
+    }
+   ],
+   "fingerprint": "2cdf7be2ed346864",
+   "text": "luogo dell'installazione num. progressivo in area privata in area pubblica insegne incassate nel vano di esercizio sulla facciata del fabbricato / presso il locale Lungo la strada/area: __________________________________________________________________________",
+   "branches": [
+    {
+     "choice": "in area privata",
+     "id": "r3c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "in area pubblica",
+     "id": "r3c2p6reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "insegne incassate nel vano di esercizio",
+     "id": "r4c1p7reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r5c1p8reg:chk",
+       "r6c1p9reg:chk"
+      ],
+      [
+       "r9c1p19reg:chk",
+       "r10c1p20reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 12
+     }
+    },
+    {
+     "choice": "sulla facciata del fabbricato / presso il locale",
+     "id": "r5c1p8reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r7c1p10reg:txt",
+       "kind": "text",
+       "label": "sito in Via/Piazza",
+       "max": 50
+      },
+      {
+       "id": "r7c2p12reg:txt",
+       "kind": "text",
+       "label": "n°",
+       "max": 10
+      },
+      {
+       "id": "r8c1p15reg:radio:2_clone",
+       "kind": "radio",
+       "label": "NCT",
+       "group": "r8c1p15reg:radio"
+      },
+      {
+       "id": "r8c2p16reg:radio:3_clone",
+       "kind": "radio",
+       "label": "NCEU",
+       "group": "r8c2p16reg:radio"
+      },
+      {
+       "id": "r10c1p19reg:txt",
+       "kind": "text",
+       "label": "foglio",
+       "max": 20
+      },
+      {
+       "id": "r10c2p21reg:txt",
+       "kind": "text",
+       "label": "mappale",
+       "max": 20
+      },
+      {
+       "id": "r10c3p23reg:txt",
+       "kind": "text",
+       "label": "subalterno",
+       "max": 20
+      },
+      {
+       "id": "r12c1p27reg:txt",
+       "kind": "text",
+       "label": "di proprietà (nome cognome / ragione sociale / denominazione)",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p19reg:chk",
+       "r13c1p28reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 12
+     },
+     "then": [
+      {
+       "choice": "NCT",
+       "id": "r8c1p15reg:radio:2_clone",
+       "kind": "radio"
+      },
+      {
+       "choice": "NCEU",
+       "id": "r8c2p16reg:radio:3_clone",
+       "kind": "radio"
+      }
+     ]
+    },
+    {
+     "choice": "Lungo la strada/area:",
+     "id": "r9c1p19reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r10c1p21reg:chk",
+       "kind": "checkbox",
+       "label": "statale/regionale"
+      },
+      {
+       "id": "r10c2p22reg:chk",
+       "kind": "checkbox",
+       "label": "provinciale"
+      },
+      {
+       "id": "r10c3p23reg:chk",
+       "kind": "checkbox",
+       "label": "comunale"
+      },
+      {
+       "id": "r12c1p26reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 30
+      },
+      {
+       "id": "r12c2p28reg:txt",
+       "kind": "text",
+       "label": "al chilometro",
+       "max": 10
+      },
+      {
+       "id": "r12c3p30reg:txt",
+       "kind": "text",
+       "label": "coordinate GPS",
+       "max": 30
+      }
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 12
+     },
+     "then": [
+      {
+       "choice": "statale/regionale",
+       "id": "r10c1p21reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "provinciale",
+       "id": "r10c2p22reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "comunale",
+       "id": "r10c3p23reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    }
+   ],
+   "seconds": 17.9
+  },
+  {
+   "section": "ulteriori dichiarazioni (mezzi pubblicitari)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "il manufatto/i è/sono stato/i calcolato/i e sarà/saranno realizzato/i e posto/i in opera tenendo conto della spinta del vento in modo da garantire la stabilità."
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "è a conoscenza di tutte le condizioni contenute nel regolamento comunale in materia"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "è stato acquisito il parere favorevole dell'ente proprietario della strada"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "ha la piena disponibilità dell'immobile sul quale verrà posizionata l'insegna pubblicitaria"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "è stato autorizzato dal proprietario o dal condominio e/o dagli aventi diritto sull'immobile per il posizionamento dell'insegna pubblicitaria (in allegato l'att"
+    },
+    {
+     "id": "r7c2p8reg:radio:0_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r7c2p8reg:radio"
+    },
+    {
+     "id": "r7c3p9reg:radio:1_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r7c3p9reg:radio"
+    },
+    {
+     "id": "r8c2p11reg:radio:2_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r8c2p11reg:radio"
+    },
+    {
+     "id": "r8c3p12reg:radio:3_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r8c3p12reg:radio"
+    }
+   ],
+   "fingerprint": "6ecaf13447de5189",
+   "text": "ulteriori dichiarazioni (mezzi pubblicitari) Consapevole delle responsabilità, anche penali, ai sensi degli artt. 75 e 76 del DPR n. 445/2000, per il caso di dichiarazioni mendaci, falsità negli atti o uso di atti falsi, dichiara che: il manufatto/i è/sono stato/i calcolato/i e sarà/saranno realizzato/i e posto/i in opera tenendo conto della spinta del vento in modo da garantire la stabilità. Inoltre dichiara che il manufatto/i sarà/saranno realizzato/i con materiale non deperibilie e resistente agli agenti atmosferici è a conoscenza di tutte le condizioni contenute nel regolamento comunale in materia è stato acquisito il parere favorevole dell'ente proprietario della strada ha la piena disponibilità dell'immobile sul quale verrà posizionata l'insegna pubblicitaria è stato autorizzato dal proprietario o dal condominio e/o dagli aventi diritto sull'immobile per il posizionamento dell'insegna pubblicitaria (in allegato l'atto di assenso) L'installazione ricade in zona A di P.R.G.: si no L'installazione ricade in area sottoposta a vincolo paesaggistico si no",
+   "branches": [
+    {
+     "choice": "il manufatto/i è/sono stato/i calcolato/i e sarà/saranno realizzato/i e posto/i in opera tenendo conto della spinta del vento in modo da garantire la stabilità.",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "è a conoscenza di tutte le condizioni contenute nel regolamento comunale in materia",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "è stato acquisito il parere favorevole dell'ente proprietario della strada",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "ha la piena disponibilità dell'immobile sul quale verrà posizionata l'insegna pubblicitaria",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "si",
+     "id": "r7c2p8reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "no",
+     "id": "r7c3p9reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "si",
+     "id": "r8c2p11reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "no",
+     "id": "r8c3p12reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p11reg:radio:2_clone",
+       "r7c2p8reg:radio:0_clone"
+      ],
+      [
+       "r8c3p12reg:radio:3_clone",
+       "r7c3p9reg:radio:1_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 10.1
+  },
+  {
+   "section": "Caratteristiche del manufatto da installare",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "num. progressivo",
+     "max": 2
+    },
+    {
+     "id": "r4c1p6reg:real",
+     "kind": "text",
+     "label": "larghezza (mt)",
+     "max": 8
+    },
+    {
+     "id": "r4c2p8reg:real",
+     "kind": "text",
+     "label": "altezza (mt)",
+     "max": 8
+    },
+    {
+     "id": "r4c3p10reg:real",
+     "kind": "text",
+     "label": "superficie (mq)",
+     "max": 8
+    },
+    {
+     "id": "r5c2p14reg:radio:0_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r5c2p14reg:radio"
+    },
+    {
+     "id": "r5c3p15reg:radio:1_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r5c3p15reg:radio"
+    },
+    {
+     "id": "r6c2p17reg:radio:2_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r6c2p17reg:radio"
+    },
+    {
+     "id": "r6c3p18reg:radio:3_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r6c3p18reg:radio"
+    },
+    {
+     "id": "r7c2p20reg:radio:4_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r7c2p20reg:radio"
+    },
+    {
+     "id": "r7c3p21reg:radio:5_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r7c3p21reg:radio"
+    },
+    {
+     "id": "r8c2p23reg:radio:6_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r8c2p23reg:radio"
+    },
+    {
+     "id": "r8c3p24reg:radio:7_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r8c3p24reg:radio"
+    },
+    {
+     "id": "r9c2p26reg:radio:8_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r9c2p26reg:radio"
+    },
+    {
+     "id": "r9c3p27reg:radio:9_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r9c3p27reg:radio"
+    },
+    {
+     "id": "r10c2p29reg:radio:10_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r10c2p29reg:radio"
+    },
+    {
+     "id": "r10c3p30reg:radio:11_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r10c3p30reg:radio"
+    },
+    {
+     "id": "r11c2p32reg:radio:12_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r11c2p32reg:radio"
+    },
+    {
+     "id": "r11c3p33reg:radio:13_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r11c3p33reg:radio"
+    },
+    {
+     "id": "r12c2p35reg:radio:14_clone",
+     "kind": "radio",
+     "label": "si",
+     "group": "r12c2p35reg:radio"
+    },
+    {
+     "id": "r12c3p36reg:radio:15_clone",
+     "kind": "radio",
+     "label": "no",
+     "group": "r12c3p36reg:radio"
+    },
+    {
+     "id": "r19c1p52reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "Testo del messaggio pubblicitario",
+     "max": 300
+    }
+   ],
+   "fingerprint": "995629c7e1e2c532",
+   "text": "Caratteristiche del manufatto da installare num. progressivo larghezza (mt) altezza (mt) superficie (mq) MONOFACCIALE si no BIFACCIALE si no OPACO si no LUMINOSO si no ILLUMINATO si no FRECCIA si no SOSTEGNI IN PERTINENZA ANAS si no STRISCIONE si no Testo del messaggio pubblicitario 300 Caratteri restanti __________________________________________________________________________________",
+   "branches": [
+    {
+     "choice": "si",
+     "id": "r5c2p14reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r5c3p15reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r6c2p17reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r6c3p18reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r7c2p20reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r7c3p21reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r8c2p23reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r8c3p24reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r9c2p26reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r9c3p27reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r10c2p29reg:radio:10_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r10c3p30reg:radio:11_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r11c2p32reg:radio:12_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r11c3p33reg:radio:13_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "si",
+     "id": "r12c2p35reg:radio:14_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r15c1p40reg:txt",
+       "kind": "text",
+       "label": "Ragione sociale",
+       "max": 100
+      },
+      {
+       "id": "r15c2p42reg:txt",
+       "kind": "text",
+       "label": "con sede in",
+       "max": 30
+      },
+      {
+       "id": "r17c1p46reg:txt",
+       "kind": "text",
+       "label": "Via",
+       "max": 100
+      },
+      {
+       "id": "r17c2p48reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "max": 10
+      },
+      {
+       "id": "r19c1p52reg:txt",
+       "kind": "text",
+       "label": "C.F.",
+       "max": 16
+      },
+      {
+       "id": "r19c2p54reg:txt",
+       "kind": "text",
+       "label": "P.IVA",
+       "max": 16
+      },
+      {
+       "id": "r21c1p58reg:txt",
+       "kind": "text",
+       "label": "iscritta nel Registro delle Imprese di",
+       "max": 100
+      },
+      {
+       "id": "r21c2p60reg:number",
+       "kind": "text",
+       "label": "con il n.",
+       "max": 10
+      }
+     ],
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ],
+      [
+       "r19c1p52reg:txta",
+       "r23c1p64reg:txta"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    },
+    {
+     "choice": "no",
+     "id": "r12c3p36reg:radio:15_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r5c2p14reg:radio:0_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r5c3p15reg:radio:1_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r6c2p17reg:radio:2_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r6c3p18reg:radio:3_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r7c2p20reg:radio:4_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r7c3p21reg:radio:5_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r8c2p23reg:radio:6_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r8c3p24reg:radio:7_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r9c2p26reg:radio:8_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r9c3p27reg:radio:9_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r10c2p29reg:radio:10_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r10c3p30reg:radio:11_clone"
+      ],
+      [
+       "r12c2p35reg:radio:14_clone",
+       "r11c2p32reg:radio:12_clone"
+      ],
+      [
+       "r12c3p36reg:radio:15_clone",
+       "r11c3p33reg:radio:13_clone"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 42
+     }
+    }
+   ],
+   "seconds": 37.1
+  },
+  {
+   "section": "dichiarazione relativa all'installazione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "in economia",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "a cura di impresa specializzata identificata come segue:",
+     "group": "r1c2p2reg:radio"
+    }
+   ],
+   "fingerprint": "4709f4b0b08d8ac5",
+   "text": "dichiarazione relativa all'installazione in economia a cura di impresa specializzata identificata come segue:",
+   "branches": [
+    {
+     "choice": "in economia",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "a cura di impresa specializzata identificata come segue:",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r3c1p4reg:txt",
+       "kind": "text",
+       "label": "denominazione dell'impresa",
+       "max": 30
+      },
+      {
+       "id": "r3c2p6reg:txt",
+       "kind": "text",
+       "label": "Codice Fiscale/Partita Iva",
+       "max": 30
+      },
+      {
+       "id": "r5c2p12reg:txt",
+       "kind": "text",
+       "label": "n.civico",
+       "context": "Indirizzo sede legale",
+       "max": 10
+      },
+      {
+       "id": "r7c1p14reg:txt",
+       "kind": "text",
+       "label": "indirizzo",
+       "max": 30
+      },
+      {
+       "id": "r9c1p18reg:txt",
+       "kind": "text",
+       "label": "Comune",
+       "max": 30
+      },
+      {
+       "id": "r9c2p20reg:txt",
+       "kind": "text",
+       "label": "Provincia",
+       "max": 2
+      },
+      {
+       "id": "r11c1p24reg:number",
+       "kind": "text",
+       "label": "telefono",
+       "max": 10
+      },
+      {
+       "id": "r11c2p26reg:number",
+       "kind": "text",
+       "label": "fax",
+       "max": 10
+      },
+      {
+       "id": "r13c1p30reg:txt",
+       "kind": "text",
+       "label": "e-mail",
+       "max": 50
+      },
+      {
+       "id": "r13c2p32reg:txt",
+       "kind": "text",
+       "label": "Pec",
+       "max": 50
+      }
+     ],
+     "plus": {
+      "anchor": "denominazione dell'impresa",
+      "adds": 20
+     }
+    }
+   ],
+   "seconds": 28.7
+  },
+  {
+   "section": "dichiarazione relativa alla redazione del progetto",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è colui che presenta la pratica",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non è colui che presenta la pratica (compilare la parte seguente)",
+     "group": "r2c1p2reg:radio"
+    }
+   ],
+   "fingerprint": "7b4724c51fa7c089",
+   "text": "dichiarazione relativa alla redazione del progetto è colui che presenta la pratica non è colui che presenta la pratica (compilare la parte seguente) (1) indicare se architetto, geometra, ingegnere, perito o agronomo. (2) La compilazione di questi campi è obbligatoria anche nel caso in cui il tecnico incaricato è colui che presenta la pratica.",
+   "branches": [
+    {
+     "choice": "è colui che presenta la pratica",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r3c1p3reg:txt",
+       "kind": "text",
+       "label": "ordine/collegio/albo (1) (2)",
+       "max": 30
+      },
+      {
+       "id": "r3c2p5reg:txt",
+       "kind": "text",
+       "label": "provincia (sigla) (2)",
+       "max": 2
+      },
+      {
+       "id": "r3c3p7reg:txt",
+       "kind": "text",
+       "label": "numero iscrizione (2)",
+       "max": 8
+      }
+     ],
+     "moved": [
+      [
+       "r2c1p2reg:radio:1_clone",
+       "r5c1p11reg:radio:1_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "non è colui che presenta la pratica (compilare la parte seguente)",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r4c1p4reg:txt",
+       "kind": "text",
+       "label": "cognome",
+       "max": 30
+      },
+      {
+       "id": "r4c2p6reg:txt",
+       "kind": "text",
+       "label": "nome",
+       "max": 30
+      },
+      {
+       "id": "r6c1p8reg:txt",
+       "kind": "text",
+       "label": "codice fiscale",
+       "max": 16
+      },
+      {
+       "id": "r8c1p12reg:txt",
+       "kind": "text",
+       "label": "via, viale, piazza",
+       "max": 50
+      },
+      {
+       "id": "r8c2p14reg:txt",
+       "kind": "text",
+       "label": "numero civico",
+       "max": 5
+      },
+      {
+       "id": "r10c1p16reg:txt",
+       "kind": "text",
+       "label": "comune",
+       "max": 30
+      },
+      {
+       "id": "r10c2p18reg:txt",
+       "kind": "text",
+       "label": "provincia (sigla)",
+       "max": 2
+      },
+      {
+       "id": "r12c1p22reg:number",
+       "kind": "text",
+       "label": "telefono",
+       "max": 10
+      },
+      {
+       "id": "r14c1p26reg:txt",
+       "kind": "text",
+       "label": "ordine/collegio/albo (1) (2)",
+       "max": 30
+      },
+      {
+       "id": "r14c2p28reg:txt",
+       "kind": "text",
+       "label": "provincia (sigla) (2)",
+       "max": 2
+      },
+      {
+       "id": "r14c3p30reg:txt",
+       "kind": "text",
+       "label": "numero iscrizione (2)",
+       "max": 8
+      }
+     ],
+     "plus": {
+      "anchor": "cognome",
+      "adds": 22
+     }
+    }
+   ],
+   "seconds": 4.1
+  },
+  {
+   "section": "DICHIARAZIONE RELATIVA AI TITOLI ABILITANTI DELL'ATTIVITA' COMMERCIALE",
+   "fingerprint": "ba7fdc60e6ecedac",
+   "same_as": "suap-common-occupazione-suolo-pubblico-subingresso-alla-concessione-per#dichiarazione relativa ai titoli abilitanti",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

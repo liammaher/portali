@@ -1,0 +1,265 @@
+{
+ "crawled": "2026-10-28T20:02:41.558Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Rinnovo di concessione occupazione di suolo pubblico annesso a pubblico esercizio (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 14,
+ "generated": {
+  "interventi": "Rinnovo di concessione occupazione di suolo pubblico annesso a pubblico esercizio",
+  "adempimenti": [
+   {
+    "adempimento": "Rinnovo di concessione occupazione di suolo pubblico annesso a pubblico esercizio",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "oggetto dell'istanza di rinnovo",
+   "ulteriori dichiarazioni",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "oggetto dell'istanza di rinnovo",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Il rinnovo dell'occupazione di suolo pubblico giusta concessione precedente n.",
+     "max": 30
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p9reg:txta",
+     "kind": "textarea",
+     "label": "3000 Caratteri restanti",
+     "context": "per la collocazione degli arredi e/o installazioni",
+     "max": 3000
+    }
+   ],
+   "fingerprint": "62c0dad30970367e",
+   "text": "oggetto dell'istanza di rinnovo Il/La sottoscritto/a ai sensi e per gli effetti dell'art. 19 commi 1 e 2 della legge 241/90 e s.m.i. segnala: Il rinnovo dell'occupazione di suolo pubblico giusta concessione precedente n. del per la collocazione degli arredi e/o installazioni 3000 Caratteri restanti",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fields": [
+    {
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "di essere titolare della licenza"
+    },
+    {
+     "id": "r4c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "che non è stato modificato lo stato dei luoghi relativi all'occupazione di suolo pubblico riportato nella planimetria"
+    },
+    {
+     "id": "r5c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "/di essere in regola con il pagamento dei tributi comunali di cui alla delibera di C.C. n. 17/2008 - Programma Cento"
+    },
+    {
+     "id": "r6c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in regola con il pagamento dei tributi del regolamento del canone unico"
+    },
+    {
+     "id": "r7c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "che gli interventi non ledono i diritti di terzi"
+    }
+   ],
+   "fingerprint": "af3ef0465bc7991d",
+   "text": "ulteriori dichiarazioni DICHIARA di essere titolare della licenza che non è stato modificato lo stato dei luoghi relativi all'occupazione di suolo pubblico riportato nella planimetria /di essere in regola con il pagamento dei tributi comunali di cui alla delibera di C.C. n. 17/2008 - Programma Cento di essere in regola con il pagamento dei tributi del regolamento del canone unico che gli interventi non ledono i diritti di terzi",
+   "branches": [
+    {
+     "choice": "di essere titolare della licenza",
+     "id": "r2c1p3reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r3c2p6reg:txt",
+       "kind": "text",
+       "label": "n.",
+       "context": "di essere titolare della licenza",
+       "max": 30
+      },
+      {
+       "id": "r3c3p8reg:txt",
+       "kind": "text",
+       "label": "tipologia",
+       "context": "di essere titolare della licenza",
+       "max": 50
+      },
+      {
+       "id": "r5c1p10reg:txt",
+       "kind": "text",
+       "label": "per la somministrazione di alimenti e bevande, emessa da",
+       "max": 50
+      },
+      {
+       "id": "r5c2p12reg:calendar_input",
+       "kind": "date",
+       "label": "in data"
+      }
+     ],
+     "moved": [
+      [
+       "r2c1p3reg:chk",
+       "r3c1p4reg:chk"
+      ],
+      [
+       "r4c1p9reg:chk",
+       "r6c1p15reg:chk"
+      ],
+      [
+       "r5c1p13reg:chk",
+       "r7c1p19reg:chk"
+      ],
+      [
+       "r6c1p14reg:chk",
+       "r8c1p20reg:chk"
+      ],
+      [
+       "r7c1p15reg:chk",
+       "r9c1p21reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "che non è stato modificato lo stato dei luoghi relativi all'occupazione di suolo pubblico riportato nella planimetria",
+     "id": "r4c1p9reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r5c2p12reg:txt",
+       "kind": "text",
+       "label": "allegata alla concessione n.",
+       "context": "che non è stato modificato lo stato dei luoghi relativi all'occupazione di suolo pubblico riportato nella planimetria",
+       "max": 30
+      },
+      {
+       "id": "r5c3p14reg:calendar_input",
+       "kind": "date",
+       "label": "del"
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p9reg:chk",
+       "r5c1p10reg:chk"
+      ],
+      [
+       "r5c1p13reg:chk",
+       "r6c1p17reg:chk"
+      ],
+      [
+       "r6c1p14reg:chk",
+       "r7c1p18reg:chk"
+      ],
+      [
+       "r7c1p15reg:chk",
+       "r8c1p19reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "/di essere in regola con il pagamento dei tributi comunali di cui alla delibera di C.C. n. 17/2008 - Programma Cento",
+     "id": "r5c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere in regola con il pagamento dei tributi del regolamento del canone unico",
+     "id": "r6c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che gli interventi non ledono i diritti di terzi",
+     "id": "r7c1p15reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 4.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  }
+ ]
+}

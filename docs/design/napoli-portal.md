@@ -7,8 +7,8 @@ declarations, paying, signing and sending. `supported-flows.md` is the promise f
 pratica; this is what it takes for the whole platform, in five pieces.
 
 Status (2026-10-28): piece 1 built for the whole SUE and under way for the SUAP (batch crawl,
-fingerprints, drift check); 5 built; 3 and 4 partly; 2 not started as data. Vault PRs #87,
-#88 and this branch; library PR #62.
+fingerprints, drift check, interventi); 5 built; 3 and 4 partly; 2 started as data (the SUAP's common cases). Vault PRs #87,
+#88, #89 and this branch; library PR #62.
 
 ## 1. The portal map: every box, and what goes in it
 
@@ -30,10 +30,16 @@ the pratiche. `claude/skills/pratica/portal/`:
 Where it stands (2026-10-28): `crawl.js` crawls in batches on one scratch draft, each section
 once by fingerprint (`catalogue/README.md`). SUE: all 27 pratiche crawled, 127 distinct
 sections, 88 in the dictionary (88% of uses), 20 pratiche complete; 7 generated and run
-(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 160 pratiche
-crawled so far (the priority sectors; the batch continues, 1,028 trips in all), 236 distinct
-sections, 21 in the dictionary (71% of uses); the acconciatore, a restaurant's opening and its
-closure generated and run. A drift check
+(CILA, CIL, SCIA, inizio and fine lavori, agibilità, proroga inizio lavori). SUAP: 278 pratiche
+crawled so far (about half of the batch's 1,028 trips), 477 distinct sections, 67 in the
+dictionary (71% of uses, counted under each title a section has), 107 pratiche filled end to end;
+the openings' "interventi eventuali" (alcohol, an outside sign) crawled; companies and businesses
+in the Registro delle imprese taken. Generated and run: the openings of a hairdresser, a
+restaurant, a non-food shop, a bakery and rooms to let, the takeover and the suspension of a
+shop and of a restaurant, a restaurant's new name, a shop's bigger sales area, a running
+restaurant's alcohol notice and a restaurant's closure; written and waiting for the portal: an
+opening with alcohol, one with an outside sign, a historic-centre authorization, a company's
+suspension, a shop's new name and a restaurant's dehors. A drift check
 reads every section's fingerprint (45 s a pratica) and stops runs of a changed pratica.
 
 `draft.py` pairs boxes with the national schema by order and type, since the portal draws a
@@ -42,8 +48,10 @@ of 49 boxes right (33 before), and sections it marks `exact` held 17 of 18. Draf
 person to check, never used unchecked. The pratica's XML, which would name each box's schema
 field, exists only once a pratica is sent: the portal offers PDFs before (`rehearsals/cessazione-fittizia`).
 
-Next: finish the SUAP batch and import it; the dictionary in order of use; the SUE's last
-seven pratiche with a professional (asseverazioni, landscape classifications).
+Next: run the six waiting recipes; finish the SUAP batch and import it; the 75 pratiche one
+or two sections short; a company's other partners (their art. 85
+statements); the SUE's last seven pratiche with a professional (asseverazioni, landscape
+classifications).
 
 ## 2. The legal layer: which pratica, which choices, which answers
 
@@ -58,10 +66,29 @@ authorization, notice); the Glossario unico, DM 2 March 2018 (building works to 
 libera, CILA, SCIA, permesso di costruire); Napoli's and Campania's own rules (the 2026
 historic-centre rule for food and drink openings, zones, the regolamento edilizio).
 
-Today only fragments: each recipe's `supports` (the cases it refuses), a few case questions,
-the pratiche-napoli library's procedures. Next: these tables as data in the library, for the
-common cases first, each rule with its source and date, re-checked on a schedule; the facts
-the law branches on asked of the person; anything uncovered refused at pre-flight.
+Started (2026-10-29, library branch `claude/legal-rules-table`): `rules/suap-napoli.yaml` in
+pratiche-napoli. Eleven facts, each with its plain-Italian question (the activity, what happens
+to it, the Piano's zone, the sales area, a sign, music, dehors, fire prevention, alcohol), and
+41 rules from them to the procedure, its regime and the portal's sector and operation, for
+shops, bars and restaurants, hairdressers and beauticians, and B&Bs. A rule cites a procedure's
+source that backs a verified claim there, so the table states nothing of its own and the
+source monitor watches it. Cases known and not handled are refused with a reason (a takeover in
+zones A and B, over 250 mq, the Dogane notice for alcohol). The validator tries every
+combination of the facts and fails on a gap or two rules that disagree; `decide()` gives the
+pratiche, or the facts still to ask, or the refusals.
+
+Pre-flight reads it (2026-10-29): a recipe names the table, the facts it fixes (a shop's
+opening) and the other pratiche it files with it (`handles`: the notifica sanitaria, the sign,
+the nulla osta); gen.py asks every other fact in pre-flight's one message, and pre-flight
+refuses a case the table gives to another pratica, or that needs one this pratica doesn't
+file. Nine recipes moved their legal refusals (zone, size, alcohol, sign, music, fire
+prevention) to it; their own `supports` keep what is only about the mapping (other partners,
+shopping centres). The table is copied in `portal/rules/`, the same bytes as the library's.
+
+Next: pick the recipe from the answers instead of refusing (one entry point per activity);
+the Dogane notice and the SUE's building works (the Glossario unico) as procedures, then as
+rules; the other recipes (bakery, rooms to let, suspension, variations) once the library has
+their procedures.
 
 ## 3. Intake: the person's context into answers
 

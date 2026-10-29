@@ -1,0 +1,554 @@
+{
+ "crawled": "2026-10-28T19:41:50.938Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Rifiuti in procedura semplificata (ai sensi degli artt. 214 e 216 del D. Lgs. 152/06) › Comunicazione di esercizio attività di recupero rifiuti pericolosi e non pericolosi, ai sensi degli artt. 214 e 216 del d.lgs 152/2006. (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 57.5,
+ "generated": {
+  "interventi": "Comunicazione di esercizio attività di recupero rifiuti pericolosi e non pericolosi",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di esercizio attività di recupero rifiuti pericolosi e non pericolosi, ai sensi degli artt. 214 e 216 del d.lgs 152/2006.",
+    "amministrazione": "Provincia di Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dati catastali",
+   "dichiarazione del titolo di disponibilità dei locali",
+   "direttore tecnico dell'impianto",
+   "autorizzazioni/visti/pareri in materia di tutela ambientale e in materia edilizia",
+   "vincoli ambientali e idrologici",
+   "oggetto della comunicazione",
+   "dichiarazione relativa alle operazioni di recupero",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione del titolo di disponibilità dei locali",
+   "fingerprint": "3fe70b0690454e05",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione del titolo di disponibilità dei locali",
+   "seconds": 0.7
+  },
+  {
+   "section": "direttore tecnico dell'impianto",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è il titolare/ legale rappresentante",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "è il signor/ a",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 50
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 50
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "codice fiscale",
+     "max": 16
+    },
+    {
+     "id": "r8c1p12reg:txt",
+     "kind": "text",
+     "label": "in possesso del titolo di studio",
+     "max": 30
+    }
+   ],
+   "fingerprint": "b16d9910538717a2",
+   "text": "direttore tecnico dell'impianto è il titolare/ legale rappresentante è il signor/ a nome cognome codice fiscale in possesso del titolo di studio",
+   "branches": [
+    {
+     "choice": "è il titolare/ legale rappresentante",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "è il signor/ a",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.5
+  },
+  {
+   "section": "autorizzazioni/visti/pareri in materia di tutela ambientale e in materia edilizia",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "assoggettabilità alla VIA (art. 20 e allegati I e IV alla parte prima del d. lgs. 152/2006 e succ. mod. e int.; D.P.G.R. Campania n° 10 del 29/01/2010);"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "scarichi idrici (D.Lgs n.152/2006 parete III e R.R. 3/2006)"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "rumore (DPCM 1 Marzo 1991 - L. 447/95)"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "emissioni in atmosfera (D.Lgs n. 152/2006 parte V)"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "rifiuti (D.Lgs n. 152/2006 parte IV)"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "A.I.A. (D.Lgs. 59/2005)"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "VV.FF."
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "Autorizzazione comunale all'esercizio dell'attività e parere igienico/sanitario"
+    },
+    {
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "Compatibilità urbanistico-territoriale"
+    },
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "Agibilità dei manufatti"
+    },
+    {
+     "id": "r12c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r12c2p14reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 50
+    }
+   ],
+   "fingerprint": "8d3faf2a1eb9906e",
+   "text": "autorizzazioni/visti/pareri in materia di tutela ambientale e in materia edilizia assoggettabilità alla VIA (art. 20 e allegati I e IV alla parte prima del d. lgs. 152/2006 e succ. mod. e int.; D.P.G.R. Campania n° 10 del 29/01/2010); scarichi idrici (D.Lgs n.152/2006 parete III e R.R. 3/2006) rumore (DPCM 1 Marzo 1991 - L. 447/95) emissioni in atmosfera (D.Lgs n. 152/2006 parte V) rifiuti (D.Lgs n. 152/2006 parte IV) A.I.A. (D.Lgs. 59/2005) VV.FF. Autorizzazione comunale all'esercizio dell'attività e parere igienico/sanitario Compatibilità urbanistico-territoriale Agibilità dei manufatti specificare altro Se l'insediamento è interessato da quanto sopra indicato, allegare copia dei relativi provvedimenti",
+   "branches": [
+    {
+     "choice": "assoggettabilità alla VIA (art. 20 e allegati I e IV alla parte prima del d. lgs. 152/2006 e succ. mod. e int.; D.P.G.R. Campania n° 10 del 29/01/2010);",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "scarichi idrici (D.Lgs n.152/2006 parete III e R.R. 3/2006)",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "rumore (DPCM 1 Marzo 1991 - L. 447/95)",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "emissioni in atmosfera (D.Lgs n. 152/2006 parte V)",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "rifiuti (D.Lgs n. 152/2006 parte IV)",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "A.I.A. (D.Lgs. 59/2005)",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "VV.FF.",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Compatibilità urbanistico-territoriale",
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Agibilità dei manufatti",
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r12c1p12reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 13.5
+  },
+  {
+   "section": "vincoli ambientali e idrologici",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "vincolo paesaggistico ed ambientale (D.Lgs 42 del 22/01/2004)"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "vincolo idrogeologico (r.d. 3267/23 e s.m.i.)"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "vincoli P.A.I. (d.p.c.m. 24 maggio 2001)"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "zona di salvaguardia punti di captazione acque destinate al consumo umano (art.94 c.4 lett. h del d.lgs. 152/2006)"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r6c2p8reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 50
+    },
+    {
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "nessun vincolo"
+    }
+   ],
+   "fingerprint": "55a2bca083de8a94",
+   "text": "vincoli ambientali e idrologici vincolo paesaggistico ed ambientale (D.Lgs 42 del 22/01/2004) vincolo idrogeologico (r.d. 3267/23 e s.m.i.) vincoli P.A.I. (d.p.c.m. 24 maggio 2001) zona di salvaguardia punti di captazione acque destinate al consumo umano (art.94 c.4 lett. h del d.lgs. 152/2006) specificare altro nessun vincolo",
+   "branches": [
+    {
+     "choice": "vincolo paesaggistico ed ambientale (D.Lgs 42 del 22/01/2004)",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "vincolo idrogeologico (r.d. 3267/23 e s.m.i.)",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "vincoli P.A.I. (d.p.c.m. 24 maggio 2001)",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "zona di salvaguardia punti di captazione acque destinate al consumo umano (art.94 c.4 lett. h del d.lgs. 152/2006)",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "altro",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "nessun vincolo",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 8.9
+  },
+  {
+   "section": "oggetto della comunicazione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "di voler esercitare l'attività di recupero di rifiuti speciali, art. 216 comma 1 del d.lgs. 152/2006",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "di voler RINNOVARE la comunicazione di esercizio di recupero di rifiuti speciali non pericolosi",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "effettuata il"
+    },
+    {
+     "id": "r5c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "label": "di voler INTEGRARE la comunicazione di esercizio di recupero di rifiuti speciali non pericolosi",
+     "group": "r5c1p7reg:radio"
+    },
+    {
+     "id": "r5c2p9reg:calendar_input",
+     "kind": "date",
+     "label": "effettuata il"
+    }
+   ],
+   "fingerprint": "6b3b327b2a943e85",
+   "text": "oggetto della comunicazione di voler esercitare l'attività di recupero di rifiuti speciali, art. 216 comma 1 del d.lgs. 152/2006 effettuata il di voler RINNOVARE la comunicazione di esercizio di recupero di rifiuti speciali non pericolosi effettuata il di voler INTEGRARE la comunicazione di esercizio di recupero di rifiuti speciali non pericolosi",
+   "branches": [
+    {
+     "choice": "di voler esercitare l'attività di recupero di rifiuti speciali, art. 216 comma 1 del d.lgs. 152/2006",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c2p9reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "di voler RINNOVARE la comunicazione di esercizio di recupero di rifiuti speciali non pericolosi",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c2p9reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "di voler INTEGRARE la comunicazione di esercizio di recupero di rifiuti speciali non pericolosi",
+     "id": "r5c1p7reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r5c2p9reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 5
+  },
+  {
+   "section": "dichiarazione relativa alle operazioni di recupero",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "recupero di materia"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "specificare tipologia ( (R2, R3, R4, R6, R7, R8, R9)",
+     "context": "recupero di materia",
+     "max": 30
+    },
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "recupero ambientale R10"
+    },
+    {
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "recupero energetico R1"
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "messa in riserva R13"
+    },
+    {
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "delle norme tecniche specifiche adottate con D.M. 5 febbraio 1998 e s.m.i."
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "delle norme tecniche specifiche adottate con D.M. 12 giugno 2002, n° 161 e s.m.i"
+    },
+    {
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in possesso dei requisiti di cui all'art. 10 del D.M. 05.02.98 e s.m.i"
+    },
+    {
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n° 161 e s.m.i."
+    },
+    {
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "che l'impianto di recupero rifiuti non pericolosi, di cui alla presente comunicazione, è realizzato nel rispetto delle norme urbanistiche ed edilizie, del D.lgs"
+    }
+   ],
+   "fingerprint": "0e5d4f2c13b1e2fc",
+   "text": "dichiarazione relativa alle operazioni di recupero specificare tipologia ( (R2, R3, R4, R6, R7, R8, R9) recupero di materia recupero ambientale R10 recupero energetico R1 messa in riserva R13 Le operazioni sono svolte nel rispetto di tutte le prescrizioni contenute nel Decreto Legislativo 152/2006 e delle vigenti leggi sulla tutela della salute dell'uomo e dell'ambiente nonché (1): delle norme tecniche specifiche adottate con D.M. 5 febbraio 1998 e s.m.i. delle norme tecniche specifiche adottate con D.M. 12 giugno 2002, n° 161 e s.m.i Dichiara inoltre (1): di essere in possesso dei requisiti di cui all'art. 10 del D.M. 05.02.98 e s.m.i di essere in possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n° 161 e s.m.i. che l'impianto di recupero rifiuti non pericolosi, di cui alla presente comunicazione, è realizzato nel rispetto delle norme urbanistiche ed edilizie, del D.lgs. n.152/2006 parte III (autorizzazioni scarichi acque) e parte V (emissioni in atmosfera), e nel rispetto di tutte le altre disposizioni che regolano la costruzione di impianti industriali (1) barrare le caselle corrispondenti a seconda se il recupero è relativo a rifiuti pericolosi (D.M. 161 del 12/06/2002) o non pericolosi (D.M. 5/2/1998) ovvero entrambi",
+   "branches": [
+    {
+     "choice": "recupero di materia",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "recupero ambientale R10",
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "recupero energetico R1",
+     "id": "r4c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "messa in riserva R13",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "delle norme tecniche specifiche adottate con D.M. 5 febbraio 1998 e s.m.i.",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "delle norme tecniche specifiche adottate con D.M. 12 giugno 2002, n° 161 e s.m.i",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere in possesso dei requisiti di cui all'art. 10 del D.M. 05.02.98 e s.m.i",
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere in possesso dei requisiti di cui all'art. 8 del D.M. 12 giugno 2002, n° 161 e s.m.i.",
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che l'impianto di recupero rifiuti non pericolosi, di cui alla presente comunicazione, è realizzato nel rispetto delle norme urbanistiche ed edilizie, del D.lgs",
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 11.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1
+  }
+ ]
+}

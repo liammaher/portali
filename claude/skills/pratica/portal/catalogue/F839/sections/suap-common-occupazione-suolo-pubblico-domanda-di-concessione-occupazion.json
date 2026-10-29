@@ -1,0 +1,246 @@
+{
+ "crawled": "2026-10-28T20:01:43.471Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Domanda di concessione occupazione temporanea suolo pubblico per spettacolo viaggiante (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 22.7,
+ "generated": {
+  "interventi": "Domanda di concessione occupazione temporanea suolo pubblico per spettacolo viaggiante",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di concessione occupazione temporanea suolo pubblico per spettacolo viaggiante",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Dichiarazione dell'indirizzo per l'occupazione del suolo pubblico",
+   "tipologia richiesta occupazione suolo pubblico",
+   "impegni per l'occupazione suolo pubblico",
+   "dichiarazione di impegno al pagamento del canone unico",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Avvertenza per le domande di concessione",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'occupazione di suolo pubblico richiesta sarà annessa ad un'attività di somministrazione alimenti e bevande aperta al pubblico"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "l'occupazione di suolo pubblico richiesta sarà annessa ad un'attività di somministrazione alimenti e bevande aperta al pubblico",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione relativa alla presenza di bagni riservati alla clientela"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione dell'indirizzo per l'occupazione del suolo pubblico",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "tipologia richiesta occupazione suolo pubblico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "l'autorizzazione ad occupare il suolo pubblico per (specificare il tipo di iniziativa):",
+     "max": 50
+    },
+    {
+     "id": "r4c1p4reg:number",
+     "kind": "text",
+     "label": "per un'area totale di mq:",
+     "max": 10
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "per il periodo dalle ore:",
+     "max": 5
+    },
+    {
+     "id": "r7c2p11reg:calendar_input",
+     "kind": "date",
+     "label": "del giorno"
+    },
+    {
+     "id": "r7c3p13reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 5
+    },
+    {
+     "id": "r7c4p15reg:calendar_input",
+     "kind": "date",
+     "label": "del giorno"
+    },
+    {
+     "id": "r10c1p21reg:txt",
+     "kind": "text",
+     "label": "con le seguente attrezzature (specificare es: tavolo, gazebo, ombrellone, impalcatura, autocarro di massa complessiva non superiore a 35ql, autogrù, carrello, s",
+     "max": 100
+    }
+   ],
+   "fingerprint": "1e33c1e9f6bcb8cd",
+   "text": "tipologia richiesta occupazione suolo pubblico l'autorizzazione ad occupare il suolo pubblico per (specificare il tipo di iniziativa): per un'area totale di mq: Per consentire la conclusione del procedimento entro i termini previsti dalla normativa vigente l'istanza deve essere presentata inderogabilmente almeno 30 giorni prima dell’evento. Il mancato rispetto del termine di presentazione dell'istanza, comporterà l'annullamento della stessa per il periodo dalle ore: del giorno alle ore del giorno con le seguente attrezzature (specificare es: tavolo, gazebo, ombrellone, impalcatura, autocarro di massa complessiva non superiore a 35ql, autogrù, carrello, scala, autoscala, piattaforma aerea, cavalletto, autobetoniera, ecc..):",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "impegni per l'occupazione suolo pubblico",
+   "fingerprint": "a715a7926a0ab91b",
+   "same_as": "sue-accertamento-di-compatibilita-paesaggistica#dichiarazione riferita all'art. 181 del D.Lgs. 42/2004",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di impegno al pagamento del canone unico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "in un unica soluzione entro il termine previsto dal regolamento comunale",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "mediante rateizzazione secondo quanto previsto dal regolamento comunale",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "è a conoscenza che il mancato pagamento determina l'immediata decadenza della concessione all'occupazione del suolo pubblico"
+    }
+   ],
+   "fingerprint": "d0a12504bab48ed6",
+   "text": "dichiarazione di impegno al pagamento del canone unico si impegna a pagare l'ammontare del canone previsto: in un unica soluzione entro il termine previsto dal regolamento comunale mediante rateizzazione secondo quanto previsto dal regolamento comunale è a conoscenza che il mancato pagamento determina l'immediata decadenza della concessione all'occupazione del suolo pubblico",
+   "branches": [
+    {
+     "choice": "in un unica soluzione entro il termine previsto dal regolamento comunale",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "mediante rateizzazione secondo quanto previsto dal regolamento comunale",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "è a conoscenza che il mancato pagamento determina l'immediata decadenza della concessione all'occupazione del suolo pubblico",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Avvertenza per le domande di concessione",
+   "fingerprint": "97944b936f875c7c",
+   "same_as": "suap-common-occupazione-suolo-pubblico-richiesta-di-occupazione-suolo-pu#Avvertenza per le domande di concessione",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alla presenza di bagni riservati alla clientela",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "bagni riservati alla clientela n°",
+     "max": 10
+    }
+   ],
+   "fingerprint": "dc71299fe0cdba8a",
+   "text": "dichiarazione relativa alla presenza di bagni riservati alla clientela bagni riservati alla clientela n°",
+   "branches": [],
+   "seconds": 0.8,
+   "scelta": "l'occupazione di suolo pubblico richiesta sarà annessa ad un'attività di somministrazione alimenti e bevande aperta al pubblico"
+  }
+ ]
+}

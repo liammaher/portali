@@ -1,0 +1,819 @@
+{
+ "crawled": "2026-10-28T19:47:21.545Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Richiedere l'autorizzazione in deroga ai limiti di rumorosità ambientale (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 47.3,
+ "generated": {
+  "interventi": "Richiedere l'autorizzazione in deroga ai limiti di rumorosità ambientale per manifestazioni temporanee",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda di autorizzazione in deroga ai limiti di rumorosità ambientale per manifestazioni temporanee",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dichiarazione per deroga ai limiti di rumorosità ambientale",
+   "dichiarazione evento per deroga ai limiti di rumorosità",
+   "dichiarazione sorgenti di rumore",
+   "dichiarazione luogo svolgimento attività",
+   "dichiarazione contesto attività",
+   "dichiarazione sistemi attenuazione",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione per deroga ai limiti di rumorosità ambientale",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "concerti",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "feste popolari",
+     "group": "r1c2p2reg:radio"
+    },
+    {
+     "id": "r2c1p3reg:radio:2_clone",
+     "kind": "radio",
+     "label": "serate musicali e danzanti",
+     "group": "r2c1p3reg:radio"
+    },
+    {
+     "id": "r2c2p4reg:radio:3_clone",
+     "kind": "radio",
+     "label": "manifestazioni",
+     "group": "r2c2p4reg:radio"
+    },
+    {
+     "id": "r3c1p5reg:radio:4_clone",
+     "kind": "radio",
+     "label": "luna park",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r3c2p6reg:radio:5_clone",
+     "kind": "radio",
+     "label": "circhi",
+     "group": "r3c2p6reg:radio"
+    },
+    {
+     "id": "r5c1p8reg:radio:6_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r5c2p10reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 50
+    }
+   ],
+   "fingerprint": "dcb4a9118b1cece0",
+   "text": "dichiarazione per deroga ai limiti di rumorosità ambientale concerti feste popolari serate musicali e danzanti manifestazioni luna park circhi specificare altro",
+   "branches": [
+    {
+     "choice": "concerti",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "feste popolari",
+     "id": "r1c2p2reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "serate musicali e danzanti",
+     "id": "r2c1p3reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "manifestazioni",
+     "id": "r2c2p4reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "luna park",
+     "id": "r3c1p5reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "circhi",
+     "id": "r3c2p6reg:radio:5_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro",
+     "id": "r5c1p8reg:radio:6_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 10.2
+  },
+  {
+   "section": "dichiarazione evento per deroga ai limiti di rumorosità",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "denominazione evento",
+     "max": 70
+    },
+    {
+     "id": "r4c1p4reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "breve decrizione dell'evento",
+     "max": 300
+    },
+    {
+     "id": "r7c1p7reg:calendar_input",
+     "kind": "date",
+     "label": "dal giorno"
+    },
+    {
+     "id": "r7c2p9reg:calendar_input",
+     "kind": "date",
+     "label": "al giorno"
+    }
+   ],
+   "fingerprint": "cc8dc3d575b914b8",
+   "text": "dichiarazione evento per deroga ai limiti di rumorosità denominazione evento breve decrizione dell'evento 300 Caratteri restanti PERIODO DI SVOLGIMENTO dal giorno al giorno",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazione sorgenti di rumore",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "MUSICA DAL VIVO"
+    },
+    {
+     "id": "r3c1p3reg:calendar_input",
+     "kind": "date",
+     "label": "dal giorno"
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "al giorno"
+    },
+    {
+     "id": "r5c1p9reg:number",
+     "kind": "text",
+     "label": "dalle ore",
+     "max": 15
+    },
+    {
+     "id": "r5c2p11reg:number",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 15
+    },
+    {
+     "id": "r6c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "MUSICA RIPRODOTTA"
+    },
+    {
+     "id": "r8c1p16reg:calendar_input",
+     "kind": "date",
+     "label": "dal giorno"
+    },
+    {
+     "id": "r8c2p18reg:calendar_input",
+     "kind": "date",
+     "label": "al giorno"
+    },
+    {
+     "id": "r10c1p22reg:number",
+     "kind": "text",
+     "label": "dalle ore",
+     "max": 15
+    },
+    {
+     "id": "r10c2p24reg:number",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 15
+    },
+    {
+     "id": "r11c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "PROVE MUSICALI O SONORE"
+    },
+    {
+     "id": "r13c1p29reg:calendar_input",
+     "kind": "date",
+     "label": "dal giorno"
+    },
+    {
+     "id": "r13c2p31reg:calendar_input",
+     "kind": "date",
+     "label": "al giorno"
+    },
+    {
+     "id": "r15c1p35reg:number",
+     "kind": "text",
+     "label": "dalle ore",
+     "max": 15
+    },
+    {
+     "id": "r15c2p37reg:number",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 15
+    },
+    {
+     "id": "r16c1p40reg:chk",
+     "kind": "checkbox",
+     "label": "UTILIZZO DI ALTOPARLANTI"
+    },
+    {
+     "id": "r18c1p42reg:calendar_input",
+     "kind": "date",
+     "label": "dal giorno"
+    },
+    {
+     "id": "r18c2p44reg:calendar_input",
+     "kind": "date",
+     "label": "al giorno"
+    },
+    {
+     "id": "r20c1p48reg:number",
+     "kind": "text",
+     "label": "dalle ore",
+     "max": 15
+    },
+    {
+     "id": "r20c2p50reg:number",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 15
+    },
+    {
+     "id": "r23c1p56reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "DESCRIZIONE DELLA STRUMENTAZIONE UTILIZZATA:",
+     "max": 300
+    }
+   ],
+   "fingerprint": "2014f522047fa9d1",
+   "text": "dichiarazione sorgenti di rumore MUSICA DAL VIVO dal giorno al giorno dalle ore alle ore MUSICA RIPRODOTTA dal giorno al giorno dalle ore alle ore PROVE MUSICALI O SONORE dal giorno al giorno dalle ore alle ore UTILIZZO DI ALTOPARLANTI dal giorno al giorno dalle ore alle ore DESCRIZIONE DELLA STRUMENTAZIONE UTILIZZATA: 300 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "MUSICA DAL VIVO",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r18c1p42reg:calendar_input",
+       "r3c1p3reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r5c1p9reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r5c2p11reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r8c1p16reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r8c2p18reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r10c1p22reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r10c2p24reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r13c1p29reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r13c2p31reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r15c1p35reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r15c2p37reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "MUSICA DAL VIVO",
+      "adds": 40
+     }
+    },
+    {
+     "choice": "MUSICA RIPRODOTTA",
+     "id": "r6c1p14reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r18c1p42reg:calendar_input",
+       "r3c1p3reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r5c1p9reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r5c2p11reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r8c1p16reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r8c2p18reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r10c1p22reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r10c2p24reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r13c1p29reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r13c2p31reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r15c1p35reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r15c2p37reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "MUSICA DAL VIVO",
+      "adds": 40
+     }
+    },
+    {
+     "choice": "PROVE MUSICALI O SONORE",
+     "id": "r11c1p27reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r18c1p42reg:calendar_input",
+       "r3c1p3reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r5c1p9reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r5c2p11reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r8c1p16reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r8c2p18reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r10c1p22reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r10c2p24reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r13c1p29reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r13c2p31reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r15c1p35reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r15c2p37reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "MUSICA DAL VIVO",
+      "adds": 40
+     }
+    },
+    {
+     "choice": "UTILIZZO DI ALTOPARLANTI",
+     "id": "r16c1p40reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r18c1p42reg:calendar_input",
+       "r3c1p3reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r5c1p9reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r5c2p11reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r8c1p16reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r8c2p18reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r10c1p22reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r10c2p24reg:number"
+      ],
+      [
+       "r18c1p42reg:calendar_input",
+       "r13c1p29reg:calendar_input"
+      ],
+      [
+       "r18c2p44reg:calendar_input",
+       "r13c2p31reg:calendar_input"
+      ],
+      [
+       "r20c1p48reg:number",
+       "r15c1p35reg:number"
+      ],
+      [
+       "r20c2p50reg:number",
+       "r15c2p37reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "MUSICA DAL VIVO",
+      "adds": 40
+     }
+    }
+   ],
+   "seconds": 12.1
+  },
+  {
+   "section": "dichiarazione luogo svolgimento attività",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "AL CHIUSO",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "descrizione delle partizioni verticali",
+     "max": 300
+    },
+    {
+     "id": "r3c2p5reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "descrizione delle partizioni orizzontali",
+     "max": 300
+    },
+    {
+     "id": "r5c1p7reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "descrizione delle aperture",
+     "max": 300
+    },
+    {
+     "id": "r6c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "ALL'APERTO",
+     "group": "r6c1p8reg:radio"
+    },
+    {
+     "id": "r8c1p10reg:txta",
+     "kind": "textarea",
+     "label": "300 Caratteri restanti",
+     "context": "descrizione sintetica del luogo",
+     "max": 300
+    }
+   ],
+   "fingerprint": "7c6f2d66c48a0910",
+   "text": "dichiarazione luogo svolgimento attività AL CHIUSO descrizione delle partizioni verticali descrizione delle partizioni orizzontali 300 Caratteri restanti 300 Caratteri restanti descrizione delle aperture 300 Caratteri restanti ALL'APERTO descrizione sintetica del luogo 300 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "AL CHIUSO",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "ALL'APERTO",
+     "id": "r6c1p8reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.9
+  },
+  {
+   "section": "dichiarazione contesto attività",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "OSPEDALI, CASE DI CURA, CASE PROTETTE PER ANZIANI:",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "distanza del fabbricato più vicino metri:",
+     "max": 15
+    },
+    {
+     "id": "r4c1p6reg:radio:1_clone",
+     "kind": "radio",
+     "label": "RESIDENZE:",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "distanza del fabbricato più vicino metri:",
+     "max": 15
+    },
+    {
+     "id": "r7c1p11reg:radio:2_clone",
+     "kind": "radio",
+     "label": "UFFICI:",
+     "group": "r7c1p11reg:radio"
+    },
+    {
+     "id": "r9c1p13reg:txt",
+     "kind": "text",
+     "label": "distanza del fabbricato più vicino metri:",
+     "max": 15
+    },
+    {
+     "id": "r11c1p17reg:radio:3_clone",
+     "kind": "radio",
+     "label": "ALTRO",
+     "group": "r11c1p17reg:radio"
+    },
+    {
+     "id": "r11c2p19reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "ALTRO",
+     "max": 30
+    },
+    {
+     "id": "r13c1p21reg:txt",
+     "kind": "text",
+     "label": "distanza del fabbricato più vicino metri:",
+     "max": 15
+    }
+   ],
+   "fingerprint": "8e77a5b0e460c6b2",
+   "text": "dichiarazione contesto attività OSPEDALI, CASE DI CURA, CASE PROTETTE PER ANZIANI: distanza del fabbricato più vicino metri: RESIDENZE: distanza del fabbricato più vicino metri: UFFICI: distanza del fabbricato più vicino metri: specificare ALTRO distanza del fabbricato più vicino metri:",
+   "branches": [
+    {
+     "choice": "OSPEDALI, CASE DI CURA, CASE PROTETTE PER ANZIANI:",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:txt",
+       "r3c1p3reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r6c1p8reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r9c1p13reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "RESIDENZE:",
+     "id": "r4c1p6reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:txt",
+       "r3c1p3reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r6c1p8reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r9c1p13reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "UFFICI:",
+     "id": "r7c1p11reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:txt",
+       "r3c1p3reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r6c1p8reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r9c1p13reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "ALTRO",
+     "id": "r11c1p17reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r13c1p21reg:txt",
+       "r3c1p3reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r6c1p8reg:txt"
+      ],
+      [
+       "r13c1p21reg:txt",
+       "r9c1p13reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 6.3
+  },
+  {
+   "section": "dichiarazione sistemi attenuazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txta",
+     "kind": "textarea",
+     "label": "500 Caratteri restanti",
+     "context": "descrizione dei sistemi di attenuazione del rumore previsti",
+     "max": 500
+    }
+   ],
+   "fingerprint": "a76e44786a1cfea3",
+   "text": "dichiarazione sistemi attenuazione descrizione dei sistemi di attenuazione del rumore previsti 500 Caratteri restanti",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.1
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "extras": [],
+ "attivita_852": [
+  "ristorazione",
+  "ristorante"
+ ],
+ "descrizione": "PROVA NON INVIARE - ristorante alcolici generato",
+ "oggetto": "Apertura di una pizzeria con somministrazione e vendita di vino e birra (SCIA, notifica sanitaria e comunicazione alle Dogane), fuori dalle zone tutelate.",
+ "insegna": "Pizzeria Fittizia",
+ "superficie_somministrazione_mq": "35",
+ "in_centro_commerciale": "false",
+ "diritti_euro": "120",
+ "alcolici": [
+  "alcol_vino",
+  "alcol_birra"
+ ]
+}
