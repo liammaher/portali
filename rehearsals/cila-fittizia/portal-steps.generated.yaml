@@ -7,7 +7,9 @@ yours:
 - Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page
 - 'Tick the dichiarante''s declarations: the awareness box under the PEC (domicilio elettronico), c) PER PRESA VISIONE, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000'
 - Pay the 151 € diritti (and the 333 € penalty if not yet paid) by bank transfer to the Comune; upload the diritti receipt on Pagamento oneri
-- 'On Allega documenti: download the portal''s procura and CILA DSC summary, have the client sign the procura, sign them digitally (.p7m) and attach them with the IDs and the drawings'
+- 'On Allega documenti, once the declarations are ticked (the portal gives the procura only then): download the procura (Scarica il documento), have the client sign it, sign it digitally (.p7m) and attach
+  it'
+- 'Attach the CILA DSC that fill.py filled (form quadro-riepilogativo-dsc: a box per document uploaded) in its slot, as a plain PDF'
 - Sign and send (Firma e invio); keep the receipt
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - CILA {{c:identity.last_name}}'}
