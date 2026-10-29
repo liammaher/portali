@@ -16,7 +16,7 @@ asks:
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
-  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], default: permesso di costruire}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], propose: permesso di costruire}
   precedente_cognome: {type: text, question: 'The permit''s holder until now: surname, or the company''s name'}
   precedente_nome: {type: text, question: Their first name (none for a company), default: ''}
   precedente_cf: {type: text, question: Their codice fiscale or partita IVA}
@@ -31,7 +31,7 @@ asks:
   atto_registrazione_numero: {type: text, question: Registration number}
   zona_prg: {type: text, question: The property's zone in the PRG (e.g. zona B)}
   attivita_svolta: {type: text, question: The new holder's occupation or business (60 characters)}
-  soggetti_cambiati: {type: yes_no, question: 'Will the works'' direttore or firm change with the new holder?', default: 'false'}
+  soggetti_cambiati: {type: yes_no, question: 'Will the works'' direttore or firm change with the new holder?', propose: 'false'}
   nuovo_dl: {type: text, question: The new direttore dei lavori's name}
   nuovo_esecutore: {type: text, question: The new firm's name}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}

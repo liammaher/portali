@@ -7,7 +7,8 @@
      server, and what was stored shown again on every load. ?banner=1 puts a consent banner
      over everything; ?rename=1 renames the second section's label, as a portal update would;
      ?fade=1 opens a suggestion list over Impresa esecutrice as Dati tecnici opens, whose
-     widget's hide() fades it out slowly, as PrimeFaces 11's does. -->
+     widget's hide() fades it out slowly, as PrimeFaces 11's does; ?slot=signed (or =plain) adds
+     an attachments slot the portal says is required, taking only signed files (or plain ones). -->
 <nav>
   <a class="linkmenu" href="#allega">Allega documenti</a>
   <a class="linkmenu" href="#tecnici">Dati tecnici</a>
@@ -41,6 +42,14 @@
 <script>
 if (location.search.includes("banner=1")) document.getElementById("consenso").hidden = false;
 if (location.search.includes("rename=1")) document.getElementById("impresa-label").textContent = "Ditta esecutrice";
+const slot = new URLSearchParams(location.search).get("slot");
+if (slot) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = '<td><label class="labelDynaFormControl">Procura speciale</label></td><td><div id="form:r3c1:dynaForm:procura">' +
+    '<input type="file" id="form:r3c1:dynaForm:procura_input"> Tipologie ammesse: ' + (slot === "signed" ? "jpg.p7m;pdf.p7m" : "pdf;pdf.p7m") +
+    ' <span class="error-message-text">Il valore è obbligatorio</span></div></td>';
+  document.querySelector("#allega + table").tBodies[0].append(tr);
+}
 if (location.search.includes("fade=1")) {
   const panel = document.createElement("div");
   panel.className = "ui-autocomplete-panel";
@@ -98,6 +107,11 @@ const list = (name) => {
 fetch("/state").then((r) => r.json()).then((st) => {
   for (const t of texts()) t.value = st.fields[t.id] || "";
   st.files.forEach(list);
+  // As the portal does, a slot's cell names the file in it.
+  for (const [id, name] of Object.entries(st.boxes || {})) {
+    const box = document.getElementById(id);
+    if (box) box.after(" " + name + " Rimuovi");
+  }
 });
 for (const box of document.querySelectorAll("input[type=file]")) {
   box.addEventListener("change", () => {
@@ -105,7 +119,7 @@ for (const box of document.querySelectorAll("input[type=file]")) {
     if (!f) return;
     const fd = new FormData();
     fd.append(box.id, f, f.name);
-    fetch("/upload", { method: "POST", body: fd }).then(() => { list(f.name); box.value = ""; });
+    fetch("/upload", { method: "POST", body: fd }).then(() => { list(f.name); box.value = ""; box.after(" " + f.name + " Rimuovi"); });
   });
 }
 document.getElementById("salva").addEventListener("click", () => {

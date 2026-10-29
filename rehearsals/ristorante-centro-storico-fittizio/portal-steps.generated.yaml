@@ -26,7 +26,7 @@ asks:
   bollo_seriale: {type: text, question: The marca da bollo's serial number (14 digits)}
   bollo_data: {type: date, question: The marca da bollo's date}
   insegna: {type: text, question: 'What name goes on the sign?'}
-  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', default: 'false'}
+  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', propose: 'false'}
   stagione_dal: {type: text, question: The season's first day (gg/mm)}
   stagione_al: {type: text, question: The season's last day (gg/mm)}
   superficie_somministrazione_mq: {type: number, question: 'How many m² is the area where customers eat and drink? (not the whole premises)'}

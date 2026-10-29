@@ -582,9 +582,7 @@ def generate(recipe, base=HERE):
     asks = {}
     for k, v in list(dictionary["asks"].items()) + [(k, {}) for k in recipe.get("asks", {}) if k not in dictionary["asks"]]:
         if k in asks_used:
-            # A recipe's `default: null` makes a default the dictionary keeps silent a question
-            # (a new building can't assume no acoustic or fire-prevention rules).
-            asks[k] = {kk: x for kk, x in {**v, **recipe.get("asks", {}).get(k, {})}.items() if x is not None}
+            asks[k] = {**v, **recipe.get("asks", {}).get(k, {})}
     missing = (asks_used - set(asks)) | {k for k, a in asks.items() if "type" not in a}
     if missing:
         raise GenError(f"asks with no definition in the dictionary: {sorted(missing)}")

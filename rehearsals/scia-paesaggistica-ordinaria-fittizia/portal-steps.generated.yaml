@@ -30,8 +30,8 @@ asks:
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   data_inizio_lavori: {type: date, question: 'When the works start, or started'}
   dettaglio_intervento: {type: text, question: The works for the relazione tecnica (500 characters)}
-  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
-  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
+  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', propose: 'true'}
+  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', propose: 'true'}
   notifica_dovuta: {type: yes_no, question: 'Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?'}
   pdc_numero: {type: text, question: The permesso di costruire's number}
   pdc_data: {type: date, question: Its issue date}
@@ -51,8 +51,8 @@ asks:
   atto_trascrizione_sede: {type: text, question: The Conservatoria (servizio di pubblicità immobiliare) it was transcribed at}
   atto_trascrizione_numero: {type: text, question: Its registro generale number}
   atto_trascrizione_data: {type: date, question: Its transcription date}
-  paes_interessa: {type: choice, question: 'Do the works concern a building or an area (land with no building)?', options: [immobile, area], default: immobile}
-  atti_gravanti: {type: yes_no, question: 'Do registered deeds weigh on the property: servitudes, atti unilaterali d''obbligo, convenzioni?', default: 'false'}
+  paes_interessa: {type: choice, question: 'Do the works concern a building or an area (land with no building)?', options: [immobile, area], propose: immobile}
+  atti_gravanti: {type: yes_no, question: 'Do registered deeds weigh on the property: servitudes, atti unilaterali d''obbligo, convenzioni?', propose: 'false'}
   atti_gravanti_quali: {type: text, question: 'Which deed(s), as the deed names them'}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}
   bollo_seriale: {type: text, question: The marca da bollo's serial number (14 digits)}
@@ -95,10 +95,10 @@ asks:
   prg_articolo: {type: text, question: The article of the PRG's rules for that zone}
   progetto_impianti: {type: yes_no, question: 'Do the systems need a project (DM 37/2008 art. 5)?'}
   demolizioni: {type: yes_no, question: 'Do the works demolish anything (partitions, finishes) and produce waste?'}
-  acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?', default: 'false'}
-  antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', default: 'false'}
-  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos?', default: 'false'}
-  igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', default: 'true'}
+  acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?', propose: 'false'}
+  antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', propose: 'false'}
+  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos?', propose: 'false'}
+  igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', propose: 'true'}
   cemento_armato: {type: yes_no, question: 'Do the works build reinforced or prestressed concrete, or steel structures (art. 65 DPR 380/2001)?'}
   denuncia_art65: {type: file, question: 'The denuncia of the concrete or steel works (art. 65 DPR 380/2001), as filed (PDF)'}
   sismica: {type: choice, question: 'The works'' seismic filing (art. 93-94 DPR 380/2001, L.R. 9/1983, Reg. 4/2010)? deposito (works to report: the denuncia''s documents attached); autorizzazione (the documents

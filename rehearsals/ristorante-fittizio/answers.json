@@ -1,6 +1,9 @@
 {
  "extras": [],
- "attivita_852": ["ristorazione", "ristorante"],
+ "attivita_852": [
+  "ristorazione",
+  "ristorante"
+ ],
  "descrizione": "PROVA NON INVIARE - ristorante generato",
  "oggetto": "Apertura di una pizzeria con somministrazione (SCIA e notifica sanitaria), fuori dalle zone tutelate.",
  "insegna": "Pizzeria Fittizia",
@@ -8,5 +11,6 @@
  "in_centro_commerciale": "false",
  "diritti_euro": "120",
  "zona": "c",
- "fatti": []
+ "fatti": [],
+ "stagionale": "false"
 }

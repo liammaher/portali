@@ -490,7 +490,7 @@ def _():
     assert "ART. 17" not in str(pdc[gen.norm("Calcolo del contributo di costruzione")]).upper()  # onerosa: no rule why it's free
 
 
-@case("the permesso and the SCIA alternativa: a choice a tipologia opens is in its branch, and a recipe asks what the dictionary keeps silent")
+@case("the permesso and the SCIA alternativa: a choice a tipologia opens is in its branch, and a fact of the case is proposed, never silent")
 def _():
     alt = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-alternativa-fittizia" / "recipe.yaml"))
     d = section(alt, "Asseverazione SCIA Alternativa - Dati progettista")
@@ -498,7 +498,6 @@ def _():
     assert "id" not in under and "nth" not in under, under  # opened by ticking 1., which moves it: by label
     pdc = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "pdc-fittizio" / "recipe.yaml"))
     assert "default" not in pdc["asks"]["acustica"] and pdc["asks"]["acustica"]["propose"] == "false"
-    assert "default" in gen.load_yaml(HERE.parent / "dictionary" / "fnsuap.yaml")["asks"]["acustica"]
     p6 = filled(pdc, p6_values("pdc-fittizio"))
     of = lambda start: next(v for k, v in p6.items() if k.startswith(gen.norm(start)))
     assert of("Qualificazione pratica") == [True, True], of("Qualificazione pratica")  # art. 10, no change of use

@@ -21,7 +21,7 @@ asks:
   descrizione: {type: text, question: A name for the draft in the portal's Pratiche in bozza, default: 'PROVA NON INVIARE - ristorante alcolici {{business.denominazione}}'}
   oggetto: {type: text, question: The pratica in one sentence (300 characters)}
   insegna: {type: text, question: 'What name goes on the sign?'}
-  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', default: 'false'}
+  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', propose: 'false'}
   stagione_dal: {type: text, question: The season's first day (gg/mm)}
   stagione_al: {type: text, question: The season's last day (gg/mm)}
   superficie_somministrazione_mq: {type: number, question: 'How many m² is the area where customers eat and drink? (not the whole premises)'}
@@ -55,7 +55,7 @@ asks:
   alcol_aromi: {type: yes_no, group: alcolici, item: Alcoholic flavourings}
   alcol_profumeria: {type: yes_no, group: alcolici, item: Alcohol-based perfumery}
   alcol_altri: {type: yes_no, group: alcolici, item: Other alcoholic products}
-  alcol_con_scia: {type: yes_no, question: Filed with the SCIA, default: 'true'}
+  alcol_con_scia: {type: yes_no, question: Filed with the SCIA, propose: 'false', default: 'true'}
   alcol_avvio: {type: date, question: From when it sells alcohol}
   ateco_descrizione: {type: text, question: 'The business''s ATECO code and activity in a few words (70 characters, e.g. 56.10.11 Ristorazione con somministrazione)'}
   in_centro_commerciale: {type: yes_no, question: 'In centro commerciale? (yes: Si)', schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_si'}

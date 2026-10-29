@@ -32,8 +32,8 @@ asks:
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   data_inizio_lavori: {type: date, question: 'When the works start, or started'}
   dettaglio_intervento: {type: text, question: The works for the relazione tecnica (500 characters)}
-  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
-  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
+  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', propose: 'true'}
+  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', propose: 'true'}
   notifica_dovuta: {type: yes_no, question: 'Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?'}
   pdc_numero: {type: text, question: The permesso di costruire's number}
   pdc_data: {type: date, question: Its issue date}
@@ -42,7 +42,7 @@ asks:
   vincolo_136_lettera: {type: text, question: 'Which letter(s) of art. 136 c.1 (a, b, c, d)?'}
   vincolo_136_provvedimento: {type: text, question: The D.M. or D.G.R. that declared it (e.g. D.M. 28/03/1985)}
   vincolo_142_lettera: {type: text, question: 'Which letter(s) of art. 142 c.1 (a: coast within 300 m, c: rivers, f: parks, g: woods, m: archaeological)?'}
-  paes_variante: {type: yes_no, question: 'Is this a variant of a landscape authorization already issued?', default: 'false'}
+  paes_variante: {type: yes_no, question: 'Is this a variant of a landscape authorization already issued?', propose: 'false'}
   paes_b1: {type: yes_no, group: allegato_b, item: 'B.1 Volume increase up to 10% of the original building, and at most 100 m³'}
   paes_b2: {type: yes_no, group: allegato_b, item: 'B.2 New or changed external openings or roof windows on buildings protected under art. 136 c.1 a), b), c)'}
   paes_b3: {type: yes_no, group: allegato_b, item: B.3 Facade changes that alter the building's look (other than B.2)}
@@ -126,10 +126,10 @@ asks:
   prg_articolo: {type: text, question: The article of the PRG's rules for that zone}
   progetto_impianti: {type: yes_no, question: 'Do the systems need a project (DM 37/2008 art. 5)?'}
   demolizioni: {type: yes_no, question: 'Do the works demolish anything (partitions, finishes) and produce waste?'}
-  acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?', default: 'false'}
-  antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', default: 'false'}
-  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos?', default: 'false'}
-  igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', default: 'true'}
+  acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?', propose: 'false'}
+  antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', propose: 'false'}
+  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos?', propose: 'false'}
+  igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', propose: 'true'}
   cemento_armato: {type: yes_no, question: 'Do the works build reinforced or prestressed concrete, or steel structures (art. 65 DPR 380/2001)?'}
   denuncia_art65: {type: file, question: 'The denuncia of the concrete or steel works (art. 65 DPR 380/2001), as filed (PDF)'}
   sismica: {type: choice, question: 'The works'' seismic filing (art. 93-94 DPR 380/2001, L.R. 9/1983, Reg. 4/2010)? deposito (works to report: the denuncia''s documents attached); autorizzazione (the documents

@@ -22,7 +22,7 @@ asks:
   vincolo_136_lettera: {type: text, question: 'Which letter(s) of art. 136 c.1 (a, b, c, d)?'}
   vincolo_136_provvedimento: {type: text, question: The D.M. or D.G.R. that declared it (e.g. D.M. 28/03/1985)}
   vincolo_142_lettera: {type: text, question: 'Which letter(s) of art. 142 c.1 (a: coast within 300 m, c: rivers, f: parks, g: woods, m: archaeological)?'}
-  paes_variante: {type: yes_no, question: 'Is this a variant of a landscape authorization already issued?', default: 'false'}
+  paes_variante: {type: yes_no, question: 'Is this a variant of a landscape authorization already issued?', propose: 'false'}
   paes_b1: {type: yes_no, group: allegato_b, item: 'B.1 Volume increase up to 10% of the original building, and at most 100 m³'}
   paes_b2: {type: yes_no, group: allegato_b, item: 'B.2 New or changed external openings or roof windows on buildings protected under art. 136 c.1 a), b), c)'}
   paes_b3: {type: yes_no, group: allegato_b, item: B.3 Facade changes that alter the building's look (other than B.2)}

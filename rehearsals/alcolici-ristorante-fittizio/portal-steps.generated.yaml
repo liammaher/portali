@@ -30,7 +30,7 @@ asks:
   alcol_aromi: {type: yes_no, group: alcolici, item: Alcoholic flavourings}
   alcol_profumeria: {type: yes_no, group: alcolici, item: Alcohol-based perfumery}
   alcol_altri: {type: yes_no, group: alcolici, item: Other alcoholic products}
-  alcol_con_scia: {type: yes_no, question: 'Is this filed together with the business''s own SCIA (a new business), rather than for one already running?', default: 'false'}
+  alcol_con_scia: {type: yes_no, question: 'Is this filed together with the business''s own SCIA (a new business), rather than for one already running?', propose: 'false'}
   alcol_avvio: {type: date, question: From when it sells alcohol}
   ateco_descrizione: {type: text, question: 'The business''s ATECO code and activity in a few words (70 characters, e.g. 56.10.11 Ristorazione con somministrazione)'}
   altri_soggetti: {group: extras, type: yes_no, item: It's a company with other partners or administrators besides the one who declares, why: 'Each files a signed antimafia statement of their own (art.

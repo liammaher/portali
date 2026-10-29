@@ -17,28 +17,28 @@ groups:
 asks:
   descrizione: {type: text, question: A name for the draft in the portal's Pratiche in bozza, default: 'PROVA NON INVIARE - negozio insegna {{business.denominazione}}'}
   oggetto: {type: text, question: The pratica in one sentence (300 characters)}
-  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', default: 'false'}
+  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', propose: 'false'}
   stagione_dal: {type: text, question: The season's first day (gg/mm)}
   stagione_al: {type: text, question: The season's last day (gg/mm)}
   diritti_euro: {type: number, question: 'The SUAP fees in euro (the shop''s 100 and the sign''s 100, S204: summed for a joined pratica, to confirm)'}
-  solo_distributori: {type: yes_no, question: 'Will it sell only through vending machines?', default: 'false'}
-  anche_ingrosso: {type: yes_no, question: 'Will it also sell wholesale (not only to the public)?', default: 'false'}
+  solo_distributori: {type: yes_no, question: 'Will it sell only through vending machines?', propose: 'false'}
+  anche_ingrosso: {type: yes_no, question: 'Will it also sell wholesale (not only to the public)?', propose: 'false'}
   superficie_vendita_mq: {type: number, question: 'The sales area in m² (where customers shop, not stores or toilets)'}
-  superficie_alimentare_mq: {type: number, question: 'Of that, m² for food', default: '0'}
-  superficie_non_alimentare_mq: {type: number, question: 'Of that, m² for everything else (non-food)', default: '0'}
-  superficie_monopolio_mq: {type: number, question: m² for tobacco and other state-monopoly goods, default: '0'}
-  in_ccn: {type: yes_no, question: 'Is it in a recognised centro commerciale naturale (C.C.N.)?', default: 'false'}
+  superficie_alimentare_mq: {type: number, question: 'Of that, m² for food', propose: '0'}
+  superficie_non_alimentare_mq: {type: number, question: 'Of that, m² for everything else (non-food)', propose: '0'}
+  superficie_monopolio_mq: {type: number, question: m² for tobacco and other state-monopoly goods, propose: '0'}
+  in_ccn: {type: yes_no, question: 'Is it in a recognised centro commerciale naturale (C.C.N.)?', propose: 'false'}
   ccn_delibera: {type: text, question: 'The C.C.N.''s recognition: delibera number'}
   ccn_delibera_data: {type: date, question: Its date}
   ccn_delibera_ente: {type: text, question: Who passed it (e.g. Giunta comunale)}
-  in_factory_outlet: {type: yes_no, question: 'Is it in a factory outlet centre?', default: 'false'}
+  in_factory_outlet: {type: yes_no, question: 'Is it in a factory outlet centre?', propose: 'false'}
   insegna_titolo_tipo: {type: choice, question: The business's title to the building the sign goes on, options: [proprietario, comproprietario, usufruttuario, altro]}
   insegna_titolo_altro: {type: text, question: Which title (e.g. locatario), default: locatario}
   insegna_descrizione: {type: text, question: 'The sign in a few words (e.g. insegna frontale sopra la vetrina, 100 characters)'}
   insegna_larghezza_m: {type: number, question: The sign's width in metres}
   insegna_altezza_m: {type: number, question: Its height in metres}
   insegna_superficie_mq: {type: number, question: Its area in m² (width × height)}
-  insegna_monofacciale: {type: yes_no, question: 'Is it single-sided?', default: 'true'}
+  insegna_monofacciale: {type: yes_no, question: 'Is it single-sided?', propose: 'true'}
   insegna_luce: {type: choice, question: 'Is it unlit, lit from inside (luminosa) or lit from outside (illuminata)?', options: [Opaca, Luminosa, Illuminata]}
   insegna_testo: {type: text, question: The text on the sign (300 characters)}
   immobile_proprietario: {type: text, question: Who owns the building (name or company)}

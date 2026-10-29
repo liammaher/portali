@@ -14,5 +14,6 @@
  "titolo_esclusivo": true,
  "parti_comuni": "comproprieta",
  "lavori_in_proprio": true,
- "altri_atti": false
+ "altri_atti": false,
+ "sotto_200": "true"
 }

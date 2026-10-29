@@ -20,8 +20,8 @@ asks:
   titolo_attivita_data: {type: date, question: Its date}
   diritti_euro: {type: number, question: 'The SUAP fees in euro (the 2026 table''s VCA column for a non-food shop, S1: check it)'}
   superficie_vendita_mq: {type: number, question: 'The sales area in m² (where customers shop, not stores or toilets)'}
-  superficie_alimentare_mq: {type: number, question: 'Of that, m² for food', default: '0'}
-  superficie_non_alimentare_mq: {type: number, question: 'Of that, m² for everything else (non-food)', default: '0'}
+  superficie_alimentare_mq: {type: number, question: 'Of that, m² for food', propose: '0'}
+  superficie_non_alimentare_mq: {type: number, question: 'Of that, m² for everything else (non-food)', propose: '0'}
   superficie_vendita_prima_mq: {type: number, question: 'The sales area before the change, in m²'}
   superficie_alimentare_prima_mq: {type: number, question: 'Of that, m² for food before the change'}
   superficie_non_alimentare_prima_mq: {type: number, question: 'Of that, m² for non-food before the change'}

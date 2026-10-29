@@ -58,11 +58,7 @@ attachments:
 asks:
   descrizione: {default: "PROVA NON INVIARE - SCIA alt {{c:identity.last_name}}"}
   relazione_energetica: {type: file, question: "The relazione tecnica on energy use (art. 125 DPR 380/2001, D.Lgs. 192/2005) (PDF)"}
-  # Works this size can't take the SCIA's silent "no" for these.
-  acustica: {default: null, propose: "false", question: "Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report: e.g. homes next to a main road, a railway or an airport)?"}
-  antincendio_soggetto: {default: null, propose: "false"}
-  amianto: {default: null, propose: "false"}
-  igienico_conforme: {default: null, propose: "true"}
+  acustica: {question: "Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report: e.g. homes next to a main road, a railway or an airport)?"}
 yours:
   - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
   - "Tick the dichiarante's declarations: the awareness box under the PEC, b) PER PRESA VISIONE, m) diritti di terzi, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"

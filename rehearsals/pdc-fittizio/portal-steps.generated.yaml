@@ -28,8 +28,8 @@ asks:
   lavori_in_proprio: {type: yes_no, question: 'Are the works so minor that the client does them without a firm (opere di modesta entità, eseguite in proprio)?', propose: 'false'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   dettaglio_intervento: {type: text, question: The works for the relazione tecnica (500 characters)}
-  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
-  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
+  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', propose: 'true'}
+  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', propose: 'true'}
   notifica_dovuta: {type: yes_no, question: 'Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?'}
   pdc_numero: {type: text, question: The permesso di costruire's number}
   pdc_data: {type: date, question: Its issue date}

@@ -16,7 +16,7 @@ asks:
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
-  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], default: permesso di costruire}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], propose: permesso di costruire}
   paes_protocollo: {type: text, question: The landscape authorization's P.G. (protocollo) number}
   paes_data: {type: date, question: Its date}
   proroga_tipo_lavori: {type: text, question: 'The works still to finish, in a few words (30 characters)'}

@@ -238,12 +238,27 @@
     return b;
   }
 
+  // An attachments slot, as its box's own texts tell: its title, the types it takes
+  // ("Tipologie ammesse: pdf.p7m;..."), whether the portal says it's required. Never the name of
+  // a file in it (a cell with one reads "<name> Rimuovi").
+  function slotOf(box) {
+    const texts = win().eval(`(${steps.label_js})`)(box);
+    const types = texts.map((t) => /Tipologie ammesse:\s*([\w.;]+)/i.exec(t)).find(Boolean);
+    const accepts = types ? types[1].split(";").filter(Boolean) : [];
+    const title = texts.find((t) => t && !/^(il valore|la descrizione|tipologie ammesse|scarica il documento)/.test(norm(t)) &&
+      !/rimuovi|\.(pdf|p7m|jpe?g|png|dwf|svg|xml|zip|tiff?)\b/i.test(t)) || "";
+    return { title, accepts, signed_only: accepts.length > 0 && accepts.every((x) => x.endsWith(".p7m")),
+      required: texts.some((t) => /obbligatori/.test(norm(t))) };
+  }
+
   // ".error-message-text" is the portal's message under a field ("Il valore è obbligatorio").
   // `theirs`: a section's fields the person fills (a statement in their name); the
-  // portal's "required" under one of them isn't the run's error.
+  // portal's "required" under one of them isn't the run's error, nor under a slot that takes
+  // only signed files (.p7m): the person signs and attaches those.
   const errors = (theirs = []) => [...doc().querySelectorAll(".ui-message-error, .ui-messages-error, .ui-growl-message-error, [id*=\"dynaForm\"] .error-message-text")]
     .filter((e) => e.getClientRects().length && norm(e.textContent))
     .filter((e) => { const box = e.closest("td") && e.closest("td").querySelector("input, select, textarea");
+      if (box && (slotOf(box) || {}).signed_only) return false;
       return !(box && theirs.some((t) => box.id.endsWith("dynaForm:" + t) ||
         win().eval(`(${steps.label_js})`)(box).some((x) => norm(x).includes(norm(t))))); })
     .map((e) => norm(e.textContent));
@@ -899,8 +914,12 @@
         const kind = kindOf(e);
         const state = kind === "radio" || kind === "checkbox" ? (e.checked ? "checked" : "unchecked")
           : kind === "file" ? "file" : e.value ? "filled" : "empty";
-        return { id: e.id.replace(/^.*dynaForm:/, ""), label: label(e), kind, state,
-          ...(kind === "select" ? { options: e.options.length } : {}) };
+        // A slot's box is named by its title, never by its cell: that reads "<file name> Rimuovi"
+        // once a file is in, and its first text is the portal's "required".
+        const slot = kind === "file" || /file_dropzone/.test(e.id) ? slotOf(e) : null;
+        return { id: e.id.replace(/^.*dynaForm:/, ""), label: slot ? scrub(norm(slot.title)).slice(0, 80) : label(e), kind, state,
+          ...(kind === "select" ? { options: e.options.length } : {}),
+          ...(slot && slot.accepts.length ? { accepts: slot.accepts.join(";"), required: slot.required } : {}) };
       });
     const open = doc().querySelector("li#corrente");
     return { section: open ? scrub(norm(open.textContent)).slice(0, 80) : null, boxes,

@@ -52,11 +52,7 @@ asks:
   elaborati_barriere: {type: file, question: "The drawings showing how the project meets the barriers rules (artt. 77-82 DPR 380/2001) (PDF)"}
   superficie_mq: {question: "The building's superficie lorda di pavimento (s.l.p.) in m²"}
   volume_mc: {question: "The building's volume in m³"}
-  # A new building can't take the SCIA's silent "no" for these.
-  acustica: {default: null, propose: "false", question: "Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report: e.g. homes next to a main road, a railway or an airport)?"}
-  antincendio_soggetto: {default: null, propose: "false"}
-  amianto: {default: null, propose: "false"}
-  igienico_conforme: {default: null, propose: "true"}
+  acustica: {question: "Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report: e.g. homes next to a main road, a railway or an airport)?"}
 yours:
   - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
   - "Tick the dichiarante's declarations: the awareness box under the PEC, j) diritti di terzi, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"

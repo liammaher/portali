@@ -30,8 +30,8 @@ asks:
   atto_trascrizione_sede: {type: text, question: The Conservatoria (servizio di pubblicità immobiliare) it was transcribed at}
   atto_trascrizione_numero: {type: text, question: Its registro generale number}
   atto_trascrizione_data: {type: date, question: Its transcription date}
-  paes_interessa: {type: choice, question: 'Do the works concern a building or an area (land with no building)?', options: [immobile, area], default: immobile}
-  atti_gravanti: {type: yes_no, question: 'Do registered deeds weigh on the property: servitudes, atti unilaterali d''obbligo, convenzioni?', default: 'false'}
+  paes_interessa: {type: choice, question: 'Do the works concern a building or an area (land with no building)?', options: [immobile, area], propose: immobile}
+  atti_gravanti: {type: yes_no, question: 'Do registered deeds weigh on the property: servitudes, atti unilaterali d''obbligo, convenzioni?', propose: 'false'}
   atti_gravanti_quali: {type: text, question: 'Which deed(s), as the deed names them'}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}
   bollo_seriale: {type: text, question: The marca da bollo's serial number (14 digits)}

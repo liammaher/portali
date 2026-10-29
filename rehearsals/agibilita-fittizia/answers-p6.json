@@ -30,5 +30,6 @@
  "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
  "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
  "dichiarazione_conformita": "rehearsals/agibilita-fittizia/files/dichiarazione-conformita-impianti.pdf",
- "titolo_esclusivo": false
+ "titolo_esclusivo": false,
+ "fine_completa": "true"
 }

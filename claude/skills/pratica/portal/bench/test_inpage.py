@@ -75,7 +75,8 @@ class Handler(BaseHTTPRequestHandler):
         elif path.startswith("/files/") and path[7:] in LINKED:
             self.send(LINKED[path[7:]], "application/pdf")
         elif path == "/state":
-            self.send(json.dumps({"fields": PORTAL.fields, "files": [f["name"] for f in PORTAL.files]}).encode())
+            self.send(json.dumps({"fields": PORTAL.fields, "files": [f["name"] for f in PORTAL.files],
+                                  "boxes": {f["box"]: f["name"] for f in PORTAL.files}}).encode())
         else:
             self.send_error(404)
 
@@ -91,7 +92,8 @@ class Handler(BaseHTTPRequestHandler):
             for part in msg.iter_parts():
                 data = part.get_payload(decode=True) or b""
                 PORTAL.files.append({"name": part.get_filename(), "type": part.get_content_type(),
-                                     "sha256": hashlib.sha256(data).hexdigest()})
+                                     "sha256": hashlib.sha256(data).hexdigest(),
+                                     "box": part.get_param("name", header="content-disposition")})
         elif self.path == "/sent":
             PORTAL.sent = True
         self.send(b"{}")
@@ -212,6 +214,20 @@ def main():
             r = fill(browser, base, steps(base, start="/portal.html?fade=1"), answers)
             assert r["result"] == "filled", r
         case("a suggestion list still fading out over the next box is closed, not a stop", fading_list)
+
+        def signed_slot():
+            # The portal's "required" under a slot that takes only signed files is the person's;
+            # under a plain one it stops the run, and the snapshot names the slot by its title.
+            PORTAL.reset()
+            r = fill(browser, base, steps(base, start="/portal.html?slot=signed"), answers)
+            assert r["result"] == "filled", r
+            PORTAL.reset()
+            r = fill(browser, base, steps(base, start="/portal.html?slot=plain"), answers)
+            assert r["result"] == "stopped" and "obbligatorio" in r["error"], r
+            box = next(b for b in r["snapshot"]["boxes"] if b["id"] == "procura_input")
+            assert box["label"] == "procura speciale" and box["required"] and box["accepts"] == "pdf;pdf.p7m", box
+            assert ".pdf" not in json.dumps(r["snapshot"]), "a file's name in the snapshot"
+        case("a required slot taking only signed files is the person's; a plain one stops, named by its title", signed_slot)
 
         def theirs():
             PORTAL.reset()

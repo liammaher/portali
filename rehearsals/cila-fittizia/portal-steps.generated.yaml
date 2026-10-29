@@ -60,8 +60,8 @@ asks:
   data_inizio_lavori: {type: date, question: 'When the works start, or started'}
   ricevuta_sanzione: {type: file, question: 'The penalty receipt (PDF): 333 € for works under way, 1,000 € for works already done'}
   dettaglio_intervento: {type: text, question: The works for the relazione tecnica (500 characters)}
-  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
-  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
+  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', propose: 'true'}
+  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', propose: 'true'}
   notifica_dovuta: {type: yes_no, question: 'Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?'}
   diritti_euro: {type: number, question: The SUE's diritti for this pratica in euro (0 when none are due), default: '151'}
   documento_identita_cliente: {type: file, question: The client's identity document (PDF)}

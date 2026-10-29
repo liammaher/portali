@@ -14,8 +14,7 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
 2. **The recipe** (`rehearsals/<name>/recipe.yaml`): procedure, title, comune, sportello,
    crawl, operation (or a list of them), scelte, `first`, `asks`, `yours` (what's left to the
    person: declarations, attachments, payment, signing), `supports` (the cases refused, with
-   why: all or nothing; `if:` checks one only once its gate holds, asking it only then). An
-   ask's `default: null` asks what the dictionary answers silently (the permesso's acoustics).
+   why: all or nothing; `if:` checks one only once its gate holds, asking it only then).
    Copy a sibling: `rehearsals/paesaggistica-ordinaria-fittizia`.
 3. **Generate:** `gen.py <recipe> --out <dir>/portal-steps.generated.yaml`. It writes nothing
    if any field is unaccounted for. Regenerate every rehearsal after a dictionary or gen.py
@@ -70,7 +69,9 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
 - **Radios with their own names can still be one choice.** The permesso's asseverazione keeps
   only one of its two opening radios after Salva: the read-back says so; keep the one it keeps.
 - **A portal document's box reads "Scarica il documento"** (the procura, the DSC): the
-  attachments screen's `theirs` names it, so its "required" isn't the run's error.
+  attachments screen's `theirs` names it, so its "required" isn't the run's error; nor is one
+  under any slot that takes only signed files (.p7m), the person's to sign and attach. A stop's
+  snapshot names each slot by its title, with the types it takes and whether it's required.
 - **A file box's cell names the file once it's in.** Name an upload by the row above it (the
   crawl's `context`), not by its cell ("Tipologie ammesse"), or the read-back can't find it.
 - **The portal's own errors:** "errore inatteso", a 503 for maintenance, a fresh load that

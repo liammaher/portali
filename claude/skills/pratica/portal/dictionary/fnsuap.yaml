@@ -15,6 +15,9 @@
 # the page; `anchor`/`block` a field inside the block that starts at another field. A `when`'s
 # words gate each other in order: pre-flight asks a later one only once the earlier hold.
 # A `when` has no "or": `|in_<a>__<b>` is true for any of those answers.
+# An ask's `default` answers it silently: only where no answer can be a wrong statement (a
+# blank optional date, the bollo's payment method, Napoli's own constants). A fact of the case,
+# however usual, is `propose`d: pre-flight shows it for the person to confirm.
 #
 # Roles (answers.json "people"): no prefix and `t:` are the studio's own (the business and its
 # titolare, the architect), `c:` the client, `o:` the owner company, `r:` its legale
@@ -131,8 +134,8 @@ asks:
   dettaglio_intervento:
     type: text
     question: "The works for the relazione tecnica (500 characters)"
-  dlgs81: {type: yes_no, question: "Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?", default: "true"}
-  sotto_200: {type: yes_no, question: "Is the site under 200 uomini-giorno?", default: "true"}
+  dlgs81: {type: yes_no, question: "Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?", propose: "true"}
+  sotto_200: {type: yes_no, question: "Is the site under 200 uomini-giorno?", propose: "true"}
   notifica_dovuta: {type: yes_no, question: "Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?"}
   verificato_idoneita: {type: yes_no, question: "Has the client checked the firms' documents (DURC and technical suitability, art. 90 c. 9 D.Lgs. 81/2008)?"}
   data_fine_prevista: {type: date, question: "When the works will end (temporary works: within 180 days)"}
@@ -146,10 +149,10 @@ asks:
     type: choice
     question: "The works' title: what was filed or issued"
     options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica]
-    default: permesso di costruire
+    propose: permesso di costruire
   titolo_id_pratica: {type: text, question: "The title's pratica number on the SUAP/SUE (ID pratica)"}
   data_nomina: {type: date, question: "From when the new direttore dei lavori takes over"}
-  nomina_aggiunta: {type: yes_no, question: "Is the firm named alongside an earlier one (rather than the first named)?", default: "false"}
+  nomina_aggiunta: {type: yes_no, question: "Is the firm named alongside an earlier one (rather than the first named)?", propose: "false"}
   paes_protocollo: {type: text, question: "The landscape authorization's P.G. (protocollo) number"}
   paes_data: {type: date, question: "Its date"}
   paes_scadenza: {type: date, question: "The date it was to stop being valid"}
@@ -163,7 +166,7 @@ asks:
   vincolo_136_lettera: {type: text, question: "Which letter(s) of art. 136 c.1 (a, b, c, d)?"}
   vincolo_136_provvedimento: {type: text, question: "The D.M. or D.G.R. that declared it (e.g. D.M. 28/03/1985)"}
   vincolo_142_lettera: {type: text, question: "Which letter(s) of art. 142 c.1 (a: coast within 300 m, c: rivers, f: parks, g: woods, m: archaeological)?"}
-  paes_variante: {type: yes_no, question: "Is this a variant of a landscape authorization already issued?", default: "false"}
+  paes_variante: {type: yes_no, question: "Is this a variant of a landscape authorization already issued?", propose: "false"}
   paes_b1: {type: yes_no, group: allegato_b, item: "B.1 Volume increase up to 10% of the original building, and at most 100 m³"}
   paes_b2: {type: yes_no, group: allegato_b, item: "B.2 New or changed external openings or roof windows on buildings protected under art. 136 c.1 a), b), c)"}
   paes_b3: {type: yes_no, group: allegato_b, item: "B.3 Facade changes that alter the building's look (other than B.2)"}
@@ -232,17 +235,17 @@ asks:
     type: choice
     question: "Do the works concern a building or an area (land with no building)?"
     options: [immobile, area]
-    default: immobile
-  atti_gravanti: {type: yes_no, question: "Do registered deeds weigh on the property: servitudes, atti unilaterali d'obbligo, convenzioni?", default: "false"}
+    propose: immobile
+  atti_gravanti: {type: yes_no, question: "Do registered deeds weigh on the property: servitudes, atti unilaterali d'obbligo, convenzioni?", propose: "false"}
   atti_gravanti_quali: {type: text, question: "Which deed(s), as the deed names them"}
   paes_ente: {type: text, question: "The ente that issued the landscape authorization", default: "Comune di Napoli"}
   paes_rinnovo_di:
     type: choice
     question: "What is being renewed: a semplificata (DPR 31/2017) or an ordinaria (art. 146 D.Lgs. 42/2004)?"
     options: [semplificata, ordinaria]
-  paes_rinnovo_variazioni: {type: yes_no, question: "Does the renewal change the project?", default: "false"}
+  paes_rinnovo_variazioni: {type: yes_no, question: "Does the renewal change the project?", propose: "false"}
   attivita_svolta: {type: text, question: "The new holder's occupation or business (60 characters)"}
-  soggetti_cambiati: {type: yes_no, question: "Will the works' direttore or firm change with the new holder?", default: "false"}
+  soggetti_cambiati: {type: yes_no, question: "Will the works' direttore or firm change with the new holder?", propose: "false"}
   nuovo_dl: {type: text, question: "The new direttore dei lavori's name"}
   nuovo_esecutore: {type: text, question: "The new firm's name"}
   nuovo_csp: {type: text, question: "The new coordinatore per la sicurezza's name (none: empty)", default: ""}
@@ -255,7 +258,7 @@ asks:
   bollo_seriale: {type: text, question: "The marca da bollo's serial number (14 digits)"}
   bollo_data: {type: date, question: "The marca da bollo's date"}
   insegna: {type: text, question: "What name goes on the sign?"}
-  stagionale: {type: yes_no, question: "Will it open only for part of the year (a season)?", default: "false"}
+  stagionale: {type: yes_no, question: "Will it open only for part of the year (a season)?", propose: "false"}
   stagione_dal: {type: text, question: "The season's first day (gg/mm)"}
   stagione_al: {type: text, question: "The season's last day (gg/mm)"}
   superficie_somministrazione_mq: {type: number, question: "How many m² is the area where customers eat and drink? (not the whole premises)"}
@@ -292,8 +295,8 @@ asks:
   catasto_variazione: {type: yes_no, question: "Did the works change the catasto registration (a DOCFA was filed)?"}
   docfa_protocollo: {type: text, question: "The DOCFA's protocol number", when: "{{ask.catasto_variazione}}"}
   docfa_data: {type: date, question: "The DOCFA's date", when: "{{ask.catasto_variazione}}"}
-  civici_variazione: {type: yes_no, question: "Did the works change the house numbers (numerazione civica)?", default: "false"}
-  antincendio_variazione: {type: yes_no, question: "Did the works change the building's fire-safety conditions?", default: "false"}
+  civici_variazione: {type: yes_no, question: "Did the works change the house numbers (numerazione civica)?", propose: "false"}
+  antincendio_variazione: {type: yes_no, question: "Did the works change the building's fire-safety conditions?", propose: "false"}
   # The SCIA edilizia's quadro c) and the asseverazione's tipologia: works of art. 22 c. 1 a)
   # to c), a variant in corso d'opera, or a change of use (art. 23-ter, as the 2024 Salva Casa
   # changed it).
@@ -379,10 +382,10 @@ asks:
   prg_articolo: {type: text, question: "The article of the PRG's rules for that zone"}
   progetto_impianti: {type: yes_no, question: "Do the systems need a project (DM 37/2008 art. 5)?"}
   demolizioni: {type: yes_no, question: "Do the works demolish anything (partitions, finishes) and produce waste?"}
-  acustica: {type: yes_no, question: "Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?", default: "false"}
-  antincendio_soggetto: {type: yes_no, question: "Is the building subject to fire-prevention rules?", default: "false"}
-  amianto: {type: yes_no, question: "Do the works touch parts with asbestos?", default: "false"}
-  igienico_conforme: {type: yes_no, question: "Does the unit meet the hygiene and health requirements (no derogation)?", default: "true"}
+  acustica: {type: yes_no, question: "Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?", propose: "false"}
+  antincendio_soggetto: {type: yes_no, question: "Is the building subject to fire-prevention rules?", propose: "false"}
+  amianto: {type: yes_no, question: "Do the works touch parts with asbestos?", propose: "false"}
+  igienico_conforme: {type: yes_no, question: "Does the unit meet the hygiene and health requirements (no derogation)?", propose: "true"}
   # Structures (the SCIA's asseverazione, quadro "Sismica"): Napoli is seismic zone 2, so works
   # on structures are filed under L.R. Campania 9/1983 and its Regolamento 4/2010. The
   # progettista says which filing; its documents are attached to the pratica.
@@ -469,7 +472,7 @@ asks:
   fascia_altro_doc: {type: file, question: "The other fascia's document: the self-certification, or the request for its assent (PDF)"}
   diritti_euro: {type: number, question: "The SUE's diritti for this pratica in euro (0 when none are due)"}
   data_fine_lavori: {type: date, question: "When the works ended"}
-  fine_completa: {type: yes_no, question: "Were the works finished completely (not in part)?", default: "true"}
+  fine_completa: {type: yes_no, question: "Were the works finished completely (not in part)?", propose: "true"}
   titolo_edilizio: {type: text, question: "The title the works were done under (e.g. C.I.L.A.)"}
   titolo_protocollo: {type: text, question: "Its protocol number"}
   titolo_data: {type: date, question: "Its protocol date"}
@@ -482,17 +485,17 @@ asks:
   stato_legittimo_doc: {type: file, question: "The documents proving the stato legittimo (the building's titles, PDF)"}
   dichiarazione_conformita: {type: file, question: "The installers' dichiarazioni di conformità of the systems touched (PDF)", when: "{{ask.impianti}}"}
 
-  solo_distributori: {type: yes_no, question: "Will it sell only through vending machines?", default: "false"}
-  anche_ingrosso: {type: yes_no, question: "Will it also sell wholesale (not only to the public)?", default: "false"}
+  solo_distributori: {type: yes_no, question: "Will it sell only through vending machines?", propose: "false"}
+  anche_ingrosso: {type: yes_no, question: "Will it also sell wholesale (not only to the public)?", propose: "false"}
   superficie_vendita_mq: {type: number, question: "The sales area in m² (where customers shop, not stores or toilets)"}
-  superficie_alimentare_mq: {type: number, question: "Of that, m² for food", default: "0"}
-  superficie_non_alimentare_mq: {type: number, question: "Of that, m² for everything else (non-food)", default: "0"}
-  superficie_monopolio_mq: {type: number, question: "m² for tobacco and other state-monopoly goods", default: "0"}
-  in_ccn: {type: yes_no, question: "Is it in a recognised centro commerciale naturale (C.C.N.)?", default: "false"}
+  superficie_alimentare_mq: {type: number, question: "Of that, m² for food", propose: "0"}
+  superficie_non_alimentare_mq: {type: number, question: "Of that, m² for everything else (non-food)", propose: "0"}
+  superficie_monopolio_mq: {type: number, question: "m² for tobacco and other state-monopoly goods", propose: "0"}
+  in_ccn: {type: yes_no, question: "Is it in a recognised centro commerciale naturale (C.C.N.)?", propose: "false"}
   ccn_delibera: {type: text, question: "The C.C.N.'s recognition: delibera number"}
   ccn_delibera_data: {type: date, question: "Its date"}
   ccn_delibera_ente: {type: text, question: "Who passed it (e.g. Giunta comunale)"}
-  in_factory_outlet: {type: yes_no, question: "Is it in a factory outlet centre?", default: "false"}
+  in_factory_outlet: {type: yes_no, question: "Is it in a factory outlet centre?", propose: "false"}
 
   forno: {type: yes_no, group: attivita_852, item: "Bread, pizza, pastry, ice cream or ready meals made on the premises"}
   pane: {type: yes_no, group: attivita_852, item: "Bread, pizza and other baked goods"}
@@ -501,20 +504,20 @@ asks:
   gastronomia: {type: yes_no, group: attivita_852, item: "Ready meals (gastronomia, rosticceria, friggitoria)"}
   pasta: {type: yes_no, group: attivita_852, item: "Fresh or dry pasta"}
   dettaglio_alimenti: {type: yes_no, group: attivita_852, item: "Food sold in a shop (esercizio di vicinato)"}
-  consumo_sul_posto: {type: yes_no, question: "Can customers eat its products on the spot (no table service)?", default: "false"}
+  consumo_sul_posto: {type: yes_no, question: "Can customers eat its products on the spot (no table service)?", propose: "false"}
   centro_commerciale_tipologia: {type: text, question: "The shopping centre's type (centro commerciale, mercato coperto, ...)"}
-  responsabile_produzione_altro: {type: yes_no, question: "Is the production manager someone other than the titolare?", default: "false"}
+  responsabile_produzione_altro: {type: yes_no, question: "Is the production manager someone other than the titolare?", propose: "false"}
   responsabile_produzione_nome: {type: text, question: "The production manager's full name"}
   responsabile_produzione_dichiarazione: {type: file, question: "The production manager's signed statement of their requirements (PDF)"}
 
   tipo_struttura: {type: choice, question: "What kind of lodging is it?", options: [Affittacamere, Bed and breakfast]}
-  imprenditoriale: {type: yes_no, question: "Is it run as a business (forma imprenditoriale)?", default: "true"}
+  imprenditoriale: {type: yes_no, question: "Is it run as a business (forma imprenditoriale)?", propose: "true"}
   denominazione_struttura: {type: text, question: "The lodging's name", default: "{{business.denominazione}}"}
   colazione: {type: choice, question: "Food for the guests: none, packaged only, or prepared on site?", options: [Nessuna, Confezionata, Preparata]}
-  camere_singole_bagno: {type: number, question: "Single rooms with a private bathroom", default: "0"}
-  camere_singole_senza: {type: number, question: "Single rooms without one", default: "0"}
-  camere_doppie_bagno: {type: number, question: "Double rooms with a private bathroom", default: "0"}
-  camere_doppie_senza: {type: number, question: "Double rooms without one", default: "0"}
+  camere_singole_bagno: {type: number, question: "Single rooms with a private bathroom", propose: "0"}
+  camere_singole_senza: {type: number, question: "Single rooms without one", propose: "0"}
+  camere_doppie_bagno: {type: number, question: "Double rooms with a private bathroom", propose: "0"}
+  camere_doppie_senza: {type: number, question: "Double rooms without one", propose: "0"}
 
   subingresso_attivita: {type: text, question: "The activity taken over, in a few words (e.g. commercio di vicinato non alimentare)"}
   cedente_titolo_protocollo: {type: text, question: "The protocol number of the SCIA (or licence) the previous owner ran it under"}
@@ -554,7 +557,7 @@ asks:
   alcol_aromi: {type: yes_no, group: alcolici, item: "Alcoholic flavourings"}
   alcol_profumeria: {type: yes_no, group: alcolici, item: "Alcohol-based perfumery"}
   alcol_altri: {type: yes_no, group: alcolici, item: "Other alcoholic products"}
-  alcol_con_scia: {type: yes_no, question: "Is this filed together with the business's own SCIA (a new business), rather than for one already running?", default: "false"}
+  alcol_con_scia: {type: yes_no, question: "Is this filed together with the business's own SCIA (a new business), rather than for one already running?", propose: "false"}
   alcol_avvio: {type: date, question: "From when it sells alcohol"}
   ateco_descrizione: {type: text, question: "The business's ATECO code and activity in a few words (70 characters, e.g. 56.10.11 Ristorazione con somministrazione)"}
 
@@ -564,7 +567,7 @@ asks:
   insegna_larghezza_m: {type: number, question: "The sign's width in metres"}
   insegna_altezza_m: {type: number, question: "Its height in metres"}
   insegna_superficie_mq: {type: number, question: "Its area in m² (width × height)"}
-  insegna_monofacciale: {type: yes_no, question: "Is it single-sided?", default: "true"}
+  insegna_monofacciale: {type: yes_no, question: "Is it single-sided?", propose: "true"}
   insegna_luce: {type: choice, question: "Is it unlit, lit from inside (luminosa) or lit from outside (illuminata)?", options: [Opaca, Luminosa, Illuminata]}
   insegna_testo: {type: text, question: "The text on the sign (300 characters)"}
   immobile_proprietario: {type: text, question: "Who owns the building (name or company)"}
@@ -578,12 +581,12 @@ asks:
   av_noleggio: {type: yes_no, group: audiovisivi, item: "Renting out"}
   av_cessione: {type: yes_no, group: audiovisivi, item: "Transferring otherwise"}
   audiovisivi_dal: {type: date, question: "From when"}
-  locale_precedente_comune: {type: text, question: "The old premises: comune", default: "Napoli"}
-  locale_precedente_provincia: {type: text, question: "Its province (sigla)", default: "NA"}
+  locale_precedente_comune: {type: text, question: "The old premises: comune", propose: "Napoli"}
+  locale_precedente_provincia: {type: text, question: "Its province (sigla)", propose: "NA"}
   locale_precedente_cap: {type: text, question: "Its CAP"}
   locale_precedente_indirizzo: {type: text, question: "Its street, as the Comune names it (e.g. Via Foria)"}
   locale_precedente_civico: {type: text, question: "Its civico"}
-  precedente_centro_commerciale: {type: yes_no, question: "Were the old premises in a shopping centre?", default: "false"}
+  precedente_centro_commerciale: {type: yes_no, question: "Were the old premises in a shopping centre?", propose: "false"}
   precedente_centro_commerciale_nome: {type: text, question: "Its name"}
 
   settore_eliminato: {type: choice, question: "Which sector the shop stops selling", options: [Alimentare, Non alimentare]}
@@ -591,12 +594,12 @@ asks:
   temporary_al: {type: date, question: "Its last day"}
 
   superficie_somministrazione_prima_mq: {type: number, question: "The customer area before the change, in m²"}
-  titolo_attivita_comune: {type: text, question: "The comune the title was filed with", default: "Napoli"}
+  titolo_attivita_comune: {type: text, question: "The comune the title was filed with", propose: "Napoli"}
 
   orario_dalle: {type: text, question: "Opening time, the same every open day (hh:mm)"}
   orario_alle: {type: text, question: "Closing time (hh:mm)"}
-  giorno_chiusura: {type: text, question: "The weekly closing day ('nessuno' if none)", default: "nessuno"}
-  area_privata_uso_pubblico: {type: yes_no, question: "Is the ground private but open to the public (rather than public)?", default: "false"}
+  giorno_chiusura: {type: text, question: "The weekly closing day ('nessuno' if none)", propose: "nessuno"}
+  area_privata_uso_pubblico: {type: yes_no, question: "Is the ground private but open to the public (rather than public)?", propose: "false"}
   dehors_dal: {type: date, question: "The season's first day for the dehors"}
   dehors_al: {type: date, question: "Its last day"}
   dehors_lunghezza_m: {type: number, question: "The dehors area's length in metres"}

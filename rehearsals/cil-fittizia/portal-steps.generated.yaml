@@ -22,8 +22,8 @@ asks:
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   data_inizio_lavori: {type: date, question: When the works will start}
   dettaglio_intervento: {type: text, question: What the temporary works are and when they'll be removed (500 characters)}
-  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
-  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
+  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', propose: 'true'}
+  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', propose: 'true'}
   notifica_dovuta: {type: yes_no, question: 'Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?'}
   verificato_idoneita: {type: yes_no, question: 'Has the client checked the firms'' documents (DURC and technical suitability, art. 90 c. 9 D.Lgs. 81/2008)?'}
   data_fine_prevista: {type: date, question: 'When the works will end (temporary works: within 180 days)'}
