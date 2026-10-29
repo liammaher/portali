@@ -28,6 +28,12 @@ It stops, writing nothing, on a section the dictionary doesn't have, a dictionar
 the crawl doesn't show, or a field the section shows that no dictionary entry fills or
 leaves (`leave:`), so a pratica is generated whole or not at all. --check compares the
 result with a hand-written steps file, field by field.
+
+A recipe's `rules:` names the library's rules table that decides whether a case is this
+pratica (`rules/<table>.yaml`), the facts the recipe fixes (`facts:`, a value or a template)
+and the other pratiche it files with it (`handles:`). Every other fact is the answer of the
+ask of its name, written from the table's question where the pratica has none (yes/no facts
+in one checklist); run.py preflight then refuses a case the table gives to another pratica.
 """
 
 import argparse
@@ -41,6 +47,8 @@ from pathlib import Path
 import yaml
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import rules  # noqa: E402
 DECLARATIONS = re.compile(
     r"consapevolezza|informativa sulla privacy|requisiti di o|altre dichiarazioni|"
     r"dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75", re.I)
@@ -51,6 +59,47 @@ PAGE_KIND = {"date": "text", "textarea": "text", "number": "text"}
 
 class GenError(Exception):
     pass
+
+
+FATTI = "Quali di queste cose valgono per l'attività? Spunta quelle vere, anche nessuna."
+
+
+def rules_block(spec, asks, groups):
+    """A recipe's `rules:` as its steps file carries it: every fact of the table, the
+    recipe's value or `{{ask.<fact>}}`, adding the ask from the table's question when the
+    pratica has none. Changes asks and groups in place."""
+    try:
+        t = rules.table(spec["table"])
+    except ValueError as e:
+        raise GenError(str(e))
+    facts = dict(spec.get("facts", {}))
+    for name in sorted(set(facts) - set(t["facts"])):
+        raise GenError(f"rules: table {spec['table']} has no fact {name}")
+    for name, v in facts.items():
+        if not (isinstance(v, str) and "{{" in v) and rules.fact_value(t["facts"][name], v) is None:
+            raise GenError(f"rules: {v!r} isn't a value of the fact {name}")
+    out = {}
+    for name, fact in t["facts"].items():
+        if name in facts:
+            out[name] = facts[name]
+            continue
+        a, kind = asks.get(name), fact["type"]
+        if a is None:
+            if kind == "yes_no":
+                a = {"group": "fatti", "type": "yes_no", "item": fact["question"]}
+                groups.setdefault("fatti", {"question": FATTI})
+            else:
+                a = {"type": kind, "question": fact["question"]}
+                if kind == "choice":
+                    a |= {"options": list(fact["values"]), "labels": fact["values"]}
+            if fact.get("how"):
+                a["how"] = fact["how"]
+            asks[name] = a
+        elif a.get("type") != kind or (kind == "choice" and set(map(str, a.get("options", []))) - set(fact["values"])):
+            raise GenError(f"rules: the fact {name} is also asks.{name}, a {a.get('type')}: give its value in the "
+                           "recipe's rules.facts")
+        out[name] = "{{ask.%s}}" % name
+    return {"table": spec["table"], "facts": out, **({"handles": spec["handles"]} if spec.get("handles") else {})}
 
 
 def norm(s):
@@ -468,10 +517,10 @@ def generate(recipe, base=HERE):
         raise GenError("\n".join(problems))
     for t in recipe.get("asks_used", []):
         asks_used.add(t)
-    for t in re.findall(r"(?:\{\{|[+*])\s*ask\.(\w+)", json.dumps([recipe.get("yours"), recipe.get("supports")])):
+    for t in re.findall(r"(?:\{\{|[+*])\s*ask\.(\w+)", json.dumps([recipe.get("yours"), recipe.get("supports"), recipe.get("rules")])):
         asks_used.add(t)
     # The dictionary's questions, the recipe's wording over them; a question only this pratica
-    # asks (one `supports` reads) is the recipe's alone.
+    # asks (one `supports` or `rules` reads) is the recipe's alone.
     asks = {}
     for k, v in list(dictionary["asks"].items()) + [(k, {}) for k in recipe.get("asks", {}) if k not in dictionary["asks"]]:
         if k in asks_used:
@@ -482,6 +531,8 @@ def generate(recipe, base=HERE):
     # Yes/no questions asked as one checklist (run.py preflight's `groups`).
     groups = {g: v for g, v in {**dictionary.get("groups", {}), **recipe.get("groups", {})}.items()
               if any(a.get("group") == g for a in asks.values())}
+
+    ruled = rules_block(recipe["rules"], asks, groups) if recipe.get("rules") else None
 
     wizard = recipe.get("wizard")
     if wizard and crawl.get("screens") is not None:
@@ -512,6 +563,7 @@ def generate(recipe, base=HERE):
         "procedure": recipe["procedure"], "title": recipe["title"],
         "generated": f"gen.py from {recipe['crawl']} ({crawl.get('crawled', '?')[:10]}) and dictionary/{recipe.get('dictionary', 'fnsuap')}.yaml",
         "yours": recipe["yours"], **({"groups": groups} if groups else {}), "asks": asks, "supports": recipe.get("supports", []),
+        **({"rules": ruled} if ruled else {}),
         "start": recipe.get("start", catalogue["start"]), "logged_in": recipe.get("logged_in", "https://suap.impresainungiorno.gov.it/fnsuap/"),
         "wizard": wizard, "sections": out_sections,
     }

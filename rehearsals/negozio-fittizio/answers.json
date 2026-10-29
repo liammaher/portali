@@ -5,5 +5,6 @@
  "superficie_vendita_mq": "40",
  "superficie_non_alimentare_mq": "40",
  "in_centro_commerciale": "false",
- "diritti_euro": "100"
+ "diritti_euro": "100",
+ "fatti": []
 }

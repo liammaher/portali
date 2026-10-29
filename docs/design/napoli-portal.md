@@ -77,9 +77,18 @@ zones A and B, over 250 mq, the Dogane notice for alcohol). The validator tries 
 combination of the facts and fails on a gap or two rules that disagree; `decide()` gives the
 pratiche, or the facts still to ask, or the refusals.
 
-Next: pre-flight reads the table (the facts asked in its one message, the recipe picked from
-the answer, a refusal stops the run), replacing each recipe's own `supports`; the Dogane
-notice and the SUE's building works (the Glossario unico) as procedures, then as rules.
+Pre-flight reads it (2026-10-29): a recipe names the table, the facts it fixes (a shop's
+opening) and the other pratiche it files with it (`handles`: the notifica sanitaria, the sign,
+the nulla osta); gen.py asks every other fact in pre-flight's one message, and pre-flight
+refuses a case the table gives to another pratica, or that needs one this pratica doesn't
+file. Nine recipes moved their legal refusals (zone, size, alcohol, sign, music, fire
+prevention) to it; their own `supports` keep what is only about the mapping (other partners,
+shopping centres). The table is copied in `portal/rules/`, the same bytes as the library's.
+
+Next: pick the recipe from the answers instead of refusing (one entry point per activity);
+the Dogane notice and the SUE's building works (the Glossario unico) as procedures, then as
+rules; the other recipes (bakery, rooms to let, suspension, variations) once the library has
+their procedures.
 
 ## 3. Intake: the person's context into answers
 

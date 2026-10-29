@@ -3,7 +3,7 @@
 # sections drafted from the national schema by draft.py (mod_acconciatori_estetisti_apertura)
 # and used as drafted; the business's shared sections from the pizzeria walk. The business
 # itself declares (`subject: impresa`): a made-up ditta individuale and its titolare.
-procedure: napoli/comune/acconciatore-apertura
+procedure: napoli/comune/scia-acconciatore-estetista
 title: "Apertura di un'attività di acconciatore, SUAP Napoli (ditta individuale)"
 comune: F839
 sportello: suap
@@ -35,6 +35,11 @@ yours:
   - "Tick the declarations yourself: the awareness box under the PEC, the antimafia declaration, consapevolezza (artt. 46-47), informativa privacy, altre dichiarazioni, tasse comunali, art. 75 DPR 445/2000"
   - "On Allega documenti: the planimetria quotata and the relazione descrittiva of the premises, signed digitally (.p7m)"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: acconciatore_estetista, evento: apertura}
 supports:
   - value: "{{business.forma_giuridica}}"
     in: [ditta_individuale, srl, srls, snc, sas, spa]

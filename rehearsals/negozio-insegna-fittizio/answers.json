@@ -13,5 +13,6 @@
  "insegna_superficie_mq": "1",
  "insegna_luce": "Opaca",
  "insegna_testo": "BOTTEGA FITTIZIA - cartoleria e regali",
- "immobile_proprietario": "Immobiliare Esempio S.r.l."
+ "immobile_proprietario": "Immobiliare Esempio S.r.l.",
+ "fatti": ["insegna"]
 }

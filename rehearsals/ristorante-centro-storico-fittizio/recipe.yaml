@@ -45,6 +45,12 @@ yours:
   - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, Napoli's rules (normative comunali), requisiti di onorabilità e professionali, altre dichiarazioni, art. 6 Reg. 852/2004, tasse comunali, art. 75 DPR 445/2000"
   - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) and the imposta di bollo with pagoPA, and the ASL tariffa forfettaria"
   - "Sign and send (Firma e invio); don't open before the authorization arrives"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: somministrazione, evento: apertura, somministrazione_particolare: false, insegna: "{{ask.insegna_esterna}}"}
+  handles: [napoli/comune/nulla-osta-impatto-acustico, napoli/asl-napoli-1/registrazione-attivita-alimentare]
 supports:
   - value: "{{business.forma_giuridica}}"
     in: [ditta_individuale, srl, srls, snc, sas, spa]
@@ -52,7 +58,5 @@ supports:
   - {when: "{{ask.altri_soggetti|not}}", else: "Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet."}
   - {when: "{{ask.superficie_somministrazione_mq|atleast_20}}", else: "The Piano requires at least 20 m² where customers eat and drink in the historic centre (art. 7): the authorization would be refused."}
   - {when: "{{ask.accessibile}} {{ask.sicurezza}} {{ask.punteggio}}", else: "The Piano's requirements (accessibility, a security system, the area's minimum score) must all be met (artt. 7, 9, 12): the authorization would be refused."}
-  - {when: "{{ask.alcolici|not}}", else: "Alcohol together with the historic centre's nulla osta isn't supported yet."}
-  - {when: "{{ask.insegna_esterna|not}}", else: "An outside sign isn't supported yet."}
   - {when: "{{ask.ristorazione}}", else: "So far only a bar or restaurant: the notifica's other activity lines aren't mapped."}
   - {when: "{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}", else: "A bar or restaurant that also bakes or runs a food shop isn't supported yet."}

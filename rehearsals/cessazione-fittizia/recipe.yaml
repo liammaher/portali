@@ -2,7 +2,7 @@
 # update), as gen.py writes its steps file from the batch crawl
 # (catalogue/F839/sections/suap-060-cessare-l-attivita.json), for the pizzeria rehearsal's
 # made-up ditta individuale.
-procedure: napoli/comune/cessazione-somministrazione
+procedure: napoli/comune/cessazione-attivita-commerciale
 title: "Cessazione di un bar o ristorante, SUAP Napoli (ditta individuale)"
 comune: F839
 sportello: suap
@@ -32,6 +32,11 @@ yours:
   - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
   - "Tick the declarations yourself: the awareness box under the PEC, consapevolezza (artt. 46-47), informativa privacy, Napoli's rules (normative comunali), tasse comunali, art. 75 DPR 445/2000"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: somministrazione, evento: cessazione}
 supports:
   - value: "{{business.forma_giuridica}}"
     in: [ditta_individuale, srl, srls, snc, sas, spa]

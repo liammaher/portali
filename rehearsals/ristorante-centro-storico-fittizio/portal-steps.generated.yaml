@@ -17,6 +17,8 @@ groups:
     question: Does any of this apply to the business? Tick all that do, or none.
   piano:
     question: 'The 2026 Piano''s requirements for the historic centre: tick each one the premises meet (a technician asserts them in CS 1 and CG 1).'
+  fatti:
+    question: Quali di queste cose valgono per l'attività? Spunta quelle vere, anche nessuna.
 asks:
   descrizione: {type: text, question: A name for the draft in the portal's Pratiche in bozza, default: 'PROVA NON INVIARE - centro storico {{business.denominazione}}'}
   oggetto: {type: text, question: The pratica in one sentence (300 characters)}
@@ -51,8 +53,17 @@ asks:
   accessibile: {group: piano, type: yes_no, item: The premises are accessible to people with disabilities}
   sicurezza: {group: piano, type: yes_no, item: 'There''s a security system (CCTV, alarm or passive systems)'}
   punteggio: {group: piano, type: yes_no, item: The technician's CG 1 reaches the minimum management score of the premises' zone and area (the Comune's street list)}
-  alcolici: {group: extras, type: yes_no, item: It will sell alcoholic drinks, why: Alcohol and the nulla osta together aren't crawled yet.}
   insegna_esterna: {group: extras, type: yes_no, item: It will have a sign outside, why: 'An outside sign bundles the insegna''s SCIA into this one, a branch not mapped yet.'}
+  zona: {type: choice, question: 'In quale zona del Piano del Comune si trova il locale?', options: [a, b, c], labels: {a: 'Zona A: centro storico UNESCO (aree 1 rossa, 2 arancione, 3 gialla)', b: 'Zona
+        B: buffer zone (blu)', c: 'Zona C: il resto della città'}, how: 'Dalla mappa delle zone tutelate allegata al Piano (delibera di Consiglio comunale n. 79/2026), o chiedendo al SUAP.'}
+  superficie_vendita_mq: {type: number, question: 'Quanti metri quadri di vendita ha il negozio (dopo il trasferimento o l''ampliamento, se è il caso)?', how: 'L''area dove entrano i clienti, banchi e scaffali
+      compresi; senza magazzini, depositi, laboratori, uffici e servizi.'}
+  consumo_sul_posto: {group: fatti, type: yes_no, item: 'Il negozio di alimenti fa consumare sul posto quello che vende (senza servizio ai tavoli)?'}
+  prevenzione_incendi: {group: fatti, type: yes_no, item: 'L''attività è nell''elenco dell''Allegato I del D.P.R. 151/2011 (per esempio un negozio con più di 400 mq lordi, servizi e depositi compresi, o
+      una centrale termica oltre 116 kW)?', how: 'Lo stabilisce il tecnico abilitato, o il Comando dei Vigili del Fuoco.'}
+  alcolici: {group: fatti, type: yes_no, item: 'Venderà o servirà bevande alcoliche?'}
+  musica: {group: fatti, type: yes_no, item: 'Userà impianti di diffusione sonora, o farà eventi con musica o strumenti musicali?'}
+  dehors: {group: fatti, type: yes_no, item: 'Vuole tavoli e sedie all''aperto, su suolo pubblico?'}
 supports:
 - value: '{{business.forma_giuridica}}'
   in:
@@ -69,14 +80,27 @@ supports:
   else: 'The Piano requires at least 20 m² where customers eat and drink in the historic centre (art. 7): the authorization would be refused.'
 - when: '{{ask.accessibile}} {{ask.sicurezza}} {{ask.punteggio}}'
   else: 'The Piano''s requirements (accessibility, a security system, the area''s minimum score) must all be met (artt. 7, 9, 12): the authorization would be refused.'
-- when: '{{ask.alcolici|not}}'
-  else: Alcohol together with the historic centre's nulla osta isn't supported yet.
-- when: '{{ask.insegna_esterna|not}}'
-  else: An outside sign isn't supported yet.
 - when: '{{ask.ristorazione}}'
   else: 'So far only a bar or restaurant: the notifica''s other activity lines aren''t mapped.'
 - when: '{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}'
   else: A bar or restaurant that also bakes or runs a food shop isn't supported yet.
+rules:
+  table: suap-napoli
+  facts:
+    attivita: somministrazione
+    evento: apertura
+    zona: '{{ask.zona}}'
+    superficie_vendita_mq: '{{ask.superficie_vendita_mq}}'
+    consumo_sul_posto: '{{ask.consumo_sul_posto}}'
+    somministrazione_particolare: false
+    prevenzione_incendi: '{{ask.prevenzione_incendi}}'
+    alcolici: '{{ask.alcolici}}'
+    insegna: '{{ask.insegna_esterna}}'
+    musica: '{{ask.musica}}'
+    dehors: '{{ask.dehors}}'
+  handles:
+  - napoli/comune/nulla-osta-impatto-acustico
+  - napoli/asl-napoli-1/registrazione-attivita-alimentare
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 wizard:

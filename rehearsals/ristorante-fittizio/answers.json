@@ -6,5 +6,7 @@
  "insegna": "Pizzeria Fittizia",
  "superficie_somministrazione_mq": "35",
  "in_centro_commerciale": "false",
- "diritti_euro": "120"
+ "diritti_euro": "120",
+ "zona": "c",
+ "fatti": []
 }

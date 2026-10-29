@@ -80,8 +80,9 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      pane (`run.py page`); reads every field back, then again on a fresh load of
                      the draft, attaches the files it names (the pane: 256 KB in all), never
                      declares, pays or sends. `run.py preflight` first: the steps file's
-                     `supports:` (cases it maps) and `asks:` (questions, asked in one message, or
-                     proposed to confirm). A stopped run resumes on its draft (`--resume`, `--fix`).
+                     `supports:` (cases it maps), `rules:` (the library's rules table, copied in
+                     `rules/`: whether the law makes the case this pratica, and the others it adds)
+                     and `asks:` (questions, asked in one message, or proposed to confirm). A stopped run resumes on its draft (`--resume`, `--fix`).
                      Both take a draft's values from one `pvault get` (`--values -`, Touch ID).
                      Where a choice or "+" renumbers ids, fields are found by label
                      (`label` + `anchor`/`block`/`nth`; `kind: add` presses "+"); the job's other
@@ -432,7 +433,8 @@ CI runs `regress.py` against the library's main (`fill.yml`); the library runs i
 The portal runner has offline tests on a fake portal: `claude/skills/pratica/portal/bench/test_inpage.py`,
 run with the pratica venv's Python (`~/.cache/pratica-portal/venv`, Playwright's Chromium, headless; no
 network, vault or model); `bench/test_preflight.py` tests pre-flight on the SCIA rehearsal's files, `bench/test_gen.py`
-gen.py on the crawls in `catalogue/F839/sections`.
+gen.py on the crawls in `catalogue/F839/sections`, `bench/test_rules.py` the rules table (with `PRATICHE_NAPOLI_DIR`, `rules/`
+the same bytes as the library's).
 
 ```go
 // Pattern: create temp vault, run test
