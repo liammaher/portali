@@ -48,11 +48,11 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
 ## Where it stands (2026-10-28, `catalogue.py count --summary`)
 
-- **SUE**: all 27 pratiche crawled; **127 distinct sections**, 88 filled by the dictionary,
-  88% of section uses. 20 of the 27 pratiche have every section filled; the other seven
-  (permesso di costruire, SCIA alternativa, the landscape ones) need the asseverazioni and the
-  landscape classifications (DPR 31/2017's lists, the art. 136/142 vincoli): legal and
-  technical choices more than mapping.
+- **SUE**: all 27 pratiche crawled; **127 distinct sections**, 90 filled by the dictionary,
+  88% of section uses. 21 of the 27 pratiche have every section filled (the paesaggistica
+  semplificata the latest: Allegato B and the vincoli); the other six (permesso di costruire,
+  SCIA alternativa, the other landscape ones) need the asseverazioni and the remaining
+  landscape declarations: legal and technical choices more than mapping.
 - **SUAP**: 278 pratiche crawled so far (the batch stands at about half of its 1,028 trips:
   the priority sectors, the common operations, part of the other sectors); **477 distinct
   sections**, 67 filled, 71% of section uses, counted under each title a section has. 107
@@ -71,7 +71,8 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   restaurant, a non-food shop, a bakery and rooms to let, the takeover (subingresso) and the
   suspension of a shop and of a restaurant, a restaurant's new name, a shop's bigger sales area,
   a restaurant's alcohol notice, and a restaurant's closure (SUAP), the
-  proroga di inizio lavori (SUE), besides the seven run before.
+  proroga di inizio lavori and the autorizzazione paesaggistica semplificata (SUE), besides the
+  seven run before.
 
 ## Drift
 

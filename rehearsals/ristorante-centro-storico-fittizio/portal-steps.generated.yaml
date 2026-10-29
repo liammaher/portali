@@ -238,7 +238,7 @@ sections:
 - section: notifica avvio e inizio attività
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.avvio_data|empty}}', label: Avvio contestuale alla data di notifica}
-  - {id: 'r3c1p4reg:radio:1_clone', kind: radio, when: '{{ask.avvio_data|empty|not}}', label: Avvio con decorrenza}
+  - {kind: radio, when: '{{ask.avvio_data|empty|not}}', label: Avvio con decorrenza}
   - {id: 'r4c2p7reg:calendar_input', kind: date, value: '{{ask.avvio_data|date_it}}', when: '{{ask.avvio_data|empty|not}}', label: dal}
   - {kind: checkbox, when: '{{ask.termine_data|empty|not}}', label: Termine dell'attività}
   - {kind: date, value: '{{ask.termine_data|date_it}}', when: '{{ask.termine_data|empty|not}}', label: in data}

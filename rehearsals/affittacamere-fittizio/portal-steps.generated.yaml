@@ -202,7 +202,7 @@ sections:
   fields:
   - {id: 'r2c2p4reg:number', kind: text, value: '{{ask.camere_singole_bagno+ask.camere_singole_senza+2*ask.camere_doppie_bagno+2*ask.camere_doppie_senza}}', max: 4, label: n.}
   - {id: 'r3c1p7reg:chk', kind: checkbox, label: Camere}
-  - {id: 'r4c1p9reg:chk', kind: checkbox, when: '{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}', label: Numero camere singole}
+  - {kind: checkbox, when: '{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}', label: Numero camere singole}
   - {id: 'r5c2p12reg:number', kind: text, value: '{{ask.camere_singole_bagno}}', when: '{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}', max: 3, label: con bagno (n.)}
   - {id: 'r5c3p14reg:number', kind: text, value: '{{ask.camere_singole_senza}}', when: '{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}', max: 3, label: senza bagno (n.)}
   - {id: 'r5c4p16reg:number', kind: text, value: '{{ask.camere_singole_bagno+ask.camere_singole_senza}}', when: '{{ask.camere_singole_bagno+ask.camere_singole_senza|positive}}', max: 5, label: totale camere

@@ -192,7 +192,7 @@ sections:
   - {id: 'r5c1p7reg:txt', kind: text, value: '{{ask.cedente_titolo_protocollo}}', max: 30, label: già avviata con la SCIA/DIA/autorizzazione prot./n}
   - {id: 'r5c2p9reg:calendar_input', kind: date, value: '{{ask.cedente_titolo_data|date_it}}', label: del}
   - {id: 'r6c1p12reg:radio:0_clone', kind: radio, when: '{{ask.subingresso_data|empty}}', label: Avvio dell'attività contestuale}
-  - {id: 'r7c1p14reg:radio:1_clone', kind: radio, when: '{{ask.subingresso_data|empty|not}}', label: Avvio dell'attività con decorrenza}
+  - {kind: radio, when: '{{ask.subingresso_data|empty|not}}', label: Avvio dell'attività con decorrenza}
   - {id: 'r8c2p17reg:calendar_input', kind: date, value: '{{ask.subingresso_data|date_it}}', when: '{{ask.subingresso_data|empty|not}}', label: dal}
 - section: motivazioni del subingresso
   fields:
@@ -202,7 +202,7 @@ sections:
   - {id: 'r2c2p5reg:radio:3_clone', kind: radio, when: '{{ask.subingresso_causa|is_fusione}}', label: Fusione}
   - {id: 'r3c1p7reg:radio:4_clone', kind: radio, when: '{{ask.subingresso_causa|is_fallimento}}', label: Fallimento}
   - {id: 'r3c2p8reg:radio:5_clone', kind: radio, when: '{{ask.subingresso_causa|is_successione}}', label: Successione}
-  - {id: 'r4c1p10reg:radio:6_clone', kind: radio, when: '{{ask.subingresso_causa|is_altre_cause}}', label: Altre cause}
+  - {kind: radio, when: '{{ask.subingresso_causa|is_altre_cause}}', label: Altre cause}
   - {id: 'r5c2p13reg:txt', kind: text, value: '{{ask.subingresso_causa_altro}}', when: '{{ask.subingresso_causa|is_altre_cause}}', max: 100, label: 'specificare:'}
   - {kind: radio, when: '{{ask.atto_registrato}}', label: con atto di registrazione}
   - {kind: text, value: '{{ask.atto_registrazione_numero}}', when: '{{ask.atto_registrato}}', max: 30, label: n.}

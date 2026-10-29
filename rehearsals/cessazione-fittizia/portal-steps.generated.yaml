@@ -190,7 +190,7 @@ sections:
   - {id: 'r5c2p9reg:txt', kind: text, value: '{{ask.titolo_attivita_protocollo}}', max: 20, label: prot./n.}
   - {id: 'r5c3p11reg:calendar_input', kind: date, value: '{{ask.titolo_attivita_data|date_it}}', label: del}
   - {id: 'r6c1p14reg:radio:0_clone', kind: radio, when: '{{ask.cessazione_data|empty}}', label: Cessazione contestuale alla comunicazione}
-  - {id: 'r7c1p16reg:radio:1_clone', kind: radio, when: '{{ask.cessazione_data|empty|not}}', label: Cessazione con decorrenza}
+  - {kind: radio, when: '{{ask.cessazione_data|empty|not}}', label: Cessazione con decorrenza}
   - {id: 'r8c2p19reg:calendar_input', kind: date, value: '{{ask.cessazione_data|date_it}}', when: '{{ask.cessazione_data|empty|not}}', label: dal}
 - section: Cessazione dell'attività ai sensi dell'art. 6, Reg. CE n. 852/2004
   fields:
