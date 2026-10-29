@@ -119,5 +119,38 @@
    "seconds": 0.8,
    "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
- ]
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "id": "r3c1p3reg:upload1_input",
+    "title": "Allegato 5 al DPR 210/2017 - Piano di utilizzo",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r8c1p9reg:upload1_input",
+    "title": "Procura speciale",
+    "accepts": "jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r11c1p12reg:upload1_input",
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "accepts": "pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r15c1p17reg:upload1_input",
+    "title": "Allegati liberi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft"
 }

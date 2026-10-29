@@ -476,5 +476,52 @@
    "seconds": 0.9,
    "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
- ]
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "id": "r2c1p2reg:upload1_input",
+    "title": "elaborati grafici comprensivi di stato attuale, progetto e tavola interventi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r6c1p7reg:upload1_input",
+    "title": "estremi di atti assenso già acquisiti",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r10c1p12reg:upload1_input",
+    "title": "Documentazione fotografica dello stato di fatto",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r15c1p18reg:upload1_input",
+    "title": "Procura speciale",
+    "accepts": "jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r18c1p21reg:upload1_input",
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "accepts": "pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r22c1p26reg:upload1_input",
+    "title": "Allegati liberi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft (an empty draft: slots that the sections' answers add are missing)"
 }

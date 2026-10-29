@@ -950,5 +950,66 @@
    "seconds": 0.9,
    "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
- ]
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "id": "r3c1p3reg:upload1_input",
+    "title": "Procura speciale",
+    "accepts": "jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r6c1p6reg:upload1_input",
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "accepts": "pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r10c1p11reg:upload1_input",
+    "title": "copia attestazione versamento oneri, diritti e spese",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r14c1p16reg:upload1_input",
+    "title": "copia della precedente autorizzazione paesaggistica (per le varianti)",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r18c1p21reg:upload1_input",
+    "title": "elaborati grafici comprensivi di stato attuale progetto ed interventi, con indicazione dei materiali adottati",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r22c1p26reg:upload1_input",
+    "title": "documentazione fotografica a colori del contesto edilizio e paesaggistico, anche a lunga e media distanza, con evidenziati, su apposita planimetria, i coni visu",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r26c1p31reg:upload1_input",
+    "title": "Relazione paesaggistica (redatta ai sensi del D.P.C.M: 12 dicembre 2005)",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r30c1p36reg:upload1_input",
+    "title": "Allegati liberi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft"
 }

@@ -692,5 +692,52 @@
    "seconds": 1.1,
    "scelta": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
   }
- ]
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "id": "r2c1p2reg:upload1_input",
+    "title": "copia attestazione versamento oneri, diritti e spese",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r7c1p8reg:upload1_input",
+    "title": "Relazione Paesaggistica Semplificata",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r10c1p11reg:upload1_input",
+    "title": "Elaborati di progetto individuati nell'Allegata Relazione Paesaggistica Semplificata",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r14c1p15reg:upload1_input",
+    "title": "Procura speciale",
+    "accepts": "jpg.p7m;pdf.p7m",
+    "required": false,
+    "portal_document": true
+   },
+   {
+    "id": "r17c1p18reg:upload1_input",
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "accepts": "pdf;pdf.p7m",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "id": "r21c1p23reg:upload1_input",
+    "title": "Allegati liberi",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft"
 }

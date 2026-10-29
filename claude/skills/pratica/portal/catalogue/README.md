@@ -47,11 +47,19 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
 ## Where it stands (2026-10-29, `catalogue.py count --summary`)
 
-- **SUE**: all 27 pratiche crawled; **128 distinct sections**, 94 filled by the dictionary,
-  89% of section uses. 22 of the 27 pratiche have every section filled; the other five
-  (permesso di costruire, SCIA, SCIA alternativa, the accertamento di compatibilità
-  paesaggistica, the parere for an exemption) need the asseverazioni, the sanatoria and the
-  exemptions' own declarations: legal and technical choices more than mapping.
+- **SUE**: all 27 pratiche crawled, and one combination (below); **128 distinct sections**,
+  94 filled by the dictionary, 90% of section uses. 22 of the 27 pratiche have every section
+  filled, and all 22 have run on the portal with made-up data; the other five (permesso di
+  costruire, SCIA, SCIA alternativa, the accertamento di compatibilità paesaggistica, the
+  parere for an exemption) need the asseverazioni, the sanatoria and the exemptions' own
+  declarations: legal and technical choices more than mapping. Every SUE crawl has its
+  attachments screen (`slots`): the four not yet fillable read on an empty draft, so slots
+  their sections' answers add may be missing. A slot reads `required` only once the portal has
+  checked the screen (after an upload or Prosegui), so a fresh read marks none.
+- **A combination**: a CILA with an autorizzazione paesaggistica semplificata in one pratica
+  (`sue-combo-cila-paesaggistica-semplificata`) has the union of their sections, each the same
+  section as alone (fingerprints), in its own order. gen.py doesn't write a two-operation
+  recipe yet.
 - **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
   B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
   21 filled, 71% of section uses (the shared ones). The whole tree is 2,333 sector-and-operation
@@ -88,6 +96,6 @@ by `run.py preflight` until it is crawled again (`import` clears it).
 - The fingerprint is the section before any choice: a change only inside a branch is caught by
   the runner, not by the check.
 - Operations are crawled one at a time; combinations (two operations in one pratica, an
-  intervento eventuale) are only what each adds on its own.
+  intervento eventuale) are only what each adds on its own, except the one checked above.
 - Names aren't identity: two sections with different titles can hold the same fields, which
   the section crawl settles.
