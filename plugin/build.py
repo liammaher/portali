@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Build the Napoli plugin for Cowork: plugin/napoli plus the runner, the rehearsals'
+"""Build the Portali plugin for Cowork: plugin/portali plus the runner, the rehearsals'
 steps files and the pratiche-napoli library, as one installable file.
 
   build.py [--library DIR] [--out DIR] [--connector URL]
 
-Writes OUT/napoli/ (default plugin/dist) and OUT/napoli.plugin (the same, zipped), then
+Writes OUT/portali/ (default plugin/dist) and OUT/portali.plugin (the same, zipped), then
 pre-flights the test fixture with the built plugin under the system python3, as Cowork would run
 it. --library is a pratiche-napoli checkout (default $PRATICHE_NAPOLI_DIR). Needs PyYAML
 (the pratica venv's Python): the plugin itself needs no packages, because every YAML file
-the runner reads goes in as JSON (shim/yaml.py says how). --connector adds the napoli
+the runner reads goes in as JSON (shim/yaml.py says how). --connector adds the Portali
 connector (connector/, serving this same build) as the plugin's .mcp.json.
 """
 
@@ -221,8 +221,8 @@ def make_pdf(path, size):
 
 def self_check(plugin):
     """The test case through check.py and pre-flight under python3, as Cowork runs them."""
-    skill = plugin / "skills" / "napoli-pratica"
-    case = plugin / "skills" / "napoli-cowork-test" / "cila"
+    skill = plugin / "skills" / "portali-pratica"
+    case = plugin / "skills" / "portali-cowork-test" / "cila"
     py = shutil.which("python3") or sys.executable
     with tempfile.TemporaryDirectory() as tmp:
         values = Path(tmp) / "values.json"
@@ -279,7 +279,7 @@ def main():
     ap.add_argument("--out", type=Path, default=HERE / "dist")
     ap.add_argument("--pvault-version", help="the pvault release the setup skill installs, e.g. 0.1.0 (with --pvault-checksums)")
     ap.add_argument("--pvault-checksums", type=Path, help="that release's checksums.txt")
-    ap.add_argument("--connector", help="the napoli connector's https URL (connector/): the plugin brings it")
+    ap.add_argument("--connector", help="the Portali connector's https URL (connector/): the plugin brings it")
     a = ap.parse_args()
     if a.connector and not re.fullmatch(r"https://[^\s/]+(/\S*)?", a.connector):
         ap.error("--connector must be an https URL")
@@ -287,24 +287,24 @@ def main():
         ap.error("--pvault-version and --pvault-checksums go together")
     if not a.library:
         ap.error("--library or $PRATICHE_NAPOLI_DIR: a pratiche-napoli checkout")
-    plugin = a.out / "napoli"
+    plugin = a.out / "portali"
     if plugin.exists():
         shutil.rmtree(plugin)
-    shutil.copytree(HERE / "napoli", plugin, ignore=shutil.ignore_patterns(".DS_Store", "__pycache__"))
+    shutil.copytree(HERE / "portali", plugin, ignore=shutil.ignore_patterns(".DS_Store", "__pycache__"))
     # The licence and notices travel with the plugin: it bundles the library's CC BY-SA texts.
     for name in ("LICENSE", "NOTICE.md"):
         shutil.copy2(REPO / name, plugin / name)
     if a.connector:  # without one the skill uses coverage.json, as of the build
-        (plugin / ".mcp.json").write_text(as_json({"mcpServers": {"napoli": {"type": "http", "url": a.connector}}}))
+        (plugin / ".mcp.json").write_text(as_json({"mcpServers": {"portali": {"type": "http", "url": a.connector}}}))
     if a.pvault_version:  # without one the setup skill says there is no release to install from
-        write_pvault_release(plugin / "skills" / "napoli-setup", a.pvault_version, a.pvault_checksums)
-    skill = plugin / "skills" / "napoli-pratica"
+        write_pvault_release(plugin / "skills" / "portali-setup", a.pvault_version, a.pvault_checksums)
+    skill = plugin / "skills" / "portali-pratica"
     copy_runner(skill)
     catalog = copy_pratiche(skill, a.library)
     copy_library(a.library, skill)
     manifest = json.loads((plugin / ".claude-plugin" / "plugin.json").read_text())
     coverage = write_coverage(skill, catalog, a.library, manifest["version"])
-    make_test_case(plugin / "skills" / "napoli-cowork-test")
+    make_test_case(plugin / "skills" / "portali-cowork-test")
     self_check(plugin)
     if not re.fullmatch(r"[a-z0-9-]+", manifest["name"]):
         sys.exit(f"plugin name {manifest['name']!r} isn't kebab-case")

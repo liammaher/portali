@@ -1,16 +1,16 @@
 ---
-name: napoli-cowork-test
-description: Run the Napoli plugin's three Cowork tests with made-up data - whether the built-in browser runs the portal runner's scripts, whether a planimetria-sized file can be attached, and what one run costs - and write the results to a file. Use only when the user asks to run the Napoli Cowork tests.
+name: portali-cowork-test
+description: Run the Portali plugin's three Cowork tests with made-up data - whether the built-in browser runs the portal runner's scripts, whether a planimetria-sized file can be attached, and what one run costs - and write the results to a file. Use only when the user asks to run the Napoli Cowork tests.
 ---
 
 # Napoli Cowork tests
 
-Three questions decide how the Napoli plugin works in Cowork. Answer them with the CILA
+Three questions decide how the Portali plugin works in Cowork. Answer them with the CILA
 rehearsal's made-up client (architetto Chiara Fittizia, client Luca Fittizio: no real
 person, codici fiscali chosen at random) on the real portal, as a draft named "PROVA NON
 INVIARE", never sent. Every path is relative to this skill's base directory (`TEST` below)
-or the napoli-pratica skill's (`SKILL`, its sibling folder `../napoli-pratica`): write them
-out in full. Keep notes as you go and write them all to `napoli-test-results.md` in the
+or the portali-pratica skill's (`SKILL`, its sibling folder `../portali-pratica`): write them
+out in full. Keep notes as you go and write them all to `portali-test-results.md` in the
 user's folder at the end, even when a test fails.
 
 ## 0. Before anything
@@ -21,10 +21,10 @@ user's folder at the end, even when a test fails.
    especially: a tool that runs JavaScript on a page, and a tool that puts a local file into
    a page's file input. Note which browser the browser setting uses (it must be the
    built-in one).
-3. Copy `TEST/cila` into the user's folder as `napoli-test/` and work from there.
+3. Copy `TEST/cila` into the user's folder as `portali-test/` and work from there.
 4. Check and pre-flight it:
    ```sh
-   cd napoli-test
+   cd portali-test
    python3 SKILL/check.py studio.json values.json --out run/values.json
    python3 SKILL/portal/run.py preflight --steps SKILL/pratiche/cila-fittizia.json \
      --answers answers.json --values run/values.json
@@ -50,7 +50,7 @@ user's folder at the end, even when a test fails.
    `python3 SKILL/review.py run`. Record `result`, `error`, `at`, `wizard_seconds`,
    `total_seconds`. The Code tab's browser pane filled this same draft in 84 to 102 s on
    2026-10-28.
-6. If it stopped: follow the napoli-pratica skill's recovery once (at most two fixes) and
+6. If it stopped: follow the portali-pratica skill's recovery once (at most two fixes) and
    record each fix and whether the resume finished.
 
 ## 2. Does a planimetria-sized file get in?
@@ -75,10 +75,10 @@ calls since step 0.
 
 ## The results file
 
-Write `napoli-test-results.md` in the user's folder:
+Write `portali-test-results.md` in the user's folder:
 
 ```markdown
-# Napoli plugin: Cowork tests, <date>
+# Portali plugin: Cowork tests, <date>
 
 | Test | Result | Detail |
 |---|---|---|
@@ -91,5 +91,5 @@ Write `napoli-test-results.md` in the user's folder:
 check.py, pre-flight and run.py page as printed; the report's result, error and at.
 ```
 
-Then attach `napoli-test-results.md` and `napoli-test/run/report.json`, and tell the user to
+Then attach `portali-test-results.md` and `portali-test/run/report.json`, and tell the user to
 send both back.

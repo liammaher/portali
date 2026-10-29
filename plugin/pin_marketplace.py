@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Writes .claude-plugin/marketplace.json for one release: the marketplace people add
 (`claude plugin marketplace add liammaher/personal-vault-italia`) and the one entry in it, the
-napoli plugin, as a zip attached to that release and pinned by its SHA-256, so Claude Code
+Portali plugin, as a zip attached to that release and pinned by its SHA-256, so Claude Code
 refuses a download that isn't the file this release published.
 
-  pin_marketplace.py --version 0.2.0 --sha256 <64 hex of napoli-0.2.0.zip> [--out FILE]
+  pin_marketplace.py --version 0.2.0 --sha256 <64 hex of portali-0.2.0.zip> [--out FILE]
 
 The release workflow (.github/workflows/release.yml) runs it after attaching the zip and opens a
 pull request with the result; until the first release the repository has no marketplace file,
@@ -23,17 +23,18 @@ HERE = Path(__file__).resolve().parent
 
 def marketplace(version, sha256, repo=REPO):
     return {
-        "name": "pratiche-italia",
-        "description": "Italian bureaucracy for Claude: prepare pratiche on government portals up to the steps only "
+        "name": "portali",
+        "description": "Portali: Claude prepares your pratiche on Italian government portals up to the steps only "
                        "you can take (SPID login, declarations, signature, payment, sending).",
         "owner": {"name": "Liam Maher"},
         "plugins": [{
-            "name": "napoli",
-            "description": "Prepares Comune di Napoli pratiche (SUE and SUAP on impresainungiorno) from your "
-                           "documents or your private vault, with the pratiche-napoli library of rules.",
+            "name": "portali",
+            "description": "Prepares pratiche on the portals, today the Comune di Napoli's (SUE and SUAP on "
+                           "impresainungiorno), from your documents or your private vault, with the pratiche-napoli "
+                           "library of rules.",
             "source": {
                 "source": "archive",
-                "url": f"https://github.com/{repo}/releases/download/v{version}/napoli-{version}.zip",
+                "url": f"https://github.com/{repo}/releases/download/v{version}/portali-{version}.zip",
                 "sha256": sha256,
             },
         }],

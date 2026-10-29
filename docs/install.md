@@ -8,11 +8,11 @@ the first release tag (`v0.2.0`) is pushed, so `marketplace add` has nothing to 
 1. **Add the plugin.** In Claude Code:
 
    ```
-   /plugin install napoli --marketplace liammaher/personal-vault-italia
+   /plugin install portali --marketplace liammaher/personal-vault-italia
    ```
 
    (or `claude plugin marketplace add liammaher/personal-vault-italia`, then
-   `claude plugin install napoli@pratiche-italia`).
+   `claude plugin install portali@portali`).
 2. **Say "set me up"** if you want the private vault. Claude asks before it downloads anything.
 3. **Choose a password and save the secret key** `pvault init` prints, in a terminal. This is the one
    step that is yours alone: neither is ever typed or shown in the conversation.
@@ -23,8 +23,8 @@ the plugin is installed.
 ## What happens, and what is checked
 
 ```
-.claude-plugin/marketplace.json  --pinned by SHA-256-->  napoli-<version>.zip  (a release asset)
-napoli-<version>.zip  contains  pvault-checksums.txt  (SHA-256 of each pvault archive of that release)
+.claude-plugin/marketplace.json  --pinned by SHA-256-->  portali-<version>.zip  (a release asset)
+portali-<version>.zip  contains  pvault-checksums.txt  (SHA-256 of each pvault archive of that release)
 install-pvault.sh | .ps1  downloads  pvault_<version>_<os>_<arch>  and refuses it unless it matches
 ```
 
@@ -53,10 +53,10 @@ install-pvault.sh | .ps1  downloads  pvault_<version>_<os>_<arch>  and refuses i
 
 ## Releasing (maintainers)
 
-1. Bump `version` in `plugin/napoli/.claude-plugin/plugin.json`; the release workflow refuses a tag that
+1. Bump `version` in `plugin/portali/.claude-plugin/plugin.json`; the release workflow refuses a tag that
    differs from it.
 2. Tag `vX.Y.Z` and push the tag. The workflow runs the tests, builds the six `pvault` archives and
-   `checksums.txt` (goreleaser), builds the plugin with them and attaches it as `napoli-X.Y.Z.zip`, then
+   `checksums.txt` (goreleaser), builds the plugin with them and attaches it as `portali-X.Y.Z.zip`, then
    opens a pull request that pins `.claude-plugin/marketplace.json` to it.
 3. Merge that pull request. Until then `marketplace add` finds no marketplace.
 4. On a clean Mac and a clean Windows machine: add the marketplace, say "set me up", and check

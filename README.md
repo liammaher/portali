@@ -1,6 +1,12 @@
-<h1 align="center">Personal Vault — Italia</h1>
+<h1 align="center">Portali</h1>
 
-**A local, encrypted vault for the personal data Italian bureaucracy keeps asking for — codice fiscale, CIE, residenza, permesso di soggiorno, document scans — with scoped, read-only-by-default access for AI agents that fill in forms for you.**
+**Portali** is a free, open-source plugin that lets Claude prepare your pratiche on Italian government portals, up to the steps only you can take: your SPID login, the declarations, signature, payment and sending. It starts with the Comune di Napoli's SUE and SUAP on impresainungiorno, and is meant to grow to every city and portal. Your details stay in an encrypted vault on your own computer, so Claude can fill a form without the details passing through the conversation. Unofficial: see [NOTICE.md](NOTICE.md).
+
+The rest of this page is about that vault, `pvault`.
+
+---
+
+**pvault: a local, encrypted vault for the personal data Italian bureaucracy keeps asking for — codice fiscale, CIE, residenza, permesso di soggiorno, document scans — with scoped, read-only-by-default access for AI agents that fill in forms for you.**
 
 ---
 
@@ -18,7 +24,7 @@ You enter your details and scan your documents once. Agents that prepare forms (
 
 ## Quick start
 
-**As a Claude plugin** (once the first release is out; see [docs/install.md](docs/install.md)): in Claude Code, `/plugin install napoli --marketplace liammaher/personal-vault-italia`, then say "set me up". No compiler.
+**As a Claude plugin** (once the first release is out; see [docs/install.md](docs/install.md)): in Claude Code, `/plugin install portali --marketplace liammaher/personal-vault-italia`, then say "set me up". No compiler.
 
 **From source.** Requires Go 1.26+.
 

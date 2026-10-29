@@ -1,4 +1,4 @@
-# Napoli
+# Portali
 
 Prepares a Comune di Napoli pratica on impresainungiorno (SUE and SUAP) from your client's
 documents, and stops where your part begins: the declarations, your firma digitale, the
@@ -9,10 +9,10 @@ payment and sending. Free; it works on a Claude Pro plan in Cowork.
 In Claude Code, one command adds the marketplace and installs the plugin:
 
 ```
-/plugin install napoli --marketplace liammaher/personal-vault-italia
+/plugin install portali --marketplace liammaher/personal-vault-italia
 ```
 
-Then say "set me up" if you want the private vault (`napoli-setup`), or just ask for a pratica.
+Then say "set me up" if you want the private vault (`portali-setup`), or just ask for a pratica.
 See `docs/install.md` in the repository for what is checked and what is not.
 
 ## Use it

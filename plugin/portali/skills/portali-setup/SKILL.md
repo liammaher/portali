@@ -1,5 +1,5 @@
 ---
-name: napoli-setup
+name: portali-setup
 description: Sets up the private vault (pvault) on this computer: installs the program from the project's release, checked against a checksum this plugin carries, and helps the person create their vault. Use when the user asks to set up, install or update the vault or pvault, or when a pratica needs their saved details and `pvault` isn't installed.
 ---
 
@@ -10,7 +10,7 @@ portal can be filled from it without the details passing through this conversati
 skill gets the program onto the computer and a vault created. It needs a shell on the
 person's own computer (the Code tab, a terminal); in a sandbox with no access to their
 computer (Cowork's, for one) say so in one line and stop: the folder-and-`values.json` way in
-`napoli-pratica` is what that setup can do.
+`portali-pratica` is what that setup can do.
 
 ## 1. Is it already there?
 

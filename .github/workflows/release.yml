@@ -33,7 +33,7 @@ jobs:
 
       # The plugin people install in Claude (plugin/): built from this tag and the pratiche-napoli
       # library, with this release's checksums so its setup skill can check the pvault download.
-      # It is attached to the release as napoli-<version>.zip.
+      # It is attached to the release as portali-<version>.zip.
       - uses: actions/checkout@v4
         with:
           repository: liammaher/pratiche-napoli
@@ -49,19 +49,19 @@ jobs:
         run: |
           set -euo pipefail
           version="${GITHUB_REF_NAME#v}"
-          manifest=$(python3 -c 'import json; print(json.load(open("plugin/napoli/.claude-plugin/plugin.json"))["version"])')
+          manifest=$(python3 -c 'import json; print(json.load(open("plugin/portali/.claude-plugin/plugin.json"))["version"])')
           if [ "$manifest" != "$version" ]; then
-            echo "plugin/napoli/.claude-plugin/plugin.json says $manifest, the tag says $version: bump the plugin first" >&2
+            echo "plugin/portali/.claude-plugin/plugin.json says $manifest, the tag says $version: bump the plugin first" >&2
             exit 1
           fi
           python3 -m pip install pyyaml
           python3 plugin/build.py --library pratiche-napoli --out "$RUNNER_TEMP/plugin" \
             --pvault-version "$version" --pvault-checksums dist/checksums.txt
-          cp "$RUNNER_TEMP/plugin/napoli.plugin" "napoli-$version.zip"
-          sha256sum "napoli-$version.zip" | cut -d' ' -f1 > "$RUNNER_TEMP/napoli.sha256"
-          gh release upload "$GITHUB_REF_NAME" "napoli-$version.zip"
+          cp "$RUNNER_TEMP/plugin/portali.plugin" "portali-$version.zip"
+          sha256sum "portali-$version.zip" | cut -d' ' -f1 > "$RUNNER_TEMP/portali.sha256"
+          gh release upload "$GITHUB_REF_NAME" "portali-$version.zip"
           echo "PLUGIN_VERSION=$version" >> "$GITHUB_ENV"
-          echo "PLUGIN_SHA256=$(cat "$RUNNER_TEMP/napoli.sha256")" >> "$GITHUB_ENV"
+          echo "PLUGIN_SHA256=$(cat "$RUNNER_TEMP/portali.sha256")" >> "$GITHUB_ENV"
 
       # The marketplace file in the repository points at one release's zip, pinned by SHA-256.
       # A pull request moves it to this one. If the repository doesn't let Actions open pull
@@ -82,4 +82,4 @@ jobs:
           git push origin "$branch"
           gh pr create --base main --head "$branch" \
             --title "Marketplace: point at the $PLUGIN_VERSION plugin" \
-            --body "Pins .claude-plugin/marketplace.json to napoli-$PLUGIN_VERSION.zip (SHA-256 $PLUGIN_SHA256). Merge it and \`claude plugin marketplace add liammaher/personal-vault-italia\` gives this release."
+            --body "Pins .claude-plugin/marketplace.json to portali-$PLUGIN_VERSION.zip (SHA-256 $PLUGIN_SHA256). Merge it and \`claude plugin marketplace add liammaher/personal-vault-italia\` gives this release."

@@ -12,7 +12,7 @@ import { serve } from "./http.js";
 import { loadRegistry } from "./registry.js";
 
 // The real server over HTTP, against a registry laid out as plugin/build.py writes it.
-// REGISTRY_DIR (a built plugin's napoli-pratica folder) adds a check on the real one.
+// REGISTRY_DIR (a built plugin's portali-pratica folder) adds a check on the real one.
 let dir: string;
 let http: Server;
 let url: string;

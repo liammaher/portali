@@ -139,7 +139,7 @@ counts: `plugin/coverage.yaml` and `plugin/build.py`.
 | 5 | Immigration is the second segment, with a partner | **Changed.** No segments: the ranking decides. The Questura isn't mapped. |
 | 6 | No interim nudge before Duet | **Unchanged.** |
 | 7 | The sensitivity tier changes, as one schema change | **Unchanged** and still to do. |
-| 8 | Pick the name with the first partner; fund hosting from grants | **Reversed.** There is no hosting to fund. The name should be chosen before anyone installs, and not be "napoli" (question 9). |
+| 8 | Pick the name with the first partner; fund hosting from grants | **Reversed.** There is no hosting to fund. The name is Portali (question 9). |
 
 ## Open questions
 
@@ -156,7 +156,7 @@ rehearsals cite them. Details are in [`design/north-star-2026-10-27.md`](design/
 | 6 | Which pratica first | **Done in practice**: the SCIA and CILA rehearsals ran on the real portal. Next is by pain density. |
 | 7 | Large attachments in the pane | **Open and sharper.** The planned fix was a host of ours serving each file for a moment; that is out. Choices: Cowork's own file tool (test 2), the Playwright window, or the person attaching. |
 | 8 | **Filling in the desktop app's browser without Claude carrying the values** | **Partly done.** (b) is built: in the pane `run.js` carries the values sealed under a code the person reads in a window and types into a box on the page, so they never pass through the conversation. The filled page stays a rule, not a fact. (a), the window as the run for real data, still needs no code and leaves Claude no handle at all. (c), a local process that drives the app's browser instead of Claude: nothing known offers one. Open: whether Cowork can show the code window from where its Python runs. |
-| 9 | **The name** | **New.** It should outlive Naples and be chosen before the first install, since renaming a plugin breaks installs. |
+| 9 | **The name** | **Decided 2026-10-29: Portali**, before any release existed. The plugin, its marketplace and its skills are `portali` / `portali-*`, and the release zip is `portali-<version>.zip`. `pvault` keeps its name, and so do the repository and the pratiche-napoli library. Not checked: trademark, domain, or another product by that name. |
 | 10 | **Install without a compiler** | **Stage one built, not released** (`docs/install.md`): a marketplace entry pinned to a release zip, a setup skill and installers that fetch the release's `pvault` and check it against checksums the plugin carries. Files fetched with `curl` aren't quarantined by macOS, so the first version needs no Apple developer account: unconfirmed until tried on a clean Mac. Windows' script is untested. Still open: creating the vault without a terminal (stage two), no system Python (stage three), one-click listing (stage four). |
 | 11 | **Sharing a drift report** | **New.** Structure only, opt-in, as a PR or an issue. |
 | 12 | **Responsible use** | **New.** A short page: not legal advice, the person signs, one person's own session and no bulk use. Check each portal's terms on automation. |
