@@ -356,7 +356,9 @@ When there is one, follow it instead of exploring the portal:
    (same arguments, `--out DIR`) writes `install.js` and `run.js`; run each on the portal's
    page with one `javascript_tool` call (install once per browser profile; it stores no
    personal data), poll `await __pv.wait(40000)` until `result` is `filled` or `stopped`, and
-   `__pv.open()` shows the draft.
+   `__pv.open()` shows the draft. One run per login at a time, in any tab or window: the
+   portal keeps one pratica in progress per login, so a second run (or a crawl) moves the
+   first one's draft back a screen or shows its error page.
 3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
    Invia, or sign: the code refuses them in `run.py`, and you don't do them by hand.
    Attachments: a field `{id: ..., kind: file, label: ..., value: "{{ask.x}}"}` (or `css:`
