@@ -15,7 +15,8 @@
 // one by an https link the page fetches, checked against its sha256.
 //
 //   __pv.start(procedure, values[, resume])  starts a run, returns at once. resume picks a
-//                                  stopped run up: {url, from, kept, fixes} (run.py --resume)
+//                                  stopped run up: {url, from, kept, fixes} (run.py --resume);
+//                                  a stop on the portal's own error goes on by itself (`retries`)
 //   await __pv.wait(ms)            the run's report once it ends, or after ms
 //   __pv.last()                    the last run's report, kept in the tab (sessionStorage: it
 //                                  outlives a reload of the runner, not the tab)
@@ -72,6 +73,7 @@
     const out = { ...report };
     delete out.kept;
     if (out.error) out.error = scrub(out.error);
+    if (out.retries) out.retries = out.retries.map((r) => ({ ...r, error: scrub(r.error) }));
     out.sections = (out.sections || []).map((s) => ({ ...s, errors: s.errors.map(scrub) }));
     return out;
   }
@@ -346,7 +348,8 @@
     const open = [...doc().querySelectorAll(".ui-autocomplete-panel")].filter((p) => p.offsetParent);
     for (const p of open) {
       const w = widgets().find((x) => x && x.panel && x.panel[0] === p);
-      if (w && w.hide) w.hide(); else p.style.display = "none";
+      if (w && w.hide) w.hide();
+      p.style.display = "none"; // PrimeFaces 11's hide() only starts a fade, still over the next box
     }
     if (open.length) await idle();
   }
@@ -754,6 +757,49 @@
       messages: errors().map(scrub).slice(0, 10) };
   }
 
+  // The portal's own hiccups: its error page ("errore inatteso"), a section slow to open or
+  // to show its boxes, a busy queue. A run stopped by one picks itself up on the same draft,
+  // as a person would by reloading (at most `retries` times, 2 by default); anything else (a
+  // value the portal refuses or doesn't keep, a label it renamed) still stops, so a real
+  // change is never retried into a misfill. Each retry is in the report's `retries`.
+  const TRANSIENT = /didn't open|stayed busy|fields with this label|expected the screen|no section |error page|has expired/;
+  async function attempt(values, resume) {
+    for (let n = 0; ; n++) {
+      await run(values, resume);
+      const prev = report, at = prev.at, onError = /\/cmd\/error/.test(prev.url || "");
+      if (prev.result !== "stopped" || !at || n >= (resume.retries ?? 2) || !(onError || TRANSIENT.test(prev.error || ""))) return;
+      // Still running for wait(): the retry is part of this run.
+      const retries = (prev.retries || []).concat([{ error: prev.error, at }]);
+      report = { ...prev, result: "running", error: undefined, snapshot: undefined, retries, resumed: true };
+      await sleep(resume.retry_wait_ms ?? 10000);
+      let url = null;
+      if (at.phase === "section") {
+        // A draft whose address is still good goes on from there; one on the error page is
+        // opened again from Pratiche in bozza by its name.
+        url = onError ? null : prev.url;
+        if (!url) {
+          try {
+            url = await reopen(values.wizard[0], location.origin + "/fnsuap/cmd/home");
+          } catch (e) {
+            report = { ...prev, retries, error: `${prev.error}; then reopening the draft: ${e.message}` };
+            try { sessionStorage.setItem("pv-report", JSON.stringify(report)); } catch (_) { /* storage off */ }
+            return;
+          }
+        }
+      }
+      document.querySelectorAll('iframe[data-pv="runner"]').forEach((f) => f.remove());
+      if (url) {
+        resume = { ...resume, url, from: { section: at.index }, kept: prev.kept || [] };
+      } else {
+        // Stopped in the wizard: a new pratica, from the start.
+        resume = { ...resume, url: undefined, from: {}, kept: [] };
+        kept = [];
+        report.sections = [];
+        report.kept = [];
+      }
+    }
+  }
+
   // The draft named name, opened from the list of Pratiche in bozza (ten a page; the newest
   // first). Its address then is the home's, with its own execution key.
   async function reopen(name, home) {
@@ -802,7 +848,7 @@
       for (const x of resume.fixes || []) Object.assign(steps.sections[x.section].fields[x.field], x.set);
       report = { procedure, result: "running", sections: [], at: null, resumed: !!resume.url };
       kept = [];
-      run(values, resume);
+      attempt(values, resume);
       return "started";
     },
     // The values sealed under a code (run.py page): the run starts once the person has typed it.

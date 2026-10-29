@@ -61,7 +61,9 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   (`sue-combo-cila-paesaggistica-semplificata`) has the union of their sections, each the same
   section as alone (fingerprints), in its own order. A recipe can name both operations
   (`rehearsals/cila-paesaggistica-fittizia`), run to the declarations; its attachments screen
-  isn't read yet.
+  isn't read yet. Two more (2026-10-29): the SCIA with its semplificata, and with its ordinaria
+  (`sue-combo-scia-paesaggistica-*`), every section one already crawled; their attachments
+  screens are read on the empty draft, plus the SCIA's answer-dependent slots.
 - **SUAP**: 278 pratiche crawled so far (the batch stands at about half of its 1,028 trips:
   the priority sectors, the common operations, part of the other sectors); **477 distinct
   sections**, 67 filled, 71% of section uses, counted under each title a section has. 107

@@ -1,0 +1,297 @@
+{
+ "crawled": "2026-10-29",
+ "by": "crawl.js check (fingerprints) on an empty draft, in the pane",
+ "pratica": "SUE: two operations in one pratica: Segnalazione Certificata di Inizio Attività Edilizia (S.C.I.A.) + Autorizzazione paesaggistica ordinaria (art.146 del D.Lgs 42/2004 - Comune), with the procura scelta",
+ "note": "Every section is one of the SCIA's or the landscape authorization's, the same fingerprint: the combination is their union, in this order. A recipe names both operations: rehearsals/scia-paesaggistica-ordinaria-fittizia.",
+ "sections": [
+  {
+   "section": "SCHEDA ANAGRAFICA",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "scia#Scheda anagrafica"
+  },
+  {
+   "section": "Qualifica e dati del procuratore",
+   "fingerprint": "2ebe54198e212bff",
+   "same_as": "scia#Qualifica e dati del procuratore"
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "scia#Oggetto della pratica"
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "scia#DOMICILIO DIGITALE"
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "scia#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)"
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione dell'intervento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "scia#Localizzazione dell'intervento"
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "scia#Dati catastali"
+  },
+  {
+   "section": "dati relativi al nome del tecnico",
+   "fingerprint": "ffddb90f4d2ab273",
+   "same_as": "sue-autorizzazione-paesaggistica-semplificata#dati relativi al nome del tecnico"
+  },
+  {
+   "section": "a) Titolarità dell'intervento",
+   "fingerprint": "3e5d5f463d6964d8",
+   "same_as": "scia#a) Titolarità dell'intervento"
+  },
+  {
+   "section": "dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)",
+   "fingerprint": "0dda28ca5077533f",
+   "same_as": "sue-autorizzazione-paesaggistica-ordinaria#dichiarazione relativa ai contenuti dell'intervento (titolo del richiedente, descrizione e riferimenti dell'immobile o dell'area oggetto dell'intervento)"
+  },
+  {
+   "section": "b) Presentazione della SCIA/SCIA Unica/SCIA Condizionata",
+   "fingerprint": "2d296ce3956dc559",
+   "same_as": "scia#b) Presentazione della SCIA/SCIA Unica/SCIA Condizionata"
+  },
+  {
+   "section": "c) Qualificazione dell'intervento",
+   "fingerprint": "efad12f73389bb59",
+   "same_as": "scia#c) Qualificazione dell'intervento"
+  },
+  {
+   "section": "d) Destinazione d'uso dell'immobile",
+   "fingerprint": "167628390a2f0298",
+   "same_as": "scia#d) Destinazione d'uso dell'immobile"
+  },
+  {
+   "section": "e) Opere su parti comuni o modifiche esterne",
+   "fingerprint": "a9ea4400694734ae",
+   "same_as": "scia#e) Opere su parti comuni o modifiche esterne"
+  },
+  {
+   "section": "f) Regolarità urbanistica e precedenti edilizi",
+   "fingerprint": "00d7988585f52837",
+   "same_as": "scia#f) Regolarità urbanistica e precedenti edilizi"
+  },
+  {
+   "section": "g) Calcolo del contributo di costruzione",
+   "fingerprint": "e307f3c15dac28df",
+   "same_as": "scia#g) Calcolo del contributo di costruzione"
+  },
+  {
+   "section": "h1) Tecnici incaricati",
+   "fingerprint": "cbe6e63b6534a4f7",
+   "same_as": "scia#h1) Tecnici incaricati"
+  },
+  {
+   "section": "H2) Altri tecnici incaricati",
+   "fingerprint": "124292a24c7f627e",
+   "same_as": "scia#H2) Altri tecnici incaricati"
+  },
+  {
+   "section": "i) Impresa esecutrice dei lavori",
+   "fingerprint": "334a1e7c12e87178",
+   "same_as": "scia#i) Impresa esecutrice dei lavori"
+  },
+  {
+   "section": "l) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro",
+   "fingerprint": "543cd39f9d75191d",
+   "same_as": "scia#l) Rispetto degli obblighi in materia di salute e sicurezza nei luoghi di lavoro"
+  },
+  {
+   "section": "m) Diritti di terzi",
+   "fingerprint": "6dcffcfdce6f75ea",
+   "same_as": "scia#m) Diritti di terzi"
+  },
+  {
+   "section": "Note",
+   "fingerprint": "e84721ea696ebe15",
+   "same_as": "scia#Note"
+  },
+  {
+   "section": "Asseverazione SCIA - Tipologia di intervento, descrizione opere",
+   "fingerprint": "c51bc113fab1176d",
+   "same_as": "scia#Asseverazione SCIA - Tipologia di intervento, descrizione opere"
+  },
+  {
+   "section": "Asseverazione SCIA - Stato legittimo, Dichiarazione di tolleranze, Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione",
+   "fingerprint": "adf0f783fad89f7b",
+   "same_as": "scia#Asseverazione SCIA - Stato legittimo, Dichiarazione di tolleranze, Sanatoria e regolarizzazioni per interventi già realizzati e in corso di esecuzione"
+  },
+  {
+   "section": "Asseverazione SCIA - Dati immobile, strumentazione urbanistica, barriere architettoniche",
+   "fingerprint": "455d3194ba676ac0",
+   "same_as": "scia#Asseverazione SCIA - Dati immobile, strumentazione urbanistica, barriere architettoniche"
+  },
+  {
+   "section": "Asseverazione SCIA - Sicurezza impianti, consumi energetici",
+   "fingerprint": "eabee6f40f7bc514",
+   "same_as": "scia#Asseverazione SCIA - Sicurezza impianti, consumi energetici"
+  },
+  {
+   "section": "Asseverazione SCIA - Inquinamento acustico, materiali di risulta, prevenzione incendi",
+   "fingerprint": "afb4e293ac108424",
+   "same_as": "scia#Asseverazione SCIA - Inquinamento acustico, materiali di risulta, prevenzione incendi"
+  },
+  {
+   "section": "Asseverazione SCIA - Amianto, conformità igienico sanitaria, Sismica",
+   "fingerprint": "f5f2a3105610e9cc",
+   "same_as": "scia#Asseverazione SCIA - Amianto, conformità igienico sanitaria, Sismica"
+  },
+  {
+   "section": "Asseverazione SCIA - Tutela Storico Ambientale",
+   "fingerprint": "33ad07aa693f5192",
+   "same_as": "scia#Asseverazione SCIA - Tutela Storico Ambientale"
+  },
+  {
+   "section": "Asseverazione SCIA - Tutela Ecologica",
+   "fingerprint": "6ccd3315fa68296d",
+   "same_as": "scia#Asseverazione SCIA - Tutela Ecologica"
+  },
+  {
+   "section": "Asseverazione SCIA - Altri Vincoli di Tutela Ecologica",
+   "fingerprint": "968ac46e0d8571ad",
+   "same_as": "scia#Asseverazione SCIA - Altri Vincoli di Tutela Ecologica"
+  },
+  {
+   "section": "Asseverazione SCIA - Tutela Funzionale",
+   "fingerprint": "60daf62dbca96826",
+   "same_as": "scia#Asseverazione SCIA - Tutela Funzionale"
+  },
+  {
+   "section": "Asseverazione SCIA - NOTE",
+   "fingerprint": "b6ac34d6d6cc314e",
+   "same_as": "scia#Asseverazione SCIA - NOTE"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "scia#Dichiarazione relativa ai diritti di segreteria/istruttori"
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-autorizzazione-paesaggistica-semplificata#Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  }
+ ],
+ "slots": {
+  "Gestione degli allegati": [
+   {
+    "title": "Procura speciale",
+    "required": false,
+    "portal_document": true,
+    "accepts": "jpg.p7m;pdf.p7m"
+   },
+   {
+    "title": "Quadro riepilogativo della documentazione già disponibile e allegata - SCIA DSC",
+    "required": false,
+    "portal_document": true,
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+   },
+   {
+    "title": "Copia del documento di identità del/i titolare/i e/o del tecnico",
+    "required": false,
+    "portal_document": false,
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+   },
+   {
+    "title": "Fotocopia di un documento di identita' del soggetto che conferisce la procura speciale",
+    "required": false,
+    "portal_document": false,
+    "accepts": "pdf;pdf.p7m"
+   },
+   {
+    "title": "copia attestazione versamento oneri, diritti e spese",
+    "required": false,
+    "portal_document": false,
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+   },
+   {
+    "title": "copia della precedente autorizzazione paesaggistica (per le varianti)",
+    "required": false,
+    "portal_document": false,
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+   },
+   {
+    "title": "elaborati grafici comprensivi di stato attuale progetto ed interventi, con indicazione dei materiali adottati",
+    "required": false,
+    "portal_document": false,
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+   },
+   {
+    "title": "documentazione fotografica a colori del contesto edilizio e paesaggistico, anche a lunga e media distanza, con evidenziati, su apposita planimetria, i coni visu",
+    "required": false,
+    "portal_document": false,
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+   },
+   {
+    "title": "Relazione paesaggistica (redatta ai sensi del D.P.C.M: 12 dicembre 2005)",
+    "required": false,
+    "portal_document": false,
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+   },
+   {
+    "title": "Elaborati grafici dello stato di fatto, di progetto e comparativi",
+    "required": false,
+    "portal_document": false,
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+   },
+   {
+    "title": "Documentazione fotografica dello stato di fatto",
+    "required": false,
+    "portal_document": false,
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+   },
+   {
+    "title": "Allegati liberi",
+    "required": false,
+    "portal_document": false,
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg"
+   },
+   {
+    "title": "Documentazione dimostrativa dello stato legittimo",
+    "required": false,
+    "portal_document": false,
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+   },
+   {
+    "title": "Dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "title": "Copia dei documenti d'identità del/i titolare/i, comproprietario/i",
+    "required": false,
+    "portal_document": false
+   },
+   {
+    "title": "Notifica preliminare (articolo 99 del d.lgs. n. 81/2008)",
+    "required": false,
+    "portal_document": false
+   }
+  ]
+ },
+ "slots_note": "read 2026-10-29 on the empty draft (__crawl.slotsOf): its base slots, plus the SCIA's that its answers add (stato legittimo, the other holders' assent and IDs, the notifica preliminare), as on the SCIA's own screen"
+}

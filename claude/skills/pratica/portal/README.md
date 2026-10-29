@@ -60,11 +60,17 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
   authorization) is selected with the pratica in the wizard, not attached to it.
 - **A block a tick opens may repeat the labels above it** (h1's structural designer under
   the architect's): fill it by label from its first box (`anchor`, `block: 1`).
+- **Suggestion lists fade out.** A street's list, hidden by its widget, lies over the next
+  boxes while it fades (PrimeFaces 11): the runner takes it off the page at once ("covered by
+  li.ui-autocomplete-item" before, 2026-10-29).
 - **A file box's cell names the file once it's in.** Name an upload by the row above it (the
   crawl's `context`), not by its cell ("Tipologie ammesse"), or the read-back can't find it.
 - **The portal's own errors:** "errore inatteso", a 503 for maintenance, a fresh load that
-  lands on `/cmd/error`. Every section is saved by then: reopen the draft from Pratiche in
-  bozza (`__pv.reopen`) and resume.
+  lands on `/cmd/error`, a section slow to open or to show its boxes. Every section is saved
+  by then, so the runner picks itself up: it reopens the draft from Pratiche in bozza (or
+  goes on from its address), waits 10 s and resumes, at most twice, each try in the report's
+  `retries`. A value the portal refuses or doesn't keep, or a renamed label, still stops.
+  Two runs on one login (another session's, a crawl) make these errors: one at a time.
 
 ## Made-up data and the code window
 

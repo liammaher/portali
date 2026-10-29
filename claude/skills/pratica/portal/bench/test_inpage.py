@@ -34,10 +34,12 @@ DEN, IMPRESA = "form:r0c1:dynaForm:den_txt", "form:r4c1:dynaForm:impresa_txt"
 
 
 class Portal:
-    """What the fake portal stored. drop: it shows Denominazione after Salva but never stores it."""
+    """What the fake portal stored. drop: it shows Denominazione after Salva but never stores it.
+    slow: the next that many loads of ?flaky=1 come without the second section's box, as
+    the real portal sometimes shows a section before its boxes."""
 
-    def reset(self, drop=False):
-        self.fields, self.files, self.drop, self.sent = {}, [], drop, False
+    def reset(self, drop=False, slow=0):
+        self.fields, self.files, self.drop, self.sent, self.slow = {}, [], drop, False, slow
 
 
 PORTAL = Portal()
@@ -61,7 +63,13 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/":
             self.send(b"<!doctype html><title>bench</title>", "text/html")
         elif path == "/portal.html":
-            self.send((HERE / "portal.html").read_bytes(), "text/html; charset=utf-8")
+            html = (HERE / "portal.html").read_bytes()
+            if "flaky=1" in self.path and PORTAL.slow > 0:
+                PORTAL.slow -= 1
+                html = html.replace(b'<tr><td><label class="labelDynaFormControl" id="impresa-label">Impresa esecutrice</label></td>\n'
+                                    b'        <td><input type="text" id="form:r4c1:dynaForm:impresa_txt"></td></tr>', b"")
+                assert b"impresa_txt" not in html, "the bench page changed: update the flaky cut"
+            self.send(html, "text/html; charset=utf-8")
         elif path.startswith("/files/") and path[7:] in LINKED:
             self.send(LINKED[path[7:]], "application/pdf")
         elif path == "/state":
@@ -197,6 +205,12 @@ def main():
             stops(fill(browser, base, steps(base, start="/portal.html?banner=1"), answers), "covered by div#consenso")
         case("a consent banner over the form stops the run", banner)
 
+        def fading_list():
+            PORTAL.reset()
+            r = fill(browser, base, steps(base, start="/portal.html?fade=1"), answers)
+            assert r["result"] == "filled", r
+        case("a suggestion list still fading out over the next box is closed, not a stop", fading_list)
+
         def theirs():
             PORTAL.reset()
             stops(fill(browser, base, steps(base, save="Firma e invio"), answers), "refused to click")
@@ -298,6 +312,32 @@ def main():
             finally:
                 page.close()
         case("a stopped run resumes in the tab after the runner reloads, one frame at a time", resumed_in_tab)
+
+        def hiccup():
+            # The section shows without its box on the first load: the run picks itself up on
+            # the same draft, without redoing the first section or its uploads.
+            PORTAL.reset(slow=1)
+            r = fill(browser, base, steps(base, start="/portal.html?flaky=1"), answers, resume={"retry_wait_ms": 100})
+            assert r["result"] == "filled", r.get("error")
+            assert len(r.get("retries", [])) == 1 and "fields with this label" in r["retries"][0]["error"], r.get("retries")
+            assert r["verify_seconds"] is not None, "no fresh load of the draft"
+            assert PORTAL.fields.get(IMPRESA) == answers["impresa"] and PORTAL.fields.get(DEN) == answers["den"], PORTAL.fields
+            assert len(PORTAL.files) == 2, f"uploaded {len(PORTAL.files)} files, not 2"
+            assert answers["impresa"] not in json.dumps(r), "a value in the report"
+        case("a portal hiccup (a box not shown yet) resumes the same draft by itself, once", hiccup)
+
+        def stubborn():
+            # A box that never shows is retried twice, then the run stops and says so; a renamed
+            # label (a real change) is never retried.
+            PORTAL.reset(slow=99)
+            r = fill(browser, base, steps(base, start="/portal.html?flaky=1"), answers, resume={"retry_wait_ms": 100})
+            stops(r, "fields with this label")
+            assert len(r.get("retries", [])) == 2, r.get("retries")
+            PORTAL.reset()
+            r = fill(browser, base, steps(base, start="/portal.html?rename=1"), answers, resume={"retry_wait_ms": 100})
+            stops(r, "expected the label Impresa esecutrice")
+            assert not r.get("retries"), r.get("retries")
+        case("retries are bounded, and a renamed label is never retried", stubborn)
 
         def silent():
             # A run that stops on a lost value tells a caller which box and why, never what it

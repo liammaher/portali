@@ -5,7 +5,9 @@
 <!-- A fake portal for test_inpage.py: two sections in a dynaForm-style form, upload boxes
      that send a file as soon as it's chosen, a Salva that stores every text box on the
      server, and what was stored shown again on every load. ?banner=1 puts a consent banner
-     over everything; ?rename=1 renames the second section's label, as a portal update would. -->
+     over everything; ?rename=1 renames the second section's label, as a portal update would;
+     ?fade=1 opens a suggestion list over Impresa esecutrice as Dati tecnici opens, whose
+     widget's hide() fades it out slowly, as PrimeFaces 11's does. -->
 <nav>
   <a class="linkmenu" href="#allega">Allega documenti</a>
   <a class="linkmenu" href="#tecnici">Dati tecnici</a>
@@ -39,6 +41,19 @@
 <script>
 if (location.search.includes("banner=1")) document.getElementById("consenso").hidden = false;
 if (location.search.includes("rename=1")) document.getElementById("impresa-label").textContent = "Ditta esecutrice";
+if (location.search.includes("fade=1")) {
+  const panel = document.createElement("div");
+  panel.className = "ui-autocomplete-panel";
+  panel.style.cssText = "position:absolute;display:none;background:#fff;border:1px solid #888;z-index:5";
+  panel.innerHTML = "<ul><li class='ui-autocomplete-item'>VIA ESEMPIO</li></ul>";
+  document.body.append(panel);
+  window.PrimeFaces = { widgets: { via: { panel: [panel], hide() { setTimeout(() => { panel.style.display = "none"; }, 3000); } } } };
+  document.querySelector('a[href="#tecnici"]').addEventListener("click", () => {
+    const r = document.getElementById("impresa-label").closest("tr").querySelector("input").getBoundingClientRect();
+    Object.assign(panel.style, { display: "block", left: `${r.left + scrollX - 10}px`, top: `${r.top + scrollY - 10}px`,
+      width: `${r.width + 20}px`, height: `${r.height + 20}px` });
+  });
+}
 const texts = () => [...document.querySelectorAll("input[type=text]")];
 const list = (name) => {
   const li = document.createElement("li");

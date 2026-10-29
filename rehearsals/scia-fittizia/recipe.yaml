@@ -1,5 +1,6 @@
 # The SCIA edilizia (art. 22 c. 1 a) to c) DPR 380/2001), as gen.py writes its steps file:
-# manutenzione straordinaria, restauro or ristrutturazione, on structures (with its seismic
+# manutenzione straordinaria, restauro or ristrutturazione (changing the use or not), a variant
+# in corso d'opera, or a change of use alone; the contributo free or due; on structures (with its seismic
 # filing and another technician as structural designer, the `s:` person) or not, and every
 # protection the progettista's asseverazione names. Crawl catalogue/F839/sections/scia.json
 # (36 sections, 319 choices), every field from dictionary/fnsuap.yaml. The CILA rehearsal's
@@ -18,6 +19,11 @@ after: [Pagamento degli oneri, Gestione degli allegati]
 attachments:
   Gestione degli allegati:
     - {kind: file, label: Allegati liberi, value: "{{ask.relazione_tecnica}}", describe: Relazione tecnica}
+    # Quadro g)'s answers add their slots: the contributo's prospetto, its receipt once paid, or the
+    # technical documents for the SUE to work it out.
+    - {kind: file, label: Prospetto di calcolo preventivo del contributo di costruzione, value: "{{ask.prospetto_contributo}}", when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_prospetto}}", on_page: true}
+    - {kind: file, label: Attestazione del versamento del contributo di costruzione, value: "{{ask.ricevuta_contributo}}", when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_pagato}}", on_page: true}
+    - {kind: file, label: Documentazione tecnica necessaria alla determinazione del contributo, value: "{{ask.documentazione_calcolo_contributo}}", when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_sportello}}", on_page: true}
     # Each "si allega" of the asseverazione adds its own required slot (seen 2026-10-29), one
     # per fascia for the tutela funzionale; plain PDFs are taken. "Denuncia dei lavori" (art.
     # 65) comes before "... in zona sismica", so it's the first of that label.
@@ -59,8 +65,7 @@ yours:
   - "A SCIA that asks for assents (the Soprintendenza, a park, a vincolo): no start date; the works start once the SUE says the assents are in"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - {value: "{{ask.scia_cambio_uso}}", in: ["false"], else: "A change of use isn't mapped yet."}
-  - {value: "{{ask.paesaggio}}", in: ["no", "senza autorizzazione"], else: "A landscape authorization goes in the same pratica as the SCIA (selected with it on the SUE): that combination isn't mapped yet."}
+  - {value: "{{ask.paesaggio}}", in: ["no", "senza autorizzazione"], else: "A landscape authorization goes in the same pratica as the SCIA, selected with it on the SUE: the SCIA with its semplificata or ordinaria (napoli/comune/scia-con-paesaggistica-*)."}
   - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
   - {value: "{{ask.acustica}}", in: ["false"], else: "Acoustic obligations aren't mapped yet."}
   - {value: "{{ask.antincendio_soggetto}}", in: ["false"], else: "Fire-prevention obligations aren't mapped yet."}
