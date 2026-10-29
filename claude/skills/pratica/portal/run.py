@@ -266,6 +266,10 @@ class Values:
 def plan(steps, values):
     """Each field with its value; raises on a missing required value."""
     out, missing = [], []
+    for w in steps.get("wizard", []):
+        v = values.render(w["fill"]["value"]) if "fill" in w else None
+        if v and w["fill"].get("max") and len(v) > w["fill"]["max"]:
+            missing.append(f"{w['screen']}: {v!r} is longer than the portal takes ({w['fill']['max']})")
     for sec in steps["sections"]:
         for f in sec["fields"]:
             if "when" in f and not truthy(values.render(f["when"]) or ""):

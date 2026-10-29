@@ -118,8 +118,13 @@
     e.scrollIntoView({ block: "center", inline: "nearest" });
     const r = e.getBoundingClientRect();
     if (!r.width || !r.height) fail(`${what}: not visible`);
-    const hit = doc().elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-    if (hit && hit !== e && !e.contains(hit) && !(hit.control === e)) {
+    // A label that wraps is several line boxes: the middle of the whole can fall between two
+    // lines, on its parent. Any line's middle on it will do.
+    const at = (b) => doc().elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+    const mine = (h) => h && (h === e || e.contains(h) || h.control === e);
+    const lines = [...e.getClientRects()].filter((b) => b.width && b.height);
+    const hit = at(r);
+    if (!mine(hit) && !lines.some((b) => mine(at(b))) && hit) {
       const name = hit.id ? `#${hit.id}` : hit.className ? `.${String(hit.className).split(" ")[0]}` : "";
       fail(`${what}: covered by ${hit.tagName.toLowerCase()}${name} "${norm(hit.innerText).slice(0, 60)}"`);
     }
@@ -472,6 +477,8 @@
     const route = /^#[!/]/.test(u.hash);
     if (!route) u.hash = "";
     await act(() => (route ? win().location.reload() : win().location.replace(u.href)));
+    // Every section is saved by now: the person can open the draft from Pratiche in bozza.
+    if (/\/cmd\/error/.test(doc().location.href)) fail("fresh load of the draft: the portal's error page (the sections are saved; open the draft from Pratiche in bozza)");
     const bad = [];
     for (const { sec, done } of kept.filter((k) => !k.sec.go)) {
       const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));

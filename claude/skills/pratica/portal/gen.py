@@ -501,7 +501,7 @@ def generate(recipe, base=HERE):
         wizard = kept
     wizard = wizard or [
         {"screen": "Assegna una descrizione alla pratica",
-         "fill": {"css": 'input[placeholder^="Inserire la descrizione"]', "value": "{{ask.descrizione}}"}, "confirm": "CONFERMA"},
+         "fill": {"css": 'input[placeholder^="Inserire la descrizione"]', "value": "{{ask.descrizione}}", "max": 60}, "confirm": "CONFERMA"},
         {"screen": "Controlla l'accesso alla pratica", "confirm": "CONFERMA"},
         {"screen": "Scelta settore attività", "tree": catalogue["sector"], "confirm": "CONFERMA"},
         {"screen": "Scelta operazioni", "tree": op["label"], "confirm": "CONFERMA"},

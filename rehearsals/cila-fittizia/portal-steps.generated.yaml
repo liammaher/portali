@@ -49,6 +49,7 @@ wizard:
   fill:
     css: input[placeholder^="Inserire la descrizione"]
     value: '{{ask.descrizione}}'
+    max: 60
   confirm: CONFERMA
 - screen: Controlla l'accesso alla pratica
   confirm: CONFERMA
