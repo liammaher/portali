@@ -1,10 +1,16 @@
 version: 2
 
+# The release assets are named pvault_<version>_<os>_<arch>; the plugin's installer
+# (plugin/napoli/skills/napoli-setup) builds those names, so keep this fixed.
+project_name: pvault
+
 builds:
   - main: ./cmd/pvault
     binary: pvault
     env:
       - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X main.version={{.Version}}
     goos:
       - darwin
       - linux

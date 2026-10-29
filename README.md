@@ -18,7 +18,9 @@ You enter your details and scan your documents once. Agents that prepare forms (
 
 ## Quick start
 
-Requires Go 1.26+.
+**As a Claude plugin** (once the first release is out; see [docs/install.md](docs/install.md)): in Claude Code, `/plugin install napoli --marketplace liammaher/personal-vault-italia`, then say "set me up". No compiler.
+
+**From source.** Requires Go 1.26+.
 
 ```sh
 git clone https://github.com/liammaher/personal-vault-italia.git

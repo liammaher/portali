@@ -5,6 +5,11 @@ import (
 	"os"
 )
 
+// version is set at release time (goreleaser: -X main.version=...); "dev" in a build from source.
+var version = "dev"
+
+func versionLine() string { return "pvault " + version }
+
 func main() {
 	args, err := selectVault(os.Args)
 	if err != nil {
@@ -77,6 +82,8 @@ func main() {
 		cmdHello()
 	case "credential":
 		cmdCredential()
+	case "version", "--version":
+		fmt.Println(versionLine())
 	case "help", "-h", "--help":
 		printUsage()
 	default:
@@ -102,6 +109,7 @@ Commands:
   lock                             Lock vault (stops server)
   serve                            Run server in foreground
   status                           Show vault status
+  version                          Print the version of this build
   schema                           Show recommended field names (--json for raw JSON)
   set <id> [value]                 Set a field; leave out the value to type it hidden (for secrets).
                                    Another person's fields are <slug>:<id>, e.g. leo:cie.numero

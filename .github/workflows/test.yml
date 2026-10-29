@@ -24,6 +24,12 @@ jobs:
       - name: Test
         run: go test -race ./...
 
+      # The plugin's pvault installer against a fake release (plugin/test_install.py).
+      - name: Installer
+        run: |
+          python3 -m pip install pyyaml
+          python3 plugin/test_install.py
+
   # peer_darwin.go and the Swift Touch ID helper compile only here, and their
   # tests skip elsewhere.
   macos:

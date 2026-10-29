@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -29,3 +30,56 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The plugin people install in Claude (plugin/): built from this tag and the pratiche-napoli
+      # library, with this release's checksums so its setup skill can check the pvault download.
+      # It is attached to the release as napoli-<version>.zip.
+      - uses: actions/checkout@v4
+        with:
+          repository: liammaher/pratiche-napoli
+          path: pratiche-napoli
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build and attach the plugin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          manifest=$(python3 -c 'import json; print(json.load(open("plugin/napoli/.claude-plugin/plugin.json"))["version"])')
+          if [ "$manifest" != "$version" ]; then
+            echo "plugin/napoli/.claude-plugin/plugin.json says $manifest, the tag says $version: bump the plugin first" >&2
+            exit 1
+          fi
+          python3 -m pip install pyyaml
+          python3 plugin/build.py --library pratiche-napoli --out "$RUNNER_TEMP/plugin" \
+            --pvault-version "$version" --pvault-checksums dist/checksums.txt
+          cp "$RUNNER_TEMP/plugin/napoli.plugin" "napoli-$version.zip"
+          sha256sum "napoli-$version.zip" | cut -d' ' -f1 > "$RUNNER_TEMP/napoli.sha256"
+          gh release upload "$GITHUB_REF_NAME" "napoli-$version.zip"
+          echo "PLUGIN_VERSION=$version" >> "$GITHUB_ENV"
+          echo "PLUGIN_SHA256=$(cat "$RUNNER_TEMP/napoli.sha256")" >> "$GITHUB_ENV"
+
+      # The marketplace file in the repository points at one release's zip, pinned by SHA-256.
+      # A pull request moves it to this one. If the repository doesn't let Actions open pull
+      # requests, the release still stands: run plugin/pin_marketplace.py by hand.
+      - name: Open a pull request pinning the marketplace to this release
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 plugin/pin_marketplace.py --version "$PLUGIN_VERSION" --sha256 "$PLUGIN_SHA256"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="release/marketplace-$PLUGIN_VERSION"
+          git checkout -b "$branch"
+          git add .claude-plugin/marketplace.json
+          git commit -m "Marketplace: point at the $PLUGIN_VERSION plugin"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Marketplace: point at the $PLUGIN_VERSION plugin" \
+            --body "Pins .claude-plugin/marketplace.json to napoli-$PLUGIN_VERSION.zip (SHA-256 $PLUGIN_SHA256). Merge it and \`claude plugin marketplace add liammaher/personal-vault-italia\` gives this release."
