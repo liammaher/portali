@@ -9,8 +9,9 @@ import (
 	"github.com/lovincyrus/personal-vault/internal/vault"
 )
 
-const locateUsage = `usage: pvault locate [residenza | domicilio | locale | sede_legale]
-         an address of the vault; a person's is leo:residenza, a second premises locale2
+const locateUsage = `usage: pvault locate [residenza | domicilio | locale | immobile | sede_legale]
+         an address of the vault; a person's is leo:residenza, a second premises locale2,
+         a client's property luca:immobile
        pvault locate --street <via> [--civico <n>] [--quartiere <name>]
          an address typed here: reads nothing from the vault, asks for no password`
 

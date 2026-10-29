@@ -15,7 +15,7 @@ import (
 )
 
 // ErrNotLocatable is returned by Locate for a category that is not an address.
-var ErrNotLocatable = errors.New("not an address: use residenza, domicilio, locale or sede_legale")
+var ErrNotLocatable = errors.New("not an address: use residenza, domicilio, locale, immobile or sede_legale")
 
 func auditRead(id string) store.AuditEntry {
 	return store.AuditEntry{Consumer: "vault", Scope: id, Action: "read"}
@@ -44,6 +44,7 @@ var locatedKinds = []locatedKind{
 	{"residenza", "indirizzo", "civico", "comune", "quartiere", "municipalita", "distretto_asl"},
 	{"domicilio", "indirizzo", "civico", "comune", "quartiere", "municipalita", "distretto_asl"},
 	{"locale", "indirizzo", "civico", "comune", "quartiere", "municipalita", "distretto_asl"},
+	{"immobile", "indirizzo", "civico", "comune", "quartiere", "municipalita", "distretto_asl"},
 	{"business", "sede_legale_indirizzo", "sede_legale_civico", "sede_legale_comune",
 		"sede_legale_quartiere", "sede_legale_municipalita", "sede_legale_distretto_asl"},
 }

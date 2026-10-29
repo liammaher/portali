@@ -310,7 +310,7 @@ the page never copies a rule.
   4%) is `Ambiguous` until a civico in a known range or a named quartiere decides it; a
   lookup never guesses. One ASL (Napoli 1 Centro) serves the whole comune; its distretto
   follows the municipalità.
-- Each address (`residenza`, `domicilio`, `locale`, the sede legale) has computed
+- Each address (`residenza`, `domicilio`, `locale`, `immobile`, the sede legale) has computed
   `quartiere`, `municipalita`, `distretto_asl` (`derived` in schema.json, standard tier).
   `GetIf`, `GetByCategory` and `GetContext` answer them; `List`, export, backups and person
   export hold stored rows only (`FieldInfo.Derived`; `pvault export` drops them).

@@ -214,6 +214,9 @@ func NormalizeAndValidate(id, value string) (string, error) {
 	if v, handled, err := normalizeBusiness(id, category, name, value); handled {
 		return v, err
 	}
+	if v, handled, err := normalizeImmobile(id, category, name, value); handled {
+		return v, err
+	}
 	if v, handled, err := normalizePratica(id, category, name, value); handled {
 		return v, err
 	}
