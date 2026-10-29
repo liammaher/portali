@@ -6,8 +6,10 @@
 // portal's reloads don't end it.
 //
 //   __crawl.start({url, sections: [names] | null, depth: 2})  starts, returns at once
-//   __crawl.batch({draft, ops: [{name, sector, path, check, like}], variants, check})  many pratiche on
-//       one draft (variants: true, false, or "new": each scelta label once);
+//   __crawl.batch({draft, ops: [{name, sector, path, check, like}], variants, interventi, check})
+//       many pratiche on one draft (variants: true, false, or "new": each scelta label once;
+//       interventi: each "interventi eventuali" tick alone too, as a variant; recrawl: section
+//       names crawled again though seen, with `depth`, for a choice that opens deeper boxes);
 //       `check`: fingerprints only (catalogue.py drift), for the batch or one op (`like`:
 //       the crawled pratica it should match)
 //   await __crawl.wait(ms)                               the map so far, once done or after ms
@@ -26,6 +28,9 @@
   // Radios aren't held to it: "dichiara" starts many factual choices (d.1 names "la
   // dichiarazione del progettista"), and the declarations' own sections are never opened.
   const PERSONAL = /presa visione|consapevol|privacy|autorizz|sottoscritt/i;
+  // ...except a box that says what changed ("Il/La sottoscritto/a comunica la modifica della
+  // sede legale"): a choice, which the shops' changes section opens its boxes with.
+  const CHANGE = /comunica la modifica/i;
   const channel = new MessageChannel(), waiting = [];
   channel.port1.onmessage = () => waiting.shift()();
   const tick = () => new Promise((r) => { waiting.push(r); channel.port2.postMessage(0); });
@@ -124,7 +129,7 @@
     const out = [];
     for (const f of fields) {
       if (f.kind === "radio" && !f.checked) out.push({ id: f.id, kind: f.kind, label: f.label });
-      if (f.kind === "checkbox" && !f.checked && !PERSONAL.test(f.label)) out.push({ id: f.id, kind: f.kind, label: f.label });
+      if (f.kind === "checkbox" && !f.checked && (!PERSONAL.test(f.label) || CHANGE.test(f.label))) out.push({ id: f.id, kind: f.kind, label: f.label });
       if (f.kind === "select" && Array.isArray(f.options) && f.options.length <= 12) {
         for (const o of f.options) if (o !== f.value) out.push({ id: f.id, kind: "select", label: f.label, option: o });
       }
@@ -253,7 +258,7 @@
       sec.fingerprint = await fingerprint(sec.fields);
       if (opts.check) {
         delete sec.fields; // a drift check: the fingerprint is all it reads
-      } else if (known && known[sec.fingerprint]) {
+      } else if (known && known[sec.fingerprint] && !(opts.recrawl || []).some((n) => norm(name).startsWith(norm(n)))) {
         sec.same_as = known[sec.fingerprint];
         delete sec.fields;
       } else {
@@ -262,7 +267,7 @@
         const cs = choices(sec.fields);
         for (const c of cs.slice(0, opts.limit || 30)) await explore([c], sec.fields, opts.depth || 2, sec.branches);
         if (cs.length > (opts.limit || 30)) sec.truncated = cs.length;
-        if (known) known[sec.fingerprint] = `${where}#${name}`;
+        if (known && !known[sec.fingerprint]) known[sec.fingerprint] = `${where}#${name}`;
       }
     } catch (e) {
       sec.error = String(e.message || e);
@@ -365,7 +370,7 @@
             r.sections.push(sec);
             report.tried = (report.tried || 0) + 1;
           }
-        });
+        }, !!opts.interventi);
         for (const k of ["refused", "pratica", "screens", "variants"]) if (w[k]) r[k] = w[k];
         for (const v of w.variants || []) if (!v.error) seen.add(norm(v.option));
         localStorage.setItem("crawl:scelte", JSON.stringify([...seen]));

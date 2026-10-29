@@ -274,13 +274,21 @@
     const words = street.toUpperCase().split(/\W+/).filter((w) => w.length > 2);
     const e = el(f.id) || fail(`${f.id}: no field`);
     checkLabel(e, f.label);
-    const query = words.reduce((a, b) => (b.length > a.length ? b : a));
-    e.value = query;
-    (widgetOf(e) || fail(`${f.id}: no lookup widget`)).search(query);
-    await idle();
-    const lis = [...el(f.id.replace(/_input$/, "_panel")).querySelectorAll("li")];
-    const items = lis.map((l) => norm(l.textContent).toUpperCase());
-    const hits = items.filter((t) => t.split(" ")[0] === dug && words.every((w) => t.split(" ").includes(w)));
+    // The longest word first; the list shows only the first 20 streets, so a common one
+    // ("Francesco") may leave the street out: then the next word.
+    let lis = [], items = [], hits = [];
+    for (const query of [...words].sort((a, b) => b.length - a.length)) {
+      e.value = query;
+      (widgetOf(e) || fail(`${f.id}: no lookup widget`)).search(query);
+      await idle();
+      lis = [...el(f.id.replace(/_input$/, "_panel")).querySelectorAll("li")];
+      items = lis.map((l) => norm(l.textContent).toUpperCase());
+      hits = items.filter((t) => t.split(" ")[0] === dug && words.every((w) => t.split(" ").includes(w)));
+      // "Via Foria" is also inside "Via Santa Maria Avvocata a Foria": the street named exactly wins.
+      const exact = hits.filter((t) => t === norm(`${dug} ${street}`).toUpperCase());
+      if (hits.length > 1 && exact.length === 1) hits = exact;
+      if (hits.length) break;
+    }
     if (hits.length !== 1) fail(`${f.id}: ${value} matches ${JSON.stringify(hits)} among ${items.length}`);
     press(lis[items.indexOf(hits[0])], `${f.id}: ${hits[0]}`);
     await idle();
@@ -382,10 +390,16 @@
     }
     const want = f.kind === "number" || f.kind === "date" ? "text" : f.kind;
     let hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
-    // A box whose own text is the label before one that only has it further off, and nth
-    // counts those: in a row of boxes, the last column's label is the one before each in the
-    // page ("Ragione sociale" would count as the firm's second "codice fiscale").
-    if (hits.length > 1) {
+    // A box is counted by its own label (its title, else its cell), as the crawl counts it: a
+    // "Si" whose nearby texts include the "No" before it is not a "No" (three Si/No pairs in a
+    // row); the beds total under a shared header is not the rooms total.
+    const ownLabel = (e) => [e.title, ...win().eval(`(${steps.label_js})`)(e)].find((t) => norm(t) && !MESSAGE.test(norm(t)));
+    const own = hits.filter((e) => norm(ownLabel(e)).startsWith(norm(f.label)));
+    if (own.length >= (f.nth || 1)) hits = own; // else a box labelled from above ("Provincia" of birth) counts too
+    else if (hits.length > 1) {
+      // Else the boxes that have the label first among their texts, and nth counts those: in a
+      // row of boxes the last column's label is the one before each in the page ("Ragione
+      // sociale" would count as the firm's second "codice fiscale").
       const best = Math.min(...hits.map((e) => labelRank(e, f.label)));
       hits = hits.filter((e) => labelRank(e, f.label) === best);
     }

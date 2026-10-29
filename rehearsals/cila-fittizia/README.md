@@ -295,6 +295,9 @@ resumed on the same draft from that section.
   INPS/INAIL codes, the owner company's phone and its representative's residence, which
   `fixture-p6.json` lacked; added (made up, valid checksums). The DURC's Cassa edile box is
   left unticked (the vault has no field for it).
+- 2026-10-29: the vault has a category for a client's property now (`immobile`, schema 19), so
+  P6's address and catasto moved from `answers-p6.json` to `fixture-p6.json` (`luca:immobile.*`)
+  and the SUE dictionary reads `c:immobile.*`: about 12 fewer answers per SUE pratica.
 - 2026-10-28, first walk, stopped in quadro h): the official schema of the CILA (InfoCamere's
   `mod_cila_v1.0.7.xsd`) holds 137 of the 152 portal fields walked (`schema/schema-vs-portal.md`).
   The next step tests building the portal map from the schema plus a crawler instead of walking

@@ -13,15 +13,6 @@ asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - proroga inizio {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The permit holder''s title to the property (proprietario, locatario, ...)'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
-  immobile_indirizzo: {type: text, question: 'The property''s street, as the Comune names it (e.g. VIA DOMENICO FONTANA)'}
-  immobile_civico: {type: text, question: Its civico}
-  immobile_cap: {type: text, question: Its CAP}
-  immobile_scala: {type: text, question: Scala, default: ''}
-  immobile_piano: {type: text, question: Piano, default: ''}
-  immobile_interno: {type: text, question: Interno, default: ''}
-  catasto_foglio: {type: text, question: 'Catasto fabbricati: foglio'}
-  catasto_particella: {type: text, question: particella}
-  catasto_subalterno: {type: text, question: subalterno}
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
@@ -112,12 +103,12 @@ sections:
   - {id: 'r3c1p3reg:txt', kind: text, value: '{{t:identity.pec}}', max: 9999, label: N.B. Inserire l'indirizzo della casella PEC}
 - section: dichiarazione relativa alla sede dell'attività
   fields:
-  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{ask.immobile_cap}}', max: 5, label: CAP}
-  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{ask.immobile_indirizzo}}', max: 60, label: 'Via, Viale, Piazza'}
-  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{ask.immobile_civico}}', max: 20, label: n° civico}
-  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{ask.immobile_scala}}', optional: true, max: 9999, label: scala}
-  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{ask.immobile_piano}}', optional: true, max: 10, label: piano}
-  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{ask.immobile_interno}}', optional: true, max: 10, label: interno}
+  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{c:immobile.cap}}', max: 5, label: CAP}
+  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{c:immobile.indirizzo|upper}}', max: 60, label: 'Via, Viale, Piazza'}
+  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{c:immobile.civico}}', max: 20, label: n° civico}
+  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{c:immobile.scala}}', optional: true, max: 9999, label: scala}
+  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{c:immobile.piano}}', optional: true, max: 10, label: piano}
+  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{c:immobile.interno}}', optional: true, max: 10, label: interno}
 - section: dichiarazione delle motivazioni della richiesta di proroga
   fields:
   - {id: 'r2c1p2reg:txt', kind: text, value: '{{ask.proroga_motivo}}', max: 500, label: specificare}
@@ -126,18 +117,18 @@ sections:
   - {id: 'r2c1p2reg:txt', kind: text, value: '{{ask.proroga_giorni}}', max: 30, label: giorni di proroga richiesti}
 - section: dichiarazione dell'immobile oggetto della domanda
   fields:
-  - {id: 'r2c1p2reg:txt', kind: text, value: '{{ask.immobile_indirizzo}}', max: 30, label: 'via , viale, piazza'}
-  - {id: 'r2c2p4reg:txt', kind: text, value: '{{ask.immobile_civico}}', max: 30, label: numero civico}
-  - {id: 'r4c2p8reg:txt', kind: text, value: '{{ask.immobile_cap}}', max: 5, label: CAP}
+  - {id: 'r2c1p2reg:txt', kind: text, value: '{{c:immobile.indirizzo|upper}}', max: 30, label: 'via , viale, piazza'}
+  - {id: 'r2c2p4reg:txt', kind: text, value: '{{c:immobile.civico}}', max: 30, label: numero civico}
+  - {id: 'r4c2p8reg:txt', kind: text, value: '{{c:immobile.cap}}', max: 5, label: CAP}
   - {id: 'r6c1p12reg:radio:0_clone', kind: radio, when: '{{ask.titolo_tipo|is_permesso_di_costruire}}', label: di cui al Permesso di costruire}
   - {id: 'r6c2p14reg:txt', kind: text, value: '{{ask.pdc_protocollo}}', when: '{{ask.titolo_tipo|is_permesso_di_costruire}}', max: 30, label: P.G. numero}
   - {id: 'r6c3p16reg:calendar_input', kind: date, value: '{{ask.pdc_data|date_it}}', when: '{{ask.titolo_tipo|is_permesso_di_costruire}}', label: del}
   - {id: 'r8c1p20reg:radio:1_clone', kind: radio, when: '{{ask.titolo_tipo|is_dia}}', label: di cui alla DIA}
   - {id: 'r8c2p22reg:txt', kind: text, value: '{{ask.pdc_protocollo}}', when: '{{ask.titolo_tipo|is_dia}}', max: 30, label: P.G. numero, nth: 2}
   - {id: 'r8c3p24reg:calendar_input', kind: date, value: '{{ask.pdc_data|date_it}}', when: '{{ask.titolo_tipo|is_dia}}', label: del, nth: 2}
-  - {id: 'r11c1p27reg:txt', kind: text, value: '{{ask.catasto_foglio}}', max: 15, label: foglio}
-  - {id: 'r11c2p29reg:txt', kind: text, value: '{{ask.catasto_particella}}', max: 15, label: mappale}
-  - {id: 'r11c3p31reg:txt', kind: text, value: '{{ask.catasto_subalterno}}', max: 15, label: subalterno}
+  - {id: 'r11c1p27reg:txt', kind: text, value: '{{c:immobile.catasto_foglio}}', max: 15, label: foglio}
+  - {id: 'r11c2p29reg:txt', kind: text, value: '{{c:immobile.catasto_particella}}', max: 15, label: mappale}
+  - {id: 'r11c3p31reg:txt', kind: text, value: '{{c:immobile.catasto_subalterno}}', max: 15, label: subalterno}
   - {id: 'r13c1p35reg:txt', kind: text, value: '{{ask.pdc_interventi}}', max: 100, label: per (specificare l'oggetto dell'intervento)}
   - {id: 'r15c1p37reg:txt', kind: text, value: '{{c:identity.first_name|upper}} {{c:identity.last_name|upper}}', max: 50, label: intestato a}
   - {id: 'r17c1p39reg:calendar_input', kind: date, value: '{{ask.proroga_data_prevista|date_it}}', label: la cui data di inizio lavori è prevista per}

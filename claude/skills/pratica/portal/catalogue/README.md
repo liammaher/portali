@@ -41,7 +41,8 @@ catalogo <sportello>" (Liam deletes it afterwards):
 - `catalogue.py`: `ops sue|suap` lists a batch's operations, `known` the fingerprints the
   stored crawls have, `import` writes an exported batch here (refusing one that holds the
   login's name: `CATALOGUE_PRIVATE`), `count` the distinct sections, how many pratiche use each
-  and whether the dictionary fills it (gen.py's own test, not a name match).
+  and whether the dictionary fills it under each title the portal gives it (gen.py's own test;
+  `names_missing` lists a title with no entry).
 
 Neither fills a value, saves a section, ticks a declaration, pays or sends.
 
@@ -61,20 +62,18 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   section as alone (fingerprints), in its own order. A recipe can name both operations
   (`rehearsals/cila-paesaggistica-fittizia`), run to the declarations; its attachments screen
   isn't read yet.
-- **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
-  B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
-  21 filled, 71% of section uses (the shared ones). The whole tree is 2,333 sector-and-operation
-  pairs plus 64 common operations, but only the sector's own operations (open, take over, move,
-  suspend, close: 710 pairs) differ by sector. The batch in the pane (`crawl:ops:suap3`, 1,028
-  trips) crawls those in every sector, every other operation once (69 of them) and each of
-  those again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns
-  into `same.json`: the same pratica, counted as a use of it, or one that differs and gets a
-  crawl of its own. Priority sectors first, then the common operations, then the other everyday
-  sectors, then the rare ones (military canteens, livestock, fuel stations, large stores, dance
-  halls and games, ...), then the checks. Each scelta is tried once (`variants: "new"`): the
-  same few (procura, other soci, the Terzo settore exemption) add the same sections everywhere,
-  and re-trying them cost 40% of the time for 1 new section in 19; `gen.py` takes a scelta's
-  sections from the pratica where it was tried.
+- **SUAP**: 278 pratiche crawled so far (the batch stands at about half of its 1,028 trips:
+  the priority sectors, the common operations, part of the other sectors); **477 distinct
+  sections**, 67 filled, 71% of section uses, counted under each title a section has. 107
+  pratiche are filled end to end, 75 more lack one or two sections. The six proven openings were
+  crawled again with each "interventi eventuali" tick (`-interventi`: alcohol, an outside sign,
+  acoustic papers), and the shops' changes section three deep. The whole tree is 2,333
+  sector-and-operation pairs plus 64 common operations, but only the sector's own operations
+  (open, take over, move, suspend, close: 710 pairs) differ by sector. The batch in the pane
+  (`crawl:ops:suap3`) crawls those in every sector, every other operation once and each of those
+  again as a check in one or two other sectors (`like`), which `catalogue.py drift` turns into
+  `same.json`. Each scelta is tried once (`variants: "new"`); `gen.py` takes a scelta's sections
+  from the pratica where it was tried.
 - **Clean reruns** (2026-10-29): every SUE recipe (22 pratiche and the combination), from
   run.py's install.js and run.js in the pane, one after another with nothing touched between
   runs. First: 20 of 23 filled; the three stopped on the fresh load, reading a section before
@@ -83,10 +82,11 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   each.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
-- Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening
-  and a restaurant's closure (SUAP); on the SUE the proroga di inizio lavori, the autorizzazione
-  paesaggistica semplificata and ordinaria, the rinnovo of a semplificata, the voltura of a
-  permesso di costruire and the cambio d'intestazione of a SCIA, besides the seven run before.
+- Proven on the portal with made-up data, generated from a batch crawl: the openings of a
+  restaurant, a non-food shop, a bakery and rooms to let, the takeover (subingresso) and the
+  suspension of a shop and of a restaurant, a restaurant's new name, a shop's bigger sales area,
+  a restaurant's alcohol notice, and a restaurant's closure (SUAP); on the SUE all 22 pratiche
+  with every section filled and the CILA with its semplificata (the clean reruns above).
 
 ## Drift
 

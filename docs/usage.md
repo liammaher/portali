@@ -121,12 +121,12 @@ Fields named in the date shapes `data_<x>` (Italian, e.g. `cie.data_scadenza`, `
 ## Naples addresses (municipalità, quartiere, ASL)
 
 ```sh
-pvault locate                                   # residenza; also domicilio, locale, sede_legale, leo:residenza
+pvault locate                                   # residenza; also domicilio, locale, immobile, sede_legale, leo:residenza
 pvault locate --street "Via Toledo" --civico 156   # an address typed here; reads nothing from the vault
 pvault set residenza.quartiere "San Ferdinando"    # settles a street that crosses a boundary
 ```
 
-An address in Napoli (`residenza`, `domicilio`, `locale`, the `business.sede_legale_*` fields) has three computed fields, `quartiere`, `municipalita` and `distretto_asl` (ASL Napoli 1 Centro), read like any other (`pvault get residenza.municipalita`) and under their own scope, never the street's. They come from the Comune's stradario, offline: the address goes nowhere. A street that crosses a municipalità boundary stays unknown until a civico in a known range or a stored quartiere decides it; `locate` then lists the quartieri to choose from and exits 3. A stored value wins only while it isn't older than the address. Agents use the MCP tool `vault_locate`.
+An address in Napoli (`residenza`, `domicilio`, `locale`, `immobile`, the `business.sede_legale_*` fields) has three computed fields, `quartiere`, `municipalita` and `distretto_asl` (ASL Napoli 1 Centro), read like any other (`pvault get residenza.municipalita`) and under their own scope, never the street's. They come from the Comune's stradario, offline: the address goes nowhere. A street that crosses a municipalità boundary stays unknown until a civico in a known range or a stored quartiere decides it; `locate` then lists the quartieri to choose from and exits 3. A stored value wins only while it isn't older than the address. Agents use the MCP tool `vault_locate` (an `immobile`'s three fields through `vault_get`).
 
 ## Document scans
 
@@ -299,7 +299,7 @@ GET    /vault/fields/category/{name}     # All fields in category with values
 ### Located addresses
 
 ```
-GET    /vault/located/{target}           # residenza, domicilio, locale, sede_legale, or leo:residenza;
+GET    /vault/located/{target}           # residenza, domicilio, locale, immobile, sede_legale, or leo:residenza;
                                          # needs the scope of its three computed fields; never the street
 ```
 

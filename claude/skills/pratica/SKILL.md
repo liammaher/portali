@@ -282,7 +282,8 @@ When there is one, follow it instead of exploring the portal:
 1. **Pre-flight first, before anything opens.** `run.py preflight --steps <folder>/portal-steps.yaml
    [--answers <answers.json>]` with the same values as step 2 (the `pvault get` piped in,
    or `--vault-dir`) prints JSON and exits 0 only when `ready`:
-   - `unsupported`: this case isn't mapped (the steps file's `supports:`). Tell the user
+   - `unsupported`: this case isn't mapped (the steps file's `supports:`), or the law makes
+     it another pratica or adds one this pratica doesn't file (its `rules:`). Tell the user
      the reason in one line and stop: don't open the portal, don't ask anything else.
    - `questions`: only what this case needs (pre-flight leaves out a question no field of
      this case reads, and one with a default). Ask all of them **in one short message**, in
@@ -292,7 +293,8 @@ When there is one, follow it instead of exploring the portal:
        `key`s under the checklist's `key` (`[]` for none);
      - an `only_if` question applies only when those items are ticked: put it under them
        ("if so: …"), never as a question of its own;
-     - give `options` when there are some, and never explain `why` unless asked;
+     - give `options` when there are some (with their `labels`), and a `how` (where to find
+       the answer) as a short hint; never explain `why` unless asked;
      - `proposals` go in the same message as "I'll use: …", one line each, with the
        `proposal` as written. "ok" confirms them all: write each one under its `key`. An
        answer that changes one replaces it. Never use a proposal nobody confirmed.
@@ -360,6 +362,9 @@ When there is one, follow it instead of exploring the portal:
      name), then `run.js`. `install.js` is both, for a pane that has neither.
    - A call ends after 45 s: run.js returns at once; poll `await __pv.wait(40000)` until
      `result` is `filled` or `stopped`. `__pv.open()` shows the draft.
+   - One run per login at a time, in any tab or window: the portal keeps one pratica in
+     progress per login, so a second run (or a crawl) moves the first one's draft back a
+     screen or shows its error page. A batch (`bench/rerun.py`) runs them one after another.
    - Stopped: `__pv.last()` is the report (kept in the tab, so it outlives a reload of the
      runner); work out the fix as above and `__pv.resume({fixes: [...]})` carries on on the
      same draft, with the same values. Write the fix into the steps file (or the dictionary
@@ -410,7 +415,9 @@ with `--for <slug>` (on both `needs` and `run`) the person the form is for (step
 ask by display name when it isn't clearly the user); it reads that person's own fields,
 and the pratica record names them in `persona`. In a business vault a person always
 signs: `--for <slug>` of someone whose `ruolo.tipo` is one of the entry's dichiarante
-roles (`vault_household`; several: ask which). For other people the form reads, pass
+roles (`vault_household`; several: ask which), or of a client (`cliente`) declaring in
+their own name, as on a studio's CILA, where none of the business's own data may reach the
+form (fill.py refuses it, e.g. a client ticking legale rappresentante). For other people the form reads, pass
 `--party <ruolo>=<slug>` (repeatable; `--party socio=verdi,gialli` for every socio of a
 repeat by ruolo), the same on `needs` and `run`: party rows read that person, a repeat
 gets a table row or an allegato copy per person. A role the vault has but `--party`

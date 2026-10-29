@@ -26,12 +26,8 @@ groups:
   extras:
     question: "Does any of this apply to the business? Tick all that do, or none."
 asks:
+  altri_soggetti: {group: extras, type: yes_no, item: "It's a company with other partners or administrators besides the one who declares", why: "Each files a signed antimafia statement of their own (art. 85 D.Lgs. 159/2011), not mapped yet."}
   descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - ristorante {{business.denominazione}}"}
-  zona_tutelata:
-    group: extras
-    type: yes_no
-    item: "It's in the historic centre: the UNESCO area or its buffer zone"
-    why: "Since 25 July 2026 an opening there needs an authorization, not a SCIA, and only the SCIA is mapped."
   alcolici: {group: extras, type: yes_no, item: "It will sell alcoholic drinks, beer and wine included", why: "Selling alcohol adds the Dogane notice to this pratica, a branch not mapped yet."}
   musica: {group: extras, type: yes_no, item: "It will have music or a sound system", why: "Music adds the impatto acustico papers, a branch not mapped yet."}
   insegna_esterna: {group: extras, type: yes_no, item: "It will have a sign outside", why: "An outside sign bundles the insegna's SCIA into this one, a branch not mapped yet."}
@@ -43,14 +39,16 @@ yours:
   - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen, and the ASL tariffa forfettaria"
   - "Attach, signed with your firma digitale (.p7m): the planimetria quotata of the premises and the ASL tariff receipt"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: somministrazione, evento: apertura, insegna: "{{ask.insegna_esterna}}"}
+  handles: [napoli/asl-napoli-1/registrazione-attivita-alimentare]
 supports:
   - value: "{{business.forma_giuridica}}"
-    in: [ditta_individuale]
-    else: "So far only for a ditta individuale: a company's Scheda anagrafica isn't mapped."
-  - when: "{{business.rea|empty}}"
-    else: "So far only for a business not yet in the Registro delle imprese."
-  - {when: "{{ask.zona_tutelata|not}}", else: "In the historic centre an opening needs an authorization, not a SCIA: not supported yet."}
-  - {when: "{{ask.alcolici|not}}", else: "Selling alcohol isn't supported yet: it adds the Dogane notice to the pratica."}
-  - {when: "{{ask.musica|not}}", else: "Music or a sound system isn't supported yet: it adds the impatto acustico papers."}
-  - {when: "{{ask.insegna_esterna|not}}", else: "An outside sign isn't supported yet: it bundles the insegna's SCIA into this one."}
+    in: [ditta_individuale, srl, srls, snc, sas, spa]
+    else: "So far for a ditta individuale or an srl, srls, snc, sas or spa."
+  - {when: "{{ask.altri_soggetti|not}}", else: "Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet."}
   - {when: "{{ask.ristorazione}}", else: "So far only a bar or restaurant: the notifica's other activity lines aren't mapped."}
+  - {when: "{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}", else: "A bar or restaurant that also bakes or runs a food shop isn't supported yet: those lines together aren't mapped."}

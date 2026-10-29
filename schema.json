@@ -1,5 +1,5 @@
 {
-  "version": "18",
+  "version": "19",
   "categories": [
     {
       "name": "identity",
@@ -1132,6 +1132,143 @@
           "id": "locale.tari_categoria",
           "description": "TARI tariff category the Comune applies to these premises, as on the payment notice (e.g. 22 ristoranti, trattorie, pizzerie)",
           "sensitivity": "standard"
+        }
+      ]
+    },
+    {
+      "name": "immobile",
+      "description": "The property a pratica is about (building works, a client's flat): its address and catasto. Not your home, which stays in residenza/domicilio and abitazione. A client's is luca:immobile, a second property immobile2. Catasto data is on the visura catastale. Attach the visura and the plans with 'pvault doc add immobile <file>'.",
+      "scope": "person",
+      "fields": [
+        {
+          "id": "immobile.indirizzo",
+          "description": "Street (via/piazza) of the property, without number; sensitive like residenza's, since it is often someone's home",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "immobile.civico",
+          "description": "Street number of the property",
+          "sensitivity": "sensitive"
+        },
+        {
+          "id": "immobile.scala",
+          "description": "Staircase (scala), if any",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.piano",
+          "description": "Floor (e.g. terra, rialzato, 3)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.interno",
+          "description": "Unit number (interno), if any; 'int. 3' is saved as 3",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.cap",
+          "description": "CAP of the property (5 digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.comune",
+          "description": "Comune of the property",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.provincia",
+          "description": "Provincia of the property as 2-letter sigla (e.g. NA; the format is checked, not the list)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.quartiere",
+          "description": "Quartiere of Napoli (e.g. Vomero), computed from the property when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the property's address",
+          "sensitivity": "standard",
+          "derived": true
+        },
+        {
+          "id": "immobile.municipalita",
+          "description": "Municipalità of Napoli (1-10), computed from the property; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the property's address",
+          "sensitivity": "standard",
+          "derived": true,
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        },
+        {
+          "id": "immobile.distretto_asl",
+          "description": "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)",
+          "sensitivity": "standard",
+          "derived": true,
+          "values": [
+            "24/73",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        },
+        {
+          "id": "immobile.catasto_sezione",
+          "description": "Sezione urbana from the visura, if any",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.catasto_foglio",
+          "description": "Foglio from the visura (digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.catasto_particella",
+          "description": "Particella (mappale) from the visura (validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.catasto_subalterno",
+          "description": "Subalterno from the visura, exactly as written (digits, validated)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.catasto_categoria",
+          "description": "Categoria catastale, e.g. A/2 for a flat (validated; a2 becomes A/2)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.destinazione_uso",
+          "description": "Lawful use of the property (e.g. residenziale, commerciale, ufficio)",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.superficie_mq",
+          "description": "Surface of the property, in m²",
+          "sensitivity": "standard"
+        },
+        {
+          "id": "immobile.titolo",
+          "description": "The holder's title on the property: proprietario, comproprietario, locatario, comodatario, usufruttuario, altro (validated; comproprietaria, conduttore, comodataria... accepted)",
+          "sensitivity": "standard",
+          "values": [
+            "proprietario",
+            "comproprietario",
+            "locatario",
+            "comodatario",
+            "usufruttuario",
+            "altro"
+          ]
         }
       ]
     },

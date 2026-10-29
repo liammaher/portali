@@ -1,0 +1,8 @@
+{
+  "tokens": {
+    "scia": {
+      "scope": "business.*,locale.*,*:identity.*,*:residenza.*,*:ruolo.*,pratiche.*",
+      "access": "append"
+    }
+  }
+}

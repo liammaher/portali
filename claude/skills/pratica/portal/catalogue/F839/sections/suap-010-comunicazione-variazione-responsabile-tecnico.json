@@ -1,0 +1,5421 @@
+{
+ "crawled": "2026-10-28T20:40:14.379Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Comunicazione variazione responsabile tecnico (sector Autoriparazione)",
+ "seconds": 106.4,
+ "generated": {
+  "interventi": "Comunicazione variazione del responsabile tecnico attività di autoriparazione",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione variazione del responsabile tecnico attività di autoriparatore",
+    "amministrazione": "Camera di Commercio Napoli"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "Designazione del responsabile tecnico",
+   "Settore di attività Autoriparatore",
+   "dichiarazione del rispetto dell'art. 67 del D. Lgs. 6.9.2011 n. 159 (antimafia)",
+   "requisiti di onorabilità (ART. 7 co 1 lett. B L.122/1992)",
+   "Requisiti tecnico-professionali",
+   "dichiarazione della user Telemaco",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "il dichiarante non è responsabile tecnico"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, individuate all'art.85 del D.L.vo 159/2011)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "il dichiarante non è responsabile tecnico",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, individuate all'art.85 del D.L.vo 159/2011)",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione di possesso dei requisiti morali delle persone coinvolte (art.85 D.L.vo 159/2011)"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.3
+  },
+  {
+   "section": "Designazione del responsabile tecnico",
+   "fields": [
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "in sostituzione di",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "context": "in sostituzione di",
+     "max": 50
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "context": "in sostituzione di",
+     "max": 50
+    },
+    {
+     "id": "r3c4p9reg:txt",
+     "kind": "text",
+     "label": "cod. fisc.",
+     "context": "in sostituzione di",
+     "max": 16
+    },
+    {
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "label": "in aggiunta di",
+     "group": "r5c1p11reg:radio"
+    },
+    {
+     "id": "r5c2p13reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "context": "in aggiunta di",
+     "max": 50
+    },
+    {
+     "id": "r5c3p15reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "context": "in aggiunta di",
+     "max": 50
+    },
+    {
+     "id": "r5c4p17reg:txt",
+     "kind": "text",
+     "label": "cod.fisc.",
+     "context": "in aggiunta di",
+     "max": 16
+    },
+    {
+     "id": "r7c1p19reg:txt",
+     "kind": "text",
+     "label": "il sig.",
+     "max": 100
+    },
+    {
+     "id": "r7c2p21reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r9c1p23reg:radio:2_clone",
+     "kind": "radio",
+     "label": "titolare",
+     "group": "r9c1p23reg:radio"
+    },
+    {
+     "id": "r9c2p24reg:radio:3_clone",
+     "kind": "radio",
+     "label": "amministratore",
+     "group": "r9c2p24reg:radio"
+    },
+    {
+     "id": "r9c3p25reg:radio:4_clone",
+     "kind": "radio",
+     "label": "socio lavoratore",
+     "group": "r9c3p25reg:radio"
+    },
+    {
+     "id": "r10c1p26reg:radio:5_clone",
+     "kind": "radio",
+     "label": "collaboratore familiare",
+     "group": "r10c1p26reg:radio"
+    },
+    {
+     "id": "r10c2p27reg:radio:6_clone",
+     "kind": "radio",
+     "label": "dipendente",
+     "group": "r10c2p27reg:radio"
+    },
+    {
+     "id": "r10c3p28reg:radio:7_clone",
+     "kind": "radio",
+     "label": "institore",
+     "group": "r10c3p28reg:radio"
+    },
+    {
+     "id": "r12c1p30reg:radio:8_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r12c1p30reg:radio"
+    },
+    {
+     "id": "r12c2p32reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 100
+    }
+   ],
+   "fingerprint": "1a11ad0b52dd8d16",
+   "text": "Designazione del responsabile tecnico Comunica la designazione del responsabile tecnico cognome nome cod. fisc. in sostituzione di cognome nome cod.fisc. in aggiunta di il sig. dal in qualità di (indicare il rapporto di immedesimazione con l'impresa): titolare amministratore socio lavoratore collaboratore familiare dipendente institore specificare altro",
+   "branches": [
+    {
+     "choice": "in sostituzione di",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "in aggiunta di",
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "titolare",
+     "id": "r9c1p23reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "amministratore",
+     "id": "r9c2p24reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "socio lavoratore",
+     "id": "r9c3p25reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "collaboratore familiare",
+     "id": "r10c1p26reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "dipendente",
+     "id": "r10c2p27reg:radio:6_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "institore",
+     "id": "r10c3p28reg:radio:7_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    },
+    {
+     "choice": "altro",
+     "id": "r12c1p30reg:radio:8_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "in sostituzione di",
+      "adds": 36
+     }
+    }
+   ],
+   "seconds": 30.4
+  },
+  {
+   "section": "Settore di attività Autoriparatore",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "meccatronica"
+    },
+    {
+     "id": "r1c2p2reg:chk",
+     "kind": "checkbox",
+     "label": "carrozzeria"
+    },
+    {
+     "id": "r1c3p3reg:chk",
+     "kind": "checkbox",
+     "label": "gommista"
+    }
+   ],
+   "fingerprint": "e459e63740f77d76",
+   "text": "Settore di attività Autoriparatore meccatronica carrozzeria gommista",
+   "branches": [
+    {
+     "choice": "meccatronica",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "carrozzeria",
+     "id": "r1c2p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "gommista",
+     "id": "r1c3p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 6.8
+  },
+  {
+   "section": "dichiarazione del rispetto dell'art. 67 del D. Lgs. 6.9.2011 n. 159 (antimafia)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D. Lgs. 6.9.2011 n. 159 (antimafia)"
+    }
+   ],
+   "fingerprint": "ec79d6bb6597cf9f",
+   "text": "dichiarazione del rispetto dell'art. 67 del D. Lgs. 6.9.2011 n. 159 (antimafia) che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D. Lgs. 6.9.2011 n. 159 (antimafia)",
+   "branches": [
+    {
+     "choice": "che non sussistono nei propri confronti cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D. Lgs. 6.9.2011 n. 159 (antimafia)",
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.8
+  },
+  {
+   "section": "requisiti di onorabilità (ART. 7 co 1 lett. B L.122/1992)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Requisiti tecnico-professionali",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "dichiara che il responsabile tecnico cognome e nome",
+     "max": 100
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "meccatronica"
+    },
+    {
+     "id": "r4c2p5reg:chk",
+     "kind": "checkbox",
+     "label": "carrozzeria"
+    },
+    {
+     "id": "r4c3p6reg:chk",
+     "kind": "checkbox",
+     "label": "gommista"
+    },
+    {
+     "id": "r5c1p8reg:radio:0_clone",
+     "kind": "radio",
+     "label": "A) TITOLO DI STUDIO",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r6c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "laurea o diploma universitario in materia tecnica (laurea breve), idoneo ad abilitare alla specifica sezione richiesta"
+    },
+    {
+     "id": "r8c1p11reg:txt",
+     "kind": "text",
+     "label": "titolo di studio",
+     "max": 100
+    },
+    {
+     "id": "r8c2p13reg:calendar_input",
+     "kind": "date",
+     "label": "conseguito/a il"
+    },
+    {
+     "id": "r10c1p15reg:txt",
+     "kind": "text",
+     "label": "rilasciata/o dall'università degli studi di",
+     "max": 100
+    },
+    {
+     "id": "r10c2p17reg:txt",
+     "kind": "text",
+     "label": "specializzazione tecnica in",
+     "max": 100
+    },
+    {
+     "id": "r11c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "diploma di istruzione secondaria superiore in materia tecnica idoneo ad abilitare alla specifica sezione richiesta"
+    },
+    {
+     "id": "r13c1p20reg:txt",
+     "kind": "text",
+     "label": "titolo di studio",
+     "max": 100
+    },
+    {
+     "id": "r13c2p22reg:calendar_input",
+     "kind": "date",
+     "label": "conseguita/o il"
+    },
+    {
+     "id": "r15c1p24reg:txt",
+     "kind": "text",
+     "label": "rilasciata/o dall'istituto",
+     "max": 100
+    },
+    {
+     "id": "r15c2p26reg:txt",
+     "kind": "text",
+     "label": "specializzazione tecnica in",
+     "max": 100
+    },
+    {
+     "id": "r16c1p27reg:radio:1_clone",
+     "kind": "radio",
+     "label": "B) TITOLO DI STUDIO ED ESPERIENZA PROFESSIONALE",
+     "group": "r16c1p27reg:radio"
+    },
+    {
+     "id": "r17c1p28reg:chk",
+     "kind": "checkbox",
+     "label": "attestato di promozione al IV anno dell'Istituto Tecnico Industriale, con indirizzo attinente l'attività, idoneo ad abilitare alla specifica sezione richiesta"
+    },
+    {
+     "id": "r18c1p29reg:chk",
+     "kind": "checkbox",
+     "label": "corso regionale teorico-pratico di qualificazione attinente l'attività, idoneo ad abilitare alla specifica sezione richiesta, seguito da un periodo di almeno un"
+    },
+    {
+     "id": "r20c1p31reg:txt",
+     "kind": "text",
+     "label": "titolo di studio",
+     "max": 100
+    },
+    {
+     "id": "r20c2p33reg:calendar_input",
+     "kind": "date",
+     "label": "conseguita/o il"
+    },
+    {
+     "id": "r22c1p35reg:txt",
+     "kind": "text",
+     "label": "rilasciata/o dall'istituto/centro",
+     "max": 100
+    },
+    {
+     "id": "r22c2p37reg:txt",
+     "kind": "text",
+     "label": "con sede nel comune di",
+     "max": 80
+    },
+    {
+     "id": "r22c3p39reg:txt",
+     "kind": "text",
+     "label": "specializzazione tecnica",
+     "max": 80
+    },
+    {
+     "id": "r24c1p41reg:chk",
+     "kind": "checkbox",
+     "label": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'"
+    },
+    {
+     "id": "r26c1p43reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r26c2p45reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r28c1p47reg:number",
+     "kind": "text",
+     "label": "n. R.E.A",
+     "max": 15
+    },
+    {
+     "id": "r28c2p49reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r28c3p51reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r29c1p54reg:chk",
+     "kind": "checkbox",
+     "label": "collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecni"
+    },
+    {
+     "id": "r31c1p56reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r31c2p58reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r33c1p60reg:number",
+     "kind": "text",
+     "label": "n. R.E.A",
+     "max": 15
+    },
+    {
+     "id": "r33c2p62reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r33c3p64reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r34c1p67reg:chk",
+     "kind": "checkbox",
+     "label": "dipendente (operaio qualificato) dell'impresa:"
+    },
+    {
+     "id": "r36c1p69reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r36c2p71reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r38c1p73reg:txt",
+     "kind": "text",
+     "label": "qualifica risultante dal libretto di lavoro/scheda professionale/busta paga",
+     "max": 100
+    },
+    {
+     "id": "r38c2p75reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r38c3p77reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r39c1p78reg:radio:2_clone",
+     "kind": "radio",
+     "label": "C) ESPERIENZA PROFESSIONALE",
+     "group": "r39c1p78reg:radio"
+    },
+    {
+     "id": "r41c1p80reg:chk",
+     "kind": "checkbox",
+     "label": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa 1 con regolare iscrizione INAIL per il periodo di esperienza necessario per "
+    },
+    {
+     "id": "r43c1p82reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r43c2p84reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r45c1p86reg:number",
+     "kind": "text",
+     "label": "n. R.E.A",
+     "max": 15
+    },
+    {
+     "id": "r45c2p88reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r45c3p90reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r46c1p93reg:chk",
+     "kind": "checkbox",
+     "label": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa 2 con regolare iscrizione INAIL per il periodo di esperienza necessario per "
+    },
+    {
+     "id": "r48c1p95reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r48c2p97reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r50c1p99reg:number",
+     "kind": "text",
+     "label": "n. R.E.A",
+     "max": 15
+    },
+    {
+     "id": "r50c2p101reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r50c3p103reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r51c1p106reg:chk",
+     "kind": "checkbox",
+     "label": "collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecni"
+    },
+    {
+     "id": "r53c1p108reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r53c2p110reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r55c1p112reg:number",
+     "kind": "text",
+     "label": "n. R.E.A",
+     "max": 15
+    },
+    {
+     "id": "r55c2p114reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r55c3p116reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r56c1p119reg:chk",
+     "kind": "checkbox",
+     "label": "dipendente ( operaio qualificato) dell'impresa 1"
+    },
+    {
+     "id": "r58c1p121reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r58c2p123reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r60c1p125reg:txt",
+     "kind": "text",
+     "label": "qualifica risultante dal libretto di lavoro scheda professionale/busta paga",
+     "max": 100
+    },
+    {
+     "id": "r60c2p127reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r60c3p129reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r61c1p130reg:chk",
+     "kind": "checkbox",
+     "label": "dipendente (operaio qualificato) dell'impresa 2"
+    },
+    {
+     "id": "r63c1p132reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r63c2p134reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 80
+    },
+    {
+     "id": "r65c1p136reg:txt",
+     "kind": "text",
+     "label": "qualifica risultante dal libretto di lavoro scheda professionale/busta paga",
+     "max": 100
+    },
+    {
+     "id": "r65c2p138reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r65c3p140reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r66c1p141reg:chk",
+     "kind": "checkbox",
+     "label": "dipendente ( operaio qualificato) dell'impresa 3"
+    },
+    {
+     "id": "r68c1p143reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "max": 100
+    },
+    {
+     "id": "r68c2p145reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 80
+    },
+    {
+     "id": "r70c1p147reg:txt",
+     "kind": "text",
+     "label": "qualifica risultante dal libretto di lavoro scheda professionale/busta paga",
+     "max": 100
+    },
+    {
+     "id": "r70c2p149reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r70c3p151reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r71c1p152reg:radio:3_clone",
+     "kind": "radio",
+     "label": "D) CASI PARTICOLARI",
+     "group": "r71c1p152reg:radio"
+    },
+    {
+     "id": "r72c1p153reg:chk",
+     "kind": "checkbox",
+     "label": "soggetto in possesso dei requisiti già accertati da Camera di Commercio o dalla Commissione Provinciale per l'Artigianato. Si precisa che il soggetto che dichia"
+    },
+    {
+     "id": "r74c1p155reg:txt",
+     "kind": "text",
+     "label": "denominazione impresa",
+     "max": 100
+    },
+    {
+     "id": "r74c2p157reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 100
+    },
+    {
+     "id": "r74c3p159reg:number",
+     "kind": "text",
+     "label": "n. R.E.A",
+     "max": 15
+    },
+    {
+     "id": "r75c1p160reg:chk",
+     "kind": "checkbox",
+     "label": "titolare di impresa del settore per almeno un anno prima dell'entrata in vigore del D.P.R. 387/94 (14.12.1994) – art. 6 Legge 25/96"
+    },
+    {
+     "id": "r76c1p161reg:radio:4_clone",
+     "kind": "radio",
+     "label": "E) RICONOSCIMENTO TITOLO ESTERO",
+     "group": "r76c1p161reg:radio"
+    },
+    {
+     "id": "r79c1p164reg:txt",
+     "kind": "text",
+     "label": "decreto n°",
+     "max": 30
+    },
+    {
+     "id": "r79c2p166reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r79c3p168reg:txt",
+     "kind": "text",
+     "label": "del Ministero",
+     "max": 80
+    }
+   ],
+   "fingerprint": "be64a91acd0883b3",
+   "text": "Requisiti tecnico-professionali dichiara che il responsabile tecnico cognome e nome risulta in possesso di uno dei requisiti tecnico-professionali di cui all'art. 7 della legge 122/92 sottoindicati: meccatronica carrozzeria gommista A) TITOLO DI STUDIO laurea o diploma universitario in materia tecnica (laurea breve), idoneo ad abilitare alla specifica sezione richiesta titolo di studio conseguito/a il rilasciata/o dall'università degli studi di specializzazione tecnica in diploma di istruzione secondaria superiore in materia tecnica idoneo ad abilitare alla specifica sezione richiesta titolo di studio conseguita/o il rilasciata/o dall'istituto specializzazione tecnica in B) TITOLO DI STUDIO ED ESPERIENZA PROFESSIONALE attestato di promozione al IV anno dell'Istituto Tecnico Industriale, con indirizzo attinente l'attività, idoneo ad abilitare alla specifica sezione richiesta corso regionale teorico-pratico di qualificazione attinente l'attività, idoneo ad abilitare alla specifica sezione richiesta, seguito da un periodo di almeno un anno di esercizio quale operario qualificato dell'attività di autoriparazione presso imprese operanti nel settore nell'arco degli ultimi cinque anni titolo di studio conseguita/o il rilasciata/o dall'istituto/centro con sede nel comune di specializzazione tecnica seguito da un periodo di almeno un anno di esercizio dell'attività di autoriparazione, idonea ad abilitare alla specifica sezione richiesta, in imprese operanti nel settore nell'arco degli ultimi cinque anni, come: titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecnico-manuale: specificare con sede in n. R.E.A dal al collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecnico-manuale: specificare con sede in n. R.E.A dal al dipendente (operaio qualificato) dell'impresa: specificare con sede in qualifica risultante dal libretto di lavoro/scheda professionale/busta paga dal al C) ESPERIENZA PROFESSIONALE Esercizio dell'attività di autoriparazione, idonea ad abilitare alla specifica sezione richiesta, per almeno tre anni presso imprese operanti nel settore nell'arco degli ultimi cinque anni, in qualità di: titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa 1 con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecnico-manuale: specificare con sede in n. R.E.A dal al titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa 2 con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecnico-manuale: specificare con sede in n. R.E.A dal al collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperien",
+   "branches": [
+    {
+     "choice": "meccatronica",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "carrozzeria",
+     "id": "r4c2p5reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "gommista",
+     "id": "r4c3p6reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "A) TITOLO DI STUDIO",
+     "id": "r5c1p8reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "laurea o diploma universitario in materia tecnica (laurea breve), idoneo ad abilitare alla specifica sezione richiesta",
+     "id": "r6c1p9reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "diploma di istruzione secondaria superiore in materia tecnica idoneo ad abilitare alla specifica sezione richiesta",
+     "id": "r11c1p18reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "B) TITOLO DI STUDIO ED ESPERIENZA PROFESSIONALE",
+     "id": "r16c1p27reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "attestato di promozione al IV anno dell'Istituto Tecnico Industriale, con indirizzo attinente l'attività, idoneo ad abilitare alla specifica sezione richiesta",
+     "id": "r17c1p28reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "corso regionale teorico-pratico di qualificazione attinente l'attività, idoneo ad abilitare alla specifica sezione richiesta, seguito da un periodo di almeno un",
+     "id": "r18c1p29reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'",
+     "id": "r24c1p41reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecni",
+     "id": "r29c1p54reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "dipendente (operaio qualificato) dell'impresa:",
+     "id": "r34c1p67reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "C) ESPERIENZA PROFESSIONALE",
+     "id": "r39c1p78reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa 1 con regolare iscrizione INAIL per il periodo di esperienza necessario per ",
+     "id": "r41c1p80reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "titolare/amministratore/socio partecipante/associato in partecipazione dell'impresa 2 con regolare iscrizione INAIL per il periodo di esperienza necessario per ",
+     "id": "r46c1p93reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "collaboratore familiare dell'impresa con regolare iscrizione INAIL per il periodo di esperienza necessario per l'attività richiesta, riferita all'attività tecni",
+     "id": "r51c1p106reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "dipendente ( operaio qualificato) dell'impresa 1",
+     "id": "r56c1p119reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "dipendente (operaio qualificato) dell'impresa 2",
+     "id": "r61c1p130reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "dipendente ( operaio qualificato) dell'impresa 3",
+     "id": "r66c1p141reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "D) CASI PARTICOLARI",
+     "id": "r71c1p152reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "soggetto in possesso dei requisiti già accertati da Camera di Commercio o dalla Commissione Provinciale per l'Artigianato. Si precisa che il soggetto che dichia",
+     "id": "r72c1p153reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "titolare di impresa del settore per almeno un anno prima dell'entrata in vigore del D.P.R. 387/94 (14.12.1994) – art. 6 Legge 25/96",
+     "id": "r75c1p160reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    },
+    {
+     "choice": "E) RICONOSCIMENTO TITOLO ESTERO",
+     "id": "r76c1p161reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r20c1p31reg:txt",
+       "r8c1p11reg:txt"
+      ],
+      [
+       "r15c2p26reg:txt",
+       "r10c2p17reg:txt"
+      ],
+      [
+       "r20c1p31reg:txt",
+       "r13c1p20reg:txt"
+      ],
+      [
+       "r20c2p33reg:calendar_input",
+       "r13c2p22reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r26c1p43reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r26c2p45reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r28c1p47reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r28c2p49reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r28c3p51reg:calendar_input"
+      ],
+      [
+       "r51c1p106reg:chk",
+       "r29c1p54reg:chk"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r31c1p56reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r31c2p58reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r33c1p60reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r33c2p62reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r33c3p64reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r36c1p69reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r36c2p71reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r38c2p75reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r38c3p77reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r43c1p82reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r43c2p84reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r45c1p86reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r45c2p88reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r45c3p90reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r48c1p95reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r48c2p97reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r50c1p99reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r50c2p101reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r50c3p103reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r53c1p108reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r53c2p110reg:txt"
+      ],
+      [
+       "r74c3p159reg:number",
+       "r55c1p112reg:number"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r55c2p114reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r55c3p116reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r58c1p121reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r58c2p123reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r60c1p125reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r60c2p127reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r60c3p129reg:calendar_input"
+      ],
+      [
+       "r68c1p143reg:txt",
+       "r63c1p132reg:txt"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r63c2p134reg:txt"
+      ],
+      [
+       "r70c1p147reg:txt",
+       "r65c1p136reg:txt"
+      ],
+      [
+       "r70c2p149reg:calendar_input",
+       "r65c2p138reg:calendar_input"
+      ],
+      [
+       "r70c3p151reg:calendar_input",
+       "r65c3p140reg:calendar_input"
+      ],
+      [
+       "r74c2p157reg:txt",
+       "r68c2p145reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dichiara che il responsabile tecnico cognome e nome",
+      "adds": 176
+     }
+    }
+   ],
+   "seconds": 41.1
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di possesso dei requisiti morali delle persone coinvolte (art.85 D.L.vo 159/2011)",
+   "fields": [
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "di aver preso visione dell'art. 85 del D.L.vo 159/2011 (allegato al modulo nella sezione ''normative di riferimento'')"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza che, in relazione ed ai fini del regolare svolgimento dell'attività oggetto della presente pratica, nei confronti dei soggetti previsti d"
+    },
+    {
+     "id": "r8c1p8reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 30
+    },
+    {
+     "id": "r8c2p10reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 30
+    },
+    {
+     "id": "r8c3p12reg:txt",
+     "kind": "text",
+     "label": "carica posseduta",
+     "max": 35
+    },
+    {
+     "id": "r10c1p14reg:txt",
+     "kind": "text",
+     "label": "nato/a a",
+     "max": 30
+    },
+    {
+     "id": "r10c2p16reg:calendar_input",
+     "kind": "date",
+     "label": "il"
+    },
+    {
+     "id": "r12c1p20reg:txt",
+     "kind": "text",
+     "label": "residente a",
+     "max": 30
+    },
+    {
+     "id": "r12c2p22reg:txt",
+     "kind": "text",
+     "label": "via/viale/piazza",
+     "max": 50
+    },
+    {
+     "id": "r12c3p24reg:txt",
+     "kind": "text",
+     "label": "n° civico",
+     "max": 10
+    },
+    {
+     "id": "r13c1p25reg:radio:0_clone",
+     "kind": "radio",
+     "label": "persona priva di codice fiscale italiano in quanto residente all'estero",
+     "group": "r13c1p25reg:radio"
+    },
+    {
+     "id": "r14c1p26reg:radio:1_clone",
+     "kind": "radio",
+     "label": "persona in possesso di codice fiscale italiano",
+     "group": "r14c1p26reg:radio"
+    },
+    {
+     "id": "r16c1p28reg:txt",
+     "kind": "text",
+     "label": "C.F.",
+     "max": 16
+    }
+   ],
+   "fingerprint": "55b6ef7d5a5dd9aa",
+   "text": "dichiarazione di possesso dei requisiti morali delle persone coinvolte (art.85 D.L.vo 159/2011) IL/ LA SOTTOSCRITTO/ A - consapevole che le dichiarazioni false, la falsità negli atti e l'uso di atti falsi comportano l'applicazione delle sanzioni penali previste dall'art.76 del DPR 28/12/2000, n. 445, nonché la decadenza dei benefici prodotti da provvedimenti emanati sulla base di dichiarazioni non veritiere ai sensi dell'art.75, del medesimo decreto; - consapevole inoltre che, dove il fatto non costituisca più grave reato, chiunque, nelle dichiarazioni o attestazioni o asseverazioni che corredano la segnalazione di inizio attività, dichiara o attesta falsamente l'esistenza dei requisiti o dei presupposti di cui al comma 1 dell'art. 19, legge 241/90, è punito con la reclusione da uno a tre anni; DICHIARA ai sensi dell'art. 47 del DPR n. 445/2000 di aver preso visione dell'art. 85 del D.L.vo 159/2011 (allegato al modulo nella sezione ''normative di riferimento'') di essere a conoscenza che, in relazione ed ai fini del regolare svolgimento dell'attività oggetto della presente pratica, nei confronti dei soggetti previsti dal medesimo art. 85 (soci, amministratori, componenti il collegio sindacale ecc.) non devono sussistere cause di divieto, di decadenza o di sospensione di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia). Essi vengono di seguito elencati: cognome nome carica posseduta nato/a a il residente a via/viale/piazza n° civico persona priva di codice fiscale italiano in quanto residente all'estero persona in possesso di codice fiscale italiano C.F.",
+   "branches": [
+    {
+     "choice": "di aver preso visione dell'art. 85 del D.L.vo 159/2011 (allegato al modulo nella sezione ''normative di riferimento'')",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "di essere a conoscenza che, in relazione ed ai fini del regolare svolgimento dell'attività oggetto della presente pratica, nei confronti dei soggetti previsti d",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "persona priva di codice fiscale italiano in quanto residente all'estero",
+     "id": "r13c1p25reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 22
+     }
+    },
+    {
+     "choice": "persona in possesso di codice fiscale italiano",
+     "id": "r14c1p26reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 22
+     }
+    }
+   ],
+   "seconds": 6.3,
+   "scelta": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, individuate all'art.85 del D.L.vo 159/2011)"
+  }
+ ]
+}

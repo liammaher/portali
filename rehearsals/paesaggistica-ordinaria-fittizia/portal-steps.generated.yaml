@@ -14,18 +14,6 @@ asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - paesaggistica ordinaria {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
-  immobile_indirizzo: {type: text, question: 'The property''s street, as the Comune names it (e.g. VIA DOMENICO FONTANA)'}
-  immobile_civico: {type: text, question: Its civico}
-  immobile_cap: {type: text, question: Its CAP}
-  immobile_scala: {type: text, question: Scala, default: ''}
-  immobile_piano: {type: text, question: Piano, default: ''}
-  immobile_interno: {type: text, question: Interno, default: ''}
-  catasto_foglio: {type: text, question: 'Catasto fabbricati: foglio'}
-  catasto_particella: {type: text, question: particella}
-  catasto_subalterno: {type: text, question: subalterno}
-  catasto_sezione: {type: text, question: sezione urbana, default: ''}
-  catasto_categoria: {type: text, question: categoria catastale (e.g. A/2)}
-  destinazione_uso: {type: text, question: 'Destinazione d''uso (residenziale, industriale, commerciale, altro)', default: residenziale}
   vincolo: {type: choice, question: 'What protects the property''s landscape? (art. 136: a declaration by D.M./D.G.R.; art. 142: by law, e.g. the coast; art. 134: the piano paesaggistico only)', options: [
       art 136, art 142, art 136 and 142, art 134]}
   atto_notaio: {type: text, question: The notary's name}
@@ -130,20 +118,20 @@ sections:
   - {id: 'r3c1p3reg:txt', kind: text, value: '{{t:identity.pec}}', max: 9999, label: N.B. Inserire l'indirizzo della casella PEC}
 - section: dichiarazione ubicazione dell'intervento
   fields:
-  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{ask.immobile_cap}}', max: 5, label: CAP}
-  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{ask.immobile_indirizzo}}', max: 60, label: 'Via, Viale, Piazza'}
-  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{ask.immobile_civico}}', max: 20, label: n° civico}
-  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{ask.immobile_scala}}', optional: true, max: 9999, label: scala}
-  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{ask.immobile_piano}}', optional: true, max: 10, label: piano}
-  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{ask.immobile_interno}}', optional: true, max: 10, label: interno}
+  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{c:immobile.cap}}', max: 5, label: CAP}
+  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{c:immobile.indirizzo|upper}}', max: 60, label: 'Via, Viale, Piazza'}
+  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{c:immobile.civico}}', max: 20, label: n° civico}
+  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{c:immobile.scala}}', optional: true, max: 9999, label: scala}
+  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{c:immobile.piano}}', optional: true, max: 10, label: piano}
+  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{c:immobile.interno}}', optional: true, max: 10, label: interno}
 - section: Dati catastali
   fields:
   - {id: 'r1c1p1reg:radio:0_clone', kind: radio, label: Nuovo Catasto Edilizio Urbano}
-  - {id: 'r3c1p5reg:number', kind: text, value: '{{ask.catasto_foglio}}', max: 5, label: foglio}
-  - {id: 'r3c2p7reg:txt', kind: text, value: '{{ask.catasto_particella}}', max: 5, label: particella/mappale}
-  - {id: 'r3c3p9reg:number', kind: text, value: '{{ask.catasto_subalterno}}', max: 4, label: subalterno}
-  - {id: 'r5c2p15reg:txt', kind: text, value: '{{ask.catasto_sezione}}', optional: true, max: 3, label: sezione Urbana}
-  - {id: r8c1p23reg, kind: select, value: '{{ask.catasto_categoria|categoria}}', label: categoria}
+  - {id: 'r3c1p5reg:number', kind: text, value: '{{c:immobile.catasto_foglio}}', max: 5, label: foglio}
+  - {id: 'r3c2p7reg:txt', kind: text, value: '{{c:immobile.catasto_particella}}', max: 5, label: particella/mappale}
+  - {id: 'r3c3p9reg:number', kind: text, value: '{{c:immobile.catasto_subalterno}}', max: 4, label: subalterno}
+  - {id: 'r5c2p15reg:txt', kind: text, value: '{{c:immobile.catasto_sezione}}', optional: true, max: 3, label: sezione Urbana}
+  - {id: r8c1p23reg, kind: select, value: '{{c:immobile.catasto_categoria|categoria}}', label: categoria}
 - section: dati relativi al nome del tecnico
   fields:
   - {id: 'r1c1p1reg:radio:0_clone', kind: radio, label: è colui che presenta la pratica}
@@ -155,7 +143,7 @@ sections:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.titolo|is_proprietario}}', label: proprietà}
   - {id: 'r3c1p4reg:radio:1_clone', kind: radio, when: '{{ask.titolo|is_comproprietario}}', label: comproprietà}
   - {id: 'r4c1p5reg:radio:2_clone', kind: radio, when: '{{ask.titolo|is_amministratore_di_condominio}}', label: amministratore/delegato dal Condominio}
-  - {id: 'r6c1p8reg:txt', kind: text, value: '{{ask.immobile_indirizzo|upper}} {{ask.immobile_civico}}', when: '{{ask.titolo|is_amministratore_di_condominio}}', max: 100, label: 'sito in via, viale, piazza'}
+  - {id: 'r6c1p8reg:txt', kind: text, value: '{{c:immobile.indirizzo|upper}} {{c:immobile.civico}}', when: '{{ask.titolo|is_amministratore_di_condominio}}', max: 100, label: 'sito in via, viale, piazza'}
   - {kind: radio, when: '{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}} {{ask.titolo|is_amministratore_di_condominio|not}}', label: altro diritto reale di godimento}
   - {kind: text, value: '{{ask.titolo}}', when: '{{ask.titolo|is_proprietario|not}} {{ask.titolo|is_comproprietario|not}} {{ask.titolo|is_amministratore_di_condominio|not}}', max: 30, label: specificare
       il titolo}
@@ -175,7 +163,7 @@ sections:
   - {kind: date, value: '{{ask.atto_trascrizione_data|date_it}}', when: '{{ask.titolo_atto|is_conservatoria}}', label: in data, nth: 2}
   - {kind: radio, when: '{{ask.paes_interessa|is_immobile}}', label: l'immobile}
   - {kind: radio, when: '{{ask.paes_interessa|is_area}}', label: l'area}
-  - {kind: text, value: '{{ask.destinazione_uso}}', max: 30, label: ad uso}
+  - {kind: text, value: '{{c:immobile.destinazione_uso}}', max: 30, label: ad uso}
   - {kind: text, value: '{{ask.prg_nta}}', max: 30, label: come da n. NTA del PRG}
   - {kind: text, value: '{{ask.zona_prg}}', max: 30, label: in zona di PRG}
   - {kind: radio, when: '{{ask.atti_gravanti}}', label: sì}

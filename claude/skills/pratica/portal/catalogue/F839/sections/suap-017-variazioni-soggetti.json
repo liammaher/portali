@@ -533,10 +533,315 @@
        "kind": "checkbox",
        "label": "Il/la sottoscritto/a comunica la modifica della SEDE LEGALE"
       }
+     ],
+     "then": [
+      {
+       "choice": "Il/La sottoscritto/a COMUNICA la modifica della DENOMINAZIONE/RAGIONE SOCIALE",
+       "id": "r8c1p19reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r10c1p21reg:txt",
+         "kind": "text",
+         "label": "della la Società/impresa",
+         "max": 100
+        },
+        {
+         "id": "r10c2p23reg:calendar_input",
+         "kind": "date",
+         "label": "a far data dal"
+        },
+        {
+         "id": "r13c1p28reg:txt",
+         "kind": "text",
+         "label": "da",
+         "max": 100
+        },
+        {
+         "id": "r13c2p30reg:txt",
+         "kind": "text",
+         "label": "a",
+         "max": 100
+        },
+        {
+         "id": "r16c1p34reg:radio:0_clone",
+         "kind": "radio",
+         "label": "Verbale",
+         "group": "r16c1p34reg:radio"
+        },
+        {
+         "id": "r17c1p37reg:radio:1_clone",
+         "kind": "radio",
+         "label": "Delibera societaria del CdA o Assemblea",
+         "group": "r17c1p37reg:radio"
+        },
+        {
+         "id": "r18c1p40reg:radio:2_clone",
+         "kind": "radio",
+         "label": "Altro",
+         "group": "r18c1p40reg:radio"
+        }
+       ],
+       "moved": [
+        [
+         "r10c1p23reg:chk",
+         "r19c1p42reg:chk"
+        ]
+       ],
+       "then": [
+        {
+         "choice": "Verbale",
+         "id": "r16c1p34reg:radio:0_clone",
+         "kind": "radio",
+         "reveals": [
+          {
+           "id": "r17c2p37reg:calendar_input",
+           "kind": "date",
+           "label": "del"
+          }
+         ],
+         "moved": [
+          [
+           "r16c1p34reg:radio:0_clone",
+           "r17c1p35reg:radio:0_clone"
+          ],
+          [
+           "r17c1p37reg:radio:1_clone",
+           "r18c1p40reg:radio:1_clone"
+          ],
+          [
+           "r18c1p40reg:radio:2_clone",
+           "r19c1p43reg:radio:2_clone"
+          ],
+          [
+           "r19c1p42reg:chk",
+           "r20c1p45reg:chk"
+          ]
+         ]
+        },
+        {
+         "choice": "Delibera societaria del CdA o Assemblea",
+         "id": "r17c1p37reg:radio:1_clone",
+         "kind": "radio",
+         "reveals": [
+          {
+           "id": "r18c2p40reg:calendar_input",
+           "kind": "date",
+           "label": "del"
+          }
+         ],
+         "moved": [
+          [
+           "r17c1p37reg:radio:1_clone",
+           "r18c1p38reg:radio:1_clone"
+          ],
+          [
+           "r18c1p40reg:radio:2_clone",
+           "r19c1p43reg:radio:2_clone"
+          ],
+          [
+           "r19c1p42reg:chk",
+           "r20c1p45reg:chk"
+          ]
+         ]
+        },
+        {
+         "choice": "Altro",
+         "id": "r18c1p40reg:radio:2_clone",
+         "kind": "radio",
+         "reveals": [
+          {
+           "id": "r19c2p43reg:txt",
+           "kind": "text",
+           "label": "specificare",
+           "context": "Altro",
+           "max": 200
+          }
+         ],
+         "moved": [
+          [
+           "r18c1p40reg:radio:2_clone",
+           "r19c1p41reg:radio:2_clone"
+          ],
+          [
+           "r19c1p42reg:chk",
+           "r20c1p44reg:chk"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "choice": "Il/la sottoscritto/a comunica la modifica della SEDE LEGALE",
+       "id": "r10c1p23reg:chk",
+       "kind": "checkbox",
+       "reveals": [
+        {
+         "id": "r12c1p25reg:txt",
+         "kind": "text",
+         "label": "della la Società/impresa",
+         "max": 100
+        },
+        {
+         "id": "r12c2p27reg:calendar_input",
+         "kind": "date",
+         "label": "a far data dal"
+        },
+        {
+         "id": "r14c1p31reg:txt",
+         "kind": "text",
+         "label": "dalla via",
+         "max": 50
+        },
+        {
+         "id": "r14c2p33reg:txt",
+         "kind": "text",
+         "label": "Comune",
+         "max": 50
+        },
+        {
+         "id": "r14c3p35reg:txt",
+         "kind": "text",
+         "label": "prov.",
+         "max": 20
+        },
+        {
+         "id": "r16c1p39reg:txt",
+         "kind": "text",
+         "label": "alla via",
+         "max": 30
+        },
+        {
+         "id": "r16c2p41reg:txt",
+         "kind": "text",
+         "label": "Comune",
+         "max": 50
+        },
+        {
+         "id": "r16c3p43reg:txt",
+         "kind": "text",
+         "label": "prov.",
+         "max": 2
+        },
+        {
+         "id": "r19c1p49reg:radio:0_clone",
+         "kind": "radio",
+         "label": "Verbale",
+         "group": "r19c1p49reg:radio"
+        },
+        {
+         "id": "r20c1p52reg:radio:1_clone",
+         "kind": "radio",
+         "label": "Delibera societaria del CdA o Assemblea",
+         "group": "r20c1p52reg:radio"
+        },
+        {
+         "id": "r21c1p55reg:radio:2_clone",
+         "kind": "radio",
+         "label": "Altro",
+         "group": "r21c1p55reg:radio"
+        }
+       ],
+       "then": [
+        {
+         "choice": "Verbale",
+         "id": "r19c1p49reg:radio:0_clone",
+         "kind": "radio",
+         "reveals": [
+          {
+           "id": "r20c2p52reg:calendar_input",
+           "kind": "date",
+           "label": "del"
+          }
+         ],
+         "moved": [
+          [
+           "r16c2p41reg:txt",
+           "r14c2p33reg:txt"
+          ],
+          [
+           "r16c3p43reg:txt",
+           "r14c3p35reg:txt"
+          ],
+          [
+           "r19c1p49reg:radio:0_clone",
+           "r20c1p50reg:radio:0_clone"
+          ],
+          [
+           "r20c1p52reg:radio:1_clone",
+           "r21c1p55reg:radio:1_clone"
+          ],
+          [
+           "r21c1p55reg:radio:2_clone",
+           "r22c1p58reg:radio:2_clone"
+          ]
+         ]
+        },
+        {
+         "choice": "Delibera societaria del CdA o Assemblea",
+         "id": "r20c1p52reg:radio:1_clone",
+         "kind": "radio",
+         "reveals": [
+          {
+           "id": "r21c2p55reg:calendar_input",
+           "kind": "date",
+           "label": "del"
+          }
+         ],
+         "moved": [
+          [
+           "r16c2p41reg:txt",
+           "r14c2p33reg:txt"
+          ],
+          [
+           "r16c3p43reg:txt",
+           "r14c3p35reg:txt"
+          ],
+          [
+           "r20c1p52reg:radio:1_clone",
+           "r21c1p53reg:radio:1_clone"
+          ],
+          [
+           "r21c1p55reg:radio:2_clone",
+           "r22c1p58reg:radio:2_clone"
+          ]
+         ]
+        },
+        {
+         "choice": "Altro",
+         "id": "r21c1p55reg:radio:2_clone",
+         "kind": "radio",
+         "reveals": [
+          {
+           "id": "r22c2p58reg:txt",
+           "kind": "text",
+           "label": "specificare",
+           "context": "Altro",
+           "max": 200
+          }
+         ],
+         "moved": [
+          [
+           "r16c2p41reg:txt",
+           "r14c2p33reg:txt"
+          ],
+          [
+           "r16c3p43reg:txt",
+           "r14c3p35reg:txt"
+          ],
+          [
+           "r21c1p55reg:radio:2_clone",
+           "r22c1p56reg:radio:2_clone"
+          ]
+         ]
+        }
+       ]
+      }
      ]
     }
    ],
-   "seconds": 29.6
+   "seconds": 48.8,
+   "depth": 3
   },
   {
    "section": "dichiarazioni sul possesso dei requisiti di onorabilità",

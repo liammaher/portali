@@ -13,17 +13,6 @@ asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - proroga 30 mesi ultimazione {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
-  immobile_indirizzo: {type: text, question: 'The property''s street, as the Comune names it (e.g. VIA DOMENICO FONTANA)'}
-  immobile_civico: {type: text, question: Its civico}
-  immobile_cap: {type: text, question: Its CAP}
-  immobile_scala: {type: text, question: Scala, default: ''}
-  immobile_piano: {type: text, question: Piano, default: ''}
-  immobile_interno: {type: text, question: Interno, default: ''}
-  catasto_foglio: {type: text, question: 'Catasto fabbricati: foglio'}
-  catasto_particella: {type: text, question: particella}
-  catasto_subalterno: {type: text, question: subalterno}
-  catasto_sezione: {type: text, question: sezione urbana, default: ''}
-  catasto_categoria: {type: text, question: categoria catastale (e.g. A/2)}
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
@@ -111,20 +100,20 @@ sections:
   - {id: 'r3c1p3reg:txt', kind: text, value: '{{t:identity.pec}}', max: 9999, label: N.B. Inserire l'indirizzo della casella PEC}
 - section: ubicazione dell'attività
   fields:
-  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{ask.immobile_cap}}', max: 5, label: CAP}
-  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{ask.immobile_indirizzo}}', max: 60, label: 'Via, Viale, Piazza'}
-  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{ask.immobile_civico}}', max: 20, label: n° civico}
-  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{ask.immobile_scala}}', optional: true, max: 9999, label: scala}
-  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{ask.immobile_piano}}', optional: true, max: 10, label: piano}
-  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{ask.immobile_interno}}', optional: true, max: 10, label: interno}
+  - {id: 'r2c4p8reg:txtws_input', kind: text, value: '{{c:immobile.cap}}', max: 5, label: CAP}
+  - {id: 'r5c1p13reg:txtws_input', kind: lookup, value: '{{c:immobile.indirizzo|upper}}', max: 60, label: 'Via, Viale, Piazza'}
+  - {id: 'r5c2p15reg:txtws_input', kind: text, value: '{{c:immobile.civico}}', max: 20, label: n° civico}
+  - {id: 'r7c1p19reg:txtws_input', kind: text, value: '{{c:immobile.scala}}', optional: true, max: 9999, label: scala}
+  - {id: 'r7c2p21reg:txtws_input', kind: text, value: '{{c:immobile.piano}}', optional: true, max: 10, label: piano}
+  - {id: 'r7c3p23reg:txtws_input', kind: text, value: '{{c:immobile.interno}}', optional: true, max: 10, label: interno}
 - section: Dati catastali
   fields:
   - {id: 'r1c1p1reg:radio:0_clone', kind: radio, label: Nuovo Catasto Edilizio Urbano}
-  - {id: 'r3c1p5reg:number', kind: text, value: '{{ask.catasto_foglio}}', max: 5, label: foglio}
-  - {id: 'r3c2p7reg:txt', kind: text, value: '{{ask.catasto_particella}}', max: 5, label: particella/mappale}
-  - {id: 'r3c3p9reg:number', kind: text, value: '{{ask.catasto_subalterno}}', max: 4, label: subalterno}
-  - {id: 'r5c2p15reg:txt', kind: text, value: '{{ask.catasto_sezione}}', optional: true, max: 3, label: sezione Urbana}
-  - {id: r8c1p23reg, kind: select, value: '{{ask.catasto_categoria|categoria}}', label: categoria}
+  - {id: 'r3c1p5reg:number', kind: text, value: '{{c:immobile.catasto_foglio}}', max: 5, label: foglio}
+  - {id: 'r3c2p7reg:txt', kind: text, value: '{{c:immobile.catasto_particella}}', max: 5, label: particella/mappale}
+  - {id: 'r3c3p9reg:number', kind: text, value: '{{c:immobile.catasto_subalterno}}', max: 4, label: subalterno}
+  - {id: 'r5c2p15reg:txt', kind: text, value: '{{c:immobile.catasto_sezione}}', optional: true, max: 3, label: sezione Urbana}
+  - {id: r8c1p23reg, kind: select, value: '{{c:immobile.catasto_categoria|categoria}}', label: categoria}
 - section: Tipologia lavori
   fields:
   - {id: 'r2c1p2reg:txt', kind: text, value: '{{ask.proroga_tipo_lavori}}', max: 30, label: tipo lavori}

@@ -1,0 +1,173 @@
+{
+ "crawled": "2026-10-28T20:03:26.105Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Cessazione di occupazione di suolo pubblico (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 12.7,
+ "generated": {
+  "interventi": "Cessazione definitiva di occupazione di suolo pubblico",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per cessazione definitiva di occupazione di suolo pubblico",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "cessazione dell'occupazione di suolo pubblico",
+   "Dichiarazione in materia di rispetto sulle tasse comunali"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "cessazione dell'occupazione di suolo pubblico",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "l'autorizzazione n°/ prot. n°",
+     "max": 20
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r2c3p6reg:calendar_input",
+     "kind": "date",
+     "label": "cesserà a far data dal"
+    },
+    {
+     "id": "r3c1p9reg:radio:0_clone",
+     "kind": "radio",
+     "label": "integralmente",
+     "group": "r3c1p9reg:radio"
+    },
+    {
+     "id": "r3c2p10reg:radio:1_clone",
+     "kind": "radio",
+     "label": "parzialmente",
+     "group": "r3c2p10reg:radio"
+    },
+    {
+     "id": "r5c1p12reg:txt",
+     "kind": "text",
+     "label": "dimensioni dell'occupazione di suolo pubblico da cessare (mt X mt)",
+     "max": 50
+    },
+    {
+     "id": "r7c1p14reg:txta",
+     "kind": "textarea",
+     "label": "150 Caratteri restanti",
+     "context": "la cessazione avviene per il seguente motivo:",
+     "max": 150
+    }
+   ],
+   "fingerprint": "b0abb7abdd6e80bd",
+   "text": "cessazione dell'occupazione di suolo pubblico l'autorizzazione n°/ prot. n° del cesserà a far data dal integralmente parzialmente dimensioni dell'occupazione di suolo pubblico da cessare (mt X mt) la cessazione avviene per il seguente motivo: 150 Caratteri restanti",
+   "branches": [
+    {
+     "choice": "integralmente",
+     "id": "r3c1p9reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "l'autorizzazione n°/ prot. n°",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "parzialmente",
+     "id": "r3c2p10reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "l'autorizzazione n°/ prot. n°",
+      "adds": 14
+     }
+    }
+   ],
+   "seconds": 3
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  }
+ ]
+}

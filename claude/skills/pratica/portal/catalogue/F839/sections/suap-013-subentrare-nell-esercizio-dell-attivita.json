@@ -1,0 +1,256 @@
+{
+ "crawled": "2026-10-28T20:46:24.350Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Subentrare nell'esercizio dell'attività (sector Lavanderia a gettone)",
+ "seconds": 22.9,
+ "generated": {
+  "interventi": "Subingresso in attività di tintolavanderia a gettone",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per subingresso in attività di tintolavanderia a gettone",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione locale",
+   "dati catastali",
+   "dichiarazione della user Telemaco",
+   "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "dichiarazione del titolo di disponibilità dei locali",
+   "dichiarazione dell'insegna dell'esercizio",
+   "dichiarazione relativa alle superfici dei locali utilizzati",
+   "dichiarazione di rispetto dei regolamenti in materia urbanistico - edilizia",
+   "dichiarazione della modalità di subingresso",
+   "dichiarazione relativa alla Prevenzione Incendi",
+   "dichiarazione di possesso dei requisiti morali e di rispetto delle norme per",
+   "dichiarazione relativa alla notifica di cui all'art. 67 del D.Lgs n. 81/2008",
+   "dichiarazione per emissioni in atmosfera (tintolavanderia)",
+   "dichiarazione relativa agli scarichi (tintolavanderia)",
+   "dichiarazione per industrie insalubri",
+   "dichiarazione relativa alla tipologia dell'esercizio di tintolavanderia",
+   "dichiarazione materiali e prodotti chimici utilizzati",
+   "dichiarazione rifiuti prodotti",
+   "dichiarazione ciclo produttivo",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "presenta contestualmente la Documentazione Previsionale di Impatto Acustico D.P.I.A. (solo nel caso in cui le emissioni di rumore siano superiori ai limiti stabiliti dal documento\ndi classificazione acustica del territorio comunale di riferimento ovvero - per i Comuni in cui non sia stato adottato - ai limiti individuati dal D.P.C.M. 14.11.1997 - Art.4, comma 2, D.P.R. 19.10.2011, n. 227 \ne la documentazione tecnica non sia già stata presentata dal precedente titolare)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione locale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "fingerprint": "072898a981cd1b8c",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione del titolo di disponibilità dei locali",
+   "fingerprint": "be9c0c120ce4e9fd",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione del titolo di disponibilità dei locali",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione dell'insegna dell'esercizio",
+   "fingerprint": "91770c2e0f55753b",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione dell'insegna dell'esercizio",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alle superfici dei locali utilizzati",
+   "fingerprint": "86ca54beb005c9b8",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alle superfici dei locali utilizzati",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di rispetto dei regolamenti in materia urbanistico - edilizia",
+   "fingerprint": "3b7a238e692942da",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione di rispetto dei regolamenti in materia urbanistico - edilizia",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della modalità di subingresso",
+   "fingerprint": "a1fc93491bcc61c1",
+   "same_as": "suap-011-subentrare-nell-attivita-di-tatuatore-piercer#dichiarazione della modalità di subingresso",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla Prevenzione Incendi",
+   "fingerprint": "649d2ecfac75455e",
+   "same_as": "suap-004-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla Prevenzione Incendi",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di possesso dei requisiti morali e di rispetto delle norme per",
+   "fingerprint": "5fd2ac33e4cfeda0",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione di possesso dei requisiti morali e di rispetto delle norme per",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alla notifica di cui all'art. 67 del D.Lgs n. 81/2008",
+   "fingerprint": "ea6cf46cfc49e2b8",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla notifica di cui all'art. 67 del D.Lgs n. 81/2008",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione per emissioni in atmosfera (tintolavanderia)",
+   "fingerprint": "ff16e12e3903890a",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione per emissioni in atmosfera (tintolavanderia)",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa agli scarichi (tintolavanderia)",
+   "fingerprint": "28c87e9cb42f996e",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa agli scarichi (tintolavanderia)",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione per industrie insalubri",
+   "fingerprint": "ff529e3ac9e59ae5",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione per industrie insalubri",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione relativa alla tipologia dell'esercizio di tintolavanderia",
+   "fingerprint": "2a97cc69c94d6307",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla tipologia dell'esercizio di tintolavanderia",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione materiali e prodotti chimici utilizzati",
+   "fingerprint": "60f06d9de781f337",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione materiali e prodotti chimici utilizzati",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione rifiuti prodotti",
+   "fingerprint": "8dad463a7b383f4c",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione rifiuti prodotti",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione ciclo produttivo",
+   "fingerprint": "7ea900a692c1a339",
+   "same_as": "suap-012-subentrare-nell-esercizio-dell-attivita#dichiarazione ciclo produttivo",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  }
+ ]
+}

@@ -1,0 +1,501 @@
+{
+ "crawled": "2026-10-28T20:55:18.456Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › Rilascio tesserino per hobbisti o creatori delle opere dell’ingegno e artistiche (sector Altre attività del settore)",
+ "seconds": 56.7,
+ "generated": {
+  "interventi": "Domanda per il rilascio/rinnovo del tesserino per hobbisti o creatori delle opere dell’ingegno e artistiche",
+  "adempimenti": [
+   {
+    "adempimento": "Domanda per il rilascio/rinnovo del tesserino per hobbisti o creatori delle opere dell’ingegno e artistiche",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "Oggetto dell'istanza",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.4
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.5
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Oggetto dell'istanza",
+   "fields": [
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "il rilascio per anni",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "label": "il rinnovo del tesserino per anni",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "di partecipare ai mercatini degli hobbisti di cui all’art. 69, comma 1, lettera b) della L.R. n. 7/2020 in qualità di operatore non professionale che vende, pro"
+    },
+    {
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "che la merceologia oggetto della presente domanda è della seguente specializzazione:"
+    },
+    {
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "di essere in possesso dei requisiti di cui all’articolo 71, comma 1, del d.lgs. 59/2010 e al comma 1 dell’articolo 7 della L.R.C. n. 7/2020;"
+    },
+    {
+     "id": "r9c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "di non essere già in possesso di altro tesserino in corso di validità o che non gliene sia stato revocato uno nell’ultimo triennio;"
+    },
+    {
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "di non aver presentato domanda per il rilascio del tesserino ad un altro comune della Campania;"
+    },
+    {
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza che il tesserino ha validità massima di 3 anni dalla data di rilascio e che nello stesso periodo, non può essere rilasciato ad altro sogg"
+    },
+    {
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "che con la presente richiesta, l’esercizio dell’attività di hobbista non supera il periodo complessivo di 5 anni, anche non consecutivi, come previsto dall’ art"
+    },
+    {
+     "id": "r13c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza che il tesserino, munito di fotografia, non è cedibile o trasferibile;"
+    },
+    {
+     "id": "r14c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "di impegnarsi ad esporre il tesserino, durante i mercatini o fiere, in modo visibile e leggibile al pubblico e agli organi preposti al controllo;"
+    },
+    {
+     "id": "r15c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "di partecipare ad un massimo di 12 manifestazioni nell’arco dell’anno, considerandosi come unitaria la partecipazione a manifestazioni della durata di due giorn"
+    },
+    {
+     "id": "r16c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza che il tesserino deve essere vidimato da ciascun comune nel quale si svolge l’attività di vendita occasionale;"
+    },
+    {
+     "id": "r17c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza che le manifestazioni che si svolgeranno sull’intero territorio comunale, durante le principali festività religiose e civili, saranno con"
+    },
+    {
+     "id": "r18c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza che esauriti gli spazi sul tesserino, non potrà richiederne uno nuovo, né partecipare ad altri mercatini, fino alla scadenza dei dodici m"
+    },
+    {
+     "id": "r19c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza delle sanzioni previste dall’art. 147 della L.R. n. 7/2020;"
+    },
+    {
+     "id": "r20c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "di allegare alla presente domanda: n. 1 fototessera; n. 1 copia di un documento di identità in corso di validità."
+    }
+   ],
+   "fingerprint": "d88cf4a5be1a3bcb",
+   "text": "Oggetto dell'istanza Il/La sottoscritto/a CHIEDE, ai sensi dell’articolo 69 Legge Regionale 7/2020 e della Delibera C.C.n.32/2024 TESSERINO hobbisti o creatori delle opere dell’ingegno e artistiche ai sensi dell’art. 69 della Legge Regionale n. 7/2020 e ss.mm.ii. e della Delibera C.C.n.32/2024 il rilascio per anni il rinnovo del tesserino per anni e a tal fine DICHIARA di partecipare ai mercatini degli hobbisti di cui all’art. 69, comma 1, lettera b) della L.R. n. 7/2020 in qualità di operatore non professionale che vende, propone o espone, in modo saltuario ed occasionale, merci di modico valore che non superano il prezzo unitario di 250,00 euro; che la merceologia oggetto della presente domanda è della seguente specializzazione: di essere in possesso dei requisiti di cui all’articolo 71, comma 1, del d.lgs. 59/2010 e al comma 1 dell’articolo 7 della L.R.C. n. 7/2020; di non essere già in possesso di altro tesserino in corso di validità o che non gliene sia stato revocato uno nell’ultimo triennio; di non aver presentato domanda per il rilascio del tesserino ad un altro comune della Campania; di essere a conoscenza che il tesserino ha validità massima di 3 anni dalla data di rilascio e che nello stesso periodo, non può essere rilasciato ad altro soggetto residente nella stessa unità immobiliare; che con la presente richiesta, l’esercizio dell’attività di hobbista non supera il periodo complessivo di 5 anni, anche non consecutivi, come previsto dall’ art 69 L.R. n. 7/2020; di essere a conoscenza che il tesserino, munito di fotografia, non è cedibile o trasferibile; di impegnarsi ad esporre il tesserino, durante i mercatini o fiere, in modo visibile e leggibile al pubblico e agli organi preposti al controllo; di partecipare ad un massimo di 12 manifestazioni nell’arco dell’anno, considerandosi come unitaria la partecipazione a manifestazioni della durata di due giorni consecutivi; di essere a conoscenza che il tesserino deve essere vidimato da ciascun comune nel quale si svolge l’attività di vendita occasionale; di essere a conoscenza che le manifestazioni che si svolgeranno sull’intero territorio comunale, durante le principali festività religiose e civili, saranno considerate come unico evento per l’intero periodo e , pertanto, la vidimazione del tesserino per gli hobbisti verrà effettuata una sola volta per ciascuna manifestazione; di essere a conoscenza che esauriti gli spazi sul tesserino, non potrà richiederne uno nuovo, né partecipare ad altri mercatini, fino alla scadenza dei dodici mesi dalla data del suo rilascio; di essere a conoscenza delle sanzioni previste dall’art. 147 della L.R. n. 7/2020; di allegare alla presente domanda: n. 1 fototessera; n. 1 copia di un documento di identità in corso di validità.",
+   "branches": [
+    {
+     "choice": "il rilascio per anni",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r4c2p6reg:number",
+       "kind": "text",
+       "label": "numero (massimo 3 anni):",
+       "context": "il rilascio per anni",
+       "max": 1
+      }
+     ],
+     "moved": [
+      [
+       "r3c1p3reg:radio:0_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r4c1p5reg:radio:1_clone",
+       "r5c1p7reg:radio:1_clone"
+      ],
+      [
+       "r6c1p8reg:chk",
+       "r7c1p10reg:chk"
+      ],
+      [
+       "r7c1p9reg:chk",
+       "r8c1p11reg:chk"
+      ],
+      [
+       "r8c1p10reg:chk",
+       "r9c1p12reg:chk"
+      ],
+      [
+       "r9c1p11reg:chk",
+       "r10c1p13reg:chk"
+      ],
+      [
+       "r10c1p12reg:chk",
+       "r11c1p14reg:chk"
+      ],
+      [
+       "r11c1p13reg:chk",
+       "r12c1p15reg:chk"
+      ],
+      [
+       "r12c1p14reg:chk",
+       "r13c1p16reg:chk"
+      ],
+      [
+       "r13c1p15reg:chk",
+       "r14c1p17reg:chk"
+      ],
+      [
+       "r14c1p16reg:chk",
+       "r15c1p18reg:chk"
+      ],
+      [
+       "r15c1p17reg:chk",
+       "r16c1p19reg:chk"
+      ],
+      [
+       "r16c1p18reg:chk",
+       "r17c1p20reg:chk"
+      ],
+      [
+       "r17c1p19reg:chk",
+       "r18c1p21reg:chk"
+      ],
+      [
+       "r18c1p20reg:chk",
+       "r19c1p22reg:chk"
+      ],
+      [
+       "r19c1p21reg:chk",
+       "r20c1p23reg:chk"
+      ],
+      [
+       "r20c1p22reg:chk",
+       "r21c1p24reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "il rinnovo del tesserino per anni",
+     "id": "r4c1p5reg:radio:1_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r5c2p8reg:number",
+       "kind": "text",
+       "label": "numero:",
+       "context": "il rinnovo del tesserino per anni",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r4c1p5reg:radio:1_clone",
+       "r5c1p6reg:radio:1_clone"
+      ],
+      [
+       "r6c1p8reg:chk",
+       "r7c1p10reg:chk"
+      ],
+      [
+       "r7c1p9reg:chk",
+       "r8c1p11reg:chk"
+      ],
+      [
+       "r8c1p10reg:chk",
+       "r9c1p12reg:chk"
+      ],
+      [
+       "r9c1p11reg:chk",
+       "r10c1p13reg:chk"
+      ],
+      [
+       "r10c1p12reg:chk",
+       "r11c1p14reg:chk"
+      ],
+      [
+       "r11c1p13reg:chk",
+       "r12c1p15reg:chk"
+      ],
+      [
+       "r12c1p14reg:chk",
+       "r13c1p16reg:chk"
+      ],
+      [
+       "r13c1p15reg:chk",
+       "r14c1p17reg:chk"
+      ],
+      [
+       "r14c1p16reg:chk",
+       "r15c1p18reg:chk"
+      ],
+      [
+       "r15c1p17reg:chk",
+       "r16c1p19reg:chk"
+      ],
+      [
+       "r16c1p18reg:chk",
+       "r17c1p20reg:chk"
+      ],
+      [
+       "r17c1p19reg:chk",
+       "r18c1p21reg:chk"
+      ],
+      [
+       "r18c1p20reg:chk",
+       "r19c1p22reg:chk"
+      ],
+      [
+       "r19c1p21reg:chk",
+       "r20c1p23reg:chk"
+      ],
+      [
+       "r20c1p22reg:chk",
+       "r21c1p24reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "di partecipare ai mercatini degli hobbisti di cui all’art. 69, comma 1, lettera b) della L.R. n. 7/2020 in qualità di operatore non professionale che vende, pro",
+     "id": "r6c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che la merceologia oggetto della presente domanda è della seguente specializzazione:",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c1p11reg:txt",
+       "kind": "text",
+       "label": "che la merceologia oggetto della presente domanda è della seguente specializzazione:",
+       "max": 9999
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p10reg:chk",
+       "r10c1p12reg:chk"
+      ],
+      [
+       "r9c1p11reg:chk",
+       "r11c1p13reg:chk"
+      ],
+      [
+       "r10c1p12reg:chk",
+       "r12c1p14reg:chk"
+      ],
+      [
+       "r11c1p13reg:chk",
+       "r13c1p15reg:chk"
+      ],
+      [
+       "r12c1p14reg:chk",
+       "r14c1p16reg:chk"
+      ],
+      [
+       "r13c1p15reg:chk",
+       "r15c1p17reg:chk"
+      ],
+      [
+       "r14c1p16reg:chk",
+       "r16c1p18reg:chk"
+      ],
+      [
+       "r15c1p17reg:chk",
+       "r17c1p19reg:chk"
+      ],
+      [
+       "r16c1p18reg:chk",
+       "r18c1p20reg:chk"
+      ],
+      [
+       "r17c1p19reg:chk",
+       "r19c1p21reg:chk"
+      ],
+      [
+       "r18c1p20reg:chk",
+       "r20c1p22reg:chk"
+      ],
+      [
+       "r19c1p21reg:chk",
+       "r21c1p23reg:chk"
+      ],
+      [
+       "r20c1p22reg:chk",
+       "r22c1p24reg:chk"
+      ]
+     ]
+    },
+    {
+     "choice": "di essere in possesso dei requisiti di cui all’articolo 71, comma 1, del d.lgs. 59/2010 e al comma 1 dell’articolo 7 della L.R.C. n. 7/2020;",
+     "id": "r8c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non essere già in possesso di altro tesserino in corso di validità o che non gliene sia stato revocato uno nell’ultimo triennio;",
+     "id": "r9c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di non aver presentato domanda per il rilascio del tesserino ad un altro comune della Campania;",
+     "id": "r10c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere a conoscenza che il tesserino ha validità massima di 3 anni dalla data di rilascio e che nello stesso periodo, non può essere rilasciato ad altro sogg",
+     "id": "r11c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che con la presente richiesta, l’esercizio dell’attività di hobbista non supera il periodo complessivo di 5 anni, anche non consecutivi, come previsto dall’ art",
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere a conoscenza che il tesserino, munito di fotografia, non è cedibile o trasferibile;",
+     "id": "r13c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di impegnarsi ad esporre il tesserino, durante i mercatini o fiere, in modo visibile e leggibile al pubblico e agli organi preposti al controllo;",
+     "id": "r14c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di partecipare ad un massimo di 12 manifestazioni nell’arco dell’anno, considerandosi come unitaria la partecipazione a manifestazioni della durata di due giorn",
+     "id": "r15c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere a conoscenza che il tesserino deve essere vidimato da ciascun comune nel quale si svolge l’attività di vendita occasionale;",
+     "id": "r16c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere a conoscenza che le manifestazioni che si svolgeranno sull’intero territorio comunale, durante le principali festività religiose e civili, saranno con",
+     "id": "r17c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere a conoscenza che esauriti gli spazi sul tesserino, non potrà richiederne uno nuovo, né partecipare ad altri mercatini, fino alla scadenza dei dodici m",
+     "id": "r18c1p20reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di essere a conoscenza delle sanzioni previste dall’art. 147 della L.R. n. 7/2020;",
+     "id": "r19c1p21reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "di allegare alla presente domanda: n. 1 fototessera; n. 1 copia di un documento di identità in corso di validità.",
+     "id": "r20c1p22reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 41.2
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.7
+  }
+ ]
+}
