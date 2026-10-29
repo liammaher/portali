@@ -79,7 +79,10 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
   pratica/portal/    run.py: fills a portal pratica from a steps file (rehearsals/*/portal-steps.yaml)
                      with inpage.js, in a Playwright window (`run.py run`) or the Claude browser
                      pane (`run.py page`: its check.js says which of runner.js and steps.js the
-                     pane's storage lacks byte for byte, so only those are sent); reads every
+                     pane's storage lacks byte for byte, so only those are sent; run.js carries
+                     the values sealed under a code a window shows and the person types into a
+                     box on the page, so they don't pass through the conversation, unless
+                     `--plain`); reads every
                      field back, then again on a fresh load of the draft, attaches the files it
                      names (the pane: 256 KB in all, bigger ones by an https link it fetches and checks by sha256,
                      `--file-urls`), never declares, pays or sends. A label

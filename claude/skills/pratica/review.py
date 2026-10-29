@@ -5,7 +5,7 @@ was checked, and every value as it went on the form or portal.
   review.py OUT [--route ROUTE.json]
 
 OUT is the folder fill.py run or run.py run wrote (its report.json), or the one run.py page
-wrote with the pane's `__pv.last()` saved there as report.json (its shown.json adds the
+wrote with the pane's `__pv.last()` saved there as report.json (its private/shown.json adds the
 values and the person's steps); --route is
 `fill.py route --json` for a form, for where it goes and the person's steps. Writes
 OUT/review.html: one self-contained file (the form's pages inlined), to show the person
@@ -119,6 +119,9 @@ def portal_review(report):
                        if ok else "Draft loaded again from the portal: a value didn't stay (see Stopped)", ok))
     if report.get("error"):
         checks.append((f"Stopped: {report['error']}", False))
+    # The report says only why a read-back failed; the person sees what it wanted and found.
+    for d in report.get("details", []):
+        checks.append((f"{d['section']}, {d['label']}: wanted {d['want']!r}, the portal had {d['got']!r}", False))
     groups = {}
     for v in report.get("values", []):
         groups.setdefault(v["section"], []).append((v["label"], v["value"], False))
@@ -134,8 +137,9 @@ def main():
     ap.add_argument("--route", type=Path)
     a = ap.parse_args()
     report = json.loads((a.out / "report.json").read_text())
-    if (a.out / "shown.json").exists():  # run.py page: the pane's report has only the run
-        report |= json.loads((a.out / "shown.json").read_text())
+    shown = a.out / "private" / "shown.json"  # run.py page: the pane's report has only the run
+    if shown.exists():
+        report |= json.loads(shown.read_text())
     route = json.loads(a.route.read_text()) if a.route else None
     doc = form_review(a.out, report, route) if "rows" in report else portal_review(report)
     (a.out / "review.html").write_text(doc, encoding="utf-8")

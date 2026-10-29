@@ -34,7 +34,9 @@ user's folder at the end, even when a test fails.
 ## 1. Does the built-in browser run the runner?
 
 1. `python3 SKILL/portal/run.py page --steps SKILL/pratiche/cila-fittizia.json --answers
-   answers.json --values run/values.json --out run`; record the sizes it prints.
+   answers.json --values run/values.json --out run --plain`; record the sizes it prints.
+   (Without `--plain` it tries to show a code in a window on the host: record whether
+   that works from Cowork's sandbox, and what it says.)
 2. Open `https://suap.impresainungiorno.gov.it/fnsuap/cmd/home` in the built-in browser and
    ask the user to log in with SPID. Wait until they're in.
 3. Run `run/check.js` as one JavaScript call on the page, then what it names

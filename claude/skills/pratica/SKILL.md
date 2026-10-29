@@ -331,14 +331,20 @@ When there is one, follow it instead of exploring the portal:
    loaded again from its address and every value read once more (only then `filled`: a
    section can re-render an earlier one, or show a value the portal never stored). It then
    shows the draft, prints a line per section and a JSON result, and writes
-   `<dir>/review.html`: show it to the user (SendUserFile, `display: render`) as the place to
-   check the draft, with step 5's list.
+   `<dir>/review.html`: show it to the user (SendUserFile, `display: render`; send it, don't
+   open it yourself) as the place to check the draft, with step 5's list.
    No environment yet: `python3 -m venv ~/.cache/pratica-portal/venv`, then its `pip install
    pyyaml playwright` and `python -m playwright install chromium` (ask first).
    **If it stops, recover it without the user** (they hear nothing about the page):
    1. `report.json`'s `error` says what differed and `at` exactly where (the wizard screen,
-      or the section and field); `<dir>/failure.png` shows it. Read that screen as text
-      (`read_page`, or the Playwright CLI's snapshot), next to the map's entry for it.
+      or the section and field); its `snapshot` is the page with no value in it (each visible
+      box's id, label and whether it holds anything, the portal's messages). Read those next
+      to the map's entry for it, and nothing else: **never read, screenshot or take the text
+      of a page a run has filled** (`read_page`, `get_page_text`, a screenshot, the Playwright
+      CLI's snapshot), and never open `<dir>/private/` or `<dir>/review.html`, which hold the
+      person's values for them. No report has a value in it (a failed read-back says
+      `empty`, `different` or `missing`), so a field you need to know more about is a
+      question for the person, or a fix to try, never a look at what they typed.
    2. Work out the fix for that one field: its new `id` or `css`, or the `label` the page
       now shows. Write `[{"section": i, "field": k, "set": {"label": "…"}}]` to a fix file.
    3. Resume on the same draft: the same command with `--resume <dir>/report.json --fix
@@ -366,14 +372,25 @@ When there is one, follow it instead of exploring the portal:
    - One run per login at a time, in any tab or window: the portal keeps one pratica in
      progress per login, so a second run (or a crawl) moves the first one's draft back a
      screen or shows its error page. A batch (`bench/rerun.py`) runs them one after another.
+   - `run.py page` seals the values: `run.js` holds them encrypted, and a window on the
+     user's screen shows the code. It is not printed anywhere you can read: never ask for it,
+     never look for it. Before the first call tell the user that a window with a code is
+     open, that the portal's page will show a box when `run.js` runs, to type the code there
+     (no need to tell you), and to leave the window open until the run is done. `run.js`
+     returns "waiting for the code": poll `__pv.wait(40000)`; `result: "waiting"` means
+     they haven't typed it yet, so say so. Take no screenshot and read no page while the box
+     is up. After a reload of the runner `__pv.resume()` asks for the code again.
+     `--plain` carries the values in the clear instead, through this conversation: only for
+     made-up data (rehearsals) or a user who has been told so, and the only choice where no
+     window can open (it says so). `run` needs no code: its window is not yours at all.
    - Stopped: `__pv.last()` is the report (kept in the tab, so it outlives a reload of the
-     runner); work out the fix as above and `__pv.resume({fixes: [...]})` carries on on the
+     runner), `__pv.look()` the page with no value in it; work out the fix as above and `__pv.resume({fixes: [...]})` carries on on the
      same draft, with the same values. Write the fix into the steps file (or the dictionary
      and regenerate) afterwards. A draft whose address has expired (`/cmd/error`): `url =
      await __pv.reopen("<the draft's name>")` opens it from Pratiche in bozza, then
      `__pv.resume({url})`.
    - "0 fields with this label" usually means the section wasn't on the page yet or another
-     one was open, not that the label changed: look at the page before fixing anything.
+     one was open, not that the label changed: check `__pv.look()` before fixing anything.
    - After a change to inpage.js, the dictionary or gen.py, rerun the rehearsals that use it
      with `bench/rerun.py` (check.js, the queue files, loop.js, results.js: portal/README.md).
 3. **Never** tick a declaration (the sections the steps file leaves out), press pagoPA or
