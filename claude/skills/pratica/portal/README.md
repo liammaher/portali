@@ -49,6 +49,11 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
   section saves only with both ticked (the recipe says so in `yours`).
 - **Acknowledgements** in the person's name are `theirs` in the dictionary (their wording
   varies by pratica: list each one), never ticked.
+- **Answers change the attachments screen.** An onerosa CILA adds the contributo's prospetto
+  and receipt slots; a title held alone drops the co-holders' IDs. A slot the crawl's screen
+  hasn't is `on_page` in the recipe, found by label under its `when`.
+- **A file box's cell names the file once it's in.** Name an upload by the row above it (the
+  crawl's `context`), not by its cell ("Tipologie ammesse"), or the read-back can't find it.
 - **The portal's own errors:** "errore inatteso", a 503 for maintenance, a fresh load that
   lands on `/cmd/error`. Every section is saved by then: reopen the draft from Pratiche in
   bozza (`__pv.reopen`) and resume.

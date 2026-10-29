@@ -20,9 +20,6 @@ yours:
   - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - value: "{{ask.titolo}}"
-    in: [locatario]
-    else: "So far only a tenant with the owner's assent (a.2) is mapped."
   - value: "{{ask.fine_completa}}"
     in: ["true"]
     else: "Works finished in part need a planimetria of the finished part, not mapped yet."

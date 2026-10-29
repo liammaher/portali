@@ -11,7 +11,7 @@ yours:
 - Sign and send (Firma e invio); keep the receipt
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - piano terre e rocce {{c:identity.last_name}}'}
-  titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
+  titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}
 supports:

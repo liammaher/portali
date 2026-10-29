@@ -105,6 +105,8 @@
     ["paolo:identity.birth_comune", "Napoli"],
     ["paolo:identity.birth_province", "NA"],
     ["paolo:identity.codice_fiscale", "FTTPLA88B14F839U"],
+    ["paolo:identity.email", "paolo.fittizio@example.com"],
+    ["paolo:identity.phone", "+39 333 000 0109"],
     ["paolo:residenza.comune", "Napoli"],
     ["paolo:residenza.provincia", "NA"],
     ["paolo:residenza.indirizzo", "Via Luca Giordano"],

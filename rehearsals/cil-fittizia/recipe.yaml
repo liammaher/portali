@@ -22,6 +22,5 @@ yours:
   - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - value: "{{ask.titolo}}"
-    in: [locatario]
-    else: "So far only a tenant with the owner's assent (a.2) is mapped."
+  - when: "{{ask.altri_atti|not}}"
+    else: "Other filings or assents with the CIL (quadro e: Soprintendenza, ASL, fire brigade) aren't mapped yet."

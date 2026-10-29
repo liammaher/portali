@@ -12,7 +12,8 @@
 # section shows that stays empty; `omit:` a section that is the person's alone. `kind: tick`
 # is a radio in one pratica and a checkbox in another; `if_present` a field only some pratiche
 # show; `on_page` one the crawl can't see (shown by two choices together), found by label on
-# the page; `anchor`/`block` a field inside the block that starts at another field.
+# the page; `anchor`/`block` a field inside the block that starts at another field. A `when`'s
+# words gate each other in order: pre-flight asks a later one only once the earlier hold.
 #
 # Roles (answers.json "people"): no prefix and `t:` are the studio's own (the business and its
 # titolare, the architect), `c:` the client, `o:` the owner company, `r:` its legale
@@ -31,6 +32,10 @@ groups:
     question: "What does the food business do? Tick every line that applies."
   allegato_b:
     question: "Which items of DPR 31/2017's Allegato B do the works fall under? Tick every one that applies."
+  cila_interventi:
+    question: "What are the works, for the CILA's relazione tecnica? Tick every line that applies."
+  tolleranze_tipi:
+    question: "Which construction tolerances does the relazione declare? Tick every one that applies."
 
 asks:
   descrizione:
@@ -39,12 +44,85 @@ asks:
     default: "PROVA NON INVIARE - {{c:identity.last_name}}"
   titolo:
     type: text
-    question: "The client's title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)"
+    question: "The client's title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)"
+    propose: "{{c:immobile.titolo}}"
+  # Whether anyone else's assent is needed (a.1 or a.2): an owner usually holds it alone, a
+  # tenant or a co-owner doesn't.
+  titolo_esclusivo:
+    type: yes_no
+    question: "Does the client hold the title alone, with no one else (co-owners, the landlord) whose assent the works need? If not, the other holder is the job's `r:` person, with `o:` their company if a company owns it"
+    propose: "{{ask.titolo|titolo_solo}}"
+  parti_comuni:
+    type: choice
+    question: "Do the works touch common parts of the building? nessuna; condominio (common parts of a condominium); comproprieta (a building of several owners that isn't a condominium, with their approval); art 1102 (common parts used at the client's expense without changing their purpose, art. 1102 c.c.: no assent needed)"
+    options: [nessuna, condominio, comproprieta, art 1102]
+    propose: "nessuna"
+  # The CILA's quadro d: works to start (d.1), under way (d.2, 333 € penalty) or done (d.3,
+  # 1,000 €): art. 6-bis c. 5 DPR 380/2001.
+  cila_stato:
+    type: choice
+    question: "Have the works started? da iniziare (not yet); in corso (under way: a late CILA with the 333 € penalty); realizzato (already finished: the 1,000 € penalty)"
+    options: [da iniziare, in corso, realizzato]
+  inizio_dopo_assensi:
+    type: yes_no
+    question: "Will the works start only once the SUE says the other assents (e.g. the landscape authorization) are in, rather than on a set date?"
+    propose: "false"
+  data_lavori_realizzati: {type: date, question: "When the works were finished (a CILA for works already done, d.3)"}
+  cila_onerosa:
+    type: yes_no
+    question: "Is a contributo di costruzione due (manutenzione straordinaria that adds urban load and floor area)?"
+    propose: "false"
+  contributo_pagato: {type: yes_no, question: "Is the contributo already paid (its receipt attached), rather than to be paid before the works start?"}
+  ricevuta_contributo: {type: file, question: "The contributo di costruzione's payment receipt (PDF)"}
+  prospetto_contributo: {type: file, question: "The prospetto di calcolo preventivo of the contributo di costruzione (PDF)"}
+  direttore_lavori:
+    type: choice
+    question: "Who directs the works? progettista (the architect filing the pratica); da nominare (no direttore dei lavori named in the CILA); altro tecnico (another technician)"
+    options: [progettista, da nominare, altro tecnico]
+    propose: "progettista"
+  altri_tecnici:
+    type: yes_no
+    question: "Are other technicians (structures, systems, acoustics, safety) already appointed for these works?"
+    propose: "false"
+  lavori_in_proprio:
+    type: yes_no
+    question: "Are the works so minor that the client does them without a firm (opere di modesta entità, eseguite in proprio)?"
+    propose: "false"
+  # The CILA's relazione tecnica: what the works are (art. 6-bis DPR 380/2001 and Tabella A of
+  # D.Lgs. 222/2016), the progettista's to say.
+  cila_manutenzione: {type: yes_no, group: cila_interventi, item: "Manutenzione straordinaria (art. 3 c.1 b DPR 380/2001), not touching the structure"}
+  cila_restauro: {type: yes_no, group: cila_interventi, item: "Restauro e risanamento conservativo (art. 3 c.1 c), not touching the structure"}
+  cila_barriere: {type: yes_no, group: cila_interventi, item: "Removing architectural barriers with external lifts or works that change the building's shape"}
+  cila_sottosuolo: {type: yes_no, group: cila_interventi, item: "Temporary geognostic surveys of the subsoil"}
+  cila_terra: {type: yes_no, group: cila_interventi, item: "Earth moving not for farming"}
+  cila_serre: {type: yes_no, group: cila_interventi, item: "Seasonal farm greenhouses with masonry parts"}
+  cila_pertinenze: {type: yes_no, group: cila_interventi, item: "Minor pertinenze the PRG doesn't count as new building"}
+  cila_altri: {type: yes_no, group: cila_interventi, item: "Other works not listed in artt. 6, 10 and 22 DPR 380/2001 (residual CILA)"}
+  cila_altri_tipo: {type: text, question: "Which other works (the 'specificare il tipo di intervento' line)"}
+  # Construction tolerances (art. 34-bis and 34-ter DPR 380/2001, as the 2024 Salva Casa changed them).
+  tolleranze:
+    type: yes_no
+    question: "Does the relazione declare construction tolerances (art. 34-bis / 34-ter DPR 380/2001) on the property?"
+    propose: "false"
+  toll_34bis_1: {type: yes_no, group: tolleranze_tipi, item: "Art. 34-bis c. 1 and 1-ter, second period (2% of the measures)"}
+  toll_34bis_1bis: {type: yes_no, group: tolleranze_tipi, item: "Art. 34-bis c. 1-bis and 1-ter, first period (2–6% by the unit's floor area, works before 24 May 2024)"}
+  toll_34bis_2: {type: yes_no, group: tolleranze_tipi, item: "Art. 34-bis c. 2 (geometric and execution irregularities)"}
+  toll_34bis_2bis: {type: yes_no, group: tolleranze_tipi, item: "Art. 34-bis c. 2-bis (works before 24 May 2024: minor execution irregularities)"}
+  toll_34ter_4: {type: yes_no, group: tolleranze_tipi, item: "Art. 34-ter c. 4 (variants made during works before 1977)"}
+  toll_superficie:
+    type: choice
+    question: "The unit's superficie utile, for the art. 34-bis c. 1-bis tolerance: oltre 500 (over 500 m², 2%); 300-500 (3%); 100-300 (4%); 60-100 (5%); sotto 60 (under 60 m², 6%)"
+    options: [oltre 500, 300-500, 100-300, 60-100, sotto 60]
+  toll_strutturale: {type: yes_no, question: "Is the tolerance structurally relevant (it then complies with the technical rules for construction)?"}
+  altri_atti:
+    type: yes_no
+    question: "Do the works need other filings or assents that this pratica doesn't file (the Soprintendenza, ASL, fire brigade, a landscape authorization not in this pratica)?"
+    propose: "false"
   oggetto:
     type: text
     question: "The works in one sentence (300 characters)"
-  data_inizio_lavori: {type: date, question: "When the works started (they're already under way: a late CILA, d.2)"}
-  ricevuta_sanzione: {type: file, question: "The 333 € penalty receipt (PDF)"}
+  data_inizio_lavori: {type: date, question: "When the works start, or started"}
+  ricevuta_sanzione: {type: file, question: "The penalty receipt (PDF): 333 € for works under way, 1,000 € for works already done"}
   dettaglio_intervento:
     type: text
     question: "The works for the relazione tecnica (500 characters)"
@@ -484,63 +562,91 @@ sections:
       - {kind: text, label: sezione Urbana, value: "{{c:immobile.catasto_sezione}}", optional: true}
       - {kind: select, label: categoria, value: "{{c:immobile.catasto_categoria|categoria}}"}
 
-  # A tenant: "altro" + locatario, and the non-exclusive title, which opens the owner's row
-  # (the terzo titolare who gave assent): `o:` the owner company, `r:` its legale rappresentante.
+  # The client's title. The dropdown's "altro" (a tenant, a comodatario: + specificare) adds a
+  # row and renumbers the radios below it. Then the title held alone (a.1), or the assent of
+  # the other holder (a.2), whose row opens: a person (`r:`), or a company (`o:`) with `r:` its
+  # legale rappresentante. The portal's row takes one holder; more go in the assent's attachment.
   - section: a) Titolarità dell'intervento
     aliases: ["Titolarità dell'intervento"]
     fields:
-      - {kind: select, label: "Il richiedente dichiara di avere titolo", value: altro}
-      - {kind: text, label: specificare, value: locatario}
-      - {kind: radio, label: non avere titolarità esclusiva}
-      - {kind: text, label: Cognome, value: "{{r:identity.last_name}}"}
-      - {kind: text, label: Nome, value: "{{r:identity.first_name}}"}
-      - {kind: text, label: C.F., value: "{{r:identity.codice_fiscale}}"}
-      - {kind: date, label: Data di nascita, value: "{{r:identity.date_of_birth|date_it}}"}
-      - {kind: select, label: Sesso, value: "{{r:identity.sex|sesso}}"}
-      - {kind: select, label: Provincia, value: "{{r:identity.birth_province}}"}
-      - {kind: text, label: Comune italiano, value: "{{r:identity.birth_comune|upper}}"}
-      - {kind: select, label: Provincia, nth: 2, value: "{{r:residenza.provincia}}"}
-      - {kind: text, label: Comune italiano, nth: 2, value: "{{r:residenza.comune|upper}}"}
-      - {kind: text, label: "Via, Piazza", value: "{{r:residenza.indirizzo|upper}}"}
-      - {kind: text, label: "N.", value: "{{r:residenza.civico}}"}
-      - {kind: text, label: C.A.P., value: "{{r:residenza.cap}}"}
-      - {kind: text, label: PEC / posta elettronica, value: "{{o:business.pec}}"}
-      - {kind: text, label: Telefono, value: "{{o:business.telefono|phone_it}}"}
-      - {kind: checkbox, label: Da compilare solo nel caso in cui il titolare sia}
-      - {kind: text, label: in qualità di, value: legale rappresentante}
-      - {kind: text, label: della ditta / società, value: "{{o:business.denominazione}}"}
-      - {kind: text, label: con codice fiscale / p. IVA, value: "{{o:business.partita_iva}}"}
+      - {kind: select, label: "Il richiedente dichiara di avere titolo", value: altro, when: "{{ask.titolo|titolo_is_altro}}"}
+      - {kind: text, label: specificare, value: "{{ask.titolo}}", when: "{{ask.titolo|titolo_is_altro}}"}
+      - {kind: select, label: "Il richiedente dichiara di avere titolo", value: "{{ask.titolo|titolo_pratica}}", when: "{{ask.titolo|titolo_is_altro|not}}"}
+      - {kind: radio, label: avere titolarità esclusiva, when: "{{ask.titolo_esclusivo}}"}
+      - {kind: radio, label: non avere titolarità esclusiva, when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: Cognome, value: "{{r:identity.last_name}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: Nome, value: "{{r:identity.first_name}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: C.F., value: "{{r:identity.codice_fiscale}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: date, label: Data di nascita, value: "{{r:identity.date_of_birth|date_it}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: select, label: Sesso, value: "{{r:identity.sex|sesso}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: select, label: Provincia, value: "{{r:identity.birth_province}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: Comune italiano, value: "{{r:identity.birth_comune|upper}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: select, label: Provincia, nth: 2, value: "{{r:residenza.provincia}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: Comune italiano, nth: 2, value: "{{r:residenza.comune|upper}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{r:residenza.indirizzo|upper}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: "N.", value: "{{r:residenza.civico}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: text, label: C.A.P., value: "{{r:residenza.cap}}", when: "{{ask.titolo_esclusivo|not}}"}
+      # A company's contacts, else the person's own.
+      - {kind: text, label: PEC / posta elettronica, value: "{{o:business.pec}}", when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}"}
+      - {kind: text, label: Telefono, value: "{{o:business.telefono|phone_it}}", when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}"}
+      - {kind: text, label: PEC / posta elettronica, value: "{{r:identity.email}}", when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty}}"}
+      - {kind: text, label: Telefono, value: "{{r:identity.phone|phone_it}}", when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty}}"}
+      - {kind: checkbox, label: Da compilare solo nel caso in cui il titolare sia, when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}"}
+      - {kind: text, label: in qualità di, value: legale rappresentante, when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}"}
+      - {kind: text, label: della ditta / società, value: "{{o:business.denominazione}}", when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}"}
+      - {kind: text, label: con codice fiscale / p. IVA, value: "{{o:business.partita_iva}}", when: "{{ask.titolo_esclusivo|not}} {{o:business.denominazione|empty|not}}"}
 
   - section: b) Opere su parti comuni
     fields:
-      - {kind: radio, label: non riguardano parti comuni}
+      - {kind: radio, label: non riguardano parti comuni, when: "{{ask.parti_comuni|is_nessuna}}"}
+      - {kind: radio, label: riguardano le parti comuni di un fabbricato condominiale, when: "{{ask.parti_comuni|is_condominio}}"}
+      - {kind: radio, label: riguardano parti comuni di un fabbricato con più proprietà, when: "{{ask.parti_comuni|is_comproprieta}}"}
+      - {kind: radio, label: riguardano parti dell'edificio di proprietà comune, when: "{{ask.parti_comuni|is_art_1102}}"}
 
   # Only the dichiarante's PER PRESA VISIONE.
   - section: c) Presentazione della comunicazione
     omit: the dichiarante's PER PRESA VISIONE
 
-  # Works already started (d.2): the date and the 333 € receipt, uploaded here.
+  # Works to start (d.1: on a date, or once the SUE has the other assents), under way (d.2:
+  # the start date and the 333 € receipt, uploaded here) or done (d.3: the end date and the
+  # 1,000 € receipt). A receipt's box is named by the row above it: its own cell shows the
+  # file's name once uploaded.
   - section: d) Qualificazione dell'intervento
     fields:
-      - {kind: radio, label: intervento in corso di esecuzione}
-      - {kind: date, label: intervento iniziato in data, value: "{{ask.data_inizio_lavori|date_it}}"}
-      - {kind: file, label: "Tipologie ammesse", value: "{{ask.ricevuta_sanzione}}"}
+      - {kind: radio, label: intervento descritto di seguito nella dichiarazione del progettista, when: "{{ask.cila_stato|is_da_iniziare}}"}
+      - {kind: radio, label: i lavori avranno inizio in data, when: "{{ask.cila_stato|is_da_iniziare}} {{ask.inizio_dopo_assensi|not}}"}
+      - {kind: date, label: data inizio lavori, value: "{{ask.data_inizio_lavori|date_it}}", when: "{{ask.cila_stato|is_da_iniziare}} {{ask.inizio_dopo_assensi|not}}"}
+      - {kind: radio, label: i lavori avranno inizio dopo la comunicazione, when: "{{ask.cila_stato|is_da_iniziare}} {{ask.inizio_dopo_assensi}}"}
+      - {kind: radio, label: intervento in corso di esecuzione, when: "{{ask.cila_stato|is_in_corso}}"}
+      - {kind: date, label: intervento iniziato in data, value: "{{ask.data_inizio_lavori|date_it}}", when: "{{ask.cila_stato|is_in_corso}}"}
+      - {kind: file, label: "allegare qui la ricevuta di versamento", value: "{{ask.ricevuta_sanzione}}", when: "{{ask.cila_stato|is_in_corso}}"}
+      - {kind: radio, label: intervento realizzato, when: "{{ask.cila_stato|is_realizzato}}"}
+      - {kind: date, label: intervento realizzato in data, value: "{{ask.data_lavori_realizzati|date_it}}", when: "{{ask.cila_stato|is_realizzato}}"}
+      - {kind: file, label: "allegare qui la ricevuta di versamento", value: "{{ask.ricevuta_sanzione}}", when: "{{ask.cila_stato|is_realizzato}}"}
 
+  # The property's lawful use: residenziale, industriale, commerciale, else "altro" and its name.
   - section: e) Destinazione d'uso
     fields:
-      - {kind: select, label: "L'intervento interessa l'immobile", value: "{{c:immobile.destinazione_uso}}"}
+      - {kind: select, label: "L'intervento interessa l'immobile", value: "{{c:immobile.destinazione_uso|destinazione}}"}
+      - {kind: text, label: specificare, via: altro, value: "{{c:immobile.destinazione_uso}}", when: "{{c:immobile.destinazione_uso|destinazione_is_altro}}"}
 
+  # Free, or a contributo (manutenzione straordinaria adding urban load and floor area): paid,
+  # its receipt in the attachments, or to be paid before the works start.
   - section: f) Calcolo del contributo
     fields:
-      - {kind: radio, label: l'intervento da realizzare è a titolo gratuito}
+      - {kind: radio, label: l'intervento da realizzare è a titolo gratuito, when: "{{ask.cila_onerosa|not}}"}
+      - {kind: radio, label: l'intervento da realizzare è a titolo oneroso, when: "{{ask.cila_onerosa}}"}
+      - {kind: radio, label: allega la ricevuta di versamento, when: "{{ask.cila_onerosa}} {{ask.contributo_pagato}}"}
+      - {kind: radio, label: "effettuerà, prima dell'inizio dei lavori, il pagamento", when: "{{ask.cila_onerosa}} {{ask.contributo_pagato|not}}"}
 
-  # The architect presents the pratica and is progettista and direttore dei lavori: her name
-  # comes from the procuratore's section.
+  # The architect presents the pratica and is the progettista (her name comes from the
+  # procuratore's section), and the direttore dei lavori too unless none is named. Another
+  # technician as direttore isn't mapped (the recipe refuses it).
   - section: G1) Tecnici incaricati
     leave: [fax]
     fields:
       - {kind: radio, label: titolare dell'intervento o procuratore}
-      - {kind: checkbox, label: incaricato anche come direttore dei lavori}
+      - {kind: checkbox, label: incaricato anche come direttore dei lavori, when: "{{ask.direttore_lavori|is_progettista}}"}
       - {kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
       - {kind: text, label: Comune italiano, value: "{{business.sede_legale_comune|upper}}"}
       - {kind: text, label: "Via, Piazza", value: "{{business.sede_legale_indirizzo|upper}}"}
@@ -556,14 +662,18 @@ sections:
   - section: G2) Altri tecnici incaricati
     fields: []
 
-  # Two firms on site: the second firm's block comes from "+". Fields by label inside the
-  # block-th repeat that starts at "Ragione sociale".
+  # The firms on site (`f1:`, and `f2:` when the job has one: its block comes from "+"), or
+  # minor works the client does without one. Fields by label inside the block-th repeat that
+  # starts at "Ragione sociale"; `firm_when` is each block's condition (a later one also
+  # needs its firm).
   - section: h) Impresa esecutrice dei lavori
     leave: [Telefono, fax]
     firms: [f1, f2]
+    firm_when: "{{ask.lavori_in_proprio|not}}"
     fields:
-      - {kind: radio, label: lavori sono/saranno eseguiti dall, if_present: true}
-      - {kind: radio, label: i lavori sono eseguiti/sono stati eseguiti, if_present: true}
+      - {kind: radio, label: in quanto opere di modesta entità, if_present: true, when: "{{ask.lavori_in_proprio}}"}
+      - {kind: radio, label: lavori sono/saranno eseguiti dall, if_present: true, when: "{{ask.lavori_in_proprio|not}}"}
+      - {kind: radio, label: i lavori sono eseguiti/sono stati eseguiti, if_present: true, when: "{{ask.lavori_in_proprio|not}}"}
     block:
       - {kind: text, label: Ragione sociale, value: "{{F:business.denominazione}}"}
       - {kind: text, label: codice fiscale / p. IVA, value: "{{F:business.partita_iva}}"}
@@ -597,13 +707,14 @@ sections:
     fields:
       - {kind: tick, label: non ricade nell'ambito di applicazione delle norme, when: "{{ask.dlgs81|not}}"}
       - {kind: tick, label: ricade nell'ambito di applicazione delle norme, when: "{{ask.dlgs81}}"}
-      - {kind: tick, label: dichiara che l'entità presunta del cantiere è inferiore, when: "{{ask.sotto_200}}"}
-      - {kind: tick, label: dichiara che l'entità presunta del cantiere è pari o superiore, if_present: true, when: "{{ask.sotto_200|not}}"}
-      - {kind: tick, label: dichiara di aver verificato la documentazione, if_present: true, when: "{{ask.verificato_idoneita}}"}
-      - {kind: tick, label: dichiara che l'intervento non è soggetto all'invio, when: "{{ask.notifica_dovuta|not}}"}
-      - {kind: tick, label: dichiara che l'intervento è soggetto all'invio, when: "{{ask.notifica_dovuta}}"}
-      - {kind: tick, label: allega alla presente comunicazione la notifica, if_present: true, when: "{{ask.notifica_dovuta}}"}
-      - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, on_page: true, when: "{{ask.notifica_dovuta}}"}
+      # The rest only where the rules apply (works with no firm on site are outside them).
+      - {kind: tick, label: dichiara che l'entità presunta del cantiere è inferiore, when: "{{ask.dlgs81}} {{ask.sotto_200}}"}
+      - {kind: tick, label: dichiara che l'entità presunta del cantiere è pari o superiore, if_present: true, when: "{{ask.dlgs81}} {{ask.sotto_200|not}}"}
+      - {kind: tick, label: dichiara di aver verificato la documentazione, if_present: true, when: "{{ask.dlgs81}} {{ask.verificato_idoneita}}"}
+      - {kind: tick, label: dichiara che l'intervento non è soggetto all'invio, when: "{{ask.dlgs81}} {{ask.notifica_dovuta|not}}"}
+      - {kind: tick, label: dichiara che l'intervento è soggetto all'invio, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
+      - {kind: tick, label: allega alla presente comunicazione la notifica, if_present: true, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
+      - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, on_page: true, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
 
   # The progettista's relazione (her asseverazione and signature are the signed CILA).
   - section: Relazione Tecnica di Asseverazione
@@ -614,9 +725,34 @@ sections:
       - {kind: text, label: Iscritto all'ordine, value: "{{t:albo.ordine}}"}
       - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
       - {kind: text, label: al n., value: "{{t:albo.numero}}"}
-      - {kind: checkbox, label: interventi di manutenzione straordinaria}
+      - {kind: checkbox, label: interventi di manutenzione straordinaria, when: "{{ask.cila_manutenzione}}"}
+      - {kind: checkbox, label: Interventi di restauro e risanamento conservativo, when: "{{ask.cila_restauro}}"}
+      - {kind: checkbox, label: Interventi di eliminazione delle barriere architettoniche, when: "{{ask.cila_barriere}}"}
+      - {kind: checkbox, label: Opere temporanee per attività di ricerca nel sottosuolo, when: "{{ask.cila_sottosuolo}}"}
+      - {kind: checkbox, label: Movimenti di terra, when: "{{ask.cila_terra}}"}
+      - {kind: checkbox, label: Serre mobili stagionali, when: "{{ask.cila_serre}}"}
+      - {kind: checkbox, label: Realizzazione di pertinenze minori, when: "{{ask.cila_pertinenze}}"}
+      - {kind: checkbox, label: Altri interventi non riconducibili, when: "{{ask.cila_altri}}"}
+      - {kind: text, label: specificare il tipo di intervento, value: "{{ask.cila_altri_tipo}}", when: "{{ask.cila_altri}}"}
       - {kind: textarea, label: e che consistono in, value: "{{ask.dettaglio_intervento}}"}
-      - {kind: radio, label: "no"}
+      # Tolerances (art. 34-bis/34-ter): each declared, the 1-bis one's percentage by the unit's
+      # floor area. Napoli is in seismic zone 2 (Campania, DGR 5447/2002), so a tolerance there
+      # says whether it is structurally relevant.
+      - {kind: radio, label: "no", when: "{{ask.tolleranze|not}}"}
+      - {kind: radio, label: "si", when: "{{ask.tolleranze}}"}
+      - {kind: checkbox, label: "TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 1 E 1-TER", when: "{{ask.tolleranze}} {{ask.toll_34bis_1}}"}
+      - {kind: checkbox, label: "TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMI 1-BIS", when: "{{ask.tolleranze}} {{ask.toll_34bis_1bis}}"}
+      - {kind: radio, label: "2%, per le U.I.", when: "{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_oltre_500}}"}
+      - {kind: radio, label: "3%, per le U.I.", when: "{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_300_500}}"}
+      - {kind: radio, label: "4%, per le U.I.", when: "{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_100_300}}"}
+      - {kind: radio, label: "5%, per le U.I.", when: "{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_60_100}}"}
+      - {kind: radio, label: "6%, per le U.I.", when: "{{ask.tolleranze}} {{ask.toll_34bis_1bis}} {{ask.toll_superficie|is_sotto_60}}"}
+      - {kind: checkbox, label: "TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 2:", when: "{{ask.tolleranze}} {{ask.toll_34bis_2}}"}
+      - {kind: checkbox, label: "TOLLERANZA DI CUI ALL’ART. 34-BIS, COMMA 2-BIS", when: "{{ask.tolleranze}} {{ask.toll_34bis_2bis}}"}
+      - {kind: checkbox, label: "TOLLERANZA DI CUI ALL’ART. 34-TER", when: "{{ask.tolleranze}} {{ask.toll_34ter_4}}"}
+      - {kind: radio, label: trattandosi di immobile ubicato in zona sismica a media o alta, when: "{{ask.tolleranze}}"}
+      - {kind: radio, label: non ha rilevanza strutturale, when: "{{ask.tolleranze}} {{ask.toll_strutturale|not}}"}
+      - {kind: radio, label: ha rilevanza strutturale, when: "{{ask.tolleranze}} {{ask.toll_strutturale}}"}
 
   # The fees, when the Comune's tariff has them. "pagamento on line" is required with them and
   # the only mode offered; it pays nothing (the SUE's payment page has no methods: the fees go
@@ -2125,9 +2261,10 @@ after:
     theirs: [Procura speciale, Quadro riepilogativo della documentazione]
     fields:
       - {kind: file, label: "Fotocopia di un documento di identita' del soggetto che conferisce", value: "{{ask.documento_identita_cliente}}"}
-      - {kind: file, label: "Copia dei documenti d'identità del/i titolare/i", value: "{{ask.documento_identita_cliente}}"}
-      - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: "{{ask.assenso_proprietario}}"}
-      - {kind: file, label: Notifica preliminare, value: "{{ask.notifica_preliminare}}"}
+      - {kind: file, label: "Copia dei documenti d'identità del/i titolare/i", value: "{{ask.documento_identita_cliente}}", when: "{{ask.titolo_esclusivo|not}}"}
+      # The other holder's assent only without an exclusive title (a.2); the notifica only when due.
+      - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: "{{ask.assenso_proprietario}}", when: "{{ask.titolo_esclusivo|not}}"}
+      - {kind: file, label: Notifica preliminare, value: "{{ask.notifica_preliminare}}", when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
       - {kind: file, label: Elaborati grafici dello stato di fatto e progetto, value: "{{ask.elaborati_grafici}}"}
       - {kind: file, label: "Elaborati grafici dello stato di fatto, di progetto e comparativi", value: "{{ask.elaborati_grafici}}"}
       - {kind: file, label: Documentazione fotografica dello stato di fatto, value: "{{ask.documentazione_fotografica}}"}

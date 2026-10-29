@@ -22,9 +22,13 @@ yours:
   - "On Allega documenti: the CILA's documents (procura, CILA DSC summary, IDs, the owner's assent, drawings, relazione tecnica) and the landscape ones (relazione paesaggistica semplificata, Allegato D, with its drawings and photos), signed digitally"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - value: "{{ask.titolo}}"
-    in: [locatario]
-    else: "So far only a tenant with the owner's assent (a.2) is mapped."
+  - value: "{{ask.direttore_lavori}}"
+    in: [progettista, da nominare]
+    else: "Another technician as direttore dei lavori isn't mapped yet (quadro G1's second block)."
+  - when: "{{ask.altri_tecnici|not}}"
+    else: "Other technicians already appointed (structures, systems, acoustics) aren't mapped yet (quadro G2's rows)."
+  - when: "{{ask.altri_atti|not}}"
+    else: "Other filings or assents with the CILA (Soprintendenza, ASL, fire brigade) aren't mapped yet; a landscape authorization goes in the same pratica (the CILA with its semplificata)."
   - when: "{{ask.paes_variante|not}}"
     else: "So far only for a new authorization: the variant of one already issued isn't run yet."
   - when: "{{ask.bollo_marche|not}}"

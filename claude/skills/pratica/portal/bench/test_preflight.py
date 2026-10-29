@@ -9,6 +9,7 @@ No browser, vault or network: the SCIA rehearsal's steps file, fixture and answe
 
 import copy
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -223,6 +224,31 @@ def too_long():
     assert not r["ready"]
 
 
+def nested_when():
+    """The CILA's quadro f: "oneroso, and then paid?" asks the second only once the first is
+    yes; the tolerance details only once there are tolerances."""
+    cila = HERE.parents[4] / "rehearsals" / "cila-fittizia"
+    steps = yaml.safe_load((cila / "portal-steps.generated.yaml").read_text())
+    fields = dict(json.loads((cila / "fixture-p6.json").read_text())["fields"])
+    owner = json.loads((cila / "answers-proprietario.json").read_text())
+    drop = {"cila_onerosa", "contributo_pagato", "ricevuta_contributo", "tolleranze", "tolleranze_tipi",
+            "toll_superficie", "toll_strutturale"}
+    base = {k: v for k, v in owner.items() if k not in drop}
+    here = os.getcwd()
+    os.chdir(HERE.parents[4])  # the answers name files from the repo's root
+    try:
+        ask = lambda a: {q["key"]: q for q in run.preflight(steps, values(a, fields, steps))["questions"]}
+        q = ask(base)
+        assert q["contributo_pagato"]["only_if"] == ["cila_onerosa"], q.get("contributo_pagato")
+        assert q["toll_strutturale"]["only_if"] == ["tolleranze"], q.get("toll_strutturale")
+        q = ask(base | {"cila_onerosa": False, "tolleranze": False})
+        assert not {"contributo_pagato", "ricevuta_contributo", "tolleranze_tipi", "toll_superficie", "toll_strutturale"} & set(q), q
+        q = ask(base | {"cila_onerosa": True, "tolleranze": True})
+        assert "only_if" not in q["contributo_pagato"] and q["ricevuta_contributo"]["only_if"] == ["contributo_pagato"], q
+    finally:
+        os.chdir(here)
+
+
 CASES = [
     ("the SCIA with its answers is ready", ready),
     ("no answers: one checklist, branch items first, then two questions, no defaults", all_questions),
@@ -242,6 +268,7 @@ CASES = [
     ("a proposal is offered to confirm, used once confirmed, and asked when the vault can't fill it", proposals),
     ("a sum of answers renders, needs every term, and each term is asked", sums),
     ("a value longer than its box is asked again, or named in the vault, before the run", too_long),
+    ("a condition's words gate each other: a later question waits on the earlier answer (CILA contributo)", nested_when),
 ]
 
 

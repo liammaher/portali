@@ -19,5 +19,17 @@
  "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf",
  "dlgs81": "true",
  "sotto_200": "true",
- "notifica_dovuta": "true"
+ "notifica_dovuta": "true",
+ "titolo_esclusivo": false,
+ "parti_comuni": "nessuna",
+ "lavori_in_proprio": false,
+ "cila_stato": "in corso",
+ "direttore_lavori": "progettista",
+ "altri_tecnici": false,
+ "altri_atti": false,
+ "cila_onerosa": false,
+ "tolleranze": false,
+ "cila_interventi": [
+  "cila_manutenzione"
+ ]
 }

@@ -306,3 +306,31 @@ resumed on the same draft from that section.
 ## Clean reruns (2026-10-29)
 
 In the pane, from run.py's install.js and run.js, nothing touched between runs: first filled in 107.5 s; second, with the runner waiting for a section to open, **filled** in 148.5 s, read back on a fresh load.
+
+## Real clients (2026-10-29)
+
+Until now the dictionary held P6's one path: a tenant, works under way. It now maps every
+title (proprietario, comproprietario, usufruttuario, amministratore di condominio, or "altro"
+with its name; alone, or with the other holder's assent from a person or a company), every
+answer of b) (common parts), d.1/d.2/d.3 (works to start on a date or after the assents, under
+way, done), e) (any destinazione), f) (free, or a contributo paid or to pay), the direttore
+dei lavori as the architect or none, h) with one firm, two, or none (in proprio), every work
+type of the relazione, and the construction tolerances (art. 34-bis/34-ter, the 1-bis
+percentage by floor area; Napoli is in seismic zone 2). Pre-flight refuses another technician
+as direttore, other technicians already appointed, and other filings or assents outside the
+pratica. Two more answer files run it: `answers-proprietario.json` (owner, condominium, to
+start on a date, contributo paid, manutenzione + restauro, two tolerances, one firm, no
+direttore) and `answers-comodatario.json` (comodatario with a co-owner's assent, works done,
+contributo to pay, in proprio, "altri interventi").
+
+| Date | Case | Browser | Login → draft | Result |
+|---|---|---|---|---|
+| 2026-10-29 | proprietario | pane | 79.8 s to Allega documenti | Stopped there: the screen had no co-holders' ID slot, and two new ones (the contributo's prospetto and receipt). Mapped by answer (`on_page` slots), resumed on the draft: **filled** |
+| 2026-10-29 | comodatario | pane | 41.4 s to d) | Stopped after uploading the 1,000 € receipt: read back by label, its cell now shows the file's name. Named by the row above instead, resumed: **filled** (fresh load 13.7 s) |
+| 2026-10-29 | P6 | pane | 91.3 s | **Filled**, fresh load 13.6 s: the same 160 values as before |
+| 2026-10-29 | proprietario, clean | pane | 110.7 s | **Filled** from scratch, 20 sections, fresh load 22.2 s |
+| 2026-10-29 | comodatario, clean | pane | 85.6 s | **Filled** from scratch, 20 sections, fresh load 12.8 s |
+
+Not run on the portal: a destinazione other than residenziale (the fixture's flat is
+residenziale; pre-flight and the generator cover it), a terzo titolare company other than P6's,
+two tolerances other than 1-bis and c. 2.

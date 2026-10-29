@@ -11,7 +11,7 @@ yours:
 - Sign and send (Firma e invio); keep the receipt
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - proroga fine lavori {{c:identity.last_name}}'}
-  titolo: {type: text, question: 'The client''s title to the property (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario)'}
+  titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
