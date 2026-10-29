@@ -20,8 +20,9 @@ now questions.
 | 2026-10-28 | pane | 112.2 s to the end of the form (wizard 10.4, 15 sections, fresh load 14.9), then 14.5 s for 3 attachments | First run, no stop: 106 values and 3 attachments kept, every value read back on a fresh load |
 
 Left to the person: the procura and the "Quadro riepilogativo della documentazione C.I.L."
-(portal documents, signed), the declarations, signing and sending. Diritti: 0 € in the
-made-up answers (whether the Comune charges for a CIL is the person's answer).
+(portal documents, signed), the declarations, signing and sending. Diritti: 100 € (line SUE 14
+of the Comune's 2026 table, in the library's CIL page); the runs below filled 0 €, so the
+"sono dovuti oneri" branch hasn't been walked yet.
 
 ## Clean reruns (2026-10-29)
 

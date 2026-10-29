@@ -160,7 +160,7 @@ def sue_every_case_decided_once():
 
 
 def sue_rehearsals_ready():
-    names = ["cila-fittizia", "cila-paesaggistica-fittizia", "scia-fittizia", "scia-paesaggistica-semplificata-fittizia",
+    names = ["cil-fittizia", "cila-fittizia", "cila-paesaggistica-fittizia", "scia-fittizia", "scia-paesaggistica-semplificata-fittizia",
              "scia-paesaggistica-ordinaria-fittizia", "pdc-fittizio", "scia-alternativa-fittizia",
              "paesaggistica-semplificata-fittizia", "paesaggistica-ordinaria-fittizia"]
     # A whole building's change of use with CILA works: the national SCIA form has a box for it,
@@ -180,9 +180,9 @@ def sue_another_pratica():
     needs (or doesn't need) the landscape authorization it files with it."""
     other = "This case is another pratica: "
     cila, scia = "napoli/comune/cila-lavori-edilizi", "napoli/comune/scia-edilizia"
+    later = "answers-proprietario.json"  # works not started yet: no sanatoria
     semplificata = "napoli/comune/autorizzazione-paesaggistica-semplificata"
     ordinaria = "napoli/comune/autorizzazione-paesaggistica-ordinaria"
-    later = "answers-proprietario.json"  # works not started yet: no sanatoria
     assert sue("cila-fittizia", later, fatti=["strutture"], sismica="deposito")["unsupported"][0].startswith(other + scia)
     assert sue("cila-fittizia", later, cambio_uso="stessa_categoria", fatti=["uso_ammesso_prg"])["unsupported"][0].startswith(
         other + scia)
@@ -225,6 +225,15 @@ def sue_another_pratica():
     assert sue("scia-fittizia", cambio_uso="zona_agricola", **unit)["unsupported"][0].startswith(
         other + "napoli/comune/permesso-di-costruire")
     assert "art. 27 c. 2" in sue("scia-fittizia", cambio_uso="stessa_categoria", fatti=["prospetti"])["unsupported"][0]
+    # Temporary works: the CIL, alone (art. 6 c. 1 e-bis); not on a bene culturale, not afterwards.
+    cil = "napoli/comune/cil-opere-temporanee"
+    assert sue("cila-fittizia", later, intervento="opere_temporanee", fatti=[])["unsupported"][0].startswith(other + cil)
+    assert sue("cil-fittizia", intervento="manutenzione_straordinaria", fatti=[], cambio_uso="no")["unsupported"][0].startswith(
+        other + cila)
+    assert sue("cil-fittizia", paesaggio="semplificata")["unsupported"] == [
+        f"This case also needs {semplificata} (autorizzazione), which this pratica doesn't file."]
+    assert "soprintendente" in sue("cil-fittizia", fatti=["bene_culturale"])["unsupported"][0]
+    assert "sanatoria" in sue("cil-fittizia", fatti=["sanatoria"])["unsupported"][0]
     # Naples: an ordinary home turned B&B or short let in the centro storico's tavola 7a area
     # (D.C.C. 129/2026), whose 70% threshold has no verified checking mechanism yet.
     a2 = sue("scia-fittizia", "answers-cambio-unita-senza-stessa.json", fatti=["uso_ammesso_prg", "verso_a2_tavola_7a"])

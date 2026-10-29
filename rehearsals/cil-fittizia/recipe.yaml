@@ -14,13 +14,21 @@ firms: [f1]
 after: [Pagamento degli oneri, Gestione degli allegati]
 asks:
   descrizione: {default: "PROVA NON INVIARE - CIL {{c:identity.last_name}}"}
+  diritti_euro: {default: "100", why: "Line SUE 14 of the Comune's 2026 table of diritti: 100 € for a CIL."}
   data_inizio_lavori: {question: "When the works will start"}
   dettaglio_intervento: {question: "What the temporary works are and when they'll be removed (500 characters)"}
 yours:
   - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
   - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
   - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
+  - "Pay the {{ask.diritti_euro}} € diritti before sending, and attach the receipt (copia attestazione versamento) on Allega documenti"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  facts: {permesso_per_scelta: "false"}
 supports:
   - when: "{{ask.altri_atti|not}}"
     else: "Other filings or assents with the CIL (quadro e: Soprintendenza, ASL, fire brigade) aren't mapped yet."

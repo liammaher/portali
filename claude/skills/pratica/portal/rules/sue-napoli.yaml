@@ -20,7 +20,7 @@ facts:
         sostituire finiture, tenere in efficienza gli impianti), barriere architettoniche senza
         ascensori esterni né modifiche della sagoma, VEPA, tende e pergole a telo retrattile,
         pavimentazioni esterne e simili
-      opere_temporanee: "Opere stagionali o temporanee, da rimuovere entro 180 giorni (art. 6 c. 1 e-bis)"
+      opere_temporanee: "Opere stagionali o per esigenze contingenti e temporanee, da rimuovere entro 180 giorni, montaggio e smontaggio compresi (art. 6 c. 1 e-bis)"
       nessuna_opera: "Nessun lavoro: solo un cambio di destinazione d'uso"
       manutenzione_straordinaria: "Manutenzione straordinaria (art. 3 c. 1 b): rinnovare e sostituire parti dell'edificio, servizi igienici e impianti, frazionare o accorpare unità"
       restauro: "Restauro e risanamento conservativo (art. 3 c. 1 c)"
@@ -138,10 +138,10 @@ rules:
     then: {refuse: "Il permesso in deroga, il permesso convenzionato, gli interventi delle leggi regionali (sottotetti, parcheggi, Piano casa), le proroghe e le volture non sono ancora in questa tabella."}
     cites: [{procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
     status: verified
-  - id: opere-temporanee
-    when: {intervento: [opere_temporanee]}
-    then: {refuse: "Le opere stagionali e temporanee chiedono la comunicazione di avvio dei lavori al Comune (art. 6 c. 1 e-bis DPR 380/2001), che la libreria non ha ancora."}
-    cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}]
+  - id: opere-temporanee-bene-culturale
+    when: {intervento: [opere_temporanee], bene_culturale: true}
+    then: {refuse: "Su un bene culturale anche le opere temporanee chiedono l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004): la libreria non copre ancora la CIL con quell'autorizzazione."}
+    cites: [{procedure: napoli/comune/cil-opere-temporanee, source: dlgs42-art21}]
     status: verified
   - id: nessuna-opera-nessun-cambio
     when: {intervento: [nessuna_opera], cambio_uso: ["no"]}
@@ -187,7 +187,7 @@ rules:
 
   # --- Lavori già eseguiti ---
   - id: sanatoria-titolo
-    when: {sanatoria: true, intervento: [ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]}
+    when: {sanatoria: true, intervento: [opere_temporanee, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]}
     then: {refuse: "Per lavori già eseguiti senza titolo serve una sanatoria (accertamento di conformità, artt. 36 e 36-bis DPR 380/2001), che la libreria non copre ancora."}
     cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
     status: verified
@@ -261,6 +261,19 @@ rules:
     when: {intervento: [edilizia_libera], cambio_uso: ["no", non_rilevante], bene_culturale: true}
     then: {refuse: "Su un bene culturale anche i lavori senza titolo edilizio chiedono l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004), che la libreria non copre ancora."}
     cites: [{procedure: napoli/comune/scia-edilizia, source: dlgs42-art21}]
+    status: verified
+
+  # --- CIL ---
+  - id: cil
+    when: {intervento: [opere_temporanee]}
+    then:
+      role: main
+      procedure: napoli/comune/cil-opere-temporanee
+      regime: comunicazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Comunicazione di Inizio Lavori per opere temporanee (C.I.L.)"}
+    cites:
+      - {procedure: napoli/comune/cil-opere-temporanee, source: dpr380-art6}
+      - {procedure: napoli/comune/cil-opere-temporanee, source: portale-sue-operazioni}
     status: verified
 
   # --- CILA ---
@@ -488,7 +501,7 @@ rules:
   # --- L'autorizzazione paesaggistica, nella stessa pratica ---
   - id: paesaggistica-semplificata
     when:
-      intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
+      intervento: [opere_temporanee, nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
       paesaggio: [semplificata]
     then:
       role: also
@@ -502,7 +515,7 @@ rules:
     status: verified
   - id: paesaggistica-ordinaria
     when:
-      intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
+      intervento: [opere_temporanee, nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
       paesaggio: [ordinaria]
     then:
       role: also

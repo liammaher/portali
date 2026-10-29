@@ -193,15 +193,15 @@ asks:
   intervento: {type: choice, question: 'Che lavori sono, secondo le definizioni dell''art. 3 DPR 380/2001?', options: [edilizia_libera, opere_temporanee, nessuna_opera, manutenzione_straordinaria, restauro,
       ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia, altro], labels: {edilizia_libera: 'Lavori senza titolo
         dell''art. 6 c. 1: manutenzione ordinaria (riparare, rinnovare e sostituire finiture, tenere in efficienza gli impianti), barriere architettoniche senza ascensori esterni né modifiche della sagoma,
-        VEPA, tende e pergole a telo retrattile, pavimentazioni esterne e simili', opere_temporanee: 'Opere stagionali o temporanee, da rimuovere entro 180 giorni (art. 6 c. 1 e-bis)', nessuna_opera: 'Nessun
-        lavoro: solo un cambio di destinazione d''uso', manutenzione_straordinaria: 'Manutenzione straordinaria (art. 3 c. 1 b): rinnovare e sostituire parti dell''edificio, servizi igienici e impianti,
-        frazionare o accorpare unità', restauro: Restauro e risanamento conservativo (art. 3 c. 1 c), ristrutturazione: Ristrutturazione edilizia (art. 3 c. 1 d) che non è uno dei casi dell'art. 10 c. 1
-        c, ristrutturazione_pesante: 'Ristrutturazione edilizia dell''art. 10 c. 1 c: un organismo in parte o del tutto diverso con più volume, o con cambio d''uso in zona omogenea A, o che cambia sagoma,
-        volume o prospetti di un immobile tutelato, o la demolizione e ricostruzione in un''area tutelata (artt. 136 c. 1 c e d, 142) con modifiche', nuova_costruzione: 'Nuova costruzione (art. 3 c. 1 e),
-        compresi gli ampliamenti fuori sagoma', ristrutturazione_urbanistica: Ristrutturazione urbanistica (art. 3 c. 1 f), variante_pdc: Variante in corso d'opera a un permesso di costruire che non è una
-        variazione essenziale, variante_essenziale_pdc: Variante in corso d'opera a un permesso di costruire che è una variazione essenziale, variante_scia: Variante in corso d'opera a una SCIA (essenziale
-        o no), altro: 'Altro: permesso in deroga (art. 14), permesso convenzionato (art. 28-bis), sottotetti, parcheggi o Piano casa delle leggi regionali, proroghe e volture'}, how: Lo stabilisce il tecnico
-      dalle definizioni dell'art. 3 e dall'elenco dell'art. 6 DPR 380/2001.}
+        VEPA, tende e pergole a telo retrattile, pavimentazioni esterne e simili', opere_temporanee: 'Opere stagionali o per esigenze contingenti e temporanee, da rimuovere entro 180 giorni, montaggio e
+        smontaggio compresi (art. 6 c. 1 e-bis)', nessuna_opera: 'Nessun lavoro: solo un cambio di destinazione d''uso', manutenzione_straordinaria: 'Manutenzione straordinaria (art. 3 c. 1 b): rinnovare
+        e sostituire parti dell''edificio, servizi igienici e impianti, frazionare o accorpare unità', restauro: Restauro e risanamento conservativo (art. 3 c. 1 c), ristrutturazione: Ristrutturazione edilizia
+        (art. 3 c. 1 d) che non è uno dei casi dell'art. 10 c. 1 c, ristrutturazione_pesante: 'Ristrutturazione edilizia dell''art. 10 c. 1 c: un organismo in parte o del tutto diverso con più volume, o
+        con cambio d''uso in zona omogenea A, o che cambia sagoma, volume o prospetti di un immobile tutelato, o la demolizione e ricostruzione in un''area tutelata (artt. 136 c. 1 c e d, 142) con modifiche',
+      nuova_costruzione: 'Nuova costruzione (art. 3 c. 1 e), compresi gli ampliamenti fuori sagoma', ristrutturazione_urbanistica: Ristrutturazione urbanistica (art. 3 c. 1 f), variante_pdc: Variante in
+        corso d'opera a un permesso di costruire che non è una variazione essenziale, variante_essenziale_pdc: Variante in corso d'opera a un permesso di costruire che è una variazione essenziale, variante_scia: Variante
+        in corso d'opera a una SCIA (essenziale o no), altro: 'Altro: permesso in deroga (art. 14), permesso convenzionato (art. 28-bis), sottotetti, parcheggi o Piano casa delle leggi regionali, proroghe
+        e volture'}, how: Lo stabilisce il tecnico dalle definizioni dell'art. 3 e dall'elenco dell'art. 6 DPR 380/2001.}
   sanatoria: {group: fatti, type: yes_no, item: 'I lavori sono già iniziati, o già finiti, senza il titolo che serviva?'}
   prospetti: {group: fatti, type: yes_no, item: 'La manutenzione straordinaria modifica i prospetti (le facciate) dell''edificio?'}
   cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso? Si sceglie il primo caso che vale.', options: ['no', zona_agricola, non_rilevante, stessa_categoria, tra_categorie, piano_terra,
