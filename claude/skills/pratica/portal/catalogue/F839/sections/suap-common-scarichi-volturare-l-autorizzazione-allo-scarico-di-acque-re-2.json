@@ -1,0 +1,487 @@
+{
+ "crawled": "2026-10-28T19:41:09.326Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Scarichi › Volturare l'autorizzazione allo scarico di acque reflue recapitanti in rete fognaria (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 41.6,
+ "generated": {
+  "interventi": "VOLTURA DI AUTORIZZAZIONE ALLO SCARICO IN PUBBLICA FOGNATURA",
+  "adempimenti": [
+   {
+    "adempimento": "VOLTURA DI AUTORIZZAZIONE ALLO SCARICO IN PUBBLICA FOGNATURA",
+    "amministrazione": "Ente idrico campano"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'impianto",
+   "dati catastali",
+   "Dati dell'autorizzazione",
+   "DATI SUBENTRO",
+   "Variazioni",
+   "dichiarazione relativa alla voltura",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'impianto",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dati dell'autorizzazione",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "prot. n.",
+     "max": 20
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "rilasciata in data"
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "per mc/anno",
+     "max": 20
+    },
+    {
+     "id": "r5c1p9reg:txt",
+     "kind": "text",
+     "label": "intestata a :",
+     "max": 50
+    }
+   ],
+   "fingerprint": "a74ce4f148936403",
+   "text": "Dati dell'autorizzazione Che l'autorizzazione di cui è richiesto la voltura è la: prot. n. rilasciata in data per mc/anno intestata a :",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "DATI SUBENTRO",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "compravendita",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "affitto",
+     "group": "r2c2p3reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "rientro in possesso per fine gestione d'azienda",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "conferimento d'azienda",
+     "group": "r3c2p5reg:radio"
+    },
+    {
+     "id": "r4c1p6reg:radio:4_clone",
+     "kind": "radio",
+     "label": "scissione d'azienda",
+     "group": "r4c1p6reg:radio"
+    },
+    {
+     "id": "r4c2p7reg:radio:5_clone",
+     "kind": "radio",
+     "label": "scioglimento della società con conferimento",
+     "group": "r4c2p7reg:radio"
+    },
+    {
+     "id": "r5c1p8reg:radio:6_clone",
+     "kind": "radio",
+     "label": "fusione",
+     "group": "r5c1p8reg:radio"
+    },
+    {
+     "id": "r5c2p9reg:radio:7_clone",
+     "kind": "radio",
+     "label": "comodato",
+     "group": "r5c2p9reg:radio"
+    },
+    {
+     "id": "r7c1p11reg:radio:8_clone",
+     "kind": "radio",
+     "label": "donazione",
+     "group": "r7c1p11reg:radio"
+    },
+    {
+     "id": "r7c2p13reg:radio:9_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r7c2p13reg:radio"
+    },
+    {
+     "id": "r7c3p15reg:txt",
+     "kind": "text",
+     "label": "descrizione",
+     "context": "altro",
+     "max": 30
+    },
+    {
+     "id": "r9c1p17reg:txt",
+     "kind": "text",
+     "label": "con Atto di",
+     "max": 50
+    },
+    {
+     "id": "r11c1p19reg:txt",
+     "kind": "text",
+     "label": "Rogato dal Notaio",
+     "max": 30
+    },
+    {
+     "id": "r11c2p21reg:txt",
+     "kind": "text",
+     "label": "in",
+     "max": 50
+    },
+    {
+     "id": "r13c1p23reg:txt",
+     "kind": "text",
+     "label": "Distretto Notarile",
+     "max": 50
+    },
+    {
+     "id": "r15c1p25reg:txt",
+     "kind": "text",
+     "label": "Registrato il",
+     "max": 30
+    },
+    {
+     "id": "r15c2p27reg:txt",
+     "kind": "text",
+     "label": "Numero",
+     "max": 30
+    },
+    {
+     "id": "r15c3p29reg:txt",
+     "kind": "text",
+     "label": "Volume",
+     "max": 30
+    },
+    {
+     "id": "r17c1p31reg:txt",
+     "kind": "text",
+     "label": "Trascritto Presso",
+     "max": 30
+    },
+    {
+     "id": "r17c2p33reg:txt",
+     "kind": "text",
+     "label": "di",
+     "max": 20
+    },
+    {
+     "id": "r17c3p35reg:calendar_input",
+     "kind": "date",
+     "label": "data"
+    },
+    {
+     "id": "r19c1p37reg:txt",
+     "kind": "text",
+     "label": "Registro",
+     "max": 30
+    },
+    {
+     "id": "r19c2p39reg:txt",
+     "kind": "text",
+     "label": "Repertorio",
+     "max": 30
+    }
+   ],
+   "fingerprint": "f04f0cac1be8c562",
+   "text": "DATI SUBENTRO Che le operazioni di carattere esclusivamente amministrativo per il sub-ingresso della nuova ditta riguardano: compravendita affitto rientro in possesso per fine gestione d'azienda conferimento d'azienda scissione d'azienda scioglimento della società con conferimento fusione comodato descrizione donazione altro con Atto di Rogato dal Notaio in Distretto Notarile Registrato il Numero Volume Trascritto Presso di data Registro Repertorio",
+   "branches": [
+    {
+     "choice": "compravendita",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "affitto",
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "rientro in possesso per fine gestione d'azienda",
+     "id": "r3c1p4reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "conferimento d'azienda",
+     "id": "r3c2p5reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "scissione d'azienda",
+     "id": "r4c1p6reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "scioglimento della società con conferimento",
+     "id": "r4c2p7reg:radio:5_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "fusione",
+     "id": "r5c1p8reg:radio:6_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "comodato",
+     "id": "r5c2p9reg:radio:7_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "donazione",
+     "id": "r7c1p11reg:radio:8_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro",
+     "id": "r7c2p13reg:radio:9_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 14.7
+  },
+  {
+   "section": "Variazioni",
+   "fields": [
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione Natura Giuridica"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "nuovo:",
+     "context": "Variazione Natura Giuridica",
+     "max": 50
+    },
+    {
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione Denominazione Sociale"
+    },
+    {
+     "id": "r5c2p9reg:txt",
+     "kind": "text",
+     "label": "nuovo",
+     "context": "Variazione Denominazione Sociale",
+     "max": 30
+    },
+    {
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "Variazione Legale Rappresentante"
+    },
+    {
+     "id": "r9c1p13reg:txt",
+     "kind": "text",
+     "label": "Nome",
+     "max": 30
+    },
+    {
+     "id": "r9c2p15reg:txt",
+     "kind": "text",
+     "label": "Cognome",
+     "max": 30
+    },
+    {
+     "id": "r11c1p17reg:txt",
+     "kind": "text",
+     "label": "CF",
+     "max": 16
+    }
+   ],
+   "fingerprint": "f8e13f914100f77b",
+   "text": "Variazioni Che comporta le variazioni sotto indicate: nuovo: Variazione Natura Giuridica nuovo Variazione Denominazione Sociale Variazione Legale Rappresentante Attuale rappresentante Nome Cognome CF",
+   "branches": [
+    {
+     "choice": "Variazione Natura Giuridica",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Variazione Denominazione Sociale",
+     "id": "r5c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Variazione Legale Rappresentante",
+     "id": "r6c1p10reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 4.9
+  },
+  {
+   "section": "dichiarazione relativa alla voltura",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "a) le caratteristiche quali-quantitative dello scarico intese come volume annuo scaricato, massa e tipologia di sostanze scaricate, in relazione a quanto previs"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "b) le caratteristiche del ciclo produttivo, compresa la capacità di produzione;"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "c) le sostanze impiegate nel ciclo produttivo e le relative quantità;"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "d) gli impianti aziendali di trattamento delle acque reflue e le relative caratteristiche tecniche;"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "e) la localizzazione dello scarico."
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "dichiara inoltre che la documentazione presentata per l'emissione della autorizzazione indicata è rappresentativa dello stato attuale dell'isediamento."
+    }
+   ],
+   "fingerprint": "b7c4206f2fd43bde",
+   "text": "dichiarazione relativa alla voltura Che sono rimaste immutate: a) le caratteristiche quali-quantitative dello scarico intese come volume annuo scaricato, massa e tipologia di sostanze scaricate, in relazione a quanto previsto nella precedente autorizzazione o se, non esplicitato in questa ultima, nella relativa istanza; b) le caratteristiche del ciclo produttivo, compresa la capacità di produzione; c) le sostanze impiegate nel ciclo produttivo e le relative quantità; d) gli impianti aziendali di trattamento delle acque reflue e le relative caratteristiche tecniche; e) la localizzazione dello scarico. dichiara inoltre che la documentazione presentata per l'emissione della autorizzazione indicata è rappresentativa dello stato attuale dell'isediamento.",
+   "branches": [
+    {
+     "choice": "a) le caratteristiche quali-quantitative dello scarico intese come volume annuo scaricato, massa e tipologia di sostanze scaricate, in relazione a quanto previs",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "b) le caratteristiche del ciclo produttivo, compresa la capacità di produzione;",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "c) le sostanze impiegate nel ciclo produttivo e le relative quantità;",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "d) gli impianti aziendali di trattamento delle acque reflue e le relative caratteristiche tecniche;",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "e) la localizzazione dello scarico.",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 7.3
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.9
+  }
+ ]
+}

@@ -1,0 +1,304 @@
+{
+ "crawled": "2026-10-28T20:35:09.431Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Subentrare nell'esercizio dell'attività (sector Agriturismo)",
+ "seconds": 34.1,
+ "generated": {
+  "interventi": "Subingresso in attività di agriturismo",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per subingresso di attività agrituristica o di ospitalità rurale familiare o operatore di fattoria didattica",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Comunicazione alla Regione - Direzione Generale per le Politiche agricole, alimentari e forestali",
+    "amministrazione": "Regione Campania - UOD Ufficio centrale di supporto alle imprese del settore agro-alimentare"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "dati catastali",
+   "dichiarazione relativa all'insegna/denominazione attività",
+   "dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "dichiarazione di disponibilità dei terreni e degli edifici",
+   "dichiarazione di utilizzo di edifici nel fondo",
+   "dichiarazione di svolgimento di attività agrituristica",
+   "Manodopera impiegata nell'attività agrituristica",
+   "dichiarazione relativa al periodo di apertura",
+   "dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione della modalità di subingresso",
+   "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "dichiarazione della data di inizio della nuova attività",
+   "dichiarazione della denominazione dell'attività precedente",
+   "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "dichiarazione di conoscenza di obblighi per il richiedente",
+   "dichiarazione relativa alla Prevenzione Incendi",
+   "dichiarazione relativa alla presentazione dell'intervento",
+   "Dichiarazione in materia di rispetto sulle tasse comunali"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività prevede la vendita di generi alimentari ed artigianali tipici, prodotti dall'azienda"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "l'attività comprende servizio di ospitalità (in piazzole e/o camere munite di bagno e/o appartamenti)",
+     "selected": true
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa all'insegna/denominazione attività",
+   "fingerprint": "3a6319ce1cee2035",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa all'insegna/denominazione attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "fingerprint": "afee07032cfc00d5",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "fingerprint": "48b1324c2011e58d",
+   "same_as": "suap-003-aprire-l-attivita#Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione di disponibilità dei terreni e degli edifici",
+   "fingerprint": "579083fbed6521c2",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di disponibilità dei terreni e degli edifici",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione di utilizzo di edifici nel fondo",
+   "fingerprint": "3861b0b041e8b98e",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di utilizzo di edifici nel fondo",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione di svolgimento di attività agrituristica",
+   "fingerprint": "033c232227149ee5",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di svolgimento di attività agrituristica",
+   "seconds": 1
+  },
+  {
+   "section": "Manodopera impiegata nell'attività agrituristica",
+   "fingerprint": "715bb39de173f35a",
+   "same_as": "suap-003-aprire-l-attivita#Manodopera impiegata nell'attività agrituristica",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione relativa al periodo di apertura",
+   "fingerprint": "606979f90c14465e",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa al periodo di apertura",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "fingerprint": "9a5af7223e50a59d",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione della modalità di subingresso",
+   "fingerprint": "a1fc93491bcc61c1",
+   "same_as": "suap-011-subentrare-nell-attivita-di-tatuatore-piercer#dichiarazione della modalità di subingresso",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "fingerprint": "1c9fa01530d715d4",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione della data di inizio della nuova attività",
+   "fingerprint": "f991f8b09879ba6a",
+   "same_as": "suap-011-variazioni-strutturali-in-attivita-di-acconciatore#dichiarazione della data di inizio dell'attività",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione della denominazione dell'attività precedente",
+   "fingerprint": "4e2a3803a9e81ddd",
+   "same_as": "suap-011-subentrare-nell-attivita-di-tatuatore-piercer#dichiarazione della denominazione dell'attività precedente",
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "fingerprint": "8467c3da5ba45e1e",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 1.2
+  },
+  {
+   "section": "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "fingerprint": "9962035d59522261",
+   "same_as": "suap-002-iniziare-l-attivita-di-vendita-di-prodotti-agricol#dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "seconds": 1
+  },
+  {
+   "section": "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "fingerprint": "922c94dd5f5a6d6f",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "seconds": 1.2
+  },
+  {
+   "section": "dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "fingerprint": "c0dab2822039b881",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione di conoscenza di obblighi per il richiedente",
+   "fingerprint": "53fba4cb1b7a5935",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di conoscenza di obblighi per il richiedente",
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazione relativa alla Prevenzione Incendi",
+   "fingerprint": "649d2ecfac75455e",
+   "same_as": "suap-004-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla Prevenzione Incendi",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa alla presentazione dell'intervento",
+   "fingerprint": "2b404e33fcb0ed13",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa alla presentazione dell'intervento",
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  }
+ ]
+}

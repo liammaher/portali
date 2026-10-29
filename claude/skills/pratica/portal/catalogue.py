@@ -197,6 +197,7 @@ def cmd_count(args):
     dictionary = gen.load_yaml(HERE / "dictionary" / "fnsuap.yaml")
     uses, names, where, cache = collections.Counter(), collections.defaultdict(set), {}, {}
     pratiche, by = collections.defaultdict(set), collections.defaultdict(collections.Counter)
+    by_name = collections.defaultdict(collections.Counter)
     stored = crawls()
     alias = json.loads(SAME.read_text())["same"] if SAME.exists() else {}
     for name, c in list(stored.items()) + [(n, stored[l]) for n, l in alias.items() if l in stored]:
@@ -213,12 +214,19 @@ def cmd_count(args):
             uses[fp] += 1
             by[fp][sp] += 1
             names[fp].add(s["section"])
+            by_name[fp][(sp, s["section"])] += 1
             pratiche[fp].add(sp)
     rows = []
     for fp, n in uses.most_common():
         sec = resolve(where[fp], cache) if fp in where else None
+        # The dictionary finds a section by its name: the same boxes under another title (the
+        # bakery's "indirizzo dell'attività") are filled only if that name has an entry too.
+        missing = sorted(nm for nm in names[fp] if not (sec and covered({**sec, "section": nm}, dictionary)))
         rows.append({"fingerprint": fp, "uses": n, "by": dict(by[fp]), "names": sorted(names[fp]), "crawl": where.get(fp),
-                     "sportelli": sorted(pratiche[fp]), "covered": bool(sec) and covered(sec, dictionary)})
+                     "sportelli": sorted(pratiche[fp]), "covered": bool(sec) and not missing,
+                     **({"names_missing": missing} if sec and missing and len(missing) < len(names[fp]) else {}),
+                     "filled": {sp: sum(k for (p, nm), k in by_name[fp].items() if p == sp and sec and nm not in missing)
+                                for sp in by[fp]}})
     if not args.summary:
         return rows
     out = []
@@ -228,9 +236,10 @@ def cmd_count(args):
             continue
         done = [x for x in r if x["covered"]]
         u = lambda xs: sum(x["by"][sp] for x in xs)
+        filled = sum(x["filled"][sp] for x in r)
         n = len({p for p in list(stored) + list(alias) if sportello(p) == sp})
         out.append(f"{sp.upper()}: {n} pratiche, {len(r)} distinct sections, {len(done)} in the dictionary; "
-                   f"{u(done)} of {u(r)} uses ({100 * u(done) // max(1, u(r))}%)")
+                   f"{filled} of {u(r)} uses ({100 * filled // max(1, u(r))}%)")
     return out
 
 

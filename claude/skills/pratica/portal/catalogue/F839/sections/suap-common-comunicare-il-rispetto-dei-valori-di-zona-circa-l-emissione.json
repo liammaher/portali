@@ -1,0 +1,407 @@
+{
+ "crawled": "2026-10-28T19:46:42.501Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Comunicare il rispetto dei valori di zona circa l' emissione di rumore (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 39,
+ "generated": {
+  "interventi": "Rispetto dei valori di zona circa l'emissione di rumore",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione di rispetto dei valori di emissione di rumore",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa all'ubicazione dell'impianto produttivo",
+   "dati catastali",
+   "dichiarazione della tipologia di attività svolta",
+   "dichiarazione degli addetti e dei turni di lavoro",
+   "classificazione acustica",
+   "dichiarazioni sul rumore",
+   "conoscenza dei valori limite di emissione di rumore",
+   "dichiarazione relativa al rispetto dei limiti di rumorosità previsti dalla zona",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa all'ubicazione dell'impianto produttivo",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della tipologia di attività svolta",
+   "fingerprint": "7c94aa095a5b163e",
+   "same_as": "sue-cambio-intestazione-cia-scia-dia#dichiarazione della tipologia di attività svolta",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione degli addetti e dei turni di lavoro",
+   "fields": [
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "context": "addetti complessivi:",
+     "max": 10
+    },
+    {
+     "id": "r5c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "giornaliero"
+    },
+    {
+     "id": "r5c2p13reg:txt",
+     "kind": "text",
+     "label": "numero addetti",
+     "context": "giornaliero",
+     "max": 10
+    },
+    {
+     "id": "r7c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "2 turni"
+    },
+    {
+     "id": "r7c2p21reg:txt",
+     "kind": "text",
+     "label": "numero addetti 1° turno",
+     "context": "2 turni",
+     "max": 10
+    },
+    {
+     "id": "r7c3p23reg:txt",
+     "kind": "text",
+     "label": "numero addetti 2° turno",
+     "context": "2 turni",
+     "max": 10
+    },
+    {
+     "id": "r9c1p27reg:chk",
+     "kind": "checkbox",
+     "label": "3 turni"
+    },
+    {
+     "id": "r9c2p29reg:txt",
+     "kind": "text",
+     "label": "numero addetti 1° turno",
+     "context": "3 turni",
+     "max": 10
+    },
+    {
+     "id": "r9c3p31reg:txt",
+     "kind": "text",
+     "label": "numero addetti 2° turno",
+     "context": "3 turni",
+     "max": 10
+    },
+    {
+     "id": "r9c4p33reg:txt",
+     "kind": "text",
+     "label": "numero addetti 3° turno",
+     "context": "3 turni",
+     "max": 10
+    }
+   ],
+   "fingerprint": "1a14b9d41ed06f85",
+   "text": "dichiarazione degli addetti e dei turni di lavoro numero addetti complessivi: addetti per turno: numero addetti giornaliero numero addetti 1° turno numero addetti 2° turno 2 turni numero addetti 1° turno numero addetti 2° turno numero addetti 3° turno 3 turni",
+   "branches": [
+    {
+     "choice": "giornaliero",
+     "id": "r5c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "2 turni",
+     "id": "r7c1p19reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "3 turni",
+     "id": "r9c1p27reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.2
+  },
+  {
+   "section": "classificazione acustica",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Zona acustica (indicare lettera/numero della zona di PRG,PSC o zonizzazione acustica vigente nel Comune)",
+     "max": 10
+    }
+   ],
+   "fingerprint": "c2d755e095ae72cf",
+   "text": "classificazione acustica Zona acustica (indicare lettera/numero della zona di PRG,PSC o zonizzazione acustica vigente nel Comune)",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "dichiarazioni sul rumore",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "attività esercitata",
+     "max": 60
+    },
+    {
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "label": "è un'attività di artigianato",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "label": "non è un'attività di artigianato",
+     "group": "r3c2p4reg:radio"
+    },
+    {
+     "id": "r5c1p6reg:txt",
+     "kind": "text",
+     "label": "se è un'attività di artigianato indicare il ciclo produttivo dell'impianto",
+     "max": 100
+    },
+    {
+     "id": "r7c1p8reg:txt",
+     "kind": "text",
+     "label": "se è un'attività di artigianato indicare i prodotti fabbricati o venduti o servizi prestati",
+     "max": 100
+    },
+    {
+     "id": "r9c1p10reg:txt",
+     "kind": "text",
+     "label": "piano sul quale sono ubicati i locali adibiti alle lavorazioni/attività",
+     "max": 30
+    },
+    {
+     "id": "r10c1p13reg:radio:2_clone",
+     "kind": "radio",
+     "label": "i locali adibiti alle lavorazioni sono isolati acusticamente",
+     "group": "r10c1p13reg:radio"
+    },
+    {
+     "id": "r10c2p14reg:radio:3_clone",
+     "kind": "radio",
+     "label": "i locali adibiti alle lavorazioni non sono isolati acusticamente",
+     "group": "r10c2p14reg:radio"
+    },
+    {
+     "id": "r12c1p16reg:txt",
+     "kind": "text",
+     "label": "se i locali NON sono isolati acusticamente indicare la distanza, la tipologia e la destinazione d'uso degli edifici più vicini o confinanti",
+     "max": 200
+    },
+    {
+     "id": "r13c1p17reg:radio:4_clone",
+     "kind": "radio",
+     "label": "i locali adibiti alle lavorazioni confinano con ambienti adibiti a civile abitazione o con altri ricettori sensibili",
+     "group": "r13c1p17reg:radio"
+    },
+    {
+     "id": "r13c2p18reg:radio:5_clone",
+     "kind": "radio",
+     "label": "i locali adibiti alle lavorazioni non confinano con ambienti adibiti a civile abitazione o con altri ricettori sensibili",
+     "group": "r13c2p18reg:radio"
+    },
+    {
+     "id": "r15c1p20reg:txt",
+     "kind": "text",
+     "label": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+     "max": 200
+    },
+    {
+     "id": "r17c1p22reg:txt",
+     "kind": "text",
+     "label": "sorgenti sonore interne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+     "max": 200
+    }
+   ],
+   "fingerprint": "a3db868fbe15e755",
+   "text": "dichiarazioni sul rumore attività esercitata è un'attività di artigianato non è un'attività di artigianato se è un'attività di artigianato indicare il ciclo produttivo dell'impianto se è un'attività di artigianato indicare i prodotti fabbricati o venduti o servizi prestati piano sul quale sono ubicati i locali adibiti alle lavorazioni/attività i locali adibiti alle lavorazioni sono isolati acusticamente i locali adibiti alle lavorazioni non sono isolati acusticamente se i locali NON sono isolati acusticamente indicare la distanza, la tipologia e la destinazione d'uso degli edifici più vicini o confinanti i locali adibiti alle lavorazioni confinano con ambienti adibiti a civile abitazione o con altri ricettori sensibili i locali adibiti alle lavorazioni non confinano con ambienti adibiti a civile abitazione o con altri ricettori sensibili sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\") sorgenti sonore interne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+   "branches": [
+    {
+     "choice": "è un'attività di artigianato",
+     "id": "r3c1p3reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "non è un'attività di artigianato",
+     "id": "r3c2p4reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "i locali adibiti alle lavorazioni sono isolati acusticamente",
+     "id": "r10c1p13reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "i locali adibiti alle lavorazioni non sono isolati acusticamente",
+     "id": "r10c2p14reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "i locali adibiti alle lavorazioni confinano con ambienti adibiti a civile abitazione o con altri ricettori sensibili",
+     "id": "r13c1p17reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "i locali adibiti alle lavorazioni non confinano con ambienti adibiti a civile abitazione o con altri ricettori sensibili",
+     "id": "r13c2p18reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "sorgenti sonore esterne che si prevede di attivare (in caso non presenti indicare \"nessuna\")",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 14.4
+  },
+  {
+   "section": "conoscenza dei valori limite di emissione di rumore",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di essere a conoscenza dei valori limite di emissione di rumore in considerazione della classificazione acustica o del DPCM 1/03/1991"
+    }
+   ],
+   "fingerprint": "4bc499d7c329c587",
+   "text": "conoscenza dei valori limite di emissione di rumore di essere a conoscenza dei valori limite di emissione di rumore in considerazione della classificazione acustica o del DPCM 1/03/1991",
+   "branches": [
+    {
+     "choice": "di essere a conoscenza dei valori limite di emissione di rumore in considerazione della classificazione acustica o del DPCM 1/03/1991",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.7
+  },
+  {
+   "section": "dichiarazione relativa al rispetto dei limiti di rumorosità previsti dalla zona",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "che la messa in funzione delle sorgenti sonore previste per l'esercizio dell'attività non produrrà il superamento dei valori di emissione di rumore previsti dal"
+    }
+   ],
+   "fingerprint": "085f45660c8d818a",
+   "text": "dichiarazione relativa al rispetto dei limiti di rumorosità previsti dalla zona che la messa in funzione delle sorgenti sonore previste per l'esercizio dell'attività non produrrà il superamento dei valori di emissione di rumore previsti dalla normativa vigente",
+   "branches": [
+    {
+     "choice": "che la messa in funzione delle sorgenti sonore previste per l'esercizio dell'attività non produrrà il superamento dei valori di emissione di rumore previsti dal",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.1
+  }
+ ]
+}

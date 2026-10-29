@@ -1,0 +1,1147 @@
+{
+ "crawled": "2026-10-28T20:00:04.069Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Richiesta di occupazione suolo pubblico per riprese televisive e/o cinematografiche (superiore ai 10 mq) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 44.6,
+ "generated": {
+  "interventi": "Richiesta di occupazione suolo pubblico per riprese televisive e/o cinematografiche (superiore ai 10 mq)",
+  "adempimenti": [
+   {
+    "adempimento": "Richiesta di occupazione suolo pubblico per riprese televisive e/o cinematografiche (superiore ai 10 mq)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "UBICAZIONE DELL'ATTIVITA'",
+   "Richiesta di occupazione suolo pubblico per riprese televisive e/o cinematografiche (superiore ai 10 mq)",
+   "Avvertenza per le domande di concessione",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "UBICAZIONE DELL'ATTIVITA'",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "Richiesta di occupazione suolo pubblico per riprese televisive e/o cinematografiche (superiore ai 10 mq)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "film",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "fiction",
+     "group": "r2c2p3reg:radio"
+    },
+    {
+     "id": "r2c3p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "documentario",
+     "group": "r2c3p4reg:radio"
+    },
+    {
+     "id": "r2c4p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "cortometraggio",
+     "group": "r2c4p5reg:radio"
+    },
+    {
+     "id": "r3c1p7reg:radio:4_clone",
+     "kind": "radio",
+     "label": "servizio tv",
+     "group": "r3c1p7reg:radio"
+    },
+    {
+     "id": "r3c2p8reg:radio:5_clone",
+     "kind": "radio",
+     "label": "spot pubblicitario",
+     "group": "r3c2p8reg:radio"
+    },
+    {
+     "id": "r3c3p9reg:radio:6_clone",
+     "kind": "radio",
+     "label": "videoclip",
+     "group": "r3c3p9reg:radio"
+    },
+    {
+     "id": "r3c4p10reg:radio:7_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r3c4p10reg:radio"
+    },
+    {
+     "id": "r5c1p13reg:txt",
+     "kind": "text",
+     "label": "Titolo dell’audiovisivo",
+     "max": 100
+    },
+    {
+     "id": "r7c1p15reg:txta",
+     "kind": "textarea",
+     "label": "1000 Caratteri restanti",
+     "context": "Breve descrizione",
+     "max": 1000
+    },
+    {
+     "id": "r9c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "attrezzature tecniche"
+    },
+    {
+     "id": "r10c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "allestimenti scenografici"
+    },
+    {
+     "id": "r11c1p21reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r13c1p24reg:txt",
+     "kind": "text",
+     "label": "Per complessivi mq.",
+     "max": 10
+    },
+    {
+     "id": "r15c1p28reg:number",
+     "kind": "text",
+     "label": "Numero complessivo dei componenti della troupe (attori, comparse, tecnici, ecc.)",
+     "max": 5
+    },
+    {
+     "id": "r18c1p34reg:calendar_input",
+     "kind": "date",
+     "label": "dal"
+    },
+    {
+     "id": "r18c2p36reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r21c1p42reg:txt",
+     "kind": "text",
+     "label": "Sito/location (1)",
+     "max": 200
+    },
+    {
+     "id": "r23c1p46reg:chk",
+     "kind": "checkbox",
+     "label": "all'interno dell'area richiesta in occupazione di suolo pubblico"
+    },
+    {
+     "id": "r24c1p47reg:chk",
+     "kind": "checkbox",
+     "label": "in altro sito"
+    },
+    {
+     "id": "r25c1p49reg:chk",
+     "kind": "checkbox",
+     "label": "altro"
+    },
+    {
+     "id": "r27c1p52reg:radio:8_clone",
+     "kind": "radio",
+     "label": "il dichiarante",
+     "group": "r27c1p52reg:radio"
+    },
+    {
+     "id": "r28c1p54reg:radio:9_clone",
+     "kind": "radio",
+     "label": "persona diversa dal dichiarante",
+     "group": "r28c1p54reg:radio"
+    },
+    {
+     "id": "r31c1p61reg:chk",
+     "kind": "checkbox",
+     "label": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar"
+    },
+    {
+     "id": "r32c1p62reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a rimuovere ogni attrezzatura e a mantenere l'area in concessione perfettamente pulita, in ordine e a non arrecare danno alcuno alla proprietà pubbli"
+    },
+    {
+     "id": "r33c1p63reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna ad acquisire ogni ulteriore ed eventuale autorizzazione prescritte dalla legge;"
+    },
+    {
+     "id": "r34c1p64reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus"
+    },
+    {
+     "id": "r35c1p65reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a realizzare le condizioni di sicurezza prescritte per legge."
+    },
+    {
+     "id": "r37c1p67reg:chk",
+     "kind": "checkbox",
+     "label": "provvederà con proprio personale alla custodia delle attrezzature eventualmente fornite dal Comune."
+    },
+    {
+     "id": "r39c1p69reg:txt",
+     "kind": "text",
+     "label": "I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area:",
+     "max": 300
+    },
+    {
+     "id": "r41c1p71reg:txt",
+     "kind": "text",
+     "label": "Le attrezzature verranno trasportate con seguenti mezzi (specificare tipo e targa):",
+     "max": 200
+    }
+   ],
+   "fingerprint": "dc84d4fff7a66fde",
+   "text": "Richiesta di occupazione suolo pubblico per riprese televisive e/o cinematografiche (superiore ai 10 mq) Dovendo effettuare le riprese televisive e/o cinematografiche inerenti: film fiction documentario cortometraggio servizio tv spot pubblicitario videoclip altro Titolo dell’audiovisivo Breve descrizione 1000 Caratteri restanti Chiede di essere autorizzato/a ad occupare il suolo pubblico per il posizionamento di: attrezzature tecniche allestimenti scenografici altro Per complessivi mq. Numero complessivo dei componenti della troupe (attori, comparse, tecnici, ecc.) Nei giorni dal al Sito/location (1) Le riprese televisive e/o cinematografiche si svolgeranno: all'interno dell'area richiesta in occupazione di suolo pubblico in altro sito altro La persona che dovrà essere presente o reperibile fino al termine della manifestazione è: il dichiarante persona diversa dal dichiarante INOLTRE: si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivare a persone o cose per effetto dell'occupazione stessa e delle attività svolte; si impegna a rimuovere ogni attrezzatura e a mantenere l'area in concessione perfettamente pulita, in ordine e a non arrecare danno alcuno alla proprietà pubblica e/o privata, al termine dell'occupazione; si impegna ad acquisire ogni ulteriore ed eventuale autorizzazione prescritte dalla legge; si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni causati (se previsto); si impegna a realizzare le condizioni di sicurezza prescritte per legge. RELATIVAMENTE ALLE ATTREZZATURE UTILIZZATE E AI MEZZI DI TRASPORTO UTILIZZATI: provvederà con proprio personale alla custodia delle attrezzature eventualmente fornite dal Comune. I mezzi di trasporto utilizzati faranno il seguente percorso per raggiungere l'area: Le attrezzature verranno trasportate con seguenti mezzi (specificare tipo e targa): (1) Per il transito in ZTL/APU e per la sosta contattare: - permessitemporanei.ztl@comune.napoli.it - ufficioztl@anm.it - contact center Anm che risponde al numero verde 800 639525 dal lunedì al venerdì dalle ore 6.30 alle ore 20:00. Maggiori informazioni sul sito https://www.anm.it oppure consultare la pagina https://www.comune.napoli.it/ztl",
+   "branches": [
+    {
+     "choice": "film",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "fiction",
+     "id": "r2c2p3reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "documentario",
+     "id": "r2c3p4reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "cortometraggio",
+     "id": "r2c4p5reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "servizio tv",
+     "id": "r3c1p7reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "spot pubblicitario",
+     "id": "r3c2p8reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "videoclip",
+     "id": "r3c3p9reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "altro",
+     "id": "r3c4p10reg:radio:7_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r4c5p16reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "altro",
+       "max": 100
+      }
+     ],
+     "moved": [
+      [
+       "r3c1p7reg:radio:4_clone",
+       "r4c1p8reg:radio:4_clone"
+      ],
+      [
+       "r3c2p8reg:radio:5_clone",
+       "r4c2p10reg:radio:5_clone"
+      ],
+      [
+       "r3c3p9reg:radio:6_clone",
+       "r4c3p12reg:radio:6_clone"
+      ],
+      [
+       "r3c4p10reg:radio:7_clone",
+       "r4c4p14reg:radio:7_clone"
+      ],
+      [
+       "r5c1p13reg:txt",
+       "r6c1p18reg:txt"
+      ],
+      [
+       "r7c1p15reg:txta",
+       "r8c1p20reg:txta"
+      ],
+      [
+       "r9c1p17reg:chk",
+       "r10c1p22reg:chk"
+      ],
+      [
+       "r10c1p19reg:chk",
+       "r11c1p24reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r12c1p26reg:chk"
+      ],
+      [
+       "r13c1p24reg:txt",
+       "r14c1p29reg:txt"
+      ],
+      [
+       "r15c1p28reg:number",
+       "r16c1p33reg:number"
+      ],
+      [
+       "r18c1p34reg:calendar_input",
+       "r19c1p39reg:calendar_input"
+      ],
+      [
+       "r18c2p36reg:calendar_input",
+       "r19c2p41reg:calendar_input"
+      ],
+      [
+       "r21c1p42reg:txt",
+       "r22c1p47reg:txt"
+      ],
+      [
+       "r23c1p46reg:chk",
+       "r24c1p51reg:chk"
+      ],
+      [
+       "r24c1p47reg:chk",
+       "r25c1p52reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r26c1p54reg:chk"
+      ],
+      [
+       "r27c1p52reg:radio:8_clone",
+       "r28c1p57reg:radio:8_clone"
+      ],
+      [
+       "r28c1p54reg:radio:9_clone",
+       "r29c1p59reg:radio:9_clone"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p66reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p67reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p68reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p69reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p70reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p72reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p74reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p76reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "attrezzature tecniche",
+     "id": "r9c1p17reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r10c2p20reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "attrezzature tecniche",
+       "max": 200
+      }
+     ],
+     "moved": [
+      [
+       "r9c1p17reg:chk",
+       "r10c1p18reg:chk"
+      ],
+      [
+       "r10c1p19reg:chk",
+       "r11c1p21reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r12c1p23reg:chk"
+      ],
+      [
+       "r13c1p24reg:txt",
+       "r14c1p26reg:txt"
+      ],
+      [
+       "r15c1p28reg:number",
+       "r16c1p30reg:number"
+      ],
+      [
+       "r18c1p34reg:calendar_input",
+       "r19c1p36reg:calendar_input"
+      ],
+      [
+       "r18c2p36reg:calendar_input",
+       "r19c2p38reg:calendar_input"
+      ],
+      [
+       "r21c1p42reg:txt",
+       "r22c1p44reg:txt"
+      ],
+      [
+       "r23c1p46reg:chk",
+       "r24c1p48reg:chk"
+      ],
+      [
+       "r24c1p47reg:chk",
+       "r25c1p49reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r26c1p51reg:chk"
+      ],
+      [
+       "r27c1p52reg:radio:8_clone",
+       "r28c1p54reg:radio:8_clone"
+      ],
+      [
+       "r28c1p54reg:radio:9_clone",
+       "r29c1p56reg:radio:9_clone"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p63reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p64reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p65reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p66reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p67reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p69reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p71reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p73reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "allestimenti scenografici",
+     "id": "r10c1p19reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r11c2p22reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "allestimenti scenografici",
+       "max": 200
+      }
+     ],
+     "moved": [
+      [
+       "r10c1p19reg:chk",
+       "r11c1p20reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r12c1p23reg:chk"
+      ],
+      [
+       "r13c1p24reg:txt",
+       "r14c1p26reg:txt"
+      ],
+      [
+       "r15c1p28reg:number",
+       "r16c1p30reg:number"
+      ],
+      [
+       "r18c1p34reg:calendar_input",
+       "r19c1p36reg:calendar_input"
+      ],
+      [
+       "r18c2p36reg:calendar_input",
+       "r19c2p38reg:calendar_input"
+      ],
+      [
+       "r21c1p42reg:txt",
+       "r22c1p44reg:txt"
+      ],
+      [
+       "r23c1p46reg:chk",
+       "r24c1p48reg:chk"
+      ],
+      [
+       "r24c1p47reg:chk",
+       "r25c1p49reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r26c1p51reg:chk"
+      ],
+      [
+       "r27c1p52reg:radio:8_clone",
+       "r28c1p54reg:radio:8_clone"
+      ],
+      [
+       "r28c1p54reg:radio:9_clone",
+       "r29c1p56reg:radio:9_clone"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p63reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p64reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p65reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p66reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p67reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p69reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p71reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p73reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "altro",
+     "id": "r11c1p21reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r12c2p24reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "altro",
+       "max": 200
+      }
+     ],
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r12c1p22reg:chk"
+      ],
+      [
+       "r13c1p24reg:txt",
+       "r14c1p26reg:txt"
+      ],
+      [
+       "r15c1p28reg:number",
+       "r16c1p30reg:number"
+      ],
+      [
+       "r18c1p34reg:calendar_input",
+       "r19c1p36reg:calendar_input"
+      ],
+      [
+       "r18c2p36reg:calendar_input",
+       "r19c2p38reg:calendar_input"
+      ],
+      [
+       "r21c1p42reg:txt",
+       "r22c1p44reg:txt"
+      ],
+      [
+       "r23c1p46reg:chk",
+       "r24c1p48reg:chk"
+      ],
+      [
+       "r24c1p47reg:chk",
+       "r25c1p49reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r26c1p51reg:chk"
+      ],
+      [
+       "r27c1p52reg:radio:8_clone",
+       "r28c1p54reg:radio:8_clone"
+      ],
+      [
+       "r28c1p54reg:radio:9_clone",
+       "r29c1p56reg:radio:9_clone"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p63reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p64reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p65reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p66reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p67reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p69reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p71reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p73reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "all'interno dell'area richiesta in occupazione di suolo pubblico",
+     "id": "r23c1p46reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "in altro sito",
+     "id": "r24c1p47reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r25c2p50reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "in altro sito",
+       "max": 200
+      }
+     ],
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ],
+      [
+       "r24c1p47reg:chk",
+       "r25c1p48reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r26c1p51reg:chk"
+      ],
+      [
+       "r27c1p52reg:radio:8_clone",
+       "r28c1p54reg:radio:8_clone"
+      ],
+      [
+       "r28c1p54reg:radio:9_clone",
+       "r29c1p56reg:radio:9_clone"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p63reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p64reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p65reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p66reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p67reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p69reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p71reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p73reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "altro",
+     "id": "r25c1p49reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r26c2p52reg:txt",
+       "kind": "text",
+       "label": "specificare",
+       "context": "altro",
+       "max": 200
+      }
+     ],
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ],
+      [
+       "r25c1p49reg:chk",
+       "r26c1p50reg:chk"
+      ],
+      [
+       "r27c1p52reg:radio:8_clone",
+       "r28c1p54reg:radio:8_clone"
+      ],
+      [
+       "r28c1p54reg:radio:9_clone",
+       "r29c1p56reg:radio:9_clone"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p63reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p64reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p65reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p66reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p67reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p69reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p71reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p73reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "il dichiarante",
+     "id": "r27c1p52reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "persona diversa dal dichiarante",
+     "id": "r28c1p54reg:radio:9_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r30c1p57reg:txt",
+       "kind": "text",
+       "label": "Sig. (nome, cognome)",
+       "max": 100
+      },
+      {
+       "id": "r30c2p59reg:number",
+       "kind": "text",
+       "label": "Recapito telefonico",
+       "max": 20
+      }
+     ],
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ],
+      [
+       "r31c1p61reg:chk",
+       "r32c1p64reg:chk"
+      ],
+      [
+       "r32c1p62reg:chk",
+       "r33c1p65reg:chk"
+      ],
+      [
+       "r33c1p63reg:chk",
+       "r34c1p66reg:chk"
+      ],
+      [
+       "r34c1p64reg:chk",
+       "r35c1p67reg:chk"
+      ],
+      [
+       "r35c1p65reg:chk",
+       "r36c1p68reg:chk"
+      ],
+      [
+       "r37c1p67reg:chk",
+       "r38c1p70reg:chk"
+      ],
+      [
+       "r39c1p69reg:txt",
+       "r40c1p72reg:txt"
+      ],
+      [
+       "r41c1p71reg:txt",
+       "r42c1p74reg:txt"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "si assume l'onere di rispondere in proprio di tutti i danni, diretti ed indiretti, senza riguardo alla natura ed all'ammontare dei medesimi, che possono derivar",
+     "id": "r31c1p61reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "si impegna a rimuovere ogni attrezzatura e a mantenere l'area in concessione perfettamente pulita, in ordine e a non arrecare danno alcuno alla proprietà pubbli",
+     "id": "r32c1p62reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "si impegna a provvedere al versamento della cauzione richiesta (fidejussione) tramite versamento presso la Tesoreria comunale a garanzia di eventuali danni caus",
+     "id": "r34c1p64reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "si impegna a realizzare le condizioni di sicurezza prescritte per legge.",
+     "id": "r35c1p65reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "provvederà con proprio personale alla custodia delle attrezzature eventualmente fornite dal Comune.",
+     "id": "r37c1p67reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r25c1p49reg:chk",
+       "r11c1p21reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "dal",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 28
+  },
+  {
+   "section": "Avvertenza per le domande di concessione",
+   "fields": [
+    {
+     "id": "r22c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "PRESA VISIONE"
+    }
+   ],
+   "fingerprint": "97944b936f875c7c",
+   "text": "Avvertenza per le domande di concessione Se la la domanda di concessione che si intende presentare interessa i seguenti siti: * Galleria Principe di Napoli * Galleria Umberto I * Piazza Carità * Piazza Dante * Piazza dei Martiri * Piazza del Carmine * Piazza del Gesù * Piazza del Mercato * Piazza del Plebiscito * Piazza San Domenico Maggiore * Piazza Trieste e Trento * Piazza Vanvitelli * Piazza della Vittoria * Piazzale di San Martino * Rotonda Diaz * Via Caracciolo * Via Nazario Sauro * Via Partenope * Piazza del Municipio è obbligatorio richiedere contestualmente il nulla-osta del sindaco (scrivendo a sindaco.segreteria@comune.napoli.it) PRESA VISIONE",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  }
+ ]
+}

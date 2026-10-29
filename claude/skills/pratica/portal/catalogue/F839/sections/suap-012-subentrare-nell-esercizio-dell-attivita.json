@@ -1,0 +1,1541 @@
+{
+ "crawled": "2026-10-28T20:42:32.667Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Subentrare nell'esercizio dell'attività (sector Tintolavanderia a lavorazione manuale/meccanica)",
+ "seconds": 77,
+ "generated": {
+  "interventi": "Subingresso in attività di tintolavanderia (a lavorazione manuale/meccanica)",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per Subingresso in attività di tintolavanderia (a lavorazione manuale/meccanica)",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione ubicazione locale",
+   "dati catastali",
+   "dichiarazione della user Telemaco",
+   "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "dichiarazione relativa all'iscrizione all'albo delle imprese artigiane",
+   "dichiarazione del titolo di disponibilità dei locali",
+   "dichiarazione dell'insegna dell'esercizio",
+   "dichiarazione relativa alle superfici dei locali utilizzati",
+   "dichiarazione di rispetto dei regolamenti in materia urbanistico - edilizia",
+   "dichiarazione della modalità di subingresso",
+   "dichiarazione relativa alla Prevenzione Incendi",
+   "dichiarazione di possesso dei requisiti morali e di rispetto delle norme per",
+   "dichiarazione relativa alla notifica di cui all'art. 67 del D.Lgs n. 81/2008",
+   "dichiarazione per emissioni in atmosfera (tintolavanderia)",
+   "dichiarazione relativa agli scarichi (tintolavanderia)",
+   "dichiarazione per industrie insalubri",
+   "dichiarazione relativa alla tipologia dell'esercizio di tintolavanderia",
+   "dichiarazione materiali e prodotti chimici utilizzati",
+   "dichiarazione rifiuti prodotti",
+   "dichiarazione ciclo produttivo",
+   "designazione del responsanile tecnico (Tintolavanderia)",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "presenta contestualmente Comunicazione per subingresso in industria insalubre"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la SCIA per inizio attività soggetta a controlli di prevenzione incendi"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "presenta contestualmente la Documentazione Previsionale di Impatto Acustico D.P.I.A. (solo nel caso in cui le emissioni di rumore siano superiori ai limiti stabiliti dal documento\ndi classificazione acustica del territorio comunale di riferimento ovvero - per i Comuni in cui non sia stato adottato - ai limiti individuati dal D.P.C.M. 14.11.1997 - Art.4, comma 2, D.P.R. 19.10.2011, n. 227 \ne la documentazione tecnica non sia già stata presentata dal precedente titolare)"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "il dichiarante è responsabile tecnico nonché titolare o socio partecipante dell'impresa"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "il dichiarante non è responsabile tecnico"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "presenta contestualmente la Documentazione Previsionale di Impatto Acustico D.P.I.A. (solo nel caso in cui le emissioni di rumore siano superiori ai limiti stabiliti dal documento\ndi classificazione acustica del territorio comunale di riferimento ovvero - per i Comuni in cui non sia stato adottato - ai limiti individuati dal D.P.C.M. 14.11.1997 - Art.4, comma 2, D.P.R. 19.10.2011, n. 227 \ne la documentazione tecnica non sia già stata presentata dal precedente titolare)",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "il dichiarante è responsabile tecnico nonché titolare o socio partecipante dell'impresa",
+   "type": "CHK",
+   "adds": [
+    "dichiarazione di possesso idoneità professionale per tintolavanderia da parte del responsabile tecnico titolare/socio partecipante"
+   ],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ubicazione locale",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione della user Telemaco",
+   "fingerprint": "41cd103a4bccf27c",
+   "same_as": "suap-010-aprire-l-attivita#dichiarazione della user Telemaco",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "fingerprint": "072898a981cd1b8c",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione della tipologia dell'esercizio (permanente/stagionale)",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa all'iscrizione all'albo delle imprese artigiane",
+   "fingerprint": "73f97394f3f85d47",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione relativa all'iscrizione all'albo delle imprese artigiane",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione del titolo di disponibilità dei locali",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "proprietà",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "affitto",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:2_clone",
+     "kind": "radio",
+     "label": "locazione",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "altro (specificare)",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r5c2p7reg:txt",
+     "kind": "text",
+     "label": "altro tipo di disponibilità",
+     "context": "altro (specificare)",
+     "max": 30
+    },
+    {
+     "id": "r7c1p9reg:txt",
+     "kind": "text",
+     "label": "come da contratto registrato presso l'Ufficio delle Entrate di",
+     "max": 30
+    },
+    {
+     "id": "r7c2p11reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r7c3p13reg:txt",
+     "kind": "text",
+     "label": "con n.",
+     "max": 15
+    }
+   ],
+   "fingerprint": "be9c0c120ce4e9fd",
+   "text": "dichiarazione del titolo di disponibilità dei locali proprietà affitto locazione altro tipo di disponibilità altro (specificare) come da contratto registrato presso l'Ufficio delle Entrate di in data con n.",
+   "branches": [
+    {
+     "choice": "proprietà",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "affitto",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "locazione",
+     "id": "r3c1p3reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro (specificare)",
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.7
+  },
+  {
+   "section": "dichiarazione dell'insegna dell'esercizio",
+   "fingerprint": "91770c2e0f55753b",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione dell'insegna dell'esercizio",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa alle superfici dei locali utilizzati",
+   "fields": [
+    {
+     "id": "r2c1p2reg:real",
+     "kind": "text",
+     "label": "superficie del locali utilizzati per l'attività mq.",
+     "max": 13
+    },
+    {
+     "id": "r4c1p6reg:real",
+     "kind": "text",
+     "label": "superficie complessiva dell'esercizio (compresa la superficie adibita ad altri usi) mq.",
+     "max": 13
+    }
+   ],
+   "fingerprint": "86ca54beb005c9b8",
+   "text": "dichiarazione relativa alle superfici dei locali utilizzati superficie del locali utilizzati per l'attività mq. superficie complessiva dell'esercizio (compresa la superficie adibita ad altri usi) mq.",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di rispetto dei regolamenti in materia urbanistico - edilizia",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+     "max": 150
+    },
+    {
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "è stata rispettata la normativa vigente in materia urbanistico-edilizia, igienico sanitaria e, dove previsto, della sorvegliabilità per l'utilizzazione richiest"
+    },
+    {
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "sono stati rispettati i regolamenti locali di polizia urbana ed annonaria"
+    },
+    {
+     "id": "r7c1p8reg:radio:0_clone",
+     "kind": "radio",
+     "label": "l'ultimo intervento edilizio è stato realizzato in conformità al seguente titolo:",
+     "group": "r7c1p8reg:radio"
+    },
+    {
+     "id": "r8c1p9reg:radio:1_clone",
+     "kind": "radio",
+     "label": "Concessione",
+     "group": "r8c1p9reg:radio"
+    },
+    {
+     "id": "r8c2p10reg:radio:2_clone",
+     "kind": "radio",
+     "label": "Autorizzazione edilizia",
+     "group": "r8c2p10reg:radio"
+    },
+    {
+     "id": "r8c3p11reg:radio:3_clone",
+     "kind": "radio",
+     "label": "Permesso di costruire",
+     "group": "r8c3p11reg:radio"
+    },
+    {
+     "id": "r9c1p12reg:radio:4_clone",
+     "kind": "radio",
+     "label": "DIA-dichiarazione inizio attività",
+     "group": "r9c1p12reg:radio"
+    },
+    {
+     "id": "r9c2p13reg:radio:5_clone",
+     "kind": "radio",
+     "label": "SCIA-segnalazione certificata inizio attività",
+     "group": "r9c2p13reg:radio"
+    },
+    {
+     "id": "r9c3p14reg:radio:6_clone",
+     "kind": "radio",
+     "label": "Comunicazione attività libera",
+     "group": "r9c3p14reg:radio"
+    },
+    {
+     "id": "r11c1p16reg:txt",
+     "kind": "text",
+     "label": "Nr SPEC. o Prot.",
+     "max": 30
+    },
+    {
+     "id": "r11c2p18reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r12c1p21reg:radio:7_clone",
+     "kind": "radio",
+     "label": "i locali sono agibili a seguito del rilascio del cerificato di agibilità",
+     "group": "r12c1p21reg:radio"
+    },
+    {
+     "id": "r14c1p23reg:number",
+     "kind": "text",
+     "label": "numero",
+     "max": 30
+    },
+    {
+     "id": "r14c2p25reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r15c1p28reg:radio:8_clone",
+     "kind": "radio",
+     "label": "è stata presentata la dichiarazione del Direttore dei Lavori attestante la conformità dell'opera al progetto presentato e la sua agibilità, ai sensi art. 10 del",
+     "group": "r15c1p28reg:radio"
+    },
+    {
+     "id": "r17c1p30reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r17c2p32reg:txt",
+     "kind": "text",
+     "label": "acquisita al prot. n°",
+     "max": 20
+    },
+    {
+     "id": "r18c1p35reg:radio:9_clone",
+     "kind": "radio",
+     "label": "i locali sono situati in un fabbricato costruito antecedentemente alle attuali norme in materia di agibilità in vigore nel comune e non hanno subito nel corso d",
+     "group": "r18c1p35reg:radio"
+    },
+    {
+     "id": "r20c1p37reg:number",
+     "kind": "text",
+     "label": "anno di costruzione",
+     "max": 20
+    },
+    {
+     "id": "r21c1p40reg:radio:10_clone",
+     "kind": "radio",
+     "label": "allega asseverazione di agibilità a firma di tecnico abilitato, corredata dai relativi elaborati tecnici",
+     "group": "r21c1p40reg:radio"
+    }
+   ],
+   "fingerprint": "3b7a238e692942da",
+   "text": "dichiarazione di rispetto dei regolamenti in materia urbanistico - edilizia i locali sono di proprietà di (specificare i dati relativi al proprietario): DICHIARA CHE: è stata rispettata la normativa vigente in materia urbanistico-edilizia, igienico sanitaria e, dove previsto, della sorvegliabilità per l'utilizzazione richiesta; sono stati rispettati i regolamenti locali di polizia urbana ed annonaria l'ultimo intervento edilizio è stato realizzato in conformità al seguente titolo: Concessione Autorizzazione edilizia Permesso di costruire DIA-dichiarazione inizio attività SCIA-segnalazione certificata inizio attività Comunicazione attività libera Nr SPEC. o Prot. del i locali sono agibili a seguito del rilascio del cerificato di agibilità numero del è stata presentata la dichiarazione del Direttore dei Lavori attestante la conformità dell'opera al progetto presentato e la sua agibilità, ai sensi art. 10 del D.P.R. 160 in data acquisita al prot. n° i locali sono situati in un fabbricato costruito antecedentemente alle attuali norme in materia di agibilità in vigore nel comune e non hanno subito nel corso del tempo alcuna modificazione tale da richiedere il rilascio di un nuovo Certificato di agibilità anno di costruzione allega asseverazione di agibilità a firma di tecnico abilitato, corredata dai relativi elaborati tecnici",
+   "branches": [
+    {
+     "choice": "è stata rispettata la normativa vigente in materia urbanistico-edilizia, igienico sanitaria e, dove previsto, della sorvegliabilità per l'utilizzazione richiest",
+     "id": "r5c1p6reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "sono stati rispettati i regolamenti locali di polizia urbana ed annonaria",
+     "id": "r6c1p7reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "l'ultimo intervento edilizio è stato realizzato in conformità al seguente titolo:",
+     "id": "r7c1p8reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "Concessione",
+     "id": "r8c1p9reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "Autorizzazione edilizia",
+     "id": "r8c2p10reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "Permesso di costruire",
+     "id": "r8c3p11reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "DIA-dichiarazione inizio attività",
+     "id": "r9c1p12reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "SCIA-segnalazione certificata inizio attività",
+     "id": "r9c2p13reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "Comunicazione attività libera",
+     "id": "r9c3p14reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "i locali sono agibili a seguito del rilascio del cerificato di agibilità",
+     "id": "r12c1p21reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "è stata presentata la dichiarazione del Direttore dei Lavori attestante la conformità dell'opera al progetto presentato e la sua agibilità, ai sensi art. 10 del",
+     "id": "r15c1p28reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "i locali sono situati in un fabbricato costruito antecedentemente alle attuali norme in materia di agibilità in vigore nel comune e non hanno subito nel corso d",
+     "id": "r18c1p35reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    },
+    {
+     "choice": "allega asseverazione di agibilità a firma di tecnico abilitato, corredata dai relativi elaborati tecnici",
+     "id": "r21c1p40reg:radio:10_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r14c2p25reg:calendar_input",
+       "r11c2p18reg:calendar_input"
+      ]
+     ],
+     "plus": {
+      "anchor": "i locali sono di proprietà di (specificare i dati relativi al proprietario):",
+      "adds": 2
+     }
+    }
+   ],
+   "seconds": 16.1
+  },
+  {
+   "section": "dichiarazione della modalità di subingresso",
+   "fingerprint": "a1fc93491bcc61c1",
+   "same_as": "suap-011-subentrare-nell-attivita-di-tatuatore-piercer#dichiarazione della modalità di subingresso",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa alla Prevenzione Incendi",
+   "fingerprint": "649d2ecfac75455e",
+   "same_as": "suap-004-subentrare-nell-esercizio-dell-attivita#dichiarazione relativa alla Prevenzione Incendi",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione di possesso dei requisiti morali e di rispetto delle norme per",
+   "fields": [
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "che non sussistono nei propri confronti \"cause di divieto, di decadenza o di sospensione\" di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia);"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "di essere consapevole che non è ammesso lo svolgimento dell'attività professionale di tintolavanderia in forma ambulante o di posteggio;"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "di essere consapevole che i servizi di raccolta e recapito dei capi, se svolti in sede fissa da imprese abilitate ai sensi dell'articolo 2 della Legge n. 84/200"
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "di essere consapevole che presso tutte le sedi ed i recapiti ove si effettua la raccolta o la riconsegna di abiti e indumenti, di tessuti e simili, deve essere "
+    },
+    {
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "che i locali dove si esercita l'attività di tintolavanderia sono conformi alle vigenti disposizioni e norme regolamentari in materia urbanistica ed edilizia e d"
+    },
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "che gli impianti installati nei locali di cui trattasi sono stati realizzati secondo la regola d'arte, in conformità alla normativa vigente, e ne è stata rilasc"
+    }
+   ],
+   "fingerprint": "5fd2ac33e4cfeda0",
+   "text": "dichiarazione di possesso dei requisiti morali e di rispetto delle norme per IL/ LA SOTTOSCRITTO/ A - consapevole che le dichiarazioni false, la falsità negli atti e l'uso di atti falsi comportano l'applicazione delle sanzioni penali previste dall'art.76 del DPR 28/12/2000, n. 445, nonché la decadenza dei benefici prodotti da provvedimenti emanati sulla base di dichiarazioni non veritiere ai sensi dell'art.75, del medesimo decreto; - consapevole inoltre che, dove il fatto non costituisca più grave reato, chiunque, nelle dichiarazioni o attestazioni o asseverazioni che corredano la segnalazione di inizio attività, dichiara o attesta falsamente l'esistenza dei requisiti o dei presupposti di cui al comma 1 dell'art. 19, legge 241/90, è punito con la reclusione da uno a tre anni; DICHIARA che non sussistono nei propri confronti \"cause di divieto, di decadenza o di sospensione\" di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia); di essere consapevole che non è ammesso lo svolgimento dell'attività professionale di tintolavanderia in forma ambulante o di posteggio; di essere consapevole che i servizi di raccolta e recapito dei capi, se svolti in sede fissa da imprese abilitate ai sensi dell'articolo 2 della Legge n. 84/2006, devono essere gestiti dal titolare, da un socio partecipante al lavoro, da un collaboratore familiare, da un dipendente o da un addetto delle medesime imprese, oppure, qualora siano svolti in forma itinerante, devono essere affidati ad altra impresa, anche di trasporto, in base a contratto di appalto; di essere consapevole che presso tutte le sedi ed i recapiti ove si effettua la raccolta o la riconsegna di abiti e indumenti, di tessuti e simili, deve essere apposto un apposito cartello indicante la sede dell'impresa ove è effettuata, in tutto o in parte, la lavorazione. Nel caso in cui tali attività siano svolte in forma itinerante, l'indicazione della sede dell'impresa ove è effettuata in tutto o in parte la lavorazione deve essere riportata sui documenti fiscali; che i locali dove si esercita l'attività di tintolavanderia sono conformi alle vigenti disposizioni e norme regolamentari in materia urbanistica ed edilizia e di destinazione d'uso; che gli impianti installati nei locali di cui trattasi sono stati realizzati secondo la regola d'arte, in conformità alla normativa vigente, e ne è stata rilasciata la dichiarazione di conformità nel rispetto dell'articolo 6 del Decreto del Ministero dello Sviluppo Economico 22/01/2008, n. 37",
+   "branches": [
+    {
+     "choice": "che non sussistono nei propri confronti \"cause di divieto, di decadenza o di sospensione\" di cui all'art. 67 del D.L.vo n°159 del 06.09.11 (antimafia);",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che i locali dove si esercita l'attività di tintolavanderia sono conformi alle vigenti disposizioni e norme regolamentari in materia urbanistica ed edilizia e d",
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "che gli impianti installati nei locali di cui trattasi sono stati realizzati secondo la regola d'arte, in conformità alla normativa vigente, e ne è stata rilasc",
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.9
+  },
+  {
+   "section": "dichiarazione relativa alla notifica di cui all'art. 67 del D.Lgs n. 81/2008",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "non è soggetto alla notifica di cui all'articolo 67 del D.Lgs. 09/04/2008, n. 81, in quanto si prevede l'impiego e la presenza di un numero di lavoratori pari o",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "è soggetto alla notifica di cui all'articolo 67 del D.Lgs. 09/04/2008, n. 81, in quanto si prevede l'impiego e la presenza di un numero di lavoratori superiore ",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "presentata all'AUlss di",
+     "max": 50
+    },
+    {
+     "id": "r4c2p6reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    }
+   ],
+   "fingerprint": "ea6cf46cfc49e2b8",
+   "text": "dichiarazione relativa alla notifica di cui all'art. 67 del D.Lgs n. 81/2008 non è soggetto alla notifica di cui all'articolo 67 del D.Lgs. 09/04/2008, n. 81, in quanto si prevede l'impiego e la presenza di un numero di lavoratori pari o inferiore a 3 (tre); è soggetto alla notifica di cui all'articolo 67 del D.Lgs. 09/04/2008, n. 81, in quanto si prevede l'impiego e la presenza di un numero di lavoratori superiore a 3 (tre) presentata all'AUlss di in data",
+   "branches": [
+    {
+     "choice": "non è soggetto alla notifica di cui all'articolo 67 del D.Lgs. 09/04/2008, n. 81, in quanto si prevede l'impiego e la presenza di un numero di lavoratori pari o",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "è soggetto alla notifica di cui all'articolo 67 del D.Lgs. 09/04/2008, n. 81, in quanto si prevede l'impiego e la presenza di un numero di lavoratori superiore ",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione per emissioni in atmosfera (tintolavanderia)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "le emissioni in atmosfera prodotte possono essere considerate \"emissioni scarsamente rilevanti agli effetti dell'inquinamento atmosferico\", ai sensi dell'art. 2",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "come da Comunicazione (di ricadere in tale elenco) trasmessa alla Provincia di",
+     "max": 30
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "prot. n°",
+     "max": 10
+    },
+    {
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "le emissioni in atmosfera prodotte possono essere considerate \"emissioni a ridotto inquinamento atmosferico\" ai sensi dell'articolo 272, comma 2 del D.Lgs. 3 ap",
+     "group": "r4c1p8reg:radio"
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "come da Autorizzazione rilasciata dalla Provincia di (indicare gli estremi di adesione all'autorizzazione generale ovvero dell'autorizzazione)",
+     "max": 30
+    },
+    {
+     "id": "r6c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r6c3p14reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "max": 20
+    },
+    {
+     "id": "r7c1p15reg:radio:2_clone",
+     "kind": "radio",
+     "label": "(ovvero) non si producono emissioni in atmosfera",
+     "group": "r7c1p15reg:radio"
+    }
+   ],
+   "fingerprint": "ff16e12e3903890a",
+   "text": "dichiarazione per emissioni in atmosfera (tintolavanderia) le emissioni in atmosfera prodotte possono essere considerate \"emissioni scarsamente rilevanti agli effetti dell'inquinamento atmosferico\", ai sensi dell'art. 272, commi 1 e 5 del D. Lgs n. 152/2006; (elenco degli impianti o delle attività elencati nella parte I dell'allegato IV alla parte quinta del decreto) come da Comunicazione (di ricadere in tale elenco) trasmessa alla Provincia di in data prot. n° le emissioni in atmosfera prodotte possono essere considerate \"emissioni a ridotto inquinamento atmosferico\" ai sensi dell'articolo 272, comma 2 del D.Lgs. 3 aprile 2006, n. 152; (elenco degli impianti o delle attività elencati nella parte II dell'allegato IV alla parte quinta del decreto) come da Autorizzazione rilasciata dalla Provincia di (indicare gli estremi di adesione all'autorizzazione generale ovvero dell'autorizzazione) in data numero (ovvero) non si producono emissioni in atmosfera",
+   "branches": [
+    {
+     "choice": "le emissioni in atmosfera prodotte possono essere considerate \"emissioni scarsamente rilevanti agli effetti dell'inquinamento atmosferico\", ai sensi dell'art. 2",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r6c2p12reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "le emissioni in atmosfera prodotte possono essere considerate \"emissioni a ridotto inquinamento atmosferico\" ai sensi dell'articolo 272, comma 2 del D.Lgs. 3 ap",
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r6c2p12reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "(ovvero) non si producono emissioni in atmosfera",
+     "id": "r7c1p15reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r6c2p12reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 2.8
+  },
+  {
+   "section": "dichiarazione relativa agli scarichi (tintolavanderia)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "le acque reflue originate hanno caratteristiche qualitative assimilabili alle acque reflue domestiche ai sensi del D.Lgs. n. 152/2006 e l'impianto fognario e l'"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "le acque reflue originate hanno le caratteristiche qualitative di acque reflue industriali ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta a"
+    },
+    {
+     "id": "r5c1p5reg:txt",
+     "kind": "text",
+     "label": "autorizzazione rilasciata da (specificare)",
+     "max": 50
+    },
+    {
+     "id": "r5c2p7reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r5c3p9reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "max": 20
+    },
+    {
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "le acque reflue originate hanno caratteristiche qualitative assimilabili alle acque reflue domestiche ai sensi del D.Lgs. n. 152/2006 e si è in possesso della p"
+    },
+    {
+     "id": "r9c1p13reg:txt",
+     "kind": "text",
+     "label": "autorizzazione rilasciata dalla Provincia di",
+     "max": 50
+    },
+    {
+     "id": "r9c2p15reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r9c3p17reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "max": 20
+    },
+    {
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "le acque reflue originate hanno le caratteristiche qualitative di acque reflue industriali ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta a"
+    },
+    {
+     "id": "r12c1p20reg:txt",
+     "kind": "text",
+     "label": "autorizzazione rilasciata dalla Provincia di",
+     "max": 50
+    },
+    {
+     "id": "r12c2p22reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r12c3p24reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "max": 20
+    }
+   ],
+   "fingerprint": "28c87e9cb42f996e",
+   "text": "dichiarazione relativa agli scarichi (tintolavanderia) PER SCARICHI IN PUBBLICA FOGNATURA: le acque reflue originate hanno caratteristiche qualitative assimilabili alle acque reflue domestiche ai sensi del D.Lgs. n. 152/2006 e l'impianto fognario e l'allacciamento alla pubblica fognatura è stato realizzato a norma delle vigenti disposizioni e del vigente regolamento degli scarichi dell'Ente gestore le acque reflue originate hanno le caratteristiche qualitative di acque reflue industriali ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta autorizzazione allo scarico/A.U.A autorizzazione rilasciata da (specificare) in data numero PER SCARICHI FUORI FOGNATURA: le acque reflue originate hanno caratteristiche qualitative assimilabili alle acque reflue domestiche ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta autorizzazione allo scarico/A.U.A. autorizzazione rilasciata dalla Provincia di in data numero le acque reflue originate hanno le caratteristiche qualitative di acque reflue industriali ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta autorizzazione allo scarico/A.U.A. autorizzazione rilasciata dalla Provincia di in data numero",
+   "branches": [
+    {
+     "choice": "le acque reflue originate hanno caratteristiche qualitative assimilabili alle acque reflue domestiche ai sensi del D.Lgs. n. 152/2006 e l'impianto fognario e l'",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r7c1p11reg:chk",
+       "r2c1p2reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r3c1p3reg:chk"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r5c2p7reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r5c3p9reg:txt"
+      ],
+      [
+       "r12c1p20reg:txt",
+       "r9c1p13reg:txt"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r9c2p15reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r9c3p17reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "le acque reflue originate hanno le caratteristiche qualitative di acque reflue industriali ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta a",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r7c1p11reg:chk",
+       "r2c1p2reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r3c1p3reg:chk"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r5c2p7reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r5c3p9reg:txt"
+      ],
+      [
+       "r12c1p20reg:txt",
+       "r9c1p13reg:txt"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r9c2p15reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r9c3p17reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "le acque reflue originate hanno caratteristiche qualitative assimilabili alle acque reflue domestiche ai sensi del D.Lgs. n. 152/2006 e si è in possesso della p",
+     "id": "r7c1p11reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r7c1p11reg:chk",
+       "r2c1p2reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r3c1p3reg:chk"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r5c2p7reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r5c3p9reg:txt"
+      ],
+      [
+       "r12c1p20reg:txt",
+       "r9c1p13reg:txt"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r9c2p15reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r9c3p17reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "le acque reflue originate hanno le caratteristiche qualitative di acque reflue industriali ai sensi del D.Lgs. n. 152/2006 e si è in possesso della prescritta a",
+     "id": "r10c1p18reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r7c1p11reg:chk",
+       "r2c1p2reg:chk"
+      ],
+      [
+       "r10c1p18reg:chk",
+       "r3c1p3reg:chk"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r5c2p7reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r5c3p9reg:txt"
+      ],
+      [
+       "r12c1p20reg:txt",
+       "r9c1p13reg:txt"
+      ],
+      [
+       "r12c2p22reg:calendar_input",
+       "r9c2p15reg:calendar_input"
+      ],
+      [
+       "r12c3p24reg:txt",
+       "r9c3p17reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 3.6
+  },
+  {
+   "section": "dichiarazione per industrie insalubri",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "l'attività non rientra tra quelle classificate insalubri di 2 classe di cui al punto c/9 del D.M. 5 settembre(*)",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "trattasi di attività classificata insalubre di 2 classe di cui al punto c/9 del D.M. 5 settembre",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:txt",
+     "kind": "text",
+     "label": "come da COMUNICAZIONE PER ATTIVAZIONE INDUSTRIE INSALUBRI** trasmessa al Comune di",
+     "max": 50
+    },
+    {
+     "id": "r6c1p6reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r6c2p8reg:txt",
+     "kind": "text",
+     "label": "prot. n°",
+     "max": 15
+    }
+   ],
+   "fingerprint": "ff529e3ac9e59ae5",
+   "text": "dichiarazione per industrie insalubri l'attività non rientra tra quelle classificate insalubri di 2 classe di cui al punto c/9 del D.M. 5 settembre(*) trattasi di attività classificata insalubre di 2 classe di cui al punto c/9 del D.M. 5 settembre come da COMUNICAZIONE PER ATTIVAZIONE INDUSTRIE INSALUBRI** trasmessa al Comune di in data prot. n° ** da presentare al Comune competente per territorio almeno 15 gg. prima dell'inizio dell'attività",
+   "branches": [
+    {
+     "choice": "l'attività non rientra tra quelle classificate insalubri di 2 classe di cui al punto c/9 del D.M. 5 settembre(*)",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "trattasi di attività classificata insalubre di 2 classe di cui al punto c/9 del D.M. 5 settembre",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione relativa alla tipologia dell'esercizio di tintolavanderia",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "ad acqua"
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "fonte approvvigionamento idrico (specificare)",
+     "context": "ad acqua",
+     "max": 50
+    },
+    {
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "a secco"
+    },
+    {
+     "id": "r3c2p6reg:chk",
+     "kind": "checkbox",
+     "label": "a ciclo aperto"
+    },
+    {
+     "id": "r3c3p7reg:chk",
+     "kind": "checkbox",
+     "label": "a ciclo chiuso"
+    }
+   ],
+   "fingerprint": "2a97cc69c94d6307",
+   "text": "dichiarazione relativa alla tipologia dell'esercizio di tintolavanderia fonte approvvigionamento idrico (specificare) ad acqua a secco a ciclo aperto a ciclo chiuso",
+   "branches": [
+    {
+     "choice": "ad acqua",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "a secco",
+     "id": "r3c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "a ciclo aperto",
+     "id": "r3c2p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "a ciclo chiuso",
+     "id": "r3c3p7reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 3.3
+  },
+  {
+   "section": "dichiarazione materiali e prodotti chimici utilizzati",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "denominazione commerciale",
+     "max": 50
+    },
+    {
+     "id": "r2c2p4reg:txt",
+     "kind": "text",
+     "label": "denominazione chimica",
+     "max": 50
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "quantità giornaliera media",
+     "max": 30
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "quantità annua media",
+     "max": 30
+    }
+   ],
+   "fingerprint": "60f06d9de781f337",
+   "text": "dichiarazione materiali e prodotti chimici utilizzati denominazione commerciale denominazione chimica quantità giornaliera media quantità annua media",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione rifiuti prodotti",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "denominazione",
+     "max": 50
+    },
+    {
+     "id": "r2c2p4reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "modalità smaltimento",
+     "max": 200
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "quantità giornaliera media",
+     "max": 30
+    },
+    {
+     "id": "r4c2p8reg:txt",
+     "kind": "text",
+     "label": "quantità annua media",
+     "max": 30
+    }
+   ],
+   "fingerprint": "8dad463a7b383f4c",
+   "text": "dichiarazione rifiuti prodotti denominazione modalità smaltimento 200 Caratteri restanti quantità giornaliera media quantità annua media",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione ciclo produttivo",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txta",
+     "kind": "textarea",
+     "label": "500 Caratteri restanti",
+     "context": "descrivere nel dettaglio l'attività svolta e i servizi resi",
+     "max": 500
+    }
+   ],
+   "fingerprint": "7ea900a692c1a339",
+   "text": "dichiarazione ciclo produttivo descrivere nel dettaglio l'attività svolta e i servizi resi 500 Caratteri restanti",
+   "branches": [],
+   "seconds": 0.7
+  },
+  {
+   "section": "designazione del responsanile tecnico (Tintolavanderia)",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "nel caso di impresa artigiana",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "il titolare dell'impresa",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r2c2p3reg:radio:2_clone",
+     "kind": "radio",
+     "label": "un socio partecipante al lavoro",
+     "group": "r2c2p3reg:radio"
+    },
+    {
+     "id": "r3c1p4reg:radio:3_clone",
+     "kind": "radio",
+     "label": "nel caso di impresa non artigiana",
+     "group": "r3c1p4reg:radio"
+    },
+    {
+     "id": "r4c1p5reg:radio:4_clone",
+     "kind": "radio",
+     "label": "un dipendente",
+     "group": "r4c1p5reg:radio"
+    },
+    {
+     "id": "r4c2p6reg:radio:5_clone",
+     "kind": "radio",
+     "label": "addetto dell'impresa",
+     "group": "r4c2p6reg:radio"
+    },
+    {
+     "id": "r4c3p7reg:radio:6_clone",
+     "kind": "radio",
+     "label": "un familiare coadiuvante",
+     "group": "r4c3p7reg:radio"
+    },
+    {
+     "id": "r7c1p10reg:txt",
+     "kind": "text",
+     "label": "cognome",
+     "max": 50
+    },
+    {
+     "id": "r7c2p12reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 50
+    }
+   ],
+   "fingerprint": "438c5f9cfabde8b7",
+   "text": "designazione del responsanile tecnico (Tintolavanderia) nel caso di impresa artigiana il titolare dell'impresa un socio partecipante al lavoro nel caso di impresa non artigiana un dipendente addetto dell'impresa un familiare coadiuvante identificazione del responsabile tecnico (per ogni sede dell'impresa dove viene esercitata l'attività deve essere designato almeno un responsabile tecnico in possesso dell'idoneità professionale che svolga prevalentemente e professionalmente la propria attività nella sede indicata. Nel caso di variazione dell'unico responsabile tecnico designato, l'attività deve essere sospesa e può essere ripresa soltanto dopo la segnalazione certificata del nuovo nominativo al Comune): cognome nome N.B. Nel concetto di \"dipendente dell'impresa\" rientrano i seguenti contratti: contratto di lavoro subordinato (a tempo indeterminato o determinato); contratto di apprendistato; contratto di lavoro ripartito; contratto di lavoro intermittente; contratto di lavoro a tempo parziale; contratto di associazione in partecipazione (con apporto di solo lavoro e partecipazione effettiva agli utili di almeno il 30%). Per i contratti di lavoro di tipo intermittente e a tempo parziale il periodo di apertura dell'esercizio deve essere coperto con la designazione di più responsabili tecnici. Nel concetto di \"addetto dell'impresa\" rientrano i seguenti contratti: co. co. pro., contratto di somministrazione e procura institoria",
+   "branches": [
+    {
+     "choice": "nel caso di impresa artigiana",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "il titolare dell'impresa",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "un socio partecipante al lavoro",
+     "id": "r2c2p3reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "nel caso di impresa non artigiana",
+     "id": "r3c1p4reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "un dipendente",
+     "id": "r4c1p5reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "addetto dell'impresa",
+     "id": "r4c2p6reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "un familiare coadiuvante",
+     "id": "r4c3p7reg:radio:6_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "cognome",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 8.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione di possesso idoneità professionale per tintolavanderia da parte del responsabile tecnico titolare/socio partecipante",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "a) Attestato di partecipazione al corso di qualificazione tecnico-professionale per l'esercizio dell'attività di tintolavanderia della durata di almeno 450 ore ",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "rilasciato dall'Ente di formazione (specificare)",
+     "max": 30
+    },
+    {
+     "id": "r3c2p5reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "attestato n°",
+     "max": 20
+    },
+    {
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "label": "b) Attestato di qualifica in materia attinente l'attività conseguito ai sensi della legislazione vigente in materia di formazione professionale, integrato da un",
+     "group": "r4c1p8reg:radio"
+    },
+    {
+     "id": "r6c1p10reg:txt",
+     "kind": "text",
+     "label": "rilasciato dall'Istituto (specificare)",
+     "max": 30
+    },
+    {
+     "id": "r8c1p14reg:txt",
+     "kind": "text",
+     "label": "con sede in",
+     "max": 50
+    },
+    {
+     "id": "r8c2p16reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    },
+    {
+     "id": "r9c1p17reg:radio:2_clone",
+     "kind": "radio",
+     "label": "c) Diploma di maturità tecnica o professionale o di livello post-secondario superiore o universitario, in materie inerenti l'attività (vedi ALLEGATO B)",
+     "group": "r9c1p17reg:radio"
+    },
+    {
+     "id": "r10c1p18reg:radio:3_clone",
+     "kind": "radio",
+     "label": "d) Periodo di inserimento presso imprese del settore non inferiore a:",
+     "group": "r10c1p18reg:radio"
+    },
+    {
+     "id": "r11c1p19reg:radio:4_clone",
+     "kind": "radio",
+     "label": "un anno, se preceduto dallo svolgimento di un rapporto di apprendistato della durata prevista dalla contrattazione collettiva",
+     "group": "r11c1p19reg:radio"
+    },
+    {
+     "id": "r12c1p20reg:radio:5_clone",
+     "kind": "radio",
+     "label": "due anni in qualità di titolare, di socio partecipante al lavoro o di collaboratore familiare degli stessi",
+     "group": "r12c1p20reg:radio"
+    },
+    {
+     "id": "r13c1p21reg:radio:6_clone",
+     "kind": "radio",
+     "label": "tre anni, anche non consecutivi ma comunque nell'arco di cinque anni, nei casi di attività lavorativa subordinata",
+     "group": "r13c1p21reg:radio"
+    }
+   ],
+   "fingerprint": "3c2950b8d624ad5f",
+   "text": "dichiarazione di possesso idoneità professionale per tintolavanderia da parte del responsabile tecnico titolare/socio partecipante a) Attestato di partecipazione al corso di qualificazione tecnico-professionale per l'esercizio dell'attività di tintolavanderia della durata di almeno 450 ore complessive da svolgersi nell'arco di un anno rilasciato dall'Ente di formazione (specificare) in data attestato n° b) Attestato di qualifica in materia attinente l'attività conseguito ai sensi della legislazione vigente in materia di formazione professionale, integrato da un periodo di inserimento della durata di almeno un anno presso imprese del settore, da effettuare nell'arco di tre anni dal conseguimento dell'attestato rilasciato dall'Istituto (specificare) con sede in in data c) Diploma di maturità tecnica o professionale o di livello post-secondario superiore o universitario, in materie inerenti l'attività (vedi ALLEGATO B) d) Periodo di inserimento presso imprese del settore non inferiore a: un anno, se preceduto dallo svolgimento di un rapporto di apprendistato della durata prevista dalla contrattazione collettiva due anni in qualità di titolare, di socio partecipante al lavoro o di collaboratore familiare degli stessi tre anni, anche non consecutivi ma comunque nell'arco di cinque anni, nei casi di attività lavorativa subordinata Il periodo di inserimento di cui le lettere b) e d) consiste nello svolgimento di attività qualificata di collaborazione tecnica continuativa nell'ambito di imprese abilitate del settore. Per attività qualificata deve intendersi il lavoro svolto nella qualifica acquisita tramite la qualificazione conseguente al periodo di apprendistato (con inquadramento non inferiore al II° livello del CCNL di settore). Inoltre il soggetto deve svolgere mansioni tecniche e non impiegatizie L'esperienza professionale di cui sopra è provata tramite i seguenti documenti. Il dichiarante dovrà allegare alla SCIA esclusivamente i documenti che non sono acquisibili d'ufficio (buste paga, CUD, contratto di lavoro/apprendistato, dichiarazione sostitutiva, ecc.): a.\\\\tLavoratore dipendente (a tempo indeterminato o determinato)-copia ultima busta paga (di ogni singolo rapporto di lavoro)-copia comunicazione/i obbligatoria/e di assunzione al CPI o estratto riassuntivo delle comunicazioni obbligatorie rilasciato dal CPI-copia CUD-visura previdenziale dei versamenti effettuati; b.Contratto di apprendistato; contratto di lavoro ripartito; contratto di lavoro intermittente; contratto di lavoro a tempo parziale; contratto di somministrazione-copia contratto/i di lavoro-copia comunicazione/i obbligatoria/e di assunzione al CPI o estratto riassuntivo delle comunicazioni obbligatorie rilasciato dal CPI-visura previdenziale dei versamenti effettuati-per coloro ai quali il periodo di apprendistato è ridotto di 6 mesi, copia del titolo di studio post-laurea o di un titolo di studio post-obbligo o di una laurea riconducibile alla qualifica da raggiungere; c. Socio ",
+   "branches": [
+    {
+     "choice": "a) Attestato di partecipazione al corso di qualificazione tecnico-professionale per l'esercizio dell'attività di tintolavanderia della durata di almeno 450 ore ",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "b) Attestato di qualifica in materia attinente l'attività conseguito ai sensi della legislazione vigente in materia di formazione professionale, integrato da un",
+     "id": "r4c1p8reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "c) Diploma di maturità tecnica o professionale o di livello post-secondario superiore o universitario, in materie inerenti l'attività (vedi ALLEGATO B)",
+     "id": "r9c1p17reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "d) Periodo di inserimento presso imprese del settore non inferiore a:",
+     "id": "r10c1p18reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "un anno, se preceduto dallo svolgimento di un rapporto di apprendistato della durata prevista dalla contrattazione collettiva",
+     "id": "r11c1p19reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "due anni in qualità di titolare, di socio partecipante al lavoro o di collaboratore familiare degli stessi",
+     "id": "r12c1p20reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "tre anni, anche non consecutivi ma comunque nell'arco di cinque anni, nei casi di attività lavorativa subordinata",
+     "id": "r13c1p21reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r8c2p16reg:calendar_input",
+       "r3c2p5reg:calendar_input"
+      ]
+     ]
+    }
+   ],
+   "seconds": 5.8,
+   "scelta": "il dichiarante è responsabile tecnico nonché titolare o socio partecipante dell'impresa"
+  }
+ ]
+}

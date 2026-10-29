@@ -1,0 +1,441 @@
+{
+ "crawled": "2026-10-28T21:40:02.649Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: Avvio, gestione, cessazione attività › Aprire l'attività (sector Panificio)",
+ "seconds": 102,
+ "generated": {
+  "interventi": "Segnalazione Certificata di Inizio Attività di Panificazione",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per apertura attività di Panificazione",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+    "amministrazione": "ASL Napoli 1 Centro"
+   },
+   {
+    "adempimento": "SCIA per installazione insegna di esercizio",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "dati catastali",
+   "dati relativi all'attività",
+   "dichiarazione relativa al direttore dei lavori",
+   "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "luogo dell'installazione",
+   "ulteriori dichiarazioni (mezzi pubblicitari)",
+   "Altre dichiarazioni",
+   "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "Caratteristiche del manufatto da installare",
+   "dichiarazione relativa all'installazione",
+   "dichiarazione relativa alla redazione del progetto",
+   "DICHIARAZIONE RELATIVA AI TITOLI ABILITANTI DELL'ATTIVITA' COMMERCIALE",
+   "notifica avvio e inizio attività",
+   "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "in caso di attività che preveda insegna esterna (dove è prevista la SCIA)",
+     "selected": true
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "Trattasi di ente del Terzo settore o associazione di volontariato (Art. 1 co.6 Dlgs 32/2021)"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso",
+   "type": "intervento",
+   "adds": [
+    "SCIA VV.F. - intestazione",
+    "SCIA VV.F. - SEGNALAZIONE CERTIFICATA DI INIZIO ATTIVITA' AI FINI DELLA SICUREZZA ANTINCENDIO",
+    "SCIA VV.F. - dichiarazioni",
+    "INFORMAZIONE AI SOLI FINI STATISTICI",
+    "SCIA VV.F. - distinta di versamento",
+    "SCIA VV.F.  - dati per la corrispondenza",
+    "SCIA VV.F. - dati del delegato",
+    "ASSEVERAZIONE DEL PROFESSIONISTA AI FINI DELLA SICUREZZA ANTINCENDIO (art. 4 del Decreto del Ministro dell'Interno 7.8.2012)",
+    "DISTINTA DELLA DOCUMENTAZIONE TECNICA ALLEGATA"
+   ],
+   "drops": [],
+   "adempimenti": [
+    {
+     "adempimento": "SCIA per apertura attività di Panificazione",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    },
+    {
+     "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+     "amministrazione": "ASL Napoli 1 Centro"
+    },
+    {
+     "adempimento": "SCIA per installazione insegna di esercizio",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    },
+    {
+     "adempimento": "SCIA per attività soggette ai controlli di prevenzione incendi",
+     "amministrazione": "Comando dei Vigili del Fuoco - PRINCE"
+    }
+   ]
+  },
+  {
+   "option": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg",
+   "type": "intervento",
+   "adds": [
+    "tipologie attività autorizzazione generale (Allegato IV Parte II alla Parte Quinta)",
+    "ulteriori dichiarazioni",
+    "dichiarazione relativa all'oggetto dell'adesione",
+    "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+   ],
+   "drops": [],
+   "adempimenti": [
+    {
+     "adempimento": "SCIA per apertura attività di Panificazione",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    },
+    {
+     "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+     "amministrazione": "ASL Napoli 1 Centro"
+    },
+    {
+     "adempimento": "SCIA per installazione insegna di esercizio",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    },
+    {
+     "adempimento": "Domanda di adesione all'autorizzazione di carattere generale (attività in deroga di cui all'art. 272 comma 2 del D.Lgs. 3 aprile 2006 n. 152",
+     "amministrazione": "Regione Campania - (UOD) Unità Operativa Dirigenziale Autorizzazioni ambientali e rifiuti Napoli"
+    }
+   ]
+  },
+  {
+   "option": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi",
+   "type": "intervento",
+   "adds": [
+    "dichiarazione relativa all'imposta di bollo"
+   ],
+   "drops": [],
+   "adempimenti": [
+    {
+     "adempimento": "SCIA per apertura attività di Panificazione",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    },
+    {
+     "adempimento": "Richiesta di autorizzazione in deroga nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    },
+    {
+     "adempimento": "Notifica ai fini della registrazione ai sensi dell'art. 6 del Regolamento CE n. 852/2004",
+     "amministrazione": "ASL Napoli 1 Centro"
+    },
+    {
+     "adempimento": "SCIA per installazione insegna di esercizio",
+     "amministrazione": "UFFICI COMUNE DI NAPOLI"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.4
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.5
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.7
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.8
+  },
+  {
+   "section": "dati relativi all'attività",
+   "fingerprint": "585e5bbd22adcbf0",
+   "same_as": "suap-004-aprire-l-attivita#dati relativi all'attività",
+   "seconds": 1.6
+  },
+  {
+   "section": "dichiarazione relativa al direttore dei lavori",
+   "fingerprint": "9f7b0522fce10de1",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#dichiarazione relativa al direttore dei lavori",
+   "seconds": 2.5
+  },
+  {
+   "section": "DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "fingerprint": "94e8127ec5d86ea6",
+   "same_as": "suap-004-aprire-l-attivita#DICHIARAZIONI SUL POSSESSO DEI REQUISITI ANTIMAFIA E TECNICI",
+   "seconds": 1.9
+  },
+  {
+   "section": "luogo dell'installazione",
+   "fingerprint": "2cdf7be2ed346864",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#luogo dell'installazione",
+   "seconds": 2.1
+  },
+  {
+   "section": "ulteriori dichiarazioni (mezzi pubblicitari)",
+   "fingerprint": "6ecaf13447de5189",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#ulteriori dichiarazioni (mezzi pubblicitari)",
+   "seconds": 1.9
+  },
+  {
+   "section": "Altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione ai sensi dell' art. 75 del d.P.R. n° 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Caratteristiche del manufatto da installare",
+   "fingerprint": "995629c7e1e2c532",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#Caratteristiche del manufatto da installare",
+   "seconds": 2.1
+  },
+  {
+   "section": "dichiarazione relativa all'installazione",
+   "fingerprint": "4709f4b0b08d8ac5",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#dichiarazione relativa all'installazione",
+   "seconds": 1.9
+  },
+  {
+   "section": "dichiarazione relativa alla redazione del progetto",
+   "fingerprint": "7b4724c51fa7c089",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#dichiarazione relativa alla redazione del progetto",
+   "seconds": 0.9
+  },
+  {
+   "section": "DICHIARAZIONE RELATIVA AI TITOLI ABILITANTI DELL'ATTIVITA' COMMERCIALE",
+   "fingerprint": "ba7fdc60e6ecedac",
+   "same_as": "suap-common-occupazione-suolo-pubblico-subingresso-alla-concessione-per#dichiarazione relativa ai titoli abilitanti",
+   "seconds": 2.2
+  },
+  {
+   "section": "notifica avvio e inizio attività",
+   "fingerprint": "a8d63774ff52277d",
+   "same_as": "suap-060-aprire-l-attivita#notifica avvio e inizio attività",
+   "seconds": 2.3
+  },
+  {
+   "section": "tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "fingerprint": "d3161a8066ba1f9f",
+   "same_as": "suap-060-aprire-l-attivita#tipologia di attività ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazioni ai sensi dell'art. 6, Reg. CE n. 852/2004",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.4
+  },
+  {
+   "section": "SCIA VV.F. - intestazione",
+   "fingerprint": "c7feb9eebcab49f1",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - intestazione",
+   "seconds": 1.6,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "SCIA VV.F. - SEGNALAZIONE CERTIFICATA DI INIZIO ATTIVITA' AI FINI DELLA SICUREZZA ANTINCENDIO",
+   "fingerprint": "3f2cb10c247b4302",
+   "same_as": "suap-common-prevenzione-incendi-pin-2-segnalazione-certificata-di-inizio#SCIA VV.F. - SEGNALAZIONE CERTIFICATA DI INIZIO ATTIVITA' AI FINI DELLA SICUREZZA ANTINCENDIO",
+   "seconds": 1.3,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "SCIA VV.F. - dichiarazioni",
+   "fingerprint": "c7455a3d47caeecc",
+   "same_as": "suap-common-prevenzione-incendi-pin-2-segnalazione-certificata-di-inizio#SCIA VV.F. - dichiarazioni",
+   "seconds": 1.2,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "INFORMAZIONE AI SOLI FINI STATISTICI",
+   "fingerprint": "8dabd9a5d4f2bef9",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#INFORMAZIONE AI SOLI FINI STATISTICI",
+   "seconds": 1.9,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "SCIA VV.F. - distinta di versamento",
+   "fingerprint": "1ccff59a643beadc",
+   "same_as": "suap-common-prevenzione-incendi-pin-2-segnalazione-certificata-di-inizio#SCIA VV.F. - distinta di versamento",
+   "seconds": 2,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "SCIA VV.F.  - dati per la corrispondenza",
+   "fingerprint": "572a85fbc3ea16c6",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati per la corrispondenza",
+   "seconds": 2,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "SCIA VV.F. - dati del delegato",
+   "fingerprint": "ac3b7a8792f93e89",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati del delegato",
+   "seconds": 2,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "ASSEVERAZIONE DEL PROFESSIONISTA AI FINI DELLA SICUREZZA ANTINCENDIO (art. 4 del Decreto del Ministro dell'Interno 7.8.2012)",
+   "fingerprint": "ab1037f0bc4258c6",
+   "same_as": "suap-common-prevenzione-incendi-pin-2-segnalazione-certificata-di-inizio#ASSEVERAZIONE DEL PROFESSIONISTA AI FINI DELLA SICUREZZA ANTINCENDIO (art. 4 del Decreto del Ministro dell'Interno 7.8.2012)",
+   "seconds": 3,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "DISTINTA DELLA DOCUMENTAZIONE TECNICA ALLEGATA",
+   "fingerprint": "be726d44534f0b94",
+   "same_as": "suap-common-prevenzione-incendi-pin-2-segnalazione-certificata-di-inizio#DISTINTA DELLA DOCUMENTAZIONE TECNICA ALLEGATA",
+   "seconds": 2.6,
+   "scelta": "nel caso di impianti per la produzione di calore con potenzialità superiore a 116 kw o utilizzo di impianti di produzione calore alimentati a combustibile solido, liquido o gassoso"
+  },
+  {
+   "section": "tipologie attività autorizzazione generale (Allegato IV Parte II alla Parte Quinta)",
+   "fingerprint": "36dc3294da7db374",
+   "same_as": "suap-common-emissioni-in-atmosfera-richiesta-di-adesione-all-autorizzazi#tipologie attività autorizzazione generale (Allegato IV Parte II alla Parte Quinta)",
+   "seconds": 1.6,
+   "scelta": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+  },
+  {
+   "section": "ulteriori dichiarazioni",
+   "fingerprint": "6ecaf13447de5189",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#ulteriori dichiarazioni (mezzi pubblicitari)",
+   "seconds": 1.3,
+   "scelta": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+  },
+  {
+   "section": "dichiarazione relativa all'oggetto dell'adesione",
+   "fingerprint": "363f1f641d4978be",
+   "same_as": "suap-common-emissioni-in-atmosfera-richiesta-di-adesione-all-autorizzazi#dichiarazione relativa all'oggetto dell'adesione",
+   "seconds": 0.7,
+   "scelta": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.5,
+   "scelta": "nel caso di panificazione, pasticceria e affini con consumo di farina giornaliero >300 kg e ≤ 1500 kg"
+  },
+  {
+   "section": "dichiarazione relativa all'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.9,
+   "scelta": "nel caso di attività ubicata in locali sotterranei o semisotterranei che non dia luogo a emissioni di agenti nocivi"
+  }
+ ]
+}

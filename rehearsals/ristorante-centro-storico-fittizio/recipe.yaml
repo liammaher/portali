@@ -1,0 +1,62 @@
+# The SUAP's opening of a bar or restaurant in the historic centre (UNESCO zone A or buffer zone
+# B): since the 2026 Piano an authorization, not a SCIA, with the Reg. 852/2004 notifica and the
+# acoustic nulla osta the Piano requires (a wizard "interventi eventuali" tick, its sections from
+# catalogue/F839/sections/suap-060-aprire-l-attivita-interventi.json). gen.py writes its steps
+# file from the batch crawl (catalogue/F839/sections/suap-061-aprire-l-attivita.json), for the
+# pizzeria rehearsal's made-up ditta individuale. The Piano's requirements are facts the person
+# (and their technician's CS 1 and CG 1) confirm; pre-flight refuses a case that misses one.
+procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+title: "Autorizzazione: apertura di un bar o ristorante nelle zone tutelate (centro storico), SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-061-aprire-l-attivita
+subject: impresa
+operation: Aprire l'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Esercizio di somministrazione di alimenti e bevande in zone tutelate], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Aprire l'attività"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, tree: ["richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"], confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+scelte: ["richiede il rilascio del Nulla osta impatto acustico, in caso di utilizzo di impianti di diffusione sonora o di manifestazioni ed eventi con diffusione di musica o utilizzo di strumenti musicali, se si superano le soglie della zonizzazione comunale"]
+groups:
+  extras:
+    question: "Does any of this apply to the business? Tick all that do, or none."
+  piano:
+    question: "The 2026 Piano's requirements for the historic centre: tick each one the premises meet (a technician asserts them in CS 1 and CG 1)."
+asks:
+  altri_soggetti: {group: extras, type: yes_no, item: "It's a company with other partners or administrators besides the one who declares", why: "Each files a signed antimafia statement of their own (art. 85 D.Lgs. 159/2011), not mapped yet."}
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - centro storico {{business.denominazione}}"}
+  accessibile: {group: piano, type: yes_no, item: "The premises are accessible to people with disabilities"}
+  sicurezza: {group: piano, type: yes_no, item: "There's a security system (CCTV, alarm or passive systems)"}
+  punteggio: {group: piano, type: yes_no, item: "The technician's CG 1 reaches the minimum management score of the premises' zone and area (the Comune's street list)"}
+  alcolici: {group: extras, type: yes_no, item: "It will sell alcoholic drinks", why: "Alcohol and the nulla osta together aren't crawled yet."}
+  insegna_esterna: {group: extras, type: yes_no, item: "It will have a sign outside", why: "An outside sign bundles the insegna's SCIA into this one, a branch not mapped yet."}
+  diritti_euro: {type: number, question: "The SUAP fees in euro (the 2026 table's protected-zone lines S74-S76: with the notifica 420, the acoustic nulla osta on top: check it)"}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Have your technician sign CS 1 (structural criteria) and CG 1 (the management score) and the acoustic documents, and attach them with the nota di condivisione"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, Napoli's rules (normative comunali), requisiti di onorabilità e professionali, altre dichiarazioni, art. 6 Reg. 852/2004, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) and the imposta di bollo with pagoPA, and the ASL tariffa forfettaria"
+  - "Sign and send (Firma e invio); don't open before the authorization arrives"
+# Which pratica a case is: the library's rules table (rules/suap-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica or that needs a pratica this one doesn't file.
+rules:
+  table: suap-napoli
+  facts: {attivita: somministrazione, evento: apertura, somministrazione_particolare: false, insegna: "{{ask.insegna_esterna}}"}
+  handles: [napoli/comune/nulla-osta-impatto-acustico, napoli/asl-napoli-1/registrazione-attivita-alimentare]
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale, srl, srls, snc, sas, spa]
+    else: "So far for a ditta individuale or an srl, srls, snc, sas or spa."
+  - {when: "{{ask.altri_soggetti|not}}", else: "Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet."}
+  - {when: "{{ask.superficie_somministrazione_mq|atleast_20}}", else: "The Piano requires at least 20 m² where customers eat and drink in the historic centre (art. 7): the authorization would be refused."}
+  - {when: "{{ask.accessibile}} {{ask.sicurezza}} {{ask.punteggio}}", else: "The Piano's requirements (accessibility, a security system, the area's minimum score) must all be met (artt. 7, 9, 12): the authorization would be refused."}
+  - {when: "{{ask.ristorazione}}", else: "So far only a bar or restaurant: the notifica's other activity lines aren't mapped."}
+  - {when: "{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}", else: "A bar or restaurant that also bakes or runs a food shop isn't supported yet."}

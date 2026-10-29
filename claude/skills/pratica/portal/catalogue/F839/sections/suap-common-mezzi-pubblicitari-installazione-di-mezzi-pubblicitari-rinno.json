@@ -1,0 +1,258 @@
+{
+ "crawled": "2026-10-28T20:08:59.648Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › Rinnovo pubblicità effettuata su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni ed altre strutture di servizio e di pertinenza (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 24.3,
+ "generated": {
+  "interventi": "Rinnovo pubblicità effettuata su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni, ed altre strutture di servizio e di pertinenza",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA di di rinnovo pubblicità effettuata su teli collegati a facciate di palazzi e monumenti, su ponteggi di cantiere, recinzioni ed altre strutture di servizio e di pertinenza",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "ubicazione dell'attività",
+   "oggetto della segnalazione",
+   "altre dichiarazioni",
+   "messaggio pubblicitario",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    },
+    {
+     "label": "",
+     "checked": false
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "in caso di immobile vincolato ex art. 49 del D.lgs 42/2004"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "in caso di rinnovo con cambio del messaggio pubblicitario"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "in presenza di soggetti (es. soci) diversi dal dichiarante (Dichiarazioni sul possesso dei requisiti da parte degli altri soci)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "in caso di immobile vincolato ex art. 49 del D.lgs 42/2004",
+   "type": "CHK",
+   "adds": [
+    "autorizzazione al cambio messaggio rilasciata dalla Soprintendenza"
+   ],
+   "drops": []
+  },
+  {
+   "option": "in caso di rinnovo con cambio del messaggio pubblicitario",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "ubicazione dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.6
+  },
+  {
+   "section": "oggetto della segnalazione",
+   "fields": [
+    {
+     "id": "r3c1p4reg:calendar_input",
+     "kind": "date",
+     "label": "per il periodo dal"
+    },
+    {
+     "id": "r3c2p6reg:calendar_input",
+     "kind": "date",
+     "label": "al"
+    },
+    {
+     "id": "r5c1p10reg:txt",
+     "kind": "text",
+     "label": "dell'autorizzazione o della precedente SCIA per rinnovo n.",
+     "max": 30
+    },
+    {
+     "id": "r5c2p12reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r7c1p14reg:calendar_input",
+     "kind": "date",
+     "label": "inserire ultima scadenza",
+     "context": "la cui ultima scadenza è prevista il"
+    },
+    {
+     "id": "r9c1p18reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r9c1p18reg:radio"
+    },
+    {
+     "id": "r9c2p19reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r9c2p19reg:radio"
+    }
+   ],
+   "fingerprint": "579bf7be96ed8247",
+   "text": "oggetto della segnalazione Il/la sottoscritto/a SEGNALA il RINNOVO: per il periodo dal al dell'autorizzazione o della precedente SCIA per rinnovo n. del la cui ultima scadenza è prevista il i ponteggi di servizio e/o le recinzioni di cantiere insistono su suolo pubblico? Si No N.B. La S.C.I.A. per il rinnovo dell'autorizzazione all'esposizione pubblicitaria deve essere inoltrata almeno 5 giorni lavorativi prima della scadenza dell'autorizzazione o della scadenza del periodo indicato nella precedente S.C.I.A. pena l'inefficacia della stessa.",
+   "branches": [
+    {
+     "choice": "Si",
+     "id": "r9c1p18reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p22reg:txt",
+       "kind": "text",
+       "label": "N° concessione suolo pubblico",
+       "max": 30
+      },
+      {
+       "id": "r13c1p28reg:txt",
+       "kind": "text",
+       "label": "rilasciata da",
+       "max": 80
+      },
+      {
+       "id": "r13c2p30reg:calendar_input",
+       "kind": "date",
+       "label": "con scadenza"
+      }
+     ],
+     "moved": [
+      [
+       "r5c2p12reg:calendar_input",
+       "r11c2p24reg:calendar_input"
+      ]
+     ]
+    },
+    {
+     "choice": "No",
+     "id": "r9c2p19reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2.6
+  },
+  {
+   "section": "altre dichiarazioni",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "messaggio pubblicitario",
+   "fingerprint": "f0f8fd9aa6b1c4b1",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-richi#dichiarazione relativa al messaggio pubblicitario",
+   "seconds": 0.8
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.7
+  },
+  {
+   "section": "autorizzazione al cambio messaggio rilasciata dalla Soprintendenza",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "n.",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "in data"
+    }
+   ],
+   "fingerprint": "0ec7aae1000103f4",
+   "text": "autorizzazione al cambio messaggio rilasciata dalla Soprintendenza n. in data",
+   "branches": [],
+   "seconds": 1,
+   "scelta": "in caso di immobile vincolato ex art. 49 del D.lgs 42/2004"
+  }
+ ]
+}

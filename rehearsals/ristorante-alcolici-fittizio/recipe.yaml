@@ -1,0 +1,59 @@
+# The SUAP's opening of a bar or restaurant outside the protected zones that sells alcohol: the
+# SCIA, the Reg. 852/2004 notifica and the Dogane notice, added by the wizard's "interventi
+# eventuali" tick (its sections from catalogue/F839/sections/suap-060-aprire-l-attivita-interventi.json),
+# as gen.py writes its steps file from the batch crawl
+# (catalogue/F839/sections/suap-060-aprire-l-attivita.json). Its own sections were drafted
+# by draft.py from two national forms and checked against the pizzeria walk
+# (rehearsals/pizzeria-fittizia), whose made-up business and legal questions it reuses.
+procedure: napoli/comune/scia-somministrazione-alimenti-bevande
+title: "SCIA: apertura di un bar o ristorante con notifica sanitaria e vendita di alcolici, SUAP Napoli"
+comune: F839
+sportello: suap
+crawl: suap-060-aprire-l-attivita
+subject: impresa
+operation: Aprire l'attività
+start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839
+wizard:
+  - screen: Assegna una descrizione alla pratica
+    fill: {css: 'input[placeholder^="Inserire la descrizione"]', value: "{{ask.descrizione}}"}
+    confirm: CONFERMA
+  - {screen: Controlla l'accesso alla pratica, confirm: CONFERMA}
+  - {screen: Scelta settore attività, tree: [Esercizio di somministrazione di alimenti e bevande in zone NON tutelate], confirm: CONFERMA}
+  - {screen: Scelta operazioni, tree: ["Aprire l'attività"], confirm: CONFERMA}
+  - {screen: Scelta interventi eventuali, tree: [in caso di vendita di alcolici], confirm: CONFERMA}
+  - {screen: Scelta del destinatario della pratica, confirm: CONFERMA}
+  - {screen: Scelte eventuali, confirm: CONFERMA}
+scelte: [in caso di vendita di alcolici]
+groups:
+  extras:
+    question: "Does any of this apply to the business? Tick all that do, or none."
+asks:
+  altri_soggetti: {group: extras, type: yes_no, item: "It's a company with other partners or administrators besides the one who declares", why: "Each files a signed antimafia statement of their own (art. 85 D.Lgs. 159/2011), not mapped yet."}
+  descrizione: {type: text, question: "A name for the draft in the portal's Pratiche in bozza", default: "PROVA NON INVIARE - ristorante alcolici {{business.denominazione}}"}
+  zona_tutelata:
+    group: extras
+    type: yes_no
+    item: "It's in the historic centre: the UNESCO area or its buffer zone"
+    why: "Since 25 July 2026 an opening there needs an authorization, not a SCIA, and only the SCIA is mapped."
+  musica: {group: extras, type: yes_no, item: "It will have music or a sound system", why: "Music adds the impatto acustico papers, a branch not mapped yet."}
+  insegna_esterna: {group: extras, type: yes_no, item: "It will have a sign outside", why: "An outside sign bundles the insegna's SCIA into this one, a branch not mapped yet."}
+  diritti_euro: {type: number, question: "The SUAP fees in euro (the 2026 table's line for a bar or restaurant with the notifica sanitaria and alcohol: check it)"}
+  alcol_con_scia: {type: yes_no, question: "Filed with the SCIA", default: "true"}
+  oggetto: {question: "The pratica in one sentence (300 characters)"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the Dogane notice's two statements yourself (no convictions for illegal alcohol production; starting only once filed)"
+  - "Tick the declarations yourself: consapevolezza (artt. 46-47), informativa privacy, requisiti di onorabilità e professionali, altre dichiarazioni, art. 6 Reg. 852/2004, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti di segreteria (€ {{ask.diritti_euro}}) with pagoPA on the payment screen, and the ASL tariffa forfettaria"
+  - "Attach, signed with your firma digitale (.p7m): the planimetria quotata of the premises and the ASL tariff receipt"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{business.forma_giuridica}}"
+    in: [ditta_individuale, srl, srls, snc, sas, spa]
+    else: "So far for a ditta individuale or an srl, srls, snc, sas or spa."
+  - {when: "{{ask.altri_soggetti|not}}", else: "Other partners or administrators file their own antimafia statements as signed attachments (art. 85 D.Lgs. 159/2011): not mapped yet."}
+  - {when: "{{ask.zona_tutelata|not}}", else: "In the historic centre an opening needs an authorization, not a SCIA: not supported yet."}
+  - {when: "{{ask.musica|not}}", else: "Music or a sound system isn't supported yet: it adds the impatto acustico papers."}
+  - {when: "{{ask.insegna_esterna|not}}", else: "An outside sign isn't supported yet: it bundles the insegna's SCIA into this one."}
+  - {when: "{{ask.ristorazione}}", else: "So far only a bar or restaurant: the notifica's other activity lines aren't mapped."}
+  - {when: "{{ask.forno|not}} {{ask.dettaglio_alimenti|not}}", else: "A bar or restaurant that also bakes or runs a food shop isn't supported yet: those lines together aren't mapped."}

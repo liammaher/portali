@@ -1,0 +1,616 @@
+{
+ "crawled": "2026-10-28T19:53:50.821Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRI ADEMPIMENTI (Prevenzione Incendi) › Prevenzione incendi › PIN 4 - Istanza di deroga al rispetto della normativa antincendio (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 69.9,
+ "generated": {
+  "interventi": "Realizzazione impianti ed edifici soggetti ai controlli di prevenzione incendi non conformi alle disposizioni normative di prevenzioni incendi - Parere in deroga",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione alla deroga alla normativa antincendio",
+    "amministrazione": "Comando dei Vigili del Fuoco - PRINCE"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "indirizzo dell'attività",
+   "Rif. Pratica VVF",
+   "Disposizioni normative alle quali si richiede deroga",
+   "dichiarazione relativa agli allegati tecnici",
+   "dichiarazione relativa al professionista",
+   "distinta di versamento",
+   "dati per la corrispondenza",
+   "dati del delegato",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "indirizzo dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.1
+  },
+  {
+   "section": "Rif. Pratica VVF",
+   "fingerprint": "c7feb9eebcab49f1",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - intestazione",
+   "seconds": 1.1
+  },
+  {
+   "section": "Disposizioni normative alle quali si richiede deroga",
+   "fields": [
+    {
+     "id": "r3c1p3reg:txt",
+     "kind": "text",
+     "label": "Il sottoscritto responsabile dell’attività",
+     "max": 200
+    },
+    {
+     "id": "r8c1p11reg:number",
+     "kind": "text",
+     "label": "Attività n.",
+     "max": 5,
+     "prefilled": true
+    },
+    {
+     "id": "r8c2p13reg:txt",
+     "kind": "text",
+     "label": "Disposizione",
+     "max": 100
+    },
+    {
+     "id": "r8c3p15reg:number",
+     "kind": "text",
+     "label": "Articolo/Punto",
+     "max": 5,
+     "prefilled": true
+    },
+    {
+     "id": "r10c1p19reg:txta",
+     "kind": "textarea",
+     "label": "400 Caratteri restanti",
+     "context": "Descrizione della situazione da derogare",
+     "max": 400
+    },
+    {
+     "id": "r12c1p21reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "Caratteristiche e/o vincoli esistenti che comportano l'impossibilità di ottemperare alle disposizioni normative*",
+     "max": 200
+    },
+    {
+     "id": "r12c2p23reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "Valutazione del rischio aggiuntivo conseguente alla mancata osservanza delle disposizioni cui si intende derogare*",
+     "max": 200
+    },
+    {
+     "id": "r12c3p25reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "Misure tecniche che si ritengono idonee a compensare il rischio aggiuntivo*",
+     "max": 200
+    }
+   ],
+   "fingerprint": "668538829e6716c2",
+   "text": "Disposizioni normative alle quali si richiede deroga Il sottoscritto responsabile dell’attività ( tipo di attività: albergo, scuola, etc. ) RIVOLGE ISTANZA DI DEROGA ai sensi dell’art. 7 del DPR 01/08/2011 n. 151, all’osservanza della vigente normativa antincendio relativamente ai punti riportati in dettaglio nella/e tabella/e seguente/i. In tale/i tabella/e vengono anche indicate, in modo sintetico, le caratteristiche dell’attività e i vincoli esistenti che comportano l’impossibilità di ottemperare ai suddetti punti. Attività n. Disposizione Articolo/Punto Descrizione della situazione da derogare 400 Caratteri restanti Caratteristiche e/o vincoli esistenti che comportano l'impossibilità di ottemperare alle disposizioni normative* Valutazione del rischio aggiuntivo conseguente alla mancata osservanza delle disposizioni cui si intende derogare* Misure tecniche che si ritengono idonee a compensare il rischio aggiuntivo* 200 Caratteri restanti 200 Caratteri restanti 200 Caratteri restanti * N.B.: inserire solo descrizione sintetica: in allegato produrre relazione dettagliata",
+   "branches": [],
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione relativa agli allegati tecnici",
+   "fields": [
+    {
+     "id": "r3c1p3reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+     "context": "Relazione tecnica",
+     "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+    },
+    {
+     "id": "r7c1p8reg:number",
+     "kind": "text",
+     "label": "n. fascicoli",
+     "max": 3
+    },
+    {
+     "id": "r9c1p12reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+     "context": "Elaborati grafici",
+     "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+    },
+    {
+     "id": "r13c1p17reg:number",
+     "kind": "text",
+     "label": "n. elaborati",
+     "max": 3
+    }
+   ],
+   "fingerprint": "d03f472d963bdbcc",
+   "text": "dichiarazione relativa agli allegati tecnici Allega i seguenti documenti tecnici di progetto¹ , debitamente firmati, conformi a quanto previsto dall'Allegato I al Decreto del Ministro dell'Interno del 7-8-2012, integrati da una valutazione sul rischio aggiuntivo conseguente alla mancata osservanza delle normative di prevenzione incendi cui si intende derogare e dall'indicazione delle misure che si ritengono idonee a compensare il rischio aggiuntivo: Relazione tecnica Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB n. fascicoli Elaborati grafici Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB n. elaborati ¹ In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio, di cui al Decreto del Ministero dell'Interno 9-5-2007, la documentazione tecnica di progetto, a firma di professionista antincendio, deve essere conforme a quanto specificato all'art. 6, comma 3, del Decreto del Ministero dell'Interno 7-8-2012.",
+   "branches": [],
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione relativa al professionista",
+   "fields": [
+    {
+     "id": "r3c1p4reg:txt",
+     "kind": "text",
+     "label": "Titolo professionale",
+     "max": 100
+    },
+    {
+     "id": "r3c2p6reg:txt",
+     "kind": "text",
+     "label": "Cognome",
+     "max": 100
+    },
+    {
+     "id": "r3c3p8reg:txt",
+     "kind": "text",
+     "label": "Nome",
+     "max": 100
+    },
+    {
+     "id": "r5c1p10reg:txt",
+     "kind": "text",
+     "label": "iscritto all'Albo professionale dell'Ordine/Collegio",
+     "max": 100
+    },
+    {
+     "id": "r5c2p12reg:number",
+     "kind": "text",
+     "label": "n. iscrizione",
+     "max": 30
+    },
+    {
+     "id": "r7c1p14reg:txt",
+     "kind": "text",
+     "label": "iscritto negli elenchi del Ministero dell'Interno di cui all'art. 16 comma 4 del DLgs 139/06, n° codice iscrizione M.I.",
+     "max": 30
+    },
+    {
+     "id": "r7c2p16reg:txt",
+     "kind": "text",
+     "label": "C.F.",
+     "max": 16
+    },
+    {
+     "id": "r9c1p18reg:txt",
+     "kind": "text",
+     "label": "con ufficio in (indirizzo)",
+     "max": 100
+    },
+    {
+     "id": "r9c2p20reg:number",
+     "kind": "text",
+     "label": "n° civico",
+     "max": 20
+    },
+    {
+     "id": "r11c1p22reg:txt",
+     "kind": "text",
+     "label": "C.A.P",
+     "max": 9999
+    },
+    {
+     "id": "r11c2p24reg",
+     "kind": "select",
+     "label": "comune",
+     "options": []
+    },
+    {
+     "id": "r11c3p26reg",
+     "kind": "select",
+     "label": "provincia",
+     "options": "111 options"
+    },
+    {
+     "id": "r13c1p30reg:number",
+     "kind": "text",
+     "label": "telefono",
+     "max": 10
+    },
+    {
+     "id": "r13c2p32reg:txt",
+     "kind": "text",
+     "label": "indirizzo di posta elettronica",
+     "max": 100
+    },
+    {
+     "id": "r13c3p34reg:txt",
+     "kind": "text",
+     "label": "indirizzo di posta elettronica certificata",
+     "max": 100
+    }
+   ],
+   "fingerprint": "96032874eeb7343d",
+   "text": "dichiarazione relativa al professionista La documentazione tecnico progettuale è sottoscritta da: Titolo professionale Cognome Nome iscritto all'Albo professionale dell'Ordine/Collegio n. iscrizione iscritto negli elenchi del Ministero dell'Interno di cui all'art. 16 comma 4 del DLgs 139/06, n° codice iscrizione M.I. C.F. con ufficio in (indirizzo) n° civico C.A.P comune provincia telefono indirizzo di posta elettronica indirizzo di posta elettronica certificata",
+   "branches": [],
+   "seconds": 1.1
+  },
+  {
+   "section": "distinta di versamento",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "Attestato di versamento n.¹",
+     "max": 30
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r4c1p8reg",
+     "kind": "select",
+     "label": "intestato alla Tesoreria Provinciale dello Stato di",
+     "options": "112 options",
+     "value": "NAPOLI"
+    },
+    {
+     "id": "r4c2p10reg:real",
+     "kind": "text",
+     "label": "per un totale di euro",
+     "max": 10
+    },
+    {
+     "id": "r6c1p14reg:upload1_input",
+     "kind": "file",
+     "label": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+     "context": "allega copia del versamento",
+     "accepts": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m"
+    },
+    {
+     "id": "r10c1p20reg:chk",
+     "kind": "checkbox",
+     "label": "In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio di cui al decreto del Ministero dell'interno 9 maggio 2007, allegare anche la dichi"
+    },
+    {
+     "id": "r12c1p22reg:radio:0_clone",
+     "kind": "radio",
+     "label": "risultano individuate ² ai n./sotto classe/ cat.:",
+     "group": "r12c1p22reg:radio"
+    },
+    {
+     "id": "r13c3p25reg:radio:1_clone",
+     "kind": "radio",
+     "label": "A",
+     "group": "r13c3p25reg:radio"
+    },
+    {
+     "id": "r13c4p26reg:radio:2_clone",
+     "kind": "radio",
+     "label": "B",
+     "group": "r13c4p26reg:radio"
+    },
+    {
+     "id": "r13c5p27reg:radio:3_clone",
+     "kind": "radio",
+     "label": "C",
+     "group": "r13c5p27reg:radio"
+    },
+    {
+     "id": "r17c1p35reg:radio:4_clone",
+     "kind": "radio",
+     "label": "Nuova",
+     "group": "r17c1p35reg:radio"
+    },
+    {
+     "id": "r17c2p36reg:radio:5_clone",
+     "kind": "radio",
+     "label": "Esistente",
+     "group": "r17c2p36reg:radio"
+    },
+    {
+     "id": "r19c1p39reg",
+     "kind": "select",
+     "label": "Approccio tecnico",
+     "options": [
+      "Modalità Standard",
+      "DM 09-05-2007 (ingegneria della sicurezza) ³",
+      "RTO/RTV ⁴ soluzione alternativa",
+      "RTO/RTV ⁴ soluzione in deroga"
+     ]
+    },
+    {
+     "id": "r22c1p45reg:real",
+     "kind": "text",
+     "label": "euro",
+     "max": 10
+    },
+    {
+     "id": "r23c1p48reg:radio:6_clone",
+     "kind": "radio",
+     "label": "non risultano riportate nell'Allegato I al DPR 01/08/2011 n. 151",
+     "group": "r23c1p48reg:radio"
+    },
+    {
+     "id": "r25c3p54reg:real",
+     "kind": "text",
+     "label": "euro",
+     "context": "attività non rientrante nell’all. I al DPR 01/08/2011 n.151",
+     "max": 10
+    }
+   ],
+   "fingerprint": "d6d98fb74d33349b",
+   "text": "distinta di versamento Attestato di versamento n.¹ del intestato alla Tesoreria Provinciale dello Stato di per un totale di euro allega copia del versamento Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio di cui al decreto del Ministero dell'interno 9 maggio 2007, allegare anche la dichiarazione, a firma del responsabile dell'attività, in merito all'attuazione del sistema di gestione della sicurezza antincendio di cui all'articolo 6 dello stesso decreto; per la definizione del relativo importo, si applica l'art 6 , comma 4, dello stesso decreto. La/le attività oggetto di deroga : risultano individuate ² ai n./sotto classe/ cat.: categoria A B C Nuova Esistente Approccio tecnico euro non risultano riportate nell'Allegato I al DPR 01/08/2011 n. 151 euro attività non rientrante nell’all. I al DPR 01/08/2011 n.151 ___________ ¹ In caso di utilizzo dell’approccio ingegneristico alla sicurezza antincendio, di cui al Decreto del Ministero dell’Interno 9-5-2007 o, per le attività in cat. A, di ricorso alle soluzioni alternative di cui al decreto del Ministro dell’Interno 3 agosto 2015 e s.m.i., per la definizione dell’importo, si applica l’art. 4, comma 2, dello stesso decreto. ² Al fine di definire il relativo importo, riportare il numero e la categoria corrispondente (A/B/C) individuata sulla base dell'elenco contenuto nell'Allegato I del DPR 01/08/2011 n.151 e la sottoclasse di cui al Decreto del Ministro dell'Interno del 7-8-2012. ³ Selezionare solo nel caso in cui si sia fatto ricorso al Decreto del Ministero dell’Interno 09-05-2007. ⁴ Selezionare solo nel caso in cui si sia fatto ricorso alle norme tecniche allegate al decreto del Ministro dell’Interno 3 agosto 2015 e s.m.i. (RTO) e/o alle regole tecniche verticali della sezione V (RTV) dello stesso decreto. ⁵ Selezionare le misure antincendio (S1, S2,..., S10) per cui si è fatto eventuale ricorso alle soluzioni alternative di cui al decreto del Ministro dell’Interno 3 agosto 2015 e s.m.i..",
+   "branches": [
+    {
+     "choice": "In caso di utilizzo dell'approccio ingegneristico alla sicurezza antincendio di cui al decreto del Ministero dell'interno 9 maggio 2007, allegare anche la dichi",
+     "id": "r10c1p20reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r12c1p22reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "allega dichiarazione",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r12c1p22reg:radio:0_clone",
+       "r16c1p27reg:radio:0_clone"
+      ],
+      [
+       "r13c3p25reg:radio:1_clone",
+       "r17c3p30reg:radio:1_clone"
+      ],
+      [
+       "r13c4p26reg:radio:2_clone",
+       "r17c4p31reg:radio:2_clone"
+      ],
+      [
+       "r13c5p27reg:radio:3_clone",
+       "r17c5p32reg:radio:3_clone"
+      ],
+      [
+       "r17c1p35reg:radio:4_clone",
+       "r21c1p40reg:radio:4_clone"
+      ],
+      [
+       "r17c2p36reg:radio:5_clone",
+       "r21c2p41reg:radio:5_clone"
+      ],
+      [
+       "r19c1p39reg",
+       "r23c1p44reg"
+      ],
+      [
+       "r22c1p45reg:real",
+       "r26c1p50reg:real"
+      ],
+      [
+       "r23c1p48reg:radio:6_clone",
+       "r27c1p53reg:radio:6_clone"
+      ],
+      [
+       "r25c3p54reg:real",
+       "r29c3p59reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "risultano individuate ² ai n./sotto classe/ cat.:",
+     "id": "r12c1p22reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p48reg:radio:6_clone",
+       "r24c1p50reg:radio:6_clone"
+      ],
+      [
+       "r25c3p54reg:real",
+       "r26c3p56reg:real"
+      ]
+     ],
+     "plus": {
+      "anchor": "A",
+      "adds": 14
+     }
+    },
+    {
+     "choice": "A",
+     "id": "r13c3p25reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "B",
+     "id": "r13c4p26reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "C",
+     "id": "r13c5p27reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Nuova",
+     "id": "r17c1p35reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Esistente",
+     "id": "r17c2p36reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Approccio tecnico = Modalità Standard",
+     "id": "r19c1p39reg",
+     "kind": "select",
+     "option": "Modalità Standard",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Approccio tecnico = DM 09-05-2007 (ingegneria della sicurezza) ³",
+     "id": "r19c1p39reg",
+     "kind": "select",
+     "option": "DM 09-05-2007 (ingegneria della sicurezza) ³",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Approccio tecnico = RTO/RTV ⁴ soluzione alternativa",
+     "id": "r19c1p39reg",
+     "kind": "select",
+     "option": "RTO/RTV ⁴ soluzione alternativa",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "Approccio tecnico = RTO/RTV ⁴ soluzione in deroga",
+     "id": "r19c1p39reg",
+     "kind": "select",
+     "option": "RTO/RTV ⁴ soluzione in deroga",
+     "plus": {
+      "anchor": "Tipologie ammesse: dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "non risultano riportate nell'Allegato I al DPR 01/08/2011 n. 151",
+     "id": "r23c1p48reg:radio:6_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "euro",
+      "adds": 2
+     }
+    }
+   ],
+   "seconds": 42.8
+  },
+  {
+   "section": "dati per la corrispondenza",
+   "fingerprint": "572a85fbc3ea16c6",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati per la corrispondenza",
+   "seconds": 1.6
+  },
+  {
+   "section": "dati del delegato",
+   "fingerprint": "ac3b7a8792f93e89",
+   "same_as": "suap-common-prevenzione-incendi-pin-1-istanza-di-valutazione-del-progett#VALUTAZIONE PROGETTO VV.F - dati del delegato",
+   "seconds": 1.5
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.4
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 1.4
+  }
+ ]
+}

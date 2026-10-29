@@ -1,0 +1,953 @@
+{
+ "crawled": "2026-10-28T20:36:24.541Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: Avvio, gestione, cessazione attività › SCIA per variazioni strutturali (sector Agriturismo)",
+ "seconds": 58.6,
+ "generated": {
+  "interventi": "Variazioni strutturali in attività di agriturismo",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per variazioni strutturali in attività di agriturismo",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   },
+   {
+    "adempimento": "Comunicazione alla Regione - Direzione Generale per le Politiche agricole, alimentari e forestali",
+    "amministrazione": "Regione Campania - UOD Ufficio centrale di supporto alle imprese del settore agro-alimentare"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "dati catastali",
+   "dichiarazione relativa all'insegna/denominazione attività",
+   "dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "dichiarazione del tipo di attività esercitate nell'azienda agrituristica prima della variazione",
+   "dichiarazione relativa alla tipologia delle variazioni apportate",
+   "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "dichiarazione di disponibilità dei terreni e degli edifici",
+   "dichiarazione di utilizzo di edifici nel fondo",
+   "dichiarazione di svolgimento di attività agrituristica",
+   "dichiarazione relativa al periodo di apertura",
+   "dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "dichiarazione antimafia D.LGS. 159/2011",
+   "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "dichiarazione del rispetto dei Regolamenti del Comune",
+   "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "dichiarazione di conoscenza di obblighi per il richiedente",
+   "dichiarazione relativa alla presentazione dell'intervento",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta interventi eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "si intende presentare contestualmente anche la notifica impresa alimentare"
+    }
+   ]
+  },
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "l'attività prevede la vendita di generi alimentari ed artigianali tipici, prodotti dall'azienda"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "l'attività prevede la somministrazione di alimenti e bevande in prevalenza di produzione propria dell'azienda e tipiche della zona"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "l'attività comprende servizio di ospitalità (in piazzole e/o camere munite di bagno e/o appartamenti)"
+    },
+    {
+     "key": "3",
+     "type": "CHK",
+     "label": "l'attività è esercitata in forma societaria (sono tenuti al possesso dei requisiti morali anche le altre persone, oltre al dichiarante, così individuate: tutti gli altri componenti il Consiglio di Amministrazione in caso di SRL e SPA; tutti gli altri soci in caso di SNC; gli altri soci accomandatari in caso di SAS)"
+    },
+    {
+     "key": "4",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 1.1
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.1
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'attività agrituristica",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.4
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione relativa all'insegna/denominazione attività",
+   "fingerprint": "3a6319ce1cee2035",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa all'insegna/denominazione attività",
+   "seconds": 0.9
+  },
+  {
+   "section": "dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "fingerprint": "afee07032cfc00d5",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione del tipo di attività esercitate nell'azienda agrituristica",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione del tipo di attività esercitate nell'azienda agrituristica prima della variazione",
+   "fields": [
+    {
+     "id": "r4c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r4c2p6reg:txt",
+     "kind": "text",
+     "label": "numero camere",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r4c3p8reg:txt",
+     "kind": "text",
+     "label": "numero posti letto",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r4c4p10reg:txt",
+     "kind": "text",
+     "label": "per un prezzo massimo di euro",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r5c1p11reg:radio"
+    },
+    {
+     "id": "r8c1p14reg:radio:2_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r8c1p14reg:radio"
+    },
+    {
+     "id": "r8c2p16reg:txt",
+     "kind": "text",
+     "label": "numero alloggi",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r8c3p18reg:txt",
+     "kind": "text",
+     "label": "numero camere",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r8c4p20reg:txt",
+     "kind": "text",
+     "label": "numero posti letto",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r8c5p22reg:txt",
+     "kind": "text",
+     "label": "per un prezzo massimo di euro",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r9c1p23reg:radio:3_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r9c1p23reg:radio"
+    },
+    {
+     "id": "r12c1p26reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r12c1p26reg:radio"
+    },
+    {
+     "id": "r12c2p28reg:txt",
+     "kind": "text",
+     "label": "numero piazzole",
+     "context": "SI",
+     "max": 2
+    },
+    {
+     "id": "r12c3p30reg:txt",
+     "kind": "text",
+     "label": "prezzi massimi per piazzole",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r13c1p31reg:radio:5_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r13c1p31reg:radio"
+    },
+    {
+     "id": "r15c1p33reg:txt",
+     "kind": "text",
+     "label": "numero margherite",
+     "max": 2
+    },
+    {
+     "id": "r19c1p39reg:radio:6_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r19c1p39reg:radio"
+    },
+    {
+     "id": "r19c2p41reg:txt",
+     "kind": "text",
+     "label": "per n. pasti al mese",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r19c3p43reg:txt",
+     "kind": "text",
+     "label": "prezzi massimi pari a euro",
+     "context": "SI",
+     "max": 5
+    },
+    {
+     "id": "r20c1p44reg:radio:7_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r20c1p44reg:radio"
+    },
+    {
+     "id": "r23c1p47reg:radio:8_clone",
+     "kind": "radio",
+     "label": "SI",
+     "group": "r23c1p47reg:radio"
+    },
+    {
+     "id": "r24c1p48reg:radio:9_clone",
+     "kind": "radio",
+     "label": "NO",
+     "group": "r24c1p48reg:radio"
+    }
+   ],
+   "fingerprint": "4d1d722831e6b44f",
+   "text": "dichiarazione del tipo di attività esercitate nell'azienda agrituristica prima della variazione OSPITALITÁ l'attività comprendeva ospitalità nell'azienda agricola strutturata in camere? numero camere numero posti letto per un prezzo massimo di euro SI NO erano previsti alloggi per l'ospitalità? numero alloggi numero camere numero posti letto per un prezzo massimo di euro SI NO erano previste piazzole in spazi aperti attrezzati (dotate di servizi igienici e allacciamenti elettrici)? numero piazzole prezzi massimi per piazzole SI NO numero margherite SOMMINISTRAZIONE PASTI E BEVANDE l'attività comprendeva la somministrazione di pasti e bevande nei locali dell'azienda secondo le seguenti specifiche? per n. pasti al mese prezzi massimi pari a euro SI NO ATTIVITÁ RICREATIVE l'attività comprendeva l'organizzazione di attività ricreative, culturali, sociali, didattiche, di pratica sportiva, escursionistiche e di ippoturismo finalizzate al trattenimento degli ospiti dell'azienda? SI NO",
+   "branches": [
+    {
+     "choice": "SI",
+     "id": "r4c1p4reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r5c1p11reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r8c1p14reg:radio:2_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r9c1p23reg:radio:3_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r12c1p26reg:radio:4_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r13c1p31reg:radio:5_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r19c1p39reg:radio:6_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r20c1p44reg:radio:7_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "SI",
+     "id": "r23c1p47reg:radio:8_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    },
+    {
+     "choice": "NO",
+     "id": "r24c1p48reg:radio:9_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r4c1p4reg:radio:0_clone"
+      ],
+      [
+       "r8c3p18reg:txt",
+       "r4c2p6reg:txt"
+      ],
+      [
+       "r8c4p20reg:txt",
+       "r4c3p8reg:txt"
+      ],
+      [
+       "r8c5p22reg:txt",
+       "r4c4p10reg:txt"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r5c1p11reg:radio:1_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r8c1p14reg:radio:2_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r9c1p23reg:radio:3_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r12c1p26reg:radio:4_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r13c1p31reg:radio:5_clone"
+      ],
+      [
+       "r23c1p47reg:radio:8_clone",
+       "r19c1p39reg:radio:6_clone"
+      ],
+      [
+       "r24c1p48reg:radio:9_clone",
+       "r20c1p44reg:radio:7_clone"
+      ]
+     ]
+    }
+   ],
+   "seconds": 18.7
+  },
+  {
+   "section": "dichiarazione relativa alla tipologia delle variazioni apportate",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "breve descrizione delle variazioni apportate",
+     "max": 400
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "si dichiara inoltre che gli allegati fanno riferimento all'attuale situazione"
+    }
+   ],
+   "fingerprint": "1c1860dc44d6284c",
+   "text": "dichiarazione relativa alla tipologia delle variazioni apportate breve descrizione delle variazioni apportate si dichiara inoltre che gli allegati fanno riferimento all'attuale situazione",
+   "branches": [
+    {
+     "choice": "si dichiara inoltre che gli allegati fanno riferimento all'attuale situazione",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 2.6
+  },
+  {
+   "section": "Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "fingerprint": "48b1324c2011e58d",
+   "same_as": "suap-003-aprire-l-attivita#Dichiarazione per il possesso dei requisiti per la definizione della classificazione dell'azienda agrituristica",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione di disponibilità dei terreni e degli edifici",
+   "fingerprint": "579083fbed6521c2",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di disponibilità dei terreni e degli edifici",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione di utilizzo di edifici nel fondo",
+   "fingerprint": "3861b0b041e8b98e",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di utilizzo di edifici nel fondo",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione di svolgimento di attività agrituristica",
+   "fingerprint": "033c232227149ee5",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di svolgimento di attività agrituristica",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione relativa al periodo di apertura",
+   "fingerprint": "606979f90c14465e",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa al periodo di apertura",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "fingerprint": "9a5af7223e50a59d",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa all'accessibilità da parte di persone disabili",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione antimafia D.LGS. 159/2011",
+   "fingerprint": "732ba5b4f8103c5b",
+   "same_as": "suap-011-aprire-l-attivita-di-tatuatore-piercer#dichiarazione antimafia D.LGS. 159/2011",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "fingerprint": "1c9fa01530d715d4",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione per il possesso del certificato di conformità edilizia ed agibilità",
+   "seconds": 1.2
+  },
+  {
+   "section": "dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "fingerprint": "8467c3da5ba45e1e",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di esenzione da una qualsiasi causa ostativa per l'attività agrituristica previste dall'art.6 della L.20.02.2006 n. 96",
+   "seconds": 1.2
+  },
+  {
+   "section": "dichiarazione del rispetto dei Regolamenti del Comune",
+   "fingerprint": "b43944807893542c",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione del rispetto dei Regolamenti del Comune",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "fingerprint": "9962035d59522261",
+   "same_as": "suap-002-iniziare-l-attivita-di-vendita-di-prodotti-agricol#dichiarazione relativa alla qualifica di imprenditore agricolo",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "fingerprint": "922c94dd5f5a6d6f",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di possesso di certificazione di Imprenditore Agricolo Professionale",
+   "seconds": 1.4
+  },
+  {
+   "section": "dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "fingerprint": "c0dab2822039b881",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di obbligo di affissione della classificazione dell'agriturismo",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione di conoscenza di obblighi per il richiedente",
+   "fingerprint": "53fba4cb1b7a5935",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione di conoscenza di obblighi per il richiedente",
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione relativa alla presentazione dell'intervento",
+   "fingerprint": "2b404e33fcb0ed13",
+   "same_as": "suap-003-aprire-l-attivita#dichiarazione relativa alla presentazione dell'intervento",
+   "seconds": 1.3
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 1.2
+  }
+ ]
+}

@@ -1,0 +1,1601 @@
+{
+ "crawled": "2026-10-28T19:38:44.994Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: AMBIENTE  (A.U.A., A.I.A., V.I.A., VINCA, Emissioni in atmosfera, Scarichi, Rifiuti, ecc..) › Scarichi › Istanza di assimilazione alle acque reflue domestiche (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 144.3,
+ "generated": {
+  "interventi": "ISTANZA DI ASSIMILAZIONE ALLE ACQUE REFLUE DOMESTICHE",
+  "adempimenti": [
+   {
+    "adempimento": "ISTANZA DI ASSIMILAZIONE ALLE ACQUE REFLUE DOMESTICHE",
+    "amministrazione": "Ente idrico campano"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione dell'ubicazione dell'insediamento",
+   "dati catastali",
+   "SEZIONE 2 - COORDINATE GEOGRAFICHE DELL'INSEDIAMENTO E DEI PUNTI DI SCARICO (WGS-84)",
+   "SEZIONE 3 - CARATTERISTICHE DELL'ATTIVITÀ SVOLTA E DELL'INSEDIAMENTO PRODUTTIVO",
+   "SEZIONE 4 - CARATTERISTICHE DELLO SCARICO",
+   "SEZIONE 4 - ATTIVITA' DELLO SCARICO",
+   "SEZIONE 5 - CARATTERISTICHE DELL'APPROVVIGIONAMENTO IDRICO",
+   "SEZIONE 5 - Utilizzazione dell'acqua",
+   "SEZIONE 6 - CARATTERISTICHE DELL'IMPIANTO DI TRATTAMENTO ACQUE REFLUE",
+   "SEZIONE 7 - CARATTERISTICHE DEL TRATTAMENTO ACQUE DI PRIMA PIOGGIA",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    },
+    {
+     "key": "1",
+     "type": "CHK",
+     "label": "è presente un impianto di pretrattamento"
+    },
+    {
+     "key": "2",
+     "type": "CHK",
+     "label": "sono presenti apparecchiature installate, tipo misuratori di portata e/o sistemi automatici per campionamento dei reflui"
+    }
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "option": "è presente un impianto di pretrattamento",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  },
+  {
+   "option": "sono presenti apparecchiature installate, tipo misuratori di portata e/o sistemi automatici per campionamento dei reflui",
+   "type": "CHK",
+   "adds": [],
+   "drops": []
+  }
+ ],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 1.7
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 1.5
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione dell'ubicazione dell'insediamento",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 1.4
+  },
+  {
+   "section": "dati catastali",
+   "fingerprint": "bd17e4e186aa5dc9",
+   "same_as": "acconciatore#Dati catastali",
+   "seconds": 0.9
+  },
+  {
+   "section": "SEZIONE 2 - COORDINATE GEOGRAFICHE DELL'INSEDIAMENTO E DEI PUNTI DI SCARICO (WGS-84)",
+   "fields": [
+    {
+     "id": "r2c2p4reg:number",
+     "kind": "text",
+     "label": "Gradi",
+     "context": "Coordinate Insediamento NORD",
+     "max": 5
+    },
+    {
+     "id": "r2c3p6reg:number",
+     "kind": "text",
+     "label": "Minuti",
+     "context": "Coordinate Insediamento NORD",
+     "max": 5
+    },
+    {
+     "id": "r2c4p8reg:number",
+     "kind": "text",
+     "label": "Secondi",
+     "context": "Coordinate Insediamento NORD",
+     "max": 5
+    },
+    {
+     "id": "r4c2p12reg:number",
+     "kind": "text",
+     "label": "Gradi",
+     "context": "Coordinate Insediamento EST",
+     "max": 5
+    },
+    {
+     "id": "r4c3p14reg:number",
+     "kind": "text",
+     "label": "Minuti",
+     "context": "Coordinate Insediamento EST",
+     "max": 5
+    },
+    {
+     "id": "r4c4p16reg:number",
+     "kind": "text",
+     "label": "Secondi",
+     "context": "Coordinate Insediamento EST",
+     "max": 5
+    },
+    {
+     "id": "r6c2p20reg:txt",
+     "kind": "text",
+     "label": "Cod. ID*",
+     "context": "Coordinate Punti Di Scarico NORD",
+     "max": 20
+    },
+    {
+     "id": "r6c3p22reg:number",
+     "kind": "text",
+     "label": "Gradi",
+     "context": "Coordinate Punti Di Scarico NORD",
+     "max": 5
+    },
+    {
+     "id": "r6c4p24reg:number",
+     "kind": "text",
+     "label": "Minuti",
+     "context": "Coordinate Punti Di Scarico NORD",
+     "max": 5
+    },
+    {
+     "id": "r6c5p26reg:number",
+     "kind": "text",
+     "label": "Secondi",
+     "context": "Coordinate Punti Di Scarico NORD",
+     "max": 5
+    },
+    {
+     "id": "r8c2p32reg:txt",
+     "kind": "text",
+     "label": "Cod. ID*",
+     "context": "Coordinate Punti Di Scarico EST",
+     "max": 20
+    },
+    {
+     "id": "r8c3p34reg:number",
+     "kind": "text",
+     "label": "Gradi",
+     "context": "Coordinate Punti Di Scarico EST",
+     "max": 5
+    },
+    {
+     "id": "r8c4p36reg:number",
+     "kind": "text",
+     "label": "Minuti",
+     "context": "Coordinate Punti Di Scarico EST",
+     "max": 5
+    },
+    {
+     "id": "r8c5p38reg:number",
+     "kind": "text",
+     "label": "Secondi",
+     "context": "Coordinate Punti Di Scarico EST",
+     "max": 5
+    }
+   ],
+   "fingerprint": "eb39b244abb58980",
+   "text": "SEZIONE 2 - COORDINATE GEOGRAFICHE DELL'INSEDIAMENTO E DEI PUNTI DI SCARICO (WGS-84) Gradi Minuti Secondi Coordinate Insediamento NORD Gradi Minuti Secondi Coordinate Insediamento EST Cod. ID* Gradi Minuti Secondi Coordinate Punti Di Scarico NORD Cod. ID* Gradi Minuti Secondi Coordinate Punti Di Scarico EST * Il Cod. id individua, sulla planimetria allegata, la posizione esatta del punto di scarico dell'attività",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "SEZIONE 3 - CARATTERISTICHE DELL'ATTIVITÀ SVOLTA E DELL'INSEDIAMENTO PRODUTTIVO",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "A agricoltura, silvicoltura pesca"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "B estrazione di minerali da cave e miniere"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "C attività manifatturiere"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "D fornitura di energia elettrica,gas,vapore e aria condizionata"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "E fornitura di acqua; reti fognarie, attività di gestione dei rifiuti e risanamento"
+    },
+    {
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "F costruzioni"
+    },
+    {
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox",
+     "label": "G commercio all'ingrosso e al dettaglio;riparazione di autoveicoli e motocicli"
+    },
+    {
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "H trasporto e magazzinaggio"
+    },
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "I attività dei servizi di alloggio e di ristorazione"
+    },
+    {
+     "id": "r11c1p11reg:chk",
+     "kind": "checkbox",
+     "label": "J servizi di informazione e comunicazione"
+    },
+    {
+     "id": "r12c1p12reg:chk",
+     "kind": "checkbox",
+     "label": "K attività finanziarie e assicurative"
+    },
+    {
+     "id": "r13c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "L attività immobiliari"
+    },
+    {
+     "id": "r14c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "M attività professionali, scientifiche e tecniche"
+    },
+    {
+     "id": "r15c1p15reg:chk",
+     "kind": "checkbox",
+     "label": "N noleggio,agenzie di viaggio, servizi di supporto alle imprese"
+    },
+    {
+     "id": "r16c1p16reg:chk",
+     "kind": "checkbox",
+     "label": "P istruzione"
+    },
+    {
+     "id": "r17c1p17reg:chk",
+     "kind": "checkbox",
+     "label": "Q sanità e assistenza sociale"
+    },
+    {
+     "id": "r18c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "R attività artistiche, sportive, di intrattenimento e divertimento"
+    },
+    {
+     "id": "r19c1p19reg:chk",
+     "kind": "checkbox",
+     "label": "S altre attività di servizi"
+    },
+    {
+     "id": "r21c1p21reg:txt",
+     "kind": "text",
+     "label": "codice ATECO completo",
+     "max": 8
+    },
+    {
+     "id": "r23c1p25reg:txt",
+     "kind": "text",
+     "label": "Categoria Istat",
+     "max": 50
+    },
+    {
+     "id": "r23c2p27reg:txt",
+     "kind": "text",
+     "label": "Codice Istat",
+     "max": 30
+    },
+    {
+     "id": "r23c3p29reg:number",
+     "kind": "text",
+     "label": "n° di addetti",
+     "max": 4
+    },
+    {
+     "id": "r26c1p32reg:real",
+     "kind": "text",
+     "label": "superficie coperta (mq)",
+     "max": 8
+    },
+    {
+     "id": "r26c2p34reg:real",
+     "kind": "text",
+     "label": "di cui uffici (mq)",
+     "max": 8
+    },
+    {
+     "id": "r26c3p36reg:txt",
+     "kind": "text",
+     "label": "e attività produttive (mq)",
+     "max": 5
+    },
+    {
+     "id": "r28c1p40reg:real",
+     "kind": "text",
+     "label": "superficie scoperta (mq)",
+     "max": 8
+    },
+    {
+     "id": "r28c2p42reg:real",
+     "kind": "text",
+     "label": "di cui impermeabilizzata (mq)",
+     "max": 8
+    },
+    {
+     "id": "r31c1p47reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "elenco principali produzioni",
+     "max": 200
+    },
+    {
+     "id": "r33c1p49reg:txta",
+     "kind": "textarea",
+     "label": "200 Caratteri restanti",
+     "context": "elenco principali materie prime",
+     "max": 200
+    },
+    {
+     "id": "r33c2p51reg:txta",
+     "kind": "textarea",
+     "label": "100 Caratteri restanti",
+     "context": "quantità",
+     "max": 100
+    },
+    {
+     "id": "r35c1p53reg:number",
+     "kind": "text",
+     "label": "Numero Mesi Lavorativi Annui",
+     "max": 2
+    },
+    {
+     "id": "r35c2p55reg:number",
+     "kind": "text",
+     "label": "Media Giornate Lavorative Settimanali",
+     "max": 1
+    },
+    {
+     "id": "r35c3p57reg:number",
+     "kind": "text",
+     "label": "Numero Turni Lavorativi Giornalieri",
+     "max": 3
+    },
+    {
+     "id": "r35c4p59reg:number",
+     "kind": "text",
+     "label": "Numero Turni Lavorativi Settimanali",
+     "max": 3
+    }
+   ],
+   "fingerprint": "40be418c5239fb83",
+   "text": "SEZIONE 3 - CARATTERISTICHE DELL'ATTIVITÀ SVOLTA E DELL'INSEDIAMENTO PRODUTTIVO l'attività svolta presso l'insediamento di cui alla precedente SEZIONE 1 appartiene alla seguente categoria economica come da classificazione delle attività economiche – ATECO2007 A agricoltura, silvicoltura pesca B estrazione di minerali da cave e miniere C attività manifatturiere D fornitura di energia elettrica,gas,vapore e aria condizionata E fornitura di acqua; reti fognarie, attività di gestione dei rifiuti e risanamento F costruzioni G commercio all'ingrosso e al dettaglio;riparazione di autoveicoli e motocicli H trasporto e magazzinaggio I attività dei servizi di alloggio e di ristorazione J servizi di informazione e comunicazione K attività finanziarie e assicurative L attività immobiliari M attività professionali, scientifiche e tecniche N noleggio,agenzie di viaggio, servizi di supporto alle imprese P istruzione Q sanità e assistenza sociale R attività artistiche, sportive, di intrattenimento e divertimento S altre attività di servizi codice ATECO completo Categoria Istat Codice Istat n° di addetti Le aree presenti nell'insediamento hanno le seguenti destinazioni d'uso: superficie coperta (mq) di cui uffici (mq) e attività produttive (mq) superficie scoperta (mq) di cui impermeabilizzata (mq) L'attività, nel caso di produzione di semilavorati o prodotti finiti, ha le seguenti caratteristiche elenco principali produzioni 200 Caratteri restanti elenco principali materie prime quantità 200 Caratteri restanti 100 Caratteri restanti Numero Mesi Lavorativi Annui Media Giornate Lavorative Settimanali Numero Turni Lavorativi Giornalieri Numero Turni Lavorativi Settimanali",
+   "branches": [
+    {
+     "choice": "A agricoltura, silvicoltura pesca",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "B estrazione di minerali da cave e miniere",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "C attività manifatturiere",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "D fornitura di energia elettrica,gas,vapore e aria condizionata",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "E fornitura di acqua; reti fognarie, attività di gestione dei rifiuti e risanamento",
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "F costruzioni",
+     "id": "r7c1p7reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "G commercio all'ingrosso e al dettaglio;riparazione di autoveicoli e motocicli",
+     "id": "r8c1p8reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "H trasporto e magazzinaggio",
+     "id": "r9c1p9reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "I attività dei servizi di alloggio e di ristorazione",
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "J servizi di informazione e comunicazione",
+     "id": "r11c1p11reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "K attività finanziarie e assicurative",
+     "id": "r12c1p12reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "L attività immobiliari",
+     "id": "r13c1p13reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "M attività professionali, scientifiche e tecniche",
+     "id": "r14c1p14reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "N noleggio,agenzie di viaggio, servizi di supporto alle imprese",
+     "id": "r15c1p15reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "P istruzione",
+     "id": "r16c1p16reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "Q sanità e assistenza sociale",
+     "id": "r17c1p17reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "R attività artistiche, sportive, di intrattenimento e divertimento",
+     "id": "r18c1p18reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "S altre attività di servizi",
+     "id": "r19c1p19reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 33.3
+  },
+  {
+   "section": "SEZIONE 4 - CARATTERISTICHE DELLO SCARICO",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "i reflui prodotti dall'attività svolta presso l'insediamento, in cui si svolgono attività di produzione di beni e prestazione di servizi, provengono esclusivame",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "i reflui prodotti dall'attività svolta presso l'insediamento, possiedono tutte le caratteristiche qualitative e quantitative di cui alla Tabella B del Regolamen",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "label": "i reflui prodotti dall'attività svolta presso l'insediamento di cui alla precedente SEZIONE 2, possiedono tutte le caratteristiche qualitative e quantitative di",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "label": "ACQUE PROVENIENTI DA SERVIZI IGIENICI"
+    },
+    {
+     "id": "r10c2p12reg:number",
+     "kind": "text",
+     "label": "Portata annua dello scarico (m3/anno)",
+     "context": "ACQUE PROVENIENTI DA SERVIZI IGIENICI",
+     "max": 10
+    },
+    {
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox",
+     "label": "ACQUE REFLUE INDUSTRIALI"
+    },
+    {
+     "id": "r12c2p16reg:number",
+     "kind": "text",
+     "label": "Portata annua dello scarico (m3/anno)",
+     "context": "ACQUE REFLUE INDUSTRIALI",
+     "max": 10
+    },
+    {
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "ACQUE DI PRIMA PIOGGIA"
+    },
+    {
+     "id": "r14c2p20reg:txt",
+     "kind": "text",
+     "label": "Portata annua dello scarico (m3/anno)",
+     "context": "ACQUE DI PRIMA PIOGGIA",
+     "max": 10
+    },
+    {
+     "id": "r16c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "ACQUE BIANCHE"
+    },
+    {
+     "id": "r16c2p24reg:number",
+     "kind": "text",
+     "label": "Portata annua dello scarico (m3/anno)",
+     "context": "ACQUE BIANCHE",
+     "max": 10
+    },
+    {
+     "id": "r18c1p26reg:chk",
+     "kind": "checkbox",
+     "label": "ACQUE DI RAFFREDDAMENTO"
+    },
+    {
+     "id": "r18c2p28reg:number",
+     "kind": "text",
+     "label": "Portata annua dello scarico (m3/anno)",
+     "context": "ACQUE DI RAFFREDDAMENTO",
+     "max": 10
+    },
+    {
+     "id": "r20c1p30reg:chk",
+     "kind": "checkbox",
+     "label": "ALTRO"
+    },
+    {
+     "id": "r20c2p32reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "ALTRO",
+     "max": 50
+    },
+    {
+     "id": "r22c1p34reg:number",
+     "kind": "text",
+     "label": "PORTATA TOTALE SCARICATA (m3/anno)",
+     "max": 10
+    },
+    {
+     "id": "r25c1p39reg",
+     "kind": "select",
+     "label": "Tipoogia scarico",
+     "options": [
+      "Fogna Bianca",
+      "Fogna Mista",
+      "Fogna Nera"
+     ]
+    },
+    {
+     "id": "r25c2p41reg:txt",
+     "kind": "text",
+     "label": "Cod.ID Su pianta reti",
+     "max": 10
+    },
+    {
+     "id": "r25c3p43reg:txt",
+     "kind": "text",
+     "label": "Tipologia Acque",
+     "max": 50
+    },
+    {
+     "id": "r25c4p45reg:txt",
+     "kind": "text",
+     "label": "Denominazione Elemento Ricettore",
+     "max": 50
+    }
+   ],
+   "fingerprint": "5f8ef185ccc4676b",
+   "text": "SEZIONE 4 - CARATTERISTICHE DELLO SCARICO i reflui prodotti dall'attività svolta presso l'insediamento, in cui si svolgono attività di produzione di beni e prestazione di servizi, provengono esclusivamente da servizi igienici, cucine e mense; i reflui prodotti dall'attività svolta presso l'insediamento, possiedono tutte le caratteristiche qualitative e quantitative di cui alla Tabella B del Regolamento della Regione Campania n. 6 del 24/09/2013, di seguito riportata, e per i restanti parametri o sostanze non compresi nella Tabella B, si rispettano i valori limite previsti alla Tabella 3 dell'Allegato 5 alla parte III del D. Lgs. 152/2006 per le emissioni in fognatura: Tabella B del Regolamento della Regione Campania n. 6 del 24_09_2013 Scarica il documento i reflui prodotti dall'attività svolta presso l'insediamento di cui alla precedente SEZIONE 2, possiedono tutte le caratteristiche qualitative e quantitative di cui all'Allegato A Tabella 1 del D.P.R. 227 del 19/10/2011, di seguito riportata, e per i restanti parametri o sostanze non compresi nella Tabella B, si rispettano i valori limite previsti alla Tabella 3 dell'Allegato 5 alla parte III del D. Lgs. 152/2006 per le emissioni in fognatura Allegato A Tabella 1 del D.P.R. 227 del 19_10_2011 Scarica il documento le tipologie di scarichi conferiti in fognatura da parte l'insediamento sono le seguenti: Portata annua dello scarico (m3/anno) ACQUE PROVENIENTI DA SERVIZI IGIENICI Portata annua dello scarico (m3/anno) ACQUE REFLUE INDUSTRIALI Portata annua dello scarico (m3/anno) ACQUE DI PRIMA PIOGGIA Portata annua dello scarico (m3/anno) ACQUE BIANCHE Portata annua dello scarico (m3/anno) ACQUE DI RAFFREDDAMENTO specificare ALTRO PORTATA TOTALE SCARICATA (m3/anno) lo scarico prodotto viene conferito in fognatura attraverso i seguenti allacci: Tipoogia scarico Cod.ID Su pianta reti Tipologia Acque Denominazione Elemento Ricettore",
+   "branches": [
+    {
+     "choice": "i reflui prodotti dall'attività svolta presso l'insediamento, in cui si svolgono attività di produzione di beni e prestazione di servizi, provengono esclusivame",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "i reflui prodotti dall'attività svolta presso l'insediamento, possiedono tutte le caratteristiche qualitative e quantitative di cui alla Tabella B del Regolamen",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "i reflui prodotti dall'attività svolta presso l'insediamento di cui alla precedente SEZIONE 2, possiedono tutte le caratteristiche qualitative e quantitative di",
+     "id": "r5c1p5reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "ACQUE PROVENIENTI DA SERVIZI IGIENICI",
+     "id": "r10c1p10reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "ACQUE REFLUE INDUSTRIALI",
+     "id": "r12c1p14reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "ACQUE DI PRIMA PIOGGIA",
+     "id": "r14c1p18reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "ACQUE BIANCHE",
+     "id": "r16c1p22reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "ACQUE DI RAFFREDDAMENTO",
+     "id": "r18c1p26reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "ALTRO",
+     "id": "r20c1p30reg:chk",
+     "kind": "checkbox",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "Tipoogia scarico = Fogna Bianca",
+     "id": "r25c1p39reg",
+     "kind": "select",
+     "option": "Fogna Bianca",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "Tipoogia scarico = Fogna Mista",
+     "id": "r25c1p39reg",
+     "kind": "select",
+     "option": "Fogna Mista",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    },
+    {
+     "choice": "Tipoogia scarico = Fogna Nera",
+     "id": "r25c1p39reg",
+     "kind": "select",
+     "option": "Fogna Nera",
+     "plus": {
+      "anchor": "Tipoogia scarico",
+      "adds": 8
+     }
+    }
+   ],
+   "seconds": 17
+  },
+  {
+   "section": "SEZIONE 4 - ATTIVITA' DELLO SCARICO",
+   "fields": [
+    {
+     "id": "r3c1p3reg:number",
+     "kind": "text",
+     "label": "Ore giornaliere",
+     "max": 2
+    },
+    {
+     "id": "r3c2p5reg:number",
+     "kind": "text",
+     "label": "Giorni a settimana",
+     "max": 1
+    },
+    {
+     "id": "r3c3p7reg:number",
+     "kind": "text",
+     "label": "Mesi all'anno",
+     "max": 2
+    },
+    {
+     "id": "r5c1p11reg:radio:0_clone",
+     "kind": "radio",
+     "label": "sono quelli indicati nel referto analitico allegato alla presente istanza",
+     "group": "r5c1p11reg:radio"
+    },
+    {
+     "id": "r6c1p12reg:radio:1_clone",
+     "kind": "radio",
+     "label": "saranno desumibili dal referto analitico predisposto, nel corso dell'istruttoria, dal Soggetto Gestore con oneri a carico del richiedente;",
+     "group": "r6c1p12reg:radio"
+    },
+    {
+     "id": "r7c1p13reg:radio:2_clone",
+     "kind": "radio",
+     "label": "hanno le caratteristiche qualitative indicate nella seguente tabella:",
+     "group": "r7c1p13reg:radio"
+    },
+    {
+     "id": "r9c1p15reg:txt",
+     "kind": "text",
+     "label": "Parametro",
+     "max": 30
+    },
+    {
+     "id": "r9c2p17reg:number",
+     "kind": "text",
+     "label": "Concentrazione (mg/l)",
+     "max": 30
+    },
+    {
+     "id": "r12c1p21reg:radio:3_clone",
+     "kind": "radio",
+     "label": "NON SONO PRESENTI CICLI PRODUTTIVI di cui alla TABELLA 3/A dell'ALLEGATO 5 alla parte III del D.Lgs 152/06.",
+     "group": "r12c1p21reg:radio"
+    },
+    {
+     "id": "r13c1p22reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SONO PRESENTI CICLI PRODUTTIVI di cui alla TABELLA 3/A dell'ALLEGATO 5 alla parte III del D.Lgs 152/06. In questo caso integrare la relazione tecnica con le seg",
+     "group": "r13c1p22reg:radio"
+    },
+    {
+     "id": "r14c1p23reg:radio:5_clone",
+     "kind": "radio",
+     "label": "NON SONO PRESENTI LE SOSTANZE di cui alla TABELLA 5 dell'ALLEGATO 5 alla parte III del D.Lgs 152/06",
+     "group": "r14c1p23reg:radio"
+    },
+    {
+     "id": "r15c1p24reg:radio:6_clone",
+     "kind": "radio",
+     "label": "SONO PRESENTI LE SOSTANZE di cui alla TABELLA 5 dell'ALLEGATO 5 alla parte III del D.Lgs 152/06",
+     "group": "r15c1p24reg:radio"
+    },
+    {
+     "id": "r16c1p25reg:radio:7_clone",
+     "kind": "radio",
+     "label": "NON SONO PRESENTI LE SOSTANZE PRIORITARIE di cui all'ALLEGATO X della DIRETTIVA 2000/60/CE.",
+     "group": "r16c1p25reg:radio"
+    },
+    {
+     "id": "r17c1p26reg:radio:8_clone",
+     "kind": "radio",
+     "label": "SONO PRESENTI LE SOSTANZE PRIORITARIE di cui all'ALLEGATO X della DIRETTIVA 2000/60/CE (indicare in relazione tecnica i kg/a di sostanza scaricata)",
+     "group": "r17c1p26reg:radio"
+    }
+   ],
+   "fingerprint": "80497634d1fbc57f",
+   "text": "SEZIONE 4 - ATTIVITA' DELLO SCARICO lo scarico presenta la seguente attività media annua: Ore giornaliere Giorni a settimana Mesi all'anno i valori medi rappresentativi dei parametri qualitativi dello scarico: sono quelli indicati nel referto analitico allegato alla presente istanza saranno desumibili dal referto analitico predisposto, nel corso dell'istruttoria, dal Soggetto Gestore con oneri a carico del richiedente; hanno le caratteristiche qualitative indicate nella seguente tabella: Parametro Concentrazione (mg/l) PRESSO L'INSEDIAMENTO NON SONO PRESENTI CICLI PRODUTTIVI di cui alla TABELLA 3/A dell'ALLEGATO 5 alla parte III del D.Lgs 152/06. SONO PRESENTI CICLI PRODUTTIVI di cui alla TABELLA 3/A dell'ALLEGATO 5 alla parte III del D.Lgs 152/06. In questo caso integrare la relazione tecnica con le seguenti informazioni:fabbisogno orario di acque per ogni specifico processo produttivo e quello complessivo; capacità di produzione del singolo stabilimento industriale che comporta produzione o trasformazione o utilizzazione delle sostanze di cui alla tabella 3/A dell'allegato 5 del D.Lgs. 152/2006, ovvero la presenza di tali sostanze nello scarico. La capacità di produzione deve essere indicata con riferimento alla massima capacità oraria, moltiplicata per i numeri massimi di ore lavorative giornaliere e di giorni lavorativi. NON SONO PRESENTI LE SOSTANZE di cui alla TABELLA 5 dell'ALLEGATO 5 alla parte III del D.Lgs 152/06 SONO PRESENTI LE SOSTANZE di cui alla TABELLA 5 dell'ALLEGATO 5 alla parte III del D.Lgs 152/06 NON SONO PRESENTI LE SOSTANZE PRIORITARIE di cui all'ALLEGATO X della DIRETTIVA 2000/60/CE. SONO PRESENTI LE SOSTANZE PRIORITARIE di cui all'ALLEGATO X della DIRETTIVA 2000/60/CE (indicare in relazione tecnica i kg/a di sostanza scaricata)",
+   "branches": [
+    {
+     "choice": "sono quelli indicati nel referto analitico allegato alla presente istanza",
+     "id": "r5c1p11reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "saranno desumibili dal referto analitico predisposto, nel corso dell'istruttoria, dal Soggetto Gestore con oneri a carico del richiedente;",
+     "id": "r6c1p12reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "hanno le caratteristiche qualitative indicate nella seguente tabella:",
+     "id": "r7c1p13reg:radio:2_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "NON SONO PRESENTI CICLI PRODUTTIVI di cui alla TABELLA 3/A dell'ALLEGATO 5 alla parte III del D.Lgs 152/06.",
+     "id": "r12c1p21reg:radio:3_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "SONO PRESENTI CICLI PRODUTTIVI di cui alla TABELLA 3/A dell'ALLEGATO 5 alla parte III del D.Lgs 152/06. In questo caso integrare la relazione tecnica con le seg",
+     "id": "r13c1p22reg:radio:4_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "NON SONO PRESENTI LE SOSTANZE di cui alla TABELLA 5 dell'ALLEGATO 5 alla parte III del D.Lgs 152/06",
+     "id": "r14c1p23reg:radio:5_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "SONO PRESENTI LE SOSTANZE di cui alla TABELLA 5 dell'ALLEGATO 5 alla parte III del D.Lgs 152/06",
+     "id": "r15c1p24reg:radio:6_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "NON SONO PRESENTI LE SOSTANZE PRIORITARIE di cui all'ALLEGATO X della DIRETTIVA 2000/60/CE.",
+     "id": "r16c1p25reg:radio:7_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    },
+    {
+     "choice": "SONO PRESENTI LE SOSTANZE PRIORITARIE di cui all'ALLEGATO X della DIRETTIVA 2000/60/CE (indicare in relazione tecnica i kg/a di sostanza scaricata)",
+     "id": "r17c1p26reg:radio:8_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "Parametro",
+      "adds": 4
+     }
+    }
+   ],
+   "seconds": 12.1
+  },
+  {
+   "section": "SEZIONE 5 - CARATTERISTICHE DELL'APPROVVIGIONAMENTO IDRICO",
+   "fields": [
+    {
+     "id": "r3c1p3reg",
+     "kind": "select",
+     "label": "Tipologia Approvigionamento",
+     "options": [
+      "Fornitura da Acquedotto",
+      "Fiume, Canale o lago",
+      "Pozzo",
+      "Sorgente"
+     ]
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "Nome Fornitore o Ente Concessionario",
+     "max": 50
+    },
+    {
+     "id": "r3c3p7reg",
+     "kind": "select",
+     "label": "Presenza Contatore",
+     "options": [
+      "SI",
+      "No"
+     ]
+    },
+    {
+     "id": "r3c4p9reg:number",
+     "kind": "text",
+     "label": "Quantità Acqua Fornita (mc/a)",
+     "max": 10
+    },
+    {
+     "id": "r6c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "Altro"
+    },
+    {
+     "id": "r6c2p15reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "Altro",
+     "max": 100
+    },
+    {
+     "id": "r6c3p17reg:txt",
+     "kind": "text",
+     "label": "Nome Fornitore o Ente Concessionario",
+     "context": "Altro",
+     "max": 100
+    },
+    {
+     "id": "r6c4p19reg",
+     "kind": "select",
+     "label": "Presenza Contatore",
+     "options": [
+      "Si",
+      "No"
+     ]
+    },
+    {
+     "id": "r6c5p21reg:number",
+     "kind": "text",
+     "label": "Quantità Acqua Fornita (mc/a)",
+     "max": 10
+    },
+    {
+     "id": "r8c1p23reg:number",
+     "kind": "text",
+     "label": "Totale Acqua Impiegata (mc/a)",
+     "max": 100
+    },
+    {
+     "id": "r9c2p25reg:radio:0_clone",
+     "kind": "radio",
+     "label": "Si",
+     "group": "r9c2p25reg:radio"
+    },
+    {
+     "id": "r9c3p26reg:radio:1_clone",
+     "kind": "radio",
+     "label": "No",
+     "group": "r9c3p26reg:radio"
+    }
+   ],
+   "fingerprint": "04d2f0ad62804766",
+   "text": "SEZIONE 5 - CARATTERISTICHE DELL'APPROVVIGIONAMENTO IDRICO Ai fini della presente istanza il TITOLARE DELLO SCARICO dichiara che l'approvvigionamento idrico dell'insediamento è così caratterizzato: Tipologia Approvigionamento Nome Fornitore o Ente Concessionario Presenza Contatore Quantità Acqua Fornita (mc/a) specificare Nome Fornitore o Ente Concessionario Presenza Contatore Quantità Acqua Fornita (mc/a) Altro Totale Acqua Impiegata (mc/a) é stato selezionato come tipologia approvigionamento Pozzo o Sorgente? Si No Allegare copia concessione Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+   "branches": [
+    {
+     "choice": "Tipologia Approvigionamento = Fornitura da Acquedotto",
+     "id": "r3c1p3reg",
+     "kind": "select",
+     "option": "Fornitura da Acquedotto",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Tipologia Approvigionamento = Fiume, Canale o lago",
+     "id": "r3c1p3reg",
+     "kind": "select",
+     "option": "Fiume, Canale o lago",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Tipologia Approvigionamento = Pozzo",
+     "id": "r3c1p3reg",
+     "kind": "select",
+     "option": "Pozzo",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Tipologia Approvigionamento = Sorgente",
+     "id": "r3c1p3reg",
+     "kind": "select",
+     "option": "Sorgente",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Presenza Contatore = SI",
+     "id": "r3c3p7reg",
+     "kind": "select",
+     "option": "SI",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Presenza Contatore = No",
+     "id": "r3c3p7reg",
+     "kind": "select",
+     "option": "No",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Altro",
+     "id": "r6c1p13reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Presenza Contatore = Si",
+     "id": "r6c4p19reg",
+     "kind": "select",
+     "option": "Si",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Presenza Contatore = No",
+     "id": "r6c4p19reg",
+     "kind": "select",
+     "option": "No",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Si",
+     "id": "r9c2p25reg:radio:0_clone",
+     "kind": "radio",
+     "reveals": [
+      {
+       "id": "r11c1p28reg:upload1_input",
+       "kind": "file",
+       "label": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+       "context": "Allegare copia concessione",
+       "accepts": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m"
+      }
+     ],
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologie ammesse: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m Allega Max: 9,77 MB",
+      "adds": 1
+     }
+    },
+    {
+     "choice": "No",
+     "id": "r9c3p26reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r6c4p19reg",
+       "r3c3p7reg"
+      ],
+      [
+       "r6c5p21reg:number",
+       "r3c4p9reg:number"
+      ]
+     ],
+     "plus": {
+      "anchor": "Tipologia Approvigionamento",
+      "adds": 10
+     }
+    }
+   ],
+   "seconds": 24.2
+  },
+  {
+   "section": "SEZIONE 5 - Utilizzazione dell'acqua",
+   "fields": [
+    {
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "label": "Utilizzazione dell'acqua",
+     "options": [
+      "Acquedotto",
+      "Fiume, Canale o Lago",
+      "Pozzo",
+      "Sorgente",
+      "Altre Fonti"
+     ]
+    },
+    {
+     "id": "r2c2p4reg:number",
+     "kind": "text",
+     "label": "% Processo",
+     "max": 3
+    },
+    {
+     "id": "r2c3p6reg:number",
+     "kind": "text",
+     "label": "% Servizi",
+     "max": 3
+    },
+    {
+     "id": "r2c4p8reg:number",
+     "kind": "text",
+     "label": "% Raffreddamento",
+     "max": 3
+    },
+    {
+     "id": "r2c5p10reg:number",
+     "kind": "text",
+     "label": "% Altro",
+     "max": 3
+    }
+   ],
+   "fingerprint": "fad854fb5efd10b8",
+   "text": "SEZIONE 5 - Utilizzazione dell'acqua Utilizzazione dell'acqua % Processo % Servizi % Raffreddamento % Altro",
+   "branches": [
+    {
+     "choice": "Utilizzazione dell'acqua = Acquedotto",
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "option": "Acquedotto",
+     "plus": {
+      "anchor": "Utilizzazione dell'acqua",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Utilizzazione dell'acqua = Fiume, Canale o Lago",
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "option": "Fiume, Canale o Lago",
+     "plus": {
+      "anchor": "Utilizzazione dell'acqua",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Utilizzazione dell'acqua = Pozzo",
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "option": "Pozzo",
+     "plus": {
+      "anchor": "Utilizzazione dell'acqua",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Utilizzazione dell'acqua = Sorgente",
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "option": "Sorgente",
+     "plus": {
+      "anchor": "Utilizzazione dell'acqua",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "Utilizzazione dell'acqua = Altre Fonti",
+     "id": "r2c1p2reg",
+     "kind": "select",
+     "option": "Altre Fonti",
+     "plus": {
+      "anchor": "Utilizzazione dell'acqua",
+      "adds": 10
+     }
+    }
+   ],
+   "seconds": 11.7
+  },
+  {
+   "section": "SEZIONE 6 - CARATTERISTICHE DELL'IMPIANTO DI TRATTAMENTO ACQUE REFLUE",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "SENZA ALCUN TRATTAMENTO",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "PREVIO TRATTAMENTO le cui caratteristiche sono descritte nella Relazione tecnica allegata",
+     "group": "r3c1p3reg:radio"
+    }
+   ],
+   "fingerprint": "d27c84898fcecd69",
+   "text": "SEZIONE 6 - CARATTERISTICHE DELL'IMPIANTO DI TRATTAMENTO ACQUE REFLUE Il TITOLARE DELLO SCARICO dichiara che i reflui prodotti presso l'insediamento sono conferiti al sistema ricettore: SENZA ALCUN TRATTAMENTO PREVIO TRATTAMENTO le cui caratteristiche sono descritte nella Relazione tecnica allegata",
+   "branches": [
+    {
+     "choice": "SENZA ALCUN TRATTAMENTO",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "PREVIO TRATTAMENTO le cui caratteristiche sono descritte nella Relazione tecnica allegata",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 3.2
+  },
+  {
+   "section": "SEZIONE 7 - CARATTERISTICHE DEL TRATTAMENTO ACQUE DI PRIMA PIOGGIA",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "PUBBLICA FOGNATURA NERA",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "PUBBLICA FOGNATURA MISTA",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio",
+     "label": "PUBBLICA FOGNATURA BIANCA",
+     "group": "r4c1p4reg:radio"
+    },
+    {
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio",
+     "label": "IN CORPO IDRICO SUPERFICIALE",
+     "group": "r5c1p5reg:radio"
+    },
+    {
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio",
+     "label": "SU SUOLO",
+     "group": "r6c1p6reg:radio"
+    },
+    {
+     "id": "r8c1p8reg:radio:5_clone",
+     "kind": "radio",
+     "label": "ALTRO",
+     "group": "r8c1p8reg:radio"
+    },
+    {
+     "id": "r8c2p10reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "ALTRO",
+     "max": 50
+    },
+    {
+     "id": "r10c1p12reg:radio:6_clone",
+     "kind": "radio",
+     "label": "SENZA ALCUN PRETRATTAMENTO",
+     "group": "r10c1p12reg:radio"
+    },
+    {
+     "id": "r11c1p13reg:radio:7_clone",
+     "kind": "radio",
+     "label": "PREVIO PRETTRATTAMENTO le cui caratteristiche sono descritte nella Relazione tecnica allegata.",
+     "group": "r11c1p13reg:radio"
+    },
+    {
+     "id": "r13c1p15reg:txt",
+     "kind": "text",
+     "label": "- Il volume massimo di acque di prima pioggia che si prevede di conferire annualmente nel sistema ricettore è pari a mc (calcolato con il seguente criterio desc",
+     "max": 10
+    },
+    {
+     "id": "r14c1p16reg:radio:8_clone",
+     "kind": "radio",
+     "label": "primi 5 mm di precipitazione uniformemente distribuita sull'intera superficie scolante;",
+     "group": "r14c1p16reg:radio"
+    },
+    {
+     "id": "r15c1p17reg:radio:9_clone",
+     "kind": "radio",
+     "label": "altro criterio",
+     "group": "r15c1p17reg:radio"
+    },
+    {
+     "id": "r17c1p19reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "max": 100
+    },
+    {
+     "id": "r19c1p21reg:radio:10_clone",
+     "kind": "radio",
+     "label": "NON SONO DEVIATE verso altro recapito;",
+     "group": "r19c1p21reg:radio"
+    },
+    {
+     "id": "r21c1p23reg:radio:11_clone",
+     "kind": "radio",
+     "label": "SONO DEVIATE verso il seguente recapito:",
+     "group": "r21c1p23reg:radio"
+    },
+    {
+     "id": "r21c2p25reg:txt",
+     "kind": "text",
+     "label": "Specificare",
+     "context": "SONO DEVIATE verso il seguente recapito:",
+     "max": 100
+    },
+    {
+     "id": "r23c1p27reg:radio:12_clone",
+     "kind": "radio",
+     "label": "all'interno dello stabilimento;",
+     "group": "r23c1p27reg:radio"
+    },
+    {
+     "id": "r24c1p28reg:radio:13_clone",
+     "kind": "radio",
+     "label": "all'esterno dello stabilimento.",
+     "group": "r24c1p28reg:radio"
+    }
+   ],
+   "fingerprint": "430c38676c175570",
+   "text": "SEZIONE 7 - CARATTERISTICHE DEL TRATTAMENTO ACQUE DI PRIMA PIOGGIA - le acque meteoriche di PRIMA PIOGGIA prodotte dal dilavamento delle superfici presenti presso l'insediamento sono conferite in: PUBBLICA FOGNATURA NERA PUBBLICA FOGNATURA MISTA PUBBLICA FOGNATURA BIANCA IN CORPO IDRICO SUPERFICIALE SU SUOLO Specificare ALTRO e vengono scaricate nel sistema ricettore: SENZA ALCUN PRETRATTAMENTO PREVIO PRETTRATTAMENTO le cui caratteristiche sono descritte nella Relazione tecnica allegata. - Il volume massimo di acque di prima pioggia che si prevede di conferire annualmente nel sistema ricettore è pari a mc (calcolato con il seguente criterio descritto nella relazione tecnica allegata) primi 5 mm di precipitazione uniformemente distribuita sull'intera superficie scolante; altro criterio Specificare - le acque meteoriche SUCCESSIVE ALLA PRIMA PIOGGIA: NON SONO DEVIATE verso altro recapito; Specificare SONO DEVIATE verso il seguente recapito: - il deposito di materie prime, prodotti intermedi, prodotti finiti avviene secondo le modalità descritte nella relazione tecnica: all'interno dello stabilimento; all'esterno dello stabilimento.",
+   "branches": [
+    {
+     "choice": "PUBBLICA FOGNATURA NERA",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "PUBBLICA FOGNATURA MISTA",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "PUBBLICA FOGNATURA BIANCA",
+     "id": "r4c1p4reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "IN CORPO IDRICO SUPERFICIALE",
+     "id": "r5c1p5reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "SU SUOLO",
+     "id": "r6c1p6reg:radio:4_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "ALTRO",
+     "id": "r8c1p8reg:radio:5_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "SENZA ALCUN PRETRATTAMENTO",
+     "id": "r10c1p12reg:radio:6_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "PREVIO PRETTRATTAMENTO le cui caratteristiche sono descritte nella Relazione tecnica allegata.",
+     "id": "r11c1p13reg:radio:7_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "primi 5 mm di precipitazione uniformemente distribuita sull'intera superficie scolante;",
+     "id": "r14c1p16reg:radio:8_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro criterio",
+     "id": "r15c1p17reg:radio:9_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "NON SONO DEVIATE verso altro recapito;",
+     "id": "r19c1p21reg:radio:10_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "SONO DEVIATE verso il seguente recapito:",
+     "id": "r21c1p23reg:radio:11_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "all'interno dello stabilimento;",
+     "id": "r23c1p27reg:radio:12_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "all'esterno dello stabilimento.",
+     "id": "r24c1p28reg:radio:13_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 18.4
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.9
+  }
+ ]
+}

@@ -1,0 +1,1283 @@
+{
+ "crawled": "2026-10-28T20:00:48.640Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Occupazione suolo pubblico › Domanda di occupazione suolo pubblico per area annessa ad esercizio di somministrazione di alimenti e bevande (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 29.7,
+ "generated": {
+  "interventi": "Autorizzazione per occupazione di suolo pubblico per area annessa ad esercizio di somministrazione di alimenti e bevande",
+  "adempimenti": [
+   {
+    "adempimento": "Autorizzazione all'occupazione di suolo pubblico per area annessa ad esercizio di somministrazione di alimenti e bevande",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa alla sede dell'attività",
+   "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "dichiarazione dell'insegna dell'esercizio",
+   "dichiarazione relativa agli orari ed ai giorni di apertura",
+   "dichiarazione relativa all'occupazione di suolo pubblico per attività di somministrazione alimenti e bevande",
+   "dichiarazione del periodo di effettiva occupazione",
+   "dichiarazione delle misure dell'area richiesta",
+   "dichiarazione relativa all'inquinamento acustico",
+   "dichiarazione di impegno relativa al montaggio della struttura",
+   "dichiarazione di impegno al pagamento della TOSAP/COSAP",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "Dichiarazione relativa all'assolvimento dell'imposta di bollo"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.6
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa alla sede dell'attività",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "fingerprint": "94f9e919eed08517",
+   "same_as": "suap-017-affidare-in-gestione-reparto#dichiarazione dell'obbligo di notifica ai fini della registrazione  impresa alimentare prevista dall'art.6 del Reg. CE 852/2004",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione dell'insegna dell'esercizio",
+   "fingerprint": "91770c2e0f55753b",
+   "same_as": "suap-060-richiedere-l-orario-di-apertura-in-deroga-a-quanto#dichiarazione dell'insegna dell'esercizio",
+   "seconds": 0.7
+  },
+  {
+   "section": "dichiarazione relativa agli orari ed ai giorni di apertura",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "orari diversi giorno per giorno",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "lunedì"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "lunedì",
+     "max": 5
+    },
+    {
+     "id": "r3c3p7reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "lunedì",
+     "max": 5
+    },
+    {
+     "id": "r3c4p9reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "lunedì",
+     "max": 5
+    },
+    {
+     "id": "r3c5p11reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "lunedì",
+     "max": 5
+    },
+    {
+     "id": "r5c1p13reg:chk",
+     "kind": "checkbox",
+     "label": "martedì"
+    },
+    {
+     "id": "r5c2p15reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "martedì",
+     "max": 5
+    },
+    {
+     "id": "r5c3p17reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "martedì",
+     "max": 5
+    },
+    {
+     "id": "r5c4p19reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "martedì",
+     "max": 5
+    },
+    {
+     "id": "r5c5p21reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "martedì",
+     "max": 5
+    },
+    {
+     "id": "r7c1p23reg:chk",
+     "kind": "checkbox",
+     "label": "mercoledì"
+    },
+    {
+     "id": "r7c2p25reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "mercoledì",
+     "max": 5
+    },
+    {
+     "id": "r7c3p27reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "mercoledì",
+     "max": 5
+    },
+    {
+     "id": "r7c4p29reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "mercoledì",
+     "max": 5
+    },
+    {
+     "id": "r7c5p31reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "mercoledì",
+     "max": 5
+    },
+    {
+     "id": "r9c1p33reg:chk",
+     "kind": "checkbox",
+     "label": "giovedì"
+    },
+    {
+     "id": "r9c2p35reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "giovedì",
+     "max": 10
+    },
+    {
+     "id": "r9c3p37reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "giovedì",
+     "max": 10
+    },
+    {
+     "id": "r9c4p39reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "giovedì",
+     "max": 10
+    },
+    {
+     "id": "r9c5p41reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "giovedì",
+     "max": 10
+    },
+    {
+     "id": "r11c1p43reg:chk",
+     "kind": "checkbox",
+     "label": "venerdì"
+    },
+    {
+     "id": "r11c2p45reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "venerdì",
+     "max": 10
+    },
+    {
+     "id": "r11c3p47reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "venerdì",
+     "max": 10
+    },
+    {
+     "id": "r11c4p49reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "venerdì",
+     "max": 10
+    },
+    {
+     "id": "r11c5p51reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "venerdì",
+     "max": 10
+    },
+    {
+     "id": "r13c1p53reg:chk",
+     "kind": "checkbox",
+     "label": "sabato"
+    },
+    {
+     "id": "r13c2p55reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "sabato",
+     "max": 10
+    },
+    {
+     "id": "r13c3p57reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "sabato",
+     "max": 10
+    },
+    {
+     "id": "r13c4p59reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "sabato",
+     "max": 10
+    },
+    {
+     "id": "r13c5p61reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "sabato",
+     "max": 10
+    },
+    {
+     "id": "r15c1p63reg:chk",
+     "kind": "checkbox",
+     "label": "domenica"
+    },
+    {
+     "id": "r15c2p65reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "domenica",
+     "max": 10
+    },
+    {
+     "id": "r15c3p67reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "domenica",
+     "max": 10
+    },
+    {
+     "id": "r15c4p69reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "context": "domenica",
+     "max": 10
+    },
+    {
+     "id": "r15c5p71reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "context": "domenica",
+     "max": 10
+    },
+    {
+     "id": "r16c1p72reg:radio:1_clone",
+     "kind": "radio",
+     "label": "oppure tutti i giorni:",
+     "group": "r16c1p72reg:radio"
+    },
+    {
+     "id": "r18c1p74reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "max": 10
+    },
+    {
+     "id": "r18c2p76reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 10
+    },
+    {
+     "id": "r18c3p78reg:txt",
+     "kind": "text",
+     "label": "dalle ore",
+     "max": 10
+    },
+    {
+     "id": "r18c4p80reg:txt",
+     "kind": "text",
+     "label": "alle ore",
+     "max": 10
+    },
+    {
+     "id": "r20c1p84reg:txt",
+     "kind": "text",
+     "label": "giorno di chiusura (in caso non ve ne siano indicare 'nessuno')",
+     "max": 50
+    }
+   ],
+   "fingerprint": "33d6e1eee18f0095",
+   "text": "dichiarazione relativa agli orari ed ai giorni di apertura orari diversi giorno per giorno dalle ore alle ore dalle ore alle ore lunedì dalle ore alle ore dalle ore alle ore martedì dalle ore alle ore dalle ore alle ore mercoledì dalle ore alle ore dalle ore alle ore giovedì dalle ore alle ore dalle ore alle ore venerdì dalle ore alle ore dalle ore alle ore sabato dalle ore alle ore dalle ore alle ore domenica oppure tutti i giorni: dalle ore alle ore dalle ore alle ore giorno di chiusura (in caso non ve ne siano indicare 'nessuno')",
+   "branches": [
+    {
+     "choice": "orari diversi giorno per giorno",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "lunedì",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "martedì",
+     "id": "r5c1p13reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "mercoledì",
+     "id": "r7c1p23reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "giovedì",
+     "id": "r9c1p33reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "venerdì",
+     "id": "r11c1p43reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "sabato",
+     "id": "r13c1p53reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "domenica",
+     "id": "r15c1p63reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "oppure tutti i giorni:",
+     "id": "r16c1p72reg:radio:1_clone",
+     "kind": "radio",
+     "moved": [
+      [
+       "r3c4p9reg:txt",
+       "r3c2p5reg:txt"
+      ],
+      [
+       "r3c5p11reg:txt",
+       "r3c3p7reg:txt"
+      ],
+      [
+       "r5c4p19reg:txt",
+       "r5c2p15reg:txt"
+      ],
+      [
+       "r5c5p21reg:txt",
+       "r5c3p17reg:txt"
+      ],
+      [
+       "r7c4p29reg:txt",
+       "r7c2p25reg:txt"
+      ],
+      [
+       "r7c5p31reg:txt",
+       "r7c3p27reg:txt"
+      ],
+      [
+       "r9c4p39reg:txt",
+       "r9c2p35reg:txt"
+      ],
+      [
+       "r9c5p41reg:txt",
+       "r9c3p37reg:txt"
+      ],
+      [
+       "r11c4p49reg:txt",
+       "r11c2p45reg:txt"
+      ],
+      [
+       "r11c5p51reg:txt",
+       "r11c3p47reg:txt"
+      ],
+      [
+       "r13c4p59reg:txt",
+       "r13c2p55reg:txt"
+      ],
+      [
+       "r13c5p61reg:txt",
+       "r13c3p57reg:txt"
+      ],
+      [
+       "r15c4p69reg:txt",
+       "r15c2p65reg:txt"
+      ],
+      [
+       "r15c5p71reg:txt",
+       "r15c3p67reg:txt"
+      ],
+      [
+       "r18c3p78reg:txt",
+       "r18c1p74reg:txt"
+      ],
+      [
+       "r18c4p80reg:txt",
+       "r18c2p76reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 6.9
+  },
+  {
+   "section": "dichiarazione relativa all'occupazione di suolo pubblico per attività di somministrazione alimenti e bevande",
+   "fields": [
+    {
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio",
+     "label": "area pubblica",
+     "group": "r2c1p2reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "area privata ad uso pubblico",
+     "group": "r3c1p3reg:radio"
+    }
+   ],
+   "fingerprint": "15f143d87795fa1d",
+   "text": "dichiarazione relativa all'occupazione di suolo pubblico per attività di somministrazione alimenti e bevande si tratta di: area pubblica area privata ad uso pubblico",
+   "branches": [
+    {
+     "choice": "area pubblica",
+     "id": "r2c1p2reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "area privata ad uso pubblico",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione del periodo di effettiva occupazione",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "a carattere annuale (1° anno di richiesta)",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio",
+     "label": "a carattere annuale - rinnovo di autorizzazione",
+     "group": "r3c1p3reg:radio"
+    },
+    {
+     "id": "r3c2p5reg:txt",
+     "kind": "text",
+     "label": "numero",
+     "context": "a carattere annuale - rinnovo di autorizzazione",
+     "max": 10
+    },
+    {
+     "id": "r3c3p7reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r5c1p9reg:radio:2_clone",
+     "kind": "radio",
+     "label": "a carattere stagionale",
+     "group": "r5c1p9reg:radio"
+    },
+    {
+     "id": "r5c2p11reg:calendar_input",
+     "kind": "date",
+     "label": "dal giorno"
+    },
+    {
+     "id": "r5c3p13reg:calendar_input",
+     "kind": "date",
+     "label": "al giorno"
+    },
+    {
+     "id": "r8c1p16reg:radio:3_clone",
+     "kind": "radio",
+     "label": "nel giorno di chiusura settimanale",
+     "group": "r8c1p16reg:radio"
+    },
+    {
+     "id": "r8c2p18reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "nel giorno di chiusura settimanale",
+     "max": 50
+    },
+    {
+     "id": "r10c1p20reg:radio:4_clone",
+     "kind": "radio",
+     "label": "altro",
+     "group": "r10c1p20reg:radio"
+    },
+    {
+     "id": "r10c2p22reg:txt",
+     "kind": "text",
+     "label": "specificare",
+     "context": "altro",
+     "max": 200
+    }
+   ],
+   "fingerprint": "d68d344a25139fe6",
+   "text": "dichiarazione del periodo di effettiva occupazione a carattere annuale (1° anno di richiesta) numero del a carattere annuale - rinnovo di autorizzazione dal giorno al giorno a carattere stagionale con area libera: specificare nel giorno di chiusura settimanale specificare altro",
+   "branches": [
+    {
+     "choice": "a carattere annuale (1° anno di richiesta)",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "a carattere annuale - rinnovo di autorizzazione",
+     "id": "r3c1p3reg:radio:1_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "a carattere stagionale",
+     "id": "r5c1p9reg:radio:2_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "nel giorno di chiusura settimanale",
+     "id": "r8c1p16reg:radio:3_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "altro",
+     "id": "r10c1p20reg:radio:4_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 4.1
+  },
+  {
+   "section": "dichiarazione delle misure dell'area richiesta",
+   "fields": [
+    {
+     "id": "r2c1p2reg:real",
+     "kind": "text",
+     "label": "lunghezza area occupata in mt. lineari",
+     "max": 13
+    },
+    {
+     "id": "r4c1p4reg:real",
+     "kind": "text",
+     "label": "larghezza area occupata in mt. lineari",
+     "max": 13
+    },
+    {
+     "id": "r6c1p6reg:real",
+     "kind": "text",
+     "label": "totale in mq",
+     "max": 13
+    }
+   ],
+   "fingerprint": "9ff02038c5c74f6f",
+   "text": "dichiarazione delle misure dell'area richiesta lunghezza area occupata in mt. lineari larghezza area occupata in mt. lineari totale in mq",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "dichiarazione relativa all'inquinamento acustico",
+   "fields": [
+    {
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio",
+     "label": "che non sono presenti fonti acustiche",
+     "group": "r1c1p1reg:radio"
+    },
+    {
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio",
+     "label": "che rispetta i limiti acustici di pressione e orario, previsti dalla normativa vigente per la zona occupata",
+     "group": "r2c1p2reg:radio"
+    }
+   ],
+   "fingerprint": "dc284eb6e34b1ea6",
+   "text": "dichiarazione relativa all'inquinamento acustico che non sono presenti fonti acustiche che rispetta i limiti acustici di pressione e orario, previsti dalla normativa vigente per la zona occupata",
+   "branches": [
+    {
+     "choice": "che non sono presenti fonti acustiche",
+     "id": "r1c1p1reg:radio:0_clone",
+     "kind": "radio"
+    },
+    {
+     "choice": "che rispetta i limiti acustici di pressione e orario, previsti dalla normativa vigente per la zona occupata",
+     "id": "r2c1p2reg:radio:1_clone",
+     "kind": "radio"
+    }
+   ],
+   "seconds": 2
+  },
+  {
+   "section": "dichiarazione di impegno relativa al montaggio della struttura",
+   "fields": [
+    {
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox",
+     "label": "di impegnarsi a far pervenire al Comune, ad avvenuta installazione certificazione di corretto montaggio delle strutture (es. pedane,tende, estensibili, delimita"
+    }
+   ],
+   "fingerprint": "3e3ac0cc8223dfd1",
+   "text": "dichiarazione di impegno relativa al montaggio della struttura di impegnarsi a far pervenire al Comune, ad avvenuta installazione certificazione di corretto montaggio delle strutture (es. pedane,tende, estensibili, delimitazioni) e degli impianti tecnologici (es.: impianto elettrico) a firma di tecnico abilitato",
+   "branches": [
+    {
+     "choice": "di impegnarsi a far pervenire al Comune, ad avvenuta installazione certificazione di corretto montaggio delle strutture (es. pedane,tende, estensibili, delimita",
+     "id": "r1c1p1reg:lbl",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 1.3
+  },
+  {
+   "section": "dichiarazione di impegno al pagamento della TOSAP/COSAP",
+   "fields": [
+    {
+     "id": "r1c1p1reg:chk",
+     "kind": "checkbox",
+     "label": "si impegna a pagare l'ammontare della TOSAP/COSAP al momento del rilascio dell'autorizzazione"
+    },
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "è a conoscenza che il mancato pagamento della TOSAP/COSAP determina l'immediata decadenza dell'autorizzazione all'occupazione del suolo pubblico"
+    }
+   ],
+   "fingerprint": "fbe202440d0784c1",
+   "text": "dichiarazione di impegno al pagamento della TOSAP/COSAP si impegna a pagare l'ammontare della TOSAP/COSAP al momento del rilascio dell'autorizzazione è a conoscenza che il mancato pagamento della TOSAP/COSAP determina l'immediata decadenza dell'autorizzazione all'occupazione del suolo pubblico",
+   "branches": [],
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.6
+  },
+  {
+   "section": "Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "fingerprint": "869752d2cea5aef3",
+   "same_as": "sue-permesso-di-costruire-art-10-d-p-r-380-2001#Dichiarazione relativa all'assolvimento dell'imposta di bollo",
+   "seconds": 0.6
+  }
+ ]
+}

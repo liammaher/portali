@@ -1,0 +1,288 @@
+{
+ "crawled": "2026-10-28T20:31:21.494Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: CHK: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › Variazioni soggetti (denominazione, sede legale, rappresentante legale) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 17.6,
+ "generated": {
+  "interventi": "Variazione soggetti in autorizzazione per impianti pubblicitari",
+  "adempimenti": [
+   {
+    "adempimento": "SCIA per variazione ragione sociale / sede legale / rappresentante legale",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "dichiarazione relativa all'indirizzo/collocazione",
+   "estremi della concessione / autorizzazione",
+   "variazione soggettive",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.9
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa all'indirizzo/collocazione",
+   "fingerprint": "1ae79e0eb7308899",
+   "same_as": "acconciatore#ubicazione dell'attività",
+   "seconds": 0.8
+  },
+  {
+   "section": "estremi della concessione / autorizzazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:txt",
+     "kind": "text",
+     "label": "concessione / autorizzazione n°",
+     "max": 15
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "del"
+    },
+    {
+     "id": "r3c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "dichiara che non sono state apportate modifiche e/o variazioni rispetto a quanto contenuto nella concessione/autorizzazione sopra indicata"
+    }
+   ],
+   "fingerprint": "4cb04df9f98d2ff2",
+   "text": "estremi della concessione / autorizzazione concessione / autorizzazione n° del dichiara che non sono state apportate modifiche e/o variazioni rispetto a quanto contenuto nella concessione/autorizzazione sopra indicata",
+   "branches": [],
+   "seconds": 0.9
+  },
+  {
+   "section": "variazione soggettive",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE"
+    },
+    {
+     "id": "r2c2p4reg:calendar_input",
+     "kind": "date",
+     "label": "con decorrenza dal"
+    },
+    {
+     "id": "r4c1p6reg:txt",
+     "kind": "text",
+     "label": "precedente",
+     "max": 50
+    },
+    {
+     "id": "r6c1p8reg:txt",
+     "kind": "text",
+     "label": "nuova",
+     "max": 50
+    },
+    {
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DELLA SEDE LEGALE"
+    },
+    {
+     "id": "r9c1p11reg:txt",
+     "kind": "text",
+     "label": "da via o...",
+     "max": 50
+    },
+    {
+     "id": "r9c2p13reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r9c3p15reg:number",
+     "kind": "text",
+     "label": "C.A.P.",
+     "max": 5
+    },
+    {
+     "id": "r11c1p17reg:txt",
+     "kind": "text",
+     "label": "a via o ...",
+     "max": 50
+    },
+    {
+     "id": "r11c2p19reg:txt",
+     "kind": "text",
+     "label": "comune",
+     "max": 50
+    },
+    {
+     "id": "r11c3p21reg:number",
+     "kind": "text",
+     "label": "C.A.P.",
+     "max": 5
+    },
+    {
+     "id": "r12c1p22reg:chk",
+     "kind": "checkbox",
+     "label": "VARIAZIONE DEL LEGALE RAPPRESENTANTE"
+    },
+    {
+     "id": "r14c1p24reg:txt",
+     "kind": "text",
+     "label": "dal/ la sig./ ra cognome",
+     "max": 35
+    },
+    {
+     "id": "r14c2p26reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 35
+    },
+    {
+     "id": "r16c1p28reg:txt",
+     "kind": "text",
+     "label": "al/ la sig./ ra cognome",
+     "max": 35
+    },
+    {
+     "id": "r16c2p30reg:txt",
+     "kind": "text",
+     "label": "nome",
+     "max": 35
+    }
+   ],
+   "fingerprint": "46538336062df525",
+   "text": "variazione soggettive con decorrenza dal VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE precedente nuova VARIAZIONE DELLA SEDE LEGALE da via o... comune C.A.P. a via o ... comune C.A.P. VARIAZIONE DEL LEGALE RAPPRESENTANTE dal/ la sig./ ra cognome nome al/ la sig./ ra cognome nome",
+   "branches": [
+    {
+     "choice": "VARIAZIONE DELLA DENOMINAZIONE/RAGIONE SOCIALE",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r11c2p19reg:txt",
+       "r9c2p13reg:txt"
+      ],
+      [
+       "r11c3p21reg:number",
+       "r9c3p15reg:number"
+      ],
+      [
+       "r16c2p30reg:txt",
+       "r14c2p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DELLA SEDE LEGALE",
+     "id": "r7c1p9reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r11c2p19reg:txt",
+       "r9c2p13reg:txt"
+      ],
+      [
+       "r11c3p21reg:number",
+       "r9c3p15reg:number"
+      ],
+      [
+       "r16c2p30reg:txt",
+       "r14c2p26reg:txt"
+      ]
+     ]
+    },
+    {
+     "choice": "VARIAZIONE DEL LEGALE RAPPRESENTANTE",
+     "id": "r12c1p22reg:chk",
+     "kind": "checkbox",
+     "moved": [
+      [
+       "r11c2p19reg:txt",
+       "r9c2p13reg:txt"
+      ],
+      [
+       "r11c3p21reg:number",
+       "r9c3p15reg:number"
+      ],
+      [
+       "r16c2p30reg:txt",
+       "r14c2p26reg:txt"
+      ]
+     ]
+    }
+   ],
+   "seconds": 4.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  }
+ ]
+}

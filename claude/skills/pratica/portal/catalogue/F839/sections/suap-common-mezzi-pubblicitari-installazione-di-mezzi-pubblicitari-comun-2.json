@@ -1,0 +1,367 @@
+{
+ "crawled": "2026-10-28T20:29:02.372Z",
+ "by": "crawl.js batch, depth 2",
+ "pratica": "SUAP: RAD: ALTRE ESIGENZE connesse con l'esercizio dell'attività (Adempimenti SANITARI, mezzi pubblicitari, occupazione di suolo pubblico, ecc...) › Mezzi pubblicitari › Installazione di mezzi pubblicitari (Ente competente: Comune) › Comunicazione per installazione pubblicità temporanea nei casi in cui non sussistano vincoli ambientali, paesaggistici o culturali o si possieda l'autorizzazione relativa al vincolo (per i soli Comuni che hanno adottato il Piano urbanistico/edilizio impianti per installazione insegne) (sector Esercizio di somministrazione di alimenti e bevande in zone NON tutelate)",
+ "seconds": 38.2,
+ "generated": {
+  "interventi": "Comunicazione per installazione pubblicità temporanea",
+  "adempimenti": [
+   {
+    "adempimento": "Comunicazione per installazione pubblicità temporanea",
+    "amministrazione": "UFFICI COMUNE DI NAPOLI"
+   }
+  ],
+  "sections": [
+   "Scheda anagrafica",
+   "Oggetto della pratica",
+   "DOMICILIO DIGITALE",
+   "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "luogo dell'installazione",
+   "tipologia del mezzo pubblicitario (pubblicità temporanea) pannello ripetibile",
+   "Periodo e luogo di esposizione",
+   "Ulteriori dichiarazioni (mezzi pubblicitari temporanei)",
+   "Caratteristiche del manufatto da installare",
+   "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "dichiarazione relativa ai diritti di segreteria/istruttori"
+  ]
+ },
+ "screens": [
+  {
+   "screen": "scelta del destinatario della pratica",
+   "options": [
+    {
+     "label": "",
+     "checked": false
+    },
+    {
+     "label": "",
+     "checked": true
+    }
+   ]
+  },
+  {
+   "screen": "scelte eventuali",
+   "options": [
+    {
+     "key": "0",
+     "type": "CHK",
+     "label": "IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE"
+    }
+   ]
+  }
+ ],
+ "variants": [],
+ "sections": [
+  {
+   "section": "Scheda anagrafica",
+   "fingerprint": "4dd844db9cdb76ff",
+   "same_as": "acconciatore#Scheda anagrafica",
+   "seconds": 0
+  },
+  {
+   "section": "Oggetto della pratica",
+   "fingerprint": "b9828eee09a1f50f",
+   "same_as": "acconciatore#Oggetto della pratica",
+   "seconds": 0.7
+  },
+  {
+   "section": "DOMICILIO DIGITALE",
+   "fingerprint": "5978ae29f079ce08",
+   "same_as": "acconciatore#DOMICILIO DIGITALE",
+   "seconds": 0.8
+  },
+  {
+   "section": "DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "fingerprint": "c282ef61bee9ea4d",
+   "same_as": "acconciatore#DOMICILIO ELETTRONICO (DOMICILIO DIGITALE SPECIALE)",
+   "seconds": 0.7
+  },
+  {
+   "section": "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "INFORMATIVA SULLA PRIVACY (Art. 13 del Reg. UE n. 2016/679 del 27 aprile 2016)",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "luogo dell'installazione",
+   "fields": [
+    {
+     "id": "r2c1p2reg:number",
+     "kind": "text",
+     "label": "num. progressivo",
+     "max": 2
+    },
+    {
+     "id": "r3c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "label": "in area privata",
+     "group": "r3c1p5reg:radio"
+    },
+    {
+     "id": "r3c2p6reg:radio:1_clone",
+     "kind": "radio",
+     "label": "in area pubblica",
+     "group": "r3c2p6reg:radio"
+    },
+    {
+     "id": "r4c1p7reg:chk",
+     "kind": "checkbox",
+     "label": "sulla facciata del fabbricato / presso il locale"
+    },
+    {
+     "id": "r8c1p18reg:chk",
+     "kind": "checkbox",
+     "label": "Lungo la strada/area:"
+    }
+   ],
+   "fingerprint": "be34866e624f81de",
+   "text": "luogo dell'installazione num. progressivo in area privata in area pubblica sulla facciata del fabbricato / presso il locale Lungo la strada/area: __________________________________________________________________________",
+   "branches": [
+    {
+     "choice": "in area privata",
+     "id": "r3c1p5reg:radio:0_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "in area pubblica",
+     "id": "r3c2p6reg:radio:1_clone",
+     "kind": "radio",
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 10
+     }
+    },
+    {
+     "choice": "sulla facciata del fabbricato / presso il locale",
+     "id": "r4c1p7reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r6c1p9reg:txt",
+       "kind": "text",
+       "label": "sito in Via/Piazza",
+       "max": 50
+      },
+      {
+       "id": "r6c2p11reg:txt",
+       "kind": "text",
+       "label": "n°",
+       "max": 10
+      },
+      {
+       "id": "r7c1p14reg:radio:2_clone",
+       "kind": "radio",
+       "label": "NCT",
+       "group": "r7c1p14reg:radio"
+      },
+      {
+       "id": "r7c2p15reg:radio:3_clone",
+       "kind": "radio",
+       "label": "NCEU",
+       "group": "r7c2p15reg:radio"
+      },
+      {
+       "id": "r9c1p18reg:txt",
+       "kind": "text",
+       "label": "foglio",
+       "max": 20
+      },
+      {
+       "id": "r9c2p20reg:txt",
+       "kind": "text",
+       "label": "mappale",
+       "max": 20
+      },
+      {
+       "id": "r9c3p22reg:txt",
+       "kind": "text",
+       "label": "subalterno",
+       "max": 20
+      },
+      {
+       "id": "r11c1p26reg:txt",
+       "kind": "text",
+       "label": "di proprietà (nome cognome / ragione sociale / denominazione)",
+       "max": 50
+      }
+     ],
+     "moved": [
+      [
+       "r8c1p18reg:chk",
+       "r12c1p27reg:chk"
+      ]
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 10
+     },
+     "then": [
+      {
+       "choice": "NCT",
+       "id": "r7c1p14reg:radio:2_clone",
+       "kind": "radio"
+      },
+      {
+       "choice": "NCEU",
+       "id": "r7c2p15reg:radio:3_clone",
+       "kind": "radio"
+      }
+     ]
+    },
+    {
+     "choice": "Lungo la strada/area:",
+     "id": "r8c1p18reg:chk",
+     "kind": "checkbox",
+     "reveals": [
+      {
+       "id": "r9c1p20reg:chk",
+       "kind": "checkbox",
+       "label": "statale/regionale"
+      },
+      {
+       "id": "r9c2p21reg:chk",
+       "kind": "checkbox",
+       "label": "provinciale"
+      },
+      {
+       "id": "r9c3p22reg:chk",
+       "kind": "checkbox",
+       "label": "comunale"
+      },
+      {
+       "id": "r11c1p25reg:txt",
+       "kind": "text",
+       "label": "denominazione",
+       "max": 30
+      },
+      {
+       "id": "r11c2p27reg:txt",
+       "kind": "text",
+       "label": "al chilometro",
+       "max": 10
+      },
+      {
+       "id": "r11c3p29reg:txt",
+       "kind": "text",
+       "label": "coordinate GPS",
+       "max": 30
+      }
+     ],
+     "plus": {
+      "anchor": "num. progressivo",
+      "adds": 10
+     },
+     "then": [
+      {
+       "choice": "statale/regionale",
+       "id": "r9c1p20reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "provinciale",
+       "id": "r9c2p21reg:chk",
+       "kind": "checkbox"
+      },
+      {
+       "choice": "comunale",
+       "id": "r9c3p22reg:chk",
+       "kind": "checkbox"
+      }
+     ]
+    }
+   ],
+   "seconds": 14.8
+  },
+  {
+   "section": "tipologia del mezzo pubblicitario (pubblicità temporanea) pannello ripetibile",
+   "fingerprint": "68d32329445ef7d1",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-2#Tipologia del mezzo pubblicitario (pubblicità temporanea)",
+   "seconds": 0.9
+  },
+  {
+   "section": "Periodo e luogo di esposizione",
+   "fingerprint": "a1792e3b360e1c53",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-2#Periodo e luogo di esposizione",
+   "seconds": 1
+  },
+  {
+   "section": "Ulteriori dichiarazioni (mezzi pubblicitari temporanei)",
+   "fields": [
+    {
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox",
+     "label": "il manufatto/i è/sono stato/i calcolato/i e sarà/saranno realizzato/i e posto/i in opera tenendo conto della spinta del vento in modo da garantire la stabilità."
+    },
+    {
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox",
+     "label": "è a conoscenza di tutte le condizioni contenute nel regolamento comunale in materia"
+    },
+    {
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox",
+     "label": "è stato acquisito il parere favorevole dell'ente proprietario della strada"
+    },
+    {
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox",
+     "label": "ha la piena disponibilità dell'immobile sul quale verrà posizionata l'insegna pubblicitaria"
+    },
+    {
+     "id": "r6c1p6reg:chk",
+     "kind": "checkbox",
+     "label": "è stato autorizzato dal proprietario o dal condominio e/o dagli aventi diritto sull'immobile per il posizionamento dell'insegna pubblicitaria (in allegato l'att"
+    }
+   ],
+   "fingerprint": "d26213be53ac4490",
+   "text": "Ulteriori dichiarazioni (mezzi pubblicitari temporanei) Consapevole delle responsabilità, anche penali, ai sensi degli artt. 75 e 76 del DPR n. 445/2000, per il caso di dichiarazioni mendaci, falsità negli atti o uso di atti falsi, dichiara che: il manufatto/i è/sono stato/i calcolato/i e sarà/saranno realizzato/i e posto/i in opera tenendo conto della spinta del vento in modo da garantire la stabilità. Inoltre dichiara che il manufatto/i sarà/saranno realizzato/i con materiale non deperibilie e resistente agli agenti atmosferici è a conoscenza di tutte le condizioni contenute nel regolamento comunale in materia è stato acquisito il parere favorevole dell'ente proprietario della strada ha la piena disponibilità dell'immobile sul quale verrà posizionata l'insegna pubblicitaria è stato autorizzato dal proprietario o dal condominio e/o dagli aventi diritto sull'immobile per il posizionamento dell'insegna pubblicitaria (in allegato l'atto di assenso)",
+   "branches": [
+    {
+     "choice": "il manufatto/i è/sono stato/i calcolato/i e sarà/saranno realizzato/i e posto/i in opera tenendo conto della spinta del vento in modo da garantire la stabilità.",
+     "id": "r2c1p2reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "è a conoscenza di tutte le condizioni contenute nel regolamento comunale in materia",
+     "id": "r3c1p3reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "è stato acquisito il parere favorevole dell'ente proprietario della strada",
+     "id": "r4c1p4reg:chk",
+     "kind": "checkbox"
+    },
+    {
+     "choice": "ha la piena disponibilità dell'immobile sul quale verrà posizionata l'insegna pubblicitaria",
+     "id": "r5c1p5reg:chk",
+     "kind": "checkbox"
+    }
+   ],
+   "seconds": 5.8
+  },
+  {
+   "section": "Caratteristiche del manufatto da installare",
+   "fingerprint": "995629c7e1e2c532",
+   "same_as": "suap-common-mezzi-pubblicitari-installazione-di-mezzi-pubblicitari-scia-4#Caratteristiche del manufatto da installare",
+   "seconds": 0.9
+  },
+  {
+   "section": "Dichiarazione in materia di rispetto sulle tasse comunali",
+   "skipped": "the person's declarations"
+  },
+  {
+   "section": "dichiarazione relativa ai diritti di segreteria/istruttori",
+   "fingerprint": "52afb47e165ec4c7",
+   "same_as": "acconciatore#Dichiarazione relativa ai diritti di segreteria/istruttori",
+   "seconds": 0.9
+  }
+ ]
+}
