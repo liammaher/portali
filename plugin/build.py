@@ -249,14 +249,42 @@ def self_check(plugin):
                 sys.exit(f"{steps.name}: pre-flight differs from {steps_file(d).relative_to(REPO)}'s")
 
 
+PVAULT_TARGETS = [("darwin", "amd64", "tar.gz"), ("darwin", "arm64", "tar.gz"), ("linux", "amd64", "tar.gz"),
+                  ("linux", "arm64", "tar.gz"), ("windows", "amd64", "zip"), ("windows", "arm64", "zip")]
+
+
+def write_pvault_release(setup, version, checksums):
+    """The release the setup skill installs: its version and the SHA-256 of each of its six
+    archives (goreleaser's checksums.txt), shipped in the plugin so the installer checks a
+    download against what the plugin says, not against what the download says."""
+    if not re.fullmatch(r"\d+\.\d+\.\d+([-+][0-9A-Za-z.-]+)?", version):
+        sys.exit(f"--pvault-version {version!r} isn't a version like 0.1.0")
+    wanted = {f"pvault_{version}_{os_}_{arch}.{ext}" for os_, arch, ext in PVAULT_TARGETS}
+    lines = {}
+    for line in checksums.read_text().splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] in wanted:
+            if not re.fullmatch(r"[0-9a-f]{64}", parts[0]):
+                sys.exit(f"{checksums}: {parts[1]} has no SHA-256")
+            lines[parts[1]] = parts[0]
+    if set(lines) != wanted:
+        sys.exit(f"{checksums} lacks {sorted(wanted - set(lines))}")
+    (setup / "pvault.version").write_text(version + "\n")
+    (setup / "pvault-checksums.txt").write_text("".join(f"{lines[n]}  {n}\n" for n in sorted(lines)))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--library", type=Path, default=os.environ.get("PRATICHE_NAPOLI_DIR"))
     ap.add_argument("--out", type=Path, default=HERE / "dist")
+    ap.add_argument("--pvault-version", help="the pvault release the setup skill installs, e.g. 0.1.0 (with --pvault-checksums)")
+    ap.add_argument("--pvault-checksums", type=Path, help="that release's checksums.txt")
     ap.add_argument("--connector", help="the napoli connector's https URL (connector/): the plugin brings it")
     a = ap.parse_args()
     if a.connector and not re.fullmatch(r"https://[^\s/]+(/\S*)?", a.connector):
         ap.error("--connector must be an https URL")
+    if bool(a.pvault_version) != bool(a.pvault_checksums):
+        ap.error("--pvault-version and --pvault-checksums go together")
     if not a.library:
         ap.error("--library or $PRATICHE_NAPOLI_DIR: a pratiche-napoli checkout")
     plugin = a.out / "napoli"
@@ -265,6 +293,8 @@ def main():
     shutil.copytree(HERE / "napoli", plugin, ignore=shutil.ignore_patterns(".DS_Store", "__pycache__"))
     if a.connector:  # without one the skill uses coverage.json, as of the build
         (plugin / ".mcp.json").write_text(as_json({"mcpServers": {"napoli": {"type": "http", "url": a.connector}}}))
+    if a.pvault_version:  # without one the setup skill says there is no release to install from
+        write_pvault_release(plugin / "skills" / "napoli-setup", a.pvault_version, a.pvault_checksums)
     skill = plugin / "skills" / "napoli-pratica"
     copy_runner(skill)
     catalog = copy_pratiche(skill, a.library)

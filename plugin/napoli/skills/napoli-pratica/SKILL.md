@@ -9,6 +9,9 @@ The user is an architect (or geometra) in Naples filing for clients with a procu
 prepare the draft on impresainungiorno; they log in with their own SPID, then make the
 declarations, sign, pay and send.
 
+If they would rather keep their own or their clients' details in an encrypted vault on their
+own computer than in a folder of files, the `napoli-setup` skill installs it.
+
 Every path below is relative to this skill's base directory: write it out in full in each
 command (`SKILL` below stands for it). Run scripts with `python3`; they need no packages (each finds its own folder's modules first).
 
