@@ -66,8 +66,13 @@ yours:
   - "Name the direttore dei lavori (and, for works on structures, the direttore dei lavori delle strutture) before the works start"
   - "On Allega documenti: the portal's procura signed by the client and the Quadro riepilogativo (SCIA alternativa DSC), then everything signed digitally (.p7m)"
   - "Sign and send (Firma e invio); keep the receipt. The works may start 30 days after filing, once the assents the SCIA asks for (if any) are in; the contributo, if due, is paid as quadro g) says"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  facts: {permesso_per_scelta: "false"}
 supports:
-  - {value: "{{ask.paesaggio}}", in: ["no", "senza autorizzazione"], else: "A landscape authorization is its own operation on Napoli's SUE, filed with the SCIA alternativa: not mapped yet."}
   - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
   - {value: "{{ask.acustica}}", in: ["false"], else: "An acoustic impact or clima acustico report (art. 8 L. 447/1995) isn't mapped yet."}
   - {value: "{{ask.vvf_valutazione}}", in: ["false"], else: "A project for the Vigili del Fuoco's assessment isn't mapped yet."}

@@ -89,8 +89,9 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      portal's PDF preview and every value over the portal (`run` also writes review.html); Claude never reads them. A label
                      names the boxes whose own text it is first (`nth` counts those), and a
                      section is read only once it is the open one. `run.py preflight` first: the steps file's
-                     `supports:` (cases it maps), `rules:` (the library's rules table, copied in
-                     `rules/`: whether the law makes the case this pratica, and the others it adds)
+                     `supports:` (cases it maps), `rules:` (the library's rules tables, SUAP and SUE,
+                     copied in `rules/`: whether the law makes the case this pratica, the others it
+                     adds with it, and those filed apart, which go in `yours`)
                      and `asks:` (questions, asked in one message, or proposed to confirm). A stopped run resumes on its draft (`--resume`, `--fix`).
                      Both take a draft's values from one `pvault get` (`--values -`, Touch ID).
                      Where a choice or "+" renumbers ids, fields are found by label
@@ -450,7 +451,7 @@ CI runs `regress.py` against the library's main (`fill.yml`); the library runs i
 The portal runner has offline tests on a fake portal: `claude/skills/pratica/portal/bench/test_inpage.py`,
 run with the pratica venv's Python (`~/.cache/pratica-portal/venv`, Playwright's Chromium, headless; no
 network, vault or model); `bench/test_preflight.py` tests pre-flight on the SCIA rehearsal's files, `bench/test_gen.py`
-gen.py on the crawls in `catalogue/F839/sections`, `bench/test_rules.py` the rules table (with `PRATICHE_NAPOLI_DIR`, `rules/`
+gen.py on the crawls in `catalogue/F839/sections`, `bench/test_rules.py` the rules tables (with `PRATICHE_NAPOLI_DIR`, `rules/`
 the same bytes as the library's). On the real portal, `bench/rerun.py` reruns the rehearsals
 in the pane after a runner, dictionary or gen.py change (portal/README.md).
 

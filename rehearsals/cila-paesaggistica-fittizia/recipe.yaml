@@ -21,6 +21,14 @@ yours:
   - "Pay the diritti (and the CILA's late-filing penalty if due) and the bollo; upload the receipts"
   - "On Allega documenti: the CILA's documents (procura, CILA DSC summary, IDs, the owner's assent, drawings, relazione tecnica) and the landscape ones (relazione paesaggistica semplificata, Allegato D, with its drawings and photos), signed digitally"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  main: napoli/comune/cila-lavori-edilizi
+  facts: {sanatoria: "{{ask.cila_stato|in_in_corso__realizzato}}", permesso_per_scelta: "false"}
+  handles: [napoli/comune/autorizzazione-paesaggistica-semplificata]
 supports:
   - value: "{{ask.direttore_lavori}}"
     in: [progettista, da nominare]

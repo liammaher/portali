@@ -73,7 +73,8 @@ FATTI = "Quali di queste cose valgono per l'attività? Spunta quelle vere, anche
 def rules_block(spec, asks, groups):
     """A recipe's `rules:` as its steps file carries it: every fact of the table, the
     recipe's value or `{{ask.<fact>}}`, adding the ask from the table's question when the
-    pratica has none. Changes asks and groups in place."""
+    pratica has none (its yes/no facts as one checklist, worded by `question`). Changes asks
+    and groups in place."""
     try:
         t = rules.table(spec["table"])
     except ValueError as e:
@@ -93,7 +94,7 @@ def rules_block(spec, asks, groups):
         if a is None:
             if kind == "yes_no":
                 a = {"group": "fatti", "type": "yes_no", "item": fact["question"]}
-                groups.setdefault("fatti", {"question": FATTI})
+                groups.setdefault("fatti", {"question": spec.get("question", FATTI)})
             else:
                 a = {"type": kind, "question": fact["question"]}
                 if kind == "choice":
@@ -101,11 +102,12 @@ def rules_block(spec, asks, groups):
             if fact.get("how"):
                 a["how"] = fact["how"]
             asks[name] = a
-        elif a.get("type") != kind or (kind == "choice" and set(map(str, a.get("options", []))) - set(fact["values"])):
+        elif a.get("type") != kind or (kind == "choice" and {rules.fact_value(fact, o) for o in a.get("options", [])} - set(fact["values"])):
             raise GenError(f"rules: the fact {name} is also asks.{name}, a {a.get('type')}: give its value in the "
                            "recipe's rules.facts")
         out[name] = "{{ask.%s}}" % name
-    return {"table": spec["table"], "facts": out, **({"handles": spec["handles"]} if spec.get("handles") else {})}
+    return {"table": spec["table"], **({"main": spec["main"]} if spec.get("main") else {}), "facts": out,
+            **({"handles": spec["handles"]} if spec.get("handles") else {})}
 
 
 def norm(s):

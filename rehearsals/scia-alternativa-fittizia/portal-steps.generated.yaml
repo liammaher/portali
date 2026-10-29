@@ -13,6 +13,8 @@ yours:
 groups:
   fasce_funzionali:
     question: Which fasce di rispetto is the property in? Tick every one that applies.
+  fatti:
+    question: Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna.
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - SCIA alt {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
@@ -136,12 +138,30 @@ asks:
   relazione_tecnica: {type: file, question: The relazione tecnica (PDF)}
   documentazione_fotografica: {type: file, question: Photos of the state of the premises (PDF)}
   relazione_energetica: {type: file, question: 'The relazione tecnica on energy use (art. 125 DPR 380/2001, D.Lgs. 192/2005) (PDF)'}
+  intervento: {type: choice, question: 'Che lavori sono, secondo le definizioni dell''art. 3 DPR 380/2001?', options: [edilizia_libera, opere_temporanee, nessuna_opera, manutenzione_straordinaria, restauro,
+      ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia, altro], labels: {edilizia_libera: 'Lavori senza titolo
+        dell''art. 6 c. 1: manutenzione ordinaria (riparare, rinnovare e sostituire finiture, tenere in efficienza gli impianti), barriere architettoniche senza ascensori esterni né modifiche della sagoma,
+        VEPA, tende e pergole a telo retrattile, pavimentazioni esterne e simili', opere_temporanee: 'Opere stagionali o temporanee, da rimuovere entro 180 giorni (art. 6 c. 1 e-bis)', nessuna_opera: 'Nessun
+        lavoro: solo un cambio di destinazione d''uso', manutenzione_straordinaria: 'Manutenzione straordinaria (art. 3 c. 1 b): rinnovare e sostituire parti dell''edificio, servizi igienici e impianti,
+        frazionare o accorpare unità', restauro: Restauro e risanamento conservativo (art. 3 c. 1 c), ristrutturazione: Ristrutturazione edilizia (art. 3 c. 1 d) che non è uno dei casi dell'art. 10 c. 1
+        c, ristrutturazione_pesante: 'Ristrutturazione edilizia dell''art. 10 c. 1 c: un organismo in parte o del tutto diverso con più volume, o con cambio d''uso in zona omogenea A, o che cambia sagoma,
+        volume o prospetti di un immobile tutelato, o la demolizione e ricostruzione in un''area tutelata (artt. 136 c. 1 c e d, 142) con modifiche', nuova_costruzione: 'Nuova costruzione (art. 3 c. 1 e),
+        compresi gli ampliamenti fuori sagoma', ristrutturazione_urbanistica: Ristrutturazione urbanistica (art. 3 c. 1 f), variante_pdc: Variante in corso d'opera a un permesso di costruire che non è una
+        variazione essenziale, variante_essenziale_pdc: Variante in corso d'opera a un permesso di costruire che è una variazione essenziale, variante_scia: Variante in corso d'opera a una SCIA (essenziale
+        o no), altro: 'Altro: permesso in deroga (art. 14), permesso convenzionato (art. 28-bis), sottotetti, parcheggi o Piano casa delle leggi regionali, proroghe e volture'}, how: Lo stabilisce il tecnico
+      dalle definizioni dell'art. 3 e dall'elenco dell'art. 6 DPR 380/2001.}
+  sanatoria: {group: fatti, type: yes_no, item: 'I lavori sono già iniziati, o già finiti, senza il titolo che serviva?'}
+  prospetti: {group: fatti, type: yes_no, item: 'La manutenzione straordinaria modifica i prospetti (le facciate) dell''edificio?'}
+  cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso?', options: ['no', stessa_categoria, tra_categorie, intero_immobile, altro], labels: {'no': 'No', stessa_categoria: 'Sì,
+        di una singola unità, restando nella stessa categoria funzionale', tra_categorie: 'Sì, di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le categorie residenziale,
+        turistico-ricettiva, produttiva e direzionale, commerciale (art. 23-ter c. 1-ter), non al piano terra né seminterrata', intero_immobile: 'Sì, di un intero immobile, restando nella stessa categoria
+        funzionale', altro: 'Sì, in un altro modo: un''unità al piano terra o seminterrata, verso o dalla categoria rurale, fuori delle zone A, B e C, o un intero immobile verso un''altra categoria'}}
+  paesaggio_eseguiti: {group: fatti, type: yes_no, item: 'Le opere che chiedono l''autorizzazione paesaggistica sono già state eseguite, anche in parte?'}
+  demolizione_zona_a: {group: fatti, type: yes_no, item: 'I lavori demoliscono e ricostruiscono un edificio, o la variante cambia la sagoma, in zona A della Variante generale al PRG o della Variante occidentale?',
+    how: La zona si legge nella tavola di zonizzazione del PRG di Napoli.}
+  piano_planovolumetrico: {group: fatti, type: yes_no, item: 'La nuova costruzione o la ristrutturazione urbanistica è disciplinata da un piano attuativo con precise disposizioni plano-volumetriche dichiarate
+      dal Comune, o (per una nuova costruzione) è in diretta esecuzione di uno strumento urbanistico generale che le contiene?'}
 supports:
-- value: '{{ask.paesaggio}}'
-  in:
-  - 'no'
-  - senza autorizzazione
-  else: 'A landscape authorization is its own operation on Napoli''s SUE, filed with the SCIA alternativa: not mapped yet.'
 - value: '{{ask.fascia_cimiteriale}}'
   in:
   - 'no'
@@ -186,6 +206,21 @@ supports:
   - rateizzazione
   - in corso d'opera
   else: 'A SCIA alternativa''s contributo is paid within 30 days of filing, in instalments or during the works: its form has no box for a receipt already paid.'
+rules:
+  table: sue-napoli
+  facts:
+    intervento: '{{ask.intervento}}'
+    sanatoria: '{{ask.sanatoria}}'
+    strutture: '{{ask.strutture}}'
+    prospetti: '{{ask.prospetti}}'
+    sismica: '{{ask.sismica}}'
+    cambio_uso: '{{ask.cambio_uso}}'
+    paesaggio: '{{ask.paesaggio}}'
+    paesaggio_eseguiti: '{{ask.paesaggio_eseguiti}}'
+    bene_culturale: '{{ask.bene_culturale}}'
+    demolizione_zona_a: '{{ask.demolizione_zona_a}}'
+    piano_planovolumetrico: '{{ask.piano_planovolumetrico}}'
+    permesso_per_scelta: 'false'
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 wizard:

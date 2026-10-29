@@ -73,5 +73,8 @@
  "rir_doc": "rehearsals/scia-fittizia/files/documentazione-rir.pdf",
  "altri_vincoli_eco_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf",
  "fascia_altro_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf",
- "scia_onerosa": "false"
+ "scia_onerosa": "false",
+ "intervento": "ristrutturazione",
+ "cambio_uso": "tra_categorie",
+ "fatti": []
 }

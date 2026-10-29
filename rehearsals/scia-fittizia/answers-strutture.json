@@ -70,5 +70,8 @@
  "denuncia_art65": "rehearsals/scia-fittizia/files/denuncia-art65.pdf",
  "sismica_doc": "rehearsals/scia-fittizia/files/denuncia-sismica.pdf",
  "fascia_stradale_doc": "rehearsals/scia-fittizia/files/autocertificazione-vincoli.pdf",
- "scia_onerosa": "false"
+ "scia_onerosa": "false",
+ "intervento": "manutenzione_straordinaria",
+ "cambio_uso": "intero_immobile",
+ "fatti": []
 }

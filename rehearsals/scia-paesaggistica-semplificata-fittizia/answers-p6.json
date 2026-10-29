@@ -71,5 +71,7 @@
  "scia_onerosa": "true",
  "contributo_pagamento": "rateizzazione",
  "contributo_calcolo": "prospetto",
- "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf"
+ "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf",
+ "intervento": "variante_scia",
+ "fatti": []
 }

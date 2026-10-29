@@ -1,0 +1,398 @@
+schema_version: 0
+id: sue-napoli
+title: "SUE di Napoli: quale titolo edilizio serve per i lavori (CILA, SCIA, SCIA alternativa o permesso di costruire)"
+updated: 2026-10-29
+intro: >-
+  Da poche risposte sui lavori (che cosa sono, se toccano le strutture o i prospetti, se cambiano
+  l'uso, i vincoli) al titolo da presentare allo Sportello Unico per l'Edilizia di Napoli, a quello
+  che va con esso (l'autorizzazione paesaggistica nella stessa pratica) e a quello che si presenta a
+  parte (il deposito o l'autorizzazione sismica al Genio Civile). Dove la legge lascia scegliere tra
+  SCIA e permesso, la scelta è una delle risposte. Le sanatorie e i casi che la libreria non copre
+  ancora sono rifiutati, con il motivo.
+facts:
+  intervento:
+    type: choice
+    question: "Che lavori sono, secondo le definizioni dell'art. 3 DPR 380/2001?"
+    values:
+      edilizia_libera: >-
+        Lavori senza titolo dell'art. 6 c. 1: manutenzione ordinaria (riparare, rinnovare e
+        sostituire finiture, tenere in efficienza gli impianti), barriere architettoniche senza
+        ascensori esterni né modifiche della sagoma, VEPA, tende e pergole a telo retrattile,
+        pavimentazioni esterne e simili
+      opere_temporanee: "Opere stagionali o temporanee, da rimuovere entro 180 giorni (art. 6 c. 1 e-bis)"
+      nessuna_opera: "Nessun lavoro: solo un cambio di destinazione d'uso"
+      manutenzione_straordinaria: "Manutenzione straordinaria (art. 3 c. 1 b): rinnovare e sostituire parti dell'edificio, servizi igienici e impianti, frazionare o accorpare unità"
+      restauro: "Restauro e risanamento conservativo (art. 3 c. 1 c)"
+      ristrutturazione: "Ristrutturazione edilizia (art. 3 c. 1 d) che non è uno dei casi dell'art. 10 c. 1 c"
+      ristrutturazione_pesante: >-
+        Ristrutturazione edilizia dell'art. 10 c. 1 c: un organismo in parte o del tutto diverso con
+        più volume, o con cambio d'uso in zona omogenea A, o che cambia sagoma, volume o prospetti di
+        un immobile tutelato, o la demolizione e ricostruzione in un'area tutelata (artt. 136 c. 1 c
+        e d, 142) con modifiche
+      nuova_costruzione: "Nuova costruzione (art. 3 c. 1 e), compresi gli ampliamenti fuori sagoma"
+      ristrutturazione_urbanistica: "Ristrutturazione urbanistica (art. 3 c. 1 f)"
+      variante_pdc: "Variante in corso d'opera a un permesso di costruire che non è una variazione essenziale"
+      variante_essenziale_pdc: "Variante in corso d'opera a un permesso di costruire che è una variazione essenziale"
+      variante_scia: "Variante in corso d'opera a una SCIA (essenziale o no)"
+      altro: >-
+        Altro: permesso in deroga (art. 14), permesso convenzionato (art. 28-bis), sottotetti,
+        parcheggi o Piano casa delle leggi regionali, proroghe e volture
+    how: Lo stabilisce il tecnico dalle definizioni dell'art. 3 e dall'elenco dell'art. 6 DPR 380/2001.
+  sanatoria:
+    type: yes_no
+    question: "I lavori sono già iniziati, o già finiti, senza il titolo che serviva?"
+  strutture:
+    type: yes_no
+    question: "I lavori toccano le parti strutturali dell'edificio?"
+  prospetti:
+    type: yes_no
+    question: "La manutenzione straordinaria modifica i prospetti (le facciate) dell'edificio?"
+  sismica:
+    type: choice
+    question: "Per le opere strutturali, che cosa chiede la normativa sismica?"
+    values:
+      deposito: "Il deposito del progetto (interventi di minore rilevanza o privi di rilevanza, art. 94-bis c. 1 b e c)"
+      autorizzazione: "L'autorizzazione preventiva (interventi rilevanti, art. 94-bis c. 1 a)"
+      variante: "Una variante non sostanziale a un progetto strutturale già depositato o autorizzato"
+    how: Lo stabilisce il progettista delle strutture (art. 94-bis DPR 380/2001 e Regolamento regionale 4/2010).
+  cambio_uso:
+    type: choice
+    question: "I lavori cambiano la destinazione d'uso?"
+    values:
+      "no": "No"
+      stessa_categoria: "Sì, di una singola unità, restando nella stessa categoria funzionale"
+      tra_categorie: >-
+        Sì, di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le
+        categorie residenziale, turistico-ricettiva, produttiva e direzionale, commerciale (art.
+        23-ter c. 1-ter), non al piano terra né seminterrata
+      intero_immobile: "Sì, di un intero immobile, restando nella stessa categoria funzionale"
+      altro: >-
+        Sì, in un altro modo: un'unità al piano terra o seminterrata, verso o dalla categoria rurale,
+        fuori delle zone A, B e C, o un intero immobile verso un'altra categoria
+  paesaggio:
+    type: choice
+    question: "L'immobile è sotto tutela paesaggistica (artt. 136 o 142 D.Lgs. 42/2004), e che cosa chiedono i lavori?"
+    values:
+      "no": "Non è sotto tutela paesaggistica"
+      senza_autorizzazione: >-
+        È tutelato, ma i lavori non alterano i luoghi né l'aspetto esteriore degli edifici, o sono
+        nell'Allegato A del D.P.R. 31/2017 (art. 149 D.Lgs. 42/2004)
+      semplificata: "L'autorizzazione semplificata: lavori di lieve entità dell'Allegato B del D.P.R. 31/2017"
+      ordinaria: "L'autorizzazione ordinaria (art. 146): gli altri lavori che alterano i luoghi o l'aspetto esteriore"
+    how: Lo stabilisce il tecnico dal vincolo e dagli Allegati A e B del D.P.R. 31/2017.
+  paesaggio_eseguiti:
+    type: yes_no
+    question: "Le opere che chiedono l'autorizzazione paesaggistica sono già state eseguite, anche in parte?"
+  bene_culturale:
+    type: yes_no
+    question: "L'edificio è un bene culturale tutelato dalla Parte II del D.Lgs. 42/2004 (vincolo storico-artistico)?"
+  demolizione_zona_a:
+    type: yes_no
+    question: >-
+      I lavori demoliscono e ricostruiscono un edificio, o la variante cambia la sagoma, in zona A
+      della Variante generale al PRG o della Variante occidentale?
+    how: La zona si legge nella tavola di zonizzazione del PRG di Napoli.
+  piano_planovolumetrico:
+    type: yes_no
+    question: >-
+      La nuova costruzione o la ristrutturazione urbanistica è disciplinata da un piano attuativo
+      con precise disposizioni plano-volumetriche dichiarate dal Comune, o (per una nuova
+      costruzione) è in diretta esecuzione di uno strumento urbanistico generale che le contiene?
+  permesso_per_scelta:
+    type: yes_no
+    question: >-
+      La legge qui lascia scegliere: si chiede il permesso di costruire invece della SCIA (art. 22 c.
+      7) o della SCIA alternativa (art. 23)?
+rules:
+  # --- Casi che la libreria non copre ---
+  - id: altro
+    when: {intervento: [altro]}
+    then: {refuse: "Il permesso in deroga, il permesso convenzionato, gli interventi delle leggi regionali (sottotetti, parcheggi, Piano casa), le proroghe e le volture non sono ancora in questa tabella."}
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
+    status: verified
+  - id: opere-temporanee
+    when: {intervento: [opere_temporanee]}
+    then: {refuse: "Le opere stagionali e temporanee chiedono la comunicazione di avvio dei lavori al Comune (art. 6 c. 1 e-bis DPR 380/2001), che la libreria non ha ancora."}
+    cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}]
+    status: verified
+  - id: nessuna-opera-nessun-cambio
+    when: {intervento: [nessuna_opera], cambio_uso: ["no"]}
+    then: {refuse: "Senza lavori né cambio di destinazione d'uso non c'è una pratica edilizia da presentare."}
+    status: verified
+  - id: cambio-uso-altro
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione], cambio_uso: [altro]}
+    then: {refuse: "Questo cambio di destinazione d'uso (al piano terra o seminterrato, verso o dalla categoria rurale, fuori delle zone A, B e C, o di un intero immobile verso un'altra categoria) segue la legge regionale o il PRG, che la libreria non ha ancora verificato."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}]
+    status: verified
+
+  # --- Lavori già eseguiti ---
+  - id: sanatoria-titolo
+    when: {sanatoria: true, intervento: [ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]}
+    then: {refuse: "Per lavori già eseguiti senza titolo serve una sanatoria (accertamento di conformità, artt. 36 e 36-bis DPR 380/2001), che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    status: verified
+  - id: sanatoria-strutture
+    when: {sanatoria: true, intervento: [manutenzione_straordinaria, restauro], strutture: true}
+    then: {refuse: "Per lavori già eseguiti senza titolo serve una sanatoria (accertamento di conformità, artt. 36 e 36-bis DPR 380/2001), che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    status: verified
+  - id: sanatoria-prospetti
+    when: {sanatoria: true, intervento: [manutenzione_straordinaria], strutture: false, prospetti: true}
+    then: {refuse: "Per lavori già eseguiti senza titolo serve una sanatoria (accertamento di conformità, artt. 36 e 36-bis DPR 380/2001), che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    status: verified
+  - id: sanatoria-cambio-uso
+    when: {sanatoria: true, intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria, tra_categorie, intero_immobile]}
+    then: {refuse: "Un cambio di destinazione d'uso già fatto senza SCIA va sanato (accertamento di conformità, art. 36-bis DPR 380/2001), e la libreria non copre ancora la sanatoria."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    status: verified
+  - id: sanatoria-paesaggio
+    when: {paesaggio: [semplificata, ordinaria], paesaggio_eseguiti: true}
+    then: {refuse: "L'autorizzazione paesaggistica non si rilascia per lavori già eseguiti (art. 146 c. 4 D.Lgs. 42/2004): serve l'accertamento di compatibilità paesaggistica, che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: dlgs42-art146}]
+    status: verified
+
+  # --- Edilizia libera ---
+  - id: edilizia-libera
+    when: {intervento: [edilizia_libera], cambio_uso: ["no"], paesaggio: ["no", senza_autorizzazione], bene_culturale: false}
+    then: {none: "Sono lavori di edilizia libera (art. 6 c. 1 DPR 380/2001): non serve un titolo edilizio né una pratica al SUE."}
+    cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}]
+    status: verified
+  - id: edilizia-libera-paesaggistica-semplificata
+    when: {intervento: [edilizia_libera], cambio_uso: ["no"], paesaggio: [semplificata]}
+    then:
+      role: main
+      procedure: napoli/comune/autorizzazione-paesaggistica-semplificata
+      regime: autorizzazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)"}
+    cites:
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-semplificata, source: dpr31-art3}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-semplificata, source: portale-sue-operazioni}
+    status: verified
+  - id: edilizia-libera-paesaggistica-ordinaria
+    when: {intervento: [edilizia_libera], cambio_uso: ["no"], paesaggio: [ordinaria]}
+    then:
+      role: main
+      procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria
+      regime: autorizzazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Autorizzazione paesaggistica ordinaria (art.146 del D.Lgs 42/2004 - Comune)"}
+    cites:
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: dlgs42-art146}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: portale-sue-operazioni}
+    status: verified
+  - id: edilizia-libera-bene-culturale
+    when: {intervento: [edilizia_libera], cambio_uso: ["no"], bene_culturale: true}
+    then: {refuse: "Su un bene culturale anche i lavori senza titolo edilizio chiedono l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004), che la libreria non copre ancora."}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dlgs42-art21}]
+    status: verified
+
+  # --- CILA ---
+  - id: cila-manutenzione
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: false, cambio_uso: ["no"]}
+    then:
+      role: main
+      procedure: napoli/comune/cila-lavori-edilizi
+      regime: comunicazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)"}
+    cites:
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6bis}
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: cila-note}
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art22}
+    status: verified
+  - id: cila-restauro
+    when: {intervento: [restauro], strutture: false, cambio_uso: ["no"]}
+    then:
+      role: main
+      procedure: napoli/comune/cila-lavori-edilizi
+      regime: comunicazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)"}
+    cites:
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art6bis}
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: cila-note}
+      - {procedure: napoli/comune/cila-lavori-edilizi, source: dpr380-art22}
+    status: verified
+  - id: cila-manutenzione-bene-culturale
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: false, cambio_uso: ["no"], bene_culturale: true}
+    then: {refuse: "Una CILA su un bene culturale chiede anche l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004): la libreria non copre ancora la CILA con quell'autorizzazione."}
+    cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dlgs42-art21}]
+    status: verified
+  - id: cila-restauro-bene-culturale
+    when: {intervento: [restauro], strutture: false, cambio_uso: ["no"], bene_culturale: true}
+    then: {refuse: "Una CILA su un bene culturale chiede anche l'autorizzazione del soprintendente (art. 21 c. 4 D.Lgs. 42/2004): la libreria non copre ancora la CILA con quell'autorizzazione."}
+    cites: [{procedure: napoli/comune/cila-lavori-edilizi, source: dlgs42-art21}]
+    status: verified
+
+  # --- SCIA, o il permesso di costruire per scelta (art. 22 c. 7) ---
+  - id: scia-strutture
+    when: {intervento: [manutenzione_straordinaria, restauro], strutture: true, permesso_per_scelta: false}
+    then: &scia
+      role: main
+      procedure: napoli/comune/scia-edilizia
+      regime: scia
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Segnalazione Certificata di Inizio Attività Edilizia (S.C.I.A.)"}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
+    status: verified
+  - id: permesso-per-scelta-strutture
+    when: {intervento: [manutenzione_straordinaria, restauro], strutture: true, permesso_per_scelta: true}
+    then: &permesso
+      role: main
+      procedure: napoli/comune/permesso-di-costruire
+      regime: permesso
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Permesso di Costruire (P.d.C) - Art.10 D.P.R. 380/2001"}
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
+    status: verified
+  - id: scia-prospetti
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: true, permesso_per_scelta: false}
+    then: *scia
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
+    status: verified
+  - id: permesso-per-scelta-prospetti
+    when: {intervento: [manutenzione_straordinaria], strutture: false, prospetti: true, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
+    status: verified
+  - id: scia-cambio-uso
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria, tra_categorie, intero_immobile], permesso_per_scelta: false}
+    then: *scia
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    status: verified
+  - id: permesso-per-scelta-cambio-uso
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro], cambio_uso: [stessa_categoria, tra_categorie, intero_immobile], permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art23ter}, {procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
+    status: verified
+  - id: scia-ristrutturazione
+    when: {intervento: [ristrutturazione], demolizione_zona_a: false, permesso_per_scelta: false}
+    then: *scia
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
+    status: verified
+  - id: permesso-per-scelta-ristrutturazione
+    when: {intervento: [ristrutturazione], demolizione_zona_a: false, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/permesso-di-costruire, source: pdc-modulo}]
+    status: verified
+  - id: scia-variante-permesso
+    when: {intervento: [variante_pdc], demolizione_zona_a: false, permesso_per_scelta: false}
+    then: *scia
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}, {procedure: napoli/comune/scia-edilizia, source: dlgs222-tabella-a}]
+    status: verified
+  - id: permesso-per-scelta-variante
+    when: {intervento: [variante_pdc], demolizione_zona_a: false, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/scia-edilizia, source: dpr380-art22}]
+    status: verified
+  - id: scia-variante-scia
+    when: {intervento: [variante_scia]}
+    then: *scia
+    cites: [{procedure: napoli/comune/scia-edilizia, source: scia-modulo}]
+    status: verified
+  # A Napoli la SCIA è esclusa per la demolizione e ricostruzione, e per le varianti che cambiano la sagoma, in zona A.
+  - id: permesso-zona-a
+    when: {intervento: [ristrutturazione, variante_pdc], demolizione_zona_a: true}
+    then: *permesso
+    cites:
+      - {procedure: napoli/comune/permesso-di-costruire, source: scia-pagina}
+      - {procedure: napoli/comune/permesso-di-costruire, source: dlgs222-tabella-a}
+      - {procedure: napoli/comune/scia-edilizia, source: dpr380-art22}
+    status: verified
+
+  # --- Permesso di costruire, o la SCIA alternativa (art. 23) ---
+  - id: scia-alternativa-ristrutturazione
+    when: {intervento: [ristrutturazione_pesante], demolizione_zona_a: false, permesso_per_scelta: false}
+    then: &alternativa
+      role: main
+      procedure: napoli/comune/scia-alternativa-pdc
+      regime: scia
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Segnalazione Certificata Inizio Attività alternativa al Permesso di Costruire (S.C.I.A. alternativa P.d.C.)"}
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: dpr380-art23}]
+    status: verified
+  - id: permesso-ristrutturazione
+    when: {intervento: [ristrutturazione_pesante], permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: dpr380-art10}]
+    status: verified
+  - id: scia-alternativa-zona-a
+    when: {intervento: [ristrutturazione_pesante], demolizione_zona_a: true, permesso_per_scelta: false}
+    then: *alternativa
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: dpr380-art23}, {procedure: napoli/comune/scia-alternativa-pdc, source: scia-pagina}]
+    status: unverified
+    note: >-
+      A Napoli la DGC 454/2014 esclude la SCIA per la demolizione e ricostruzione in zona A, e non è
+      verificato se valga anche per la SCIA alternativa: va chiesto al SUE, o si chiede il permesso
+      di costruire.
+  - id: permesso-nuova-costruzione
+    when: {intervento: [nuova_costruzione, ristrutturazione_urbanistica], piano_planovolumetrico: false}
+    then: *permesso
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: dpr380-art10}]
+    status: verified
+  - id: scia-alternativa-nuova-costruzione
+    when: {intervento: [nuova_costruzione, ristrutturazione_urbanistica], piano_planovolumetrico: true, permesso_per_scelta: false}
+    then: *alternativa
+    cites: [{procedure: napoli/comune/scia-alternativa-pdc, source: dpr380-art23}]
+    status: verified
+  - id: permesso-per-scelta-nuova-costruzione
+    when: {intervento: [nuova_costruzione, ristrutturazione_urbanistica], piano_planovolumetrico: true, permesso_per_scelta: true}
+    then: *permesso
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: dpr380-art10}, {procedure: napoli/comune/permesso-di-costruire, source: dpr380-art23}]
+    status: verified
+  - id: permesso-variante-essenziale
+    when: {intervento: [variante_essenziale_pdc]}
+    then: *permesso
+    cites: [{procedure: napoli/comune/permesso-di-costruire, source: dlgs222-tabella-a}]
+    status: verified
+
+  # --- L'autorizzazione paesaggistica, nella stessa pratica ---
+  - id: paesaggistica-semplificata
+    when:
+      intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
+      paesaggio: [semplificata]
+    then:
+      role: also
+      procedure: napoli/comune/autorizzazione-paesaggistica-semplificata
+      regime: autorizzazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)"}
+    cites:
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-semplificata, source: dpr31-art3}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-semplificata, source: portale-sue-operazioni}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-semplificata, source: scia-modulo}
+    status: verified
+  - id: paesaggistica-ordinaria
+    when:
+      intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
+      paesaggio: [ordinaria]
+    then:
+      role: also
+      procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria
+      regime: autorizzazione
+      portal: {settore: "Edilizia e pianificazione urbana", operazione: "Autorizzazione paesaggistica ordinaria (art.146 del D.Lgs 42/2004 - Comune)"}
+    cites:
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: dlgs42-art146}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: portale-sue-operazioni}
+      - {procedure: napoli/comune/autorizzazione-paesaggistica-ordinaria, source: scia-modulo}
+    status: verified
+
+  # --- Il deposito o l'autorizzazione sismica, a parte al Genio Civile ---
+  - id: sismica-deposito
+    when:
+      intervento: [manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
+      strutture: true
+      sismica: [deposito]
+    then: {role: apart, procedure: napoli/genio-civile/deposito-autorizzazione-sismica, regime: deposito}
+    cites:
+      - {procedure: napoli/genio-civile/deposito-autorizzazione-sismica, source: classificazione-sismica}
+      - {procedure: napoli/genio-civile/deposito-autorizzazione-sismica, source: dpr380-art93}
+      - {procedure: napoli/genio-civile/deposito-autorizzazione-sismica, source: competenza-napoli}
+    status: verified
+  - id: sismica-autorizzazione
+    when:
+      intervento: [manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia]
+      strutture: true
+      sismica: [autorizzazione]
+    then: {role: apart, procedure: napoli/genio-civile/deposito-autorizzazione-sismica, regime: autorizzazione}
+    cites:
+      - {procedure: napoli/genio-civile/deposito-autorizzazione-sismica, source: classificazione-sismica}
+      - {procedure: napoli/genio-civile/deposito-autorizzazione-sismica, source: dpr380-art94bis}
+      - {procedure: napoli/genio-civile/deposito-autorizzazione-sismica, source: competenza-napoli}
+    status: verified

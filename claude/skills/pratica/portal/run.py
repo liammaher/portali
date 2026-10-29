@@ -479,15 +479,12 @@ def needed(steps, values):
     return need
 
 
-def ruled(steps, values):
-    """What the rules table (steps `rules:`) says of this case: why it isn't this pratica,
-    and the facts it still waits on. Each fact is the recipe's value or an ask's answer.
-    The table's main pratica must be this steps file's procedure, at its wizard's sector
-    and operation; every other pratica it adds must be one this pratica files (`handles`),
-    and every one this pratica files one the case needs."""
+def _decision(steps, values):
+    """The rules table's decision of this case (steps `rules:`), or None without one. Each
+    fact is the recipe's value or an ask's answer."""
     r = steps.get("rules")
     if not r:
-        return [], []
+        return None
     t = rules.table(r["table"])
     facts = {}
     for name, fact in t["facts"].items():
@@ -498,17 +495,39 @@ def ruled(steps, values):
     d = rules.decide(t, facts)
     if d["conflict"]:
         raise StepError(f"rules table {r['table']}: rules {', '.join(d['conflict'])} disagree (validate the library)")
+    return d
+
+
+def ruled(steps, values):
+    """What the rules table says of this case: why it isn't this pratica, and the facts it
+    still waits on. The table's main pratica must be the one this steps file files (`main`,
+    else its procedure: a CILA with its landscape authorization files the CILA), at its
+    wizard's sector and operation; every other pratica it adds with it must be one this
+    pratica files (`handles`), and every one this pratica files one the case needs. Those it
+    files apart, with another office, are the person's (`apart`)."""
+    d = _decision(steps, values)
+    if d is None:
+        return [], []
+    r = steps["rules"]
     out = [x["reason"] for x in d["refused"]]
     if d["ask"]:
-        return out, d["ask"]
+        # While the table's first fact (what the case is: the activity, the works) is unknown
+        # it is asked alone: which of the others matter depends on it.
+        first = next(iter(rules.table(r["table"])["facts"]))
+        return out, d["ask"][:1] if d["ask"][0] == first else d["ask"]
+    if d["none"]:
+        return out + [f"This case needs no pratica: {d['none']['reason']}"], []
     m = d["main"]
     where = lambda o: " at " + " › ".join(o["portal"][k] for k in ("settore", "operazione") if k in o["portal"]) \
         if "portal" in o else ""
     if not m:
         return out or [f"The rules table {r['table']} names no pratica for this case."], []
-    labels = {x if isinstance(x, str) else x.get("leaf") for w in steps.get("wizard", []) for x in w.get("tree", [])}
+    # A wizard screen's tree is one label, or a list of them (several operations: the SUE's
+    # CILA with its landscape authorization), each a label or a {leaf: ...}.
+    trees = [w["tree"] for w in steps.get("wizard", []) if "tree" in w]
+    labels = {x if isinstance(x, str) else x.get("leaf") for t in trees for x in (t if isinstance(t, list) else [t])}
     seen = m.get("portal", {})
-    if m["procedure"] != steps["procedure"] or any(seen[k] not in labels for k in ("settore", "operazione") if k in seen):
+    if m["procedure"] != r.get("main", steps["procedure"]) or any(seen[k] not in labels for k in ("settore", "operazione") if k in seen):
         out.append(f"This case is another pratica: {m['procedure']} ({m['regime']}){where(m)}.")
     handles = r.get("handles", [])
     for a in d["also"]:
@@ -518,6 +537,16 @@ def ruled(steps, values):
         if h not in [a["procedure"] for a in d["also"]]:
             out.append(f"This pratica also files {h}, which this case doesn't need.")
     return out, []
+
+
+def apart(steps, values):
+    """The pratiche the rules table says this case also needs, filed on their own with
+    another office (the Genio Civile's seismic filing for works on structures): the
+    person's to file, said in their steps, never a reason to refuse this one."""
+    d = _decision(steps, values)
+    if d is None or d["ask"] or not d["main"]:
+        return []
+    return [f"File apart, with its own office: {a['procedure']} ({a['regime']})" for a in d["apart"]]
 
 
 def supported(steps, values):
@@ -737,7 +766,7 @@ def preflight(steps, values, urls=None):
                                         "dichiarante: right if someone else must sign it, otherwise sign it again")
                 report["files"].append(entry)
     report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"] if "link" not in x) <= PAGE_FILES_LIMIT
-    report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
+    report["yours"] = [values.render(y) or y for y in steps.get("yours", [])] + apart(steps, values)
     report["ready"] = not (report["questions"] or report["proposals"] or report["missing"]
                            or any(not x["exists"] or x.get("problem") for x in report["files"] if x["path"]))
     return report
@@ -1035,7 +1064,7 @@ def review_shown(steps, values):
         if DECIDED.search(v["section"]):
             what = v["label"] or v["id"]
             decisions.setdefault(v["section"], []).append(what if v["value"] is None else f"{what}: {v['value']}")
-    return {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
+    return {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])] + apart(steps, values),
             "decisions": [{"section": s, "choices": c} for s, c in decisions.items()],
             "values": [{"section": v["section"], "label": v["label"] or v["id"],
                         "value": "chosen" if v["value"] is None

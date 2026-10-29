@@ -62,5 +62,8 @@
  "scia_onerosa": "true",
  "contributo_pagamento": "prima dei lavori",
  "contributo_calcolo": "sportello",
- "documentazione_calcolo_contributo": "rehearsals/scia-fittizia/files/documentazione-calcolo-contributo.pdf"
+ "documentazione_calcolo_contributo": "rehearsals/scia-fittizia/files/documentazione-calcolo-contributo.pdf",
+ "intervento": "manutenzione_straordinaria",
+ "cambio_uso": "tra_categorie",
+ "fatti": []
 }

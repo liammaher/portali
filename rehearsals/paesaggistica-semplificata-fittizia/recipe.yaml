@@ -20,6 +20,12 @@ yours:
   - "On Allega documenti: download the portal's procura, have the client sign it, sign it digitally (.p7m) and attach it"
   - "Pay the imposta di bollo (two marche da 16 €) and any diritti on pagoPA after sending"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  facts: {permesso_per_scelta: "false"}
 supports:
   - when: "{{ask.paes_variante|not}}"
     else: "So far only for a new authorization: the variant of one already issued isn't run yet."

@@ -64,8 +64,13 @@ yours:
   - "On Allega documenti: the portal's procura signed by the client, the stato legittimo documents (signed files only), then everything signed digitally (.p7m)"
   - "A SCIA that asks for assents (the Soprintendenza, a park, a vincolo): no start date; the works start once the SUE says the assents are in"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  facts: {permesso_per_scelta: "false"}
 supports:
-  - {value: "{{ask.paesaggio}}", in: ["no", "senza autorizzazione"], else: "A landscape authorization goes in the same pratica as the SCIA, selected with it on the SUE: the SCIA with its semplificata or ordinaria (napoli/comune/scia-con-paesaggistica-*)."}
   - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
   - {value: "{{ask.acustica}}", in: ["false"], else: "Acoustic obligations aren't mapped yet."}
   - {value: "{{ask.antincendio_soggetto}}", in: ["false"], else: "Fire-prevention obligations aren't mapped yet."}

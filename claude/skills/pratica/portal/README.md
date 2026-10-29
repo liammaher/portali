@@ -16,6 +16,16 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
    person: declarations, attachments, payment, signing), `supports` (the cases refused, with
    why: all or nothing; `if:` checks one only once its gate holds, asking it only then).
    Copy a sibling: `rehearsals/paesaggistica-ordinaria-fittizia`.
+   **Which pratica it is** is the library's rules table's (`rules/`, a byte-for-byte copy):
+   `rules: {table, facts, handles}`, as the SUAP and SUE recipes have. `facts` fixes what the
+   recipe is (`permesso_per_scelta: "true"` for the permesso); a fact it doesn't fix is an ask
+   (an ask of the same name, `{{ask.paesaggio}}`, when the pratica has one; its options may
+   have spaces where the table's values have `_`). `handles` lists what the pratica files with
+   the main one (a CILA's landscape authorization); `main` names the main one when the
+   recipe's procedure is the combination's; `question` words the checklist of yes/no facts.
+   Pre-flight refuses a case the table gives to another pratica, and adds to `yours` a
+   pratica it needs from another office (the seismic filing at the Genio Civile).
+   A recipe's `supports` keeps only what the table doesn't decide (an unmapped branch).
 3. **Generate:** `gen.py <recipe> --out <dir>/portal-steps.generated.yaml`. It writes nothing
    if any field is unaccounted for. Regenerate every rehearsal after a dictionary or gen.py
    change and look at the diff: an unrelated steps file that changes is a regression until

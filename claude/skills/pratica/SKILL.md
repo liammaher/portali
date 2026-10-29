@@ -311,7 +311,9 @@ When there is one, follow it instead of exploring the portal:
      someone other than the dichiarante, or carrying no codice fiscale, is a `warnings` entry
      (tell the user, it may be right: a technician signs their own relazione). It checks whose
      name is on the signature, not that the signature holds: the portal does that.
-   - `yours`: tell the user now what they'll do at the end, so nothing surprises them.
+   - `yours`: tell the user now what they'll do at the end, so nothing surprises them,
+     including a pratica the case needs from another office ("File apart, …": the seismic
+     filing at the Genio Civile), which they file themselves.
 
    Only when it says `ready` go on: the user hears nothing more from you until the review
    page, except the login. A steps file without `asks:` (an older one) fails pre-flight

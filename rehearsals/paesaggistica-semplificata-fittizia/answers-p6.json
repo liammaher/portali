@@ -15,5 +15,9 @@
  "vincolo_142_lettera": "a)",
  "paes_variante": false,
  "bollo_marche": false,
- "diritti_euro": "0"
+ "diritti_euro": "0",
+ "intervento": "edilizia_libera",
+ "cambio_uso": "no",
+ "paesaggio": "semplificata",
+ "fatti": []
 }

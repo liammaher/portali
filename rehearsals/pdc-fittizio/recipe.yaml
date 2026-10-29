@@ -60,8 +60,14 @@ yours:
   - "On Allega documenti: the portal's procura signed by the client and the Quadro riepilogativo (PdC DSC), the broadband infrastructure drawing (art. 135-bis DPR 380/2001: signed files only), the contributo's prospetto or the documents for the SUE to work it out (the permesso has no slot for them: under Allegati liberi), then everything signed digitally (.p7m)"
   - "Pay the diritti and the bollo as the portal asks, then sign and send (Firma e invio); keep the receipt"
   - "Once the permesso is issued: collect it (paying the contributo, if due, as quadro f) says), name the structural designer and the direttori dei lavori, and file the comunicazione di inizio lavori with the energy report and the structural filings"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+# The permesso is the choice where the law lets SCIA works be asked as one (art. 22 c. 7).
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  facts: {permesso_per_scelta: "true"}
 supports:
-  - {value: "{{ask.paesaggio}}", in: ["no", "senza autorizzazione"], else: "A landscape authorization is its own operation on Napoli's SUE, filed with the permesso: not mapped yet."}
   - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
   - {value: "{{ask.acustica}}", in: ["false"], else: "An acoustic impact or clima acustico report (art. 8 L. 447/1995) isn't mapped yet."}
   - {value: "{{ask.vvf_valutazione}}", in: ["false"], else: "A project for the Vigili del Fuoco's assessment isn't mapped yet."}

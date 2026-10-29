@@ -31,5 +31,9 @@
  "tolleranze": false,
  "cila_interventi": [
   "cila_manutenzione"
- ]
+ ],
+ "intervento": "manutenzione_straordinaria",
+ "cambio_uso": "no",
+ "paesaggio": "no",
+ "fatti": []
 }

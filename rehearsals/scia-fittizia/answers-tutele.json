@@ -90,5 +90,8 @@
  "fascia_militare_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
  "fascia_aeroportuale_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
  "fascia_altro_doc": "rehearsals/scia-fittizia/files/documentazione-assenso-vincoli.pdf",
- "scia_onerosa": "false"
+ "scia_onerosa": "false",
+ "intervento": "restauro",
+ "cambio_uso": "stessa_categoria",
+ "fatti": []
 }

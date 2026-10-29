@@ -36,5 +36,9 @@
  "relazione_tecnica": "rehearsals/cila-fittizia/files/relazione-tecnica.pdf",
  "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
  "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
- "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf"
+ "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf",
+ "intervento": "manutenzione_straordinaria",
+ "cambio_uso": "no",
+ "paesaggio": "no",
+ "fatti": []
 }
