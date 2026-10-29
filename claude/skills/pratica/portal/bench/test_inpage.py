@@ -229,7 +229,10 @@ def main():
             d = held[0]["declarations"]
             assert len(d) == 1 and "consapevolezza" in d[0]["section"], d
             assert "dichiara quanto segue" in d[0]["text"] and "art. 76" in d[0]["text"], d[0]["text"]
-            assert d[0]["boxes"] == [{"label": "Per presa visione", "kind": "checkbox", "ticked": False}], d[0]["boxes"]
+            assert d[0]["boxes"] == [{"label": "Per presa visione", "kind": "checkbox", "ticked": False},
+                                     {"label": "che i locali possiedono i requisiti di sorvegliabilità", "kind": "radio",
+                                      "ticked": False}], d[0]["boxes"]  # one radio, not its clone, with its own label
+            assert "SALVA" not in d[0]["text"], d[0]["text"]
             assert "sanzioni penali" not in json.dumps(r), "the report carries the declaration's own text"
             assert not PORTAL.sent, "Firma e invio was clicked"
         case("the declarations' own text is copied into held(), ticked by nothing, and not into the report", declarations_read)
@@ -261,7 +264,8 @@ def main():
         def preview_copied():
             PORTAL.reset()
             values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
-            install, run_js = run.page_scripts(steps(base, start=decl_start), values, None)
+            st = steps(base, start=decl_start) | {"preview_url": "/anteprima.pdf"}
+            install, run_js = run.page_scripts(st, values, None)
             folder = tmp / "preview"
             folder.mkdir(exist_ok=True)
             (folder / "anteprima.pdf").unlink(missing_ok=True)
@@ -273,14 +277,44 @@ def main():
                 while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
                     pass
                 assert report["result"] == "filled", report.get("error")
-                ok, why = run.capture_preview(page.context, page, folder)
+                assert report["preview_pdf"] is True and "preview_note" not in report, report
+                ok, why = run.capture_preview(page, folder)
                 assert ok, why
                 assert (folder / "anteprima.pdf").read_bytes().startswith(b"%PDF-1.4\n"), "not the portal's PDF"
                 assert (folder / "anteprima.pdf").stat().st_mode & 0o777 == 0o600
-                assert len(page.context.pages) == 1, "the preview's window was left open"
+                assert page.query_selector('[data-pv="review"] iframe[src^="blob:"]'), "the preview isn't on the review"
+                assert page.url.startswith(base + "/"), "the preview moved the page"
             finally:
                 page.close()
-        case("the portal's PDF preview is fetched by the person's own browser and kept private", preview_copied)
+        case("the portal's PDF is fetched with the person's session, kept private and shown on the review, with no navigation", preview_copied)
+
+        def review_drawn():
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            install, run_js = run.page_scripts(steps(base, start=decl_start), values, None)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert report["result"] == "filled", report.get("error")
+                inside = "document.querySelector('[data-pv=review]').shadowRoot"  # drawn in a shadow root
+                text = page.evaluate(f"{inside}.firstElementChild.nextElementSibling.innerText")
+                assert "Draft saved on the portal" in text and "nothing has been declared".lower() in text.lower(), text[:200]
+                assert "dichiara quanto segue" in text and "Per presa visione" in text, "the declaration isn't on the review"
+                assert "che i locali possiedono i requisiti di sorvegliabilità" in text, "the radio's own label is missing"
+                everything = page.evaluate(f"{inside}.textContent")  # the values sit in closed <details>
+                assert answers["den"] in everything and answers["impresa"] in everything, "the values typed aren't on the review"
+                assert "dichiara quanto segue" not in json.dumps(report), "the report carries the declaration"
+                page.click("text=Show the draft")
+                assert page.query_selector('[data-pv="review"]') is None, "Show the draft left the review up"
+                page.evaluate("__pv.review()")
+                assert page.query_selector('[data-pv="review"]'), "__pv.review() didn't draw it again"
+            finally:
+                page.close()
+        case("a filled run draws the declarations and every value over the portal, none of it in the report", review_drawn)
 
         def preview_missing():
             PORTAL.reset()
@@ -293,14 +327,18 @@ def main():
                 page.goto(base + "/")
                 page.evaluate(install)
                 page.evaluate(run_js)
-                while page.evaluate("__pv.wait(5000)")["result"] == "running":
+                while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
                     pass
-                ok, why = run.capture_preview(page.context, page, folder)
-                assert not ok and "anteprima" in why, (ok, why)
+                assert report["result"] == "filled", f"a missing preview stopped the run: {report.get('error')}"
+                assert report["preview_pdf"] is False and "404" in report["preview_note"], report
+                ok, why = run.capture_preview(page, folder)
+                assert not ok and "no preview" in why, (ok, why)
                 assert not (folder / "anteprima.pdf").exists()
+                assert "Not copied" in page.evaluate("document.querySelector('[data-pv=review]').shadowRoot.textContent"), \
+                    "the review doesn't say it has no preview"
             finally:
                 page.close()
-        case("a portal with no preview button gives a reason, not a stop", preview_missing)
+        case("a portal that gives no preview is a note on the review, not a stop", preview_missing)
 
 
         def recovered():

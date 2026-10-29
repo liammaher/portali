@@ -85,8 +85,8 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      `--plain`); reads every
                      field back, then again on a fresh load of the draft, attaches the files it
                      names (the pane: 256 KB in all, bigger ones by an https link it fetches and checks by sha256,
-                     `--file-urls`), never declares, pays or sends; `run` copies the declarations' own text and the
-                     portal's PDF preview into the review page, which Claude never reads. A label
+                     `--file-urls`), never declares, pays or sends; a filled run draws the declarations' own text, the
+                     portal's PDF preview and every value over the portal (`run` also writes review.html); Claude never reads them. A label
                      names the boxes whose own text it is first (`nth` counts those), and a
                      section is read only once it is the open one. `run.py preflight` first: the steps file's
                      `supports:` (cases it maps), `rules:` (the library's rules table, copied in

@@ -40,7 +40,7 @@
       value, and what a failed read-back wanted and found) are the person's, for Claude to
       send and never to read. There is no screenshot: a failed page holds the person's data.
       Reading the declarations opens their sections and copies their text, ticking nothing;
-      the preview is the PDF "Visualizza anteprima" opens. Neither can stop a saved draft:
+      the preview is the PDF the portal's "Visualizza anteprima" shows, fetched with the person's session. Neither can stop a saved draft:
       a failure is a note (`declarations_note`, `preview_note`) in the report and the page.
 
 A run that stops says where (report.json `at`: the wizard screen, or the section and
@@ -927,7 +927,7 @@ def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=N
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,
         "dug": sorted(DUG), "label_js": LABEL_JS,
-    }
+    } | ({"preview_url": steps["preview_url"]} if "preview_url" in steps else {})
 
     def value(f):
         """False when its `when` is false, true for a tick, a file's bytes, else the value."""
@@ -1067,63 +1067,20 @@ def private(out, shown, held=None):
         f.chmod(0o600)
 
 
-def capture_preview(ctx, page, folder, seconds=20):
-    """The portal's own PDF preview of the draft (Visualizza anteprima), copied to
-    folder/anteprima.pdf for the review page: what the person declares is the portal's rendering,
-    not our list of values. Whatever the button opens (a window with the PDF, or a download) is
-    fetched here, in the person's logged-in browser, so none of it passes through Claude. Best
-    effort: returns (True, "") or (False, why), and never stops a filled draft."""
-    seen, files = [], []
-
-    # Named functions: Playwright wraps a handler and can't attach to a builtin like list.append.
-    def download(d):
-        files.append(d)
-
-    def popup(p):
-        seen.append(p)
-        p.on("download", download)
-    ctx.on("page", popup)
-    page.on("download", download)
-    body, why = None, "the preview didn't open a window or a download"
+def capture_preview(page, folder):
+    """The portal's own PDF of the draft, which the filled run fetched in the person's logged-in
+    browser (__pv.previewPdf), kept as folder/anteprima.pdf for the review page: what the person
+    declares is the portal's rendering, not our list of values. None of it passes through Claude.
+    Returns (True, "") or (False, why); a missing preview never stops a filled draft."""
     try:
-        page.evaluate("__pv.preview()")
-        end = time.monotonic() + seconds
-        while body is None and time.monotonic() < end:
-            page.wait_for_timeout(250)
-            if files:
-                tmp = folder / "anteprima.download"
-                files[0].save_as(tmp)
-                body = tmp.read_bytes()
-                tmp.unlink()
-                break
-            for p in seen:
-                u = p.url
-                if u.startswith("blob:"):
-                    b64 = p.evaluate("fetch(location.href).then(r => r.blob()).then(b => new Promise(ok => {"
-                                     "const f = new FileReader(); f.onload = () => ok(f.result.split(',')[1]); f.readAsDataURL(b); }))")
-                    body = base64.b64decode(b64)
-                elif u.startswith(("http://", "https://")):
-                    r = ctx.request.get(u)
-                    body = r.body() if r.ok else None
-                    if body is None:
-                        why = f"the preview's address answered {r.status}"
-                        break
-                if body is not None:
-                    break
-        if body is not None and not body.startswith(b"%PDF-"):
-            body, why = None, "what the preview opened isn't a PDF"
+        b64 = page.evaluate("__pv.previewPdf()")
     except Exception as e:
-        body, why = None, f"{type(e).__name__}: {str(e).splitlines()[0][:160]}"
-    finally:
-        ctx.remove_listener("page", popup)
-        page.remove_listener("download", download)
-        for p in seen:
-            try:
-                p.close()
-            except Exception:
-                pass
-    if body is None:
-        return False, why
+        return False, f"{type(e).__name__}: {str(e).splitlines()[0][:160]}"
+    if not b64:
+        return False, "the run found no preview to keep"
+    body = base64.b64decode(b64)
+    if not body.startswith(b"%PDF-"):
+        return False, "what the portal gave isn't a PDF"
     f = folder / "anteprima.pdf"
     f.write_bytes(body)
     f.chmod(0o600)
@@ -1188,10 +1145,10 @@ def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
                 except Exception:
                     pass
             if report.get("result") == "filled" and not page.is_closed():
-                ok, why = capture_preview(ctx, page, private_dir(out))
+                ok, why = capture_preview(page, private_dir(out))
                 report["preview_pdf"] = ok
                 if why:
-                    report["preview_note"] = why
+                    report["preview_note"] = report.get("preview_note") or why
             # report.json holds no value, so Claude may read it; what the person needs is
             # kept apart and goes to them, never into the conversation.
             (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))

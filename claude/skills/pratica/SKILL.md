@@ -546,11 +546,11 @@ without saying which service it is. Then:
 
 - approving the SPID/CIE login on their phone (you do the clicking: reference/portal-login.md)
 - the declarations in a portal's form (DPR 445/2000, requisiti, privacy…): they tick them, after
-  reading the portal's preview of the pratica. After `run.py run` the review page holds the
-  portal's own text of each declaration and its PDF preview: point them there ("read these in
-  the review page, word for word, before you tick") and never paraphrase a declaration yourself.
-  After `run.py page` it holds neither (they'd pass through the conversation): give only each
-  section's title, and tell them to read it, and Visualizza anteprima, in the portal itself
+  reading the portal's preview of the pratica. A filled run (`run` or `page`) draws a review over the
+  portal: the portal's own text of each declaration, its PDF preview and every value typed. Point them
+  there ("read these before you tick, word for word") and never paraphrase a declaration yourself, and
+  never read that page or its text: it is drawn in the page for them. "Show the draft" takes it away;
+  `__pv.review()` draws it again. Where it says "Not copied", have them read that part in the portal
 - signatures: a firma digitale always; a handwritten one by hand, or by approving a signing
   request with `pvault sign review` (reference/signing.md): you file it, they approve it
 - payments (F24, pagoPA): give the amount, codice tributo and deadline; never pay

@@ -72,7 +72,12 @@ if (location.search.includes("decl=1")) {
     if (a === link) {
       li.insertAdjacentHTML("beforeend", "<p>Il sottoscritto, consapevole delle sanzioni penali previste dall'art. 76\n" +
         "del D.P.R. 445/2000, dichiara quanto segue.</p><label><input type='checkbox' id='form:r9c1:dynaForm:consap_chk'" +
-        (location.search.includes("ticked=1") ? " checked" : "") + "> Per presa visione</label>");
+        (location.search.includes("ticked=1") ? " checked" : "") + "> Per presa visione</label>" +
+        // As PrimeFaces draws a radio: the real input hidden, its clone in the visible button, the
+        // label beside it in a titled div; and the section's own Salva button.
+        "<div title='opt'><span><input type='radio' id='form:r9c1:dynaForm:sorv:radio:0' name='sorv'></span>" +
+        "<div class='ui-radiobutton'><input type='radio' id='form:r9c1:dynaForm:sorv:radio:0_clone' name='sorv'></div>" +
+        "<label>che i locali possiedono i requisiti di sorvegliabilità</label></div><button type='button'>SALVA</button>");
     }
   };
   for (const a of document.querySelectorAll("a.linkmenu")) {

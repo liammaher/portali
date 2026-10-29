@@ -90,26 +90,28 @@ certificate's validity at signing time; the portal does.
 
 ## What the person reads before they declare
 
-The review page is where the person reads, not where Claude summarizes. `run.py run` adds two
-things the portal itself says, copied by the program and never read by Claude:
+The person reads the portal's own words, not Claude's summary, and in the window where they tick. A
+filled run (in the pane or in `run`) draws a review over the portal from what it holds in memory
+(`showReview`, inpage.js), so none of it passes through Claude:
 
-- **The declarations.** After the fresh load, `readDeclarations` (inpage.js) opens each section
-  the steps file leaves out (`DECLARATIONS`) by its menu link, copies the open section's text
-  (`li#corrente`'s `innerText`) and each tick box's label and state, ticks nothing, and goes back
-  to the section the steps left open. The text is held (`__pv.held().declarations`, may carry the
-  person's name), written to `private/declarations.json`, and shown word for word. A box already
-  ticked is flagged. A section that won't open is `declarations_note` in the report, not a stop.
-- **The portal's PDF preview.** `capture_preview` presses "Visualizza anteprima" (`__pv.preview()`),
-  fetches the PDF the button opens (a window, a blob or a download) in the person's own browser,
-  and keeps it as `private/anteprima.pdf`; the page draws its pages when PyMuPDF is there and always
-  offers the PDF to download. Not a PDF, or no window: `preview_note`, and the page says to open it in
-  the portal.
+- **The declarations.** After the fresh load, `readDeclarations` opens each section the steps file
+  leaves out (`DECLARATIONS`) by its menu link, copies the open section's text (`li#corrente`'s
+  `innerText`, minus the portal's Salva and Annulla) and each tick box's label and state (a radio is
+  one box: its `_clone` input is skipped, its label is the one beside it), ticks nothing, and goes
+  back to the section the steps left open. A box already ticked is flagged. A section that won't
+  open is `declarations_note` in the report, never a stop. Held in `__pv.held().declarations`.
+- **The portal's PDF preview.** `fetchPreview` does a plain GET of `/fnsuap/preview.do` (a steps file's
+  `preview_url` changes it) with the person's session and shows the PDF in the review. Pressing
+  "Visualizza anteprima" instead navigates the whole page to that PDF, which would end the run's page.
+  Not a PDF, or an error: `preview_note`, and the review says to press the button in the portal.
+- **Every value typed**, by section.
 
-The pane (`run.py page`) copies neither: the text would pass through Claude. The page then says so.
-**Not yet seen on the real portal:** both are proven on the bench's fake portal only. First real run:
-check that `li#corrente` holds a declaration's whole text, that a section's tick box labels are its
-own, and what Visualizza anteprima opens (a PDF at an address, a blob, a download, or the frame
-itself), then record it here and in the map (`seen:`).
+`run.py run` also writes the same to `private/` (declarations.json, anteprima.pdf, from
+`__pv.previewPdf()`) and into review.html. In the pane they stay in the page.
+
+Seen on the real portal 2026-10-29 (pane, the SCIA rehearsal): all 7 declarations copied, every box
+unticked, the 9-page preview fetched (165 KB). Not yet seen: a real client's text (it may carry a
+name), a resumed run, the review in a narrow pane.
 
 ## Made-up data and the code window
 
