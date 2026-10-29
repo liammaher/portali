@@ -69,7 +69,7 @@ historic-centre rule for food and drink openings, zones, the regolamento edilizi
 Started (2026-10-29, library branch `claude/legal-rules-table`): `rules/suap-napoli.yaml` in
 pratiche-napoli. Eleven facts, each with its plain-Italian question (the activity, what happens
 to it, the Piano's zone, the sales area, a sign, music, dehors, fire prevention, alcohol), and
-39 rules from them to the procedure, its regime and the portal's sector and operation, for
+41 rules from them to the procedure, its regime and the portal's sector and operation, for
 shops, bars and restaurants, hairdressers and beauticians, and B&Bs. A rule cites a procedure's
 source that backs a verified claim there, so the table states nothing of its own and the
 source monitor watches it. Cases known and not handled are refused with a reason (a takeover in
