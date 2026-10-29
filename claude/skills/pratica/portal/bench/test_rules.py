@@ -259,6 +259,33 @@ def sue_asks_and_apart():
     assert not [y for y in sue("scia-fittizia")["yours"] if y.startswith("File apart")]
 
 
+def sue_proposals():
+    """The forms' own boxes (what the SCIA, permesso or SCIA alternativa files) are proposed
+    from the table's answers, for the person to confirm: never asked again, never guessed."""
+    form = ["scia_tipo", "scia_cambio_uso", "cambio_uso_tipo", "pdc_tipo", "scia_alt_tipo"]
+    drop = {k: None for k in form}
+    proposed = lambda r: {p["key"]: p["proposal"] for p in r["proposals"] if p["key"] in form}
+    asked = lambda r: [q["key"] for q in r["questions"]]
+    r = sue("scia-fittizia", **drop)
+    assert proposed(r) == {"scia_tipo": "manutenzione straordinaria", "scia_cambio_uso": "no"}, proposed(r)
+    # While the table's facts are still asked, the box waits for them instead of being asked cold.
+    r = sue("scia-fittizia", intervento=None, **drop)
+    assert "intervento" in asked(r) and "scia_tipo" not in set(asked(r)) | set(proposed(r)), r["questions"]
+    assert proposed(r)["scia_cambio_uso"] == "no"  # cambio_uso is answered already
+    r = sue("scia-fittizia", "answers-cambio-unita-senza-tra.json", **drop)
+    assert proposed(r)["scia_tipo"] == "cambio uso" and proposed(r)["cambio_uso_tipo"] == "unita senza opere tra categorie"
+    assert proposed(sue("pdc-fittizio", **drop)) == {"scia_cambio_uso": "no", "pdc_tipo": "ristrutturazione edilizia"}
+    # SCIA works asked as a permesso by choice (art. 22 c. 7) ...
+    assert proposed(sue("pdc-fittizio", intervento="manutenzione_straordinaria", **drop))["pdc_tipo"] == "facolta scia"
+    # ... but not when Campania's law makes it a permesso anyway (zona E): then it's asked.
+    r = sue("pdc-fittizio", intervento="manutenzione_straordinaria", cambio_uso="zona_agricola",
+            fatti=["uso_ammesso_prg"], **drop)
+    assert "pdc_tipo" in asked(r) and "pdc_tipo" not in proposed(r), r
+    assert proposed(sue("scia-alternativa-fittizia", **drop))["scia_alt_tipo"] == "ristrutturazione edilizia"
+    # A variant to a SCIA, essential or not: the table doesn't say, so the box is asked.
+    assert "scia_tipo" in asked(sue("scia-fittizia", "answers-variante-essenziale.json", **drop))
+
+
 def raises(fn, words, error=run.StepError):
     try:
         fn()
@@ -306,7 +333,7 @@ def same_as_library():
 def main():
     os.chdir(REHEARSALS.parent)  # the rehearsals' files are paths from the repository
     tests = [every_case_decided_once, decide_answers, ready_as_proven, facts_asked, refused_by_the_table, other_pratiche,
-             gen_checks, sue_every_case_decided_once, sue_rehearsals_ready, sue_another_pratica, sue_asks_and_apart,
+             gen_checks, sue_every_case_decided_once, sue_rehearsals_ready, sue_another_pratica, sue_asks_and_apart, sue_proposals,
              same_as_library]
     for t in tests:
         t()

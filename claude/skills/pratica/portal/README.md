@@ -26,6 +26,9 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
    Pre-flight refuses a case the table gives to another pratica, and adds to `yours` a
    pratica it needs from another office (the seismic filing at the Genio Civile).
    A recipe's `supports` keeps only what the table doesn't decide (an unmapped branch).
+   A form's own box on the same thing (what the SCIA files, `scia_tipo`) is `propose`d from the
+   table's answers, for the person to confirm: `{{ask.intervento,ask.strutture|sue_scia_tipo}}`
+   reads several facts at once, and a proposal waits while a fact it reads is still asked.
 3. **Generate:** `gen.py <recipe> --out <dir>/portal-steps.generated.yaml`. It writes nothing
    if any field is unaccounted for. Regenerate every rehearsal after a dictionary or gen.py
    change and look at the diff: an unrelated steps file that changes is a regression until

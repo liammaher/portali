@@ -48,11 +48,11 @@ asks:
   barriere: {type: yes_no, question: 'Is the building private and subject to the barriers rules (artt. 77-82 DPR 380/2001)?'}
   scia_cambio_uso: {type: choice, question: 'Do the works change the use? no; stessa categoria (one unit, within the same functional category); tra categorie (one unit in a building in zone A, B or C of
       DM 1444/1968, to another category: art. 23-ter c. 1-ter); intero immobile (a whole building, within the same category: art. 23-ter c. 3)', options: ['no', stessa categoria, tra categorie, intero immobile],
-    propose: 'no'}
+    propose: '{{ask.cambio_uso|sue_scia_cambio_uso}}'}
   pdc_tipo: {type: choice, question: 'What does the permesso di costruire ask for? nuova costruzione (art. 3 c. 1 e); ristrutturazione urbanistica (f); ristrutturazione edilizia (one of art. 10 c. 1 c:
       a different building with more volume, a change of use in zone A, or new shape, volume or facades on a protected building); facolta scia (works a SCIA could file, asked as a permesso by choice, art.
       22 c. 7); variante essenziale (a variant in corso d''opera to a permesso that is an essential variation)', options: [nuova costruzione, ristrutturazione urbanistica, ristrutturazione edilizia, facolta
-        scia, variante essenziale]}
+        scia, variante essenziale], propose: '{{ask.intervento,ask.cambio_uso,ask.demolizione_zona_a|sue_pdc_tipo}}'}
   intervento_tipo: {type: text, question: The works' type as the relazione tecnico-illustrativa names it (one line)}
   superficie_coperta_mq: {type: number, question: The building's superficie coperta in m²}
   barriere_accessibilita: {type: yes_no, group: barriere_requisiti, item: Accessibilità}

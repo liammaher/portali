@@ -195,6 +195,52 @@ class Filters(dict):
         return lambda v: "true" if answer(v) == name[3:] else "false"
 
 
+def _facts(v, n):
+    return (str(v).split("/") + [""] * n)[:n]
+
+
+SUE_CAMBIO = {"stessa_categoria": "stessa categoria", "tra_categorie": "tra categorie"}
+
+
+def _sue_scia_tipo(v):
+    """What the SCIA files (asks.scia_tipo), from the SUE table's intervento, strutture,
+    prospetti and cambio_uso; "" where they don't settle it (a variant to a SCIA: essential
+    or not), so the question is asked."""
+    i, strutture, prospetti, cambio = _facts(v, 4)
+    if i in ("variante_pdc", "ristrutturazione"):
+        return {"variante_pdc": "variante pdc", "ristrutturazione": "ristrutturazione"}[i]
+    if i == "restauro" and strutture == "true":
+        return "restauro"
+    if i == "manutenzione_straordinaria" and "true" in (strutture, prospetti):
+        return "manutenzione straordinaria"
+    if i in ("nessuna_opera", "edilizia_libera", "manutenzione_straordinaria", "restauro") and cambio in SUE_CAMBIO:
+        return "cambio uso"
+    return ""
+
+
+def _sue_cambio_uso_tipo(v):
+    """A change of use alone (asks.cambio_uso_tipo), from intervento and cambio_uso."""
+    i, cambio = _facts(v, 2)
+    works = {"nessuna_opera": "senza opere", "edilizia_libera": "senza opere",
+             "manutenzione_straordinaria": "opere 6bis", "restauro": "opere 6bis"}.get(i)
+    return f"unita {works} {SUE_CAMBIO[cambio]}" if works and cambio in SUE_CAMBIO else ""
+
+
+def _sue_pdc_tipo(v):
+    """What the permesso asks for (asks.pdc_tipo), from intervento, cambio_uso and
+    demolizione_zona_a: SCIA works are asked as a permesso by choice (art. 22 c. 7) only when
+    no Campania or Naples rule makes it a permesso anyway."""
+    i, cambio, demolizione = _facts(v, 3)
+    own = {"nuova_costruzione": "nuova costruzione", "ristrutturazione_urbanistica": "ristrutturazione urbanistica",
+           "ristrutturazione_pesante": "ristrutturazione edilizia", "variante_essenziale_pdc": "variante essenziale"}
+    if i in own:
+        return own[i]
+    scia_works = ("nessuna_opera", "edilizia_libera", "manutenzione_straordinaria", "restauro", "ristrutturazione", "variante_pdc")
+    if i in scia_works and cambio not in ("zona_agricola", "intero_immobile", "intero_tra_categorie") and demolizione != "true":
+        return "facolta scia"
+    return ""
+
+
 FILTERS = Filters({
     "upper": str.upper,
     "albo_tipo": _albo_tipo,
@@ -222,6 +268,13 @@ FILTERS = Filters({
     "empty": lambda v: "true" if not v else "false",
     "not": lambda v: "false" if truthy(v) else "true",
     "positive": lambda v: "true" if float(str(v or 0).replace(",", ".")) > 0 else "false",
+    # The SUE rules table's facts as the forms' own boxes (an ask's `propose`).
+    "sue_scia_tipo": _sue_scia_tipo,
+    "sue_cambio_uso_tipo": _sue_cambio_uso_tipo,
+    "sue_pdc_tipo": _sue_pdc_tipo,
+    "sue_scia_cambio_uso": lambda v: {"no": "no", "intero_immobile": "intero immobile", **SUE_CAMBIO}.get(str(v), ""),
+    "sue_scia_alt_tipo": lambda v: {"ristrutturazione_pesante": "ristrutturazione edilizia",
+                                    "ristrutturazione_urbanistica": "nuova costruzione piano attuativo"}.get(str(v), ""),
 })
 
 
@@ -319,7 +372,10 @@ class Values:
         """A template's value, or None when a field it names is missing."""
         def one(m):
             ref, *filters = [p.strip() for p in m.group(1).split("|")]
-            v = self.sum(ref) if "+" in ref or "*" in ref else self.field(ref)
+            if "," in ref:  # several fields for one filter (a proposal from facts of the case): a/b/c, "" for one unknown
+                v = "/".join(self.field(r.strip()) or "" for r in ref.split(","))
+            else:
+                v = self.sum(ref) if "+" in ref or "*" in ref else self.field(ref)
             if v is None:
                 if "empty" in filters:
                     v = ""
@@ -369,7 +425,7 @@ def refs_in(template):
     """The fields a template reads, each with its filters (each term of a sum on its own)."""
     return [(t.strip().rpartition("*")[2].strip(), parts[1:]) for parts in
             ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))
-            for t in parts[0].split("+")]
+            for t in re.split(r"[+,]", parts[0])]
 
 
 def templates(steps):
@@ -654,7 +710,10 @@ def preflight(steps, values, urls=None):
         hangs = {"only_if": sorted(need[k])} if need[k] else {}
         if v is None and "propose" in a:
             # What the rules or the vault say it should be: the person confirms it, or says
-            # otherwise, instead of answering from scratch. Never used until confirmed.
+            # otherwise, instead of answering from scratch. Never used until confirmed. One
+            # that reads a question asked now waits for its answer: proposed next time.
+            if any(r.startswith("ask.") and r[4:] in need and values.field(r) is None for r, _ in refs_in(a["propose"])):
+                continue
             proposal = values.render(a["propose"])
             if proposal is not None and not check_answer(a, proposal):
                 report["proposals"].append({"key": k, "question": a["question"], "proposal": proposal}

@@ -46,13 +46,13 @@ asks:
   scia_tipo: {type: choice, question: 'What does the SCIA file? manutenzione straordinaria (art. 3 c. 1 b: on structural parts or the facades); restauro (c: restauro e risanamento conservativo on structural
       parts); ristrutturazione (d: a ristrutturazione edilizia that isn''t one of art. 10 c. 1 c); variante pdc (a variant in corso d''opera to a permesso di costruire, art. 22 c. 2 and 2-bis); variante
       scia (a variant to a SCIA that isn''t an essential variation); variante scia essenziale (one that is, art. 32); cambio uso (a change of use alone, art. 23-ter)', options: [manutenzione straordinaria,
-      restauro, ristrutturazione, variante pdc, variante scia, variante scia essenziale, cambio uso]}
+      restauro, ristrutturazione, variante pdc, variante scia, variante scia essenziale, cambio uso], propose: '{{ask.intervento,ask.strutture,ask.prospetti,ask.cambio_uso|sue_scia_tipo}}'}
   scia_cambio_uso: {type: choice, question: 'Do the works change the use? no; stessa categoria (one unit, within the same functional category); tra categorie (one unit in a building in zone A, B or C of
       DM 1444/1968, to another category: art. 23-ter c. 1-ter); intero immobile (a whole building, within the same category: art. 23-ter c. 3)', options: ['no', stessa categoria, tra categorie, intero immobile],
-    propose: 'no'}
+    propose: '{{ask.cambio_uso|sue_scia_cambio_uso}}'}
   cambio_uso_tipo: {type: choice, question: 'Which change of use, alone? unita senza opere stessa categoria / unita senza opere tra categorie (one unit, with no works or only edilizia libera, art. 6); unita
       opere 6bis stessa categoria / unita opere 6bis tra categorie (one unit, with CILA works, art. 6-bis); immobile senza opere / immobile opere 6bis (a whole building, within the same category)', options: [
-      unita senza opere stessa categoria, unita senza opere tra categorie, unita opere 6bis stessa categoria, unita opere 6bis tra categorie, immobile senza opere, immobile opere 6bis]}
+      unita senza opere stessa categoria, unita senza opere tra categorie, unita opere 6bis stessa categoria, unita opere 6bis tra categorie, immobile senza opere, immobile opere 6bis], propose: '{{ask.intervento,ask.cambio_uso|sue_cambio_uso_tipo}}'}
   scia_variata_numero: {type: text, question: 'The SCIA the variant changes: its number'}
   scia_variata_data: {type: date, question: Its date}
   scia_onerosa: {type: yes_no, question: 'Is a contributo di costruzione due (e.g. a change of use between categories, or works adding urban load)?', propose: 'false'}

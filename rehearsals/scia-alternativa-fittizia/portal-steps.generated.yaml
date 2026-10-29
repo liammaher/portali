@@ -40,10 +40,10 @@ asks:
   barriere: {type: yes_no, question: 'Is the building private and subject to the barriers rules (artt. 77-82 DPR 380/2001)?'}
   scia_cambio_uso: {type: choice, question: 'Do the works change the use? no; stessa categoria (one unit, within the same functional category); tra categorie (one unit in a building in zone A, B or C of
       DM 1444/1968, to another category: art. 23-ter c. 1-ter); intero immobile (a whole building, within the same category: art. 23-ter c. 3)', options: ['no', stessa categoria, tra categorie, intero immobile],
-    propose: 'no'}
+    propose: '{{ask.cambio_uso|sue_scia_cambio_uso}}'}
   scia_alt_tipo: {type: choice, question: 'Which works does the SCIA alternativa al permesso file (art. 23 c. 1 DPR 380/2001)? ristrutturazione edilizia (one of art. 10 c. 1 c); nuova costruzione piano
       attuativo (new building or ristrutturazione urbanistica under a piano attuativo with precise plano-volumetric rules); nuova costruzione strumento generale (new building directly under the town plan''s
-      precise plano-volumetric rules)', options: [ristrutturazione edilizia, nuova costruzione piano attuativo, nuova costruzione strumento generale]}
+      precise plano-volumetric rules)', options: [ristrutturazione edilizia, nuova costruzione piano attuativo, nuova costruzione strumento generale], propose: '{{ask.intervento|sue_scia_alt_tipo}}'}
   rinnovabili: {type: yes_no, question: 'Does the renewables obligation apply (D.Lgs. 28/2011: a new building or a major renovation), its respect shown in the drawings and the relazione tecnica?'}
   incentivo_energetico: {type: choice, question: 'Which energy incentive does the project use, certified in the relazione tecnica? nessuno; art 14 c6 (D.Lgs. 102/2014: thicker walls and roofs not counted,
       the energy index at least 20% lower); art 14 c7 (deroga to distances and heights, the transmittance limit at least 10% lower); bonus volumetrico (D.Lgs. 28/2011 art. 12: 5% more volume, renewables
