@@ -126,7 +126,21 @@ def files():
     assert r["ready"] and r["files"][0]["exists"] and not r["pane_ok"], r
     r = run.preflight(steps, values(steps=steps, answers=ANSWERS | {"planimetria": str(tmp / "nope.pdf")}))
     assert not r["ready"] and r["questions"][0]["error"].startswith("no file"), r
-    big.unlink()
+    # Over the portal's 9.77 MB, or a type the slot doesn't take: not ready, and why.
+    huge = tmp / "rilievo.pdf"
+    with huge.open("wb") as f:
+        f.truncate(run.SLOT_MAX_BYTES + 1)
+    r = run.preflight(steps, values(steps=steps, answers=ANSWERS | {"planimetria": str(huge)}))
+    assert not r["ready"] and "over the portal's 9.77 MB" in r["files"][0]["problem"], r["files"]
+    steps["sections"][-1]["fields"][-1]["accepts"] = "pdf.p7m;jpg.p7m"
+    r = run.preflight(steps, values(steps=steps, answers=ANSWERS | {"planimetria": str(big)}))
+    assert not r["ready"] and r["files"][0]["problem"] == "the slot takes only pdf.p7m, jpg.p7m", r["files"]
+    signed = tmp / "planimetria.pdf.p7m"
+    signed.write_bytes(b"0")
+    r = run.preflight(steps, values(steps=steps, answers=ANSWERS | {"planimetria": str(signed)}))
+    assert r["ready"] and "problem" not in r["files"][0], r["files"]
+    for f in (big, huge, signed):
+        f.unlink()
     tmp.rmdir()
 
 
@@ -221,7 +235,7 @@ CASES = [
     ("a default fills an unanswered ask", default_used),
     ("an ask with no question is a steps-file error", ask_without_question),
     ("an expired document the steps read is named", expired),
-    ("files: found, too big for the pane, or missing", files),
+    ("files: found, too big for the pane or the portal, of a type the slot doesn't take, or missing", files),
     ("a checklist answers as a list or item by item, and a bad list is asked again", checklist_forms),
     ("a question no field reads is a steps-file error", unused_ask),
     ("a question this case doesn't need isn't asked; a conditional one says on what", not_needed_here),

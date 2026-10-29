@@ -3,13 +3,15 @@
 
   PRATICHE_NAPOLI_DIR=<pratiche-napoli checkout> regress.py [--keep DIR] [case ...]
 
-The pilots are five library forms: the TARI Mod. 1 (drawn on, with the
+The pilots are six library forms: the TARI Mod. 1 (drawn on, with the
 stato di famiglia's table), the ricorso al Prefetto (drawn on, two pages, tick
-boxes that are font characters), the CILA Allegato A (fillable fields), the
-Regione Campania scheda anagrafica, in a business vault (signed by its
-legale rappresentante, a procuratore read by --party, typed |__| cells), and
-the TARI Mod. 5 in the Pizzeria Fittizia rehearsal's business vault
-(rehearsals/pizzeria-fittizia/fixture.json).
+boxes that are font characters), the CILA Allegato A (fillable fields; also
+declared by a studio's client in proprio), the Regione Campania scheda
+anagrafica, in a business vault (signed by its legale rappresentante, a
+procuratore read by --party, typed |__| cells), the TARI Mod. 5 in the Pizzeria
+Fittizia rehearsal's business vault (rehearsals/pizzeria-fittizia/fixture.json),
+and the CILA DSC checklist, which the SUE gives only inside a draft, so its
+blank is in forms/ (an entry's form with no url is read from there).
 Each case changes a pilot's inputs (the made-up vault, the answers, the
 library entry, the library's layout, the form, who signs), runs fill.py
 against its own synthetic vault, and checks the exit code and that each
@@ -52,11 +54,19 @@ PILOTS = {
                "business-fixture.json"),
     "mod-5": ("napoli/comune/tari-iscrizione-non-domestica", "mod-5", "mod5-answers.json", None,
               os.path.join("..", "..", "..", "..", "..", "rehearsals", "pizzeria-fittizia", "fixture.json")),
+    # The portal's own checklist, which it gives only inside a draft: the blank is in forms/.
+    "dsc": ("napoli/comune/cila-lavori-edilizi", "quadro-riepilogativo-dsc", "dsc-answers.json", None, "fixture.json"),
 }
 ID, FORM = PILOTS["mod-1"][:2]
 SLUG = "tari-iscrizione-uso-abitativo-2026"
 RICORSO_SLUG = "verbale-pagamento-ricorso-2026"
 LR = "in proprio / in qualità di Legale Rappresentante di"
+# The business pilot's client, with what the Allegato A reads of a person.
+NERI = [["neri:identity.first_name", "Anna"], ["neri:identity.date_of_birth", "1975-03-02"],
+        ["neri:identity.birth_comune", "Napoli"], ["neri:identity.birth_province", "NA"], ["neri:identity.sex", "F"],
+        ["neri:identity.codice_fiscale", "NRENNA75C42F839H"], ["neri:identity.email", "anna.neri@example.com"],
+        ["neri:identity.phone", "+39 333 444 5555"], ["neri:residenza.comune", "Napoli"], ["neri:residenza.provincia", "NA"],
+        ["neri:residenza.indirizzo", "Via Chiaia"], ["neri:residenza.civico", "12"], ["neri:residenza.cap", "80121"]]
 PENDENZE = ("Dichiara di non avere pendenze verso il Comune di Napoli per IMU, Tassa rifiuti, Imposta di soggiorno, "
             "Canone di occupazione suolo pubblico (fino al 2020) e Canone patrimoniale (dal 2021)")
 
@@ -496,6 +506,18 @@ CASES = {
                               "entry": row("Pec", map={"repeat": {"ruolo": "socio", "except": "dichiarante"}, "fields": ["*:identity.last_name"]}),
                               "needs_from_entry": True}, 0,
                              ["ok   the form is ready", "wrote: Verdi", "wrote: Gialli", "page 2: "]),
+    "dsc": ("the CILA DSC checklist: a box per attachment uploaded, the Wingdings squares, one specificare line",
+            {"pilot": "dsc"}, 0,
+            ["ok   every layout box sits on the form's own blank", "ok   the form is ready",
+             "wrote: Autorizzazione paesaggistica semplificata: relazione paesaggistica e documentazione fotografica"]),
+    "cila-client": ("a studio's client declares the Allegato A in proprio from the studio's business vault",
+                    {"pilot": "cila", "for": "neri", "fixture_file": "business-fixture.json", "fixture": with_fields(*NERI)}, 0,
+                    ["ok   neri declares in proprio, as the business's client",
+                     "ok   no data of the business itself is on its client's form", "ok   the form is ready", "wrote: Neri Anna"]),
+    "cila-client-for-business": ("a client ticking legale rappresentante would carry the studio's data: refused",
+                                 {"pilot": "cila", "for": "neri", "fixture_file": "business-fixture.json",
+                                  "fixture": with_fields(*NERI), "answers": {LR: "legale rappresentante"}}, 1,
+                                 ["FAIL no data of the business itself is on its client's form: business.codice_fiscale"]),
     "scheda-ruolo-from-answers": ("answers.json can't give someone a ruolo, so they can't sign through it",
                                   {"pilot": "scheda", "for": "nuovo", "fixture": with_fields(["nuovo:identity.last_name", "Nuovo"]),
                                    "values": {"nuovo:ruolo.tipo": "legale_rappresentante"}}, 1,
@@ -559,10 +581,17 @@ def unit_checks(ricorso_entry):
     doc = fitz.open()
     page = doc.new_page()
     page.insert_text((20, 100), "Indirizzo")
-    pen = fill.Pen(fitz, doc, 9)
+    pen = fill.Pen(fitz, doc, 9, [])
     pen.put([70, 90, 100, 102], "Via")
     if (got := pen.address(1, [110, 90, 400, 102], "Via Roma 3")) != "Via Roma 3":
         bad.append(f"after our own 'Via', an address became {got!r}")
+    # The form's own Helvetica isn't ours: the pen takes another base-14 font, embedding nothing.
+    if (got := pen.name()) != "Times-Roman":
+        bad.append(f"on a form printed in Helvetica the pen writes in {got}")
+    if fill.Pen(fitz, fitz.open(), 9, ["Rossi"]).file:
+        bad.append("a Latin-1 text embedded a Unicode font")
+    if not fill.Pen(fitz, fitz.open(), 9, ["Łukasz"]).file and any(os.path.exists(f) for f in fill.UNICODE_FONTS):
+        bad.append("Łukasz didn't embed the Unicode font")
     with tempfile.TemporaryDirectory() as d:
         os.symlink(os.path.abspath(FILL), os.path.join(d, "fill.py"))
         got = subprocess.run([sys.executable, "-I", os.path.join(d, "fill.py"), "needs", "--entry", ricorso_entry,
@@ -658,8 +687,11 @@ def main():
         if name not in pilots:
             pid, form = PILOTS[name][:2]
             entry = fill.entry_of(types.SimpleNamespace(entry=None, library=library, procedure=pid, form=form))
-            url = next(f["url"] for f in entry["forms"] if f["id"] == form)
-            if name == "mod-1" and os.environ.get("PILOT_FORM_PDF"):
+            url = next(f.get("url") for f in entry["forms"] if f["id"] == form)
+            if not url:
+                with open(os.path.join(HERE, "forms", form + ".pdf"), "rb") as f:
+                    pdf = f.read()
+            elif name == "mod-1" and os.environ.get("PILOT_FORM_PDF"):
                 # A copy already on disk, e.g. offline; fill.py still checks its sha256.
                 with open(os.environ["PILOT_FORM_PDF"], "rb") as f:
                     pdf = f.read()

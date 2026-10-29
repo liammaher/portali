@@ -748,8 +748,8 @@ func (s *Server) handleGetContext(w http.ResponseWriter, r *http.Request) {
 // GET /vault/located/{target...}
 // Says where an address of the vault is in Napoli: its quartiere, municipalità
 // and ASL distretto, what settled them and, when they can't be known, why and
-// which quartieri to ask about. target is residenza, domicilio, locale or
-// sede_legale, with an optional person (leo:residenza). It answers under the
+// which quartieri to ask about. target is residenza, domicilio, locale, immobile
+// or sede_legale, with an optional person (leo:residenza). It answers under the
 // scope of the three computed fields, never needing the street's.
 func (s *Server) handleLocated(w http.ResponseWriter, r *http.Request) {
 	category, ids, ok := vault.LocatedTarget(r.PathValue("target"))

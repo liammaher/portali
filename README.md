@@ -74,6 +74,7 @@ pvault hello enable   # optional: Windows Hello instead of your password for dat
 | `famiglia` | how each family member relates to you: `relazione` (mapped to ANPR codes), `stato_famiglia`, `a_carico_percentuale`, `genitori`, `rappresentanza`; your `intestatario_scheda` |
 | `business` | `partita_iva` (validated), `forma_giuridica` (validated), PEC, ATECO, regime fiscale, REA, CCIAA, capital, start/end dates, INPS/INAIL positions, PEC and DURC expiry, `qualita_dichiarante` (titolare / legale_rappresentante; personal vaults), sede legale address (`sede_legale_cap`, `sede_legale_provincia` validated) |
 | `locale` | the business premises: address, `titolo`, `data_inizio`, catasto data and `catasto_categoria` (C/1, validated), `superficie_mq`, `destinazione_uso` |
+| `immobile` | the property a pratica is about (building works, a client's flat; `luca:immobile`, a second one `immobile2`): address, catasto data and `catasto_categoria` (validated), `superficie_mq`, `destinazione_uso`, `titolo` (proprietario, comproprietario…) |
 | `albo`, `cassa`, `firma_digitale` | a professional's albo registration and pension fund; a digital signature's issuer and expiry |
 | `ruolo` | business vaults: what each person is to the business (`tipo`: titolare, socio, dipendente, cliente…), dates, quota, poteri |
 | `spid` (personal) | provider, livello, username, password, renewal date — plus `cie.pin` / `cie.puk` |

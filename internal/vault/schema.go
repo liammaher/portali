@@ -131,6 +131,8 @@ func schemaValues() {
 			switch {
 			case f.ID == "ruolo.tipo":
 				f.Values = slices.Clone(ruoli)
+			case f.ID == "immobile.titolo":
+				f.Values = slices.Clone(immobileTitoli)
 			case f.Derived && strings.HasSuffix(f.ID, "municipalita"):
 				f.Values = napoli.Municipalita()
 			case f.Derived && strings.HasSuffix(f.ID, "distretto_asl"):
@@ -156,7 +158,7 @@ var RecommendedSchema = Schema{
 		Identity:   `^(` + identityWords + `)$`,
 		Account:    `^(` + accountWords + `)$`,
 	},
-	Version: "18",
+	Version: "19",
 	Categories: []SchemaCategory{
 		{
 			Name:        "identity",
@@ -429,6 +431,33 @@ var RecommendedSchema = Schema{
 				{ID: "locale.tari_protocollo", Description: "Protocol number the Comune gave that TARI declaration", Sensitivity: "standard"},
 				{ID: "locale.tari_superficie_tassata_mq", Description: "Area of these premises the Comune taxes for TARI, in m², from the payment notice", Sensitivity: "standard"},
 				{ID: "locale.tari_categoria", Description: "TARI tariff category the Comune applies to these premises, as on the payment notice (e.g. 22 ristoranti, trattorie, pizzerie)", Sensitivity: "standard"},
+			},
+		},
+		{
+			Name: "immobile",
+			Description: "The property a pratica is about (building works, a client's flat): its address and catasto. Not your home, " +
+				"which stays in residenza/domicilio and abitazione. A client's is luca:immobile, a second property immobile2. " +
+				"Catasto data is on the visura catastale. Attach the visura and the plans with 'pvault doc add immobile <file>'.",
+			Fields: []SchemaField{
+				{ID: "immobile.indirizzo", Description: "Street (via/piazza) of the property, without number; sensitive like residenza's, since it is often someone's home", Sensitivity: "sensitive"},
+				{ID: "immobile.civico", Description: "Street number of the property", Sensitivity: "sensitive"},
+				{ID: "immobile.scala", Description: "Staircase (scala), if any", Sensitivity: "standard"},
+				{ID: "immobile.piano", Description: "Floor (e.g. terra, rialzato, 3)", Sensitivity: "standard"},
+				{ID: "immobile.interno", Description: "Unit number (interno), if any; 'int. 3' is saved as 3", Sensitivity: "standard"},
+				{ID: "immobile.cap", Description: "CAP of the property (5 digits, validated)", Sensitivity: "standard"},
+				{ID: "immobile.comune", Description: "Comune of the property", Sensitivity: "standard"},
+				{ID: "immobile.provincia", Description: "Provincia of the property as 2-letter sigla (e.g. NA; the format is checked, not the list)", Sensitivity: "standard"},
+				{ID: "immobile.quartiere", Description: "Quartiere of Napoli (e.g. Vomero), computed from the property when the street settles it; store it to settle a street that crosses a municipalità boundary. One of the 30 quartieri (validated); ignored once older than the property's address", Sensitivity: "standard", Derived: true},
+				{ID: "immobile.municipalita", Description: "Municipalità of Napoli (1-10), computed from the property; store it only to override. A number or a Roman numeral (validated, saved as 1-10); ignored once older than the property's address", Sensitivity: "standard", Derived: true},
+				{ID: "immobile.distretto_asl", Description: "ASL Napoli 1 Centro distretto sanitario (24/73, 25-33), computed from the municipalità; store it only to override (validated; DS 31 is saved as 31)", Sensitivity: "standard", Derived: true},
+				{ID: "immobile.catasto_sezione", Description: "Sezione urbana from the visura, if any", Sensitivity: "standard"},
+				{ID: "immobile.catasto_foglio", Description: "Foglio from the visura (digits, validated)", Sensitivity: "standard"},
+				{ID: "immobile.catasto_particella", Description: "Particella (mappale) from the visura (validated)", Sensitivity: "standard"},
+				{ID: "immobile.catasto_subalterno", Description: "Subalterno from the visura, exactly as written (digits, validated)", Sensitivity: "standard"},
+				{ID: "immobile.catasto_categoria", Description: "Categoria catastale, e.g. A/2 for a flat (validated; a2 becomes A/2)", Sensitivity: "standard"},
+				{ID: "immobile.destinazione_uso", Description: "Lawful use of the property (e.g. residenziale, commerciale, ufficio)", Sensitivity: "standard"},
+				{ID: "immobile.superficie_mq", Description: "Surface of the property, in m²", Sensitivity: "standard"},
+				{ID: "immobile.titolo", Description: "The holder's title on the property: " + strings.Join(immobileTitoli, ", ") + " (validated; comproprietaria, conduttore, comodataria... accepted)", Sensitivity: "standard"},
 			},
 		},
 		{

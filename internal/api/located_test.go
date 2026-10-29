@@ -96,7 +96,7 @@ func TestLocated_Route(t *testing.T) {
 		t.Errorf("%+v", loc)
 	}
 
-	for target, code := range map[string]int{"identity": 400, "residenza.indirizzo": 400, "Residenza": 400, "leo:domicilio": 200, "sede_legale": 200} {
+	for target, code := range map[string]int{"identity": 400, "residenza.indirizzo": 400, "Residenza": 400, "leo:domicilio": 200, "sede_legale": 200, "immobile2": 200} {
 		if w := env.doRequest(t, "GET", "/vault/located/"+target, nil, true); w.Code != code {
 			t.Errorf("%s: %d %s", target, w.Code, w.Body.String())
 		}
@@ -104,6 +104,33 @@ func TestLocated_Route(t *testing.T) {
 	// No credentials, no answer.
 	if w := env.doRequest(t, "GET", "/vault/located/residenza", nil, false); w.Code != 401 {
 		t.Errorf("unauthenticated: %d", w.Code)
+	}
+}
+
+// A person's property (the immobile of a building pratica) is located like
+// any other address, and never echoes its street.
+func TestLocated_PersonImmobile(t *testing.T) {
+	env := setup(t)
+	putField(t, env, "luca:immobile.indirizzo", "Via Alabardieri")
+	putField(t, env, "luca:immobile.civico", "10")
+	putField(t, env, "luca:immobile.comune", "Napoli")
+
+	w := env.doRequest(t, "GET", "/vault/located/luca:immobile", nil, true)
+	if w.Code != 200 {
+		t.Fatalf("%d %s", w.Code, w.Body.String())
+	}
+	loc := decodeLocated(t, w.Body.Bytes())
+	if loc.Category != "luca:immobile" || loc.Fields["luca:immobile.municipalita"].Value != "1" || loc.Fields["luca:immobile.quartiere"].Value != "Chiaia" {
+		t.Errorf("%+v", loc)
+	}
+	if strings.Contains(strings.ToLower(w.Body.String()), "alabardieri") {
+		t.Errorf("the street is in the answer: %s", w.Body.String())
+	}
+	w = env.doRequest(t, "GET", "/vault/fields/luca:immobile.distretto_asl", nil, true)
+	var f vault.FieldInfo
+	json.NewDecoder(w.Body).Decode(&f)
+	if w.Code != 200 || f.Value != "24/73" || !f.Derived {
+		t.Errorf("%d %+v", w.Code, f)
 	}
 }
 

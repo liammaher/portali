@@ -473,6 +473,8 @@ func TestLocatedTarget(t *testing.T) {
 		"residenza":         {"residenza", "residenza.municipalita"},
 		"leo:residenza":     {"leo:residenza", "leo:residenza.municipalita"},
 		"locale2":           {"locale2", "locale2.municipalita"},
+		"immobile":          {"immobile", "immobile.municipalita"},
+		"luca:immobile2":    {"luca:immobile2", "luca:immobile2.municipalita"},
 		"sede_legale":       {"business", "business.sede_legale_municipalita"},
 		"rossi:sede_legale": {"rossi:business", "rossi:business.sede_legale_municipalita"},
 	} {
@@ -513,8 +515,8 @@ func TestLocatedSchemaFields(t *testing.T) {
 			}
 		}
 	}
-	if derived != 12 {
-		t.Errorf("%d derived fields, want 12", derived)
+	if derived != 15 {
+		t.Errorf("%d derived fields, want 15", derived)
 	}
 }
 

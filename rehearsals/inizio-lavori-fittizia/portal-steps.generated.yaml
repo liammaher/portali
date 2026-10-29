@@ -12,8 +12,6 @@ asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - inizio lavori {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The permit holder''s title to the property (proprietario, locatario, ...)'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
-  immobile_indirizzo: {type: text, question: 'The property''s street, as the Comune names it (e.g. VIA DOMENICO FONTANA)'}
-  immobile_civico: {type: text, question: Its civico}
   data_inizio_lavori: {type: date, question: When the works start}
   pdc_numero: {type: text, question: The permesso di costruire's number}
   pdc_data: {type: date, question: Its issue date}
@@ -115,8 +113,8 @@ sections:
 - section: dichiarazione dell'ubicazione dei lavori
   fields:
   - {id: 'r2c1p2reg:txt', kind: text, value: NAPOLI, max: 50, label: comune}
-  - {id: 'r4c1p4reg:txt', kind: text, value: '{{ask.immobile_indirizzo}}', max: 50, label: 'via, viale, piazza'}
-  - {id: 'r4c2p6reg:txt', kind: text, value: '{{ask.immobile_civico}}', max: 5, label: numero civico}
+  - {id: 'r4c1p4reg:txt', kind: text, value: '{{c:immobile.indirizzo|upper}}', max: 50, label: 'via, viale, piazza'}
+  - {id: 'r4c2p6reg:txt', kind: text, value: '{{c:immobile.civico}}', max: 5, label: numero civico}
 - section: Dichiarazione relativa ai diritti
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.diritti_euro|positive|not}}', label: non sono dovuti oneri}
@@ -135,4 +133,4 @@ sections:
   - Quadro riepilogativo della documentazione
   - copia attestazione versamento oneri, diritti e spese
   fields:
-  - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}'}
+  - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}', accepts: pdf;pdf.p7m}

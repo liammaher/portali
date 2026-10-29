@@ -63,7 +63,9 @@ residenza, cie..., and ruolo) is then read from that person's fields; the
 rest (the home, the pratiche, business.*, locale.*) stays the vault's own,
 and the pratica record names the person. In a business
 vault a person always signs: --for names one whose ruolo is one of the
-entry's dichiarante roles, and "in qualità di" is the role they sign as.
+entry's dichiarante roles, and "in qualità di" is the role they sign as; or
+a cliente, who declares in proprio (a studio's client), so none of the
+business's own business.* and locale.* may reach their form.
 
 Other people (a procuratore, the soci): --party ROLE=SLUG names who has a
 ruolo the form reads, so the token reaches only them. A party row reads
@@ -133,9 +135,12 @@ ISO_DATE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
 # Words a form prints before an address box that an address also starts with.
 TOPONYMS = {"via", "viale", "piazza", "piazzetta", "corso", "largo", "vico", "vicolo", "strada", "salita",
             "calata", "discesa", "rampa", "rampe", "traversa", "contrada", "località", "borgo", "lungomare"}
-# A Unicode font to embed when there is one, so Łukasz or Nguyễn print; the
-# base-14 Helvetica only has Latin-1. Neither is used by the forms here, so
-# text in it is ours (read_back relies on that).
+# Text is ours when it is in our font (read_back relies on that), so we write in
+# a base-14 font the form doesn't use, which embeds nothing. Those only have
+# Latin-1: for Łukasz or Nguyễn a Unicode font is embedded and subset. Embedded on
+# a page and left unused, it isn't subset, and a whole Arial Unicode makes the
+# PDF 15 MB, over what the portals take (9.77 MB on impresainungiorno).
+BASE14 = [("helv", "Helvetica"), ("tiro", "Times-Roman"), ("cour", "Courier")]
 UNICODE_FONTS = [
     "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -1175,21 +1180,42 @@ def table_row(row, values, household, answers):
 
 # --- Filling and reading back -----------------------------------------------
 
+def strings(value):
+    """Every string in a row's value (a text, a table's cells, an allegato's copies)."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for v in value.values():
+            yield from strings(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from strings(v)
+
+
 class Pen:
     """Writes on the form's pages in one font, shrinking text to fit its box,
     or sets its fillable fields; remembers what went where for read_back."""
 
-    def __init__(self, fitz, doc, size):
+    def __init__(self, fitz, doc, size, texts):
         self.fitz, self.doc, self.size = fitz, doc, size
-        self.file = next((f for f in UNICODE_FONTS if os.path.exists(f)), None)
+        self.written, self.problems = [], []
+        # The form's printed fonts, and Helvetica if it has a text field: PyMuPDF draws a field it
+        # sets in Helvetica whatever font the field names.
+        used = {f[3].split("+")[-1] for page in doc for f in page.get_fonts()}
+        if any(w.field_type_string == "Text" for page in doc for w in page.widgets()):
+            used.add("Helvetica")
+        base = next(((code, name) for code, name in BASE14 if name not in used), None)
+        self.file = None
+        if base is None or any(ord(c) > 255 for t in texts for c in t.translate(PLAIN)):
+            self.file = next((f for f in UNICODE_FONTS if os.path.exists(f)), None)
         if self.file:
             self.font, self.fontname = fitz.Font(fontfile=self.file), "pvfill"
         else:
-            self.font, self.fontname = fitz.Font("helv"), "helv"
+            code = base[0] if base else "helv"
+            self.font, self.fontname = fitz.Font(code), code
         self.fonted = set()
         # The form's own printed words, by page, read before anything is written.
         self.words = [page.get_text("words") for page in doc]
-        self.written, self.problems = [], []
 
     def name(self):
         return self.font.name
@@ -1233,7 +1259,7 @@ class Pen:
         if not self.file:
             text = text.translate(PLAIN)
             if any(ord(c) > 255 for c in text):
-                self.problems.append(f"{text!r} has characters Helvetica can't print, and no Unicode font was found")
+                self.problems.append(f"{text!r} has characters {self.font.name} can't print, and no Unicode font was embedded")
         return text
 
     def fit(self, text, width):
@@ -1367,7 +1393,8 @@ def fill_pdf(fitz, pdf_in, pdf_out, layout, form, rows):
     library = {r["label"]: r for r in form["fields"]}
     doc = fitz.open(pdf_in)
     copies, problems = allegati(fitz, pdf_in, layout, library, by_label, doc)
-    pen = Pen(fitz, doc, layout.get("font_size", 9))
+    pen = Pen(fitz, doc, layout.get("font_size", 9),
+              list(strings([r.get("value") for r in rows if r["status"] in ("value", "answered")])))
     pen.problems += problems
     ticked = set()
 
@@ -1685,14 +1712,21 @@ def run(a):
         check(f"{signer} is a person in the vault", signer in known, "" if signer in known else "not in the household this token sees")
     who = Who(values, signer, people, parties)
     signer_roles = role_list(entry["dichiarante"]["ruolo"]) if "dichiarante" in entry else []
+    client = False
     if business and signer_roles:
         # The business signs through a person whose ruolo is one of these.
         can = who.holding(signer_roles)
         if signer == "io":
             sys.exit(f"a business vault's form is signed by a person who is {' or '.join(human_role(r) for r in signer_roles)}: "
                      f"pass --for to needs and run, " + (f"one of {', '.join(can)}" if can else "and add them to the vault first"))
-        check(f"{signer} signs as {' or '.join(human_role(r) for r in signer_roles)}", signer in can,
-              "" if signer in can else f"their ruolo is {', '.join(sorted(who.roles.get(signer, ()))) or 'not in the vault'}")
+        # Or a client declares in their own name, never for the business: an architect's studio
+        # files its client's own pratica, which the client signs.
+        client = signer not in can and "cliente" in who.roles.get(signer, ())
+        if client:
+            check(f"{signer} declares in proprio, as the business's client", True)
+        else:
+            check(f"{signer} signs as {' or '.join(human_role(r) for r in signer_roles)}", signer in can,
+                  "" if signer in can else f"their ruolo is {', '.join(sorted(who.roles.get(signer, ()))) or 'not in the vault'}")
     for role, slugs in parties.items():
         for p in slugs:
             check(f"{p} is {human_role(role)}", role in who.roles.get(p, ()),
@@ -1717,6 +1751,16 @@ def run(a):
                 for m in r["missing"]))
         if r["status"] == "ask":
             check(f"row {r['label']!r} is answered", False, r["question"])
+
+    if client:
+        # The vault's own business.* and locale.* are the business's, not its client's.
+        library = {f["label"]: f["map"] for f in form["fields"]}
+        own = sorted({ref for r in rows if r["status"] in ("value", "answered") for ref in
+                      refs(library[r["label"]]) + template_names(library[r["label"]].get("template", ""))
+                      if "." in ref and ":" not in ref.split(".", 1)[0] and ref not in SIGNERS_OWN
+                      and schema_category(ref) in ("business", "locale")})
+        check("no data of the business itself is on its client's form", not own,
+              f"{', '.join(own)}: the client declares in proprio, so these would be the business's, not theirs")
 
     written, problems, font = fill_pdf(fitz, a.pdf, f"{a.out}/filled.pdf", layout, form, rows)
     check("everything the rows hold is on the form", not problems, "; ".join(problems))
