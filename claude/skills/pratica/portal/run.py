@@ -13,11 +13,16 @@
               (--values - | --server S.json --token NAME | --vault-dir DIR [--keychain SERVICE])
       Resolves every value the steps need and prints what goes where. No browser.
 
-  run.py page --steps STEPS.yaml --answers A.json VAULT --out DIR
+  run.py page --steps STEPS.yaml --answers A.json VAULT --out DIR [--plain]
       Writes the scripts for the Claude browser pane, each run with one call on the
       portal's page: check.js says which of runner.js (inpage.js) and steps.js (the steps,
       no personal data) the pane's storage doesn't already hold byte for byte; run.js starts
       a run with the person's values; install.js is runner.js and steps.js together.
+      Claude writes every byte of a call, so run.js would put the values through the
+      conversation. It doesn't: run.js carries them sealed under a code that a window on
+      the person's screen shows (not printed, not in a file) and that they type into a box
+      the runner opens on the portal's page. --plain carries them in the clear instead (made-up
+      data, or a person who accepts that), and is the only choice where no window can open.
       bench/rerun.py does it for many rehearsals at once. inpage.js says more.
 
   run.py run  --steps STEPS.yaml --answers A.json VAULT --out DIR
@@ -27,9 +32,12 @@
       saved and read back, then the draft loaded again and every value read once more. It
       stops before what is the person's: the declarations, the attachments the steps file
       doesn't name, the payment, signing and sending, and shows the draft, left open for
-      them unless --close. Writes DIR/report.json (timings, what each section kept),
-      DIR/review.html (the page the person reviews: what's left for them, the steps file's
-      `yours`, and every value) and DIR/failure.png when a step fails.
+      them unless --close. Writes DIR/report.json (timings, what each section kept, and when
+      it stops a `snapshot` of the page with no value in it): no value is in it, so Claude
+      may read it. DIR/private/ (kept.json, held.json, shown.json) and DIR/review.html (the page
+      the person reviews: what's left for them, the steps file's `yours`, every value, and
+      what a failed read-back wanted and found) are the person's, for Claude to send and
+      never to read. There is no screenshot: a failed page holds the person's data.
 
 A run that stops says where (report.json `at`: the wizard screen, or the section and
 field). `page` or `run` with --resume REPORT picks it up on the same draft, from that
@@ -63,10 +71,16 @@ that is the point where Claude looks at the page and fixes the steps file.
 import argparse
 import base64
 import hashlib
+import hmac
 import json
 import mimetypes
+import os
 import re
+import secrets
+import shutil
+import subprocess
 import sys
+import time
 from datetime import date
 from pathlib import Path
 
@@ -707,29 +721,120 @@ def file_links(urls):
 
 def resumption(report, fixes=None):
     """How run.js picks up a stopped run: the draft it stopped on, the section it stopped
-    in (redone, with any fixes), and what the earlier sections typed, for the fresh load."""
+    in (redone, with any fixes), and what the earlier sections typed, for the fresh load.
+    report is report.json plus `kept` from private/kept.json: a report has no values."""
     at = report.get("at") or {}
     if not report.get("url") or not at:
         raise StepError("this report has no place to resume from")
+    if at.get("phase") == "section" and at.get("index") and not report.get("kept"):
+        raise StepError("no record of what the earlier sections typed (private/kept.json next to report.json): "
+                        "resume in the pane's tab with __pv.resume(), or run again from the start")
     return {"url": report["url"], "from": {("section" if at.get("phase") == "section" else "wizard"): at["index"]},
             "kept": report.get("kept", []), "fixes": fixes or []}
 
 
-def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None):
+def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None, code=None):
     """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
-    files = page_files(steps, values, files_limit, resume, urls)
+    files = page_files(steps, values, files_limit, resume, urls, code)
     return files["install.js"], files["run.js"]
 
 
-def page_files(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None):
+def page_files(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None, code=None):
     """Every file `run.py page` writes, by name: install.js is runner.js and steps.js, and
     check.js says which of those two the pane's storage lacks."""
-    return page_bundle(steps, values, files_limit, resume, urls)[0]
+    return page_bundle(steps, values, files_limit, resume, urls, code)[0]
 
 
-def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None):
+# --- sealing run.js ---------------------------------------------------------------
+# In the pane Claude writes every byte of the run.js call, so the person's values would pass
+# through the conversation. With a code, run.js carries them sealed instead, and the code
+# reaches the page through the person, not through Claude: shown in a window Claude has no
+# output from (show_code) and typed into a box the runner opens (inpage.js, askCode).
+# The code is 15 characters of Crockford base32 (75 bits), stretched by PBKDF2-HMAC-SHA256
+# and split into an encryption and a MAC key; the plaintext is XORed with an HMAC-SHA256
+# keystream and the result authenticated, encrypt-then-MAC. Only the standard library and
+# WebCrypto's PBKDF2 and HMAC, which every page has, so there is nothing to install.
+SEAL_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+SEAL_CODE_LENGTH = 15
+SEAL_ITERATIONS = 200_000
+
+
+def new_code():
+    return "".join(secrets.choice(SEAL_ALPHABET) for _ in range(SEAL_CODE_LENGTH))
+
+
+def pretty_code(code):
+    return "-".join(code[i:i + 5] for i in range(0, len(code), 5))
+
+
+def seal_keys(code, salt, iterations):
+    master = hashlib.pbkdf2_hmac("sha256", code.encode(), salt, iterations, 32)
+    return hmac.new(master, b"pv-enc", "sha256").digest(), hmac.new(master, b"pv-mac", "sha256").digest()
+
+
+def seal_stream(key, nonce, n):
+    out = b"".join(hmac.new(key, nonce + i.to_bytes(4, "big"), "sha256").digest() for i in range((n + 31) // 32))
+    return out[:n]
+
+
+def seal(plain, code, iterations=SEAL_ITERATIONS):
+    """plain (bytes) sealed under code: {v, i, s, n, c, t}, each binary part in base64."""
+    salt, nonce = os.urandom(16), os.urandom(16)
+    enc, mac = seal_keys(code, salt, iterations)
+    ct = (int.from_bytes(plain, "big") ^ int.from_bytes(seal_stream(enc, nonce, len(plain)), "big")).to_bytes(len(plain), "big")
+    tag = hmac.new(mac, b"pv1" + iterations.to_bytes(4, "big") + salt + nonce + ct, "sha256").digest()
+    b = lambda x: base64.b64encode(x).decode()
+    return {"v": 1, "i": iterations, "s": b(salt), "n": b(nonce), "c": b(ct), "t": b(tag)}
+
+
+def unseal(sealed, code):
+    """The inverse of seal, for tests: raises StepError for a wrong code."""
+    d = lambda k: base64.b64decode(sealed[k])
+    enc, mac = seal_keys(code, d("s"), sealed["i"])
+    ct = d("c")
+    want = hmac.new(mac, b"pv1" + sealed["i"].to_bytes(4, "big") + d("s") + d("n") + ct, "sha256").digest()
+    if not hmac.compare_digest(want, d("t")):
+        raise StepError("that code doesn't open it")
+    return (int.from_bytes(ct, "big") ^ int.from_bytes(seal_stream(enc, d("n"), len(ct)), "big")).to_bytes(len(ct), "big")
+
+
+def show_code(code, give_up=None):
+    """The code in a window of its own, for the person: it must not go through the output of
+    anything Claude runs, so it is not printed, not in a file, and not in the child's arguments
+    or environment (a program's arguments can be listed): the child reads it on stdin. The
+    window stays until they close it, so run.py can return. give_up (tests): seconds."""
+    text = (f"Type this code into the portal page when it asks for it:\n\n{pretty_code(code)}\n\n"
+            "Keep this window open until the run is done. Don't tell it to anyone, Claude included.")
+    if sys.platform == "darwin":
+        script = (f'display dialog {json.dumps(text)} with title "pvault" buttons {{"Done"}} default button "Done"'
+                  + (f" giving up after {give_up}" if give_up else ""))
+        cmd, feed = ["osascript", "-"], script
+    elif sys.platform == "win32":
+        cmd = [sys.executable, "-I", "-c",
+               "import ctypes, sys; ctypes.windll.user32.MessageBoxW(0, sys.stdin.read(), 'pvault', 0x40 | 0x40000)"]
+        feed = text
+    elif shutil.which("zenity"):
+        cmd, feed = ["zenity", "--text-info", "--title=pvault", "--width=420", "--height=200"], text
+    else:
+        raise StepError("no way to show the code outside this conversation here: use `run` (its window "
+                        "needs no code), or --plain if the values may pass through the conversation")
+    child = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                             text=True, start_new_session=True)
+    child.stdin.write(feed)
+    child.stdin.close()
+    for _ in range(10):  # a window that can't open (no desktop session) fails at once
+        time.sleep(0.1)
+        if child.poll() is not None:
+            break
+    if child.poll() not in (None, 0):
+        raise StepError("the code window didn't open: use `run`, or --plain if the values may pass through the conversation")
+    return child
+
+
+def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None, code=None):
     """page_files, and what runner.js and steps.js leave in the pane's localStorage. urls:
-    {path: https URL}, files the page fetches itself instead of run.js carrying them."""
+    {path: https URL}, files the page fetches itself instead of run.js carrying them.
+    code: seal the values under it (see above); None carries them in the clear."""
     links = file_links(urls)
     require_supported(steps, values)
     plan(steps, values)  # stops on a missing required value
@@ -771,9 +876,13 @@ def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=N
                             "run.js can carry in the pane: send the big ones by link (--file-urls) or use `run`")
     proc = steps["procedure"]
     runner_js, steps_js, stored = pane_parts(proc, skeleton)
-    run_js = ("if (!window.__pv) (0, eval)(localStorage.getItem('pv-runner'));\n"
-              f"__pv.start({json.dumps(proc)}, {json.dumps(vals, ensure_ascii=False, separators=(',', ':'))}"
-              + (f", {json.dumps(resume, ensure_ascii=False, separators=(',', ':'))}" if resume else "") + ")\n")
+    load = "if (!window.__pv) (0, eval)(localStorage.getItem('pv-runner'));\n"
+    if code:
+        plain = json.dumps({"vals": vals, "resume": resume or {}}, ensure_ascii=False, separators=(",", ":"))
+        run_js = load + f"__pv.startSealed({json.dumps(proc)}, {json.dumps(seal(plain.encode(), code), separators=(',', ':'))})\n"
+    else:
+        run_js = (load + f"__pv.start({json.dumps(proc)}, {json.dumps(vals, ensure_ascii=False, separators=(',', ':'))}"
+                  + (f", {json.dumps(resume, ensure_ascii=False, separators=(',', ':'))}" if resume else "") + ")\n")
     origin = re.match(r"https?://[^/]+", steps["logged_in"])[0]
     return {"install.js": runner_js + steps_js + "'installed'\n", "runner.js": runner_js, "steps.js": steps_js,
             "check.js": check_script(stored, origin), "run.js": run_js}, stored
@@ -850,6 +959,22 @@ def review_shown(steps, values):
                        for v in plan(steps, values)]}
 
 
+def private(out, shown, held=None):
+    """What no report holds: what each section typed (to resume), what a failed read-back wanted
+    and found, and every value for the review page. A folder only the person reads; the skill
+    tells Claude to send the review page and never to open these."""
+    folder = out / "private"
+    folder.mkdir(mode=0o700, exist_ok=True)
+    folder.chmod(0o700)
+    parts = [("shown", shown)]
+    if held is not None:  # a run in the pane has only shown: __pv.held() stays in its tab
+        parts += [("kept", held.get("kept", [])), ("held", held.get("details", []))]
+    for name, data in parts:
+        f = folder / f"{name}.json"
+        f.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+        f.chmod(0o600)
+
+
 def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
     """inpage.js in a Playwright window: the runner the Claude browser pane uses, without
     the pane's 45 s call limit and slowed timers. A window behind others keeps full speed
@@ -862,6 +987,7 @@ def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
     drift(out, steps, resume)
     shown = review_shown(steps, values)
     report = {"procedure": steps["procedure"], "result": "stopped"}
+    held = {}
     with sync_playwright() as pw:
         if cdp:
             ctx = pw.chromium.connect_over_cdp(cdp).contexts[0]
@@ -901,11 +1027,18 @@ def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
             report["result"] = "stopped"
             report["error"] = f"{type(e).__name__}: {e}"
         finally:
-            if report["result"] != "filled" and not page.is_closed():
-                page.screenshot(path=str(out / "failure.png"), full_page=True)
-            report |= shown
+            if not page.is_closed():
+                try:
+                    held = page.evaluate("__pv.held()")
+                except Exception:
+                    pass
+            # report.json holds no value, so Claude may read it; what the person needs is
+            # kept apart and goes to them, never into the conversation.
             (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
-            (out / "review.html").write_text(review.portal_review(report), encoding="utf-8")
+            private(out, shown, held)
+            (out / "review.html").write_text(review.portal_review(report | shown | {"details": held.get("details", [])}),
+                                             encoding="utf-8")
+            (out / "review.html").chmod(0o600)
             print(f"review: {out / 'review.html'}", flush=True)
             print(json.dumps({k: report.get(k) for k in ("result", "error", "wizard_seconds", "total_seconds")}),
                   flush=True)
@@ -937,6 +1070,7 @@ def main():
     ap.add_argument("--cdp")
     ap.add_argument("--profile", type=Path, default=Path.home() / ".cache/pratica-portal/profile")
     ap.add_argument("--close", action="store_true")
+    ap.add_argument("--plain", action="store_true", help="page: run.js carries the values in the clear, through the conversation")
     ap.add_argument("--resume", type=Path, help="page/run: a stopped run's report.json, to pick it up where it stopped")
     ap.add_argument("--file-urls", type=Path, help="preflight/page: JSON {path: https URL}, files the page fetches by link")
     ap.add_argument("--fix", type=Path, help="with --resume: JSON list of {section, field, set: {id|label|css}}")
@@ -955,10 +1089,17 @@ def main():
             if a.server and a.token not in vaults:
                 ap.error(f"{a.server} has no token {a.token!r}")
             values = Values(answers, vault=vaults[a.token if a.server else "prepare"], asks=asks)
-        resume = resumption(json.loads(a.resume.read_text()), json.loads(a.fix.read_text()) if a.fix else None) \
-            if a.resume else None
+        resume = None
+        if a.resume:
+            earlier = json.loads(a.resume.read_text())
+            kept = a.resume.parent / "private" / "kept.json"
+            if kept.exists():
+                earlier["kept"] = json.loads(kept.read_text())
+            resume = resumption(earlier, json.loads(a.fix.read_text()) if a.fix else None)
         if a.fix and not a.resume:
             ap.error("--fix needs --resume")
+        if a.plain and a.command != "page":
+            ap.error("--plain is for page: run keeps the values out of the conversation without it")
         if a.command == "preflight":
             report = preflight(steps, values, json.loads(a.file_urls.read_text()) if a.file_urls else None)
             print(json.dumps(report, indent=2, ensure_ascii=False))
@@ -974,12 +1115,25 @@ def main():
         if a.command == "page":
             a.out.mkdir(parents=True, exist_ok=True)
             urls = json.loads(a.file_urls.read_text()) if a.file_urls else None
-            files = page_files(steps, values, resume=resume, urls=urls)
+            code = None if a.plain else new_code()
+            files = page_files(steps, values, resume=resume, urls=urls, code=code)
             drift(a.out, steps, resume)
             for name, text in files.items():
                 (a.out / name).write_text(text)
-            # The pane's report has no values or person's steps: review.py OUT adds these.
-            (a.out / "shown.json").write_text(json.dumps(review_shown(steps, values), indent=2, ensure_ascii=False))
+            # The pane's report has no values or person's steps: review.py OUT adds these, from
+            # private/ (Claude sends the review page and never opens that folder).
+            private(a.out, review_shown(steps, values))
+            if code:
+                try:
+                    show_code(code)
+                except StepError:
+                    (a.out / "run.js").unlink(missing_ok=True)
+                    raise
+                print("run.js is sealed. A window with its code is open on the person's screen: tell them it is "
+                      "for the box the portal's page will show when run.js runs, to leave the window open until "
+                      "the run is done, and never to tell you the code.")
+            else:
+                print("--plain: run.js carries the values in the clear, so they pass through this conversation.")
             print(f"{a.out}: check.js first (which of runner.js, steps.js the pane lacks), then run.js; "
                   f"install.js is both. Save __pv.last() as report.json here, then review.py {a.out}. "
                   + ", ".join(f"{n} {len(t)} bytes" for n, t in files.items()))

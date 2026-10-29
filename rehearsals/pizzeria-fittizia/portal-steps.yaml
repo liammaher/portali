@@ -157,7 +157,10 @@ sections:
       - {id: "r5c1p5reg:chk", kind: checkbox, label: INI-PEC}
       - {id: "r7c1p7reg:txt", kind: text, value: "{{business.pec}}"}
 
+  # The box under the PEC ("si dichiara di essere consapevoli ...") is required, and the
+  # person's: the run leaves it and its "required" to them (as in cila-fittizia).
   - section: DOMICILIO ELETTRONICO
+    theirs: ["r4c1p4reg:chk"]
     fields:
       - {id: "r3c1p3reg:txt", kind: text, value: "{{business.pec}}"}
 

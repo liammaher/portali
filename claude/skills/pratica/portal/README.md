@@ -66,6 +66,13 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
   lands on `/cmd/error`. Every section is saved by then: reopen the draft from Pratiche in
   bozza (`__pv.reopen`) and resume.
 
+## Made-up data and the code window
+
+`run.py page` seals `run.js` and opens a window with the code, which the person types into the
+portal's page: right for a real person's data, a nuisance for a rehearsal. Rehearsals with made-up
+data pass `--plain`; `bench/rerun.py` builds its scripts without a code. Where no window can open
+(a sandbox, a remote shell) `page` stops and says so.
+
 ## Checking them all: `bench/rerun.py`
 
 After a change to inpage.js, the dictionary or gen.py, rerun the rehearsals in the pane, one
