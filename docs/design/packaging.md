@@ -165,7 +165,9 @@ Cowork's browser has a tool that puts a file from the folder into a page's file 
 test skill tries a 3 MB PDF). If it has, the runner pauses at each file slot for that tool. If
 not, question 7's fix: a small endpoint serves each file once at a short-lived `https` URL,
 CORS limited to the portal; it puts a document on our server for a moment, so it waits for the
-hosting design, or is the first thing that design covers.
+hosting design, or is the first thing that design covers. The runner side of that fix is built
+and its portal side checked in the Code tab's pane (north-star question 7, 2026-10-29): what's left
+is the host.
 
 Then measure:
 

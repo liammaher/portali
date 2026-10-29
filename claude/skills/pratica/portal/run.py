@@ -51,7 +51,9 @@ lasts as long as the portal keeps it.
 A `kind: file` field attaches a file: its value is a path (usually an {{ask.x}}), and
 its bytes travel in run.js. With `page` they pass through the conversation, so all of a
 run's files together may be at most 256 KB (PAGE_FILES_LIMIT); `run` evaluates run.js
-itself and takes any size.
+itself and takes any size. `page --file-urls MAP.json` ({path: https URL}) sends a file
+by link instead: run.js carries its URL, size and sha256, and the runner fetches it in the
+portal's page and stops if the link serves other bytes; such files don't count to 256 KB.
 
 No model is called during a run. A step that doesn't match what the steps file expects
 (a label, a lookup with no single answer, a value the portal didn't keep) stops the run:
@@ -674,11 +676,29 @@ def preflight(steps, values):
     return report
 
 
-def attachment(path):
-    """A file as run.js carries it to inpage.js."""
+def attachment(path, url=None):
+    """A file as run.js carries it to inpage.js: its bytes, or a link to them with the size
+    and sha256 the page holds what it fetches to."""
     p = Path(path).expanduser()
     kind = FILE_TYPES.get(p.suffix.lower()) or mimetypes.guess_type(p.name)[0] or "application/octet-stream"
-    return {"name": p.name, "type": kind, "b64": base64.b64encode(p.read_bytes()).decode()}
+    data = p.read_bytes()
+    if url:
+        return {"name": p.name, "type": kind, "url": url, "size": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+    return {"name": p.name, "type": kind, "b64": base64.b64encode(data).decode()}
+
+
+# A file's link is fetched by the portal's page: https only (loopback for the bench).
+FILE_URL = re.compile(r"https://|http://(127\.0\.0\.1|localhost)[:/]")
+
+
+def file_links(urls):
+    """{path: URL} keyed by the file each path names, every URL checked."""
+    out = {}
+    for path, url in (urls or {}).items():
+        if not FILE_URL.match(str(url)):
+            raise StepError(f"file link for {path}: {url!r} isn't https")
+        out[Path(path).expanduser().resolve()] = url
+    return out
 
 
 def resumption(report, fixes=None):
@@ -691,20 +711,22 @@ def resumption(report, fixes=None):
             "kept": report.get("kept", []), "fixes": fixes or []}
 
 
-def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
+def page_scripts(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None):
     """install.js (inpage.js and the steps, no personal data) and run.js (the values)."""
-    files = page_files(steps, values, files_limit, resume)
+    files = page_files(steps, values, files_limit, resume, urls)
     return files["install.js"], files["run.js"]
 
 
-def page_files(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
+def page_files(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None):
     """Every file `run.py page` writes, by name: install.js is runner.js and steps.js, and
     check.js says which of those two the pane's storage lacks."""
-    return page_bundle(steps, values, files_limit, resume)[0]
+    return page_bundle(steps, values, files_limit, resume, urls)[0]
 
 
-def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
-    """page_files, and what runner.js and steps.js leave in the pane's localStorage."""
+def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=None):
+    """page_files, and what runner.js and steps.js leave in the pane's localStorage. urls:
+    {path: https URL}, files the page fetches itself instead of run.js carrying them."""
+    links = file_links(urls)
     require_supported(steps, values)
     plan(steps, values)  # stops on a missing required value
     skeleton = {
@@ -729,18 +751,20 @@ def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None):
         if "value" not in f:
             return True
         v = values.render(f["value"])
-        return attachment(v) if f["kind"] == "file" and v else v
+        if f["kind"] == "file" and v:
+            return attachment(v, links.get(Path(v).expanduser().resolve()))
+        return v
 
     vals = {
         "wizard": [values.render(w["fill"]["value"]) if "fill" in w else None for w in steps["wizard"]],
         "sections": [[value(f) for f in s["fields"]] for s in steps["sections"]],
     }
     if files_limit is not None:
-        files = [v for s in vals["sections"] for v in s if isinstance(v, dict)]
+        files = [v for s in vals["sections"] for v in s if isinstance(v, dict) and "b64" in v]
         size = sum(len(f["b64"]) * 3 // 4 for f in files)
         if size > files_limit:
             raise StepError(f"the attachments come to {size // 1024} KB, more than the {files_limit // 1024} KB "
-                            "run.js can carry in the pane: use `run` (a Playwright window) or attach them by hand")
+                            "run.js can carry in the pane: send the big ones by link (--file-urls) or use `run`")
     proc = steps["procedure"]
     runner_js, steps_js, stored = pane_parts(proc, skeleton)
     run_js = ("if (!window.__pv) (0, eval)(localStorage.getItem('pv-runner'));\n"
@@ -910,6 +934,7 @@ def main():
     ap.add_argument("--profile", type=Path, default=Path.home() / ".cache/pratica-portal/profile")
     ap.add_argument("--close", action="store_true")
     ap.add_argument("--resume", type=Path, help="page/run: a stopped run's report.json, to pick it up where it stopped")
+    ap.add_argument("--file-urls", type=Path, help="page: JSON {path: https URL}, files the page fetches by link")
     ap.add_argument("--fix", type=Path, help="with --resume: JSON list of {section, field, set: {id|label|css}}")
     a = ap.parse_args()
     steps = yaml.safe_load(a.steps.read_text())
@@ -944,7 +969,8 @@ def main():
             ap.error(f"{a.command} needs --out")
         if a.command == "page":
             a.out.mkdir(parents=True, exist_ok=True)
-            files = page_files(steps, values, resume=resume)
+            urls = json.loads(a.file_urls.read_text()) if a.file_urls else None
+            files = page_files(steps, values, resume=resume, urls=urls)
             drift(a.out, steps, resume)
             for name, text in files.items():
                 (a.out / name).write_text(text)

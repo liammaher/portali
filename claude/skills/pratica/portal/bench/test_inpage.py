@@ -38,6 +38,8 @@ class Portal:
 
 
 PORTAL = Portal()
+# Files the bench serves by link (/files/<name>), as an https host would for the real portal.
+LINKED = {}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -57,6 +59,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send(b"<!doctype html><title>bench</title>", "text/html")
         elif path == "/portal.html":
             self.send((HERE / "portal.html").read_bytes(), "text/html; charset=utf-8")
+        elif path.startswith("/files/") and path[7:] in LINKED:
+            self.send(LINKED[path[7:]], "application/pdf")
         elif path == "/state":
             self.send(json.dumps({"fields": PORTAL.fields, "files": [f["name"] for f in PORTAL.files]}).encode())
         else:
@@ -92,9 +96,11 @@ def steps(base, start="/portal.html", **over):
             "sections": [sec, tecnici]}
 
 
-def fill(browser, base, st, answers, files_limit=None, resume=None):
+def fill(browser, base, st, answers, files_limit=None, resume=None, urls=None, sizes=None):
     values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
-    install, run_js = run.page_scripts(st, values, files_limit, resume=resume)
+    install, run_js = run.page_scripts(st, values, files_limit, resume=resume, urls=urls)
+    if sizes is not None:
+        sizes.append(len(run_js))
     page = browser.new_page()
     try:
         page.goto(base + "/")
@@ -275,6 +281,41 @@ def main():
         else:
             raise AssertionError("3 MB of files went into run.js for the pane")
     case("the pane's run.js refuses more than 256 KB of files", pane_limit)
+
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch()
+
+        def by_link():
+            PORTAL.reset()
+            LINKED["planimetria.pdf"] = planimetria.read_bytes()
+            sizes = []
+            r = fill(browser, base, steps(base), answers, files_limit=run.PAGE_FILES_LIMIT, sizes=sizes,
+                     urls={str(planimetria): base + "/files/planimetria.pdf"})
+            assert r["result"] == "filled", r.get("error")
+            assert {f["name"]: f["sha256"] for f in PORTAL.files} == sha, PORTAL.files
+            assert sizes[0] < 10_000, f"run.js is {sizes[0]} bytes"
+        case("a big file by link: fetched in the page, checked, attached byte-exact; run.js stays small", by_link)
+
+        def other_bytes():
+            PORTAL.reset()
+            LINKED["planimetria.pdf"] = b"%PDF-1.4 not the person's file"
+            r = fill(browser, base, steps(base), answers, files_limit=run.PAGE_FILES_LIMIT,
+                     urls={str(planimetria): base + "/files/planimetria.pdf"})
+            stops(r, "the link served other bytes")
+            assert not PORTAL.files or all(f["name"] != "planimetria.pdf" for f in PORTAL.files), PORTAL.files
+        case("a link that serves other bytes stops the run before attaching", other_bytes)
+
+        browser.close()
+
+    def not_https():
+        values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+        try:
+            run.page_scripts(steps(base), values, urls={str(planimetria): "http://example.com/p.pdf"})
+        except run.StepError as e:
+            assert "isn't https" in str(e), str(e)
+        else:
+            raise AssertionError("a plain-http link was accepted")
+    case("a file link must be https", not_https)
 
     def missing():
         values = run.Values(answers | {"ricevuta": str(tmp / "nope.p7m")}, fields={"x:ruolo.tipo": "titolare"})
