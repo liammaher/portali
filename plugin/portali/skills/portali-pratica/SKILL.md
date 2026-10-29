@@ -1,5 +1,5 @@
 ---
-name: napoli-pratica
+name: portali-pratica
 description: Prepare a Comune di Napoli pratica on impresainungiorno (the SUE and SUAP front office) from a client's documents - CILA, CIL, SCIA, agibilità, autorizzazione paesaggistica, inizio and fine lavori, proroghe, volture, dehors, a shop or restaurant opening - as a checked draft that stops before the architect's declarations, signature, payment and sending. Also answers which pratica a Naples case needs, with what documents, costs and timelines. Use when an architect or geometra asks to prepare, fill, draft or file a pratica for a client in Napoli, or asks what a case needs.
 ---
 
@@ -10,7 +10,7 @@ prepare the draft on impresainungiorno; they log in with their own SPID, then ma
 declarations, sign, pay and send.
 
 If they would rather keep their own or their clients' details in an encrypted vault on their
-own computer than in a folder of files, the `napoli-setup` skill installs it.
+own computer than in a folder of files, the `portali-setup` skill installs it.
 
 Every path below is relative to this skill's base directory: write it out in full in each
 command (`SKILL` below stands for it). Run scripts with `python3`; they need no packages (each finds its own folder's modules first).
@@ -54,7 +54,7 @@ The folder the architect opened in Cowork holds:
 - a subfolder per job, with the client's documents. You write there: `values.json` (this
   job's people), `answers.json` and `run/`.
 
-## What's supported, and the napoli connector
+## What's supported, and the Portali connector
 
 A pratica's status says what you may do with it:
 
@@ -65,7 +65,7 @@ A pratica's status says what you may do with it:
 - `guide`: the library says what it needs and where; it can't be filled automatically.
 - `coming`: being worked on.
 
-The plugin may bring the **napoli connector** (its `coverage`, `find_pratica`, `get_pratica`
+The plugin may bring the **Portali connector** (its `coverage`, `find_pratica`, `get_pratica`
 and `get_procedure` tools). It holds no one's data and must get none: describe a case to it
 by its facts only (the works, the activity, the size), never by a name, codice fiscale or
 address. When it's connected, its statuses are the current ones; use it for "what can you

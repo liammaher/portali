@@ -1,14 +1,14 @@
-# The Napoli plugin for Cowork
+# The Portali plugin for Cowork
 
 What an architect in Naples installs in Cowork, on a Pro plan: the portal runner, the
 rehearsals' steps files and the pratiche-napoli library, with no server and no vault
-(`docs/design/packaging.md`). `napoli/` is what's written by hand; `build.py` adds the rest.
+(`docs/design/packaging.md`). `portali/` is what's written by hand; `build.py` adds the rest.
 
 ```sh
 PRATICHE_NAPOLI_DIR=../pratiche-napoli ~/.cache/pratica-portal/venv/bin/python plugin/build.py
 ```
 
-writes `plugin/dist/napoli/` and `plugin/dist/napoli.plugin` (install it in Cowork
+writes `plugin/dist/portali/` and `plugin/dist/portali.plugin` (install it in Cowork
 from a file). The build:
 
 - copies `run.py`, `rules.py`, `inpage.js`, `catalogue.py` (for its drift refusal, with
@@ -23,9 +23,9 @@ from a file). The build:
 - stops unless the test case passes `check.py` and pre-flight under the system `python3`,
   and every pratica's pre-flight prints the same from the plugin as from the repo's runner.
 
-Two skills: `napoli-pratica` (the job) and `napoli-cowork-test` (the tests that decide the
+Two skills: `portali-pratica` (the job) and `portali-cowork-test` (the tests that decide the
 design: script calls in Cowork's browser, a 3 MB attachment, a run's cost; it writes
-`napoli-test-results.md` to bring back).
+`portali-test-results.md` to bring back).
 
 Rebuild after a change to the runner, a steps file, the dictionary or the library, and bump
-`version` in `napoli/.claude-plugin/plugin.json`.
+`version` in `portali/.claude-plugin/plugin.json`.

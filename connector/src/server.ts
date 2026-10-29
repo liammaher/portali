@@ -9,7 +9,7 @@ Statuses: available = run on the real portal and unchanged since; paused = the p
 
 Rules:
 - Send this server no personal data: no names, codici fiscali, addresses or documents of anyone. Describe a case by its facts only (the works, the activity, the zone, the size).
-- Filling a pratica needs the Napoli plugin in Cowork, with the client's data in the user's own folder. This server only says what exists and how.
+- Filling a pratica needs the Portali plugin in Cowork, with the client's data in the user's own folder. This server only says what exists and how.
 - Never tick a declaration, sign, pay or send for the user: those steps are theirs.
 - Answer about the law only from get_procedure, naming the sources it cites; say so when the library doesn't cover something.`;
 
@@ -95,7 +95,7 @@ export function unknownWords(reg: Registry, query: string): string[] {
 }
 
 export function createServer(reg: Registry): McpServer {
-  const server = new McpServer({ name: "napoli", version: reg.pluginVersion }, { instructions: INSTRUCTIONS });
+  const server = new McpServer({ name: "portali", version: reg.pluginVersion }, { instructions: INSTRUCTIONS });
   const readOnly = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 
   server.registerTool(

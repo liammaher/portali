@@ -1,0 +1,10 @@
+{
+  "name": "portali",
+  "version": "0.2.0",
+  "description": "Portali: prepares Italian government pratiche on their portals, up to the steps only you can take (SPID login, declarations, signature, payment, sending). Today: the Comune di Napoli's SUE and SUAP on impresainungiorno, with the pratiche-napoli library of rules and procedures.",
+  "author": {
+    "name": "Liam Maher"
+  },
+  "license": "MIT",
+  "keywords": ["portali", "italia", "napoli", "sue", "suap", "cila", "scia", "architetti", "pratiche"]
+}

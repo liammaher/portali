@@ -107,10 +107,10 @@ claude/skills/       vault and pratica skills; pratica keeps one playbook per pr
                      draft.py drafts dictionary entries for a new section from the national
                      schema (`schema/`, InfoCamere's forms flattened), for a person to check
   pratica/review.py  the page the person reviews: what's left for them, the checks, every value
-plugin/              the Napoli plugin for Cowork (docs/design/packaging.md): build.py copies the
+plugin/              the Portali plugin for Cowork (docs/design/packaging.md): build.py copies the
                      runner, the rehearsals' steps files (as JSON: no packages in Cowork) and the
                      library into it; it stops unless each pratica's pre-flight matches the repo's
-connector/           the napoli connector (remote MCP, read-only, no sign-in): coverage, search, a
+connector/           the Portali connector (remote MCP, read-only, no sign-in): coverage, search, a
                      pratica's status and freshness, library entries, from plugin/build.py's output.
                      It never takes personal data: its tools take a case's facts
 ```

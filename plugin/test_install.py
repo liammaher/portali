@@ -26,7 +26,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
-SKILL = HERE / "napoli" / "skills" / "napoli-setup"
+SKILL = HERE / "portali" / "skills" / "portali-setup"
 sys.path.insert(0, str(HERE))
 sys.dont_write_bytecode = True
 import build  # noqa: E402

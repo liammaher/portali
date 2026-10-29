@@ -1,7 +1,7 @@
 version: 2
 
 # The release assets are named pvault_<version>_<os>_<arch>; the plugin's installer
-# (plugin/napoli/skills/napoli-setup) builds those names, so keep this fixed.
+# (plugin/portali/skills/portali-setup) builds those names, so keep this fixed.
 project_name: pvault
 
 builds:
