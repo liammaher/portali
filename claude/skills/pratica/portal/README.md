@@ -43,6 +43,10 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
 
 ## What the portal does that bit us
 
+- **A bare `/fnsuap/` that says Forbidden.** On 2026-10-29 it answered a 403 after every SPID
+  sign-in for hours, while `/fnsuap/cmd/home` (where the pratica skill starts) and a recipe's
+  `start` (`/fnsuap/cmd/create?...`) worked and the runs filled. Open one of those before
+  resetting cookies or the sign-on.
 - **Labels.** A box is found by the start of one of its first three texts (its title, its
   cell, the row above, the cell to its left, the nearest label before it). In a row of boxes
   the nearest label before each is the *last* column's, so a label can name several boxes:
