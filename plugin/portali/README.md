@@ -9,7 +9,7 @@ payment and sending. Free; it works on a Claude Pro plan in Cowork.
 In Claude Code, one command adds the marketplace and installs the plugin:
 
 ```
-/plugin install portali --marketplace liammaher/personal-vault-italia
+/plugin install portali --marketplace liammaher/portali
 ```
 
 Then say "set me up" if you want the private vault (`portali-setup`), or just ask for a pratica.

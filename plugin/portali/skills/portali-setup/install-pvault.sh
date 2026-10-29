@@ -11,7 +11,7 @@
 set -eu
 
 here=$(cd "$(dirname "$0")" && pwd)
-base=${PVAULT_RELEASE_BASE:-https://github.com/liammaher/personal-vault-italia/releases/download}
+base=${PVAULT_RELEASE_BASE:-https://github.com/liammaher/portali/releases/download}
 dest_dir=${PVAULT_INSTALL_DIR:-$HOME/.local/bin}
 
 die() { echo "install-pvault: $*" >&2; exit 1; }

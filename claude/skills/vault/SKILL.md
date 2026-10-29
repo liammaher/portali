@@ -10,7 +10,7 @@ Local encrypted vault. The default vault (the user and their family) has its ser
 business vault in `~/.pvault-<name>` with its own port: every command takes
 `--vault <name>` first (`pvault --vault studio status` prints its address). See "Several
 vaults" below.
-Source: https://github.com/liammaher/personal-vault-italia (see its CLAUDE.md for internals).
+Source: https://github.com/liammaher/portali (see its CLAUDE.md for internals).
 
 ## Hard rules
 

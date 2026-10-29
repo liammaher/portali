@@ -8,10 +8,10 @@ the first release tag (`v0.2.0`) is pushed, so `marketplace add` has nothing to 
 1. **Add the plugin.** In Claude Code:
 
    ```
-   /plugin install portali --marketplace liammaher/personal-vault-italia
+   /plugin install portali --marketplace liammaher/portali
    ```
 
-   (or `claude plugin marketplace add liammaher/personal-vault-italia`, then
+   (or `claude plugin marketplace add liammaher/portali`, then
    `claude plugin install portali@portali`).
 2. **Say "set me up"** if you want the private vault. Claude asks before it downloads anything.
 3. **Choose a password and save the secret key** `pvault init` prints, in a terminal. This is the one

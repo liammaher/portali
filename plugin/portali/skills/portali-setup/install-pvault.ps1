@@ -23,7 +23,7 @@ if (-not ((Test-Path $versionFile) -and (Test-Path $sumsFile))) {
 $version = (Get-Content $versionFile -Raw).Trim()
 if ($version -notmatch '^[0-9A-Za-z.+-]+$') { Fail "the version in pvault.version isn't one" }
 
-$base = if ($env:PVAULT_RELEASE_BASE) { $env:PVAULT_RELEASE_BASE } else { 'https://github.com/liammaher/personal-vault-italia/releases/download' }
+$base = if ($env:PVAULT_RELEASE_BASE) { $env:PVAULT_RELEASE_BASE } else { 'https://github.com/liammaher/portali/releases/download' }
 $destDir = if ($env:PVAULT_INSTALL_DIR) { $env:PVAULT_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Programs\pvault' }
 $arch = switch ($env:PROCESSOR_ARCHITECTURE) { 'AMD64' { 'amd64' } 'ARM64' { 'arm64' } default { Fail "unsupported processor $($env:PROCESSOR_ARCHITECTURE)" } }
 $asset = "pvault_${version}_windows_${arch}.zip"

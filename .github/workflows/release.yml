@@ -82,4 +82,4 @@ jobs:
           git push origin "$branch"
           gh pr create --base main --head "$branch" \
             --title "Marketplace: point at the $PLUGIN_VERSION plugin" \
-            --body "Pins .claude-plugin/marketplace.json to portali-$PLUGIN_VERSION.zip (SHA-256 $PLUGIN_SHA256). Merge it and \`claude plugin marketplace add liammaher/personal-vault-italia\` gives this release."
+            --body "Pins .claude-plugin/marketplace.json to portali-$PLUGIN_VERSION.zip (SHA-256 $PLUGIN_SHA256). Merge it and \`claude plugin marketplace add liammaher/portali\` gives this release."
