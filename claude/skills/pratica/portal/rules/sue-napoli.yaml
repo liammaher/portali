@@ -84,6 +84,16 @@ facts:
   uso_ammesso_prg:
     type: yes_no
     question: "La nuova destinazione d'uso è tra quelle che il PRG ammette in quella zona?"
+  verso_a2_tavola_7a:
+    type: yes_no
+    question: >-
+      Il cambio porta un'abitazione ordinaria (a.1) a B&B, affittacamere, casa o appartamento per
+      vacanze o locazione breve non imprenditoriale (a.2), in un edificio dell'area della tavola 7a
+      del centro storico?
+    how: >-
+      Le sottocategorie sono quelle dell'art. 21 delle norme della Variante generale come modificato
+      dalla D.C.C. 129/2026; l'area è quella della tavola 7a "centro storico, area di salvaguardia
+      dell'offerta abitativa ordinaria".
   cambio_uso_sagoma:
     type: yes_no
     question: "Le opere che accompagnano il cambio d'uso dell'immobile incidono sulla sagoma o ne aumentano i volumi?"
@@ -146,6 +156,13 @@ rules:
     when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante], cambio_uso: [zona_agricola, non_rilevante, stessa_categoria, tra_categorie, piano_terra, intero_immobile, intero_tra_categorie], uso_ammesso_prg: false}
     then: {refuse: "La nuova destinazione d'uso è ammissibile solo se il PRG la indica come compatibile per quella zona (art. 27 c. 2 L.R. Campania 31/2021): così il cambio non si può fare."}
     cites: [{procedure: napoli/comune/scia-edilizia, source: lr31-2021}]
+    status: verified
+  - id: centro-storico-a1-a2
+    when: {intervento: [nessuna_opera, edilizia_libera, manutenzione_straordinaria, restauro, ristrutturazione, ristrutturazione_pesante], cambio_uso: [non_rilevante, stessa_categoria, intero_immobile], verso_a2_tavola_7a: true}
+    then: {refuse: "Dal 27/10/2026, nell'area della tavola 7a del centro storico il passaggio da abitazione ordinaria (a.1) a B&B, affittacamere, casa vacanze o locazione breve (a.2) è limitato da una soglia di residenzialità ordinaria del 70% dell'intero edificio (art. 63 c. 8 delle norme, D.C.C. 129/2026), e il modo di verificarla non è ancora verificato: va chiesto al SUE."}
+    cites:
+      - {procedure: napoli/comune/scia-edilizia, source: variante-dcc-129}
+      - {procedure: napoli/comune/scia-edilizia, source: variante-burc-58}
     status: verified
   # Per un'unità al piano terra o seminterrata l'art. 23-ter rimette il cambio alla legge
   # regionale, e la circolare regionale non ne indica il titolo.

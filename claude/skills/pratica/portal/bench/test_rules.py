@@ -225,6 +225,10 @@ def sue_another_pratica():
     assert sue("scia-fittizia", cambio_uso="zona_agricola", **unit)["unsupported"][0].startswith(
         other + "napoli/comune/permesso-di-costruire")
     assert "art. 27 c. 2" in sue("scia-fittizia", cambio_uso="stessa_categoria", fatti=["prospetti"])["unsupported"][0]
+    # Naples: an ordinary home turned B&B or short let in the centro storico's tavola 7a area
+    # (D.C.C. 129/2026), whose 70% threshold has no verified checking mechanism yet.
+    a2 = sue("scia-fittizia", "answers-cambio-unita-senza-stessa.json", fatti=["uso_ammesso_prg", "verso_a2_tavola_7a"])
+    assert len(a2["unsupported"]) == 1 and "tavola 7a" in a2["unsupported"][0] and "70%" in a2["unsupported"][0], a2
     ground = sue("scia-fittizia", cambio_uso="piano_terra", **unit)["unsupported"]
     assert len(ground) == 1 and "1-quater" in ground[0] and "va chiesto al SUE" in ground[0], ground
 
@@ -236,7 +240,7 @@ def sue_asks_and_apart():
     # Then, in one message, the facts the rules for those works still wait on.
     r = sue("cila-fittizia", fatti=None, paesaggio=None, cambio_uso=None)
     assert [q["key"] for q in r["questions"]] == ["fatti", "sismica", "cambio_uso", "paesaggio"], r["questions"]
-    assert [i["key"] for i in r["questions"][0]["items"]] == ["strutture", "prospetti", "uso_ammesso_prg",
+    assert [i["key"] for i in r["questions"][0]["items"]] == ["strutture", "prospetti", "uso_ammesso_prg", "verso_a2_tavola_7a",
                                                                "paesaggio_eseguiti", "bene_culturale"], r["questions"][0]
     assert "permesso_per_scelta" not in str(r["questions"])  # the recipe's: a CILA is no choice
     # The seismic filing is the person's, at the Genio Civile: in their steps, never a refusal.

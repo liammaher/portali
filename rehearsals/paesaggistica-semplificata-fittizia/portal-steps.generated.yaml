@@ -99,6 +99,9 @@ asks:
       (residenziale, turistico-ricettiva, produttiva e direzionale, commerciale, rurale). Il fabbisogno di standard lo stabilisce il tecnico dalle dotazioni che il PRG chiede per la nuova destinazione (art.
       2 c. 4 L.R. Campania 13/2022, art. 27 c. 2 L.R. 31/2021).'}
   uso_ammesso_prg: {group: fatti, type: yes_no, item: 'La nuova destinazione d''uso è tra quelle che il PRG ammette in quella zona?'}
+  verso_a2_tavola_7a: {group: fatti, type: yes_no, item: 'Il cambio porta un''abitazione ordinaria (a.1) a B&B, affittacamere, casa o appartamento per vacanze o locazione breve non imprenditoriale (a.2),
+      in un edificio dell''area della tavola 7a del centro storico?', how: 'Le sottocategorie sono quelle dell''art. 21 delle norme della Variante generale come modificato dalla D.C.C. 129/2026; l''area
+      è quella della tavola 7a "centro storico, area di salvaguardia dell''offerta abitativa ordinaria".'}
   cambio_uso_sagoma: {group: fatti, type: yes_no, item: 'Le opere che accompagnano il cambio d''uso dell''immobile incidono sulla sagoma o ne aumentano i volumi?'}
   paesaggio: {type: choice, question: 'L''immobile è sotto tutela paesaggistica (artt. 136 o 142 D.Lgs. 42/2004), e che cosa chiedono i lavori?', options: ['no', senza_autorizzazione, semplificata, ordinaria],
     labels: {'no': Non è sotto tutela paesaggistica, senza_autorizzazione: 'È tutelato, ma i lavori non alterano i luoghi né l''aspetto esteriore degli edifici, o sono nell''Allegato A del D.P.R. 31/2017
@@ -125,6 +128,7 @@ rules:
     sismica: '{{ask.sismica}}'
     cambio_uso: '{{ask.cambio_uso}}'
     uso_ammesso_prg: '{{ask.uso_ammesso_prg}}'
+    verso_a2_tavola_7a: '{{ask.verso_a2_tavola_7a}}'
     cambio_uso_sagoma: '{{ask.cambio_uso_sagoma}}'
     paesaggio: '{{ask.paesaggio}}'
     paesaggio_eseguiti: '{{ask.paesaggio_eseguiti}}'
