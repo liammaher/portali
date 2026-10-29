@@ -4,7 +4,7 @@
 napoli plugin, as a zip attached to that release and pinned by its SHA-256, so Claude Code
 refuses a download that isn't the file this release published.
 
-  pin_marketplace.py --version 0.1.0 --sha256 <64 hex of napoli-0.1.0.zip> [--out FILE]
+  pin_marketplace.py --version 0.2.0 --sha256 <64 hex of napoli-0.2.0.zip> [--out FILE]
 
 The release workflow (.github/workflows/release.yml) runs it after attaching the zip and opens a
 pull request with the result; until the first release the repository has no marketplace file,
