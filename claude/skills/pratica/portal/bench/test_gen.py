@@ -124,6 +124,23 @@ def _():
     assert "id" not in field(s, "non è soggetto agli obblighi")
 
 
+@case("a section name two pratiche share takes the entry that fits; a tick that renumbers itself and what follows go by label (paesaggistica semplificata)")
+def _():
+    steps = generated("paesaggistica-semplificata-fittizia")
+    q = section(steps, "Qualificazione dell'intervento")  # the SCIA's has one radio
+    assert len(q["fields"]) == 42 and field(q, "B.10.")["id"] == "r12c1p13reg:chk"
+    a = section(steps, "Ambito dell'intervento")
+    both = [f for f in a["fields"] if f["when"] == "{{ask.vincolo|is_art_136_and_142}}"]
+    # Ticking art. 136 opens its rows above itself: r2c1p2 becomes r3c1p3 (run of 2026-10-29).
+    ticks = [f for f in a["fields"] if f["kind"] == "checkbox" and f["label"] == "dell'art. 136"]
+    assert len(ticks) == 2 and all("id" not in f for f in ticks)
+    assert all("id" not in f for f in both[1:] if f["label"] != "dell'art. 136")
+    # A pair of same-label boxes crawl.js matched isn't a move (the SCIA's tutela radio).
+    scia = generated("scia-fittizia")
+    assert any(f.get("id") == "r10c1p10reg:radio:3_clone" for s in scia["sections"] for f in s["fields"])
+    assert "allegato_b" in steps["groups"]
+
+
 @case("a slot that takes only signed files is the person's, never a plain copy (SCIA stato legittimo)")
 def _():
     s = section(generated("scia-fittizia"), "Gestione degli allegati")
