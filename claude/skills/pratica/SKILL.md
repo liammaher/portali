@@ -305,7 +305,8 @@ When there is one, follow it instead of exploring the portal:
    - `missing`: vault fields that are empty or expired. Ask for each in the same message,
      or have the user fill them in the vault (`pvault set`, the onboarding page).
    - `files`: each attachment, whether it exists, and `pane_ok` (all of them within the
-     pane's 256 KB): if not, use the Playwright window or leave the big ones to the user.
+     pane's 256 KB): if not, send the big ones by https link (`run.py page --file-urls`),
+     use the Playwright window, or leave them to the user.
    - `yours`: tell the user now what they'll do at the end, so nothing surprises them.
 
    Only when it says `ready` go on: the user hears nothing more from you until the review
@@ -382,8 +383,10 @@ When there is one, follow it instead of exploring the portal:
    checks its name shows up on the page; a section whose files upload one by one, with no
    Salva, takes `save: false` (or `save: <button>`). A file the person must sign first
    (`.p7m`) is attached only once they've signed it. In the pane all of a run's files may
-   come to 256 KB (`run.py page` refuses more): use the Playwright window for a planimetria,
-   or leave it to the person (docs/north-star.md, open question 7). Stop at what's left.
+   come to 256 KB (`run.py page` refuses more). A bigger one goes by an https link
+   (`--file-urls MAP.json`, {path: URL}): the page fetches it and checks its size and sha256
+   against the person's copy. Otherwise use the Playwright window for a planimetria, or leave
+   it to the person (docs/north-star.md, open question 7). Stop at what's left.
 4. **When the portal differs** (a screen, a label, a lookup with no single match), stop,
    correct the steps file and the map, and add the run to the README.
 

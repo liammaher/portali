@@ -249,6 +249,18 @@ def nested_when():
         os.chdir(here)
 
 
+def linked_files():
+    """A file over the pane's 256 KB is pane_ok once it goes by link (page --file-urls)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        big = Path(tmp) / "planimetria.pdf"
+        big.write_bytes(b"%PDF-1.4\n" + b"0" * (300 * 1024))
+        steps = copy.deepcopy(STEPS)
+        steps["sections"][0]["fields"].append({"kind": "file", "label": "Planimetria", "value": str(big)})
+        assert not run.preflight(steps, values(steps=steps))["pane_ok"]
+        r = run.preflight(steps, values(steps=steps), {str(big): "https://example.org/planimetria.pdf"})
+        assert r["pane_ok"] and any(f.get("link") for f in r["files"]), r["files"]
+
+
 CASES = [
     ("the SCIA with its answers is ready", ready),
     ("no answers: one checklist, branch items first, then two questions, no defaults", all_questions),
@@ -268,6 +280,7 @@ CASES = [
     ("a proposal is offered to confirm, used once confirmed, and asked when the vault can't fill it", proposals),
     ("a sum of answers renders, needs every term, and each term is asked", sums),
     ("a value longer than its box is asked again, or named in the vault, before the run", too_long),
+    ("a file over the pane's 256 KB is pane_ok once it goes by link", linked_files),
     ("a condition's words gate each other: a later question waits on the earlier answer (CILA contributo)", nested_when),
 ]
 

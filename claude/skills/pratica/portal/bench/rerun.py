@@ -51,10 +51,12 @@ def main():
     ap.add_argument("--values", required=True, type=Path)
     ap.add_argument("--answers", default="answers-p6.json", help="each rehearsal's answers file")
     ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument("--file-urls", type=Path, help="JSON {path: https URL}: files the page fetches by link")
     a = ap.parse_args()
     names = a.rehearsals or sorted(d.name for d in REHEARSALS.iterdir()
                                    if (d / "portal-steps.generated.yaml").exists() and (d / a.answers).exists())
     fields = json.loads(a.values.read_text())
+    urls = json.loads(a.file_urls.read_text()) if a.file_urls else None
     (a.out / "steps").mkdir(parents=True, exist_ok=True)
     stored, sources, origin, queue, failed = {}, {}, None, [], []
     for name in names:
@@ -65,7 +67,7 @@ def main():
         steps = yaml.safe_load(steps_file.read_text())
         values = run.Values(json.loads((d / a.answers).read_text()), fields=fields, asks=steps.get("asks"))
         try:
-            files, parts = run.page_bundle(steps, values)
+            files, parts = run.page_bundle(steps, values, urls=urls)
         except run.StepError as e:
             failed.append(f"{name}: {e}")
             continue

@@ -194,6 +194,15 @@ the URL instead of the bytes. That is the first time a document leaves the compu
 hosting design (decision 1, question 5): encrypted per business, in the EU, never kept. Until then,
 large files are attached in a Playwright window or by the person.
 
+**Built and checked (2026-10-29):** the runner side. `run.py page --file-urls` puts a file's URL, size
+and sha256 in run.js; `inpage.js` fetches it in the portal's page and stops if the bytes differ (bench:
+a 3 MB file attached byte-exact, a wrong file refused). On the real portal in the pane: a fetch from
+the portal's page to another `https` origin with CORS works (no CSP blocks it), and a 5 MB PDF built in
+the page uploads in 3 s and is still there, 4.95 MB, after Salva and a fresh reopen of the draft. End to
+end: the owner CILA filled with a 5 MB FAC-SIMILE drawing served from a public test gist (raw link
+pinned to its commit; gist's "latest" link answered 404 for minutes after the push), run.js 6.9 KB
+(`rehearsals/cila-fittizia`). Left: the real host, the hosting design above.
+
 ## Parked
 
 Good for a personal vault, not part of the product. Kept working, not developed further:

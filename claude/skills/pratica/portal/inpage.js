@@ -11,7 +11,8 @@
 // declaration or clicks what is the person's: payment, signing, sending.
 // A file is attached by building it in the page and handing it to the file box as a
 // drop would (DataTransfer): the pane can't type a path into one, and a public page
-// can't fetch from localhost, so its bytes come in run.js (run.py says how big).
+// can't fetch from localhost, so its bytes come in run.js (run.py says how big), or a big
+// one by an https link the page fetches, checked against its sha256.
 //
 //   __pv.start(procedure, values[, resume])  starts a run, returns at once. resume picks a
 //                                  stopped run up: {url, from, kept, fixes} (run.py --resume)
@@ -299,13 +300,27 @@
     return hits[0];
   }
 
-  // v is {name, type, b64}. The portal's own change handler then uploads it, as when a
-  // person picks the file.
+  // A file too big for run.js comes by link ({name, type, url, size, sha256}): fetched here,
+  // in the portal's page, and held to the size and hash run.py read from the person's copy.
+  async function fetched(v) {
+    let res;
+    try { res = await fetch(v.url, { credentials: "omit", cache: "no-store" }); }
+    catch (e) { fail(`${v.name}: couldn't fetch ${v.url} (${e.message})`); }
+    if (!res.ok) fail(`${v.name}: ${v.url} answered ${res.status}`);
+    const bytes = new Uint8Array(await res.arrayBuffer());
+    const sha = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)))
+      .map((b) => b.toString(16).padStart(2, "0")).join("");
+    if (bytes.length !== v.size || sha !== v.sha256) fail(`${v.name}: the link served other bytes (${bytes.length} B)`);
+    return bytes;
+  }
+
+  // v is {name, type, b64} or a link (fetched above). The portal's own change handler then
+  // uploads it, as when a person picks the file.
   async function attach(f, v) {
     const e = (f.css ? doc().querySelector(f.css) : el(f.id)) || fail(`${f.css || f.id}: no file box`);
     if (e.type !== "file") fail(`${f.css || f.id}: not a file box`);
     checkLabel(e, f.label);
-    const w = win(), bytes = Uint8Array.from(w.atob(v.b64), (c) => c.charCodeAt(0));
+    const w = win(), bytes = v.url ? await fetched(v) : Uint8Array.from(w.atob(v.b64), (c) => c.charCodeAt(0));
     const dt = new w.DataTransfer();
     dt.items.add(new w.File([bytes], v.name, { type: v.type }));
     e.files = dt.files;
