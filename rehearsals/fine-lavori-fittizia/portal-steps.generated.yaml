@@ -158,6 +158,7 @@ sections:
   theirs:
   - Procura speciale
   - Quadro riepilogativo della documentazione
+  - Scarica il documento
   - copia attestazione versamento oneri, diritti e spese
   fields:
   - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}', accepts: pdf;pdf.p7m}

@@ -562,7 +562,8 @@ def generate(recipe, base=HERE):
                         out["theirs"] = out.get("theirs", []) + [title]
             for s in slots:
                 hit = any(norm(s["title"]).startswith(norm(d["label"])) for d in fields)
-                theirs = any(norm(s["title"]).startswith(norm(t)) for t in entry.get("theirs", []))
+                # The person's: the entry's own, and the signed-only slots handed to them above.
+                theirs = any(norm(s["title"]).startswith(norm(t)) for t in entry.get("theirs", []) + out.get("theirs", []))
                 if s.get("required") and not hit and not theirs:
                     problems.append(f"{name}: required slot {s['title'][:70]!r} is in no dictionary entry")
         out["fields"] = fields
@@ -581,7 +582,9 @@ def generate(recipe, base=HERE):
     asks = {}
     for k, v in list(dictionary["asks"].items()) + [(k, {}) for k in recipe.get("asks", {}) if k not in dictionary["asks"]]:
         if k in asks_used:
-            asks[k] = {**v, **recipe.get("asks", {}).get(k, {})}
+            # A recipe's `default: null` makes a default the dictionary keeps silent a question
+            # (a new building can't assume no acoustic or fire-prevention rules).
+            asks[k] = {kk: x for kk, x in {**v, **recipe.get("asks", {}).get(k, {})}.items() if x is not None}
     missing = (asks_used - set(asks)) | {k for k, a in asks.items() if "type" not in a}
     if missing:
         raise GenError(f"asks with no definition in the dictionary: {sorted(missing)}")

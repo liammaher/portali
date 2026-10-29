@@ -1,0 +1,78 @@
+# The permesso di costruire (art. 10 DPR 380/2001), as gen.py writes its steps file: a new
+# building, a ristrutturazione urbanistica or an art. 10 c. 1 c ristrutturazione edilizia (each
+# changing the use or not), a SCIA's works asked as a permesso (art. 22 c. 7), or an essential
+# variant to a permesso; the contributo free or due; on structures or not (the structural
+# filings go with the comunicazione di inizio lavori, or the seismic authorization is asked
+# now); and every protection the progettista's asseverazione names. Crawl
+# catalogue/F839/sections/sue-permesso-di-costruire-art-10-d-p-r-380-2001.json (37 sections),
+# every field from dictionary/fnsuap.yaml. The CILA rehearsal's people
+# (rehearsals/cila-fittizia): the architect with a procura designs and presents, the client,
+# the owner company, two firms.
+procedure: napoli/comune/permesso-di-costruire
+title: "Permesso di costruire, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-permesso-di-costruire-art-10-d-p-r-380-2001
+operation: Permesso di Costruire (P.d.C) - Art.10 D.P.R. 380/2001
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+si_no: {"Le opere ricadono nell'ambito della Sanatoria": "No"}
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+after: [Pagamento degli oneri, Gestione degli allegati]
+attachments:
+  Gestione degli allegati:
+    - {kind: file, label: Allegati liberi, value: "{{ask.relazione_tecnica}}", describe: Relazione tecnica}
+    # Under the barriers rules, their drawings (a slot read on the P6 run's screen).
+    - {kind: file, label: Elaborati relativi al superamento delle barriere architettoniche, value: "{{ask.elaborati_barriere}}", when: "{{ask.barriere}}"}
+    # Each "si allega" of the asseverazione adds its own slot, as on the SCIA.
+    - {kind: file, label: Documentazione necessaria per il rilascio dell'autorizzazione sismica, value: "{{ask.sismica_doc}}", when: "{{ask.strutture}} {{ask.sismica|is_autorizzazione}}", on_page: true}
+    - {kind: file, label: Documentazione per il rilascio del parere/nulla osta dell'ente competente, value: "{{ask.area_protetta_doc}}", when: "{{ask.area_protetta|is_nulla_osta}}", on_page: true}
+    - {kind: file, label: Documentazione per il rilascio dell'autorizzazione relativa al vincolo idrogeologico, value: "{{ask.idrogeologico_doc}}", when: "{{ask.idrogeologico|is_autorizzazione}}", on_page: true}
+    - {kind: file, label: Documentazione per il rilascio dell'autorizzazione relativa al vincolo idraulico, value: "{{ask.idraulico_doc}}", when: "{{ask.idraulico}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria all'approvazione del progetto (VINCA), value: "{{ask.vinca_doc}}", when: "{{ask.vinca}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria per la valutazione del progetto da parte del Comitato Tecnico Regionale, value: "{{ask.rir_doc}}", when: "{{ask.rir|is_in_area}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria per la valutazione del progetto da parte del Comitato Tecnico Regionale, value: "{{ask.rir_doc}}", when: "{{ask.rir|is_non_individuata}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli (", value: "{{ask.altri_vincoli_eco_doc}}", when: "{{ask.altri_vincoli_eco|is_autocertificazione}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria per il rilascio di atti di assenso relativi ad altri vincoli di tutela ecologica, value: "{{ask.altri_vincoli_eco_doc}}", when: "{{ask.altri_vincoli_eco|is_assenso}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (stradale)", value: "{{ask.fascia_stradale_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_stradale}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (ferroviario)", value: "{{ask.fascia_ferroviaria_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_ferroviaria}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (elettrodotto)", value: "{{ask.fascia_elettrodotto_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_elettrodotto}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (gasdotto)", value: "{{ask.fascia_gasdotto_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_gasdotto}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (militare)", value: "{{ask.fascia_militare_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_militare}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (aeroportuale)", value: "{{ask.fascia_aeroportuale_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_aeroportuale}}", on_page: true}
+    - {kind: file, label: "Autocertificazioni relative alla conformità dell'intervento per i relativi vincoli di tutela funzionale (altro)", value: "{{ask.fascia_altro_doc}}", when: "{{ask.fasce|is_autocertificazione}} {{ask.fascia_altro}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (stradale)", value: "{{ask.fascia_stradale_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_stradale}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (ferroviario)", value: "{{ask.fascia_ferroviaria_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_ferroviaria}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (elettrodotto)", value: "{{ask.fascia_elettrodotto_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_elettrodotto}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (gasdotto)", value: "{{ask.fascia_gasdotto_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_gasdotto}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (militare)", value: "{{ask.fascia_militare_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_militare}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (aeroportuale)", value: "{{ask.fascia_aeroportuale_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_aeroportuale}}", on_page: true}
+    - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (altro)", value: "{{ask.fascia_altro_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_altro}}", on_page: true}
+asks:
+  descrizione: {default: "PROVA NON INVIARE - PdC {{c:identity.last_name}}"}
+  elaborati_barriere: {type: file, question: "The drawings showing how the project meets the barriers rules (artt. 77-82 DPR 380/2001) (PDF)"}
+  superficie_mq: {question: "The building's superficie lorda di pavimento (s.l.p.) in m²"}
+  volume_mc: {question: "The building's volume in m³"}
+  # A new building can't take the SCIA's silent "no" for these.
+  acustica: {default: null, propose: "false", question: "Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report: e.g. homes next to a main road, a railway or an airport)?"}
+  antincendio_soggetto: {default: null, propose: "false"}
+  amianto: {default: null, propose: "false"}
+  igienico_conforme: {default: null, propose: "true"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC, j) diritti di terzi, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "As progettista, check every asseverazione on this page: the portal makes them the Relazione tecnica di asseverazione you sign with the request"
+  - "On Allega documenti: the portal's procura signed by the client and the Quadro riepilogativo (PdC DSC), the broadband infrastructure drawing (art. 135-bis DPR 380/2001: signed files only), the contributo's prospetto or the documents for the SUE to work it out (the permesso has no slot for them: under Allegati liberi), then everything signed digitally (.p7m)"
+  - "Pay the diritti and the bollo as the portal asks, then sign and send (Firma e invio); keep the receipt"
+  - "Once the permesso is issued: collect it (paying the contributo, if due, as quadro f) says), name the structural designer and the direttori dei lavori, and file the comunicazione di inizio lavori with the energy report and the structural filings"
+supports:
+  - {value: "{{ask.paesaggio}}", in: ["no", "senza autorizzazione"], else: "A landscape authorization is its own operation on Napoli's SUE, filed with the permesso: not mapped yet."}
+  - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
+  - {value: "{{ask.acustica}}", in: ["false"], else: "An acoustic impact or clima acustico report (art. 8 L. 447/1995) isn't mapped yet."}
+  - {value: "{{ask.vvf_valutazione}}", in: ["false"], else: "A project for the Vigili del Fuoco's assessment isn't mapped yet."}
+  - {value: "{{ask.igienico_conforme}}", in: ["true"], else: "A hygiene derogation isn't mapped yet."}
+  - {value: "{{ask.progetto_impianti}}", in: ["false"], else: "Systems needing a project (DM 37/2008 art. 5) aren't mapped yet."}
+  - {value: "{{ask.indagini_ambientali}}", in: ["false"], else: "Soil needing environmental investigations (or already remediated) isn't mapped yet."}
+  - {value: "{{ask.urbanizzazione}}", in: ["true"], else: "An area without its primary urbanisation works isn't mapped yet."}
+  - {if: "{{ask.prestazione_energetica}}", value: "{{ask.incentivo_energetico}}", in: ["art 14 c6", "art 14 c7", "bonus volumetrico"], else: "With the energy filing, the permesso's form wants one energy incentive claimed (art. 14 D.Lgs. 102/2014 or the 5% bonus): a project with none can't be filed on it as is; ask the SUE."}
+  - {if: "{{ask.rinnovabili}}", value: "{{ask.incentivo_energetico}}", in: ["art 14 c6", "art 14 c7", "bonus volumetrico"], else: "With the renewables obligation, the permesso's form wants one energy incentive claimed (art. 14 D.Lgs. 102/2014 or the 5% bonus): a project with none can't be filed on it as is; ask the SUE."}
+  - {if: "{{ask.scia_onerosa}}", value: "{{ask.contributo_pagamento}}", in: ["prima dei lavori", "rateizzazione", "in corso d'opera"], else: "A permesso's contributo is paid when it's collected, in instalments or during the works: never before filing."}

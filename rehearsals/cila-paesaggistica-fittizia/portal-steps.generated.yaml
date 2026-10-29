@@ -403,6 +403,7 @@ sections:
   - {id: 'r9c2p18reg:radio:5_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}', label: dichiara che l'intervento è soggetto all'invio}
   - {id: 'r10c2p21reg:chk', kind: checkbox, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}', label: allega alla presente comunicazione la notifica}
   - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
+  - {kind: radio, label: invierà la notifica prima dell'inizio dei lavori, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
 - section: Ambito dell'intervento
   fields:
   - {kind: checkbox, when: '{{ask.vincolo|is_art_136}}', label: dell'art. 136}

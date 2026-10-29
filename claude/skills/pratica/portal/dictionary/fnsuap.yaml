@@ -14,6 +14,7 @@
 # show; `on_page` one the crawl can't see (shown by two choices together), found by label on
 # the page; `anchor`/`block` a field inside the block that starts at another field. A `when`'s
 # words gate each other in order: pre-flight asks a later one only once the earlier hold.
+# A `when` has no "or": `|in_<a>__<b>` is true for any of those answers.
 #
 # Roles (answers.json "people"): no prefix and `t:` are the studio's own (the business and its
 # titolare, the architect), `c:` the client, `o:` the owner company, `r:` its legale
@@ -38,6 +39,8 @@ groups:
     question: "Which construction tolerances does the relazione declare? Tick every one that applies."
   fasce_funzionali:
     question: "Which fasce di rispetto is the property in? Tick every one that applies."
+  barriere_requisiti:
+    question: "Which of the barriers rules' requirements does the project meet (D.M. 236/1989)? Tick every one that applies."
 
 asks:
   descrizione:
@@ -307,6 +310,50 @@ asks:
     type: choice
     question: "Which change of use, alone? unita senza opere stessa categoria / unita senza opere tra categorie (one unit, with no works or only edilizia libera, art. 6); unita opere 6bis stessa categoria / unita opere 6bis tra categorie (one unit, with CILA works, art. 6-bis); immobile senza opere / immobile opere 6bis (a whole building, within the same category)"
     options: [unita senza opere stessa categoria, unita senza opere tra categorie, unita opere 6bis stessa categoria, unita opere 6bis tra categorie, immobile senza opere, immobile opere 6bis]
+  # The permesso di costruire (art. 10 DPR 380/2001) and the SCIA alternativa to it (art. 23):
+  # what they file, in quadro a) / c) and the progettista's asseverazione.
+  pdc_tipo:
+    type: choice
+    question: "What does the permesso di costruire ask for? nuova costruzione (art. 3 c. 1 e); ristrutturazione urbanistica (f); ristrutturazione edilizia (one of art. 10 c. 1 c: a different building with more volume, a change of use in zone A, or new shape, volume or facades on a protected building); facolta scia (works a SCIA could file, asked as a permesso by choice, art. 22 c. 7); variante essenziale (a variant in corso d'opera to a permesso that is an essential variation)"
+    options: [nuova costruzione, ristrutturazione urbanistica, ristrutturazione edilizia, facolta scia, variante essenziale]
+  scia_alt_tipo:
+    type: choice
+    question: "Which works does the SCIA alternativa al permesso file (art. 23 c. 1 DPR 380/2001)? ristrutturazione edilizia (one of art. 10 c. 1 c); nuova costruzione piano attuativo (new building or ristrutturazione urbanistica under a piano attuativo with precise plano-volumetric rules); nuova costruzione strumento generale (new building directly under the town plan's precise plano-volumetric rules)"
+    options: [ristrutturazione edilizia, nuova costruzione piano attuativo, nuova costruzione strumento generale]
+  intervento_tipo: {type: text, question: "The works' type as the relazione tecnico-illustrativa names it (one line)"}
+  superficie_coperta_mq: {type: number, question: "The building's superficie coperta in m²"}
+  barriere_accessibilita: {type: yes_no, group: barriere_requisiti, item: "Accessibilità"}
+  barriere_visitabilita: {type: yes_no, group: barriere_requisiti, item: "Visitabilità"}
+  barriere_adattabilita: {type: yes_no, group: barriere_requisiti, item: "Adattabilità"}
+  rinnovabili: {type: yes_no, question: "Does the renewables obligation apply (D.Lgs. 28/2011: a new building or a major renovation), its respect shown in the drawings and the relazione tecnica?"}
+  incentivo_energetico:
+    type: choice
+    question: "Which energy incentive does the project use, certified in the relazione tecnica? nessuno; art 14 c6 (D.Lgs. 102/2014: thicker walls and roofs not counted, the energy index at least 20% lower); art 14 c7 (deroga to distances and heights, the transmittance limit at least 10% lower); bonus volumetrico (D.Lgs. 28/2011 art. 12: 5% more volume, renewables covering more than the obligation)"
+    options: [nessuno, art 14 c6, art 14 c7, bonus volumetrico]
+    propose: "nessuno"
+  acustica_passiva: {type: yes_no, question: "Does the DPCM 5/12/1997 on buildings' passive acoustic requirements apply (a new building, or one rebuilt)?"}
+  vvf_valutazione: {type: yes_no, question: "Does the project need the Vigili del Fuoco's assessment (an activity of DPR 151/2011 cat. B or C, e.g. a residential building over 24 m)?", propose: "false"}
+  scavo:
+    type: choice
+    question: "Do the works produce excavated earth? nessuno (no excavation subject to the rules); riutilizzo in sito (reused where it is dug); rifiuti (handled as waste)"
+    options: [nessuno, riutilizzo in sito, rifiuti]
+    propose: "nessuno"
+  indagini_ambientali: {type: yes_no, question: "Does the area need environmental investigations of its soil first (past uses that may have polluted it)?", propose: "false"}
+  urbanizzazione: {type: yes_no,question: "Does the area have the primary urbanisation works (roads, sewers, water, power)?", propose: "true"}
+  scarichi:
+    type: choice
+    question: "The works' drains: nessuna autorizzazione (they need none); allaccio ottenuto (the connection to the public sewer is authorised: its protocol and date); allaccio da richiedere (the request's documents attached)"
+    options: [nessuna autorizzazione, allaccio ottenuto, allaccio da richiedere]
+    propose: "nessuna autorizzazione"
+  allaccio_protocollo: {type: text, question: "The sewer connection's authorisation: its protocol number"}
+  allaccio_data: {type: date, question: "Its date"}
+  allaccio_doc: {type: file, question: "The documents for the sewer connection's authorisation (PDF)"}
+  autorita_bacino:
+    type: choice
+    question: "Under the Autorità di Bacino's plans (PSAI: landslide and flood risk), the property is: no (in no constrained area); vincolata (under vincoli: named below); costa (under the coastal safeguards: described below)"
+    options: ["no", vincolata, costa]
+    propose: "no"
+  autorita_bacino_quale: {type: text, question: "The Autorità di Bacino's vincoli on the property"}
   scia_variata_numero: {type: text, question: "The SCIA the variant changes: its number"}
   scia_variata_data: {type: date, question: "Its date"}
   # Quadro g): the contributo di costruzione, free (the rule why) or due, how it's paid, and
@@ -315,7 +362,7 @@ asks:
   contributo_normativa: {type: text, question: "Why the works are free of the contributo di costruzione (the rule, e.g. art. 17 c. 3 DPR 380/2001)"}
   contributo_pagamento:
     type: choice
-    question: "How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start); rateizzazione (in instalments, as the Comune sets); in corso d'opera (the costo di costruzione paid during the works)"
+    question: "How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start; for a permesso, paid when it's collected; for a SCIA alternativa, within 30 days of filing); rateizzazione (in instalments, as the Comune sets); in corso d'opera (the costo di costruzione paid during the works)"
     options: [pagato, prima dei lavori, rateizzazione, in corso d'opera]
   contributo_calcolo:
     type: choice
@@ -786,6 +833,7 @@ sections:
       - {kind: radio, label: in quanto opere di modesta entità, if_present: true, when: "{{ask.lavori_in_proprio}}"}
       - {kind: radio, label: lavori sono/saranno eseguiti dall, if_present: true, when: "{{ask.lavori_in_proprio|not}}"}
       - {kind: radio, label: i lavori sono eseguiti/sono stati eseguiti, if_present: true, when: "{{ask.lavori_in_proprio|not}}"}
+      - {kind: radio, label: i lavori saranno eseguiti/sono eseguiti, if_present: true, when: "{{ask.lavori_in_proprio|not}}"}
     block:
       - {kind: text, label: Ragione sociale, value: "{{F:business.denominazione}}"}
       - {kind: text, label: codice fiscale / p. IVA, value: "{{F:business.partita_iva}}"}
@@ -827,6 +875,8 @@ sections:
       - {kind: tick, label: dichiara che l'intervento è soggetto all'invio, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
       - {kind: tick, label: allega alla presente comunicazione la notifica, if_present: true, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
       - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, on_page: true, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
+      # A permesso's notifica goes before the works start, once it is issued.
+      - {kind: radio, label: invierà la notifica prima dell'inizio dei lavori, if_present: true, on_page: true, when: "{{ask.dlgs81}} {{ask.notifica_dovuta}}"}
 
   # The progettista's relazione (her asseverazione and signature are the signed CILA).
   - section: Relazione Tecnica di Asseverazione
@@ -1582,6 +1632,7 @@ sections:
   # Three Si/No questions: the state is the legitimate one (from the titles), no tolerances,
   # no sanatoria.
   - section: Asseverazione SCIA - Stato legittimo
+    aliases: ["Asseverazione PdC - stato legittimo"]
     fields:
       - {kind: radio, label: si}
       - {kind: checkbox, label: corrisponde allo stato legittimo come risultante}
@@ -1590,6 +1641,7 @@ sections:
       - {kind: radio, label: "no", nth: 3}
 
   - section: Asseverazione SCIA - Dati immobile
+    aliases: ["Asseverazione SCIA Alternativa - Dati immobile"]
     fields:
       - {kind: text, label: Mq, value: "{{ask.superficie_mq}}"}
       - {kind: text, label: Mc, value: "{{ask.volume_mc}}"}
@@ -1625,6 +1677,7 @@ sections:
       - {kind: radio, label: non è soggetto alla valutazione del progetto da parte del Comando, when: "{{ask.antincendio_soggetto|not}}"}
 
   - section: Asseverazione SCIA - Amianto
+    aliases: ["Asseverazione SCIA Alternativa - Amianto"]
     leave: [con prot., in data]
     fields:
       - {kind: radio, label: non interessano parti di edifici con presenza di fibre di amianto, when: "{{ask.amianto|not}}"}
@@ -1651,6 +1704,7 @@ sections:
   # The two "Si allega ... parere/nulla
   # osta" boxes are the Soprintendenza's (first) and the park's (second).
   - section: Asseverazione SCIA - Tutela Storico Ambientale
+    aliases: ["Asseverazione SCIA Alternativa - Tutela Storico Ambientale"]
     fields:
       - {kind: radio, label: NON ricade in zona sottoposta a tutela, when: "{{ask.paesaggio|is_no}}"}
       - {kind: radio, label: "ricade in zona tutelata, ma le opere non comportano alterazione", when: "{{ask.paesaggio|is_senza_autorizzazione}}"}
@@ -1671,6 +1725,7 @@ sections:
   # Vincolo idrogeologico, vincolo idraulico, VINCA, a cemetery's fascia di rispetto (the one
   # not allowed needs a deroga: the recipe refuses it).
   - section: Asseverazione SCIA - Tutela Ecologica
+    aliases: ["Asseverazione SCIA Alternativa - Tutela Ecologica", "Asseverazione PdC - tutela ecologica ambientale"]
     fields:
       - {kind: radio, label: non è sottoposta a tutela, when: "{{ask.idrogeologico|is_no}}"}
       - {kind: radio, label: "è sottoposta a tutela e l'intervento rientra nei casi eseguibili senza autorizzazione", when: "{{ask.idrogeologico|is_senza_autorizzazione}}"}
@@ -1706,6 +1761,7 @@ sections:
   # Fasce di rispetto (roads, rail, power lines, gas, military, airport, another), ticked as
   # they apply; a road's and another's each open a "Specificare:" line, the road's first.
   - section: Asseverazione SCIA - Tutela Funzionale
+    aliases: ["Asseverazione SCIA Alternativa - TUTELA FUNZIONALE", "Asseverazione PdC - tutela funzionale"]
     fields:
       - {kind: checkbox, label: stradale, when: "{{ask.fasce|is_no|not}} {{ask.fascia_stradale}}"}
       - {kind: text, label: "Specificare:", value: "{{ask.fascia_stradale_quale}}", when: "{{ask.fasce|is_no|not}} {{ask.fascia_stradale}}"}
@@ -1721,8 +1777,325 @@ sections:
       - {kind: checkbox, label: si allega la documentazione necessaria ai fini del rilascio dei relativi atti di assenso, when: "{{ask.fasce|is_assenso}}"}
 
   - section: Asseverazione SCIA - NOTE
+    aliases: ["Asseverazione SCIA Alternativa - NOTE"]
     leave: [Note]
     fields: []
+
+  # The SCIA alternativa al permesso di costruire (art. 23 DPR 380/2001). Its works start 30
+  # days after filing: b) has no start date.
+  - section: Presentazione della SCIA Alternativa
+    theirs: [PER PRESA VISIONE]
+    fields: []
+
+  - section: Qualificazione dell'intervento
+    fields:
+      - {kind: checkbox, label: interventi per i quali è possibile presentare la SCIA alternativa}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di una singola unità immobiliare all’interno, when: "{{ask.scia_cambio_uso|is_stessa_categoria}}"}
+      - {kind: radio, label: "comporta mutamento di destinazione d’uso di una singola unità immobiliare, ubicata", when: "{{ask.scia_cambio_uso|is_tra_categorie}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di un intero immobile, when: "{{ask.scia_cambio_uso|is_intero_immobile}}"}
+
+  # Quadro g): paid within 30 days of filing ("prima dei lavori"), in instalments or during the
+  # works; never already paid (no receipt box). Not the opere a scomputo.
+  - section: Calcolo del contributo di costruzione
+    leave: [ai sensi della seguente normativa]
+    fields:
+      - {kind: radio, label: L'intervento da realizzare è a titolo gratuito, when: "{{ask.scia_onerosa|not}}"}
+      - {kind: text, label: ai sensi della seguente normativa, value: "{{ask.contributo_normativa}}", when: "{{ask.scia_onerosa|not}}"}
+      - {kind: radio, label: L'intervento da realizzare è a titolo oneroso, when: "{{ask.scia_onerosa}}"}
+      - {kind: radio, label: chiede allo Sportello Unico di effettuare il calcolo, when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_sportello}}"}
+      - {kind: radio, label: allega il prospetto di calcolo preventivo, when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_prospetto}}"}
+      - {kind: radio, label: effettuerà il pagamento del contributo di costruzione, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_prima_dei_lavori}}"}
+      - {kind: radio, label: chiede la rateizzazione del contributo, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_rateizzazione}}"}
+      - {kind: radio, label: si impegna a corrispondere il costo di costruzione, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_in_corso_d_opera}}"}
+
+  # "specificare il tipo di intervento" is the 4th tipologia's (regional works): the portal
+  # clears it otherwise.
+  - section: Asseverazione SCIA Alternativa - Dati progettista
+    leave: [specificare il tipo di intervento]
+    fields:
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Iscritto all'ordine, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: checkbox, label: 1. Interventi di ristrutturazione edilizia, when: "{{ask.scia_alt_tipo|is_ristrutturazione_edilizia}}"}
+      - {kind: checkbox, label: 2. Interventi di nuova costruzione o di ristrutturazione urbanistica, when: "{{ask.scia_alt_tipo|is_nuova_costruzione_piano_attuativo}}"}
+      - {kind: checkbox, label: 3. Interventi di nuova costruzione qualora, when: "{{ask.scia_alt_tipo|is_nuova_costruzione_strumento_generale}}"}
+      # Each tipologia opens its own "changes the use or not".
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_alt_tipo|is_ristrutturazione_edilizia}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso, when: "{{ask.scia_alt_tipo|is_ristrutturazione_edilizia}} {{ask.scia_cambio_uso|is_no|not}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_alt_tipo|is_nuova_costruzione_piano_attuativo}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso, when: "{{ask.scia_alt_tipo|is_nuova_costruzione_piano_attuativo}} {{ask.scia_cambio_uso|is_no|not}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.scia_alt_tipo|is_nuova_costruzione_strumento_generale}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso, when: "{{ask.scia_alt_tipo|is_nuova_costruzione_strumento_generale}} {{ask.scia_cambio_uso|is_no|not}}"}
+      - {kind: textarea, label: e che consistono in, value: "{{ask.dettaglio_intervento}}"}  # its own text: the counter changes
+
+  # Two Si/No questions: the state is the legitimate one (from the titles), no tolerances.
+  - section: Asseverazione SCIA Alternativa - stato legittimo
+    fields:
+      - {kind: radio, label: si}
+      - {kind: checkbox, label: corrisponde allo stato legittimo come risultante}
+      - {kind: checkbox, label: dal/i titolo/i o dalla/e pratica/che edilizia/e}
+      - {kind: radio, label: "no", nth: 2}
+
+  # The SCIA's systems section, with its energy report attached and the renewables obligation.
+  - section: Asseverazione SCIA Alternativa - Sicurezza impianti
+    fields:
+      - {kind: radio, label: Non comporta l'installazione, when: "{{ask.impianti|not}}"}
+      - {kind: radio, label: "Comporta l'installazione, la trasformazione", when: "{{ask.impianti}}"}
+      - {kind: checkbox, label: "di produzione, trasformazione, trasporto", when: "{{ask.impianti}} {{ask.impianto_elettrico}}"}
+      - {kind: checkbox, label: "di riscaldamento, di climatizzazione", when: "{{ask.impianti}} {{ask.impianto_termico}}"}
+      - {kind: checkbox, label: idrici e sanitari, when: "{{ask.impianti}} {{ask.impianto_idrico}}"}
+      - {kind: checkbox, label: per la distribuzione e l'utilizzazione di gas, when: "{{ask.impianti}} {{ask.impianto_gas}}"}
+      - {kind: radio, label: non è soggetto agli obblighi di presentazione del progetto, when: "{{ask.progetto_impianti|not}}"}
+      - {kind: radio, label: non è soggetto al deposito del progetto e della relazione tecnica, when: "{{ask.prestazione_energetica|not}}"}
+      - {kind: radio, label: è soggetto al deposito del progetto e della relazione tecnica, when: "{{ask.prestazione_energetica}}"}
+      - {kind: checkbox, label: si allega la relazione tecnica sul rispetto delle prescrizioni in materia di risparmio energetico, when: "{{ask.prestazione_energetica}}"}
+      - {kind: radio, label: non è soggetto all'applicazione del d.lgs. n. 28/2011, when: "{{ask.rinnovabili|not}}"}
+      - {kind: radio, label: è soggetto all'applicazione del d.lgs. n. 28/2011, when: "{{ask.rinnovabili}}"}
+      - {kind: checkbox, label: il rispetto delle prescrizioni in materia di utilizzo di fonti di energia rinnovabili, when: "{{ask.rinnovabili}}"}
+      - {kind: radio, label: "ricade nell'articolo 14, comma 6", when: "{{ask.incentivo_energetico|is_art_14_c6}}"}
+      - {kind: checkbox, label: si certifica nella relazione tecnica una riduzione minima del 20, when: "{{ask.incentivo_energetico|is_art_14_c6}}"}
+      - {kind: radio, label: "ricade nell'articolo 14, comma 7", when: "{{ask.incentivo_energetico|is_art_14_c7}}"}
+      - {kind: checkbox, label: si certifica nella relazione tecnica una riduzione minima del 10, when: "{{ask.incentivo_energetico|is_art_14_c7}}"}
+      - {kind: radio, label: "ricade nell'articolo 12, comma 1", when: "{{ask.incentivo_energetico|is_bonus_volumetrico}}"}
+      - {kind: checkbox, label: si certifica nella relazione tecnica una copertura, when: "{{ask.incentivo_energetico|is_bonus_volumetrico}}"}
+      - {kind: radio, label: L'intervento non ricade in alcuno dei casi sopra elencati, when: "{{ask.incentivo_energetico|is_nessuno}}"}
+
+  # Shared by the permesso and the SCIA alternativa (the SCIA's own keeps its silent defaults):
+  # art. 8 L. 447/1995 and the passive acoustic requirements asked apart, the excavated earth,
+  # fire prevention without the Vigili del Fuoco's assessment.
+  - section: Asseverazione PdC - inquinamento acustico
+    aliases: ["Asseverazione SCIA Alternativa - Inquinamento acustico"]
+    leave: ["rilasciato da:", con prot., in data, rilasciato con prot., In data]
+    fields:
+      - {kind: radio, label: Non rientra nell'ambito di applicazione dell'articolo 8, when: "{{ask.acustica|not}}"}
+      - {kind: radio, label: non rientra nell'ambito dell'applicazione del d.P.C.M., when: "{{ask.acustica_passiva|not}}"}
+      - {kind: radio, label: rientra nell'ambito dell'applicazione del d.P.C.M., when: "{{ask.acustica_passiva}}"}
+      - {kind: checkbox, label: non sono soggette alla normativa vigente relativa ai materiali da scavo, when: "{{ask.scavo|is_nessuno}}"}
+      - {kind: checkbox, label: comportano la produzione di materiali da scavo che saranno riutilizzati, when: "{{ask.scavo|is_riutilizzo_in_sito}}"}
+      - {kind: checkbox, label: comportano la produzione di materiali da scavo che saranno gestiti, when: "{{ask.scavo|is_rifiuti}}"}
+      - {kind: checkbox, label: riguardano interventi di demolizione, when: "{{ask.demolizioni}}"}
+      - {kind: radio, label: non è soggetto alle norme di prevenzione incendi, when: "{{ask.antincendio_soggetto|not}}"}
+      - {kind: radio, label: è soggetto alle norme tecniche di prevenzione incendi, when: "{{ask.antincendio_soggetto}}"}
+      - {kind: radio, label: non è soggetto alla valutazione del progetto da parte del Comando, when: "{{ask.vvf_valutazione|not}}"}
+
+  # Soil, urbanisation and drains: no investigations needed, an urbanised area, and drains that
+  # need no authorisation or the sewer connection's (got, or asked with its documents).
+  - section: Asseverazione PdC - qualità terreni
+    aliases: ["Asseverazione SCIA Alternativa - Qualità terreni"]
+    leave: ["rilasciata da:", in data, stipulata in data, con prot.]
+    fields:
+      - {kind: radio, label: non richiede indagini ambientali preventive, when: "{{ask.indagini_ambientali|not}}"}
+      - {kind: radio, label: è dotata delle opere di urbanizzazione primaria, when: "{{ask.urbanizzazione}}"}
+      - {kind: radio, label: non necessita di autorizzazione allo scarico, when: "{{ask.scarichi|is_nessuna_autorizzazione}}"}
+      - {kind: radio, label: necessita di autorizzazione, nth: 2, when: "{{ask.scarichi|is_nessuna_autorizzazione|not}}"}
+      - {kind: checkbox, label: all'allaccio in pubblica fognatura, when: "{{ask.scarichi|is_nessuna_autorizzazione|not}}"}
+      - {kind: checkbox, label: la relativa autorizzazione è stata ottenuta, nth: 3, when: "{{ask.scarichi|is_allaccio_ottenuto}}"}
+      - {kind: text, label: con prot., nth: 3, value: "{{ask.allaccio_protocollo}}", when: "{{ask.scarichi|is_allaccio_ottenuto}}"}
+      - {kind: date, label: in data, nth: 4, value: "{{ask.allaccio_data|date_it}}", when: "{{ask.scarichi|is_allaccio_ottenuto}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria ai fini del rilascio dell'autorizzazione, nth: 3, when: "{{ask.scarichi|is_allaccio_da_richiedere}}"}
+
+  # The SCIA alternativa's other ecological vincoli are checkboxes (the SCIA's are radios).
+  - section: Asseverazione SCIA Alternativa - Altri Vincoli
+    fields:
+      - {kind: radio, label: nel comune NON è presente, when: "{{ask.rir|is_no}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” è individuata", when: "{{ask.rir|is_fuori_area}}"}
+      - {kind: radio, label: l'intervento NON ricade nell'area di danno, when: "{{ask.rir|is_fuori_area}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” è individuata", when: "{{ask.rir|is_in_area}}"}
+      - {kind: radio, label: l'intervento ricade in area di danno, when: "{{ask.rir|is_in_area}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria alla valutazione del progetto, when: "{{ask.rir|is_in_area}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” non è individuata", when: "{{ask.rir|is_non_individuata}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria alla valutazione del progetto, nth: 2, when: "{{ask.rir|is_non_individuata}}"}
+      - {kind: checkbox, label: fascia di rispetto dei depuratori, when: "{{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_depuratori}}"}
+      - {kind: checkbox, label: Altro, when: "{{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_altro}}"}
+      - {kind: text, label: "Specificare:", value: "{{ask.altri_vincoli_eco_quale}}", when: "{{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_altro}}"}
+      - {kind: checkbox, label: si allegano le autocertificazioni, when: "{{ask.altri_vincoli_eco|is_autocertificazione}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria ai fini del rilascio dei relativi atti di assenso, when: "{{ask.altri_vincoli_eco|is_assenso}}"}
+
+  # The permesso di costruire (art. 10 DPR 380/2001): one kind of works, each art. 10 one with
+  # whether it changes the use; or a SCIA's works asked as a permesso, or an essential variant.
+  - section: Qualificazione pratica dell'intervento
+    leave: [n., del, (specificare)]
+    fields:
+      - {kind: radio, label: interventi di cui all'articolo 10, when: "{{ask.pdc_tipo|in_nuova_costruzione__ristrutturazione_urbanistica__ristrutturazione_edilizia}}"}
+      - {kind: radio, label: non comporta mutamento di destinazione d’uso, when: "{{ask.pdc_tipo|in_nuova_costruzione__ristrutturazione_urbanistica__ristrutturazione_edilizia}} {{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di una singola unità immobiliare all’interno, when: "{{ask.pdc_tipo|in_nuova_costruzione__ristrutturazione_urbanistica__ristrutturazione_edilizia}} {{ask.scia_cambio_uso|is_stessa_categoria}}"}
+      - {kind: radio, label: "comporta mutamento di destinazione d’uso di una singola unità immobiliare, ubicata", when: "{{ask.pdc_tipo|in_nuova_costruzione__ristrutturazione_urbanistica__ristrutturazione_edilizia}} {{ask.scia_cambio_uso|is_tra_categorie}}"}
+      - {kind: radio, label: comporta mutamento di destinazione d’uso di un intero immobile, when: "{{ask.pdc_tipo|in_nuova_costruzione__ristrutturazione_urbanistica__ristrutturazione_edilizia}} {{ask.scia_cambio_uso|is_intero_immobile}}"}
+      - {kind: radio, label: interventi assoggettati a Segnalazione Certificata di Inizio Attività, when: "{{ask.pdc_tipo|is_facolta_scia}}"}
+      - {kind: text, label: (specificare), value: "{{ask.intervento_tipo}}", when: "{{ask.pdc_tipo|is_facolta_scia}}"}
+      - {kind: radio, label: variazione essenziale e/o sostanziale, when: "{{ask.pdc_tipo|is_variante_essenziale}}"}
+      - {kind: radio, label: permesso di costruire, when: "{{ask.pdc_tipo|is_variante_essenziale}}"}
+      - {kind: text, label: n., nth: 2, value: "{{ask.pdc_numero}}", when: "{{ask.pdc_tipo|is_variante_essenziale}}"}
+      - {kind: date, label: del, nth: 2, value: "{{ask.pdc_data|date_it}}", when: "{{ask.pdc_tipo|is_variante_essenziale}}"}
+
+  # Quadro f): paid when the permesso is collected ("prima dei lavori"), in instalments or
+  # during the works; no opere a scomputo.
+  - section: Calcolo del contributo di costruzione
+    leave: [ai sensi della seguente normativa]
+    fields:
+      - {kind: radio, label: è a titolo gratuito, when: "{{ask.scia_onerosa|not}}"}
+      - {kind: text, label: ai sensi della seguente normativa, value: "{{ask.contributo_normativa}}", when: "{{ask.scia_onerosa|not}}"}
+      - {kind: radio, label: è a titolo oneroso, when: "{{ask.scia_onerosa}}"}
+      - {kind: radio, label: chiede allo Sportello Unico di effettuare il calcolo, when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_sportello}}"}
+      - {kind: radio, label: allega il prospetto di calcolo preventivo, when: "{{ask.scia_onerosa}} {{ask.contributo_calcolo|is_prospetto}}"}
+      - {kind: radio, label: dichiara che il versamento del contributo di costruzione sarà effettuato al momento del ritiro, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_prima_dei_lavori}}"}
+      - {kind: radio, label: chiede la rateizzazione del contributo, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_rateizzazione}}"}
+      - {kind: radio, label: si impegna a corrispondere il costo di costruzione, when: "{{ask.scia_onerosa}} {{ask.contributo_pagamento|is_in_corso_d_opera}}"}
+      - {kind: radio, label: "NO"}
+
+  # The permesso's g1): the architect is "colui che presenta la pratica" (the crawl names the
+  # radio by its column, "titolare dell'intervento o procuratore"), which asks only for the
+  # studio, the albo and the contacts; the structural designer and the direttori dei lavori
+  # are named before the works start.
+  - section: Tecnici incaricati
+    fields:
+      - {kind: checkbox, label: "che il progettista delle opere strutturali, il/i direttore/i dei lavori saranno individuati"}
+      - {kind: radio, label: titolare dell'intervento o procuratore}
+      - {kind: select, label: Provincia, value: "{{business.sede_legale_provincia}}"}
+      - {kind: text, label: Comune italiano, value: "{{business.sede_legale_comune|upper}}"}
+      - {kind: text, label: "Via, Piazza", value: "{{business.sede_legale_indirizzo|upper}}"}
+      - {kind: text, label: "N.", value: "{{business.sede_legale_civico}}"}
+      - {kind: text, label: C.A.P., value: "{{business.sede_legale_cap}}"}
+      - {kind: text, label: Iscritto all'ordine/collegio, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      - {kind: text, label: Telefono, value: "{{business.telefono|phone_it}}"}
+      - {kind: text, label: cell., value: "{{t:identity.phone|phone_it}}"}
+      - {kind: text, label: posta elettronica certificata, value: "{{t:identity.pec}}"}
+    leave: [fax]
+
+  - section: Asseverazione PdC - Dati progettista
+    leave: [che i lavori riguardano l'immobile individuato]
+    fields:
+      - {kind: text, label: Cognome, value: "{{t:identity.last_name}}"}
+      - {kind: text, label: Nome, value: "{{t:identity.first_name}}"}
+      - {kind: text, label: Iscritto all'ordine, value: "{{t:albo.ordine}}"}
+      - {kind: text, label: di, value: "{{t:albo.provincia|provincia_nome}}"}
+      - {kind: text, label: al n., value: "{{t:albo.numero}}"}
+      # Two radios with their own names, but the portal keeps one: the tipologia's.
+      - {kind: radio, label: che le opere in progetto sono subordinate a rilascio}
+      - {kind: checkbox, label: Intervento di nuova costruzione, when: "{{ask.pdc_tipo|is_nuova_costruzione}}"}
+      - {kind: checkbox, label: Interventi di ristrutturazione urbanistica, when: "{{ask.pdc_tipo|is_ristrutturazione_urbanistica}}"}
+      - {kind: checkbox, label: Interventi di ristrutturazione edilizia che portino, when: "{{ask.pdc_tipo|is_ristrutturazione_edilizia}}"}
+      - {kind: checkbox, label: interventi assoggettati a Segnalazione Certificata di Inizio Attività, when: "{{ask.pdc_tipo|is_facolta_scia}}"}
+      - {kind: checkbox, label: Varianti in corso d'opera a permessi di costruire, when: "{{ask.pdc_tipo|is_variante_essenziale}}"}
+      - {kind: radio, label: non comportano mutamento di destinazione d’uso, when: "{{ask.scia_cambio_uso|is_no}}"}
+      - {kind: radio, label: comportano mutamento di destinazione d’uso di una singola unità immobiliare all’interno, when: "{{ask.scia_cambio_uso|is_stessa_categoria}}"}
+      - {kind: radio, label: "comportano mutamento di destinazione d’uso di una singola unità immobiliare, ubicata", when: "{{ask.scia_cambio_uso|is_tra_categorie}}"}
+      - {kind: radio, label: comportano mutamento di destinazione d’uso di un intero immobile, when: "{{ask.scia_cambio_uso|is_intero_immobile}}"}
+      - {kind: textarea, label: e che consistono in, value: "{{ask.dettaglio_intervento}}"}  # its own text: the counter changes
+
+  # The building's surfaces and storeys, its plan, and the barriers rules (which a new
+  # building meets: the requirements ticked as they apply).
+  - section: Asseverazione PdC - Dati immobile
+    fields:
+      - {kind: text, label: Mq, value: "{{ask.superficie_mq}}"}
+      - {kind: text, label: Mq, nth: 2, value: "{{ask.superficie_coperta_mq}}"}
+      - {kind: text, label: Mc, value: "{{ask.volume_mc}}"}
+      - {kind: text, label: n., value: "{{ask.piani_n}}"}
+      - {kind: checkbox, label: PUC/PRG/PdF}
+      - {kind: text, label: Estremi Provv. di Approvazione, value: "{{ask.prg_specificare}}"}
+      - {kind: text, label: Zona, value: "{{ask.prg_zona}}"}
+      - {kind: text, label: Art., value: "{{ask.prg_articolo}}"}
+      - {kind: checkbox, label: non è soggetto alle prescrizioni degli articoli 77, when: "{{ask.barriere|not}}"}
+      - {kind: checkbox, label: è soggetto alle prescrizioni degli articoli 77, when: "{{ask.barriere}}"}
+      - {kind: checkbox, label: accessibilità, when: "{{ask.barriere}} {{ask.barriere_accessibilita}}"}
+      - {kind: checkbox, label: visitabilità, when: "{{ask.barriere}} {{ask.barriere_visitabilita}}"}
+      - {kind: checkbox, label: adattabilità, when: "{{ask.barriere}} {{ask.barriere_adattabilita}}"}
+
+  # The systems, the energy report (filed with the comunicazione di inizio lavori) and the
+  # renewables obligation; never the piano casa.
+  - section: Asseverazione PdC - sicurezza impianti
+    fields:
+      - {kind: radio, label: Non comporta l'installazione, when: "{{ask.impianti|not}}"}
+      - {kind: radio, label: "Comporta l'installazione, la trasformazione", when: "{{ask.impianti}}"}
+      - {kind: checkbox, label: "di produzione, trasformazione, trasporto", when: "{{ask.impianti}} {{ask.impianto_elettrico}}"}
+      - {kind: checkbox, label: "di riscaldamento, di climatizzazione", when: "{{ask.impianti}} {{ask.impianto_termico}}"}
+      - {kind: checkbox, label: idrici e sanitari, when: "{{ask.impianti}} {{ask.impianto_idrico}}"}
+      - {kind: checkbox, label: per la distribuzione e l'utilizzazione di gas, when: "{{ask.impianti}} {{ask.impianto_gas}}"}
+      - {kind: radio, label: non è soggetto agli obblighi di presentazione del progetto, when: "{{ask.progetto_impianti|not}}"}
+      - {kind: radio, label: non è soggetto al deposito del progetto e della relazione tecnica, when: "{{ask.prestazione_energetica|not}}"}
+      - {kind: radio, label: è soggetto all'applicazione dell'articolo 125, when: "{{ask.prestazione_energetica}}"}
+      - {kind: checkbox, label: saranno presentate in allegato alla comunicazione di inizio lavori, when: "{{ask.prestazione_energetica}}"}
+      - {kind: radio, label: non è soggetto all'applicazione del d.lgs. n. 28/2011, when: "{{ask.rinnovabili|not}}"}
+      - {kind: radio, label: è soggetto all'applicazione del d.lgs. n. 28/2011, when: "{{ask.rinnovabili}}"}
+      - {kind: checkbox, label: il rispetto delle prescrizioni in materia di utilizzo di fonti di energia rinnovabili, when: "{{ask.rinnovabili}}"}
+      # With the energy filing or the renewables, the portal wants one incentive claimed (the
+      # recipe refuses none: this form can't say so).
+      - {kind: checkbox, label: "ricade nell'articolo 14, comma 6", when: "{{ask.incentivo_energetico|is_art_14_c6}}"}
+      - {kind: checkbox, label: si certifica nella relazione tecnica una riduzione minima del 20, when: "{{ask.incentivo_energetico|is_art_14_c6}}"}
+      - {kind: checkbox, label: "ricade nell'articolo 14, comma 7", when: "{{ask.incentivo_energetico|is_art_14_c7}}"}
+      - {kind: checkbox, label: si certifica nella relazione tecnica una riduzione minima del 10, when: "{{ask.incentivo_energetico|is_art_14_c7}}"}
+      - {kind: checkbox, label: "ricade nell'articolo 12, comma 1", when: "{{ask.incentivo_energetico|is_bonus_volumetrico}}"}
+      - {kind: checkbox, label: si certifica nella relazione tecnica una copertura, when: "{{ask.incentivo_energetico|is_bonus_volumetrico}}"}
+      - {kind: radio, label: non rientra tra quelli previsti dalla l.r. n. 19/2009}
+
+  # Asbestos (its plan sent 30 days before the works), hygiene, and the structures: the art. 65
+  # denuncia and the seismic deposito go with the comunicazione di inizio lavori.
+  - section: Asseverazione PdC - amianto
+    leave: [con prot., in data]
+    fields:
+      - {kind: radio, label: non interessano parti di edifici con presenza di fibre di amianto, when: "{{ask.amianto|not}}"}
+      - {kind: radio, label: interessano parti di edifici con presenza di fibre di amianto, when: "{{ask.amianto}}"}
+      - {kind: checkbox, label: sarà presentato 30 giorni prima dell'inizio dei lavori, when: "{{ask.amianto}}"}
+      - {kind: radio, label: è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe, when: "{{ask.igienico_conforme}}"}
+      - {kind: radio, label: non prevede la realizzazione di opere di conglomerato cementizio, when: "{{ask.strutture|not}}"}
+      - {kind: radio, label: non prevede la realizzazione di opere di conglomerato cementizio, when: "{{ask.strutture}} {{ask.cemento_armato|not}}"}
+      - {kind: radio, label: prevede la realizzazione di opere di conglomerato cementizio, when: "{{ask.strutture}} {{ask.cemento_armato}}"}
+      - {kind: radio, label: la documentazione tecnica relativa alla denuncia di cui all'articolo 65, when: "{{ask.strutture}} {{ask.cemento_armato}}"}
+      - {kind: radio, label: non prevede opere da denunciare o autorizzare, when: "{{ask.strutture|not}}"}
+      - {kind: radio, label: prevede opere in zona sismica da denunciare, when: "{{ask.strutture}} {{ask.sismica|is_deposito}}"}
+      - {kind: radio, label: la documentazione relativa alla denuncia dei lavori in zona sismica sarà allegata, when: "{{ask.strutture}} {{ask.sismica|is_deposito}}"}
+      - {kind: radio, label: prevede opere strutturali soggette ad autorizzazione sismica, when: "{{ask.strutture}} {{ask.sismica|is_autorizzazione}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria per il rilascio dell'autorizzazione sismica, when: "{{ask.strutture}} {{ask.sismica|is_autorizzazione}}"}
+      - {kind: radio, label: costituisce una variante non sostanziale riguardante parti strutturali, when: "{{ask.strutture}} {{ask.sismica|is_variante}}"}
+      - {kind: text, label: con prot., value: "{{ask.sismica_protocollo}}", when: "{{ask.strutture}} {{ask.sismica|is_variante}}"}
+      - {kind: date, label: in data, value: "{{ask.sismica_data|date_it}}", when: "{{ask.strutture}} {{ask.sismica|is_variante}}"}
+
+  # The permesso's protections: no box to attach for a bene culturale (the SUE asks the
+  # Soprintendenza), the park's nulla osta request attached. A landscape authorization is its
+  # own operation on Napoli's SUE (the recipe refuses it).
+  - section: Asseverazione PdC - tutela storico ambientale
+    fields:
+      - {kind: radio, label: NON ricade in zona sottoposta a tutela, when: "{{ask.paesaggio|is_no}}"}
+      - {kind: radio, label: "ricade in zona tutelata, ma le opere non comportano alterazione", when: "{{ask.paesaggio|is_senza_autorizzazione}}"}
+      - {kind: radio, label: non è sottoposto a tutela, when: "{{ask.bene_culturale|not}}"}
+      - {kind: radio, label: è sottoposto a tutela, when: "{{ask.bene_culturale}}"}
+      - {kind: radio, label: non ricade in area tutelata, when: "{{ask.area_protetta|is_no}}"}
+      - {kind: radio, label: "ricade in area tutelata, ma le opere non comportano alterazione", when: "{{ask.area_protetta|is_senza_alterazione}}"}
+      - {kind: radio, label: è sottoposto alle relative disposizioni, when: "{{ask.area_protetta|is_nulla_osta}}"}
+      - {kind: checkbox, label: "Si allega la documentazione necessaria ai fini del rilascio del parere/nulla osta", when: "{{ask.area_protetta|is_nulla_osta}}"}
+
+  # As the SCIA alternativa's, with the Autorità di Bacino's plans after them.
+  - section: Asseverazione PdC - aree a rischio e altri vincoli
+    fields:
+      - {kind: radio, label: nel comune NON è presente, when: "{{ask.rir|is_no}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” è individuata", when: "{{ask.rir|is_fuori_area}}"}
+      - {kind: radio, label: l'intervento NON ricade nell'area di danno, when: "{{ask.rir|is_fuori_area}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” è individuata", when: "{{ask.rir|is_in_area}}"}
+      - {kind: radio, label: l'intervento ricade in area di danno, when: "{{ask.rir|is_in_area}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria alla valutazione del progetto, when: "{{ask.rir|is_in_area}}"}
+      - {kind: radio, label: "nel comune E' presente un'attività a rischio d'incidente rilevante e la relativa “area di danno” non è individuata", when: "{{ask.rir|is_non_individuata}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria alla valutazione del progetto, nth: 2, when: "{{ask.rir|is_non_individuata}}"}
+      - {kind: checkbox, label: fascia di rispetto dei depuratori, when: "{{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_depuratori}}"}
+      - {kind: checkbox, label: Altro, when: "{{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_altro}}"}
+      - {kind: text, label: "Specificare:", value: "{{ask.altri_vincoli_eco_quale}}", when: "{{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_altro}}"}
+      - {kind: checkbox, label: si allegano le autocertificazioni, when: "{{ask.altri_vincoli_eco|is_autocertificazione}}"}
+      - {kind: checkbox, label: si allega la documentazione necessaria ai fini del rilascio dei relativi atti di assenso, when: "{{ask.altri_vincoli_eco|is_assenso}}"}
+      - {kind: radio, label: l'immobile non ricade in area vincolata, when: "{{ask.autorita_bacino|is_no}}"}
+      - {kind: radio, label: l'immobile è assoggettato ai seguenti vincoli, when: "{{ask.autorita_bacino|is_vincolata}}"}
+      - {kind: radio, label: rispetto alle misure di salvaguardia della costa, when: "{{ask.autorita_bacino|is_costa}}"}
+      # Its "specificare:" is opened by its own radio, and is the second of that label when
+      # another vincolo's is open above it (a combination the crawl didn't try).
+      - {kind: text, label: "specificare:", value: "{{ask.autorita_bacino_quale}}", when: "{{ask.autorita_bacino|is_vincolata}} {{ask.altri_vincoli_eco|is_nessuno}}"}
+      - {kind: text, label: "specificare:", value: "{{ask.autorita_bacino_quale}}", when: "{{ask.autorita_bacino|is_vincolata}} {{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_depuratori}}"}
+      - {kind: text, label: "specificare:", nth: 2, on_page: true, value: "{{ask.autorita_bacino_quale}}", when: "{{ask.autorita_bacino|is_vincolata}} {{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_altro}}"}
+      - {kind: text, label: "specificare:", value: "{{ask.autorita_bacino_quale}}", when: "{{ask.autorita_bacino|is_costa}} {{ask.altri_vincoli_eco|is_nessuno}}"}
+      - {kind: text, label: "specificare:", value: "{{ask.autorita_bacino_quale}}", when: "{{ask.autorita_bacino|is_costa}} {{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_depuratori}}"}
+      - {kind: text, label: "specificare:", nth: 2, on_page: true, value: "{{ask.autorita_bacino_quale}}", when: "{{ask.autorita_bacino|is_costa}} {{ask.altri_vincoli_eco|is_nessuno|not}} {{ask.altri_vincoli_eco_tipo|is_altro}}"}
 
   # Fine lavori: the date, whole or in part, and the title the works were done under.
   - section: comunicazione di fine lavori
@@ -2536,9 +2909,11 @@ after:
   # recipe's `attachments`. Not here, the person's: the portal's procura (download, the client signs, then .p7m), the
   # Quadro riepilogativo (the national checklist, to complete and sign), the fee receipt
   # (.p7m), the Allegato A and the Modello DP (signed).
+  # A document the portal makes (the procura, the DSC: "Scarica il documento" by its box) is the
+  # person's to download, sign and attach.
   - section: Gestione degli allegati
     go: Prosegui
-    theirs: [Procura speciale, Quadro riepilogativo della documentazione]
+    theirs: [Procura speciale, Quadro riepilogativo della documentazione, Scarica il documento]
     fields:
       - {kind: file, label: "Fotocopia di un documento di identita' del soggetto che conferisce", value: "{{ask.documento_identita_cliente}}"}
       - {kind: file, label: "Copia dei documenti d'identità del/i titolare/i", value: "{{ask.documento_identita_cliente}}", when: "{{ask.titolo_esclusivo|not}}"}

@@ -323,6 +323,30 @@ def nested_when():
         os.chdir(here)
 
 
+def gated_support():
+    """A `supports` check with `if` applies, and asks its question, only once the gate holds:
+    how a permesso's contributo is paid matters only when one is due."""
+    pdc = HERE.parents[4] / "rehearsals" / "pdc-fittizio"
+    steps = yaml.safe_load((pdc / "portal-steps.generated.yaml").read_text())
+    fields = dict(json.loads((HERE.parents[4] / "rehearsals" / "cila-fittizia" / "fixture-p6.json").read_text())["fields"])
+    p6 = json.loads((pdc / "answers-p6.json").read_text())
+    base = {k: v for k, v in p6.items() if k not in ("scia_onerosa", "contributo_pagamento", "contributo_calcolo",
+                                                     "documentazione_calcolo_contributo")}
+    here = os.getcwd()
+    os.chdir(HERE.parents[4])  # the answers name files from the repo's root
+    try:
+        pre = lambda a: run.preflight(steps, values(a, fields, steps))
+        r = pre(base | {"scia_onerosa": "false", "contributo_normativa": "art. 17 (inventato)"})
+        assert r["ready"] and not r["unsupported"], r
+        q = {x["key"]: x for x in pre(base)["questions"]}
+        assert q["contributo_pagamento"]["only_if"] == ["scia_onerosa"], q.get("contributo_pagamento")
+        r = pre(p6 | {"contributo_pagamento": "pagato"})
+        assert any("never before filing" in u for u in r["unsupported"]), r["unsupported"]
+        assert pre(p6)["ready"]
+    finally:
+        os.chdir(here)
+
+
 def linked_files():
     """A file over the pane's 256 KB is pane_ok once it goes by link (page --file-urls)."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -358,6 +382,7 @@ CASES = [
     ("a .p7m is read: signed by the dichiarante, by someone else (a warning without any codice fiscale), or not a signature (not ready)", p7m_signer),
     ("the imposta di bollo route is listed as a choice made in the person's name", bollo_chosen),
     ("a condition's words gate each other: a later question waits on the earlier answer (CILA contributo)", nested_when),
+    ("a supports check with `if` applies, and is asked, only once its gate holds (permesso contributo)", gated_support),
 ]
 
 

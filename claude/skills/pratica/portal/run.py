@@ -181,14 +181,18 @@ def _destinazione(v):
 
 class Filters(dict):
     """`is_<answer>` is true when the value is that answer, spaces as underscores
-    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `atleast_<n>`
-    is true when the number is n or more (the 20 m² the historic centre's Piano requires)."""
+    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `in_<a>__<b>`
+    is true when it is any of them (a `when` has no "or"). `atleast_<n>` is true when the number
+    is n or more (the 20 m² the historic centre's Piano requires)."""
     def __missing__(self, name):
         if name.startswith("atleast_") and name[8:].isdigit():
             return lambda v: "true" if float(str(v or 0).replace(",", ".")) >= int(name[8:]) else "false"
+        answer = lambda v: re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_")
+        if name.startswith("in_"):
+            return lambda v: "true" if answer(v) in name[3:].split("__") else "false"
         if not name.startswith("is_"):
             raise KeyError(name)
-        return lambda v: "true" if re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_") == name[3:] else "false"
+        return lambda v: "true" if answer(v) == name[3:] else "false"
 
 
 FILTERS = Filters({
@@ -381,7 +385,7 @@ def templates(steps):
     for y in steps.get("yours", []):
         yield "yours", y, {}
     for c in steps.get("supports", []):
-        for k in ("when", "value", "else"):
+        for k in ("if", "when", "value", "else"):
             if k in c:
                 yield "supports", c[k], {}
     for v in steps.get("rules", {}).get("facts", {}).values():
@@ -415,7 +419,7 @@ def check_asks(steps):
         if not d.get("question") or not any(a.get("group") == g for a in asks.values()):
             raise StepError(f"steps file: groups.{g} needs a question and at least one ask in it")
     # The asks that decide the branch come first: their answers can end the pratica here.
-    branch = {r[4:] for c in steps.get("supports", []) for k in ("when", "value")
+    branch = {r[4:] for c in steps.get("supports", []) for k in ("if", "when", "value")
               for r, _ in refs_in(c.get(k, "")) if r.startswith("ask.")}
     branch |= {r[4:] for where, t, _ in templates(steps) if where == "rules" for r, _ in refs_in(t) if r.startswith("ask.")}
     return sorted(asks, key=lambda k: k not in branch)
@@ -448,7 +452,15 @@ def needed(steps, values):
         return True
 
     for c in steps.get("supports", []):
-        add(asked(c.get("when", c.get("value", ""))))
+        # `if`: a check that only applies once its gate holds (how a contributo is paid,
+        # once one is due), asked only then.
+        deps = ()
+        if "if" in c:
+            if not gate(c["if"]):
+                continue
+            if values.render(c["if"]) is None:
+                deps = [k for k in asked(c["if"]) if values.field("ask." + k) is None]
+        add(asked(c.get("when", c.get("value", ""))), deps)
     for fact in ruled(steps, values)[1]:
         add(asked(steps["rules"]["facts"][fact]))
     for w in steps.get("wizard", []):
@@ -519,6 +531,13 @@ def supported(steps, values):
         if not asked:  # read from the vault, and empty there
             out.append(f"The rules need {f}, read from {tmpl}: empty in the vault.")
     for c in steps.get("supports", []):
+        if "if" in c:
+            unknown = [r for r, f in refs_in(c["if"]) if r.startswith("ask.") and values.field(r) is None]
+            if unknown:
+                need += unknown
+                continue
+            if not truthy(values.render(c["if"])):
+                continue
         tmpl = c.get("when", c.get("value"))
         unknown = [r for r, f in refs_in(tmpl) if r.startswith("ask.") and values.field(r) is None]
         if unknown:

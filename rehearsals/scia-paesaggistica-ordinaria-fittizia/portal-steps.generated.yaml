@@ -79,8 +79,9 @@ asks:
   scia_variata_data: {type: date, question: Its date}
   scia_onerosa: {type: yes_no, question: 'Is a contributo di costruzione due (e.g. a change of use between categories, or works adding urban load)?', propose: 'false'}
   contributo_normativa: {type: text, question: 'Why the works are free of the contributo di costruzione (the rule, e.g. art. 17 c. 3 DPR 380/2001)'}
-  contributo_pagamento: {type: choice, question: 'How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start); rateizzazione (in instalments,
-      as the Comune sets); in corso d''opera (the costo di costruzione paid during the works)', options: [pagato, prima dei lavori, rateizzazione, in corso d'opera]}
+  contributo_pagamento: {type: choice, question: 'How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start; for a permesso, paid when
+      it''s collected; for a SCIA alternativa, within 30 days of filing); rateizzazione (in instalments, as the Comune sets); in corso d''opera (the costo di costruzione paid during the works)', options: [
+      pagato, prima dei lavori, rateizzazione, in corso d'opera]}
   contributo_calcolo: {type: choice, question: 'Who works the contributo out: prospetto (the progettista''s prospetto di calcolo preventivo, attached); sportello (the SUE, from the technical documents attached)',
     options: [prospetto, sportello]}
   documentazione_calcolo_contributo: {type: file, question: The technical documents the SUE needs to work out the contributo (PDF)}
@@ -546,6 +547,7 @@ sections:
   - {id: 'r8c2p14reg:radio:4_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta|not}}', label: dichiara che l'intervento non è soggetto all'invio}
   - {id: 'r9c2p17reg:radio:5_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}', label: dichiara che l'intervento è soggetto all'invio}
   - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
+  - {kind: radio, label: invierà la notifica prima dell'inizio dei lavori, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
 - section: m) Diritti di terzi
   theirs:
   - dichiara di essere consapevole
@@ -730,6 +732,7 @@ sections:
   theirs:
   - Procura speciale
   - Quadro riepilogativo della documentazione
+  - Scarica il documento
   - Documentazione dimostrativa dello stato legittimo
   - copia attestazione versamento oneri, diritti e spese
   - 'copia della precedente autorizzazione paesaggistica (per le '

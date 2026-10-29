@@ -10199,17 +10199,23 @@
  "slots": {
   "Gestione degli allegati": [
    {
+    "title": "Documentazione dimostrativa dello stato legittimo",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": true,
+    "portal_document": false
+   },
+   {
     "id": "r12c1p12reg:upload1_input",
     "title": "Procura speciale",
     "accepts": "jpg.p7m;pdf.p7m",
-    "required": false,
+    "required": true,
     "portal_document": true
    },
    {
     "id": "r16c1p16reg:upload1_input",
     "title": "Quadro riepilogativo della documentazione già disponibile ed allegata - PdC DSC",
     "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
-    "required": false,
+    "required": true,
     "portal_document": true
    },
    {
@@ -10237,7 +10243,7 @@
     "id": "r38c1p42reg:upload1_input",
     "title": "copia attestazione versamento oneri, diritti e spese o autocertificazione di esenzione",
     "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
-    "required": false,
+    "required": true,
     "portal_document": false
    },
    {
@@ -10260,8 +10266,26 @@
     "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
     "required": false,
     "portal_document": false
+   },
+   {
+    "title": "Dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": true,
+    "portal_document": false
+   },
+   {
+    "title": "Copia dei documenti d'identità del/i titolare/i, comproprietario/i",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": true,
+    "portal_document": false
+   },
+   {
+    "title": "Elaborati relativi al superamento delle barriere architettoniche (art. 77 e seguenti del d.P.R. n. 380/2001)",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": true,
+    "portal_document": false
    }
   ]
  },
- "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft (an empty draft: slots that the sections' answers add are missing)"
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft (an empty draft: slots that the sections' answers add are missing); 2026-10-29 also the P6 permesso's own screen (the client without an exclusive title, under the barriers rules): the slots its answers add, and which it requires"
 }
