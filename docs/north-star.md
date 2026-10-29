@@ -198,9 +198,10 @@ large files are attached in a Playwright window or by the person.
 and sha256 in run.js; `inpage.js` fetches it in the portal's page and stops if the bytes differ (bench:
 a 3 MB file attached byte-exact, a wrong file refused). On the real portal in the pane: a fetch from
 the portal's page to another `https` origin with CORS works (no CSP blocks it), and a 5 MB PDF built in
-the page uploads in 3 s and is still there, 4.95 MB, after Salva and a fresh reopen of the draft. Left:
-the host. No file of ours has been served yet: a public test host needs Liam's approval, and the real
-one is the hosting design.
+the page uploads in 3 s and is still there, 4.95 MB, after Salva and a fresh reopen of the draft. End to
+end: the owner CILA filled with a 5 MB FAC-SIMILE drawing served from a public test gist (raw link
+pinned to its commit; gist's "latest" link answered 404 for minutes after the push), run.js 6.9 KB
+(`rehearsals/cila-fittizia`). Left: the real host, the hosting design above.
 
 ## Parked
 

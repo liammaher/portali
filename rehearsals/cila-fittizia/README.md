@@ -330,6 +330,7 @@ contributo to pay, in proprio, "altri interventi").
 | 2026-10-29 | P6 | pane | 91.3 s | **Filled**, fresh load 13.6 s: the same 160 values as before |
 | 2026-10-29 | proprietario, clean | pane | 110.7 s | **Filled** from scratch, 20 sections, fresh load 22.2 s |
 | 2026-10-29 | comodatario, clean | pane | 85.6 s | **Filled** from scratch, 20 sections, fresh load 12.8 s |
+| 2026-10-29 | proprietario, 5 MB drawing by link | pane | 86.5 s (attachments 10.7 s) | **Filled**: the elaborati grafici a 5,195,674-byte FAC-SIMILE PDF, fetched in the portal's page from a public test gist pinned to its commit (`run.py page --file-urls`), sha256 checked; run.js 6.9 KB. Still there, 4.95 MB, on a fresh reopen of the draft |
 
 Not run on the portal: a destinazione other than residenziale (the fixture's flat is
 residenziale; pre-flight and the generator cover it), a terzo titolare company other than P6's,

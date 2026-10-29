@@ -552,10 +552,12 @@ def portal_changed(steps):
             "(crawl.js) and steps file (gen.py) first."] if diff else []
 
 
-def preflight(steps, values):
+def preflight(steps, values, urls=None):
     """Everything a run needs, settled before any browser opens: why this case isn't
     supported, the questions still to ask, the vault fields missing or expired, the files
-    to attach, and the person's own steps. ready: nothing is left before the run."""
+    to attach, and the person's own steps. ready: nothing is left before the run. urls: the
+    files sent by link (page --file-urls), which don't count to the pane's 256 KB."""
+    links = file_links(urls)
     order = check_asks(steps)
     asks = steps.get("asks", {})
     report = {"ready": False, "unsupported": [], "proposals": [], "questions": [], "missing": [], "files": [],
@@ -661,6 +663,8 @@ def preflight(steps, values):
                 p = Path(path).expanduser() if path else None
                 entry = {"for": f"{sec['section']}: {f.get('label') or f.get('id')}", "path": path,
                          "exists": bool(p and p.is_file()), "bytes": p.stat().st_size if p and p.is_file() else None}
+                if p and p.resolve() in links:
+                    entry["link"] = links[p.resolve()]
                 if entry["exists"]:
                     takes = [t for t in f.get("accepts", "").lower().split(";") if t]
                     if entry["bytes"] > SLOT_MAX_BYTES:
@@ -669,7 +673,7 @@ def preflight(steps, values):
                     elif takes and not any(p.name.lower().endswith("." + t) for t in takes):
                         entry["problem"] = f"the slot takes only {', '.join(takes)}"
                 report["files"].append(entry)
-    report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"]) <= PAGE_FILES_LIMIT
+    report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"] if "link" not in x) <= PAGE_FILES_LIMIT
     report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
     report["ready"] = not (report["questions"] or report["proposals"] or report["missing"]
                            or any(not x["exists"] or x.get("problem") for x in report["files"] if x["path"]))
@@ -934,7 +938,7 @@ def main():
     ap.add_argument("--profile", type=Path, default=Path.home() / ".cache/pratica-portal/profile")
     ap.add_argument("--close", action="store_true")
     ap.add_argument("--resume", type=Path, help="page/run: a stopped run's report.json, to pick it up where it stopped")
-    ap.add_argument("--file-urls", type=Path, help="page: JSON {path: https URL}, files the page fetches by link")
+    ap.add_argument("--file-urls", type=Path, help="preflight/page: JSON {path: https URL}, files the page fetches by link")
     ap.add_argument("--fix", type=Path, help="with --resume: JSON list of {section, field, set: {id|label|css}}")
     a = ap.parse_args()
     steps = yaml.safe_load(a.steps.read_text())
@@ -956,7 +960,7 @@ def main():
         if a.fix and not a.resume:
             ap.error("--fix needs --resume")
         if a.command == "preflight":
-            report = preflight(steps, values)
+            report = preflight(steps, values, json.loads(a.file_urls.read_text()) if a.file_urls else None)
             print(json.dumps(report, indent=2, ensure_ascii=False))
             return 0 if report["ready"] else 3
         if a.command == "plan":
