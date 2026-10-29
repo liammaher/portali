@@ -1142,13 +1142,13 @@
       "fields": [
         {
           "id": "immobile.indirizzo",
-          "description": "Street (via/piazza) of the property, without number",
-          "sensitivity": "standard"
+          "description": "Street (via/piazza) of the property, without number; sensitive like residenza's, since it is often someone's home",
+          "sensitivity": "sensitive"
         },
         {
           "id": "immobile.civico",
           "description": "Street number of the property",
-          "sensitivity": "standard"
+          "sensitivity": "sensitive"
         },
         {
           "id": "immobile.scala",
@@ -1259,12 +1259,13 @@
         },
         {
           "id": "immobile.titolo",
-          "description": "The holder's title on the property: proprietario, comproprietario, locatario, usufruttuario, altro (validated; comproprietaria, conduttore... accepted)",
+          "description": "The holder's title on the property: proprietario, comproprietario, locatario, comodatario, usufruttuario, altro (validated; comproprietaria, conduttore, comodataria... accepted)",
           "sensitivity": "standard",
           "values": [
             "proprietario",
             "comproprietario",
             "locatario",
+            "comodatario",
             "usufruttuario",
             "altro"
           ]

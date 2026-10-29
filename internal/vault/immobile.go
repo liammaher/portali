@@ -13,7 +13,7 @@ import "strings"
 
 // immobileTitoli are the holder's titles on the property, in the order the
 // schema lists them (schemaValues).
-var immobileTitoli = []string{"proprietario", "comproprietario", "locatario", "usufruttuario", "altro"}
+var immobileTitoli = []string{"proprietario", "comproprietario", "locatario", "comodatario", "usufruttuario", "altro"}
 
 // immobileTitoloAliases maps ways of saying a title, read with normalizeChoice,
 // to the stored word. Every title also names itself.
@@ -23,6 +23,7 @@ var immobileTitoloAliases = map[string]string{
 	"co_owner": "comproprietario", "coowner": "comproprietario",
 	"locataria": "locatario", "conduttore": "locatario", "affittuario": "locatario", "affittuaria": "locatario",
 	"inquilino": "locatario", "inquilina": "locatario", "tenant": "locatario",
+	"comodataria":   "comodatario",
 	"usufruttuaria": "usufruttuario",
 	"other":         "altro",
 }

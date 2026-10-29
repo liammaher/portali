@@ -205,7 +205,7 @@ server.registerTool(
       pvCmd("set <address>.quartiere \"<name>\"") +
       ". Never store one yourself to fill a form. The token's scope must reach <address>.municipalita, .quartiere and .distretto_asl.",
     inputSchema: {
-      address: z.enum(["residenza", "domicilio", "locale", "sede_legale"]).describe("Which address (sede_legale: the business's registered office)"),
+      address: z.enum(["residenza", "domicilio", "locale", "sede_legale", "immobile"]).describe("Which address (sede_legale: the business's registered office; immobile: the property a pratica is about, e.g. a client's)"),
       for: PERSON.optional().describe("Whose address: a person's slug, or io (default) for the user or the business"),
     },
   },

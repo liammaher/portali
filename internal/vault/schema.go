@@ -439,8 +439,8 @@ var RecommendedSchema = Schema{
 				"which stays in residenza/domicilio and abitazione. A client's is luca:immobile, a second property immobile2. " +
 				"Catasto data is on the visura catastale. Attach the visura and the plans with 'pvault doc add immobile <file>'.",
 			Fields: []SchemaField{
-				{ID: "immobile.indirizzo", Description: "Street (via/piazza) of the property, without number", Sensitivity: "standard"},
-				{ID: "immobile.civico", Description: "Street number of the property", Sensitivity: "standard"},
+				{ID: "immobile.indirizzo", Description: "Street (via/piazza) of the property, without number; sensitive like residenza's, since it is often someone's home", Sensitivity: "sensitive"},
+				{ID: "immobile.civico", Description: "Street number of the property", Sensitivity: "sensitive"},
 				{ID: "immobile.scala", Description: "Staircase (scala), if any", Sensitivity: "standard"},
 				{ID: "immobile.piano", Description: "Floor (e.g. terra, rialzato, 3)", Sensitivity: "standard"},
 				{ID: "immobile.interno", Description: "Unit number (interno), if any; 'int. 3' is saved as 3", Sensitivity: "standard"},
@@ -457,7 +457,7 @@ var RecommendedSchema = Schema{
 				{ID: "immobile.catasto_categoria", Description: "Categoria catastale, e.g. A/2 for a flat (validated; a2 becomes A/2)", Sensitivity: "standard"},
 				{ID: "immobile.destinazione_uso", Description: "Lawful use of the property (e.g. residenziale, commerciale, ufficio)", Sensitivity: "standard"},
 				{ID: "immobile.superficie_mq", Description: "Surface of the property, in m²", Sensitivity: "standard"},
-				{ID: "immobile.titolo", Description: "The holder's title on the property: " + strings.Join(immobileTitoli, ", ") + " (validated; comproprietaria, conduttore... accepted)", Sensitivity: "standard"},
+				{ID: "immobile.titolo", Description: "The holder's title on the property: " + strings.Join(immobileTitoli, ", ") + " (validated; comproprietaria, conduttore, comodataria... accepted)", Sensitivity: "standard"},
 			},
 		},
 		{

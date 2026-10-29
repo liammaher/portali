@@ -26,6 +26,7 @@ func TestNormalizeAndValidate_Immobile(t *testing.T) {
 		{"immobile.titolo", "comproprietaria", "comproprietario"},
 		{"immobile.titolo", "conduttore", "locatario"},
 		{"immobile.titolo", "usufruttuaria", "usufruttuario"},
+		{"immobile.titolo", "comodataria", "comodatario"},
 		{"immobile.titolo", "altro", "altro"},
 		{"immobile.municipalita", "V", "5"},
 		{"immobile.quartiere", "vomero", "Vomero"},
@@ -62,8 +63,7 @@ func TestNormalizeAndValidate_ImmobileRejects(t *testing.T) {
 		{"immobile.catasto_foglio", "12a"},
 		{"immobile.catasto_subalterno", "sub"},
 		{"immobile.superficie_mq", "0"},
-		{"immobile.titolo", "ospite"},      // a home's title, not a property's
-		{"immobile.titolo", "comodatario"}, // not in the list: altro
+		{"immobile.titolo", "ospite"}, // a home's title, not a property's
 		{"immobile.municipalita", "11"},
 		{"luca:immobile2.catasto_foglio", "x"},
 	}
@@ -102,11 +102,16 @@ func TestImmobile_HoldersAndKinds(t *testing.T) {
 	if IsHousingCategory("immobile") || IsOwnerOnlyCategory("immobile") || isPersonOnlyCategory("immobile") {
 		t.Error("immobile is neither housing, nor owner-only, nor person-only")
 	}
+	// The street and civico are sensitive, like residenza's: a property is often someone's home.
 	for _, f := range c.Fields {
-		if f.Sensitivity != "standard" || IsCredentialField(f.ID) || IsCredentialField("luca:"+f.ID) {
+		want := "standard"
+		if f.ID == "immobile.indirizzo" || f.ID == "immobile.civico" {
+			want = "sensitive"
+		}
+		if f.Sensitivity != want || IsCredentialField(f.ID) || IsCredentialField("luca:"+f.ID) {
 			t.Errorf("%s: tier %s, credential %v", f.ID, f.Sensitivity, IsCredentialField(f.ID))
 		}
-		if got := DefaultSensitivity("luca:immobile2" + f.ID[len("immobile"):]); got != "standard" {
+		if got := DefaultSensitivity("luca:immobile2" + f.ID[len("immobile"):]); got != want {
 			t.Errorf("DefaultSensitivity of a copy of %s = %s", f.ID, got)
 		}
 	}
