@@ -2,7 +2,7 @@
  "crawled": "2026-10-29",
  "by": "crawl.js check (fingerprints) on an empty draft, in the pane",
  "pratica": "SUE: two operations in one pratica: Comunicazione Inizio Lavoro Asseverata (C.I.L.A.) + Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune), with the procura scelta",
- "note": "Every section is one of the CILA's or the semplificata's, the same fingerprint: the combination is their union, in this order. gen.py can't yet write a recipe of two operations (catalogue README, Limits).",
+ "note": "Every section is one of the CILA's or the semplificata's, the same fingerprint: the combination is their union, in this order. A recipe names both operations: rehearsals/cila-paesaggistica-fittizia.",
  "sections": [
   {
    "section": "Scheda anagrafica",

@@ -124,6 +124,24 @@ def _():
     assert "id" not in field(s, "non è soggetto agli obblighi")
 
 
+@case("two operations in one pratica: their sections once each, in the combination's crawl's order, and both ticked")
+def _():
+    steps = generated("cila-paesaggistica-fittizia")
+    names = [x["section"] for x in steps["sections"]]
+    assert len(names) == len(set(n.lower() for n in names)) == 22
+    assert names.index("a) Titolarità dell'intervento") < names.index("Qualificazione dell'intervento") < names.index("Ambito dell'intervento")
+    assert "dichiarazione ubicazione dell'intervento" not in names  # the CILA's Localizzazione, the same section
+    assert steps["wizard"][3]["tree"] == ["Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)",
+                                          "Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)"]
+    recipe = gen.load_yaml(REH / "cila-paesaggistica-fittizia" / "recipe.yaml")
+    recipe["crawl"] = "cila"  # a crawl of the CILA alone is not of both
+    try:
+        gen.generate(recipe)
+        assert False, "generated from the wrong crawl"
+    except gen.GenError as e:
+        assert "isn't a crawl of these operations together" in str(e)
+
+
 @case("two scelte both keep the sections they add, and the wizard ticks both (voltura with a co-holder)")
 def _():
     steps = generated("voltura-pdc-fittizia")

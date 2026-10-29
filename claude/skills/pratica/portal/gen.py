@@ -367,18 +367,40 @@ def generate(recipe, base=HERE):
         if "wizard" not in recipe:
             raise GenError("the catalogue has no pratica for this operation: the recipe needs `wizard`")
     else:
-        op = next((o for o in catalogue["operations"] if o["label"] == recipe["operation"]), None)
-        if not op:
-            raise GenError(f"no operation {recipe['operation']!r} in the catalogue")
-        names = [catalogue["sections"][i] for i in op["sections"]]
-    if "operations" in catalogue:
-        # Each scelta drops and adds by index, so a second one keeps what the first added.
-        idx = list(op["sections"])
-        for s in recipe.get("scelte", []):
-            sc = next((x for x in op.get("scelte", []) if x["option"] == s), None) or \
-                (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {op['label']}"))
-            idx = [i for i in idx if i not in sc.get("drops", [])] + [i for i in sc.get("adds", []) if i not in idx]
+        # Several operations in one pratica (a CILA with its landscape authorization): each one's
+        # sections with its scelte, and the pratica is their union.
+        labels = recipe["operation"] if isinstance(recipe["operation"], list) else [recipe["operation"]]
+        idx = []
+        for label in labels:
+            o = next((o for o in catalogue["operations"] if o["label"] == label), None)
+            if not o:
+                raise GenError(f"no operation {label!r} in the catalogue")
+            # Each scelta drops and adds by index, so a second one keeps what the first added.
+            own = list(o["sections"])
+            for s in recipe.get("scelte", []):
+                sc = next((x for x in o.get("scelte", []) if x["option"] == s), None) or \
+                    (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {label}"))
+                own = [i for i in own if i not in sc.get("drops", [])] + [i for i in sc.get("adds", []) if i not in own]
+            idx += [i for i in own if i not in idx]
+        op = {"label": labels[0] if len(labels) == 1 else labels}
         names = [catalogue["sections"][i] for i in idx]
+        if len(labels) > 1:
+            # The portal's own order is the combination's crawl's, which must hold just these.
+            have = [s["section"] for s in crawl["sections"]]
+            missing = [n for n in names if not any(norm(h) == norm(n) for h in have)]
+            # One section both operations have under two names (the semplificata's "ubicazione
+            # dell'intervento" is the CILA's "Localizzazione"): shown once, the same fields.
+            fps = {s.get("fingerprint") for s in crawl["sections"]} - {None}
+            seen = {norm(s["section"]) for f in (cat_dir / "sections").glob("*.json")
+                    for s in json.loads(f.read_text()).get("sections", []) if s.get("fingerprint") in fps}
+            missing = [n for n in missing if norm(n) not in seen]
+            extra = [h for h in have if not any(norm(h) == norm(n) for n in names)]
+            if missing or extra:
+                raise GenError(f"{recipe['crawl']} isn't a crawl of these operations together: "
+                               f"missing {missing}, more {extra}")
+            # Each crawled section once, under the name the combination shows ("Dati catastali" and
+            # "dati catastali" are one).
+            names = [h for h in have if any(norm(h) == norm(n) for n in names)]
     # A batch crawl names a section it had seen elsewhere (`same_as`: "pratica#section").
     import catalogue as cat_py
     others = {}

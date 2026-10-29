@@ -376,9 +376,10 @@
     }
     const want = f.kind === "number" || f.kind === "date" ? "text" : f.kind;
     let hits = list.filter((e) => kindOf(e) === want && labelled(e, f.label));
-    // With no nth, a box whose own text is the label before one that only has it further
-    // off: in a row of three boxes, the last column's label is the one before each in the page.
-    if (!f.nth && hits.length > 1) {
+    // A box whose own text is the label before one that only has it further off, and nth
+    // counts those: in a row of boxes, the last column's label is the one before each in the
+    // page ("Ragione sociale" would count as the firm's second "codice fiscale").
+    if (hits.length > 1) {
       const best = Math.min(...hits.map((e) => labelRank(e, f.label)));
       hits = hits.filter((e) => labelRank(e, f.label) === best);
     }

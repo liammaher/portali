@@ -58,8 +58,9 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   checked the screen (after an upload or Prosegui), so a fresh read marks none.
 - **A combination**: a CILA with an autorizzazione paesaggistica semplificata in one pratica
   (`sue-combo-cila-paesaggistica-semplificata`) has the union of their sections, each the same
-  section as alone (fingerprints), in its own order. gen.py doesn't write a two-operation
-  recipe yet.
+  section as alone (fingerprints), in its own order. A recipe can name both operations
+  (`rehearsals/cila-paesaggistica-fittizia`), run to the declarations; its attachments screen
+  isn't read yet.
 - **SUAP**: 160 pratiche crawled so far (the 11 priority sectors: bars and restaurants, shops,
   B&B, hotels, hairdressers, bakeries; then the common operations); **236 distinct sections**,
   21 filled, 71% of section uses (the shared ones). The whole tree is 2,333 sector-and-operation

@@ -1,0 +1,31 @@
+# A CILA with its autorizzazione paesaggistica semplificata in one pratica on Napoli's SUE: the
+# CILA rehearsal's P6 job (rehearsals/cila-fittizia) with an outdoor air-conditioning unit on a
+# protected building. Two operations: gen.py takes each one's sections from the catalogue and
+# the order from the combination's crawl (catalogue/F839/sections/sue-combo-cila-paesaggistica-semplificata.json).
+procedure: napoli/comune/cila-con-paesaggistica-semplificata
+title: "CILA con autorizzazione paesaggistica semplificata, SUE Napoli (tecnico con procura)"
+comune: F839
+sportello: sue
+crawl: sue-combo-cila-paesaggistica-semplificata
+operation:
+  - Comunicazione Inizio Lavoro Asseverata (C.I.L.A.)
+  - Autorizzazione paesaggistica semplificata (DPR 31/2017 - Comune)
+scelte: [IL PRESENTATORE DELLA DOMANDA È UN PROFESSIONISTA / ALTRO SOGGETTO MUNITO DI PROCURA SPECIALE]
+first: [Scheda anagrafica, Qualifica e dati del procuratore]
+asks:
+  descrizione: {default: "PROVA NON INVIARE - CILA e paesaggistica {{c:identity.last_name}}"}
+  diritti_euro: {default: "151"}
+yours:
+  - "Open the draft in Pratiche in bozza ({{ask.descrizione}}) and check it against this page"
+  - "Tick the dichiarante's declarations: the awareness box under the PEC (domicilio elettronico), c) PER PRESA VISIONE, consapevolezza (artt. 46-47), informativa privacy, tasse comunali, art. 75 DPR 445/2000"
+  - "Pay the diritti (and the CILA's late-filing penalty if due) and the bollo; upload the receipts"
+  - "On Allega documenti: the CILA's documents (procura, CILA DSC summary, IDs, the owner's assent, drawings, relazione tecnica) and the landscape ones (relazione paesaggistica semplificata, Allegato D, with its drawings and photos), signed digitally"
+  - "Sign and send (Firma e invio); keep the receipt"
+supports:
+  - value: "{{ask.titolo}}"
+    in: [locatario]
+    else: "So far only a tenant with the owner's assent (a.2) is mapped."
+  - when: "{{ask.paes_variante|not}}"
+    else: "So far only for a new authorization: the variant of one already issued isn't run yet."
+  - when: "{{ask.bollo_marche|not}}"
+    else: "So far only with the bollo paid on pagoPA: the marche route isn't run yet."
