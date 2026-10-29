@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Writes .claude-plugin/marketplace.json for one release: the marketplace people add
-(`claude plugin marketplace add liammaher/personal-vault-italia`) and the one entry in it, the
+(`claude plugin marketplace add liammaher/portali`) and the one entry in it, the
 Portali plugin, as a zip attached to that release and pinned by its SHA-256, so Claude Code
 refuses a download that isn't the file this release published.
 
@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-REPO = "liammaher/personal-vault-italia"
+REPO = "liammaher/portali"
 HERE = Path(__file__).resolve().parent
 
 

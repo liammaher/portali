@@ -21,7 +21,7 @@ On macOS, keep the token in your Keychain (recommended). Register once:
 ```sh
 claude mcp add vault --scope user \
   -e VAULT_KEYCHAIN_SERVICE=pvault-mcp \
-  -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+  -- node /absolute/path/to/portali/mcp/dist/index.js
 ```
 
 Then, whenever an agent needs access, create a token straight into the Keychain.
@@ -40,7 +40,7 @@ On Windows the token lives in Credential Manager, which the server reads through
 claude mcp add vault --scope user `
   -e VAULT_KEYCHAIN_SERVICE=pvault-mcp `
   -e PVAULT_BIN=C:\Users\you\AppData\Local\Programs\pvault\pvault.exe `
-  -- node C:\path\to\personal-vault-italia\mcp\dist\index.js
+  -- node C:\path\to\portali\mcp\dist\index.js
 pvault create-service-token claude --scope "residenza.*" --access read --ttl 2h --keychain pvault-mcp
 ```
 
@@ -56,7 +56,7 @@ expires or is revoked there):
 claude mcp add studio --scope user \
   -e VAULT_NAME=studio \
   -e VAULT_KEYCHAIN_SERVICE=pvault-studio-mcp \
-  -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+  -- node /absolute/path/to/portali/mcp/dist/index.js
 pvault --vault studio create-service-token claude --scope "business.*" --ttl 2h --keychain pvault-studio-mcp
 ```
 
@@ -71,7 +71,7 @@ never gets the token.
 Elsewhere, pass the token directly (stored in plain text in `~/.claude.json`):
 
 ```sh
-claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+claude mcp add vault --scope user -e VAULT_TOKEN=<token> -- node /absolute/path/to/portali/mcp/dist/index.js
 ```
 
 ## Tools
@@ -135,7 +135,7 @@ The server can read your PEC mailbox over IMAP so an agent can find notices from
    claude mcp add vault --scope user \
      -e VAULT_KEYCHAIN_SERVICE=pvault-mcp \
      -e PEC_ADDRESS=you@pec.it -e PEC_KEYCHAIN_SERVICE=pvault-pec \
-     -- node /absolute/path/to/personal-vault-italia/mcp/dist/index.js
+     -- node /absolute/path/to/portali/mcp/dist/index.js
    ```
 
 The password is read from the Keychain for every call, so when the app password expires (Aruba's reportedly last 90 days) you only rerun step 2.

@@ -24,7 +24,7 @@ A `dev` version is a build from source: leave it alone and go to step 3.
 A download needs their explicit yes. Ask once, saying what it is:
 
 > I'll download pvault <version> for <macOS or Windows or Linux>, <chip>, from
-> github.com/liammaher/personal-vault-italia (its releases page), a single file of some tens
+> github.com/liammaher/portali (its releases page), a single file of some tens
 > of MB. I check it against a checksum that came with this plugin before anything is
 > installed, then put it in your user folder (`~/.local/bin`, or `%LOCALAPPDATA%\Programs\pvault`).
 > No admin rights, and nothing else on the computer changes. OK?
