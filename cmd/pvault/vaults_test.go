@@ -18,6 +18,7 @@ func isolatedHome(t *testing.T) string {
 	t.Helper()
 	home := t.TempDir()
 	t.Setenv("HOME", home)
+	t.Setenv("USERPROFILE", home) // os.UserHomeDir on Windows
 	t.Setenv("VAULT_DIR", "")
 	t.Setenv("PVAULT_VAULT", "")
 	return home
@@ -190,7 +191,8 @@ func TestListenError(t *testing.T) {
 	if err == nil {
 		t.Fatal("listened twice on one port")
 	}
-	if got := listenError(err, "/v").Error(); !strings.Contains(got, "/v/port") {
-		t.Fatalf("listenError = %q, want it to name /v/port", got)
+	want := filepath.Join("/v", "port")
+	if got := listenError(err, "/v").Error(); !strings.Contains(got, want) {
+		t.Fatalf("listenError = %q, want it to name %s", got, want)
 	}
 }

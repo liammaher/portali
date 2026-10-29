@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -443,6 +444,9 @@ func TestEveryConnectionWaitsForLocks(t *testing.T) {
 // The driver cuts its connection string at '?', which would put the
 // database outside a folder named like "a?b".
 func TestOpenRefusesQuestionMarkInPath(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("a Windows path can't hold a '?'")
+	}
 	dir := filepath.Join(t.TempDir(), "a?b")
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		t.Fatal(err)

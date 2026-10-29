@@ -1,0 +1,5 @@
+# Text files are checked out with LF on every system, Windows included: schema.json is compared
+# byte for byte with what `pvault schema --json` prints, and the shell installer must not get CRLF.
+* text=auto eol=lf
+*.pdf binary
+*.png binary

@@ -77,6 +77,9 @@ func TestWalk_LeavesOutHiddenLinksAndLockFiles(t *testing.T) {
 }
 
 func TestWalk_NamesTheVaultWouldRefuseAreSkippedNotFatal(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Windows can't create files with these names (a control character, only spaces, a backslash)")
+	}
 	root, _ := ResolveRoot(t.TempDir())
 	write(t, filepath.Join(root, "ok.pdf"), "x")
 	write(t, filepath.Join(root, "bell\x07.pdf"), "x")
