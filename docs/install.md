@@ -1,7 +1,7 @@
 # Installing
 
 **Status: not released yet.** The pieces below are built and tested offline; nothing is published until
-the first release tag (`v0.1.0`) is pushed, so `marketplace add` has nothing to point at today.
+the first release tag (`v0.2.0`) is pushed, so `marketplace add` has nothing to point at today.
 
 ## What you do
 

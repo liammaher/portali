@@ -1,6 +1,6 @@
 {
   "name": "napoli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Prepares Comune di Napoli pratiche (SUE and SUAP on impresainungiorno) from a client's documents, up to the architect's own declarations, signature and sending; with the pratiche-napoli library of rules and procedures.",
   "author": {
     "name": "Liam Maher"
