@@ -14,7 +14,7 @@ You enter your details and scan your documents once. Agents that prepare forms (
 
 > Fork of [lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault) (MIT), extended with the Italian schema, document storage and a hardened agent access model.
 
-**Where this is going:** [docs/north-star.md](docs/north-star.md). The vault's structured profile, PEC tools and sign gate will become part of one connector for a Naples business's own Claude, hosted in the EU. That changes the rules above (local-first, no cloud) once the work lands; until then, everything below describes the vault as it is.
+**Where this is going:** [docs/north-star.md](docs/north-star.md). The vault is the privacy layer of a free, open-source map of Italian government portals, so that Claude can prepare any pratica up to the steps only you can take (SPID login, declarations, signature, payment, sending), starting with Napoli and impresainungiorno. Nothing of ours is hosted: the rules above (local-first, no cloud) stand, and everything below describes the vault as it is.
 
 ## Quick start
 

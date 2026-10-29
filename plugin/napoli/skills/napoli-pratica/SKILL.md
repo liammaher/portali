@@ -139,8 +139,13 @@ the review page, except the login.
 
 ```sh
 python3 SKILL/portal/run.py page --steps SKILL/pratiche/<name>.json \
-  --answers answers.json --values run/values.json --out run
+  --answers answers.json --values run/values.json --out run --plain
 ```
+
+`--plain` because in this version you read the architect's documents and wrote
+`run/values.json` yourself, so the values are in this conversation already, and Cowork's
+sandbox has no window to show a code in (`page` without it seals `run.js` under a code the
+person types, and refuses when it can't show one).
 
 1. Open `https://suap.impresainungiorno.gov.it/fnsuap/cmd/home` in the built-in browser and
    ask the architect to log in with SPID there (the login stays for later sessions). Wait
@@ -159,10 +164,14 @@ in another tab moves the first one's draft.
 
 **If it stops, recover it without the architect:**
 
-1. `__pv.last()` has `error` (what differed) and `at` (the wizard screen, or the section and
-   field). Read that part of the page as text.
+1. `__pv.last()` has `error` (what differed), `at` (the wizard screen, or the section and
+   field) and `snapshot`, the page with no value in it (each visible box's id, label and
+   whether it holds anything); `__pv.look()` gives it again. Use those and nothing else:
+   never read, screenshot or take the text of a page the run has filled, and never open
+   `run/review.html` yourself (show it). A failed read-back says `empty`, `different` or
+   `missing`, never what was typed.
 2. "0 fields with this label" usually means the section wasn't open yet, not that the label
-   changed: look before fixing anything.
+   changed: check `__pv.look()` before fixing anything.
 3. Work out the fix for that one field: its new `id` or `css`, or the `label` the page now
    shows, and call `__pv.resume({fixes: [{"section": i, "field": k, "set": {"label": "..."}}]})`.
    It carries on on the same draft and checks every section again at the end.

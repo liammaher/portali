@@ -21,6 +21,19 @@
 //                                  outlives a reload of the runner, not the tab)
 //   __pv.resume({fixes, url})      the last stopped run again on its draft, from where it
 //                                  stopped, with the same values and any fixes
+//   __pv.startSealed(procedure, sealed)  as start, with the values sealed under a code the
+//                                  person types into a box on the page (run.py page, not --plain)
+//   __pv.look()                    the page with no value in it: each visible box's id, label
+//                                  and whether it holds anything, the portal's messages. A
+//                                  stopped run's report carries it as `snapshot`
+//   __pv.held()                    what the reports leave out (the values each section typed,
+//                                  what a failed read-back wanted and found): for run.py to
+//                                  write where only the person reads it, never for Claude
+//
+// No report holds a value: a failed read-back says why ("empty", "different"), an error
+// names the box and never what was typed, and a portal message that echoes a value is
+// scrubbed. So Claude can recover a stopped run from the report and look() without reading
+// or photographing a filled page (docs/north-star.md, the privacy contract).
 //   await __pv.reopen(name)        a draft opened from Pratiche in bozza by its name, when its
 //                                  address has expired: its address, for resume({url})
 //   __pv.open()                    loads the frame's page as the top page, for the person
@@ -35,7 +48,127 @@
   const norm = (s) => (s || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "")
     .replace(/\s+/g, " ").trim().toLowerCase();
 
-  let steps, frame, report, kept;
+  let steps, frame, report, kept, secrets = [], details = [], sealedRun = null;
+
+  // The person's values, as patterns to scrub from anything a report says. Four characters
+  // or more, in the text as given and as norm() would show it (the portal's messages are
+  // normalized); a file counts by its name, not its bytes.
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  function hide(values) {
+    const out = new Set();
+    const add = (v) => {
+      if (typeof v === "string") { if (norm(v).length >= 4) out.add(v.trim()); }
+      else if (Array.isArray(v)) v.forEach(add);
+      else if (v && typeof v === "object") add(v.name);
+    };
+    add([values.wizard, values.sections]);
+    secrets = [...out].flatMap((s) => [s, norm(s)]).filter(Boolean).sort((a, b) => b.length - a.length)
+      .map((t) => new RegExp(esc(t).replace(/\s+/g, "\\s+"), "gi"));
+  }
+  const scrub = (s) => secrets.reduce((t, rx) => t.replace(rx, "‹value›"), String(s));
+  // Why a read-back failed, without what it wanted or found.
+  const redact = (c) => ({ label: c.label, why: c.got === null ? "missing" : c.got === "" || c.got === "unchecked" ? "empty" : "different" });
+  function publicReport() {
+    const out = { ...report };
+    delete out.kept;
+    if (out.error) out.error = scrub(out.error);
+    out.sections = (out.sections || []).map((s) => ({ ...s, errors: s.errors.map(scrub) }));
+    return out;
+  }
+
+  // --- sealed values (run.py: seal) ---------------------------------------------------
+  // run.js can carry the values sealed under a code that the person types into a box here, so
+  // they never pass through the conversation. As run.py builds it: PBKDF2-HMAC-SHA256 of the
+  // code, an HMAC-SHA256 keystream, encrypt-then-MAC (WebCrypto has both primitives on any
+  // https page). A stopped run's typed values are sealed again under the same code before they
+  // are kept in the tab, so none sits in storage in the clear.
+  const utf8 = new TextEncoder(), utf8d = new TextDecoder();
+  const fromB64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const toB64 = (u) => {
+    let s = "";
+    for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
+    return btoa(s);
+  };
+  const hmacKey = (raw, usages) => crypto.subtle.importKey("raw", raw, { name: "HMAC", hash: "SHA-256" }, false, usages);
+  const hmac = async (key, data) => new Uint8Array(await crypto.subtle.sign("HMAC", key, data));
+  async function sealKeys(code, sealed) {
+    const base = await crypto.subtle.importKey("raw", utf8.encode(code), "PBKDF2", false, ["deriveBits"]);
+    const master = await crypto.subtle.deriveBits(
+      { name: "PBKDF2", hash: "SHA-256", salt: fromB64(sealed.s), iterations: sealed.i }, base, 256);
+    const m = await hmacKey(master, ["sign"]);
+    return { enc: await hmacKey(await hmac(m, utf8.encode("pv-enc")), ["sign"]),
+      mac: await hmacKey(await hmac(m, utf8.encode("pv-mac")), ["sign", "verify"]), s: sealed.s, i: sealed.i };
+  }
+  async function keystream(keys, nonce, n) {
+    const blocks = Math.ceil(n / 32), out = new Uint8Array(blocks * 32);
+    for (let b = 0; b < blocks; b += 256) {
+      const part = await Promise.all(Array.from({ length: Math.min(256, blocks - b) }, (_, j) => {
+        const msg = new Uint8Array(20);
+        msg.set(nonce);
+        new DataView(msg.buffer).setUint32(16, b + j);
+        return hmac(keys.enc, msg);
+      }));
+      part.forEach((blk, j) => out.set(blk, (b + j) * 32));
+    }
+    return out.subarray(0, n);
+  }
+  const xor = (a, b) => a.map((x, i) => x ^ b[i]);
+  function tagInput(s, nonce, ct) { // "pv1", iterations, salt, nonce, ciphertext
+    const salt = fromB64(s.s), out = new Uint8Array(7 + salt.length + nonce.length + ct.length);
+    out.set(utf8.encode("pv1"));
+    new DataView(out.buffer).setUint32(3, s.i);
+    out.set(salt, 7);
+    out.set(nonce, 7 + salt.length);
+    out.set(ct, 7 + salt.length + nonce.length);
+    return out;
+  }
+  async function openSealed(keys, sealed) {
+    const nonce = fromB64(sealed.n), ct = fromB64(sealed.c);
+    if (!(await crypto.subtle.verify("HMAC", keys.mac, fromB64(sealed.t), tagInput(sealed, nonce, ct)))) throw new Error("wrong code");
+    return xor(ct, await keystream(keys, nonce, ct.length));
+  }
+  async function sealAgain(keys, bytes) {
+    const nonce = crypto.getRandomValues(new Uint8Array(16)), ct = xor(bytes, await keystream(keys, nonce, bytes.length));
+    const out = { v: 1, i: keys.i, s: keys.s, n: toB64(nonce), c: toB64(ct) };
+    out.t = toB64(await hmac(keys.mac, tagInput(out, nonce, ct)));
+    return out;
+  }
+  // The box for the code. It is on the top page, not in the portal's frame, takes a masked
+  // input (a read of the page shows no characters) and goes the moment the code is complete.
+  // 15 characters, as run.py's SEAL_CODE_LENGTH; Crockford base32, so O reads as 0, I and L as 1.
+  function askCode(note) {
+    return new Promise((resolve) => {
+      const box = document.createElement("div");
+      box.dataset.pv = "code";
+      box.style.cssText = "position:fixed;inset:0;z-index:2147483647;background:#fff;display:flex;flex-direction:column;" +
+        "align-items:center;justify-content:center;gap:12px;font:16px system-ui,sans-serif";
+      const msg = document.createElement("div");
+      msg.textContent = (note ? note + " " : "") + "Type the code shown in the pvault window on your screen.";
+      const input = document.createElement("input");
+      input.type = "password";
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.maxLength = 24;
+      input.style.cssText = "font:20px monospace;letter-spacing:2px;padding:6px;width:18em";
+      box.append(msg, input);
+      document.body.append(box);
+      input.focus();
+      const clean = () => input.value.toUpperCase().replace(/[\s-]/g, "").replace(/O/g, "0").replace(/[IL]/g, "1");
+      const done = () => { const code = clean(); input.value = ""; box.remove(); resolve(code); };
+      input.addEventListener("input", () => { if (clean().length >= 15) done(); });
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter" && clean()) done(); });
+    });
+  }
+  async function unlock(sealed) {
+    let note = "";
+    for (let tries = 0; tries < 5; tries++) {
+      const keys = await sealKeys(await askCode(note), sealed);
+      try { return { keys, plain: JSON.parse(utf8d.decode(await openSealed(keys, sealed))) }; }
+      catch (e) { note = "That code didn't open it."; }
+    }
+    throw new StepError("the code didn't open the values");
+  }
+
   const win = () => frame.contentWindow;
   const doc = () => frame.contentDocument;
   const el = (id) => doc().querySelector(`[id$="dynaForm:${id}"]`);
@@ -238,7 +371,7 @@
     checkLabel(el(f.id + ":combo_label"), f.label);
     const opts = [...sel.options];
     const i = opts.findIndex((o) => o.value === value || o.text.trim().toUpperCase() === value.toUpperCase());
-    if (i < 0) fail(`${f.id}: no option ${value}`);
+    if (i < 0) fail(`${f.id}: none of its ${opts.length} options is the value`);
     if (sel.value !== opts[i].value) {
       const w = widgetOf(sel) || fail(`${f.id}: no dropdown widget`);
       if (!w.items) { // its list is built when it first opens
@@ -250,7 +383,7 @@
       w.selectItem(w.items.eq(i));
       await idle();
     }
-    if (el(f.id + ":combo_input").value !== opts[i].value) fail(`${f.id}: ${value} didn't stay selected`);
+    if (el(f.id + ":combo_input").value !== opts[i].value) fail(`${f.id}: the chosen option didn't stay selected`);
     return opts[i].value;
   }
 
@@ -290,7 +423,7 @@
       if (hits.length > 1 && exact.length === 1) hits = exact;
       if (hits.length) break;
     }
-    if (hits.length !== 1) fail(`${f.id}: ${value} matches ${JSON.stringify(hits)} among ${items.length}`);
+    if (hits.length !== 1) fail(`${f.id}: the value matches ${hits.length} of ${items.length} listed`);
     press(lis[items.indexOf(hits[0])], `${f.id}: ${hits[0]}`);
     await idle();
     // The list can stay open a moment over the next boxes: wait for it, else close it.
@@ -503,8 +636,10 @@
     const errs = errors(sec.theirs);
     const checks = done.map(readBack);
     const bad = checks.filter((c) => !c.ok);
-    report.sections.push({ section: sec.section, seconds: +((performance.now() - t0) / 1000).toFixed(1), errors: errs, bad });
-    if (errs.length || bad.length) fail(`${sec.section}: portal errors ${JSON.stringify(errs)}, not kept ${JSON.stringify(bad)}`);
+    details.push(...bad.map((c) => ({ section: sec.section, ...c })));
+    const gone = bad.map(redact);
+    report.sections.push({ section: sec.section, seconds: +((performance.now() - t0) / 1000).toFixed(1), errors: errs, bad: gone });
+    if (errs.length || bad.length) fail(`${sec.section}: portal errors ${JSON.stringify(errs)}, not kept ${JSON.stringify(gone)}`);
     keep(si, done);
   }
 
@@ -537,7 +672,10 @@
       for (const c of done.map(readBack)) if (!c.ok) bad.push({ section: sec.section, ...c });
     }
     report.verify_seconds = +((performance.now() - t0) / 1000).toFixed(1);
-    if (bad.length) fail(`fresh load of the draft: not kept ${JSON.stringify(bad)}`);
+    if (bad.length) {
+      details.push(...bad);
+      fail(`fresh load of the draft: not kept ${JSON.stringify(bad.map(({ section, ...c }) => ({ section, ...redact(c) })))}`);
+    }
   }
 
   async function run(values, resume) {
@@ -578,11 +716,42 @@
     } catch (e) {
       report.result = "stopped";
       report.error = e instanceof StepError ? e.message : `${e.name}: ${e.message}`;
+      try { report.snapshot = look(); } catch (x) { /* the page is gone */ }
     } finally {
       report.total_seconds = secs();
       report.url = frame && doc() ? doc().location.href : null;
-      try { sessionStorage.setItem("pv-report", JSON.stringify(report)); } catch (e) { /* storage off */ }
+      try {
+        sessionStorage.setItem("pv-report", JSON.stringify(publicReport()));
+        // Only a stopped run is resumed, and only it needs what its sections typed.
+        if (report.result === "filled") { sessionStorage.removeItem("pv-run"); sessionStorage.removeItem("pv-held"); }
+        else {
+          const held = { kept: report.kept || [] };
+          sessionStorage.setItem("pv-held", JSON.stringify(
+            sealedRun ? await sealAgain(sealedRun.keys, utf8.encode(JSON.stringify(held))) : held));
+        }
+      } catch (e) { /* storage off */ }
     }
+  }
+
+  // The page in the frame with no value in it: enough to find a moved id or a renamed label
+  // (each visible box, its label, whether it holds anything) without reading what it holds.
+  function look() {
+    if (!frame || !doc()) return null;
+    const label = (e) => {
+      try { return scrub(norm(win().eval(`(${steps.label_js})`)(e)[0] || "")).slice(0, 80); } catch (x) { return ""; }
+    };
+    const boxes = [...doc().querySelectorAll("input, select, textarea")]
+      .filter((e) => e.type !== "hidden" && (e.type === "file" || shown(e))).slice(0, 150)
+      .map((e) => {
+        const kind = kindOf(e);
+        const state = kind === "radio" || kind === "checkbox" ? (e.checked ? "checked" : "unchecked")
+          : kind === "file" ? "file" : e.value ? "filled" : "empty";
+        return { id: e.id.replace(/^.*dynaForm:/, ""), label: label(e), kind, state,
+          ...(kind === "select" ? { options: e.options.length } : {}) };
+      });
+    const open = doc().querySelector("li#corrente");
+    return { section: open ? scrub(norm(open.textContent)).slice(0, 80) : null, boxes,
+      messages: errors().map(scrub).slice(0, 10) };
   }
 
   // The draft named name, opened from the list of Pratiche in bozza (ten a page; the newest
@@ -615,15 +784,19 @@
   }
 
   window.__pv = {
-    start(procedure, values, resume = {}) {
+    start(procedure, values, resume = {}, sealed = null) {
       const raw = localStorage.getItem("pv-steps:" + procedure) || fail(`no steps installed for ${procedure}`);
       // One frame at a time: a run that ended left its own over the page, maybe from a
       // runner loaded before this one.
       document.querySelectorAll('iframe[data-pv="runner"]').forEach((f) => f.remove());
-      try { sessionStorage.setItem("pv-run", JSON.stringify({ procedure, values })); } catch (e) { /* storage off */ }
+      if (!sealed) sealedRun = null;
+      try { sessionStorage.setItem("pv-run", JSON.stringify(sealed ? { procedure, sealed } : { procedure, values })); }
+      catch (e) { /* storage off */ }
       steps = JSON.parse(raw);
       steps.forbidden = new RegExp(steps.forbidden, "i");
       steps.declarations = new RegExp(steps.declarations, "i");
+      hide(values);
+      details = [];
       // A fix is what Claude found the page really has for one field (a moved id, a renamed
       // label): this run uses it, and run.py writes it down for the steps file.
       for (const x of resume.fixes || []) Object.assign(steps.sections[x.section].fields[x.field], x.set);
@@ -632,23 +805,61 @@
       run(values, resume);
       return "started";
     },
+    // The values sealed under a code (run.py page): the run starts once the person has typed it.
+    startSealed(procedure, sealed) {
+      report = { procedure, result: "waiting", sections: [], at: null,
+        waiting: "for the person to type the code shown in the pvault window into the portal page" };
+      (async () => {
+        try {
+          const { keys, plain } = await unlock(sealed);
+          sealedRun = { sealed, keys, vals: plain.vals };
+          this.start(procedure, plain.vals, plain.resume || {}, sealed);
+        } catch (e) {
+          report.result = "stopped";
+          report.error = e instanceof StepError ? e.message : `${e.name}: ${e.message}`;
+        }
+      })();
+      return "waiting for the code";
+    },
     async wait(ms = 25000) {
       const end = performance.now() + ms;
-      while (report && report.result === "running" && performance.now() < end) await sleep(200);
-      return report;
+      while (report && (report.result === "running" || report.result === "waiting") && performance.now() < end) await sleep(200);
+      return report && publicReport();
     },
     open() {
       location.href = doc().location.href;
     },
     last() {
-      return report || JSON.parse(sessionStorage.getItem("pv-report") || "null");
+      return report ? publicReport() : JSON.parse(sessionStorage.getItem("pv-report") || "null");
+    },
+    look,
+    // What the reports leave out. run.py writes it for the person; Claude doesn't read it.
+    held() {
+      return { kept: report ? report.kept || [] : [], details };
     },
     resume({ fixes = [], url } = {}) {
       // As run.py's resumption(): the draft, the section it stopped in, what came before.
       const last = this.last(), run = JSON.parse(sessionStorage.getItem("pv-run") || "null");
       if (!last || !run || !last.at || !(url || last.url)) fail("no stopped run in this tab to resume");
       const from = { [last.at.phase === "section" ? "section" : "wizard"]: last.at.index };
-      return this.start(run.procedure, run.values, { url: url || last.url, from, kept: last.kept || [], fixes });
+      const stored = JSON.parse(sessionStorage.getItem("pv-held") || "null");
+      const go = (values, kept) => this.start(run.procedure, values, { url: url || last.url, from, kept, fixes }, run.sealed || null);
+      if (!run.sealed) return go(run.values, (report && report.kept) || (stored && stored.kept) || []);
+      if (sealedRun) return go(sealedRun.vals, (report && report.kept) || []);
+      // The runner was reloaded and the values are sealed again: ask for the code again.
+      report = { procedure: run.procedure, result: "waiting", sections: [], at: null,
+        waiting: "for the person to type the code shown in the pvault window into the portal page" };
+      (async () => {
+        try {
+          const { keys, plain } = await unlock(run.sealed);
+          sealedRun = { sealed: run.sealed, keys, vals: plain.vals };
+          go(plain.vals, stored ? JSON.parse(utf8d.decode(await openSealed(keys, stored))).kept : []);
+        } catch (e) {
+          report.result = "stopped";
+          report.error = e instanceof StepError ? e.message : `${e.name}: ${e.message}`;
+        }
+      })();
+      return "waiting for the code";
     },
     async reopen(name, home = location.origin + "/fnsuap/cmd/home") {
       return reopen(name, home);

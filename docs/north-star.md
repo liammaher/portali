@@ -1,299 +1,173 @@
 # North star
 
-Status: **decided, 2026-10-27.** The direction below comes from the strategy work in [`reports/`](../reports/),
-and Liam took all eight decisions at the end, each as recommended. The design rules in
-[`CLAUDE.md`](../CLAUDE.md) and the design docs (local-first, credentials never over TCP, the vault
-never goes online, no SMTP for PEC) describe the code as it is: each one changes in the pull request
-that implements the decision affecting it, not before.
+Status: **draft, 2026-10-29.** It replaces the 2026-10-27 page, kept whole at
+[`design/north-star-2026-10-27.md`](design/north-star-2026-10-27.md). What Liam said on
+2026-10-29 is stated as decided; what follows from it and he hasn't confirmed is marked
+*proposed*. The design rules in [`CLAUDE.md`](../CLAUDE.md) describe the code as it is and change
+in the pull request that changes the code, not before.
 
 ## The north star
 
-**Any Naples business's own Claude can complete any dealing with a Naples public office, correctly,
-and the owner only taps to approve.**
+**Ask Claude to do any dealing with an Italian public office, and it does everything up to the
+steps the law keeps for you, using your data without ever seeing or keeping it. Free and open
+source, for every city and every portal in the end.**
 
-"Complete" is the point. Today people ask Claude about a pratica, get a general answer, and then do it
-themselves, pay a commercialista or an agency, or put it off. Claude doesn't fill Naples forms or work
-Naples portals on its own. The product exists to change that: Claude does the pratica, the owner
-approves.
+Napoli and impresainungiorno come first. They are where the map is built and proved, not the limit.
 
-Take "do my TARI":
+You log in yourself (SPID, in the Claude desktop app's browser). Claude then picks the procedure,
+checks what's missing, fills the portal, reads every value back and hands you a review page. You
+make the declarations, sign, pay and send.
 
-| | Plain Claude | With the vault and the skills |
+## What doesn't bend
+
+1. **Free and open source, full stop.** No fee, no account, no server of ours that costs money to
+   keep up. Anything that needs one is out, or it runs from static files in this repo.
+2. **The person takes the human steps.** SPID login, declarations, signature, payment, sending.
+   The runner never declares, pays or sends. "Anything" means anything up to there.
+3. **All or nothing.** Between the login and those steps everything is automatic, or the case is
+   refused before anything opens. A half-automated flow is worse than a manual one.
+4. **Claude doesn't see the data it fills.** What this means, stage by stage, and where it isn't true
+   yet, is in *The privacy contract* below.
+5. **Honest coverage.** Each pratica is `available` (run on the real portal and unchanged since),
+   `paused` (a portal section changed), `mapped` (not yet run for a client), `guide` (advice only) or
+   `coming`. It comes from the repo (`plugin/build.py`, `plugin/coverage.yaml`), never typed by hand.
+6. **Mapped on the real portals with made-up data.** No fake sites, no real pratiche to learn from.
+
+## The first ten minutes
+
+What the person should meet after installing, and what each step needs.
+
+1. **Install in one step, with no terminal.** Today the README starts with `git clone` and
+   `make build`: a developer's install. *(Not yet true; question 10.)*
+2. **Ask in plain words**, in Italian or English. The first answer is whether it's supported:
+   available, coming, or advice only.
+3. **One message of questions**, with proposed answers to confirm (pre-flight does this).
+4. **One sentence on privacy**: what Claude reads, and what goes straight to the form.
+5. **"Log in with SPID, then tell me."** In the desktop app's browser.
+6. **About a minute of run**, narrated in plain language, with no screenshot of a filled page.
+7. **A review page**: what's left for you, and every value. You sign and send.
+8. **A failure is specific and early.** A refusal says why and gives the manual steps; a changed
+   portal can be reported as structure only (field labels and ids, never values). *(Reporting isn't
+   built; question 11.)*
+
+## The privacy contract
+
+| Stage | What Claude sees | What it doesn't |
 |---|---|---|
-| **Who and where** | Doesn't know; asks for name, codice fiscale, address | Reads them from the vault, already validated, with the municipalità worked out |
-| **What applies** | Searches the web, meets stale and contradictory pages, asks more questions | The library says which TARI procedure, form version, deadline and channel |
-| **How to do it** | Doesn't know the portal or the form; works it out slowly, or gives up and explains | The skill knows the steps, the boxes, the documents, the PEC address |
-| **Doing it** | Hands it back to the owner | Fills it, prepares the PEC, and stops only for the owner's taps (SPID login, signature, send) |
-| **Time** | Long, and often unfinished | Minutes |
+| You type your details in the onboarding page or `pvault set` | Nothing | Everything you type |
+| You hand Claude a scan to fill the vault | That scan, once | Anything you didn't hand it |
+| Pre-flight | The case's facts you told it, which vault fields exist or are missing | The values |
+| Fill, in the separate window (`run.py run`) | The run's `report.json`: per section, saved and read back, pass or fail and why (`empty`, `different`, `missing`); when it stops, a `snapshot` of the page (each box's id, label and whether it holds anything) | The values: `pvault get` is piped into the runner after your approval (Touch ID, Hello or password), no report holds one, a portal message that repeats one is scrubbed, and Claude has no handle on that window |
+| Fill, in the pane (`run.py page`) | The same report and snapshot; `run.js` as a sealed blob | The values: they travel sealed under a 15-character code that a window on your screen shows (not printed, not in a file, not in the arguments of anything Claude runs) and that you type into a box the runner opens on the portal's page. The box is masked and goes the moment the code is complete. No storage in the tab holds a value or the code in the clear. |
+| A run that stops | The report and snapshot above; `__pv.look()` in the pane | The page itself: no screenshot is saved, and the skill forbids reading a filled page |
+| Review | Nothing: the page is shown to you | `review.html` and `private/` (what each section typed, what a failed read-back wanted and found) are written for you; the skill sends the page and never opens either |
+| Login | Nothing | Your SPID or CIE credentials, which are `personal` tier and which you type yourself |
 
-The same holds for every administrative task, for every segment: "renew my dehors" (the vault knows
-the locale, its m² and street; the skill knows the SUAP route and the canone), "file the CILA for via
-Toledo 12" (the client, the procura and the catasto data; the SUE route on impresainungiorno), "renew
-this client's permesso" (the client's documents and expiry; the Naples checklist, the postal kit, the
-Questura's real timing).
+**Where the promise doesn't hold** (found 2026-10-29):
 
-It stops short in three places:
-- **What specialists already do** (taxes, payroll, invoices): Claude coordinates them through their
-  connectors; we don't redo their work.
-- **What the law keeps for the person:** SPID logins, signatures, payments. Claude prepares everything
-  up to those taps.
-- **What only happens in person:** Questura appointments and fingerprints, desk-only offices, the
-  building archive. Claude books, prepares and says exactly what to bring, but someone still has to go.
+- **The pane: fixed in transit, not on the page (2026-10-29).** `run.js` used to carry the values in
+  the clear and Claude had to write them into a script call. Now `run.py page` seals them (`seal` in
+  `run.py`, `unlock` in `inpage.js`; tests `a sealed run.js: ...`, `five wrong codes ...`, and the two
+  resume cases), unless `--plain`. What is left: (1) once the box is gone the values are in the page
+  and in the form, so reading a filled page is still a rule; (2) the code is on your screen, so a
+  screenshot of your whole screen (computer use) would show it; (3) Cowork's sandbox has no window to
+  show a code in, so the plugin uses `--plain`, and in that version Claude reads the documents
+  anyway; (4) the window is written for macOS (tested), Windows and Linux (`zenity`), the last two
+  untried; (5) sealed, a pane run's files weigh a third more than the 256 KB they count as.
+- **Failure recovery: fixed the same day.** It used to have Claude read the failing screen
+  (`read_page`), and `run.py` saved a full-page `failure.png`, either of which could show values.
+  Now no report carries one (`inpage.js`: `redact`, `scrub`; tests `a stopped run's report, snapshot
+  and stored copy hold no value` and `a portal label that repeats a value is scrubbed`), the
+  screenshot is gone, and the recovery step works from the report and `look()`.
+- **Browser reads after a fill: a rule in the pane, a fact in the window.** In the separate window
+  Claude has no handle on the page. In the pane the skill forbids reading a filled page, and nothing
+  enforces it.
+- **Files on disk: a rule.** `review.html` and `private/` hold the values for the person. Claude's
+  shell runs as the same user and could read them; the skill says to send the page and never open
+  either. Both are mode 0600/0700, which does not stop that (and Windows ignores the mode).
 
-"Naples" means the Comune di Napoli and the local offices that serve it (Comune, Municipalità, ASL Napoli
-1, Questura, Prefettura, Soprintendenza, Genio Civile, Camera di Commercio, SUAP and SUE on
-impresainungiorno), plus the national bodies a Naples business deals with.
+## Where we stop
 
-## The product
+In: choosing the pratica, checking the case against the law and the portal's rules, collecting what's
+missing, filling every section, attaching the files, reading everything back, the review page,
+tracking.
 
-**One connector added to the owner's own Claude** (working name: *Napoli for Claude*). Add it once,
-answer about ten questions in one chat, approve each connection once, and the assistant:
+Out, and the person's: the login, the declarations (false ones carry penal consequences for whoever
+signs), a firma digitale, payments, sending, anything in person. Out of scope: what specialists
+already do (taxes, payroll, invoices).
 
-- completes the pratica: picks the right procedure, form and channel, fills in his facts, attaches the
-  documents, works the portal, and hands him only the steps the law keeps for him;
-- knows Naples: what applies, what's due and when, what a notice means, what to do;
-- knows the business: the facts every form needs, validated;
-- can act where Claude can't: PEC and signing;
-- gets smarter from every other business's experience.
+## What to map next
 
-The owner never opens a PEC, reads a letter or chases anyone. They answer questions and tap: sign, pay,
-send. Those taps are what the law requires (SPID, firma digitale, moving money), not what we choose.
+Not by city, by **pain density**. Until there are volume figures this is an estimate:
 
-The connector doesn't watch inboxes or wake itself up: the assistant does that (Claude Duet, once it
-reaches Europe). It doesn't do accounting, payroll or payments: the specialists do (Fatture in Cloud,
-JetHR, Stripe, the bank, the commercialista). It doesn't hold secrets the agent mustn't read: 1Password
-does (SPID login, CIE PIN and PUK, PEC and portal passwords, cards).
+> runs a year × human minutes a run × share bounced or needing a second pass ÷ cost to map
 
-## The five jobs
+Two things adjust it:
 
-| The assistant needs to… | Job | What we have | What's missing |
-|---|---|---|---|
-| **complete the pratica** | Execution skills, one per procedure | The pratica skill (Claude Code only); the library's steps with the human-only ones marked, forms mapped to facts, what you do on each portal; `fill.py` with layouts for 4 of the library's 31 forms | Skills that work in the Claude app, one per procedure: which choices to make on each portal, what goes in each box, which documents to attach, where to hand over (SPID login, signature, payment); portal maps, screen by screen (open question 1); steps that name the owner's taps (open question 3); layouts where a filled PDF is sent (open question 4); **a real pratica completed end to end** (none yet) |
-| **know the rules** | Naples layer | [pratiche-napoli](https://github.com/liammaher/pratiche-napoli): 30 sourced procedures (L1), 7 situations, offices by area, forms mapped to facts, signing rules by channel | A connector serving it; "what applies" as rules a program can check; recurring dates; notice recognition with deadlines from delivery; L2/L3 confirmation; building-works and immigration procedures |
-| **know the business** | Profile | This repo's schema, Italian validation, the street → municipalità/quartiere/ASL lookup, people and roles, documents, dates, pratiche | Hosting it per business, encrypted; filling it from a visura and photos in one chat; the tier changes in [`reports/Vault sensitivity ranking.md`](../reports/Vault%20sensitivity%20ranking.md) |
-| **act where Claude can't** | PEC, signing | The read-only PEC tools; the sign gate, which stamps a handwritten signature (enough for PEC, email, post and desk) | Both run only on a Mac today; sending PEC on the owner's tap; renewing Aruba's 90-day app password; a firma digitale for portal filings (open question 2); approval taps that work once hosted (open question 5) |
-| **know what really happens** | Outcomes | The library's reports backend, with its privacy rules | Deployment; a tool for the assistant to report an outcome; outcomes collected before launch; a stricter tier for immigration |
+- **Reuse.** A section shared by many pratiche is worth more, because the dictionary
+  (`dictionary/fnsuap.yaml`) is by section and not by pratica.
+- **A gate: can the wizard be walked without submitting?** A portal with a draft or save step can be
+  mapped with a scratch identity. One without can only be mapped by filing, so it waits for reports
+  from users.
 
-Full list, item by item: [`reports/MVP checklist.md`](../reports/MVP%20checklist.md).
+SPID is not a gate: the person logs in. The mapping unit is the platform. impresainungiorno is shared
+by many comuni, so the next comune costs its rules, fees and offices; INPS, Agenzia delle Entrate and
+the Questura each cost a new map. Repeat filers (geometri, architetti, commercialisti, small
+businesses) come before one-off citizen procedures, then the high-volume citizen ones. Current
+counts: `plugin/coverage.yaml` and `plugin/build.py`.
 
-## Who it serves
+## How it stays current without a budget
 
-One engine, filled segment by segment:
+*Proposed.*
 
-- **Owners** (a pizzeria, a shop): they mostly benefit from what others report.
-- **Intermediaries** (architects, geometri, commercialisti): dozens of pratiche a year, so they
-  contribute most of the outcomes and can set owners up.
-- **Migrant-services organisations** (like an impresa sociale doing permesso paperwork): the heaviest
-  use of the profile (many clients' data, the strictest tier) and the most sensitive outcomes.
+- **Maps are data**: steps files, rules tables and the dictionary, generated by `gen.py` from a crawl.
+  A fix is a small diff a contributor can review.
+- **Drift is found by the people who run it.** The runner already stops on a changed section and
+  writes `drift.json`. Sharing that as a structure-only report, opt-in, is the part to build.
+- **CI runs offline**, with no secrets and no portal (`bench/test_*.py`). "Available" stays a status
+  someone confirms on the real portal.
+- **Demand is GitHub issues** ("request a pratica"), not a counting service.
 
-Start where the segments meet: opening and running a business (ComUnica, SUAP, CILA/SUE, dehors,
-insegna, TARI non domestica). See [`reports/Three avatars synthesis.md`](../reports/Three%20avatars%20synthesis.md).
+## The 2026-10-27 decisions, and what happens to them
 
-What it's worth to each, honestly: an owner meets these pratiche a few times a year, but each one goes
-from "pay someone or lose days" to "tap to approve". Intermediaries and migrant-services organisations
-meet them every week, so for them it's large. It doesn't make offices answer faster, and it doesn't
-lower what's owed.
-
-**The tension with intermediaries.** If owners can file simple pratiche through Claude, commercialisti
-and agencies lose that work. The pitch to them is "do more pratiche, faster, with fewer requests for more
-documents", never "your clients won't need you".
-
-## First milestone: one real pratica, end to end
-
-Nothing has completed a real pratica yet. The closest is the TARI Mod. 1 draft filled from the vault,
-which matched a hand-filled form box for box (11 of 11). Before building wide, take one or two pratiche
-from the business-opening chain all the way through with the skills, on the real portal, up to the
-owner's taps, and record where it breaks. That's also the first L3 in the library. Which pratica, and
-why an intermediary's is the easier start: open question 6.
-
-## How we'll know it works
-
-- Pratiche completed end to end, with only the owner's taps.
-- Requests for more documents, and rejections, compared with doing it by hand.
-- Instalments and PEC deadlines not missed.
-- Days from "I need to do this" to filed.
-- Intermediaries reporting outcomes each month.
+| # | Decision then | Now |
+|---|---|---|
+| 1 | Host the connector in the EU, as a GDPR processor | **Reversed.** Nothing of ours is hosted, so no processor role and no data-processing agreement. Local-first stands, and the README's "will change" note goes. Static files in the repo may carry coverage and updates. *(Follows from "free, full stop"; proposed.)* |
+| 2 | Add PEC sending on an explicit tap | **Parked.** PEC stays read-only. Not part of the portal map. |
+| 3 | One connector service in this repo | **Reversed.** `connector/` is optional; the plugin works without it (`design/packaging.md`). Not deployed. *(Proposed.)* |
+| 4 | Design for owners, recruit intermediaries first | **Changed.** Design for whoever does the pratica; order by pain density. Intermediaries stay the heaviest users and best contributors. |
+| 5 | Immigration is the second segment, with a partner | **Changed.** No segments: the ranking decides. The Questura isn't mapped. |
+| 6 | No interim nudge before Duet | **Unchanged.** |
+| 7 | The sensitivity tier changes, as one schema change | **Unchanged** and still to do. |
+| 8 | Pick the name with the first partner; fund hosting from grants | **Reversed.** There is no hosting to fund. The name should be chosen before anyone installs, and not be "napoli" (question 9). |
 
 ## Open questions
 
-Found on 2026-10-27 by checking this page against both repositories. None is decided; each says what
-we'd suggest.
+Questions 1 to 7 keep their numbers from the old page, because the runner, the skill and the
+rehearsals cite them. Details are in [`design/north-star-2026-10-27.md`](design/north-star-2026-10-27.md#open-questions).
 
-### 1. Portals need a browser, and the phone has none
-
-24 of the library's 30 procedures file on a portal first (18 only on a portal), mostly impresainungiorno
-behind SPID; the other 6 are the 5 TARI ones, by PEC, and one at a desk. A connector alone can't work a
-portal: Claude needs a browser, which is the Claude desktop app's own (Cowork's built-in browser, the
-Code tab's pane), never Claude in Chrome (`design/packaging.md`). So "the owner only
-taps" works from a phone for PEC pratiche once the connector is hosted, not yet for portal ones.
-
-**Suggested:** say so: portal pratiche from a desktop, or through an intermediary, until a browser agent
-reaches the phone or the cloud. Each execution skill carries a portal map, screen by screen: what to
-choose, what goes in each box, what to upload.
-
-### 2. Portal filings need a firma digitale, which the sign gate doesn't make
-
-The sign gate stamps a handwritten signature, which PEC, email, post and desk accept (the library's
-`contract/signing.json`). SUAP and SUE uploads need a firma digitale, and `signing.json` has no rule for
-portals.
-
-**Suggested:** a firma digitale handoff: the connector prepares the exact PDF, the owner signs it in their
-remote-signature app (Aruba, InfoCert, Namirial) with one tap, and the connector checks that the signed
-file is the one prepared. Or an intermediary signs under a procura speciale, as most SUAP filings are
-done today. Add the portal rule to `signing.json`.
-
-### 3. `human_only` is broader than the owner's taps
-
-178 of the library's 349 steps are `human_only`, whole portal steps included ("log in, fill in the
-istanza, upload, send"). Here Claude does those, and only the taps are the person's.
-
-**Suggested:** replace the flag in the library's contract with the tap a step needs (`login`, `sign`,
-`pay`, `send`, `in_person`), so an execution skill knows exactly where to stop.
-
-### 4. More PDF layouts, or not
-
-The five jobs list layouts for the flat PDF forms as missing; [`reports/Gennaro strategy
-conclusion.md`](../reports/Gennaro%20strategy%20conclusion.md) says to stop making more.
-
-**Suggested:** layouts only for the business-opening chain's forms that a portal or a PEC takes as a
-filled PDF. Fill them in the connector, so the Claude app gets the filled PDF from a tool call.
-
-### 5. Keys and taps once hosted
-
-Decision 1 moves the profile online. The vault's model doesn't carry over: the key only in memory after
-the owner's password, credentials never over TCP, Touch ID or Windows Hello for approvals. A hosted
-connector holds plaintext while it serves Claude.
-
-**Suggested:** design it before the second hosting step: per-business keys wrapped by a key service in
-the EU, and an approval service of our own (a passkey tap on our page, reached from the connector) for
-the sign gate, sending PEC and personal-tier reads. Check whether the Claude app supports MCP's URL
-elicitation for that hop.
-
-### 6. Which pratica first
-
-An intermediary already has SPID, a firma digitale, a desktop and the clients' procure, so questions 1
-and 2 are already answered for them.
-
-**Suggested:** a CILA filed by an architect partner on impresainungiorno: the library has it current for
-the July 2026 SUE switch, and `fill.py` has its Allegato A layout. Alongside it, if a business is ready,
-a TARI non domestica by PEC, to test that path.
-
-### 7. Large attachments in the Claude browser pane
-
-`inpage.js` attaches a file by building it in the page and handing it to the file box (`kind: file` in a
-steps file). In a Playwright window (`run.py run`) any size works, because run.js never passes through
-the conversation. In the pane run.js is one tool call's text, so `run.py page` carries at most 256 KB of
-files: a receipt or a small scan, not a planimetria (often 1–5 MB). Tested on a local bench on
-2026-10-28, the pane offers no other way in: its form tool can't set a file box, a public portal page
-can't fetch or frame `localhost` (`ERR_BLOCKED_BY_CLIENT`, the app's own block), and `window.open`
-replaces the tab, so a helper page can't hand a file over. A normal `https` fetch with CORS works.
-
-**Suggested:** the connector puts each large file at a short-lived `https` URL that only the run can
-read (one-time token, CORS limited to the portal's origin, deleted after the upload), and run.js carries
-the URL instead of the bytes. That is the first time a document leaves the computer, so it waits for the
-hosting design (decision 1, question 5): encrypted per business, in the EU, never kept. Until then,
-large files are attached in a Playwright window or by the person.
-
-**Built and checked (2026-10-29):** the runner side. `run.py page --file-urls` puts a file's URL, size
-and sha256 in run.js; `inpage.js` fetches it in the portal's page and stops if the bytes differ (bench:
-a 3 MB file attached byte-exact, a wrong file refused). On the real portal in the pane: a fetch from
-the portal's page to another `https` origin with CORS works (no CSP blocks it), and a 5 MB PDF built in
-the page uploads in 3 s and is still there, 4.95 MB, after Salva and a fresh reopen of the draft. End to
-end: the owner CILA filled with a 5 MB FAC-SIMILE drawing served from a public test gist (raw link
-pinned to its commit; gist's "latest" link answered 404 for minutes after the push), run.js 6.9 KB
-(`rehearsals/cila-fittizia`). Left: the real host, the hosting design above.
-
-## Parked
-
-Good for a personal vault, not part of the product. Kept working, not developed further:
-
-- household and family features;
-- the Touch ID helper;
-- the file index's cloud sources (OneDrive, Google Drive, Dropbox);
-- the CLI as the interface;
-- local backups;
-- per-user playbooks in the pratica skill (the per-procedure execution skills are the first job, not
-  parked).
-
-Client features (retention, many clients, per-person export) wait for the migrant-services segment.
-
-## Decisions
-
-All eight were taken on 2026-10-27, each as recommended. Each section keeps the question it answered.
-
-### 1. Hosted or local
-
-The connector has to be remote for the Claude app on a phone. The vault's rules say it never goes
-online and never takes credentials over TCP.
-
-**Decided:** host it in the EU. Do it in two steps: first the parts with no personal data
-(rules, notices, outcomes), then the profile and PEC, encrypted per business. Keep a local option for
-organisations that must hold client data themselves. This makes us a GDPR processor: it needs a
-data-processing agreement and a security review before the second step.
-
-**Changes when implemented:** the README's "local-first, no cloud", `docs/design/file-index.md` D10, and the
-credential and socket rules in `CLAUDE.md`.
-
-### 2. Sending PEC
-
-Claude can't send PEC, and the owner must never forward anything by hand. The PEC tools have no SMTP by
-design.
-
-**Decided:** add sending, only after an explicit tap on the exact message, checked the way the
-sign gate checks a file (the message approved is the message sent), and audited.
-
-**Changes when implemented:** the PEC rule in `CLAUDE.md` and `mcp/README.md`.
-
-### 3. Where the connector lives
-
-The plan put a read-only MCP in the library repo. The profile, PEC and sign gate live in this repo.
-
-**Decided:** one connector service in this repo that reads the library's published JSON. The
-library stays pure data, site and reports backend, and never depends on the vault.
-
-### 4. Who comes first
-
-The plan says owners; the analysis says intermediaries contribute the outcomes.
-
-**Decided:** design the experience for owners, but recruit intermediaries first, as contributors
-and as the people who set owners up. Start with the business-opening chain. The pitch to them is in
-"Who it serves": more pratiche, faster.
-
-### 5. Immigration
-
-The plan puts residents' procedures out of scope until its Phase 3; the migrant-services analysis shows
-the biggest unmet need and the vault's best fit.
-
-**Decided:** second segment, after business opening, built with a partner (Sportellino, a
-non-profit chatbot for migrants), with its own stricter privacy tier for outcomes.
-
-### 6. An interim nudge before Duet
-
-Until Claude can wake itself up in Europe, nothing starts the assistant on its own.
-
-**Decided:** build nothing now. If the connector launches before Duet reaches Europe, add the
-smallest notification that sends the owner into Claude, and remove it when Duet arrives.
-
-### 7. The sensitivity tier changes
-
-Seven changes are recommended in [`reports/Vault sensitivity ranking.md`](../reports/Vault%20sensitivity%20ranking.md)
-(SPID provider and dates to standard, citizenship and permit type to sensitive, payment cards and
-credentials to 1Password, drop the US-only fields).
-
-**Decided:** make them in one schema change of their own, with the library's copy synced as usual.
-
-### 8. Name and funding
-
-**Decided:** pick the name with the first partner. Fund the hosting (a few euros per business per
-month, an estimate) from Camera di Commercio programmes, Regione Campania calls, Fondazione CON IL SUD,
-or AI-provider credits, as the plan already lists.
+| # | Question | Now |
+|---|---|---|
+| 1 | Portals need a browser, and the phone has none | **Answered for desktop**: the app's own browser, never Claude in Chrome. The phone still can't run a portal. Whether Cowork's browser can run the runner is untested (`design/packaging.md`, tests 1 and 2): **the first thing to do**. |
+| 2 | Portal filings need a firma digitale | **Unchanged.** It's the person's step (*Where we stop*). The portal rule still needs adding to `signing.json`. |
+| 3 | `human_only` is broader than the person's taps | **Unchanged**, still the right fix: name the tap a step needs. |
+| 4 | More PDF layouts, or not | **Reduced**: only for the forms a portal or PEC takes as a filled PDF, filled by the runner. |
+| 5 | Keys and taps once hosted | **Moot**: nothing is hosted. |
+| 6 | Which pratica first | **Done in practice**: the SCIA and CILA rehearsals ran on the real portal. Next is by pain density. |
+| 7 | Large attachments in the pane | **Open and sharper.** The planned fix was a host of ours serving each file for a moment; that is out. Choices: Cowork's own file tool (test 2), the Playwright window, or the person attaching. |
+| 8 | **Filling in the desktop app's browser without Claude carrying the values** | **Partly done.** (b) is built: in the pane `run.js` carries the values sealed under a code the person reads in a window and types into a box on the page, so they never pass through the conversation. The filled page stays a rule, not a fact. (a), the window as the run for real data, still needs no code and leaves Claude no handle at all. (c), a local process that drives the app's browser instead of Claude: nothing known offers one. Open: whether Cowork can show the code window from where its Python runs. |
+| 9 | **The name** | **New.** It should outlive Naples and be chosen before the first install, since renaming a plugin breaks installs. |
+| 10 | **Install without a compiler** | **New.** Signed release binaries, or a first version with no vault (`design/packaging.md`: Claude would then read the client's files). That version isn't blind at all, so it conflicts with principle 4. Notarizing macOS binaries needs an Apple Developer account, which is paid. |
+| 11 | **Sharing a drift report** | **New.** Structure only, opt-in, as a PR or an issue. |
+| 12 | **Responsible use** | **New.** A short page: not legal advice, the person signs, one person's own session and no bulk use. Check each portal's terms on automation. |
 
 ## Where the rest lives
 
-- [`reports/`](../reports/): the strategy reports this comes from (three personas, the synthesis, the
-  MVP checklist, the sensitivity ranking, the research on recurring obligations).
-- [pratiche-napoli](https://github.com/liammaher/pratiche-napoli): the library.
-- [`design/supported-flows.md`](design/supported-flows.md): what a supported pratica promises (one
-  message of questions, a login, a finished draft) and the plan to get there: pre-flight, branch
-  coverage, self-recovery.
-- The earlier plan (25 Oct) is Liam's local plan file; it points here for what has changed.
+- [`design/north-star-2026-10-27.md`](design/north-star-2026-10-27.md): the page this replaces, with
+  the five jobs, the segments and the old decisions in full.
+- [`design/packaging.md`](design/packaging.md): the plugin, still drafted around a hosted connector;
+  it needs revising against this page.
+- [`design/supported-flows.md`](design/supported-flows.md): what a supported pratica promises.
+- [`../claude/skills/pratica/portal/README.md`](../claude/skills/pratica/portal/README.md): adding a
+  pratica and the portal's quirks.
+- [`../reports/`](../reports/): the strategy reports from before this change.
