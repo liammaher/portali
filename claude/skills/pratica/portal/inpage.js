@@ -16,6 +16,12 @@
 //   __pv.start(procedure, values[, resume])  starts a run, returns at once. resume picks a
 //                                  stopped run up: {url, from, kept, fixes} (run.py --resume)
 //   await __pv.wait(ms)            the run's report once it ends, or after ms
+//   __pv.last()                    the last run's report, kept in the tab (sessionStorage: it
+//                                  outlives a reload of the runner, not the tab)
+//   __pv.resume({fixes, url})      the last stopped run again on its draft, from where it
+//                                  stopped, with the same values and any fixes
+//   await __pv.reopen(name)        a draft opened from Pratiche in bozza by its name, when its
+//                                  address has expired: its address, for resume({url})
 //   __pv.open()                    loads the frame's page as the top page, for the person
 (() => {
   class StepError extends Error {}
@@ -511,6 +517,7 @@
     try {
       frame = document.createElement("iframe");
       frame.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:2147483647;background:#fff";
+      frame.dataset.pv = "runner";
       const loaded = new Promise((r) => frame.addEventListener("load", r, { once: true }));
       // A resumed run opens the draft it stopped on; a new one starts a new pratica.
       frame.src = resume.url || steps.start;
@@ -545,12 +552,46 @@
     } finally {
       report.total_seconds = secs();
       report.url = frame && doc() ? doc().location.href : null;
+      try { sessionStorage.setItem("pv-report", JSON.stringify(report)); } catch (e) { /* storage off */ }
     }
+  }
+
+  // The draft named name, opened from the list of Pratiche in bozza (ten a page; the newest
+  // first). Its address then is the home's, with its own execution key.
+  async function reopen(name, home) {
+    document.querySelectorAll('iframe[data-pv="runner"]').forEach((f) => f.remove());
+    frame = document.createElement("iframe");
+    frame.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:2147483647;background:#fff";
+    frame.dataset.pv = "runner";
+    const loaded = new Promise((r) => frame.addEventListener("load", r, { once: true }));
+    frame.src = home;
+    document.body.append(frame);
+    await loaded;
+    await idle();
+    const row = () => [...doc().querySelectorAll("tr")].find((t) => norm(t.innerText).includes(norm(name)));
+    for (let p = 2; !row(); p++) {
+      const next = [...doc().querySelectorAll(".ui-paginator-page")].find((a) => a.textContent.trim() === String(p));
+      if (!next) fail(`no draft named ${name} in Pratiche in bozza`);
+      next.click();
+      await idle();
+    }
+    const open = [...row().querySelectorAll("a, button")].find((b) => norm(b.title || b.textContent) === "apri") || fail(`${name}: no Apri`);
+    await act(() => open.click());
+    for (const end = performance.now() + 20000; !doc().querySelector("li#corrente");) {
+      if (performance.now() > end) fail(`${name}: the draft didn't open`);
+      await sleep(200);
+    }
+    await idle();
+    return doc().location.href;
   }
 
   window.__pv = {
     start(procedure, values, resume = {}) {
       const raw = localStorage.getItem("pv-steps:" + procedure) || fail(`no steps installed for ${procedure}`);
+      // One frame at a time: a run that ended left its own over the page, maybe from a
+      // runner loaded before this one.
+      document.querySelectorAll('iframe[data-pv="runner"]').forEach((f) => f.remove());
+      try { sessionStorage.setItem("pv-run", JSON.stringify({ procedure, values })); } catch (e) { /* storage off */ }
       steps = JSON.parse(raw);
       steps.forbidden = new RegExp(steps.forbidden, "i");
       steps.declarations = new RegExp(steps.declarations, "i");
@@ -569,6 +610,19 @@
     },
     open() {
       location.href = doc().location.href;
+    },
+    last() {
+      return report || JSON.parse(sessionStorage.getItem("pv-report") || "null");
+    },
+    resume({ fixes = [], url } = {}) {
+      // As run.py's resumption(): the draft, the section it stopped in, what came before.
+      const last = this.last(), run = JSON.parse(sessionStorage.getItem("pv-run") || "null");
+      if (!last || !run || !last.at || !(url || last.url)) fail("no stopped run in this tab to resume");
+      const from = { [last.at.phase === "section" ? "section" : "wizard"]: last.at.index };
+      return this.start(run.procedure, run.values, { url: url || last.url, from, kept: last.kept || [], fixes });
+    },
+    async reopen(name, home = location.origin + "/fnsuap/cmd/home") {
+      return reopen(name, home);
     },
   };
 })();

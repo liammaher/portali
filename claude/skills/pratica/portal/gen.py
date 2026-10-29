@@ -21,8 +21,14 @@ them on the live page.
 
 Sections are matched without their quadro letter (the CIL's f) is the CILA's h)), and the
 first dictionary entry that fits the crawled section wins. A field under a `when` lives in
-its own branch of the section; a field outside it that such a choice moves goes by label.
-An attachments slot that takes only signed files (.p7m) is left to the person.
+its own branch of the section; a field outside it that such a choice moves goes by label,
+and so does a box whose own tick renumbers it (it opens rows above itself). An attachments
+slot that takes only signed files (.p7m) is left to the person.
+
+A recipe's `operation` may be a list (a CILA with its autorizzazione paesaggistica): the
+pratica is the union of each operation's sections with the recipe's `scelte`, in the order
+of the combination's own crawl, which must hold just those (a section both have under two
+names, the same fields, is one). Every scelta named is ticked.
 
 It stops, writing nothing, on a section the dictionary doesn't have, a dictionary field
 the crawl doesn't show, or a field the section shows that no dictionary entry fills or
