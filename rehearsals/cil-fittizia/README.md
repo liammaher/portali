@@ -22,3 +22,7 @@ now questions.
 Left to the person: the procura and the "Quadro riepilogativo della documentazione C.I.L."
 (portal documents, signed), the declarations, signing and sending. Diritti: 0 € in the
 made-up answers (whether the Comune charges for a CIL is the person's answer).
+
+## Clean reruns (2026-10-29)
+
+In the pane, from run.py's install.js and run.js, nothing touched between runs: first filled in 76.1 s; second, with the runner waiting for a section to open, **filled** in 87.9 s, read back on a fresh load.

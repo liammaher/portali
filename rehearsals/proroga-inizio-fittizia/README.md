@@ -21,3 +21,4 @@ How its steps file was made (`portal-steps.generated.yaml`, by `gen.py`):
 | Date | Browser | Result |
 |---|---|---|
 | 2026-10-28 | pane | First run, no stop: 11 sections in 82 s, every value read back on a fresh load (12 s). The made-up address shows the portal's orange "Indirizzo sconosciuto", as in the CILA rehearsal: values kept, draft not blocked. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 49.3 s; second, with the runner waiting for a section to open, **filled** in 56.2 s, read back on a fresh load. |

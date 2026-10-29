@@ -14,3 +14,4 @@ INVIARE" and stops before the declarations, the attachments, any bollo, signing 
 |---|---|---|
 | 2026-10-29 | pane | A first try stopped on the first screen: the draft's name was 65 characters, the box takes 60 (run.py now refuses a longer one before the run). |
 | 2026-10-29 | pane | **Filled**: every section in 46 s, every value read back on a fresh load of the draft. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 47.6 s; second, with the runner waiting for a section to open, **filled** in 68.7 s, read back on a fresh load. |

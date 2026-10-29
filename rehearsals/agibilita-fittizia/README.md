@@ -33,3 +33,7 @@ Each stop was general, fixed where it belongs, and the run resumed on the same d
 
 Left to the person: the procura and the "Quadro riepilogativo - Agibilità" (portal documents,
 signed), the art. 24 box above, the declarations, signing and sending.
+
+## Clean reruns (2026-10-29)
+
+In the pane, from run.py's install.js and run.js, nothing touched between runs: first filled in 89.3 s; second, with the runner waiting for a section to open, **filled** in 101.3 s, read back on a fresh load.

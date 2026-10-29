@@ -17,3 +17,4 @@ INVIARE" and stops before the acknowledgements in the new holder's name, signing
 |---|---|---|
 | 2026-10-29 | pane | The portal's "errore inatteso" after the Scheda anagrafica (left a draft); a new draft stopped at the prescrizioni acknowledgement (its wording). |
 | 2026-10-29 | pane | **Filled**, resumed on the same draft: all 17 sections read back on a fresh load (11 s). |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 61 s; second, with the runner waiting for a section to open, **filled** in 64.7 s, read back on a fresh load. |

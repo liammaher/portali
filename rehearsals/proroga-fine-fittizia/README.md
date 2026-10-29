@@ -14,3 +14,4 @@ INVIARE" and stops before the declarations, the attachments, any bollo, signing 
 |---|---|---|
 | 2026-10-29 | pane | Its P.G. box takes 10 characters, so the number alone (0888888). Every section saved, then the fresh load of the draft landed on the portal's error page; the draft reopened from Pratiche in bozza read back whole (7 s). |
 | 2026-10-29 | pane | **Filled**: every section in 49 s, every value read back on a fresh load of the draft. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first stopped on the fresh load ("In qualità di: 0 fields with this label": the section wasn't open yet; the same run unchanged then filled); second, with the runner waiting for a section to open, **filled** in 54.6 s, read back on a fresh load. |

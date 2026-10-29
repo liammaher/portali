@@ -13,3 +13,4 @@ INVIARE" and stops before the declarations, the attachments, any bollo, signing 
 | Date | Browser | Result |
 |---|---|---|
 | 2026-10-29 | pane | **Filled**: every section in 47 s, every value read back on a fresh load of the draft. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first stopped on the fresh load ("categoria: 0 fields with this label": the section wasn't open yet; the same run unchanged then filled); second, with the runner waiting for a section to open, **filled** in 81.4 s, read back on a fresh load. |

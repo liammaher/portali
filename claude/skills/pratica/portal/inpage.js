@@ -404,6 +404,20 @@
     const cur = doc().querySelector("li#corrente");
     return !!cur && norm(cur.innerText).startsWith(norm(name));
   };
+  const linkTo = (name) => [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(name)));
+  // Opens a section by its link. The Scheda anagrafica's reloads the whole page, and act()
+  // can come back before the new page shows it (a fresh load read the old one): wait until
+  // the section is the open one, its link gone from the menu and nothing loading (a page
+  // that marks no open section, li#corrente, only the loading).
+  async function openSection(a, name, ms = 20000) {
+    await act(() => press(a, name));
+    const end = performance.now() + ms;
+    while (busy() || (doc().querySelector("li#corrente") && linkTo(name) && !isOpen(name))) {
+      if (performance.now() > end) fail(`${name}: the section didn't open`);
+      await sleep(100);
+    }
+    await idle();
+  }
 
   async function section(sec, values, si) {
     const t0 = performance.now();
@@ -416,8 +430,8 @@
       if (!here()) await act(() => press(button(sec.go), sec.go));
       if (!here()) fail(`expected the screen ${sec.section}`);
     } else if (sec.open !== false) {
-      const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
-      if (a) await act(() => press(a, sec.section));
+      const a = linkTo(sec.section);
+      if (a) await openSection(a, sec.section);
       else if (!isOpen(sec.section)) fail(`no section ${sec.section}`);
     }
     const done = [];
@@ -482,8 +496,8 @@
     if (/\/cmd\/error/.test(doc().location.href)) fail("fresh load of the draft: the portal's error page (the sections are saved; open the draft from Pratiche in bozza)");
     const bad = [];
     for (const { sec, done } of kept.filter((k) => !k.sec.go)) {
-      const a = [...doc().querySelectorAll("a.linkmenu")].find((x) => norm(x.textContent).startsWith(norm(sec.section)));
-      if (a) await act(() => press(a, sec.section));
+      const a = linkTo(sec.section);
+      if (a) await openSection(a, sec.section);
       else if (sec.open !== false && !isOpen(sec.section)) fail(`fresh load of the draft: no section ${sec.section}`);
       for (const c of done.map(readBack)) if (!c.ok) bad.push({ section: sec.section, ...c });
     }

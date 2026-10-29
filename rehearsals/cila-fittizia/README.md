@@ -299,3 +299,7 @@ resumed on the same draft from that section.
   `mod_cila_v1.0.7.xsd`) holds 137 of the 152 portal fields walked (`schema/schema-vs-portal.md`).
   The next step tests building the portal map from the schema plus a crawler instead of walking
   each screen by hand.
+
+## Clean reruns (2026-10-29)
+
+In the pane, from run.py's install.js and run.js, nothing touched between runs: first filled in 107.5 s; second, with the runner waiting for a section to open, **filled** in 148.5 s, read back on a fresh load.

@@ -75,6 +75,12 @@ Neither fills a value, saves a section, ticks a declaration, pays or sends.
   same few (procura, other soci, the Terzo settore exemption) add the same sections everywhere,
   and re-trying them cost 40% of the time for 1 new section in 19; `gen.py` takes a scelta's
   sections from the pratica where it was tried.
+- **Clean reruns** (2026-10-29): every SUE recipe (22 pratiche and the combination), from
+  run.py's install.js and run.js in the pane, one after another with nothing touched between
+  runs. First: 20 of 23 filled; the three stopped on the fresh load, reading a section before
+  it had opened (the Scheda anagrafica's link reloads the whole page), and filled when run again
+  unchanged. With the runner waiting for each section to open: 23 of 23 filled, 40 to 150 s
+  each.
 - Each newly crawled section keeps its own words (`text`: its intro and notes, never a box's
   content), which say what a box means, for the drafter and for whoever checks a draft.
 - Proven on the portal with made-up data, generated from a batch crawl: the restaurant opening

@@ -32,3 +32,4 @@ drawings and photos, the signed procura, the bollo and diritti, signing and send
 | 2026-10-28 | pane | Not run: impresainungiorno answered 503 (maintenance) at 23:50. Pre-flight ready with `answers-p6.json` and the P6 fixture's values. |
 | 2026-10-29 | pane | Stopped at Ambito: the art. 136 tick renumbered itself, which gen.py didn't yet send by label (fixed: `Section.moves_itself`). |
 | 2026-10-29 | pane | **Filled**, a new draft: 12 sections in 54 s (wizard 9 s), every value read back on a fresh load of the draft (8 s). Run with art. 136 and 142 together; 136 alone and 134 alone not run. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 53.3 s; second, with the runner waiting for a section to open, **filled** in 59 s, read back on a fresh load. |

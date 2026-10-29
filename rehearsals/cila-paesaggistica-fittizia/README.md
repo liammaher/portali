@@ -24,3 +24,4 @@ sending.
 |---|---|---|
 | 2026-10-29 | pane | Stopped at the firms (h): with `nth: 2` the runner counted the "Ragione sociale" box as a "codice fiscale" (the next column's label leaks into its texts), so the legale rappresentante's CF went into the firm's partita IVA. Fixed in inpage.js: `nth` counts only the boxes that match at the best place. |
 | 2026-10-29 | pane | **Filled**, resumed on the same draft: all 22 sections read back on a fresh load. The ordinaria was then re-run (both deed registrations: the second and third "con sede a", "al n. gen.", "in data"): filled. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 172.3 s; second, with the runner waiting for a section to open, **filled** in 123.5 s, read back on a fresh load. |

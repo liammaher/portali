@@ -21,3 +21,4 @@ attachments (the relazione paesaggistica, DPCM 12/12/2005), the bollo, signing a
 |---|---|---|
 | 2026-10-29 | pane | Stopped twice in its own section: the vincolo's "sì" by label found the "no" above it; then "in zona di PRG" named the "ad uso" box too (the page's nearest label before each box in a row is the last column's). Fixed in the dictionary and in inpage.js (a box whose own text is the label comes first). |
 | 2026-10-29 | pane | **Filled**, resumed on the same draft: all 11 sections read back on a fresh load (8 s). Run as owner, rogito, building, no deeds, art. 136 and 142. |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 53.4 s; second, with the runner waiting for a section to open, **filled** in 58.2 s, read back on a fresh load. |

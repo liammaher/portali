@@ -20,3 +20,4 @@ holders' names, the bollo, signing and sending.
 |---|---|---|
 | 2026-10-29 | pane | Stopped: the old holder's made-up partita IVA failed the portal's check digit (now the fixture's Immobiliare Fittizia); then the soggetti section (empty entry, wrong crawl); then the co-holder's sex (see above). |
 | 2026-10-29 | pane | **Filled**, resumed on the same draft: all 16 sections read back on a fresh load (11 s). |
+| 2026-10-29 | pane | Clean reruns of all 23 SUE recipes from run.py's install.js and run.js, nothing touched between runs: first filled in 76.5 s; second, with the runner waiting for a section to open, **filled** in 65.8 s, read back on a fresh load. |
