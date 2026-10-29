@@ -776,6 +776,15 @@ def drift(out, steps, resume):
                                                     "draft": resume["url"]}, indent=2, ensure_ascii=False))
 
 
+def review_shown(steps, values):
+    """What the review page shows besides the run: each value, and the person's own steps."""
+    return {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
+            "values": [{"section": v["section"], "label": v["label"] or v["id"],
+                        "value": "chosen" if v["value"] is None
+                        else "attached: " + Path(v["value"]).name if v["kind"] == "file" else v["value"]}
+                       for v in plan(steps, values)]}
+
+
 def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
     """inpage.js in a Playwright window: the runner the Claude browser pane uses, without
     the pane's 45 s call limit and slowed timers. A window behind others keeps full speed
@@ -786,12 +795,7 @@ def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
     install, run_js = page_scripts(steps, values, files_limit=None, resume=resume)
     out.mkdir(parents=True, exist_ok=True)
     drift(out, steps, resume)
-    # What the review page shows besides the run: each value, and the person's own steps.
-    shown = {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
-             "values": [{"section": v["section"], "label": v["label"] or v["id"],
-                         "value": "chosen" if v["value"] is None
-                         else "attached: " + Path(v["value"]).name if v["kind"] == "file" else v["value"]}
-                        for v in plan(steps, values)]}
+    shown = review_shown(steps, values)
     report = {"procedure": steps["procedure"], "result": "stopped"}
     with sync_playwright() as pw:
         if cdp:
@@ -907,8 +911,11 @@ def main():
             drift(a.out, steps, resume)
             for name, text in files.items():
                 (a.out / name).write_text(text)
+            # The pane's report has no values or person's steps: review.py OUT adds these.
+            (a.out / "shown.json").write_text(json.dumps(review_shown(steps, values), indent=2, ensure_ascii=False))
             print(f"{a.out}: check.js first (which of runner.js, steps.js the pane lacks), then run.js; "
-                  f"install.js is both. " + ", ".join(f"{n} {len(t)} bytes" for n, t in files.items()))
+                  f"install.js is both. Save __pv.last() as report.json here, then review.py {a.out}. "
+                  + ", ".join(f"{n} {len(t)} bytes" for n, t in files.items()))
             return 0
         return run(steps, values, a.out, a.cdp, a.profile, a.close, resume)
     except StepError as e:
