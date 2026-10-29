@@ -123,7 +123,8 @@ we'd suggest.
 
 24 of the library's 30 procedures file on a portal first (18 only on a portal), mostly impresainungiorno
 behind SPID; the other 6 are the 5 TARI ones, by PEC, and one at a desk. A connector alone can't work a
-portal: Claude needs a browser agent, which today is Claude in Chrome on a desktop. So "the owner only
+portal: Claude needs a browser, which is the Claude desktop app's own (Cowork's built-in browser, the
+Code tab's pane), never Claude in Chrome (`design/packaging.md`). So "the owner only
 taps" works from a phone for PEC pratiche once the connector is hosted, not yet for portal ones.
 
 **Suggested:** say so: portal pratiche from a desktop, or through an intermediary, until a browser agent
