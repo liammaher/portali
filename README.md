@@ -12,7 +12,7 @@ You enter your details and scan your documents once. Agents that prepare forms (
 - **Agent-safe by design.** Service tokens are scoped, short-lived, capped by sensitivity, and **read-only unless you say otherwise**.
 - **A personal tier only you can see.** SPID login, CIE PIN/PUK and similar secrets are stored as `personal`: no agent token, whatever its scope or cap, can read, list or change them. To a token they look absent; the only trace is that a token with write access is refused if it tries to write one.
 
-> Fork of [lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault) (MIT), extended with the Italian schema, document storage and a hardened agent access model.
+> Fork of [lovincyrus/personal-vault](https://github.com/lovincyrus/personal-vault) (MIT), extended with the Italian schema, document storage and a hardened agent access model. Third-party material, what is known about reusing it, and the fact that this is not an official tool: [NOTICE.md](NOTICE.md).
 
 **Where this is going:** [docs/north-star.md](docs/north-star.md). The vault is the privacy layer of a free, open-source map of Italian government portals, so that Claude can prepare any pratica up to the steps only you can take (SPID login, declarations, signature, payment, sending), starting with Napoli and impresainungiorno. Nothing of ours is hosted: the rules above (local-first, no cloud) stand, and everything below describes the vault as it is.
 

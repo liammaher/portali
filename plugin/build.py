@@ -291,6 +291,9 @@ def main():
     if plugin.exists():
         shutil.rmtree(plugin)
     shutil.copytree(HERE / "napoli", plugin, ignore=shutil.ignore_patterns(".DS_Store", "__pycache__"))
+    # The licence and notices travel with the plugin: it bundles the library's CC BY-SA texts.
+    for name in ("LICENSE", "NOTICE.md"):
+        shutil.copy2(REPO / name, plugin / name)
     if a.connector:  # without one the skill uses coverage.json, as of the build
         (plugin / ".mcp.json").write_text(as_json({"mcpServers": {"napoli": {"type": "http", "url": a.connector}}}))
     if a.pvault_version:  # without one the setup skill says there is no release to install from
