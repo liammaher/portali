@@ -1,6 +1,6 @@
 <h1 align="center">Portali</h1>
 
-**Portali** is a free, open-source plugin that lets Claude prepare your pratiche on Italian government portals, up to the steps only you can take: your SPID login, the declarations, signature, payment and sending. It starts with the Comune di Napoli's SUE and SUAP on impresainungiorno, and is meant to grow to every city and portal. Your details stay in an encrypted vault on your own computer, so Claude can fill a form without the details passing through the conversation. Unofficial: see [NOTICE.md](NOTICE.md).
+**Portali** is a free, open-source plugin that lets Claude prepare your pratiche on Italian government portals, up to the steps only you can take: your SPID login, the declarations, signature, payment and sending. It starts with the Comune di Napoli's SUE and SUAP on impresainungiorno, and is meant to grow to every city and portal. Your details stay in an encrypted vault on your own computer, so Claude can fill a form without the details passing through the conversation. Unofficial: see [NOTICE.md](NOTICE.md). Before you use it, read [responsible use](docs/responsible-use.md); to ask for a pratica or report a changed portal, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 The rest of this page is about that vault, `pvault`.
 

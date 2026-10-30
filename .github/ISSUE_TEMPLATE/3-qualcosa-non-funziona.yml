@@ -1,0 +1,62 @@
+name: Qualcosa non funziona / Something is broken
+description: L'installazione, il vault, un comando o una risposta sbagliata. / The install, the vault, a command or a wrong answer.
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Una vulnerabilità di sicurezza va segnalata in privato ([SECURITY.md](https://github.com/liammaher/portali/blob/main/SECURITY.md)).
+        **Nessun dato personale**: dove serve un esempio, usa valori inventati.
+
+        Report a security vulnerability privately ([SECURITY.md](https://github.com/liammaher/portali/blob/main/SECURITY.md)).
+        **No personal data**: where an example is needed, use made-up values.
+  - type: textarea
+    id: cosa
+    attributes:
+      label: Cosa hai fatto, e cosa è successo / What you did, and what happened
+    validations:
+      required: true
+  - type: textarea
+    id: atteso
+    attributes:
+      label: Cosa ti aspettavi / What you expected
+  - type: dropdown
+    id: dove
+    attributes:
+      label: Dove / Where
+      options:
+        - Cowork
+        - Claude desktop, Code
+        - Claude Code nel terminale / in a terminal
+        - pvault da solo / on its own
+    validations:
+      required: true
+  - type: input
+    id: versione
+    attributes:
+      label: Versioni / Versions
+      description: Portali (`/plugin`) e `pvault version`, se lo usi. / Portali (`/plugin`) and `pvault version`, if you use it.
+      placeholder: portali 0.2.0, pvault 0.2.0
+    validations:
+      required: true
+  - type: input
+    id: sistema
+    attributes:
+      label: Sistema / System
+      placeholder: macOS 26, Apple silicon
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Messaggi di errore / Error output
+      description: "Rileggili prima: niente valori, percorsi con il nome di un cliente, token o chiavi. / Read it first: no values, paths with a client's name, tokens or keys."
+      render: text
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Dati personali / Personal data
+      options:
+        - label: Non ho scritto dati personali di nessuno, né password, token o chiavi. / I wrote no one's personal data, and no password, token or key.
+          required: true

@@ -1,0 +1,74 @@
+name: Il portale è cambiato / The portal changed
+description: Una pratica si è fermata perché il portale non è più come la mappa. Solo struttura, mai valori. / A run stopped because the portal no longer matches the map. Structure only, never values.
+title: "[Portale cambiato] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!WARNING]
+        > **Incolla solo struttura**: il nome della sezione, le etichette e gli id dei campi.
+        > **Mai** valori, nomi, codici fiscali, indirizzi, dati catastali, numeri di pratica o screenshot.
+        > Il report del runner (`run/report.json`) e `__pv.look()` non contengono valori, e un'etichetta che ne ripete uno è oscurata:
+        > rileggili comunque prima di incollare. Non incollare mai `run/review.html` né niente da `run/private/`.
+        >
+        > **Paste structure only**: the section's name, the fields' labels and ids.
+        > **Never** values, names, codici fiscali, addresses, cadastral data, case numbers or screenshots.
+        > The runner's report (`run/report.json`) and `__pv.look()` hold no values, and a label that repeats one is scrubbed:
+        > read them again before pasting anyway. Never paste `run/review.html` or anything from `run/private/`.
+  - type: input
+    id: pratica
+    attributes:
+      label: Pratica
+      description: Il suo nome in Portali (`catalog.json`) o il titolo. / Its name in Portali (`catalog.json`) or its title.
+      placeholder: cila-fittizia
+    validations:
+      required: true
+  - type: input
+    id: comune
+    attributes:
+      label: Comune / Municipality
+      placeholder: Napoli
+    validations:
+      required: true
+  - type: input
+    id: versione
+    attributes:
+      label: Versione di Portali / Portali version
+      description: "`plugin_version` in `coverage.json`, o `/plugin` in Claude Code."
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: input
+    id: data
+    attributes:
+      label: Quando / When
+      placeholder: "2026-10-30"
+    validations:
+      required: true
+  - type: textarea
+    id: stop
+    attributes:
+      label: Dove si è fermata / Where it stopped
+      description: "`error` e `at` da `run/report.json`. / `error` and `at` from `run/report.json`."
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: snapshot
+    attributes:
+      label: La pagina, senza valori / The page, without values
+      description: "`snapshot` da `run/report.json`, o il risultato di `__pv.look()`. / `snapshot` from `run/report.json`, or what `__pv.look()` returns."
+      render: json
+  - type: textarea
+    id: differenza
+    attributes:
+      label: Cosa vedi di diverso / What looks different
+      description: A parole tue, senza valori. / In your own words, without values.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Dati personali / Personal data
+      options:
+        - label: Ho riletto tutto e non c'è nessun valore né dato personale. / I read it all again and there is no value or personal data in it.
+          required: true
