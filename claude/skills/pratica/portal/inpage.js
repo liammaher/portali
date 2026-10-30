@@ -502,9 +502,7 @@
 
   function readBack(f) {
     if (f.spec) f = { ...f, id: resolve(f.spec).id }; // rows added since may have renumbered it
-    else if (f.id && f.label && !el(f.kind === "select" ? f.id + ":combo_input" : f.id)) {
-      f = { ...f, id: resolve({ kind: f.kind, label: f.label, nth: f.nth }).id }; // as when it was filled
-    }
+    else if (f.id && f.label) f = { ...f, id: located({ kind: f.kind, label: f.label, nth: f.nth, id: f.id }).id }; // as when it was filled
     if (f.kind === "file") {
       // An upload widget empties its box once it has sent the file; its list names it.
       const got = norm(doc().body.innerText).includes(norm(f.typed)) ? f.typed : null;
@@ -553,6 +551,28 @@
     return texts.filter((t, i) => !t || texts.indexOf(t) === i).slice(0, 3).findIndex((t) => norm(t).startsWith(norm(label)));
   }
   const labelled = (e, label) => labelRank(e, label) >= 0;
+  // A steps file's id is the row the crawl saw; a choice made earlier in the section can
+  // have moved it onto another box, which a click would then tick in silence. The box must
+  // be of the field's kind and carry its label as the lookup reads labels; else the field
+  // goes by its label (the move is in the report). A label no box carries this way leaves
+  // the id, held to checkLabel's looser test as before.
+  function located(f) {
+    const e = el(f.kind === "select" ? f.id + ":combo_input" : f.id);
+    const want = f.kind === "number" || f.kind === "date" ? "text" : f.kind;
+    // A street's lookup box is a text box to a steps file that types into it.
+    const kind = e && kindOf(e) === "lookup" && want === "text" ? "text" : e && kindOf(e);
+    if (e && kind === want && labelled(e, f.label)) return f;
+    const { id, ...byLabel } = f;
+    let found;
+    const note = (k, x) => { if (!(report[k] = report[k] || []).some((y) => y.label === x.label && y.id === x.id)) report[k].push(x); };
+    try { found = resolve(byLabel); } catch (err) {
+      if (!(err instanceof StepError) || !e) throw err;
+      note("loose", { label: f.label, id }); // a steps file to look at: its label isn't how the lookup reads this box
+      return f;
+    }
+    if (e && found.id !== id) note("moved", { label: f.label, id, to: found.id });
+    return { ...found, spec: byLabel };
+  }
   function resolve(f) {
     if (f.id || f.css) return f;
     let list = inputs();
@@ -637,11 +657,9 @@
       let typed;
       if (f.kind === "add") { await addBlock(f); continue; }
       // An id a combination of choices moved (one the crawl didn't try together) is found
-      // again by its label, held to the same checks.
-      if (f.id && f.label && !el(f.kind === "select" ? f.id + ":combo_input" : f.id)) {
-        const { id, ...byLabel } = f;
-        f = byLabel;
-      }
+      // again by its label, held to the same checks: when it is gone, and when the box it
+      // names now is another one (an earlier choice in the section shifted the rows).
+      if (f.id && f.label) f = located(f);
       if (!f.id && !f.css && f.if_present) {
         // A box only some pratiche show: skipped where this one doesn't.
         try { f = { ...resolve(f), spec: f }; } catch (e) { if (e instanceof StepError) continue; throw e; }
