@@ -367,6 +367,25 @@ def agibilita_systems():
         os.chdir(here)
 
 
+def sanatoria_cases():
+    """The SCIA in sanatoria: works in progress and double conformity fill; the conformity of art.
+    36-bis c. 1 (the portal's asseverazione can't state it) and pre-1977 variants are refused."""
+    d = HERE.parents[4] / "rehearsals" / "scia-sanatoria-fittizia"
+    steps = yaml.safe_load((d / "portal-steps.generated.yaml").read_text())
+    fields = dict(json.loads((HERE.parents[4] / "rehearsals" / "cila-fittizia" / "fixture-p6.json").read_text())["fields"])
+    p6 = json.loads((d / "answers-p6.json").read_text())
+    here = os.getcwd()
+    os.chdir(HERE.parents[4])
+    try:
+        pre = lambda a: run.preflight(steps, values(a, fields, steps))
+        assert pre(p6)["ready"] and pre(json.loads((d / "answers-in-corso.json").read_text()))["ready"]
+        r = pre(p6 | {"sanatoria_caso": "conformita urbanistica"})
+        assert any("one radio choice" in u for u in r["unsupported"]), r["unsupported"]
+        assert pre(p6 | {"sanatoria_caso": "variante pre 1977"})["unsupported"]
+    finally:
+        os.chdir(here)
+
+
 def linked_files():
     """A file over the pane's 256 KB is pane_ok once it goes by link (page --file-urls)."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -404,6 +423,7 @@ CASES = [
     ("a condition's words gate each other: a later question waits on the earlier answer (CILA contributo)", nested_when),
     ("a supports check with `if` applies, and is asked, only once its gate holds (permesso contributo)", gated_support),
     ("the agibilità's systems: their dichiarazione is filled, any other certificate refused, asked only with systems", agibilita_systems),
+    ("the SCIA in sanatoria: in progress and double conformity ready, art. 36-bis c. 1 and pre-1977 variants refused", sanatoria_cases),
 ]
 
 

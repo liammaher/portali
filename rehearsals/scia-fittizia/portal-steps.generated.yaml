@@ -51,6 +51,18 @@ asks:
   barriere_deroga: {type: yes_no, question: 'Are the works subject to the barriers rules but don''t meet them, so the SCIA condizionata asks for a deroga (its documents attached)?', propose: 'false'}
   barriere_elaborati: {type: file, question: The drawings and relazione showing the barriers rules are met (art. 77 ff. or art. 82 DPR 380/2001) (PDF)}
   barriere_deroga_doc: {type: file, question: The documents for the barriers deroga (relazione tecnica and drawings) (PDF)}
+  scia_sanatoria: {type: yes_no, question: 'Is this SCIA filed in sanatoria (the wizard''s sanatoria question answered Sì)?', default: 'false'}
+  sanatoria_caso: {type: choice, question: 'Which case of the SCIA in sanatoria? in corso (works still under way, the SCIA filed of one''s own accord: a €516 sanction, art. 37 c. 5 DPR 380/2001); doppia
+      conformita (works done without the SCIA or differing from it, conforming to the planning and building rules both when done and today: an oblazione of €516 to €5,164, art. 36-bis c. 5 b); conformita
+      urbanistica (conforming to today''s planning rules and the building rules of the time: €1,032 to €10,328, art. 36-bis c. 1); variante pre 1977 (a variant to a title issued before L. 10/1977, art.
+      34-ter)', options: [in corso, doppia conformita, conformita urbanistica, variante pre 1977], when: '{{ask.scia_sanatoria}}'}
+  sanatoria_data: {type: date, question: 'When the works were done (for works still under way: when they started)', when: '{{ask.scia_sanatoria}}'}
+  sanatoria_oblazione: {type: number, question: 'The oblazione the technician determines and the client paid before filing, in euro (€516 to €5,164 with double conformity); the SUE may adjust it', when: '{{ask.scia_sanatoria}}
+      {{ask.sanatoria_caso|is_doppia_conformita}}'}
+  sanatoria_catasto: {type: choice, question: 'The catasto for the works to legalize: invariato (no change to the catasto registration); presentata (the DOCFA already filed: its protocol and date); dopo
+      (to be filed once the sanatoria takes effect)', options: [invariato, presentata, dopo], when: '{{ask.scia_sanatoria}}'}
+  sanatoria_catasto_protocollo: {type: text, question: The DOCFA's protocol number, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}'}
+  sanatoria_catasto_data: {type: date, question: The DOCFA's date, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}'}
   scia_tipo: {type: choice, question: 'What does the SCIA file? manutenzione straordinaria (art. 3 c. 1 b: on structural parts or the facades); restauro (c: restauro e risanamento conservativo on structural
       parts); ristrutturazione (d: a ristrutturazione edilizia that isn''t one of art. 10 c. 1 c); variante pdc (a variant in corso d''opera to a permesso di costruire, art. 22 c. 2 and 2-bis); variante
       scia (a variant to a SCIA that isn''t an essential variation); variante scia essenziale (one that is, art. 32); cambio uso (a change of use alone, art. 23-ter)', options: [manutenzione straordinaria,
@@ -378,8 +390,8 @@ sections:
   fields:
   - {id: 'r5c1p6reg:calendar_input', kind: date, value: '{{ask.data_inizio_lavori|date_it}}', when: '{{ask.bene_culturale|not}} {{ask.area_protetta|is_nulla_osta|not}} {{ask.idrogeologico|is_autorizzazione|not}}
       {{ask.idraulico|not}} {{ask.vinca|not}} {{ask.rir|is_in_area|not}} {{ask.rir|is_non_individuata|not}} {{ask.altri_vincoli_eco|is_assenso|not}} {{ask.fasce|is_assenso|not}} {{ask.paesaggio|is_semplificata|not}}
-      {{ask.paesaggio|is_ordinaria|not}} {{ask.barriere_deroga|not}} {{ask.antincendio_deroga|not}} {{ask.vvf_valutazione|not}} {{ask.igienico_conforme}} {{ask.fascia_cimiteriale|is_non_consentito|not}}',
-    label: 'Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio'}
+      {{ask.paesaggio|is_ordinaria|not}} {{ask.barriere_deroga|not}} {{ask.antincendio_deroga|not}} {{ask.vvf_valutazione|not}} {{ask.igienico_conforme}} {{ask.fascia_cimiteriale|is_non_consentito|not}}
+      {{ask.scia_sanatoria|not}}', label: 'Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio'}
 - section: c) Qualificazione dell'intervento
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.scia_tipo|is_manutenzione_straordinaria}}', label: intervento di manutenzione straordinaria}
@@ -603,14 +615,28 @@ sections:
       immobile}
   - {kind: checkbox, when: '{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}', label: 'mutamento di destinazione d''uso, nel rispetto'}
   - {kind: radio, when: '{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}', label: con opere riconducibili agli interventi di cui all'articolo 6-bis di un intero immobile}
+  - {kind: checkbox, when: '{{ask.scia_sanatoria}}', label: la presente SCIA è presentata in sanatoria}
   - {kind: text, value: '{{ask.dettaglio_intervento}}', max: 500, label: e che l’intervento sopra indicato}
 - section: Asseverazione SCIA - Stato legittimo
   fields:
   - {id: 'r3c2p5reg:radio:0_clone', kind: radio, label: si}
   - {id: 'r4c1p7reg:chk', kind: checkbox, label: corrisponde allo stato legittimo come risultante}
   - {id: 'r5c1p8reg:chk', kind: checkbox, label: dal/i titolo/i o dalla/e pratica/che edilizia/e}
+  - {id: 'r7c1p10reg:chk', kind: checkbox, when: '{{ask.scia_sanatoria}}', label: dalla sanatoria di cui al successivo quadro}
   - {id: 'r5c3p10reg:radio:3_clone', kind: radio, label: 'no', nth: 2}
-  - {id: 'r12c3p19reg:radio:5_clone', kind: radio, label: 'no', nth: 3}
+  - {id: 'r12c3p19reg:radio:5_clone', kind: radio, when: '{{ask.scia_sanatoria|not}}', label: 'no', nth: 3}
+  - {id: 'r12c2p18reg:radio:4_clone', kind: radio, when: '{{ask.scia_sanatoria}}', label: si, nth: 3}
+  - {id: 'r14c1p21reg:chk', kind: checkbox, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_in_corso}}', label: un intervento soggetto a SCIA in corso di esecuzione}
+  - {kind: date, value: '{{ask.sanatoria_data|date_it}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_in_corso}}', label: i cui lavori sono stati iniziati in data}
+  - {kind: checkbox, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', label: un intervento soggetto a SCIA, nth: 2}
+  - {kind: date, value: '{{ask.sanatoria_data|date_it}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', label: realizzato in data}
+  - {kind: checkbox, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', label: determina l’oblazione dovuta}
+  - {kind: text, value: '{{ask.sanatoria_oblazione}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', max: 9999, label: in euro}
+  - {kind: radio, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_invariato}}', label: dichiara che l’intervento da sanare non richiede}
+  - {kind: radio, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}', label: comunica gli estremi della dichiarazione per l’iscrizione}
+  - {kind: text, value: '{{ask.sanatoria_catasto_protocollo}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}', max: 9999, label: presentata con prot.}
+  - {kind: date, value: '{{ask.sanatoria_catasto_data|date_it}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}', label: in data}
+  - {kind: radio, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_dopo}}', label: si impegna a presentare la dichiarazione}
 - section: Asseverazione SCIA - Dati immobile
   fields:
   - {id: 'r5c2p7reg:real', kind: number, value: '{{ask.superficie_mq}}', max: 9, label: Mq}

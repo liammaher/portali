@@ -560,5 +560,24 @@ def _():
     assert has(parziale, "interessa un edificio privato aperto al pubblico")
     assert not has(parziale, "interessa un edificio privato ed è soggetto")
 
+
+@case("the SCIA in sanatoria: the wizard's Si adds its quadro; each case fills its own rows, by label where another case moves them; no start date")
+def _():
+    steps = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-sanatoria-fittizia" / "recipe.yaml"))
+    assert steps["wizard"][-1]["answers"] == {"Le opere ricadono nell'ambito della Sanatoria": "Sì"}
+    q = section(steps, "SANATORIA e regolarizzazioni")
+    assert field(q, "sanatoria di intervento soggetto a SCIA, in assenza della SCIA stessa")["kind"] == "checkbox"
+    a = section(steps, "Asseverazione SCIA - Stato legittimo")
+    for label in ("realizzato in data", "in euro", "presentata con prot.", "dichiara che l’intervento da sanare"):
+        assert "id" not in field(a, label), label  # moved by the case ticked before them
+    doppia = filled(steps, p6_values("scia-sanatoria-fittizia"))
+    assert "516" in doppia[gen.norm("SANATORIA e regolarizzazioni per interventi già realizzati")]
+    assert "NA0888888" in doppia[gen.norm("Asseverazione SCIA - Stato legittimo")]
+    assert doppia.get(gen.norm("Presentazione della SCIA/SCIA Unica/SCIA Condizionata"), []) == []
+    corso = filled(steps, p6_values("scia-sanatoria-fittizia", "answers-in-corso.json"))
+    assert "IUV 0000000000000000 (inventato)" in corso[gen.norm("SANATORIA e regolarizzazioni per interventi già realizzati")]
+    plain = filled(gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-fittizia" / "recipe.yaml")), p6_values("scia-fittizia"))
+    assert plain[gen.norm("Presentazione della SCIA/SCIA Unica/SCIA Condizionata")] == ["23/11/2026"]
+
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)
