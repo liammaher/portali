@@ -1,0 +1,77 @@
+name: Richiedi una pratica / Request a pratica
+description: Una pratica che Portali non prepara ancora. / A pratica Portali doesn't prepare yet.
+title: "[Richiesta] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Le richieste decidono cosa mappare dopo: conta quante volte l'anno la fai e quanto tempo ti costa.
+        **Nessun dato personale**: niente nomi, codici fiscali, indirizzi o numeri di pratica.
+
+        Requests decide what gets mapped next: what counts is how often a year you file it and how long it takes.
+        **No personal data**: no names, codici fiscali, addresses or case numbers.
+  - type: input
+    id: comune
+    attributes:
+      label: Comune / Municipality
+      placeholder: Napoli
+    validations:
+      required: true
+  - type: dropdown
+    id: sportello
+    attributes:
+      label: Sportello o portale / Office or portal
+      options:
+        - SUE (edilizia) / building works
+        - SUAP (attività produttive) / businesses
+        - Un altro portale (INPS, Agenzia delle Entrate, ...) / another portal
+        - Non so / I don't know
+    validations:
+      required: true
+  - type: input
+    id: pratica
+    attributes:
+      label: Pratica
+      description: Come la chiami tu, con il caso. / What you call it, with the case.
+      placeholder: "SCIA per l'apertura di un bar con dehors"
+    validations:
+      required: true
+  - type: dropdown
+    id: chi
+    attributes:
+      label: Chi sei / Who you are
+      options:
+        - Architetto, ingegnere o geometra / architect, engineer or surveyor
+        - Impresa o titolare / business owner
+        - Commercialista o consulente / accountant or consultant
+        - Cittadino / private person
+        - Altro / other
+    validations:
+      required: true
+  - type: input
+    id: volte
+    attributes:
+      label: Quante ne fai l'anno / How many a year
+      placeholder: "12"
+  - type: input
+    id: minuti
+    attributes:
+      label: Quanto tempo ti costa ciascuna, sul portale / How long each one takes you on the portal
+      placeholder: "2 ore / 2 hours"
+  - type: textarea
+    id: dettagli
+    attributes:
+      label: Cosa ti fa perdere tempo, o tornare indietro / What takes the time, or gets it sent back
+  - type: textarea
+    id: fonti
+    attributes:
+      label: Fonti / Sources
+      description: Link alla modulistica o alla pagina dell'ente, se li hai. / Links to the forms or the office's page, if you have them.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Dati personali / Personal data
+      options:
+        - label: Non ho scritto dati personali di nessuno. / I wrote no one's personal data.
+          required: true

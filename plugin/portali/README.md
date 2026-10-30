@@ -38,3 +38,10 @@ Claude" in Settings → Privacy, and use Cowork's built-in browser, not Claude i
 - The cases each pratica doesn't cover yet: those are refused before anything opens.
 
 Claude never ticks a declaration, signs, pays or sends.
+
+## Before you use it
+
+Read [responsible use](https://github.com/liammaher/portali/blob/main/docs/responsible-use.md)
+(Italian and English): you sign and answer for the pratica, one pratica at a time with your own
+SPID, and no personal data in a report. To ask for a pratica or report a portal that changed, open
+an [issue](https://github.com/liammaher/portali/issues/new/choose).
