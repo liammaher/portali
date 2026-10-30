@@ -35,17 +35,28 @@ The wizard's required Si/No (sanatoria) is answered No (`si_no` in the recipe).
   bene culturale (the Soprintendenza), a protected natural area, the vincolo idrogeologico and
   idraulico, a VINCA, a cemetery's fascia, major-hazard plants (RIR), other ecological vincoli,
   and the fasce di rispetto (road, rail, power line, gas, military, airport, another).
-- **A SCIA condizionata.** When any of those needs an assent, the request's documents go in
-  the slot the answer adds, and section b) gets no start date: the works start once the SUE
-  says the assents are in (the section's own text; the date isn't required).
+- **Systems, energy, barriers, acoustics, fire, asbestos, hygiene** (the asseverazione's
+  technical quadri, shared with the SCIA alternativa): every kind of system installed (one
+  project per system where DM 37/2008 asks one, "altre" with its name); the energy report
+  (art. 125), the renewables obligation (D.Lgs. 28/2011) and the energy incentives (art. 14 D.Lgs.
+  102/2014, the 5% bonus); the barriers rules (art. 77 with its requirements, art. 82 for a
+  building open to the public, or a deroga asked); art. 8 L. 447/1995 (each acoustic document
+  it attaches) and the passive requirements; excavated earth; fire prevention (rules met, a
+  deroga, or the Vigili del Fuoco's assessment of the project); asbestos (the piano di lavoro);
+  hygiene (conforming, under art. 24 c. 5-bis with its cases, or a derogation); a cemetery's
+  fascia where the works aren't allowed (the deroga). Each "si allega" adds a required slot.
+- **A SCIA condizionata.** When any of those needs an assent or a deroga, the request's
+  documents go in the slot the answer adds, and section b) gets no start date: the works start
+  once the SUE says the assents are in (the section's own text; the date isn't required).
 - **The attachments screen** changes with the answers: each "si allega" adds a required slot,
-  one per fascia for the tutela funzionale. All take plain PDFs (recipe `attachments`,
-  `on_page`).
+  one per fascia for the tutela funzionale, one per system's project. All take plain PDFs
+  (recipe `attachments`, `on_page`).
 
-Refused at pre-flight (`supports`): a landscape authorization (semplificata or ordinaria: the
-SCIA with it is its own recipe); works not allowed in a cemetery's fascia; acoustics, fire prevention, asbestos, a
-hygiene derogation, the barriers rules, systems needing a project, energy filings. The
-architect as structural designer too isn't mapped (her studio is the business's).
+Refused at pre-flight: what the rules table gives to another pratica (a landscape
+authorization: the SCIA with it is its own recipe). Not mapped: the fire-safety variant of a
+project the Vigili del Fuoco already approved (the form's last fire option, never offered), and
+the excavated earth as by-products or under a VIA/AIA. The architect as structural designer
+too isn't mapped (her studio is the business's).
 
 ## Runs
 
@@ -84,3 +95,9 @@ Still the person's: the "Documentazione dimostrativa dello stato legittimo" slot
 files only, `.p7m`), the procura and the "Quadro riepilogativo - SCIA DSC" (portal
 documents), naming the direttore dei lavori (and the structures' one), the declarations,
 signing and sending.
+| 2026-10-29 | pane | the technical quadri (answers-tecnici: a shop open to the public, systems with their projects, energy report, renewables, art. 14 c. 6, barriers art. 77 and 82, acoustics art. 8 and DPCM, VVF assessment, asbestos, art. 24 c. 5-bis) | every section through fire and acoustics filled first time; stopped on the 5-bis's three cases the crawl never saw (read, mapped); resumed past it, stopped on 13 new required slots (read, mapped) |
+| 2026-10-29 | pane | every deroga (answers-deroghe: barriers, fire, hygiene, a cemetery's fascia; gas and another system) | stopped on the other system's required "specificare" (mapped), then on 8 new required slots (read, mapped) |
+| 2026-10-29 | pane | every deroga, from scratch | **filled** in 153 s with 16 attachments; fresh load 22 s, every value read back; no start date accepted |
+| 2026-10-29 | pane | the technical quadri, from scratch | stopped on art. 24 c. 5-ter's conditions, which each 5-bis case opens below it (read; mapped, one case per pratica) |
+| 2026-10-29 | pane | the technical quadri, from scratch, with the 5-ter conditions | **filled** in 149 s with 20 attachments; fresh load 23 s, every value read back |
+| 2026-10-29 | pane | P6, structures and every protection, from scratch after the technical quadri's dictionary change (one batch) | **filled**: 186 s / 147 s / 161 s, every value read back; no retry |

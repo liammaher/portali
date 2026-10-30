@@ -65,5 +65,18 @@
  "documentazione_calcolo_contributo": "rehearsals/scia-fittizia/files/documentazione-calcolo-contributo.pdf",
  "contributo_normativa": "art. 17, comma 3, d.P.R. 380/2001 (inventato per la prova)",
  "intervento": "variante_scia",
- "fatti": []
+ "fatti": [],
+ "barriere_art82": "false",
+ "rinnovabili": "false",
+ "acustica_passiva": "false",
+ "impianto_radiotv": "false",
+ "impianto_ascensore": "false",
+ "impianto_antincendio": "false",
+ "impianto_altro": "false",
+ "barriere_deroga": "false",
+ "incentivo_energetico": "nessuno",
+ "vvf_valutazione": "false",
+ "scavo": "nessuno",
+ "antincendio_deroga": "false",
+ "igienico_24_5bis": "false"
 }

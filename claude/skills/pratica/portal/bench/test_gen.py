@@ -271,6 +271,20 @@ def _():
     assert not any(f["label"].startswith("Documentazione dimostrativa") for f in s["fields"])
 
 
+@case("one entry fills the SCIA's and the SCIA alternativa's shared quadri; boxes a choice opens are found on the page; every assent or deroga holds the start date back")
+def _():
+    scia, alt = generated("scia-fittizia"), generated("scia-alternativa-fittizia")
+    for s in (scia, alt):
+        imp = next(x for x in s["sections"] if "Sicurezza impianti" in x["section"])
+        assert field(imp, "allega i relativi elaborati")["when"] == "{{ask.progetto_impianti}}"
+    am = section(scia, "Asseverazione SCIA - Amianto")
+    assert field(am, "alloggio monostanza per due persone").get("on_page")
+    assert field(section(scia, "Asseverazione SCIA - Sicurezza impianti"), "specificare")["value"] == "{{ask.impianto_altro_quale}}"
+    b = field(section(scia, "b) Presentazione"), "Per SCIA/SCIA Unica")["when"]
+    for w in ("barriere_deroga|not", "antincendio_deroga|not", "vvf_valutazione|not", "fascia_cimiteriale|is_non_consentito|not"):
+        assert w in b, w
+
+
 @case("a question only a missing field reads isn't asked (SCIA has no firm-documents check)")
 def _():
     assert "verificato_idoneita" not in generated("scia-fittizia")["asks"]
@@ -503,6 +517,48 @@ def _():
     assert of("Qualificazione pratica") == [True, True], of("Qualificazione pratica")  # art. 10, no change of use
     assert "240" in of("Asseverazione PdC - Dati immobile")
 
+
+
+@case("the agibilità: works on structures name their collaudo or its references by the block of their own choice; the fire SCIA makes it a SCIA Unica with its slot; a partial one attaches its plan; every system ticks")
+def _():
+    import os
+    import run
+    steps = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "agibilita-fittizia" / "recipe.yaml"))
+
+    def ticked(answers):
+        here = os.getcwd()
+        os.chdir(ROOT)
+        try:
+            v = p6_values("agibilita-fittizia", answers)(steps)
+            run.plan(steps, v)
+            return [(s["section"], f.get("label"), f.get("anchor"), f.get("nth"), v.render(f["value"]) if "value" in f else True)
+                    for s in steps["sections"] for f in s["fields"]
+                    if "when" not in f or run.truthy(v.render(f["when"]) or "")]
+        finally:
+            os.chdir(here)
+    has = lambda rows, label, **k: [r for r in rows if r[1] and r[1].startswith(label) and all(
+        r[{"anchor": 2, "nth": 3, "value": 4}[x]] == y for x, y in k.items())]
+    allegato = ticked("answers-collaudo.json")
+    assert has(allegato, "si allega certificato di collaudo statico")
+    assert has(allegato, "Certificato di collaudo statico", value="rehearsals/agibilita-fittizia/files/collaudo-statico.pdf")
+    assert has(allegato, "l'agibilità relativa all'immobile", nth=2)  # SCIA Unica
+    assert has(allegato, "SCIA ai sensi dell’art. 4 comma 1")
+    assert has(allegato, "specificare:", value="Impianto fotovoltaico")
+    assert len(has(allegato, "Subalt. n.")) == 10, has(allegato, "Subalt. n.")
+    assert not has(allegato, "reperibile presso")
+    estremi = ticked("answers-estremi.json")
+    dl = "si comunicano gli estremi della dichiarazione di regolare esecuzione"
+    assert has(estremi, "reperibile presso", anchor=dl, value="Genio Civile di Napoli")
+    assert not has(estremi, "reperibile presso", anchor="si comunicano gli estremi del certificato di collaudo statico")
+    assert has(estremi, "prot./n.", anchor="si comunicano gli estremi della richiesta di assegnazione", value="PG/2026/0999996")
+    assert has(estremi, "prot./n.", value="PG/2026/0999995")  # the lift's communication
+    assert has(estremi, "l'agibilità parziale relativa a singole unità immobiliari", nth=None)
+    assert not has(estremi, "SCIA ai sensi")
+    assert has(estremi, "Copia di elaborato planimetrico")  # a partial agibilità's plan
+    assert not has(allegato, "Copia di elaborato planimetrico")
+    parziale = ticked("answers-parziale.json")
+    assert has(parziale, "interessa un edificio privato aperto al pubblico")
+    assert not has(parziale, "interessa un edificio privato ed è soggetto")
 
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

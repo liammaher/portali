@@ -31,5 +31,15 @@
  "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
  "dichiarazione_conformita": "rehearsals/agibilita-fittizia/files/dichiarazione-conformita-impianti.pdf",
  "titolo_esclusivo": false,
- "fine_completa": "true"
+ "fine_completa": "true",
+ "agibilita_parziale": "immobile",
+ "barriere_art82": "false",
+ "sca_unica": "false",
+ "impianti_certificazione": "dichiarazione",
+ "impianto_radiotv": "false",
+ "impianto_ascensore": "false",
+ "impianto_antincendio": "false",
+ "impianto_scariche": "false",
+ "impianto_linee_vita": "false",
+ "impianto_altro": "false"
 }

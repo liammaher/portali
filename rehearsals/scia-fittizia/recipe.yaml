@@ -1,8 +1,9 @@
 # The SCIA edilizia (art. 22 c. 1 a) to c) DPR 380/2001), as gen.py writes its steps file:
 # manutenzione straordinaria, restauro or ristrutturazione (changing the use or not), a variant
 # in corso d'opera, or a change of use alone; the contributo free or due; on structures (with its seismic
-# filing and another technician as structural designer, the `s:` person) or not, and every
-# protection the progettista's asseverazione names. Crawl catalogue/F839/sections/scia.json
+# filing and another technician as structural designer, the `s:` person) or not, every
+# protection the progettista's asseverazione names, and its technical quadri (systems, energy,
+# barriers, acoustics, fire, asbestos, hygiene) with each deroga or assent they ask. Crawl catalogue/F839/sections/scia.json
 # (36 sections, 319 choices), every field from dictionary/fnsuap.yaml. The CILA rehearsal's
 # people (rehearsals/cila-fittizia): the architect with a procura designs and presents, the
 # tenant client, the owner company, two firms; and Davide Esempio, the structural engineer.
@@ -53,6 +54,29 @@ attachments:
     - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (militare)", value: "{{ask.fascia_militare_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_militare}}", on_page: true}
     - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (aeroportuale)", value: "{{ask.fascia_aeroportuale_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_aeroportuale}}", on_page: true}
     - {kind: file, label: "Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (altro)", value: "{{ask.fascia_altro_doc}}", when: "{{ask.fasce|is_assenso}} {{ask.fascia_altro}}", on_page: true}
+    # The asseverazione's systems, energy, barriers, acoustics, fire and asbestos answers each
+    # add a required slot (read 2026-10-29): one project per system, plain PDFs.
+    - {kind: file, label: "Progetto dell'impianto di produzione, trasformazione", value: "{{ask.progetto_elettrico_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_elettrico}}", on_page: true}
+    - {kind: file, label: Progetto degli impianti radiotelevisivi, value: "{{ask.progetto_radiotv_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_radiotv}}", on_page: true}
+    - {kind: file, label: "Progetto dell'impianto di riscaldamento", value: "{{ask.progetto_termico_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_termico}}", on_page: true}
+    - {kind: file, label: Progetto degli impianti idrici e sanitari, value: "{{ask.progetto_idrico_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_idrico}}", on_page: true}
+    - {kind: file, label: "Progetto dell'impianto per la distribuzione e l'utilizzazione di gas", value: "{{ask.progetto_gas_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_gas}}", on_page: true}
+    - {kind: file, label: "Progetto dell'impianto di sollevamento", value: "{{ask.progetto_ascensore_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_ascensore}}", on_page: true}
+    - {kind: file, label: "Progetto dell'impianto di protezione antincendio", value: "{{ask.progetto_antincendio_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_antincendio}}", on_page: true}
+    - {kind: file, label: Progetto di altre tipologie di impianti, value: "{{ask.progetto_altro_doc}}", when: "{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_altro}}", on_page: true}
+    - {kind: file, label: Relazione tecnica sui consumi energetici, value: "{{ask.relazione_energetica}}", when: "{{ask.prestazione_energetica}}", on_page: true}
+    - {kind: file, label: "Elaborati relativi al superamento delle barriere architettoniche (art. 82", value: "{{ask.barriere_elaborati}}", when: "{{ask.barriere_art82}}", on_page: true}
+    - {kind: file, label: "Elaborati relativi al superamento delle barriere architettoniche (art. 77", value: "{{ask.barriere_elaborati}}", when: "{{ask.barriere}} {{ask.barriere_deroga|not}}", on_page: true}
+    - {kind: file, label: Documentazione per la richiesta di deroga alla normativa per l'abbattimento delle barriere, value: "{{ask.barriere_deroga_doc}}", when: "{{ask.barriere}} {{ask.barriere_deroga}}", on_page: true}
+    - {kind: file, label: Documentazione di impatto acustico, value: "{{ask.acustica_impatto_doc}}", when: "{{ask.acustica}} {{ask.acustica_impatto}}", on_page: true}
+    - {kind: file, label: Dichiarazione sostitutiva, value: "{{ask.acustica_dichiarazione_doc}}", when: "{{ask.acustica}} {{ask.acustica_dichiarazione}}", on_page: true}
+    - {kind: file, label: Valutazione previsionale di clima acustico, value: "{{ask.acustica_clima_doc}}", when: "{{ask.acustica}} {{ask.acustica_clima}}", on_page: true}
+    - {kind: file, label: Documentazione di previsione di impatto acustico, value: "{{ask.acustica_misure_doc}}", when: "{{ask.acustica}} {{ask.acustica_misure}}", on_page: true}
+    - {kind: file, label: Deroga all'integrale osservanza delle regole tecniche di prevenzione incendi, value: "{{ask.antincendio_deroga_doc}}", when: "{{ask.antincendio_soggetto}} {{ask.antincendio_deroga}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria al rilascio del parere progetto da parte dei Vigili del Fuoco, value: "{{ask.vvf_doc}}", when: "{{ask.vvf_valutazione}}", on_page: true}
+    - {kind: file, label: "Piano di lavoro di demolizione o rimozione dell'amianto", value: "{{ask.amianto_piano}}", when: "{{ask.amianto}}", on_page: true}
+    - {kind: file, label: Documentazione per la richiesta di deroga alla conformità ai requisiti igienico sanitari, value: "{{ask.igienico_deroga_doc}}", when: "{{ask.igienico_conforme|not}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria per la richiesta di deroga alla fascia di rispetto cimiteriale, value: "{{ask.cimiteriale_doc}}", when: "{{ask.fascia_cimiteriale|is_non_consentito}}", on_page: true}
 asks:
   descrizione: {default: "PROVA NON INVIARE - SCIA {{c:identity.last_name}}"}
   data_inizio_lavori: {question: "When the works will start"}
@@ -71,11 +95,5 @@ rules:
   question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
   facts: {permesso_per_scelta: "false"}
 supports:
-  - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
-  - {value: "{{ask.acustica}}", in: ["false"], else: "Acoustic obligations aren't mapped yet."}
-  - {value: "{{ask.antincendio_soggetto}}", in: ["false"], else: "Fire-prevention obligations aren't mapped yet."}
-  - {value: "{{ask.amianto}}", in: ["false"], else: "Works on parts with asbestos aren't mapped yet."}
-  - {value: "{{ask.igienico_conforme}}", in: ["true"], else: "A hygiene derogation isn't mapped yet."}
-  - {value: "{{ask.barriere}}", in: ["false"], else: "The barriers rules (artt. 77-82) aren't mapped yet."}
-  - {value: "{{ask.progetto_impianti}}", in: ["false"], else: "Systems needing a project aren't mapped yet."}
-  - {value: "{{ask.prestazione_energetica}}", in: ["false"], else: "Energy-performance filings aren't mapped yet."}
+  - {if: "{{ask.igienico_conforme}} {{ask.igienico_24_5bis}}", value: "{{ask.igienico_5bis_caso}}", in: ["altezza", "monostanza uno", "monostanza due"], else: "More than one case of art. 24 c. 5-bis isn't mapped yet: each opens its own conditions."}
+  - {if: "{{ask.igienico_conforme}} {{ask.igienico_24_5bis}}", value: "{{ask.igienico_adattabilita}}", in: ["true"], else: "The form allows art. 24 c. 5-bis only with the adattabilità requirement met (art. 24 c. 5-ter): the unit doesn't qualify."}

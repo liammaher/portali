@@ -1,7 +1,9 @@
 # The Segnalazione Certificata per l'Agibilità after the CILA rehearsal's works, as gen.py writes
 # its steps file. Never walked: crawl catalogue/F839/sections/agibilita.json, every field from
 # dictionary/fnsuap.yaml. The architect is the direttore dei lavori and attests; the client is
-# the tenant of the CILA (rehearsals/cila-fittizia).
+# the tenant of the CILA (rehearsals/cila-fittizia). Works on structures (collaudo statico or
+# dichiarazione di regolare esecuzione), energy (AQE), house numbers, fire safety (the fire
+# SCIA, a SCIA Unica), lifts and every system are mapped; partial agibilità too.
 procedure: napoli/comune/agibilita
 title: "Segnalazione certificata per l'agibilità, SUE Napoli (tecnico con procura)"
 comune: F839
@@ -21,12 +23,16 @@ yours:
   - "On Allega documenti: the portal's procura signed by the client, then everything signed digitally (.p7m)"
   - "Sign and send (Firma e invio); keep the receipt"
 supports:
-  - value: "{{ask.strutture}}"
-    in: ["false"]
-    else: "Works on the structure (collaudo statico) aren't mapped yet."
-  - value: "{{ask.antincendio_variazione}}"
-    in: ["false"]
-    else: "Works that change fire safety aren't mapped yet."
-  - value: "{{ask.civici_variazione}}"
-    in: ["false"]
-    else: "A change of house numbers isn't mapped yet."
+  - value: "{{ask.impianti_certificazione}}"
+    in: [dichiarazione]
+    if: "{{ask.impianti}}"
+    else: "Systems certified by a collaudo, an atto notorio or a document already filed with the Comune aren't mapped yet."
+# Each "si allega" of the attestazione adds its own required slot (read on the portal 2026-10-30).
+attachments:
+  Gestione degli allegati:
+    - {kind: file, label: Certificato di collaudo statico, value: "{{ask.collaudo_doc}}", when: "{{ask.strutture}} {{ask.collaudo|is_certificato_allegato}}", on_page: true}
+    - {kind: file, label: Dichiarazione di regolare esecuzione, value: "{{ask.collaudo_doc}}", when: "{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_allegata}}", on_page: true}
+    - {kind: file, label: Attestato di qualificazione energetica (AQE), value: "{{ask.aqe_doc}}", when: "{{ask.prestazione_energetica}}", on_page: true}
+    - {kind: file, label: Documentazione necessaria per l'assegnazione o aggiornamento di numerazione civica, value: "{{ask.civici_doc}}", when: "{{ask.civici_variazione}} {{ask.civici_richiesta|is_allegata}}", on_page: true}
+    - {kind: file, label: SCIA ai sensi dell’art. 4 comma 1 del d.P.R. n. 151/2011, value: "{{ask.antincendio_scia_doc}}", when: "{{ask.antincendio_variazione}}", on_page: true}
+    - {kind: file, label: "Copia di elaborato planimetrico, del progetto ed eventuali varianti", value: "{{ask.elaborato_parziale_doc}}", when: "{{ask.agibilita_parziale|in_edificio__unita}}", on_page: true}

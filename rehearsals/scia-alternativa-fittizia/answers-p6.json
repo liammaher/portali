@@ -76,5 +76,11 @@
  "incentivo_energetico": "nessuno",
  "intervento": "ristrutturazione_pesante",
  "fatti": [],
- "cambio_uso": "no"
+ "cambio_uso": "no",
+ "igienico_24_5bis": "false",
+ "barriere_art82": "false",
+ "impianto_radiotv": "false",
+ "impianto_ascensore": "false",
+ "impianto_antincendio": "false",
+ "impianto_altro": "false"
 }

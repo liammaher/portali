@@ -25,3 +25,4 @@ The case: an owner's change of use of a whole building within its category, no w
 | 2026-10-29 | pane | Rerun: the portal's "errore inatteso" page mid-run; rerun unchanged after 20 s. |
 | 2026-10-29 | pane | **Filled** from scratch in 182 s, every value read back on a fresh load (31 s): an owner's change of use of a whole building, the contributo during the works worked out by the SUE. |
 | 2026-10-29 | pane | As now, a single unit within its category with no works (a whole building's is a SCIA alternativa in Campania): first run stopped on the portal's error page at DOMICILIO ELETTRONICO, the draft not reopening; rerun alone, unchanged, **filled** in 142 s, read back on a fresh load (24 s). |
+| 2026-10-29 | pane | P6, from scratch after the SCIA's technical quadri changed (the combo still refuses them) | **filled** in 142 s; fresh load 25 s, every value read back; no retry |

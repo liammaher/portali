@@ -42,3 +42,4 @@ already paid (its form has no receipt box). Not offered: the 4th tipologia (regi
 |---|---|---|---|
 | 2026-10-29 | pane | P6 (plain), first legs on one draft | sections 0-19 filled first time; stopped on the description box (named by its counter: now by "e che consistono in"), then on "specificare il tipo di intervento" (the 4th tipologia's: left), then every asseverazione filled and read back on a fresh load (32 s); stopped on the attachments screen's required slots (read and recorded in the crawl, the energy report mapped) |
 | 2026-10-29 | pane | P6 (plain), from scratch, in a batch after the permesso | **filled** in 194 s with 9 attachments; fresh load 33 s, every value read back; no retry |
+| 2026-10-29 | pane | P6, from scratch after the SCIA's technical quadri joined this pratica's dictionary entries | **filled** in 159 s; fresh load 24 s, every value read back; no retry |

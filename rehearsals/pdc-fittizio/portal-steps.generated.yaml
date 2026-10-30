@@ -17,6 +17,8 @@ groups:
     question: Which fasce di rispetto is the property in? Tick every one that applies.
   barriere_requisiti:
     question: Which of the barriers rules' requirements does the project meet (D.M. 236/1989)? Tick every one that applies.
+  acustica_documenti:
+    question: Which acoustic documents are attached (art. 8 L. 447/1995, art. 4 DPR 227/2011)? Tick every one that applies.
   fatti:
     question: Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna.
 asks:
@@ -45,7 +47,7 @@ asks:
   impianto_gas: {type: yes_no, question: 'Gas?', when: '{{ask.impianti}}'}
   strutture: {type: yes_no, question: 'Did the works touch the building''s structure?'}
   prestazione_energetica: {type: yes_no, question: 'Are the works subject to the minimum energy-performance requirements?'}
-  barriere: {type: yes_no, question: 'Is the building private and subject to the barriers rules (artt. 77-82 DPR 380/2001)?'}
+  barriere: {type: yes_no, question: 'Are the works subject to the barriers rules of artt. 77 ff. DPR 380/2001 and DM 236/1989 (private buildings)?'}
   scia_cambio_uso: {type: choice, question: 'Do the works change the use? no; stessa categoria (one unit, within the same functional category); tra categorie (one unit in a building in zone A, B or C of
       DM 1444/1968, to another category: art. 23-ter c. 1-ter); intero immobile (a whole building, within the same category: art. 23-ter c. 3)', options: ['no', stessa categoria, tra categorie, intero immobile],
     propose: '{{ask.cambio_uso|sue_scia_cambio_uso}}'}
@@ -93,8 +95,14 @@ asks:
   progetto_impianti: {type: yes_no, question: 'Do the systems need a project (DM 37/2008 art. 5)?'}
   demolizioni: {type: yes_no, question: 'Do the works demolish anything (partitions, finishes) and produce waste?'}
   acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report: e.g. homes next to a main road, a railway or an airport)?', propose: 'false'}
+  acustica_impatto: {type: yes_no, group: acustica_documenti, item: Documentazione di impatto acustico (art. 8 cc. 2 and 4 L. 447/1995)}
+  acustica_clima: {type: yes_no, group: acustica_documenti, item: Valutazione previsionale di clima acustico (art. 8 c. 3 L. 447/1995)}
+  acustica_dichiarazione: {type: yes_no, group: acustica_documenti, item: The titolare's dichiarazione sostitutiva that the limits of the acoustic classification are respected}
+  acustica_misure: {type: yes_no, group: acustica_documenti, item: Documentazione di previsione di impatto acustico with the measures to reduce the emissions (the limits would be exceeded)}
   antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', propose: 'false'}
-  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos?', propose: 'false'}
+  antincendio_deroga: {type: yes_no, question: 'Does the building have features that don''t allow the fire-prevention technical rules to be followed in full, so a deroga is asked (its documents attached)?',
+    propose: 'false'}
+  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos (so a piano di lavoro under art. 256 D.Lgs. 81/2008 is needed)?', propose: 'false'}
   igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', propose: 'true'}
   cemento_armato: {type: yes_no, question: 'Do the works build reinforced or prestressed concrete, or steel structures (art. 65 DPR 380/2001)?'}
   sismica: {type: choice, question: 'The works'' seismic filing (art. 93-94 DPR 380/2001, L.R. 9/1983, Reg. 4/2010)? deposito (works to report: the denuncia''s documents attached); autorizzazione (the documents
@@ -566,6 +574,11 @@ sections:
 - section: Asseverazione PdC - inquinamento acustico
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.acustica|not}}', label: Non rientra nell'ambito di applicazione dell'articolo 8}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.acustica}}', label: Rientra nell'ambito di applicazione dell'articolo 8}
+  - {id: 'r6c1p6reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_impatto}}', label: documentazione di impatto acustico}
+  - {id: 'r7c1p7reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_clima}}', label: valutazione previsionale di clima acustico}
+  - {id: 'r8c1p8reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_dichiarazione}}', label: dichiarazione sostitutiva dell'atto di notorietà}
+  - {id: 'r9c1p9reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_misure}}', label: '(art. 4, commi 1 e 2, d.P.R. 227/2011)'}
   - {id: 'r10c1p10reg:radio:2_clone', kind: radio, when: '{{ask.acustica_passiva|not}}', label: non rientra nell'ambito dell'applicazione del d.P.C.M.}
   - {id: 'r11c1p11reg:radio:3_clone', kind: radio, when: '{{ask.acustica_passiva}}', label: rientra nell'ambito dell'applicazione del d.P.C.M.}
   - {id: 'r14c1p14reg:chk', kind: checkbox, when: '{{ask.scavo|is_nessuno}}', label: non sono soggette alla normativa vigente relativa ai materiali da scavo}
@@ -573,8 +586,12 @@ sections:
   - {id: 'r25c1p37reg:chk', kind: checkbox, when: '{{ask.scavo|is_rifiuti}}', label: comportano la produzione di materiali da scavo che saranno gestiti}
   - {id: 'r24c1p36reg:chk', kind: checkbox, when: '{{ask.demolizioni}}', label: riguardano interventi di demolizione}
   - {id: 'r28c1p40reg:radio:6_clone', kind: radio, when: '{{ask.antincendio_soggetto|not}}', label: non è soggetto alle norme di prevenzione incendi}
-  - {id: 'r29c1p41reg:radio:7_clone', kind: radio, when: '{{ask.antincendio_soggetto}}', label: è soggetto alle norme tecniche di prevenzione incendi}
+  - {id: 'r29c1p41reg:radio:7_clone', kind: radio, when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga|not}}', label: è soggetto alle norme tecniche di prevenzione incendi}
+  - {id: 'r30c1p42reg:radio:8_clone', kind: radio, when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga}}', label: presenta caratteristiche tali da non consentire l'integrale osservanza}
+  - {id: 'r31c1p43reg:chk', kind: checkbox, when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga}}', label: si allega documentazione necessaria all'ottenimento della deroga}
   - {id: 'r33c1p45reg:radio:9_clone', kind: radio, when: '{{ask.vvf_valutazione|not}}', label: non è soggetto alla valutazione del progetto da parte del Comando}
+  - {id: 'r34c1p46reg:radio:10_clone', kind: radio, when: '{{ask.vvf_valutazione}}', label: è soggetto alla valutazione del progetto da parte del Comando}
+  - {id: 'r35c1p47reg:chk', kind: checkbox, when: '{{ask.vvf_valutazione}}', label: si allega la documentazione necessaria alla valutazione del progetto}
 - section: Asseverazione PdC - amianto
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.amianto|not}}', label: non interessano parti di edifici con presenza di fibre di amianto}
@@ -628,6 +645,8 @@ sections:
   - {id: 'r17c1p17reg:chk', kind: checkbox, when: '{{ask.vinca}}', label: Si allega la documentazione necessaria all'approvazione del progetto}
   - {id: 'r20c1p20reg:radio:7_clone', kind: radio, when: '{{ask.fascia_cimiteriale|is_no}}', label: l'intervento non ricade nella fascia di rispetto}
   - {id: 'r21c1p21reg:radio:8_clone', kind: radio, when: '{{ask.fascia_cimiteriale|is_consentito}}', label: l'intervento ricade nella fascia di rispetto ed è consentito}
+  - {id: 'r22c1p22reg:radio:9_clone', kind: radio, when: '{{ask.fascia_cimiteriale|is_non_consentito}}', label: l'intervento ricade in fascia di rispetto cimiteriale e non è consentito}
+  - {id: 'r23c1p23reg:chk', kind: checkbox, when: '{{ask.fascia_cimiteriale|is_non_consentito}}', label: Si allega la documentazione necessaria per la richiesta di deroga}
 - section: Asseverazione PdC - aree a rischio e altri vincoli
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.rir|is_no}}', label: nel comune NON è presente}
