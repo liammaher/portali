@@ -14,7 +14,7 @@ asks:
   titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   pdc_data: {type: date, question: Its issue date}
-  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], default: permesso di costruire}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], propose: permesso di costruire}
   titolo_id_pratica: {type: text, question: The title's pratica number on the SUAP/SUE (ID pratica)}
   data_nomina: {type: date, question: From when the new direttore dei lavori takes over}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}

@@ -306,8 +306,14 @@ When there is one, follow it instead of exploring the portal:
      or have the user fill them in the vault (`pvault set`, the onboarding page).
    - `files`: each attachment, whether it exists, and `pane_ok` (all of them within the
      pane's 256 KB): if not, send the big ones by https link (`run.py page --file-urls`),
-     use the Playwright window, or leave them to the user.
-   - `yours`: tell the user now what they'll do at the end, so nothing surprises them.
+     use the Playwright window, or leave them to the user. A `.p7m` is read with openssl: one
+     that isn't a CAdES file is a `problem` (not ready: the user signs it again); one signed by
+     someone other than the dichiarante, or carrying no codice fiscale, is a `warnings` entry
+     (tell the user, it may be right: a technician signs their own relazione). It checks whose
+     name is on the signature, not that the signature holds: the portal does that.
+   - `yours`: tell the user now what they'll do at the end, so nothing surprises them,
+     including a pratica the case needs from another office ("File apart, …": the seismic
+     filing at the Genio Civile), which they file themselves.
 
    Only when it says `ready` go on: the user hears nothing more from you until the review
    page, except the login. A steps file without `asks:` (an older one) fails pre-flight
@@ -332,7 +338,10 @@ When there is one, follow it instead of exploring the portal:
    section can re-render an earlier one, or show a value the portal never stored). It then
    shows the draft, prints a line per section and a JSON result, and writes
    `<dir>/review.html`: show it to the user (SendUserFile, `display: render`; send it, don't
-   open it yourself) as the place to check the draft, with step 5's list.
+   open it yourself) as the place to check the draft, with step 5's list. `run` also copies
+   the declarations' text and the portal's PDF preview into it (a failure of either is a
+   note on the page, never a stop); it lists every value we typed, and the declarations and
+   the preview are what the person actually swears to.
    No environment yet: `python3 -m venv ~/.cache/pratica-portal/venv`, then its `pip install
    pyyaml playwright` and `python -m playwright install chromium` (ask first).
    **If it stops, recover it without the user** (they hear nothing about the page):
@@ -538,8 +547,12 @@ names their desk in every list and what each serves. Never call one the ASL or C
 without saying which service it is. Then:
 
 - approving the SPID/CIE login on their phone (you do the clicking: reference/portal-login.md)
-- the declarations in a portal's form (DPR 445/2000, requisiti, privacy…): name each section
-  and what it states; they tick them, after reading the portal's preview of the pratica
+- the declarations in a portal's form (DPR 445/2000, requisiti, privacy…): they tick them, after
+  reading the portal's preview of the pratica. A filled run (`run` or `page`) draws a review over the
+  portal: the portal's own text of each declaration, its PDF preview and every value typed. Point them
+  there ("read these before you tick, word for word") and never paraphrase a declaration yourself, and
+  never read that page or its text: it is drawn in the page for them. "Show the draft" takes it away;
+  `__pv.review()` draws it again. Where it says "Not copied", have them read that part in the portal
 - signatures: a firma digitale always; a handwritten one by hand, or by approving a signing
   request with `pvault sign review` (reference/signing.md): you file it, they approve it
 - payments (F24, pagoPA): give the amount, codice tributo and deadline; never pay

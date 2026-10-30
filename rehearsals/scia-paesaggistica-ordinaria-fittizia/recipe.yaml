@@ -69,8 +69,15 @@ yours:
   - "No start date: the works start once the SUE says the landscape authorization (and any other assent) is in"
   - "Pay the imposta di bollo and the diritti; upload the receipts"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  main: napoli/comune/scia-edilizia
+  facts: {permesso_per_scelta: "false"}
+  handles: [napoli/comune/autorizzazione-paesaggistica-ordinaria]
 supports:
-  - {value: "{{ask.paesaggio}}", in: ["ordinaria"], else: "This pratica is the SCIA with its autorizzazione paesaggistica ordinaria: the SCIA alone, or with the other procedure, is another recipe."}
   - {value: "{{ask.fascia_cimiteriale}}", in: ["no", "consentito"], else: "Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet."}
   - {value: "{{ask.acustica}}", in: ["false"], else: "Acoustic obligations aren't mapped yet."}
   - {value: "{{ask.antincendio_soggetto}}", in: ["false"], else: "Fire-prevention obligations aren't mapped yet."}

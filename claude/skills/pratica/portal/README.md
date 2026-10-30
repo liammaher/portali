@@ -14,7 +14,21 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
 2. **The recipe** (`rehearsals/<name>/recipe.yaml`): procedure, title, comune, sportello,
    crawl, operation (or a list of them), scelte, `first`, `asks`, `yours` (what's left to the
    person: declarations, attachments, payment, signing), `supports` (the cases refused, with
-   why: all or nothing). Copy a sibling: `rehearsals/paesaggistica-ordinaria-fittizia`.
+   why: all or nothing; `if:` checks one only once its gate holds, asking it only then).
+   Copy a sibling: `rehearsals/paesaggistica-ordinaria-fittizia`.
+   **Which pratica it is** is the library's rules table's (`rules/`, a byte-for-byte copy):
+   `rules: {table, facts, handles}`, as the SUAP and SUE recipes have. `facts` fixes what the
+   recipe is (`permesso_per_scelta: "true"` for the permesso); a fact it doesn't fix is an ask
+   (an ask of the same name, `{{ask.paesaggio}}`, when the pratica has one; its options may
+   have spaces where the table's values have `_`). `handles` lists what the pratica files with
+   the main one (a CILA's landscape authorization); `main` names the main one when the
+   recipe's procedure is the combination's; `question` words the checklist of yes/no facts.
+   Pre-flight refuses a case the table gives to another pratica, and adds to `yours` a
+   pratica it needs from another office (the seismic filing at the Genio Civile).
+   A recipe's `supports` keeps only what the table doesn't decide (an unmapped branch).
+   A form's own box on the same thing (what the SCIA files, `scia_tipo`) is `propose`d from the
+   table's answers, for the person to confirm: `{{ask.intervento,ask.strutture|sue_scia_tipo}}`
+   reads several facts at once, and a proposal waits while a fact it reads is still asked.
 3. **Generate:** `gen.py <recipe> --out <dir>/portal-steps.generated.yaml`. It writes nothing
    if any field is unaccounted for. Regenerate every rehearsal after a dictionary or gen.py
    change and look at the diff: an unrelated steps file that changes is a regression until
@@ -29,6 +43,10 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
 
 ## What the portal does that bit us
 
+- **A bare `/fnsuap/` that says Forbidden.** On 2026-10-29 it answered a 403 after every SPID
+  sign-in for hours, while `/fnsuap/cmd/home` (where the pratica skill starts) and a recipe's
+  `start` (`/fnsuap/cmd/create?...`) worked and the runs filled. Open one of those before
+  resetting cookies or the sign-on.
 - **Labels.** A box is found by the start of one of its first three texts (its title, its
   cell, the row above, the cell to its left, the nearest label before it). In a row of boxes
   the nearest label before each is the *last* column's, so a label can name several boxes:
@@ -63,6 +81,14 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
 - **Suggestion lists fade out.** A street's list, hidden by its widget, lies over the next
   boxes while it fades (PrimeFaces 11): the runner takes it off the page at once ("covered by
   li.ui-autocomplete-item" before, 2026-10-29).
+- **A counter is no label.** A text area the crawl labels "500 Caratteri restanti" is named by
+  its own text ("e che consistono in", the crawl's `context`): the counter changes as it fills.
+- **Radios with their own names can still be one choice.** The permesso's asseverazione keeps
+  only one of its two opening radios after Salva: the read-back says so; keep the one it keeps.
+- **A portal document's box reads "Scarica il documento"** (the procura, the DSC): the
+  attachments screen's `theirs` names it, so its "required" isn't the run's error; nor is one
+  under any slot that takes only signed files (.p7m), the person's to sign and attach. A stop's
+  snapshot names each slot by its title, with the types it takes and whether it's required.
 - **A file box's cell names the file once it's in.** Name an upload by the row above it (the
   crawl's `context`), not by its cell ("Tipologie ammesse"), or the read-back can't find it.
 - **The portal's own errors:** "errore inatteso", a 503 for maintenance, a fresh load that
@@ -71,6 +97,39 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
   goes on from its address), waits 10 s and resumes, at most twice, each try in the report's
   `retries`. A value the portal refuses or doesn't keep, or a renamed label, still stops.
   Two runs on one login (another session's, a crawl) make these errors: one at a time.
+
+## What pre-flight checks in a signed file
+
+A `.p7m` is read with openssl (`p7m_signers`; PEM, DER and base64 text) before any browser
+opens: unreadable is `not ready`; no codice fiscale in its certificates, or none of the
+dichiarante's (`t:identity.codice_fiscale`), is a `warnings` entry. Counts and a yes/no only: Claude
+reads the report, so no codice fiscale is in it. It does not verify the signature or the
+certificate's validity at signing time; the portal does.
+
+## What the person reads before they declare
+
+The person reads the portal's own words, not Claude's summary, and in the window where they tick. A
+filled run (in the pane or in `run`) draws a review over the portal from what it holds in memory
+(`showReview`, inpage.js), so none of it passes through Claude:
+
+- **The declarations.** After the fresh load, `readDeclarations` opens each section the steps file
+  leaves out (`DECLARATIONS`) by its menu link, copies the open section's text (`li#corrente`'s
+  `innerText`, minus the portal's Salva and Annulla) and each tick box's label and state (a radio is
+  one box: its `_clone` input is skipped, its label is the one beside it), ticks nothing, and goes
+  back to the section the steps left open. A box already ticked is flagged. A section that won't
+  open is `declarations_note` in the report, never a stop. Held in `__pv.held().declarations`.
+- **The portal's PDF preview.** `fetchPreview` does a plain GET of `/fnsuap/preview.do` (a steps file's
+  `preview_url` changes it) with the person's session and shows the PDF in the review. Pressing
+  "Visualizza anteprima" instead navigates the whole page to that PDF, which would end the run's page.
+  Not a PDF, or an error: `preview_note`, and the review says to press the button in the portal.
+- **Every value typed**, by section.
+
+`run.py run` also writes the same to `private/` (declarations.json, anteprima.pdf, from
+`__pv.previewPdf()`) and into review.html. In the pane they stay in the page.
+
+Seen on the real portal 2026-10-29 (pane, the SCIA rehearsal): all 7 declarations copied, every box
+unticked, the 9-page preview fetched (165 KB). Not yet seen: a real client's text (it may carry a
+name), a resumed run, the review in a narrow pane.
 
 ## Made-up data and the code window
 

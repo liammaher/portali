@@ -7,8 +7,8 @@
   "f2": "impianti"
  },
  "titolo": "proprietario",
- "oggetto": "Mutamento di destinazione d'uso dell'intero immobile nella stessa categoria funzionale, senza opere, in area vincolata (dati inventati per la prova).",
- "dettaglio_intervento": "Mutamento di destinazione d'uso dell'intero immobile all'interno della stessa categoria funzionale, senza opere, con pergola sul terrazzo soggetta ad autorizzazione paesaggistica ordinaria. Dati inventati per la prova.",
+ "oggetto": "Mutamento di destinazione d'uso di una singola unità nella stessa categoria funzionale, senza opere, in area vincolata (dati inventati per la prova).",
+ "dettaglio_intervento": "Mutamento di destinazione d'uso di una singola unità immobiliare all'interno della stessa categoria funzionale, senza opere, con pergola sul terrazzo soggetta ad autorizzazione paesaggistica ordinaria. Dati inventati per la prova.",
  "dlgs81": "true",
  "sotto_200": "true",
  "notifica_dovuta": "true",
@@ -65,7 +65,7 @@
  "atti_gravanti": false,
  "vincolo": "art 136 and 142",
  "bollo_marche": false,
- "cambio_uso_tipo": "immobile senza opere",
+ "cambio_uso_tipo": "unita senza opere stessa categoria",
  "scia_onerosa": "true",
  "contributo_pagamento": "in corso d'opera",
  "contributo_calcolo": "sportello",
@@ -73,5 +73,23 @@
  "vincolo_136_lettera": "c) e d)",
  "vincolo_136_provvedimento": "D.M. fittizio PROVA NON INVIARE del 01/01/1960",
  "vincolo_142_lettera": "a)",
- "relazione_paesaggistica": "rehearsals/scia-fittizia/files/relazione-paesaggistica.pdf"
+ "relazione_paesaggistica": "rehearsals/scia-fittizia/files/relazione-paesaggistica.pdf",
+ "intervento": "nessuna_opera",
+ "cambio_uso": "stessa_categoria",
+ "fatti": [
+  "uso_ammesso_prg"
+ ],
+ "barriere_art82": "false",
+ "rinnovabili": "false",
+ "acustica_passiva": "false",
+ "impianto_radiotv": "false",
+ "impianto_ascensore": "false",
+ "impianto_antincendio": "false",
+ "impianto_altro": "false",
+ "barriere_deroga": "false",
+ "incentivo_energetico": "nessuno",
+ "vvf_valutazione": "false",
+ "scavo": "nessuno",
+ "antincendio_deroga": "false",
+ "igienico_24_5bis": "false"
 }

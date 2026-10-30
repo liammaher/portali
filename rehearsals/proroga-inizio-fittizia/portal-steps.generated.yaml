@@ -16,7 +16,7 @@ asks:
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
-  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], default: permesso di costruire}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], propose: permesso di costruire}
   proroga_giorni: {type: text, question: How many days of extension are asked (e.g. 365)}
   proroga_motivo: {type: text, question: 'Why the extension is needed: the facts beyond the holder''s control (500 characters)'}
   proroga_data_prevista: {type: date, question: The new date the works are now expected to start}

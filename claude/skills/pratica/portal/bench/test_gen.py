@@ -271,6 +271,20 @@ def _():
     assert not any(f["label"].startswith("Documentazione dimostrativa") for f in s["fields"])
 
 
+@case("one entry fills the SCIA's and the SCIA alternativa's shared quadri; boxes a choice opens are found on the page; every assent or deroga holds the start date back")
+def _():
+    scia, alt = generated("scia-fittizia"), generated("scia-alternativa-fittizia")
+    for s in (scia, alt):
+        imp = next(x for x in s["sections"] if "Sicurezza impianti" in x["section"])
+        assert field(imp, "allega i relativi elaborati")["when"] == "{{ask.progetto_impianti}}"
+    am = section(scia, "Asseverazione SCIA - Amianto")
+    assert field(am, "alloggio monostanza per due persone").get("on_page")
+    assert field(section(scia, "Asseverazione SCIA - Sicurezza impianti"), "specificare")["value"] == "{{ask.impianto_altro_quale}}"
+    b = field(section(scia, "b) Presentazione"), "Per SCIA/SCIA Unica")["when"]
+    for w in ("barriere_deroga|not", "antincendio_deroga|not", "vvf_valutazione|not", "fascia_cimiteriale|is_non_consentito|not"):
+        assert w in b, w
+
+
 @case("a question only a missing field reads isn't asked (SCIA has no firm-documents check)")
 def _():
     assert "verificato_idoneita" not in generated("scia-fittizia")["asks"]
@@ -489,6 +503,81 @@ def _():
     assert "PDC123" in pdc[gen.norm("Qualificazione dell'intervento")]
     assert "ART. 17" not in str(pdc[gen.norm("Calcolo del contributo di costruzione")]).upper()  # onerosa: no rule why it's free
 
+
+@case("the permesso and the SCIA alternativa: a choice a tipologia opens is in its branch, and a fact of the case is proposed, never silent")
+def _():
+    alt = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-alternativa-fittizia" / "recipe.yaml"))
+    d = section(alt, "Asseverazione SCIA Alternativa - Dati progettista")
+    under = next(f for f in d["fields"] if f["label"].startswith("non comporta") and "is_ristrutturazione_edilizia" in f["when"])
+    assert "id" not in under and "nth" not in under, under  # opened by ticking 1., which moves it: by label
+    pdc = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "pdc-fittizio" / "recipe.yaml"))
+    assert "default" not in pdc["asks"]["acustica"] and pdc["asks"]["acustica"]["propose"] == "false"
+    p6 = filled(pdc, p6_values("pdc-fittizio"))
+    of = lambda start: next(v for k, v in p6.items() if k.startswith(gen.norm(start)))
+    assert of("Qualificazione pratica") == [True, True], of("Qualificazione pratica")  # art. 10, no change of use
+    assert "240" in of("Asseverazione PdC - Dati immobile")
+
+
+
+@case("the agibilità: works on structures name their collaudo or its references by the block of their own choice; the fire SCIA makes it a SCIA Unica with its slot; a partial one attaches its plan; every system ticks")
+def _():
+    import os
+    import run
+    steps = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "agibilita-fittizia" / "recipe.yaml"))
+
+    def ticked(answers):
+        here = os.getcwd()
+        os.chdir(ROOT)
+        try:
+            v = p6_values("agibilita-fittizia", answers)(steps)
+            run.plan(steps, v)
+            return [(s["section"], f.get("label"), f.get("anchor"), f.get("nth"), v.render(f["value"]) if "value" in f else True)
+                    for s in steps["sections"] for f in s["fields"]
+                    if "when" not in f or run.truthy(v.render(f["when"]) or "")]
+        finally:
+            os.chdir(here)
+    has = lambda rows, label, **k: [r for r in rows if r[1] and r[1].startswith(label) and all(
+        r[{"anchor": 2, "nth": 3, "value": 4}[x]] == y for x, y in k.items())]
+    allegato = ticked("answers-collaudo.json")
+    assert has(allegato, "si allega certificato di collaudo statico")
+    assert has(allegato, "Certificato di collaudo statico", value="rehearsals/agibilita-fittizia/files/collaudo-statico.pdf")
+    assert has(allegato, "l'agibilità relativa all'immobile", nth=2)  # SCIA Unica
+    assert has(allegato, "SCIA ai sensi dell’art. 4 comma 1")
+    assert has(allegato, "specificare:", value="Impianto fotovoltaico")
+    assert len(has(allegato, "Subalt. n.")) == 10, has(allegato, "Subalt. n.")
+    assert not has(allegato, "reperibile presso")
+    estremi = ticked("answers-estremi.json")
+    dl = "si comunicano gli estremi della dichiarazione di regolare esecuzione"
+    assert has(estremi, "reperibile presso", anchor=dl, value="Genio Civile di Napoli")
+    assert not has(estremi, "reperibile presso", anchor="si comunicano gli estremi del certificato di collaudo statico")
+    assert has(estremi, "prot./n.", anchor="si comunicano gli estremi della richiesta di assegnazione", value="PG/2026/0999996")
+    assert has(estremi, "prot./n.", value="PG/2026/0999995")  # the lift's communication
+    assert has(estremi, "l'agibilità parziale relativa a singole unità immobiliari", nth=None)
+    assert not has(estremi, "SCIA ai sensi")
+    assert has(estremi, "Copia di elaborato planimetrico")  # a partial agibilità's plan
+    assert not has(allegato, "Copia di elaborato planimetrico")
+    parziale = ticked("answers-parziale.json")
+    assert has(parziale, "interessa un edificio privato aperto al pubblico")
+    assert not has(parziale, "interessa un edificio privato ed è soggetto")
+
+
+@case("the SCIA in sanatoria: the wizard's Si adds its quadro; each case fills its own rows, by label where another case moves them; no start date")
+def _():
+    steps = gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-sanatoria-fittizia" / "recipe.yaml"))
+    assert steps["wizard"][-1]["answers"] == {"Le opere ricadono nell'ambito della Sanatoria": "Sì"}
+    q = section(steps, "SANATORIA e regolarizzazioni")
+    assert field(q, "sanatoria di intervento soggetto a SCIA, in assenza della SCIA stessa")["kind"] == "checkbox"
+    a = section(steps, "Asseverazione SCIA - Stato legittimo")
+    for label in ("realizzato in data", "in euro", "presentata con prot.", "dichiara che l’intervento da sanare"):
+        assert "id" not in field(a, label), label  # moved by the case ticked before them
+    doppia = filled(steps, p6_values("scia-sanatoria-fittizia"))
+    assert "516" in doppia[gen.norm("SANATORIA e regolarizzazioni per interventi già realizzati")]
+    assert "NA0888888" in doppia[gen.norm("Asseverazione SCIA - Stato legittimo")]
+    assert doppia.get(gen.norm("Presentazione della SCIA/SCIA Unica/SCIA Condizionata"), []) == []
+    corso = filled(steps, p6_values("scia-sanatoria-fittizia", "answers-in-corso.json"))
+    assert "IUV 0000000000000000 (inventato)" in corso[gen.norm("SANATORIA e regolarizzazioni per interventi già realizzati")]
+    plain = filled(gen.generate(gen.load_yaml(ROOT / "rehearsals" / "scia-fittizia" / "recipe.yaml")), p6_values("scia-fittizia"))
+    assert plain[gen.norm("Presentazione della SCIA/SCIA Unica/SCIA Condizionata")] == ["23/11/2026"]
 
 print(f"{sum(results)}/{len(results)} passed")
 sys.exit(0 if all(results) else 1)

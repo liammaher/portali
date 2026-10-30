@@ -7137,10 +7137,16 @@
  "slots": {
   "Gestione degli allegati": [
    {
+    "title": "Documentazione dimostrativa dello stato legittimo",
+    "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m",
+    "required": true,
+    "portal_document": false
+   },
+   {
     "id": "r8c1p8reg:upload1_input",
     "title": "Procura speciale",
     "accepts": "jpg.p7m;pdf.p7m",
-    "required": false,
+    "required": true,
     "portal_document": true
    },
    {
@@ -7154,7 +7160,7 @@
     "id": "r16c1p17reg:upload1_input",
     "title": "Quadro riepilogativo della documentazione - SCIA alternativa DSC",
     "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
-    "required": false,
+    "required": true,
     "portal_document": true
    },
    {
@@ -7191,8 +7197,26 @@
     "accepts": "dwf.p7m;svg.p7m;jpg.p7m;pdf.p7m;pdf;xml;dwf;svg;jpg",
     "required": false,
     "portal_document": false
+   },
+   {
+    "title": "Dichiarazione di assenso dei terzi titolari di altri diritti reali o obbligatori",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": true,
+    "portal_document": false
+   },
+   {
+    "title": "Copia dei documenti d'identità del/i titolare/i, comproprietario/i",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": true,
+    "portal_document": false
+   },
+   {
+    "title": "Relazione tecnica sui consumi energetici",
+    "accepts": "xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m",
+    "required": true,
+    "portal_document": false
    }
   ]
  },
- "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft (an empty draft: slots that the sections' answers add are missing)"
+ "slots_read": "2026-10-29 in the pane: the Allega Documenti screen of the P6 draft (an empty draft: slots that the sections' answers add are missing); 2026-10-29 also the P6 SCIA alternativa's own screen (the client without an exclusive title, with the energy filing): the slots its answers add, and which it requires"
 }

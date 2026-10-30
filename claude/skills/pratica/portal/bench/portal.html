@@ -7,7 +7,8 @@
      server, and what was stored shown again on every load. ?banner=1 puts a consent banner
      over everything; ?rename=1 renames the second section's label, as a portal update would;
      ?fade=1 opens a suggestion list over Impresa esecutrice as Dati tecnici opens, whose
-     widget's hide() fades it out slowly, as PrimeFaces 11's does. -->
+     widget's hide() fades it out slowly, as PrimeFaces 11's does; ?slot=signed (or =plain) adds
+     an attachments slot the portal says is required, taking only signed files (or plain ones). -->
 <nav>
   <a class="linkmenu" href="#allega">Allega documenti</a>
   <a class="linkmenu" href="#tecnici">Dati tecnici</a>
@@ -41,6 +42,14 @@
 <script>
 if (location.search.includes("banner=1")) document.getElementById("consenso").hidden = false;
 if (location.search.includes("rename=1")) document.getElementById("impresa-label").textContent = "Ditta esecutrice";
+const slot = new URLSearchParams(location.search).get("slot");
+if (slot) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = '<td><label class="labelDynaFormControl">Procura speciale</label></td><td><div id="form:r3c1:dynaForm:procura">' +
+    '<input type="file" id="form:r3c1:dynaForm:procura_input"> Tipologie ammesse: ' + (slot === "signed" ? "jpg.p7m;pdf.p7m" : "pdf;pdf.p7m") +
+    ' <span class="error-message-text">Il valore è obbligatorio</span></div></td>';
+  document.querySelector("#allega + table").tBodies[0].append(tr);
+}
 if (location.search.includes("fade=1")) {
   const panel = document.createElement("div");
   panel.className = "ui-autocomplete-panel";
@@ -54,6 +63,41 @@ if (location.search.includes("fade=1")) {
       width: `${r.width + 20}px`, height: `${r.height + 20}px` });
   });
 }
+// ?decl=1: a declarations section (its link in the menu, its text and a tick box in li#corrente
+// as the real portal shows the open section) and a Visualizza anteprima button. ?decl=1&stuck=1:
+// the declarations link opens nothing, as when the portal doesn't answer.
+if (location.search.includes("decl=1")) {
+  const cur = document.createElement("ul");
+  cur.innerHTML = "<li id='corrente'></li>";
+  document.body.append(cur);
+  const link = document.createElement("a");
+  link.className = "linkmenu";
+  link.href = "#consapevolezza";
+  link.textContent = "Dichiarazione di consapevolezza ex artt. 46 e 47 DPR 445/2000";
+  document.querySelector("nav").append(link);
+  const open = (a) => {
+    const li = document.getElementById("corrente");
+    li.textContent = a.textContent;
+    if (a === link) {
+      li.insertAdjacentHTML("beforeend", "<p>Il sottoscritto, consapevole delle sanzioni penali previste dall'art. 76\n" +
+        "del D.P.R. 445/2000, dichiara quanto segue.</p><label><input type='checkbox' id='form:r9c1:dynaForm:consap_chk'" +
+        (location.search.includes("ticked=1") ? " checked" : "") + "> Per presa visione</label>" +
+        // As PrimeFaces draws a radio: the real input hidden, its clone in the visible button, the
+        // label beside it in a titled div; and the section's own Salva button.
+        "<div title='opt'><span><input type='radio' id='form:r9c1:dynaForm:sorv:radio:0' name='sorv'></span>" +
+        "<div class='ui-radiobutton'><input type='radio' id='form:r9c1:dynaForm:sorv:radio:0_clone' name='sorv'></div>" +
+        "<label>che i locali possiedono i requisiti di sorvegliabilità</label></div><button type='button'>SALVA</button>");
+    }
+  };
+  for (const a of document.querySelectorAll("a.linkmenu")) {
+    a.addEventListener("click", () => { if (!(a === link && location.search.includes("stuck=1"))) open(a); });
+  }
+  const preview = document.createElement("button");
+  preview.type = "button";
+  preview.textContent = "VISUALIZZA ANTEPRIMA";
+  preview.addEventListener("click", () => window.open("/anteprima.pdf"));
+  document.getElementById("form").append(preview);
+}
 const texts = () => [...document.querySelectorAll("input[type=text]")];
 const list = (name) => {
   const li = document.createElement("li");
@@ -63,6 +107,11 @@ const list = (name) => {
 fetch("/state").then((r) => r.json()).then((st) => {
   for (const t of texts()) t.value = st.fields[t.id] || "";
   st.files.forEach(list);
+  // As the portal does, a slot's cell names the file in it.
+  for (const [id, name] of Object.entries(st.boxes || {})) {
+    const box = document.getElementById(id);
+    if (box) box.after(" " + name + " Rimuovi");
+  }
 });
 for (const box of document.querySelectorAll("input[type=file]")) {
   box.addEventListener("change", () => {
@@ -70,7 +119,7 @@ for (const box of document.querySelectorAll("input[type=file]")) {
     if (!f) return;
     const fd = new FormData();
     fd.append(box.id, f, f.name);
-    fetch("/upload", { method: "POST", body: fd }).then(() => { list(f.name); box.value = ""; });
+    fetch("/upload", { method: "POST", body: fd }).then(() => { list(f.name); box.value = ""; box.after(" " + f.name + " Rimuovi"); });
   });
 }
 document.getElementById("salva").addEventListener("click", () => {

@@ -6,7 +6,8 @@ was checked, and every value as it went on the form or portal.
 
 OUT is the folder fill.py run or run.py run wrote (its report.json), or the one run.py page
 wrote with the pane's `__pv.last()` saved there as report.json (its private/shown.json adds the
-values and the person's steps); --route is
+values and the person's steps; private/declarations.json the declarations' own text, and
+private/anteprima.pdf the portal's PDF preview, which only `run.py run` copies); --route is
 `fill.py route --json` for a form, for where it goes and the person's steps. Writes
 OUT/review.html: one self-contained file (the form's pages inlined), to show the person
 before they sign anything. It reads only those files.
@@ -46,6 +47,9 @@ table { width: 100%; border-collapse: collapse; }
 td { padding: 6px 14px; border-top: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
 td:first-child { color: var(--muted); width: 42%; }
 .blank { color: var(--muted); font-style: italic; }
+.decl { white-space: pre-wrap; padding: 6px 14px 10px; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.decl ul { list-style: none; margin: 8px 0 0; padding: 0; } .decl li.on { color: var(--bad); font-weight: 600; }
+a.dl { display:inline-block; margin: 4px 0 8px; }
 img.page { width: 100%; border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; background: #fff; }
 """
 
@@ -54,7 +58,7 @@ def esc(x):
     return html.escape("" if x is None else str(x))
 
 
-def page(title, subtitle, ok, status, yours, facts, checks, groups, extra=""):
+def page(title, subtitle, ok, status, yours, facts, checks, groups, extra="", top=""):
     out = [f"<!doctype html><html lang='it'><head><meta charset='utf-8'>"
            f"<meta name='viewport' content='width=device-width,initial-scale=1'>"
            f"<title>{esc(title)}</title><style>{CSS}</style></head><body><main>",
@@ -63,6 +67,7 @@ def page(title, subtitle, ok, status, yours, facts, checks, groups, extra=""):
     if yours:
         out.append("<h2>What's left for you</h2><div class='you'><ol>"
                    + "".join(f"<li>{esc(y)}</li>" for y in yours) + "</ol></div>")
+    out.append(top)
     if facts:
         out.append("<h2>Where it goes</h2><dl class='facts'>"
                    + "".join(f"<dt>{esc(k)}</dt><dd>{esc(v)}</dd>" for k, v in facts if v) + "</dl>")
@@ -107,7 +112,81 @@ def form_review(out, report, route):
                 [("Form fields", rows)], f"<h2>The filled form</h2>{pages}" if pages else "")
 
 
-def portal_review(report):
+def decisions(report):
+    """Choices the form took in the person's name (run.py DECIDED), apart from the long table of
+    values: they state how an obligation will be met, so the person confirms each. html."""
+    items = report.get("decisions") or []
+    if not items:
+        return ""
+    out = ["<h2>Chosen in your name</h2><p class='sub'>The form was filled with these. Each states how you will "
+           "meet an obligation: check that it is what you will do.</p><div class='you'><ul>"]
+    for d in items:
+        out.append(f"<li><b>{esc(d['section'])}</b><ul>" + "".join(f"<li>{esc(c)}</li>" for c in d["choices"])
+                   + "</ul></li>")
+    return "".join(out) + "</ul></div>"
+
+
+def declarations(report, folder):
+    """The declarations' own text, as the runner copied it from the portal (private/declarations.json):
+    the page shows these, never Claude's summary of them. (html, checks)."""
+    f = folder / "declarations.json" if folder else None
+    items = json.loads(f.read_text()) if f and f.exists() else None
+    note = report.get("declarations_note")
+    checks = []
+    if items:
+        ticked = [i["section"] for i in items if any(b["ticked"] for b in i["boxes"])]
+        checks.append((f"Declarations: {len(items)} copied word for word from the portal; none ticked" if not ticked
+                       else "Declarations already ticked before you opened them (not by this run): "
+                       + "; ".join(ticked), not ticked))
+    elif items is not None and not note:
+        checks.append(("Declarations: none in the portal's menu; read each one there before you tick it", False))
+    elif items is None:
+        checks.append(("Declarations: not copied in this run" + (" (read in the pane, but kept in its tab: they would "
+                       "pass through the conversation)" if report.get("declarations_read") else "")
+                       + "; read each one in the portal before you tick it", False))
+    if note:
+        checks.append((f"Declarations: not all copied ({note}); read the rest in the portal", False))
+    if not items:
+        return "", checks
+    out = ["<h2>The declarations you will tick</h2><p class='sub'>The portal's own words, copied by the program, "
+           "not a summary. Read them before you tick: you make them under your own name, and a false one is "
+           "a crime (DPR 445/2000, art. 76).</p>"]
+    for i in items:
+        boxes = "".join(f"<li class='{'on' if b['ticked'] else ''}'>{'☑ already ticked' if b['ticked'] else '☐'} "
+                        f"{esc(b['label'])}</li>" for b in i["boxes"])
+        out.append(f"<details open><summary>{esc(i['section'])}</summary><div class='decl'>{esc(i['text'])}"
+                   + (f"<ul>{boxes}</ul>" if boxes else "") + "</div></details>")
+    return "".join(out), checks
+
+
+def preview(report, folder):
+    """The portal's PDF preview of the draft (private/anteprima.pdf): pages as images when PyMuPDF is
+    there, always a download. (html, checks)."""
+    f = folder / "anteprima.pdf" if folder else None
+    if not (f and f.exists()):
+        why = report.get("preview_note")
+        return "", [("The portal's PDF preview " + (f"couldn't be copied ({why})" if why else "was not copied in this run")
+                     + ": open Visualizza anteprima in the portal and read it before you sign", False)]
+    data = f.read_bytes()
+    out = ["<h2>The portal's preview</h2><p class='sub'>The document the portal will file, as it renders it.</p>",
+           f"<a class='dl' download='anteprima.pdf' href='data:application/pdf;base64,"
+           f"{base64.b64encode(data).decode()}'>Download the PDF</a>"]
+    try:
+        import fitz  # noqa: PLC0415  (optional, as in fill.py)
+        with fitz.open(stream=data, filetype="pdf") as doc:
+            for n, pg in enumerate(doc):
+                if n == 20:
+                    out.append(f"<p class='sub'>{len(doc) - 20} more pages in the PDF.</p>")
+                    break
+                png = pg.get_pixmap(matrix=fitz.Matrix(1.4, 1.4)).tobytes("png")
+                out.append(f"<img class='page' alt='page {n + 1}' src='data:image/png;base64,"
+                           f"{base64.b64encode(png).decode()}'>")
+    except Exception:
+        out.append("<p class='sub'>(Open the PDF to read it: this page can't draw it without PyMuPDF.)</p>")
+    return "".join(out), [("The portal's own PDF preview copied", True)]
+
+
+def portal_review(report, out=None):
     ok = report.get("result") == "filled"
     checks = [(f"{s['section']}: saved, every field read back ({s['seconds']} s)"
                if not s["errors"] and not s["bad"] else f"{s['section']}: {s['errors'] or s['bad']}",
@@ -125,10 +204,15 @@ def portal_review(report):
     groups = {}
     for v in report.get("values", []):
         groups.setdefault(v["section"], []).append((v["label"], v["value"], False))
+    folder = out / "private" if out else None
+    # A stopped run hasn't reached either, so it says nothing about them.
+    decl_html, decl_checks = declarations(report, folder) if ok else ("", [])
+    prev_html, prev_checks = preview(report, folder) if ok else ("", [])
+    checks += decl_checks + prev_checks
     return page(report.get("title") or report["procedure"], f"{report['procedure']} · draft on the portal", ok,
                 f"Draft saved in {report.get('total_seconds')} s: ready for your review" if ok
                 else "Stopped before the end: see below", report.get("yours", []), [("Draft", report.get("url"))],
-                checks, list(groups.items()))
+                checks, list(groups.items()), prev_html, decisions(report) + decl_html)
 
 
 def main():
@@ -141,7 +225,7 @@ def main():
     if shown.exists():
         report |= json.loads(shown.read_text())
     route = json.loads(a.route.read_text()) if a.route else None
-    doc = form_review(a.out, report, route) if "rows" in report else portal_review(report)
+    doc = form_review(a.out, report, route) if "rows" in report else portal_review(report, a.out)
     (a.out / "review.html").write_text(doc, encoding="utf-8")
     print(a.out / "review.html")
     return 0

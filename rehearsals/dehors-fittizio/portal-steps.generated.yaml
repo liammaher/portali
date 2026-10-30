@@ -19,13 +19,13 @@ asks:
   bollo_seriale: {type: text, question: The marca da bollo's serial number (14 digits)}
   bollo_data: {type: date, question: The marca da bollo's date}
   insegna: {type: text, question: 'What name goes on the sign?'}
-  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', default: 'false'}
+  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', propose: 'false'}
   notifica_852_data: {type: date, question: Its date}
   diritti_euro: {type: number, question: The SUAP fees in euro, default: '250', why: The 2026 table's line for suolo pubblico annesso a pubblici esercizi (DGC 239/2026).}
   orario_dalle: {type: text, question: 'Opening time, the same every open day (hh:mm)'}
   orario_alle: {type: text, question: 'Closing time (hh:mm)'}
-  giorno_chiusura: {type: text, question: The weekly closing day ('nessuno' if none), default: nessuno}
-  area_privata_uso_pubblico: {type: yes_no, question: 'Is the ground private but open to the public (rather than public)?', default: 'false'}
+  giorno_chiusura: {type: text, question: The weekly closing day ('nessuno' if none), propose: nessuno}
+  area_privata_uso_pubblico: {type: yes_no, question: 'Is the ground private but open to the public (rather than public)?', propose: 'false'}
   dehors_dal: {type: date, question: The season's first day for the dehors}
   dehors_al: {type: date, question: Its last day}
   dehors_lunghezza_m: {type: number, question: The dehors area's length in metres}

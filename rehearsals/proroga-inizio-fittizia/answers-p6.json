@@ -1,5 +1,7 @@
 {
- "people": {"c": "luca"},
+ "people": {
+  "c": "luca"
+ },
  "descrizione": "PROVA NON INVIARE - proroga inizio P6 generato",
  "titolo": "proprietario",
  "oggetto": "Richiesta di proroga del termine di inizio lavori del permesso di costruire 999/2026.",
@@ -9,5 +11,6 @@
  "proroga_data_prevista": "2027-11-15",
  "proroga_giorni": "365",
  "proroga_motivo": "Ritardo nella consegna delle strutture prefabbricate da parte del fornitore, per cause non imputabili al titolare.",
- "diritti_euro": "0"
+ "diritti_euro": "0",
+ "titolo_tipo": "permesso di costruire"
 }

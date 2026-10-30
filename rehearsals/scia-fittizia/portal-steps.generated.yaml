@@ -14,6 +14,12 @@ yours:
 groups:
   fasce_funzionali:
     question: Which fasce di rispetto is the property in? Tick every one that applies.
+  barriere_requisiti:
+    question: Which of the barriers rules' requirements does the project meet (D.M. 236/1989)? Tick every one that applies.
+  acustica_documenti:
+    question: Which acoustic documents are attached (art. 8 L. 447/1995, art. 4 DPR 227/2011)? Tick every one that applies.
+  fatti:
+    question: Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna.
 asks:
   descrizione: {type: text, question: A name for the draft in Pratiche in bozza, default: 'PROVA NON INVIARE - SCIA {{c:identity.last_name}}'}
   titolo: {type: text, question: 'The client''s title to the property, in one word (proprietario, comproprietario, usufruttuario, amministratore di condominio, locatario, comodatario, ...)', propose: '{{c:immobile.titolo}}'}
@@ -28,8 +34,8 @@ asks:
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   data_inizio_lavori: {type: date, question: When the works will start}
   dettaglio_intervento: {type: text, question: The works for the relazione tecnica (500 characters)}
-  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', default: 'true'}
-  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', default: 'true'}
+  dlgs81: {type: yes_no, question: 'Do the D.Lgs. 81/2008 site-safety rules apply (works by a firm, not a self-builder)?', propose: 'true'}
+  sotto_200: {type: yes_no, question: 'Is the site under 200 uomini-giorno?', propose: 'true'}
   notifica_dovuta: {type: yes_no, question: 'Is a notifica preliminare due (more than one firm on site, or over 200 uomini-giorno)?'}
   pdc_numero: {type: text, question: The permesso di costruire's number}
   pdc_data: {type: date, question: Its issue date}
@@ -40,23 +46,51 @@ asks:
   impianto_gas: {type: yes_no, question: 'Gas?', when: '{{ask.impianti}}'}
   strutture: {type: yes_no, question: 'Did the works touch the building''s structure?'}
   prestazione_energetica: {type: yes_no, question: 'Are the works subject to the minimum energy-performance requirements?'}
-  barriere: {type: yes_no, question: 'Is the building private and subject to the barriers rules (artt. 77-82 DPR 380/2001)?'}
+  barriere: {type: yes_no, question: 'Are the works subject to the barriers rules of artt. 77 ff. DPR 380/2001 and DM 236/1989 (private buildings)?'}
+  barriere_art82: {type: yes_no, question: 'Is it a private building open to the public, the works conforming to art. 82 DPR 380/2001 (as the relazione and drawings show)?'}
+  barriere_deroga: {type: yes_no, question: 'Are the works subject to the barriers rules but don''t meet them, so the SCIA condizionata asks for a deroga (its documents attached)?', propose: 'false'}
+  barriere_elaborati: {type: file, question: The drawings and relazione showing the barriers rules are met (art. 77 ff. or art. 82 DPR 380/2001) (PDF)}
+  barriere_deroga_doc: {type: file, question: The documents for the barriers deroga (relazione tecnica and drawings) (PDF)}
+  scia_sanatoria: {type: yes_no, question: 'Is this SCIA filed in sanatoria (the wizard''s sanatoria question answered Sì)?', default: 'false'}
+  sanatoria_caso: {type: choice, question: 'Which case of the SCIA in sanatoria? in corso (works still under way, the SCIA filed of one''s own accord: a €516 sanction, art. 37 c. 5 DPR 380/2001); doppia
+      conformita (works done without the SCIA or differing from it, conforming to the planning and building rules both when done and today: an oblazione of €516 to €5,164, art. 36-bis c. 5 b); conformita
+      urbanistica (conforming to today''s planning rules and the building rules of the time: €1,032 to €10,328, art. 36-bis c. 1); variante pre 1977 (a variant to a title issued before L. 10/1977, art.
+      34-ter)', options: [in corso, doppia conformita, conformita urbanistica, variante pre 1977], when: '{{ask.scia_sanatoria}}'}
+  sanatoria_data: {type: date, question: 'When the works were done (for works still under way: when they started)', when: '{{ask.scia_sanatoria}}'}
+  sanatoria_oblazione: {type: number, question: 'The oblazione the technician determines and the client paid before filing, in euro (€516 to €5,164 with double conformity); the SUE may adjust it', when: '{{ask.scia_sanatoria}}
+      {{ask.sanatoria_caso|is_doppia_conformita}}'}
+  sanatoria_catasto: {type: choice, question: 'The catasto for the works to legalize: invariato (no change to the catasto registration); presentata (the DOCFA already filed: its protocol and date); dopo
+      (to be filed once the sanatoria takes effect)', options: [invariato, presentata, dopo], when: '{{ask.scia_sanatoria}}'}
+  sanatoria_catasto_protocollo: {type: text, question: The DOCFA's protocol number, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}'}
+  sanatoria_catasto_data: {type: date, question: The DOCFA's date, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}'}
   scia_tipo: {type: choice, question: 'What does the SCIA file? manutenzione straordinaria (art. 3 c. 1 b: on structural parts or the facades); restauro (c: restauro e risanamento conservativo on structural
       parts); ristrutturazione (d: a ristrutturazione edilizia that isn''t one of art. 10 c. 1 c); variante pdc (a variant in corso d''opera to a permesso di costruire, art. 22 c. 2 and 2-bis); variante
       scia (a variant to a SCIA that isn''t an essential variation); variante scia essenziale (one that is, art. 32); cambio uso (a change of use alone, art. 23-ter)', options: [manutenzione straordinaria,
-      restauro, ristrutturazione, variante pdc, variante scia, variante scia essenziale, cambio uso]}
+      restauro, ristrutturazione, variante pdc, variante scia, variante scia essenziale, cambio uso], propose: '{{ask.intervento,ask.strutture,ask.prospetti,ask.cambio_uso|sue_scia_tipo}}'}
   scia_cambio_uso: {type: choice, question: 'Do the works change the use? no; stessa categoria (one unit, within the same functional category); tra categorie (one unit in a building in zone A, B or C of
       DM 1444/1968, to another category: art. 23-ter c. 1-ter); intero immobile (a whole building, within the same category: art. 23-ter c. 3)', options: ['no', stessa categoria, tra categorie, intero immobile],
-    propose: 'no'}
+    propose: '{{ask.cambio_uso|sue_scia_cambio_uso}}'}
   cambio_uso_tipo: {type: choice, question: 'Which change of use, alone? unita senza opere stessa categoria / unita senza opere tra categorie (one unit, with no works or only edilizia libera, art. 6); unita
       opere 6bis stessa categoria / unita opere 6bis tra categorie (one unit, with CILA works, art. 6-bis); immobile senza opere / immobile opere 6bis (a whole building, within the same category)', options: [
-      unita senza opere stessa categoria, unita senza opere tra categorie, unita opere 6bis stessa categoria, unita opere 6bis tra categorie, immobile senza opere, immobile opere 6bis]}
+      unita senza opere stessa categoria, unita senza opere tra categorie, unita opere 6bis stessa categoria, unita opere 6bis tra categorie, immobile senza opere, immobile opere 6bis], propose: '{{ask.intervento,ask.cambio_uso|sue_cambio_uso_tipo}}'}
+  barriere_accessibilita: {type: yes_no, group: barriere_requisiti, item: Accessibilità}
+  barriere_visitabilita: {type: yes_no, group: barriere_requisiti, item: Visitabilità}
+  barriere_adattabilita: {type: yes_no, group: barriere_requisiti, item: Adattabilità}
+  rinnovabili: {type: yes_no, question: 'Does the renewables obligation apply (D.Lgs. 28/2011: a new building or a major renovation), its respect shown in the drawings and the relazione tecnica?'}
+  incentivo_energetico: {type: choice, question: 'Which energy incentive does the project use, certified in the relazione tecnica? nessuno; art 14 c6 (D.Lgs. 102/2014: thicker walls and roofs not counted,
+      the energy index at least 20% lower); art 14 c7 (deroga to distances and heights, the transmittance limit at least 10% lower); bonus volumetrico (D.Lgs. 28/2011 art. 12: 5% more volume, renewables
+      covering more than the obligation)', options: [nessuno, art 14 c6, art 14 c7, bonus volumetrico], propose: nessuno}
+  acustica_passiva: {type: yes_no, question: 'Does the DPCM 5/12/1997 on buildings'' passive acoustic requirements apply (a new building, or one rebuilt)?'}
+  vvf_valutazione: {type: yes_no, question: 'Does the project need the Vigili del Fuoco''s assessment (an activity of DPR 151/2011 cat. B or C, e.g. a residential building over 24 m)?', propose: 'false'}
+  scavo: {type: choice, question: 'Do the works produce excavated earth? nessuno (no excavation subject to the rules); riutilizzo in sito (reused where it is dug); rifiuti (handled as waste)', options: [
+      nessuno, riutilizzo in sito, rifiuti], propose: nessuno}
   scia_variata_numero: {type: text, question: 'The SCIA the variant changes: its number'}
   scia_variata_data: {type: date, question: Its date}
   scia_onerosa: {type: yes_no, question: 'Is a contributo di costruzione due (e.g. a change of use between categories, or works adding urban load)?', propose: 'false'}
   contributo_normativa: {type: text, question: 'Why the works are free of the contributo di costruzione (the rule, e.g. art. 17 c. 3 DPR 380/2001)'}
-  contributo_pagamento: {type: choice, question: 'How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start); rateizzazione (in instalments,
-      as the Comune sets); in corso d''opera (the costo di costruzione paid during the works)', options: [pagato, prima dei lavori, rateizzazione, in corso d'opera]}
+  contributo_pagamento: {type: choice, question: 'How the contributo is paid: pagato (already: its receipt attached); prima dei lavori (the receipt sent before the works start; for a permesso, paid when
+      it''s collected; for a SCIA alternativa, within 30 days of filing); rateizzazione (in instalments, as the Comune sets); in corso d''opera (the costo di costruzione paid during the works)', options: [
+      pagato, prima dei lavori, rateizzazione, in corso d'opera]}
   contributo_calcolo: {type: choice, question: 'Who works the contributo out: prospetto (the progettista''s prospetto di calcolo preventivo, attached); sportello (the SUE, from the technical documents attached)',
     options: [prospetto, sportello]}
   documentazione_calcolo_contributo: {type: file, question: The technical documents the SUE needs to work out the contributo (PDF)}
@@ -69,11 +103,47 @@ asks:
   prg_zona: {type: text, question: The PRG zone of the property}
   prg_articolo: {type: text, question: The article of the PRG's rules for that zone}
   progetto_impianti: {type: yes_no, question: 'Do the systems need a project (DM 37/2008 art. 5)?'}
+  progetto_elettrico_doc: {type: file, question: The electrical system's project (PDF)}
+  progetto_radiotv_doc: {type: file, question: The radio and TV systems' project (PDF)}
+  progetto_termico_doc: {type: file, question: The heating or air-conditioning system's project (PDF)}
+  progetto_idrico_doc: {type: file, question: The water and sanitary systems' project (PDF)}
+  progetto_gas_doc: {type: file, question: The gas system's project (PDF)}
+  progetto_ascensore_doc: {type: file, question: The lift's project (PDF)}
+  progetto_antincendio_doc: {type: file, question: The fire-protection system's project (PDF)}
+  progetto_altro_doc: {type: file, question: The other system's project (PDF)}
+  impianto_radiotv: {type: yes_no, question: 'Radio and TV systems, aerials, electronics?', when: '{{ask.impianti}}'}
+  impianto_ascensore: {type: yes_no, question: 'Lifts, goods lifts, escalators?', when: '{{ask.impianti}}'}
+  impianto_antincendio: {type: yes_no, question: 'Fire-protection systems?', when: '{{ask.impianti}}'}
+  impianto_altro: {type: yes_no, question: 'Any other kind of system (as regional rules define them)?', when: '{{ask.impianti}}'}
+  impianto_altro_quale: {type: text, question: 'Which other system, in a few words (100 characters)'}
   demolizioni: {type: yes_no, question: 'Do the works demolish anything (partitions, finishes) and produce waste?'}
-  acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 (acoustic impact) or the DPCM 5/12/1997 (passive acoustics) apply?', default: 'false'}
-  antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', default: 'false'}
-  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos?', default: 'false'}
-  igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', default: 'true'}
+  acustica: {type: yes_no, question: 'Does art. 8 of L. 447/1995 apply (an acoustic impact or clima acustico report, or the titolare''s declaration under DPR 227/2011 art. 4)?', propose: 'false'}
+  acustica_impatto: {type: yes_no, group: acustica_documenti, item: Documentazione di impatto acustico (art. 8 cc. 2 and 4 L. 447/1995)}
+  acustica_clima: {type: yes_no, group: acustica_documenti, item: Valutazione previsionale di clima acustico (art. 8 c. 3 L. 447/1995)}
+  acustica_dichiarazione: {type: yes_no, group: acustica_documenti, item: The titolare's dichiarazione sostitutiva that the limits of the acoustic classification are respected}
+  acustica_misure: {type: yes_no, group: acustica_documenti, item: Documentazione di previsione di impatto acustico with the measures to reduce the emissions (the limits would be exceeded)}
+  acustica_impatto_doc: {type: file, question: The documentazione di impatto acustico (PDF)}
+  acustica_clima_doc: {type: file, question: The valutazione previsionale di clima acustico (PDF)}
+  acustica_dichiarazione_doc: {type: file, question: The titolare's dichiarazione sostitutiva on the acoustic limits (PDF)}
+  acustica_misure_doc: {type: file, question: The documentazione di previsione di impatto acustico with its measures (PDF)}
+  antincendio_soggetto: {type: yes_no, question: 'Is the building subject to fire-prevention rules?', propose: 'false'}
+  antincendio_deroga: {type: yes_no, question: 'Does the building have features that don''t allow the fire-prevention technical rules to be followed in full, so a deroga is asked (its documents attached)?',
+    propose: 'false'}
+  antincendio_deroga_doc: {type: file, question: The documents for the fire-prevention deroga (PDF)}
+  vvf_doc: {type: file, question: The documents for the Vigili del Fuoco's assessment of the project (art. 3 DPR 151/2011) (PDF)}
+  amianto: {type: yes_no, question: 'Do the works touch parts with asbestos (so a piano di lavoro under art. 256 D.Lgs. 81/2008 is needed)?', propose: 'false'}
+  relazione_energetica: {type: file, question: 'The relazione tecnica on energy use (art. 125 DPR 380/2001, D.Lgs. 192/2005) (PDF)'}
+  amianto_piano: {type: file, question: The piano di lavoro for the asbestos (art. 256 D.Lgs. 81/2008) (PDF)}
+  igienico_conforme: {type: yes_no, question: 'Does the unit meet the hygiene and health requirements (no derogation)?', propose: 'true'}
+  igienico_24_5bis: {type: yes_no, question: 'Does it meet them under art. 24 c. 5-bis DPR 380/2001 (rooms 2.40 to 2.70 m high, or a one-room flat of 20 to 28 m² for one person or 28 to 38 m² for two)?',
+    propose: 'false'}
+  igienico_5bis_caso: {type: choice, question: 'Which case of art. 24 c. 5-bis? altezza (rooms with a minimum inner height under 2.70 m but at least 2.40 m, lett. a); monostanza uno (a one-room flat for
+      one person, 20 m² or more but under 28 m² with its services, lett. b); monostanza due (for two people, 28 m² or more but under 38 m²); piu casi (more than one)', options: [altezza, monostanza uno,
+      monostanza due, piu casi]}
+  igienico_adattabilita: {type: yes_no, question: 'Do the rooms meet the adattabilità requirement of DM 236/1989 (art. 24 c. 5-ter DPR 380/2001)?'}
+  igienico_5ter: {type: choice, question: 'Which condition of art. 24 c. 5-ter holds? recupero (the building is under works of recupero edilizio improving its hygiene, lett. a); progetto alternativo (the
+      drawings attached include a renovation project with alternative solutions for the occupants: more surface, or better natural ventilation, lett. b)', options: [recupero, progetto alternativo]}
+  igienico_deroga_doc: {type: file, question: The documents for the hygiene derogation request (PDF)}
   cemento_armato: {type: yes_no, question: 'Do the works build reinforced or prestressed concrete, or steel structures (art. 65 DPR 380/2001)?'}
   denuncia_art65: {type: file, question: 'The denuncia of the concrete or steel works (art. 65 DPR 380/2001), as filed (PDF)'}
   sismica: {type: choice, question: 'The works'' seismic filing (art. 93-94 DPR 380/2001, L.R. 9/1983, Reg. 4/2010)? deposito (works to report: the denuncia''s documents attached); autorizzazione (the documents
@@ -98,6 +168,7 @@ asks:
   vinca_doc: {type: file, question: The documents for the Valutazione d'incidenza (PDF)}
   fascia_cimiteriale: {type: choice, question: 'Is the property in a cemetery''s fascia di rispetto? no; consentito (inside, and the works are allowed there); non consentito (inside, and not allowed without
       a deroga)', options: ['no', consentito, non consentito], propose: 'no'}
+  cimiteriale_doc: {type: file, question: The documents for the cemetery fascia's deroga (PDF)}
   rir: {type: choice, question: 'Major-hazard plants (RIR, D.Lgs. 105/2015) in the comune? no (none); fuori area (there are, the comune maps their area di danno, and the property is outside it); in area
       (inside it: the documents for the Comitato Tecnico Regionale attached); non individuata (there are, and the comune hasn''t mapped the area di danno: the documents attached)', options: ['no', fuori
         area, in area, non individuata]}
@@ -132,45 +203,70 @@ asks:
   elaborati_grafici: {type: file, question: 'The drawings: stato di fatto, progetto, comparativo (PDF)'}
   relazione_tecnica: {type: file, question: The relazione tecnica (PDF)}
   documentazione_fotografica: {type: file, question: Photos of the state of the premises (PDF)}
+  intervento: {type: choice, question: 'Che lavori sono, secondo le definizioni dell''art. 3 DPR 380/2001?', options: [edilizia_libera, opere_temporanee, nessuna_opera, manutenzione_straordinaria, restauro,
+      ristrutturazione, ristrutturazione_pesante, nuova_costruzione, ristrutturazione_urbanistica, variante_pdc, variante_essenziale_pdc, variante_scia, altro], labels: {edilizia_libera: 'Lavori senza titolo
+        dell''art. 6 c. 1: manutenzione ordinaria (riparare, rinnovare e sostituire finiture, tenere in efficienza gli impianti), barriere architettoniche senza ascensori esterni né modifiche della sagoma,
+        VEPA, tende e pergole a telo retrattile, pavimentazioni esterne e simili', opere_temporanee: 'Opere stagionali o per esigenze contingenti e temporanee, da rimuovere entro 180 giorni, montaggio e
+        smontaggio compresi (art. 6 c. 1 e-bis)', nessuna_opera: 'Nessun lavoro: solo un cambio di destinazione d''uso', manutenzione_straordinaria: 'Manutenzione straordinaria (art. 3 c. 1 b): rinnovare
+        e sostituire parti dell''edificio, servizi igienici e impianti, frazionare o accorpare unità', restauro: Restauro e risanamento conservativo (art. 3 c. 1 c), ristrutturazione: Ristrutturazione edilizia
+        (art. 3 c. 1 d) che non è uno dei casi dell'art. 10 c. 1 c, ristrutturazione_pesante: 'Ristrutturazione edilizia dell''art. 10 c. 1 c: un organismo in parte o del tutto diverso con più volume, o
+        con cambio d''uso in zona omogenea A, o che cambia sagoma, volume o prospetti di un immobile tutelato, o la demolizione e ricostruzione in un''area tutelata (artt. 136 c. 1 c e d, 142) con modifiche',
+      nuova_costruzione: 'Nuova costruzione (art. 3 c. 1 e), compresi gli ampliamenti fuori sagoma', ristrutturazione_urbanistica: Ristrutturazione urbanistica (art. 3 c. 1 f), variante_pdc: Variante in
+        corso d'opera a un permesso di costruire che non è una variazione essenziale, variante_essenziale_pdc: Variante in corso d'opera a un permesso di costruire che è una variazione essenziale, variante_scia: Variante
+        in corso d'opera a una SCIA (essenziale o no), altro: 'Altro: permesso in deroga (art. 14), permesso convenzionato (art. 28-bis), sottotetti, parcheggi o Piano casa delle leggi regionali, proroghe
+        e volture'}, how: Lo stabilisce il tecnico dalle definizioni dell'art. 3 e dall'elenco dell'art. 6 DPR 380/2001.}
+  sanatoria: {group: fatti, type: yes_no, item: 'I lavori sono già iniziati, o già finiti, senza il titolo che serviva?'}
+  prospetti: {group: fatti, type: yes_no, item: 'La manutenzione straordinaria modifica i prospetti (le facciate) dell''edificio?'}
+  cambio_uso: {type: choice, question: 'I lavori cambiano la destinazione d''uso? Si sceglie il primo caso che vale.', options: ['no', zona_agricola, non_rilevante, stessa_categoria, tra_categorie, piano_terra,
+      intero_immobile, intero_tra_categorie, altro], labels: {'no': 'No', zona_agricola: 'Sì, in una zona agricola (zona E del PRG)', non_rilevante: 'Sì, ma il cambio non aumenta il fabbisogno di standard
+        urbanistici (aree per servizi e parcheggi): in Campania non è urbanisticamente rilevante', stessa_categoria: 'Sì, di una singola unità, restando nella stessa categoria funzionale', tra_categorie: 'Sì,
+        di una singola unità in un immobile delle zone A, B o C del D.M. 1444/1968, tra le categorie residenziale, turistico-ricettiva, produttiva e direzionale, commerciale (art. 23-ter c. 1-ter), non
+        al piano terra né seminterrata', piano_terra: 'Sì, di una singola unità al piano terra (primo piano fuori terra) o seminterrata, verso un''altra categoria funzionale', intero_immobile: 'Sì, di un
+        intero immobile, restando nella stessa categoria funzionale', intero_tra_categorie: 'Sì, di un intero immobile, verso un''altra categoria funzionale', altro: 'Sì, in un altro modo: un''unità fuori
+        delle zone A, B e C (o equipollenti) verso un''altra categoria, o verso o dalla categoria rurale fuori della zona E'}, how: 'Le categorie funzionali sono quelle dell''art. 23-ter c. 1 DPR 380/2001
+      (residenziale, turistico-ricettiva, produttiva e direzionale, commerciale, rurale). Il fabbisogno di standard lo stabilisce il tecnico dalle dotazioni che il PRG chiede per la nuova destinazione (art.
+      2 c. 4 L.R. Campania 13/2022, art. 27 c. 2 L.R. 31/2021).'}
+  uso_ammesso_prg: {group: fatti, type: yes_no, item: 'La nuova destinazione d''uso è tra quelle che il PRG ammette in quella zona?'}
+  verso_a2_tavola_7a: {group: fatti, type: yes_no, item: 'Il cambio porta un''abitazione ordinaria (a.1) a B&B, affittacamere, casa o appartamento per vacanze o locazione breve non imprenditoriale (a.2),
+      in un edificio dell''area della tavola 7a del centro storico?', how: 'Le sottocategorie sono quelle dell''art. 21 delle norme della Variante generale come modificato dalla D.C.C. 129/2026; l''area
+      è quella della tavola 7a "centro storico, area di salvaguardia dell''offerta abitativa ordinaria".'}
+  cambio_uso_sagoma: {group: fatti, type: yes_no, item: 'Le opere che accompagnano il cambio d''uso dell''immobile incidono sulla sagoma o ne aumentano i volumi?'}
+  paesaggio_eseguiti: {group: fatti, type: yes_no, item: 'Le opere che chiedono l''autorizzazione paesaggistica sono già state eseguite, anche in parte?'}
+  demolizione_zona_a: {group: fatti, type: yes_no, item: 'I lavori demoliscono e ricostruiscono un edificio, o la variante cambia la sagoma, in zona A della Variante generale al PRG o della Variante occidentale?',
+    how: La zona si legge nella tavola di zonizzazione del PRG di Napoli.}
+  piano_planovolumetrico: {group: fatti, type: yes_no, item: 'La nuova costruzione o la ristrutturazione urbanistica è disciplinata da un piano attuativo con precise disposizioni plano-volumetriche dichiarate
+      dal Comune, o (per una nuova costruzione) è in diretta esecuzione di uno strumento urbanistico generale che le contiene?'}
 supports:
-- value: '{{ask.paesaggio}}'
+- if: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}}'
+  value: '{{ask.igienico_5bis_caso}}'
   in:
-  - 'no'
-  - senza autorizzazione
-  else: 'A landscape authorization goes in the same pratica as the SCIA, selected with it on the SUE: the SCIA with its semplificata or ordinaria (napoli/comune/scia-con-paesaggistica-*).'
-- value: '{{ask.fascia_cimiteriale}}'
-  in:
-  - 'no'
-  - consentito
-  else: Works not allowed in a cemetery's fascia di rispetto need a deroga, not mapped yet.
-- value: '{{ask.acustica}}'
-  in:
-  - 'false'
-  else: Acoustic obligations aren't mapped yet.
-- value: '{{ask.antincendio_soggetto}}'
-  in:
-  - 'false'
-  else: Fire-prevention obligations aren't mapped yet.
-- value: '{{ask.amianto}}'
-  in:
-  - 'false'
-  else: Works on parts with asbestos aren't mapped yet.
-- value: '{{ask.igienico_conforme}}'
+  - altezza
+  - monostanza uno
+  - monostanza due
+  else: 'More than one case of art. 24 c. 5-bis isn''t mapped yet: each opens its own conditions.'
+- if: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}}'
+  value: '{{ask.igienico_adattabilita}}'
   in:
   - 'true'
-  else: A hygiene derogation isn't mapped yet.
-- value: '{{ask.barriere}}'
-  in:
-  - 'false'
-  else: The barriers rules (artt. 77-82) aren't mapped yet.
-- value: '{{ask.progetto_impianti}}'
-  in:
-  - 'false'
-  else: Systems needing a project aren't mapped yet.
-- value: '{{ask.prestazione_energetica}}'
-  in:
-  - 'false'
-  else: Energy-performance filings aren't mapped yet.
+  else: 'The form allows art. 24 c. 5-bis only with the adattabilità requirement met (art. 24 c. 5-ter): the unit doesn''t qualify.'
+rules:
+  table: sue-napoli
+  facts:
+    intervento: '{{ask.intervento}}'
+    sanatoria: '{{ask.sanatoria}}'
+    strutture: '{{ask.strutture}}'
+    prospetti: '{{ask.prospetti}}'
+    sismica: '{{ask.sismica}}'
+    cambio_uso: '{{ask.cambio_uso}}'
+    uso_ammesso_prg: '{{ask.uso_ammesso_prg}}'
+    verso_a2_tavola_7a: '{{ask.verso_a2_tavola_7a}}'
+    cambio_uso_sagoma: '{{ask.cambio_uso_sagoma}}'
+    paesaggio: '{{ask.paesaggio}}'
+    paesaggio_eseguiti: '{{ask.paesaggio_eseguiti}}'
+    bene_culturale: '{{ask.bene_culturale}}'
+    demolizione_zona_a: '{{ask.demolizione_zona_a}}'
+    piano_planovolumetrico: '{{ask.piano_planovolumetrico}}'
+    permesso_per_scelta: 'false'
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 wizard:
@@ -294,7 +390,8 @@ sections:
   fields:
   - {id: 'r5c1p6reg:calendar_input', kind: date, value: '{{ask.data_inizio_lavori|date_it}}', when: '{{ask.bene_culturale|not}} {{ask.area_protetta|is_nulla_osta|not}} {{ask.idrogeologico|is_autorizzazione|not}}
       {{ask.idraulico|not}} {{ask.vinca|not}} {{ask.rir|is_in_area|not}} {{ask.rir|is_non_individuata|not}} {{ask.altri_vincoli_eco|is_assenso|not}} {{ask.fasce|is_assenso|not}} {{ask.paesaggio|is_semplificata|not}}
-      {{ask.paesaggio|is_ordinaria|not}}', label: 'Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio'}
+      {{ask.paesaggio|is_ordinaria|not}} {{ask.barriere_deroga|not}} {{ask.antincendio_deroga|not}} {{ask.vvf_valutazione|not}} {{ask.igienico_conforme}} {{ask.fascia_cimiteriale|is_non_consentito|not}}
+      {{ask.scia_sanatoria|not}}', label: 'Per SCIA/SCIA Unica, il titolare dichiara che i lavori avranno inizio'}
 - section: c) Qualificazione dell'intervento
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.scia_tipo|is_manutenzione_straordinaria}}', label: intervento di manutenzione straordinaria}
@@ -474,6 +571,7 @@ sections:
   - {id: 'r8c2p14reg:radio:4_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta|not}}', label: dichiara che l'intervento non è soggetto all'invio}
   - {id: 'r9c2p17reg:radio:5_clone', kind: radio, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}', label: dichiara che l'intervento è soggetto all'invio}
   - {kind: checkbox, label: e allega alla presente segnalazione la notifica, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
+  - {kind: radio, label: invierà la notifica prima dell'inizio dei lavori, if_present: true, when: '{{ask.dlgs81}} {{ask.notifica_dovuta}}'}
 - section: m) Diritti di terzi
   theirs:
   - dichiara di essere consapevole
@@ -517,14 +615,28 @@ sections:
       immobile}
   - {kind: checkbox, when: '{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}', label: 'mutamento di destinazione d''uso, nel rispetto'}
   - {kind: radio, when: '{{ask.scia_tipo|is_cambio_uso}} {{ask.cambio_uso_tipo|is_immobile_opere_6bis}}', label: con opere riconducibili agli interventi di cui all'articolo 6-bis di un intero immobile}
+  - {kind: checkbox, when: '{{ask.scia_sanatoria}}', label: la presente SCIA è presentata in sanatoria}
   - {kind: text, value: '{{ask.dettaglio_intervento}}', max: 500, label: e che l’intervento sopra indicato}
 - section: Asseverazione SCIA - Stato legittimo
   fields:
   - {id: 'r3c2p5reg:radio:0_clone', kind: radio, label: si}
   - {id: 'r4c1p7reg:chk', kind: checkbox, label: corrisponde allo stato legittimo come risultante}
   - {id: 'r5c1p8reg:chk', kind: checkbox, label: dal/i titolo/i o dalla/e pratica/che edilizia/e}
+  - {id: 'r7c1p10reg:chk', kind: checkbox, when: '{{ask.scia_sanatoria}}', label: dalla sanatoria di cui al successivo quadro}
   - {id: 'r5c3p10reg:radio:3_clone', kind: radio, label: 'no', nth: 2}
-  - {id: 'r12c3p19reg:radio:5_clone', kind: radio, label: 'no', nth: 3}
+  - {id: 'r12c3p19reg:radio:5_clone', kind: radio, when: '{{ask.scia_sanatoria|not}}', label: 'no', nth: 3}
+  - {id: 'r12c2p18reg:radio:4_clone', kind: radio, when: '{{ask.scia_sanatoria}}', label: si, nth: 3}
+  - {id: 'r14c1p21reg:chk', kind: checkbox, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_in_corso}}', label: un intervento soggetto a SCIA in corso di esecuzione}
+  - {kind: date, value: '{{ask.sanatoria_data|date_it}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_in_corso}}', label: i cui lavori sono stati iniziati in data}
+  - {kind: checkbox, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', label: un intervento soggetto a SCIA, nth: 2}
+  - {kind: date, value: '{{ask.sanatoria_data|date_it}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', label: realizzato in data}
+  - {kind: checkbox, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', label: determina l’oblazione dovuta}
+  - {kind: text, value: '{{ask.sanatoria_oblazione}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_caso|is_doppia_conformita}}', max: 9999, label: in euro}
+  - {kind: radio, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_invariato}}', label: dichiara che l’intervento da sanare non richiede}
+  - {kind: radio, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}', label: comunica gli estremi della dichiarazione per l’iscrizione}
+  - {kind: text, value: '{{ask.sanatoria_catasto_protocollo}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}', max: 9999, label: presentata con prot.}
+  - {kind: date, value: '{{ask.sanatoria_catasto_data|date_it}}', when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_presentata}}', label: in data}
+  - {kind: radio, when: '{{ask.scia_sanatoria}} {{ask.sanatoria_catasto|is_dopo}}', label: si impegna a presentare la dichiarazione}
 - section: Asseverazione SCIA - Dati immobile
   fields:
   - {id: 'r5c2p7reg:real', kind: number, value: '{{ask.superficie_mq}}', max: 9, label: Mq}
@@ -535,43 +647,90 @@ sections:
   - {id: 'r18c1p30reg:txt', kind: text, value: '{{ask.prg_zona}}', max: 9999, label: Zona}
   - {id: 'r18c2p32reg:txt', kind: text, value: '{{ask.prg_articolo}}', max: 9999, label: Art.}
   - {id: 'r26c1p40reg:chk', kind: checkbox, when: '{{ask.barriere|not}}', label: non è soggetto alle prescrizioni degli articoli 77}
+  - {id: 'r27c1p41reg:chk', kind: checkbox, when: '{{ask.barriere_art82}}', label: interessa un edificio privato aperto al pubblico}
+  - {id: 'r28c1p42reg:chk', kind: checkbox, when: '{{ask.barriere}} {{ask.barriere_deroga|not}}', label: è soggetto alle prescrizioni degli articoli 77}
+  - {id: 'r29c1p43reg:chk', kind: checkbox, when: '{{ask.barriere}} {{ask.barriere_deroga|not}} {{ask.barriere_accessibilita}}', label: accessibilità}
+  - {id: 'r29c2p44reg:chk', kind: checkbox, when: '{{ask.barriere}} {{ask.barriere_deroga|not}} {{ask.barriere_visitabilita}}', label: visitabilità}
+  - {id: 'r29c3p45reg:chk', kind: checkbox, when: '{{ask.barriere}} {{ask.barriere_deroga|not}} {{ask.barriere_adattabilita}}', label: adattabilità}
+  - {id: 'r30c1p46reg:chk', kind: checkbox, when: '{{ask.barriere}} {{ask.barriere_deroga}}', label: pur essendo soggetto alle prescrizioni degli articoli 77}
+  - {id: 'r31c1p47reg:chk', kind: checkbox, when: '{{ask.barriere}} {{ask.barriere_deroga}}', label: presenta contestualmente alla SCIA condizionata}
 - section: Asseverazione SCIA - Sicurezza impianti
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.impianti|not}}', label: Non comporta l'installazione}
   - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.impianti}}', label: 'Comporta l''installazione, la trasformazione'}
-  - {id: 'r6c1p6reg:chk', kind: checkbox, when: '{{ask.impianto_elettrico}}', label: 'di produzione, trasformazione, trasporto'}
-  - {id: 'r8c1p8reg:chk', kind: checkbox, when: '{{ask.impianto_termico}}', label: 'di riscaldamento, di climatizzazione'}
-  - {id: 'r9c1p9reg:chk', kind: checkbox, when: '{{ask.impianto_idrico}}', label: idrici e sanitari}
-  - {id: 'r10c1p10reg:chk', kind: checkbox, when: '{{ask.impianto_gas}}', label: per la distribuzione e l'utilizzazione di gas}
+  - {id: 'r6c1p6reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_elettrico}}', label: 'di produzione, trasformazione, trasporto'}
+  - {id: 'r7c1p7reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_radiotv}}', label: radiotelevisivi}
+  - {id: 'r8c1p8reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_termico}}', label: 'di riscaldamento, di climatizzazione'}
+  - {id: 'r9c1p9reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_idrico}}', label: idrici e sanitari}
+  - {id: 'r10c1p10reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_gas}}', label: per la distribuzione e l'utilizzazione di gas}
+  - {id: 'r11c1p11reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_ascensore}}', label: impianti di sollevamento di persone o di cose}
+  - {id: 'r12c1p12reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_antincendio}}', label: di protezione antincendio}
+  - {id: 'r13c1p13reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_altro}}', label: altre tipologie di impianti}
+  - {kind: text, label: specificare, value: '{{ask.impianto_altro_quale}}', when: '{{ask.impianti}} {{ask.impianto_altro}}'}
   - {kind: radio, when: '{{ask.progetto_impianti|not}}', label: non è soggetto agli obblighi di presentazione del progetto}
   - {kind: radio, when: '{{ask.progetto_impianti}}', label: è soggetto agli obblighi di presentazione del progetto}
+  - {kind: checkbox, when: '{{ask.progetto_impianti}}', label: allega i relativi elaborati}
   - {kind: radio, when: '{{ask.prestazione_energetica|not}}', label: non è soggetto al deposito del progetto e della relazione tecnica}
-  - {kind: radio, label: non è soggetto all'applicazione del d.lgs. n. 28/2011}
-  - {kind: radio, label: L'intervento non ricade in alcuno dei casi sopra elencati}
+  - {kind: radio, when: '{{ask.prestazione_energetica}}', label: è soggetto al deposito del progetto e della relazione tecnica}
+  - {kind: checkbox, when: '{{ask.prestazione_energetica}}', label: si allega la relazione tecnica sul rispetto delle prescrizioni in materia di risparmio energetico}
+  - {kind: radio, when: '{{ask.rinnovabili|not}}', label: non è soggetto all'applicazione del d.lgs. n. 28/2011}
+  - {kind: radio, when: '{{ask.rinnovabili}}', label: è soggetto all'applicazione del d.lgs. n. 28/2011}
+  - {kind: checkbox, when: '{{ask.rinnovabili}}', label: il rispetto delle prescrizioni in materia di utilizzo di fonti di energia rinnovabili}
+  - {kind: radio, when: '{{ask.incentivo_energetico|is_art_14_c6}}', label: 'ricade nell''articolo 14, comma 6'}
+  - {kind: checkbox, when: '{{ask.incentivo_energetico|is_art_14_c6}}', label: si certifica nella relazione tecnica una riduzione minima del 20}
+  - {kind: radio, when: '{{ask.incentivo_energetico|is_art_14_c7}}', label: 'ricade nell''articolo 14, comma 7'}
+  - {kind: checkbox, when: '{{ask.incentivo_energetico|is_art_14_c7}}', label: si certifica nella relazione tecnica una riduzione minima del 10}
+  - {kind: radio, when: '{{ask.incentivo_energetico|is_bonus_volumetrico}}', label: 'ricade nell''articolo 12, comma 1'}
+  - {kind: checkbox, when: '{{ask.incentivo_energetico|is_bonus_volumetrico}}', label: si certifica nella relazione tecnica una copertura}
+  - {kind: radio, when: '{{ask.incentivo_energetico|is_nessuno}}', label: L'intervento non ricade in alcuno dei casi sopra elencati}
 - section: Asseverazione SCIA - Inquinamento acustico
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.acustica|not}}', label: Non rientra nell'ambito di applicazione dell'articolo 8}
-  - {id: 'r10c1p10reg:radio:2_clone', kind: radio, when: '{{ask.acustica|not}}', label: non rientra nell'ambito dell'applicazione del d.P.C.M.}
-  - {id: 'r14c1p14reg:chk', kind: checkbox, label: non sono soggette alla normativa vigente relativa ai materiali da scavo}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.acustica}}', label: Rientra nell'ambito di applicazione dell'articolo 8}
+  - {id: 'r6c1p6reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_impatto}}', label: documentazione di impatto acustico}
+  - {id: 'r7c1p7reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_clima}}', label: valutazione previsionale di clima acustico}
+  - {id: 'r8c1p8reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_dichiarazione}}', label: dichiarazione sostitutiva dell'atto di notorietà}
+  - {id: 'r9c1p9reg:chk', kind: checkbox, when: '{{ask.acustica}} {{ask.acustica_misure}}', label: la documentazione di previsione di impatto acustico}
+  - {id: 'r10c1p10reg:radio:2_clone', kind: radio, when: '{{ask.acustica_passiva|not}}', label: non rientra nell'ambito dell'applicazione del d.P.C.M.}
+  - {id: 'r11c1p11reg:radio:3_clone', kind: radio, when: '{{ask.acustica_passiva}}', label: rientra nell'ambito dell'applicazione del d.P.C.M.}
+  - {id: 'r14c1p14reg:chk', kind: checkbox, when: '{{ask.scavo|is_nessuno}}', label: non sono soggette alla normativa vigente relativa ai materiali da scavo}
+  - {id: 'r23c1p35reg:chk', kind: checkbox, when: '{{ask.scavo|is_riutilizzo_in_sito}}', label: comportano la produzione di materiali da scavo che saranno riutilizzati}
+  - {id: 'r25c1p37reg:chk', kind: checkbox, when: '{{ask.scavo|is_rifiuti}}', label: comportano la produzione di materiali da scavo che saranno gestiti}
   - {id: 'r24c1p36reg:chk', kind: checkbox, when: '{{ask.demolizioni}}', label: riguardano interventi di demolizione}
   - {id: 'r28c1p40reg:radio:6_clone', kind: radio, when: '{{ask.antincendio_soggetto|not}}', label: non è soggetto alle norme di prevenzione incendi}
-  - {id: 'r33c1p45reg:radio:9_clone', kind: radio, when: '{{ask.antincendio_soggetto|not}}', label: non è soggetto alla valutazione del progetto da parte del Comando}
+  - {id: 'r29c1p41reg:radio:7_clone', kind: radio, when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga|not}}', label: è soggetto alle norme tecniche di prevenzione incendi}
+  - {id: 'r30c1p42reg:radio:8_clone', kind: radio, when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga}}', label: presenta caratteristiche tali da non consentire l'integrale osservanza}
+  - {id: 'r31c1p43reg:chk', kind: checkbox, when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga}}', label: si allega documentazione necessaria all'ottenimento della deroga}
+  - {id: 'r33c1p45reg:radio:9_clone', kind: radio, when: '{{ask.vvf_valutazione|not}}', label: non è soggetto alla valutazione del progetto da parte del Comando}
+  - {id: 'r34c1p46reg:radio:10_clone', kind: radio, when: '{{ask.vvf_valutazione}}', label: è soggetto alla valutazione del progetto da parte del Comando}
+  - {id: 'r35c1p47reg:chk', kind: checkbox, when: '{{ask.vvf_valutazione}}', label: si allega la documentazione necessaria alla valutazione del progetto}
 - section: Asseverazione SCIA - Amianto
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.amianto|not}}', label: non interessano parti di edifici con presenza di fibre di amianto}
-  - {id: 'r9c1p9reg:radio:2_clone', kind: radio, when: '{{ask.igienico_conforme}}', label: è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe}
-  - {id: 'r15c1p15reg:radio:5_clone', kind: radio, when: '{{ask.strutture|not}}', label: non prevede la realizzazione di opere di conglomerato cementizio}
-  - {id: 'r15c1p15reg:radio:5_clone', kind: radio, when: '{{ask.strutture}} {{ask.cemento_armato|not}}', label: non prevede la realizzazione di opere di conglomerato cementizio}
-  - {id: 'r16c1p16reg:radio:6_clone', kind: radio, when: '{{ask.strutture}} {{ask.cemento_armato}}', label: prevede la realizzazione di opere di conglomerato cementizio}
-  - {id: 'r17c1p17reg:chk', kind: checkbox, when: '{{ask.strutture}} {{ask.cemento_armato}}', label: si allega la denuncia di cui all'articolo 65}
-  - {id: 'r19c1p19reg:radio:7_clone', kind: radio, when: '{{ask.strutture|not}}', label: non prevede opere da denunciare o autorizzare}
-  - {id: 'r23c1p25reg:radio:9_clone', kind: radio, when: '{{ask.strutture}} {{ask.sismica|is_deposito}}', label: prevede opere in zona sismica da denunciare}
-  - {id: 'r24c1p26reg:chk', kind: checkbox, when: '{{ask.strutture}} {{ask.sismica|is_deposito}}', label: Si allega documentazione relativa alla denuncia dei lavori in zona sismica}
-  - {id: 'r25c1p27reg:radio:10_clone', kind: radio, when: '{{ask.strutture}} {{ask.sismica|is_autorizzazione}}', label: prevede opere strutturali soggette ad autorizzazione sismica}
-  - {id: 'r26c1p28reg:chk', kind: checkbox, when: '{{ask.strutture}} {{ask.sismica|is_autorizzazione}}', label: Si allega la documentazione necessaria per il rilascio dell'autorizzazione sismica}
-  - {id: 'r20c1p20reg:radio:8_clone', kind: radio, when: '{{ask.strutture}} {{ask.sismica|is_variante}}', label: costituisce una variante non sostanziale riguardante parti strutturali}
-  - {id: 'r22c1p22reg:txt', kind: text, value: '{{ask.sismica_protocollo}}', when: '{{ask.strutture}} {{ask.sismica|is_variante}}', max: 9999, label: con prot.}
-  - {id: 'r22c2p24reg:calendar_input', kind: date, value: '{{ask.sismica_data|date_it}}', when: '{{ask.strutture}} {{ask.sismica|is_variante}}', label: in data}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.amianto}}', label: interessano parti di edifici con presenza di fibre di amianto}
+  - {id: 'r6c1p6reg:chk', kind: checkbox, when: '{{ask.amianto}}', label: in allegato alla presente relazione di asseverazione}
+  - {id: 'r9c1p9reg:radio:2_clone', kind: radio, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis|not}}', label: è conforme ai requisiti igienico-sanitari e alle ipotesi di deroghe}
+  - {id: 'r12c1p12reg:radio:4_clone', kind: radio, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}}', label: è conforme ai requisiti igienico-sanitari previsti dalla normativa vigente e ricade}
+  - {id: 'r13c1p13reg:chk', kind: checkbox, on_page: true, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}} {{ask.igienico_5bis_caso|is_altezza}}', label: locali con un’altezza minima interna}
+  - {kind: checkbox, on_page: true, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}} {{ask.igienico_5bis_caso|is_monostanza_uno}}', label: alloggio monostanza per una persona}
+  - {kind: checkbox, on_page: true, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}} {{ask.igienico_5bis_caso|is_monostanza_due}}', label: alloggio monostanza per due persone}
+  - {kind: checkbox, on_page: true, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}} {{ask.igienico_adattabilita}}', label: che soddisfano il requisito dell}
+  - {kind: checkbox, on_page: true, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}} {{ask.igienico_5ter|is_recupero}}', label: i locali sono situati in edifici sottoposti ad interventi di recupero}
+  - {kind: checkbox, on_page: true, when: '{{ask.igienico_conforme}} {{ask.igienico_24_5bis}} {{ask.igienico_5ter|is_progetto_alternativo}}', label: è contestualmente presentato}
+  - {id: 'r10c1p10reg:radio:3_clone', kind: radio, when: '{{ask.igienico_conforme|not}}', label: non è conforme ai requisiti igienico-sanitari}
+  - {id: 'r11c1p11reg:chk', kind: checkbox, when: '{{ask.igienico_conforme|not}}', label: Si allega documentazione per la richiesta di deroga}
+  - {kind: radio, when: '{{ask.strutture|not}}', label: non prevede la realizzazione di opere di conglomerato cementizio}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.cemento_armato|not}}', label: non prevede la realizzazione di opere di conglomerato cementizio}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.cemento_armato}}', label: prevede la realizzazione di opere di conglomerato cementizio}
+  - {kind: checkbox, when: '{{ask.strutture}} {{ask.cemento_armato}}', label: si allega la denuncia di cui all'articolo 65}
+  - {kind: radio, when: '{{ask.strutture|not}}', label: non prevede opere da denunciare o autorizzare}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.sismica|is_deposito}}', label: prevede opere in zona sismica da denunciare}
+  - {kind: checkbox, when: '{{ask.strutture}} {{ask.sismica|is_deposito}}', label: Si allega documentazione relativa alla denuncia dei lavori in zona sismica}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.sismica|is_autorizzazione}}', label: prevede opere strutturali soggette ad autorizzazione sismica}
+  - {kind: checkbox, when: '{{ask.strutture}} {{ask.sismica|is_autorizzazione}}', label: Si allega la documentazione necessaria per il rilascio dell'autorizzazione sismica}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.sismica|is_variante}}', label: costituisce una variante non sostanziale riguardante parti strutturali}
+  - {kind: text, value: '{{ask.sismica_protocollo}}', when: '{{ask.strutture}} {{ask.sismica|is_variante}}', max: 9999, label: con prot.}
+  - {kind: date, value: '{{ask.sismica_data|date_it}}', when: '{{ask.strutture}} {{ask.sismica|is_variante}}', label: in data}
 - section: Asseverazione SCIA - Tutela Storico Ambientale
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.paesaggio|is_no}}', label: NON ricade in zona sottoposta a tutela}
@@ -603,6 +762,8 @@ sections:
   - {id: 'r17c1p17reg:chk', kind: checkbox, when: '{{ask.vinca}}', label: Si allega la documentazione necessaria all'approvazione del progetto}
   - {id: 'r20c1p20reg:radio:7_clone', kind: radio, when: '{{ask.fascia_cimiteriale|is_no}}', label: l'intervento non ricade nella fascia di rispetto}
   - {id: 'r21c1p21reg:radio:8_clone', kind: radio, when: '{{ask.fascia_cimiteriale|is_consentito}}', label: l'intervento ricade nella fascia di rispetto ed è consentito}
+  - {id: 'r22c1p22reg:radio:9_clone', kind: radio, when: '{{ask.fascia_cimiteriale|is_non_consentito}}', label: l'intervento ricade in fascia di rispetto cimiteriale e non è consentito}
+  - {id: 'r23c1p23reg:chk', kind: checkbox, when: '{{ask.fascia_cimiteriale|is_non_consentito}}', label: Si allega la documentazione necessaria per la richiesta di deroga}
 - section: Asseverazione SCIA - Altri Vincoli
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.rir|is_no}}', label: nel comune NON è presente}
@@ -650,6 +811,7 @@ sections:
   theirs:
   - Procura speciale
   - Quadro riepilogativo della documentazione
+  - Scarica il documento
   - Documentazione dimostrativa dello stato legittimo
   fields:
   - {kind: file, label: Fotocopia di un documento di identita' del soggetto che conferisce, value: '{{ask.documento_identita_cliente}}'}
@@ -702,3 +864,24 @@ sections:
       {{ask.fascia_aeroportuale}}'}
   - {kind: file, label: Documentazione necessaria per il rilascio di atti di assenso relativi ai vincoli di tutela funzionale (altro), value: '{{ask.fascia_altro_doc}}', when: '{{ask.fasce|is_assenso}}
       {{ask.fascia_altro}}'}
+  - {kind: file, label: 'Progetto dell''impianto di produzione, trasformazione', value: '{{ask.progetto_elettrico_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_elettrico}}'}
+  - {kind: file, label: Progetto degli impianti radiotelevisivi, value: '{{ask.progetto_radiotv_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_radiotv}}'}
+  - {kind: file, label: Progetto dell'impianto di riscaldamento, value: '{{ask.progetto_termico_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_termico}}'}
+  - {kind: file, label: Progetto degli impianti idrici e sanitari, value: '{{ask.progetto_idrico_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_idrico}}'}
+  - {kind: file, label: Progetto dell'impianto per la distribuzione e l'utilizzazione di gas, value: '{{ask.progetto_gas_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_gas}}'}
+  - {kind: file, label: Progetto dell'impianto di sollevamento, value: '{{ask.progetto_ascensore_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_ascensore}}'}
+  - {kind: file, label: Progetto dell'impianto di protezione antincendio, value: '{{ask.progetto_antincendio_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_antincendio}}'}
+  - {kind: file, label: Progetto di altre tipologie di impianti, value: '{{ask.progetto_altro_doc}}', when: '{{ask.progetto_impianti}} {{ask.impianti}} {{ask.impianto_altro}}'}
+  - {kind: file, label: Relazione tecnica sui consumi energetici, value: '{{ask.relazione_energetica}}', when: '{{ask.prestazione_energetica}}'}
+  - {kind: file, label: Elaborati relativi al superamento delle barriere architettoniche (art. 82, value: '{{ask.barriere_elaborati}}', when: '{{ask.barriere_art82}}'}
+  - {kind: file, label: Elaborati relativi al superamento delle barriere architettoniche (art. 77, value: '{{ask.barriere_elaborati}}', when: '{{ask.barriere}} {{ask.barriere_deroga|not}}'}
+  - {kind: file, label: Documentazione per la richiesta di deroga alla normativa per l'abbattimento delle barriere, value: '{{ask.barriere_deroga_doc}}', when: '{{ask.barriere}} {{ask.barriere_deroga}}'}
+  - {kind: file, label: Documentazione di impatto acustico, value: '{{ask.acustica_impatto_doc}}', when: '{{ask.acustica}} {{ask.acustica_impatto}}'}
+  - {kind: file, label: Dichiarazione sostitutiva, value: '{{ask.acustica_dichiarazione_doc}}', when: '{{ask.acustica}} {{ask.acustica_dichiarazione}}'}
+  - {kind: file, label: Valutazione previsionale di clima acustico, value: '{{ask.acustica_clima_doc}}', when: '{{ask.acustica}} {{ask.acustica_clima}}'}
+  - {kind: file, label: Documentazione di previsione di impatto acustico, value: '{{ask.acustica_misure_doc}}', when: '{{ask.acustica}} {{ask.acustica_misure}}'}
+  - {kind: file, label: Deroga all'integrale osservanza delle regole tecniche di prevenzione incendi, value: '{{ask.antincendio_deroga_doc}}', when: '{{ask.antincendio_soggetto}} {{ask.antincendio_deroga}}'}
+  - {kind: file, label: Documentazione necessaria al rilascio del parere progetto da parte dei Vigili del Fuoco, value: '{{ask.vvf_doc}}', when: '{{ask.vvf_valutazione}}'}
+  - {kind: file, label: Piano di lavoro di demolizione o rimozione dell'amianto, value: '{{ask.amianto_piano}}', when: '{{ask.amianto}}'}
+  - {kind: file, label: Documentazione per la richiesta di deroga alla conformità ai requisiti igienico sanitari, value: '{{ask.igienico_deroga_doc}}', when: '{{ask.igienico_conforme|not}}'}
+  - {kind: file, label: Documentazione necessaria per la richiesta di deroga alla fascia di rispetto cimiteriale, value: '{{ask.cimiteriale_doc}}', when: '{{ask.fascia_cimiteriale|is_non_consentito}}'}

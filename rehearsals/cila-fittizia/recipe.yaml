@@ -28,6 +28,12 @@ yours:
   - "On Allega documenti, once the declarations are ticked (the portal gives the procura only then): download the procura (Scarica il documento), have the client sign it, sign it digitally (.p7m) and attach it"
   - "Attach the CILA DSC that fill.py filled (form quadro-riepilogativo-dsc: a box per document uploaded) in its slot, as a plain PDF"
   - "Sign and send (Firma e invio); keep the receipt"
+# Which pratica a case is: the library's rules table (rules/sue-napoli.yaml) decides, and pre-flight
+# refuses a case it gives to another pratica, or that needs a pratica this one doesn't file with it.
+rules:
+  table: sue-napoli
+  question: "Quali di queste cose valgono per i lavori? Spunta quelle vere, anche nessuna."
+  facts: {sanatoria: "{{ask.cila_stato|in_in_corso__realizzato}}", permesso_per_scelta: "false"}
 supports:
   - value: "{{ask.direttore_lavori}}"
     in: [progettista, da nominare]

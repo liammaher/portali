@@ -34,10 +34,14 @@
       doesn't name, the payment, signing and sending, and shows the draft, left open for
       them unless --close. Writes DIR/report.json (timings, what each section kept, and when
       it stops a `snapshot` of the page with no value in it): no value is in it, so Claude
-      may read it. DIR/private/ (kept.json, held.json, shown.json) and DIR/review.html (the page
-      the person reviews: what's left for them, the steps file's `yours`, every value, and
-      what a failed read-back wanted and found) are the person's, for Claude to send and
-      never to read. There is no screenshot: a failed page holds the person's data.
+      may read it. DIR/private/ (kept.json, held.json, shown.json, declarations.json,
+      anteprima.pdf) and DIR/review.html (the page the person reviews: what's left for them,
+      the steps file's `yours`, the declarations' own text, the portal's PDF preview, every
+      value, and what a failed read-back wanted and found) are the person's, for Claude to
+      send and never to read. There is no screenshot: a failed page holds the person's data.
+      Reading the declarations opens their sections and copies their text, ticking nothing;
+      the preview is the PDF the portal's "Visualizza anteprima" shows, fetched with the person's session. Neither can stop a saved draft:
+      a failure is a note (`declarations_note`, `preview_note`) in the report and the page.
 
 A run that stops says where (report.json `at`: the wizard screen, or the section and
 field). `page` or `run` with --resume REPORT picks it up on the same draft, from that
@@ -99,6 +103,12 @@ FORBIDDEN = re.compile(r"pago\s*pa|\binvia\b|\bpaga\b|procedi con il pagamento|f
 DECLARATIONS = re.compile(
     r"consapevolezza|informativa sulla privacy|requisiti di o|altre dichiarazioni|"
     r"dichiarazioni ai sensi dell'art\. 6|rispetto sulle tasse|art\. ?75", re.I)
+
+# A codice fiscale as it sits in a firma digitale certificate's subject ("TINIT-RSSMRA80A01H501U").
+CF = re.compile(r"\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b")
+# Choices the form takes in the person's name and the review page lists apart from the long table:
+# how the imposta di bollo is settled (pagoPA, or marche whose serial numbers go in the form).
+DECIDED = re.compile(r"imposta di bollo", re.I)
 
 DUG = {"VIA", "VIALE", "PIAZZA", "CORSO", "LARGO"}
 # run.js for the pane is one tool call's text: a receipt or a small scan, not a planimetria.
@@ -171,14 +181,64 @@ def _destinazione(v):
 
 class Filters(dict):
     """`is_<answer>` is true when the value is that answer, spaces as underscores
-    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `atleast_<n>`
-    is true when the number is n or more (the 20 m² the historic centre's Piano requires)."""
+    ({{ask.titolo_tipo|is_permesso_di_costruire}}): a choice's branch in a `when`. `in_<a>__<b>`
+    is true when it is any of them (a `when` has no "or"). `atleast_<n>` is true when the number
+    is n or more (the 20 m² the historic centre's Piano requires)."""
     def __missing__(self, name):
         if name.startswith("atleast_") and name[8:].isdigit():
             return lambda v: "true" if float(str(v or 0).replace(",", ".")) >= int(name[8:]) else "false"
+        answer = lambda v: re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_")
+        if name.startswith("in_"):
+            return lambda v: "true" if answer(v) in name[3:].split("__") else "false"
         if not name.startswith("is_"):
             raise KeyError(name)
-        return lambda v: "true" if re.sub(r"[^a-z0-9]+", "_", str(v).strip().lower()).strip("_") == name[3:] else "false"
+        return lambda v: "true" if answer(v) == name[3:] else "false"
+
+
+def _facts(v, n):
+    return (str(v).split("/") + [""] * n)[:n]
+
+
+SUE_CAMBIO = {"stessa_categoria": "stessa categoria", "tra_categorie": "tra categorie"}
+
+
+def _sue_scia_tipo(v):
+    """What the SCIA files (asks.scia_tipo), from the SUE table's intervento, strutture,
+    prospetti and cambio_uso; "" where they don't settle it (a variant to a SCIA: essential
+    or not), so the question is asked."""
+    i, strutture, prospetti, cambio = _facts(v, 4)
+    if i in ("variante_pdc", "ristrutturazione"):
+        return {"variante_pdc": "variante pdc", "ristrutturazione": "ristrutturazione"}[i]
+    if i == "restauro" and strutture == "true":
+        return "restauro"
+    if i == "manutenzione_straordinaria" and "true" in (strutture, prospetti):
+        return "manutenzione straordinaria"
+    if i in ("nessuna_opera", "edilizia_libera", "manutenzione_straordinaria", "restauro") and cambio in SUE_CAMBIO:
+        return "cambio uso"
+    return ""
+
+
+def _sue_cambio_uso_tipo(v):
+    """A change of use alone (asks.cambio_uso_tipo), from intervento and cambio_uso."""
+    i, cambio = _facts(v, 2)
+    works = {"nessuna_opera": "senza opere", "edilizia_libera": "senza opere",
+             "manutenzione_straordinaria": "opere 6bis", "restauro": "opere 6bis"}.get(i)
+    return f"unita {works} {SUE_CAMBIO[cambio]}" if works and cambio in SUE_CAMBIO else ""
+
+
+def _sue_pdc_tipo(v):
+    """What the permesso asks for (asks.pdc_tipo), from intervento, cambio_uso and
+    demolizione_zona_a: SCIA works are asked as a permesso by choice (art. 22 c. 7) only when
+    no Campania or Naples rule makes it a permesso anyway."""
+    i, cambio, demolizione = _facts(v, 3)
+    own = {"nuova_costruzione": "nuova costruzione", "ristrutturazione_urbanistica": "ristrutturazione urbanistica",
+           "ristrutturazione_pesante": "ristrutturazione edilizia", "variante_essenziale_pdc": "variante essenziale"}
+    if i in own:
+        return own[i]
+    scia_works = ("nessuna_opera", "edilizia_libera", "manutenzione_straordinaria", "restauro", "ristrutturazione", "variante_pdc")
+    if i in scia_works and cambio not in ("zona_agricola", "intero_immobile", "intero_tra_categorie") and demolizione != "true":
+        return "facolta scia"
+    return ""
 
 
 FILTERS = Filters({
@@ -208,6 +268,13 @@ FILTERS = Filters({
     "empty": lambda v: "true" if not v else "false",
     "not": lambda v: "false" if truthy(v) else "true",
     "positive": lambda v: "true" if float(str(v or 0).replace(",", ".")) > 0 else "false",
+    # The SUE rules table's facts as the forms' own boxes (an ask's `propose`).
+    "sue_scia_tipo": _sue_scia_tipo,
+    "sue_cambio_uso_tipo": _sue_cambio_uso_tipo,
+    "sue_pdc_tipo": _sue_pdc_tipo,
+    "sue_scia_cambio_uso": lambda v: {"no": "no", "intero_immobile": "intero immobile", **SUE_CAMBIO}.get(str(v), ""),
+    "sue_scia_alt_tipo": lambda v: {"ristrutturazione_pesante": "ristrutturazione edilizia",
+                                    "ristrutturazione_urbanistica": "nuova costruzione piano attuativo"}.get(str(v), ""),
 })
 
 
@@ -305,7 +372,10 @@ class Values:
         """A template's value, or None when a field it names is missing."""
         def one(m):
             ref, *filters = [p.strip() for p in m.group(1).split("|")]
-            v = self.sum(ref) if "+" in ref or "*" in ref else self.field(ref)
+            if "," in ref:  # several fields for one filter (a proposal from facts of the case): a/b/c, "" for one unknown
+                v = "/".join(self.field(r.strip()) or "" for r in ref.split(","))
+            else:
+                v = self.sum(ref) if "+" in ref or "*" in ref else self.field(ref)
             if v is None:
                 if "empty" in filters:
                     v = ""
@@ -355,7 +425,7 @@ def refs_in(template):
     """The fields a template reads, each with its filters (each term of a sum on its own)."""
     return [(t.strip().rpartition("*")[2].strip(), parts[1:]) for parts in
             ([p.strip() for p in m.split("|")] for m in re.findall(r"\{\{(.+?)\}\}", str(template)))
-            for t in parts[0].split("+")]
+            for t in re.split(r"[+,]", parts[0])]
 
 
 def templates(steps):
@@ -371,7 +441,7 @@ def templates(steps):
     for y in steps.get("yours", []):
         yield "yours", y, {}
     for c in steps.get("supports", []):
-        for k in ("when", "value", "else"):
+        for k in ("if", "when", "value", "else"):
             if k in c:
                 yield "supports", c[k], {}
     for v in steps.get("rules", {}).get("facts", {}).values():
@@ -405,7 +475,7 @@ def check_asks(steps):
         if not d.get("question") or not any(a.get("group") == g for a in asks.values()):
             raise StepError(f"steps file: groups.{g} needs a question and at least one ask in it")
     # The asks that decide the branch come first: their answers can end the pratica here.
-    branch = {r[4:] for c in steps.get("supports", []) for k in ("when", "value")
+    branch = {r[4:] for c in steps.get("supports", []) for k in ("if", "when", "value")
               for r, _ in refs_in(c.get(k, "")) if r.startswith("ask.")}
     branch |= {r[4:] for where, t, _ in templates(steps) if where == "rules" for r, _ in refs_in(t) if r.startswith("ask.")}
     return sorted(asks, key=lambda k: k not in branch)
@@ -438,7 +508,15 @@ def needed(steps, values):
         return True
 
     for c in steps.get("supports", []):
-        add(asked(c.get("when", c.get("value", ""))))
+        # `if`: a check that only applies once its gate holds (how a contributo is paid,
+        # once one is due), asked only then.
+        deps = ()
+        if "if" in c:
+            if not gate(c["if"]):
+                continue
+            if values.render(c["if"]) is None:
+                deps = [k for k in asked(c["if"]) if values.field("ask." + k) is None]
+        add(asked(c.get("when", c.get("value", ""))), deps)
     for fact in ruled(steps, values)[1]:
         add(asked(steps["rules"]["facts"][fact]))
     for w in steps.get("wizard", []):
@@ -457,15 +535,12 @@ def needed(steps, values):
     return need
 
 
-def ruled(steps, values):
-    """What the rules table (steps `rules:`) says of this case: why it isn't this pratica,
-    and the facts it still waits on. Each fact is the recipe's value or an ask's answer.
-    The table's main pratica must be this steps file's procedure, at its wizard's sector
-    and operation; every other pratica it adds must be one this pratica files (`handles`),
-    and every one this pratica files one the case needs."""
+def _decision(steps, values):
+    """The rules table's decision of this case (steps `rules:`), or None without one. Each
+    fact is the recipe's value or an ask's answer."""
     r = steps.get("rules")
     if not r:
-        return [], []
+        return None
     t = rules.table(r["table"])
     facts = {}
     for name, fact in t["facts"].items():
@@ -476,17 +551,39 @@ def ruled(steps, values):
     d = rules.decide(t, facts)
     if d["conflict"]:
         raise StepError(f"rules table {r['table']}: rules {', '.join(d['conflict'])} disagree (validate the library)")
+    return d
+
+
+def ruled(steps, values):
+    """What the rules table says of this case: why it isn't this pratica, and the facts it
+    still waits on. The table's main pratica must be the one this steps file files (`main`,
+    else its procedure: a CILA with its landscape authorization files the CILA), at its
+    wizard's sector and operation; every other pratica it adds with it must be one this
+    pratica files (`handles`), and every one this pratica files one the case needs. Those it
+    files apart, with another office, are the person's (`apart`)."""
+    d = _decision(steps, values)
+    if d is None:
+        return [], []
+    r = steps["rules"]
     out = [x["reason"] for x in d["refused"]]
     if d["ask"]:
-        return out, d["ask"]
+        # While the table's first fact (what the case is: the activity, the works) is unknown
+        # it is asked alone: which of the others matter depends on it.
+        first = next(iter(rules.table(r["table"])["facts"]))
+        return out, d["ask"][:1] if d["ask"][0] == first else d["ask"]
+    if d["none"]:
+        return out + [f"This case needs no pratica: {d['none']['reason']}"], []
     m = d["main"]
     where = lambda o: " at " + " › ".join(o["portal"][k] for k in ("settore", "operazione") if k in o["portal"]) \
         if "portal" in o else ""
     if not m:
         return out or [f"The rules table {r['table']} names no pratica for this case."], []
-    labels = {x if isinstance(x, str) else x.get("leaf") for w in steps.get("wizard", []) for x in w.get("tree", [])}
+    # A wizard screen's tree is one label, or a list of them (several operations: the SUE's
+    # CILA with its landscape authorization), each a label or a {leaf: ...}.
+    trees = [w["tree"] for w in steps.get("wizard", []) if "tree" in w]
+    labels = {x if isinstance(x, str) else x.get("leaf") for t in trees for x in (t if isinstance(t, list) else [t])}
     seen = m.get("portal", {})
-    if m["procedure"] != steps["procedure"] or any(seen[k] not in labels for k in ("settore", "operazione") if k in seen):
+    if m["procedure"] != r.get("main", steps["procedure"]) or any(seen[k] not in labels for k in ("settore", "operazione") if k in seen):
         out.append(f"This case is another pratica: {m['procedure']} ({m['regime']}){where(m)}.")
     handles = r.get("handles", [])
     for a in d["also"]:
@@ -496,6 +593,16 @@ def ruled(steps, values):
         if h not in [a["procedure"] for a in d["also"]]:
             out.append(f"This pratica also files {h}, which this case doesn't need.")
     return out, []
+
+
+def apart(steps, values):
+    """The pratiche the rules table says this case also needs, filed on their own with
+    another office (the Genio Civile's seismic filing for works on structures): the
+    person's to file, said in their steps, never a reason to refuse this one."""
+    d = _decision(steps, values)
+    if d is None or d["ask"] or not d["main"]:
+        return []
+    return [f"File apart, with its own office: {a['procedure']} ({a['regime']})" for a in d["apart"]]
 
 
 def supported(steps, values):
@@ -509,6 +616,13 @@ def supported(steps, values):
         if not asked:  # read from the vault, and empty there
             out.append(f"The rules need {f}, read from {tmpl}: empty in the vault.")
     for c in steps.get("supports", []):
+        if "if" in c:
+            unknown = [r for r, f in refs_in(c["if"]) if r.startswith("ask.") and values.field(r) is None]
+            if unknown:
+                need += unknown
+                continue
+            if not truthy(values.render(c["if"])):
+                continue
         tmpl = c.get("when", c.get("value"))
         unknown = [r for r, f in refs_in(tmpl) if r.startswith("ask.") and values.field(r) is None]
         if unknown:
@@ -575,7 +689,7 @@ def preflight(steps, values, urls=None):
     order = check_asks(steps)
     asks = steps.get("asks", {})
     report = {"ready": False, "unsupported": [], "proposals": [], "questions": [], "missing": [], "files": [],
-              "yours": []}
+              "warnings": [], "yours": []}
     if any(r.startswith("t:") for _, t, _ in templates(steps) for r, _ in refs_in(t)):
         try:
             values.titolare
@@ -596,7 +710,10 @@ def preflight(steps, values, urls=None):
         hangs = {"only_if": sorted(need[k])} if need[k] else {}
         if v is None and "propose" in a:
             # What the rules or the vault say it should be: the person confirms it, or says
-            # otherwise, instead of answering from scratch. Never used until confirmed.
+            # otherwise, instead of answering from scratch. Never used until confirmed. One
+            # that reads a question asked now waits for its answer: proposed next time.
+            if any(r.startswith("ask.") and r[4:] in need and values.field(r) is None for r, _ in refs_in(a["propose"])):
+                continue
             proposal = values.render(a["propose"])
             if proposal is not None and not check_answer(a, proposal):
                 report["proposals"].append({"key": k, "question": a["question"], "proposal": proposal}
@@ -686,12 +803,59 @@ def preflight(steps, values, urls=None):
                                             "compress it or split it across the slot's +")
                     elif takes and not any(p.name.lower().endswith("." + t) for t in takes):
                         entry["problem"] = f"the slot takes only {', '.join(takes)}"
+                    if p.name.lower().endswith(".p7m") and "problem" not in entry:
+                        signers, why = p7m_signers(p)
+                        if why:
+                            entry["problem"] = why
+                        elif signers is not None:
+                            # Counts and a yes/no, never the codici fiscali: Claude reads this report.
+                            try:
+                                cf = values.field("t:identity.codice_fiscale")
+                            except StepError:
+                                cf = None
+                            entry["signers"] = len(signers)
+                            if not signers:
+                                report["warnings"].append(f"{entry['for']}: the .p7m carries no certificate with a "
+                                                          "codice fiscale, so who signed it can't be told")
+                            elif cf:
+                                entry["signed_by_dichiarante"] = cf.upper() in signers
+                                if not entry["signed_by_dichiarante"]:
+                                    report["warnings"].append(
+                                        f"{entry['for']}: signed by {len(signers)} other person(s), not by the "
+                                        "dichiarante: right if someone else must sign it, otherwise sign it again")
                 report["files"].append(entry)
     report["pane_ok"] = sum(x["bytes"] or 0 for x in report["files"] if "link" not in x) <= PAGE_FILES_LIMIT
-    report["yours"] = [values.render(y) or y for y in steps.get("yours", [])]
+    report["yours"] = [values.render(y) or y for y in steps.get("yours", [])] + apart(steps, values)
     report["ready"] = not (report["questions"] or report["proposals"] or report["missing"]
                            or any(not x["exists"] or x.get("problem") for x in report["files"] if x["path"]))
     return report
+
+
+def p7m_signers(path):
+    """The codici fiscali in the certificates a .p7m (CAdES, PKCS#7) carries, read with openssl:
+    (set, None); (None, why) when it isn't a readable one; (None, None) with no openssl to ask.
+    Who signed it is a name in a certificate, not proof the signature holds: the portal checks
+    that, and so does the person's own signing software. This catches the wrong file, an
+    unsigned copy renamed, and a signature by someone other than the dichiarante, before upload."""
+    openssl = shutil.which("openssl")
+    if not openssl:
+        return None, None
+    raw = Path(path).read_bytes()
+    forms = [("DER", raw), ("PEM", raw)]
+    try:  # some tools save the DER as base64 text
+        forms.append(("DER", base64.b64decode(b"".join(raw.split()), validate=True)))
+    except ValueError:
+        pass
+    for form, data in forms:
+        try:
+            r = subprocess.run([openssl, "pkcs7", "-inform", form, "-print_certs"], input=data,
+                               capture_output=True, timeout=20)
+        except subprocess.TimeoutExpired:
+            continue
+        if r.returncode == 0:
+            subjects = [x for x in r.stdout.decode(errors="replace").splitlines() if x.startswith("subject=")]
+            return {cf for x in subjects for cf in CF.findall(x)}, None
+    return None, "not a readable .p7m (CAdES) file: sign the document again with your firma digitale"
 
 
 def attachment(path, url=None):
@@ -851,7 +1015,7 @@ def page_bundle(steps, values, files_limit=PAGE_FILES_LIMIT, resume=None, urls=N
                      for s in steps["sections"]],
         "forbidden": FORBIDDEN.pattern, "declarations": DECLARATIONS.pattern,
         "dug": sorted(DUG), "label_js": LABEL_JS,
-    }
+    } | ({"preview_url": steps["preview_url"]} if "preview_url" in steps else {})
 
     def value(f):
         """False when its `when` is false, true for a tick, a file's bytes, else the value."""
@@ -951,28 +1115,64 @@ def drift(out, steps, resume):
 
 
 def review_shown(steps, values):
-    """What the review page shows besides the run: each value, and the person's own steps."""
-    return {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])],
+    """What the review page shows besides the run: each value, the choices made in the person's
+    name (DECIDED), and the person's own steps."""
+    rows = plan(steps, values)
+    decisions = {}
+    for v in rows:
+        if DECIDED.search(v["section"]):
+            what = v["label"] or v["id"]
+            decisions.setdefault(v["section"], []).append(what if v["value"] is None else f"{what}: {v['value']}")
+    return {"title": steps.get("title"), "yours": [values.render(y) for y in steps.get("yours", [])] + apart(steps, values),
+            "decisions": [{"section": s, "choices": c} for s, c in decisions.items()],
             "values": [{"section": v["section"], "label": v["label"] or v["id"],
                         "value": "chosen" if v["value"] is None
                         else "attached: " + Path(v["value"]).name if v["kind"] == "file" else v["value"]}
-                       for v in plan(steps, values)]}
+                       for v in rows]}
+
+
+def private_dir(out):
+    folder = out / "private"
+    folder.mkdir(mode=0o700, exist_ok=True)
+    folder.chmod(0o700)
+    return folder
 
 
 def private(out, shown, held=None):
     """What no report holds: what each section typed (to resume), what a failed read-back wanted
-    and found, and every value for the review page. A folder only the person reads; the skill
-    tells Claude to send the review page and never to open these."""
-    folder = out / "private"
-    folder.mkdir(mode=0o700, exist_ok=True)
-    folder.chmod(0o700)
+    and found, every value for the review page, and the declarations' own text. A folder only the
+    person reads; the skill tells Claude to send the review page and never to open these."""
+    folder = private_dir(out)
     parts = [("shown", shown)]
     if held is not None:  # a run in the pane has only shown: __pv.held() stays in its tab
         parts += [("kept", held.get("kept", [])), ("held", held.get("details", []))]
+        # A resume past the declarations reads none: it must not blank what an earlier run kept.
+        if held.get("declarations") or not (folder / "declarations.json").exists():
+            parts.append(("declarations", held.get("declarations", [])))
     for name, data in parts:
         f = folder / f"{name}.json"
         f.write_text(json.dumps(data, indent=2, ensure_ascii=False))
         f.chmod(0o600)
+
+
+def capture_preview(page, folder):
+    """The portal's own PDF of the draft, which the filled run fetched in the person's logged-in
+    browser (__pv.previewPdf), kept as folder/anteprima.pdf for the review page: what the person
+    declares is the portal's rendering, not our list of values. None of it passes through Claude.
+    Returns (True, "") or (False, why); a missing preview never stops a filled draft."""
+    try:
+        b64 = page.evaluate("__pv.previewPdf()")
+    except Exception as e:
+        return False, f"{type(e).__name__}: {str(e).splitlines()[0][:160]}"
+    if not b64:
+        return False, "the run found no preview to keep"
+    body = base64.b64decode(b64)
+    if not body.startswith(b"%PDF-"):
+        return False, "what the portal gave isn't a PDF"
+    f = folder / "anteprima.pdf"
+    f.write_bytes(body)
+    f.chmod(0o600)
+    return True, ""
 
 
 def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
@@ -1032,11 +1232,16 @@ def run(steps, values, out, cdp=None, profile=None, close=False, resume=None):
                     held = page.evaluate("__pv.held()")
                 except Exception:
                     pass
+            if report.get("result") == "filled" and not page.is_closed():
+                ok, why = capture_preview(page, private_dir(out))
+                report["preview_pdf"] = ok
+                if why:
+                    report["preview_note"] = report.get("preview_note") or why
             # report.json holds no value, so Claude may read it; what the person needs is
             # kept apart and goes to them, never into the conversation.
             (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
             private(out, shown, held)
-            (out / "review.html").write_text(review.portal_review(report | shown | {"details": held.get("details", [])}),
+            (out / "review.html").write_text(review.portal_review(report | shown | {"details": held.get("details", [])}, out),
                                              encoding="utf-8")
             (out / "review.html").chmod(0o600)
             print(f"review: {out / 'review.html'}", flush=True)

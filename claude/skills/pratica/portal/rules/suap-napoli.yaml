@@ -335,8 +335,10 @@ rules:
     status: verified
   - id: bed-and-breakfast-zone-tutelate
     when: {attivita: [bed_and_breakfast], evento: [apertura], zona: [a, b]}
-    then: {refuse: "Nel centro storico la variante urbanistica del 2026 limita i nuovi B&B, e non è verificato se sia già efficace: va chiesto al SUAP o al Servizio Pianificazione urbanistica."}
-    cites: [{procedure: napoli/comune/avvio-bed-and-breakfast, source: variante-dcc-129}]
+    then: {refuse: "Nel centro storico la variante urbanistica in vigore dal 27/10/2026 limita i nuovi B&B nell'area della tavola 7a (soglia di residenzialità ordinaria del 70%), e il meccanismo di verifica non è ancora verificato: va chiesto al SUAP o al Servizio Pianificazione urbanistica."}
+    cites:
+      - {procedure: napoli/comune/avvio-bed-and-breakfast, source: variante-dcc-129}
+      - {procedure: napoli/comune/avvio-bed-and-breakfast, source: variante-burc-58}
     status: verified
   - id: bed-and-breakfast-altro
     when: {attivita: [bed_and_breakfast], evento: [trasferimento, ampliamento, subingresso, cessazione]}

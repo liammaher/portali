@@ -35,17 +35,28 @@ The wizard's required Si/No (sanatoria) is answered No (`si_no` in the recipe).
   bene culturale (the Soprintendenza), a protected natural area, the vincolo idrogeologico and
   idraulico, a VINCA, a cemetery's fascia, major-hazard plants (RIR), other ecological vincoli,
   and the fasce di rispetto (road, rail, power line, gas, military, airport, another).
-- **A SCIA condizionata.** When any of those needs an assent, the request's documents go in
-  the slot the answer adds, and section b) gets no start date: the works start once the SUE
-  says the assents are in (the section's own text; the date isn't required).
+- **Systems, energy, barriers, acoustics, fire, asbestos, hygiene** (the asseverazione's
+  technical quadri, shared with the SCIA alternativa): every kind of system installed (one
+  project per system where DM 37/2008 asks one, "altre" with its name); the energy report
+  (art. 125), the renewables obligation (D.Lgs. 28/2011) and the energy incentives (art. 14 D.Lgs.
+  102/2014, the 5% bonus); the barriers rules (art. 77 with its requirements, art. 82 for a
+  building open to the public, or a deroga asked); art. 8 L. 447/1995 (each acoustic document
+  it attaches) and the passive requirements; excavated earth; fire prevention (rules met, a
+  deroga, or the Vigili del Fuoco's assessment of the project); asbestos (the piano di lavoro);
+  hygiene (conforming, under art. 24 c. 5-bis with its cases, or a derogation); a cemetery's
+  fascia where the works aren't allowed (the deroga). Each "si allega" adds a required slot.
+- **A SCIA condizionata.** When any of those needs an assent or a deroga, the request's
+  documents go in the slot the answer adds, and section b) gets no start date: the works start
+  once the SUE says the assents are in (the section's own text; the date isn't required).
 - **The attachments screen** changes with the answers: each "si allega" adds a required slot,
-  one per fascia for the tutela funzionale. All take plain PDFs (recipe `attachments`,
-  `on_page`).
+  one per fascia for the tutela funzionale, one per system's project. All take plain PDFs
+  (recipe `attachments`, `on_page`).
 
-Refused at pre-flight (`supports`): a landscape authorization (semplificata or ordinaria: the
-SCIA with it is its own recipe); works not allowed in a cemetery's fascia; acoustics, fire prevention, asbestos, a
-hygiene derogation, the barriers rules, systems needing a project, energy filings. The
-architect as structural designer too isn't mapped (her studio is the business's).
+Refused at pre-flight: what the rules table gives to another pratica (a landscape
+authorization: the SCIA with it is its own recipe). Not mapped: the fire-safety variant of a
+project the Vigili del Fuoco already approved (the form's last fire option, never offered), and
+the excavated earth as by-products or under a VIA/AIA. The architect as structural designer
+too isn't mapped (her studio is the business's).
 
 ## Runs
 
@@ -64,6 +75,7 @@ architect as structural designer too isn't mapped (her studio is the business's)
 | 2026-10-29 | pane | PdC variant, rerun unchanged (after one more stop on the portal's "errore inatteso" page) | **filled** in 205 s, read back on a fresh load (31 s) |
 | 2026-10-29 | pane | batch of the five cases not yet run, from scratch, with the runner that retries the portal's own errors: a variant that is a variazione essenziale; a change of use alone, of a unit with no works (within its category, between categories) or with art. 6-bis works (within its category), and of a whole building with 6-bis works | **4 of 5 filled** (essential variant 275 s, unit without works within its category 207 s, unit with 6-bis works 202 s, whole building 307 s), each read back on a fresh load, none needing a retry; the unit between categories stopped on Localizzazione, a street's suggestion list still fading out over "scala" |
 | 2026-10-29 | pane | unit without works between categories, rerun with the runner that takes a fading list off the page | **filled** in 227 s, read back on a fresh load (62 s) |
+| 2026-10-29 | pane | P6 as now (manutenzione straordinaria that changes the facades, since internal works alone are a CILA's under the SUE rules table), `bench/rerun.py` with the CIL and the SCIA with its ordinaria | **filled**, read back on a fresh load (24 s); the portal's error page once at DOMICILIO ELETTRONICO, resumed by the runner (47.5 s after the resume) |
 
 What the 2026-10-28 stops taught (each fixed for every pratica):
 
@@ -83,3 +95,9 @@ Still the person's: the "Documentazione dimostrativa dello stato legittimo" slot
 files only, `.p7m`), the procura and the "Quadro riepilogativo - SCIA DSC" (portal
 documents), naming the direttore dei lavori (and the structures' one), the declarations,
 signing and sending.
+| 2026-10-29 | pane | the technical quadri (answers-tecnici: a shop open to the public, systems with their projects, energy report, renewables, art. 14 c. 6, barriers art. 77 and 82, acoustics art. 8 and DPCM, VVF assessment, asbestos, art. 24 c. 5-bis) | every section through fire and acoustics filled first time; stopped on the 5-bis's three cases the crawl never saw (read, mapped); resumed past it, stopped on 13 new required slots (read, mapped) |
+| 2026-10-29 | pane | every deroga (answers-deroghe: barriers, fire, hygiene, a cemetery's fascia; gas and another system) | stopped on the other system's required "specificare" (mapped), then on 8 new required slots (read, mapped) |
+| 2026-10-29 | pane | every deroga, from scratch | **filled** in 153 s with 16 attachments; fresh load 22 s, every value read back; no start date accepted |
+| 2026-10-29 | pane | the technical quadri, from scratch | stopped on art. 24 c. 5-ter's conditions, which each 5-bis case opens below it (read; mapped, one case per pratica) |
+| 2026-10-29 | pane | the technical quadri, from scratch, with the 5-ter conditions | **filled** in 149 s with 20 attachments; fresh load 23 s, every value read back |
+| 2026-10-29 | pane | P6, structures and every protection, from scratch after the technical quadri's dictionary change (one batch) | **filled**: 186 s / 147 s / 161 s, every value read back; no retry |

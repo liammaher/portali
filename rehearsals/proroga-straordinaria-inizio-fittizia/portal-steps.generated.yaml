@@ -16,7 +16,7 @@ asks:
   pdc_data: {type: date, question: Its issue date}
   pdc_protocollo: {type: text, question: Its protocollo generale number}
   pdc_interventi: {type: text, question: 'What it permits, in a few words (per interventi di ...)'}
-  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], default: permesso di costruire}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], propose: permesso di costruire}
   proroga_data_prevista: {type: date, question: The new date the works are now expected to start (or end)}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}
 supports:

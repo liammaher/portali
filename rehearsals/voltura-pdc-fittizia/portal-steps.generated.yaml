@@ -30,7 +30,7 @@ asks:
   atto_registrazione_data: {type: date, question: Registration date}
   atto_registrazione_numero: {type: text, question: Registration number}
   zona_prg: {type: text, question: The property's zone in the PRG (e.g. zona B)}
-  soggetti_cambiati: {type: yes_no, question: 'Will the works'' direttore or firm change with the new holder?', default: 'false'}
+  soggetti_cambiati: {type: yes_no, question: 'Will the works'' direttore or firm change with the new holder?', propose: 'false'}
   nuovo_dl: {type: text, question: The new direttore dei lavori's name}
   nuovo_esecutore: {type: text, question: The new firm's name}
   nuovo_csp: {type: text, question: 'The new coordinatore per la sicurezza''s name (none: empty)', default: ''}

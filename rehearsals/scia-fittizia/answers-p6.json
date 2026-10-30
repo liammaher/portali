@@ -7,8 +7,8 @@
   "f2": "impianti"
  },
  "titolo": "locatario",
- "oggetto": "Manutenzione straordinaria non strutturale in appartamento: demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno, nuovo bagno, rifacimento degli impianti idrico ed elettrico.",
- "dettaglio_intervento": "Demolizione e ricostruzione di due tramezzi interni con nuova distribuzione di cucina e bagno; nuovo bagno; rifacimento degli impianti idrico ed elettrico della cucina e del bagno. Opere interne non strutturali, senza modifiche di volume, superficie o destinazione d'uso.",
+ "oggetto": "Manutenzione straordinaria non strutturale in appartamento con modifica dei prospetti: persiane e ringhiere in facciata di diverso disegno, demolizione e ricostruzione di due tramezzi interni, nuovo bagno, rifacimento degli impianti idrico ed elettrico.",
+ "dettaglio_intervento": "In facciata: sostituzione di persiane e ringhiere con altre di diverso disegno (modifica dei prospetti). All'interno: demolizione e ricostruzione di due tramezzi con nuova distribuzione di cucina e bagno; nuovo bagno; rifacimento degli impianti idrico ed elettrico. Opere non strutturali, senza modifiche di volume, superficie o destinazione d'uso.",
  "dlgs81": "true",
  "sotto_200": "true",
  "notifica_dovuta": "true",
@@ -60,5 +60,23 @@
  "rir": "no",
  "altri_vincoli_eco": "nessuno",
  "fasce": "no",
- "scia_onerosa": "false"
+ "scia_onerosa": "false",
+ "intervento": "manutenzione_straordinaria",
+ "cambio_uso": "no",
+ "fatti": [
+  "prospetti"
+ ],
+ "barriere_art82": "false",
+ "rinnovabili": "false",
+ "acustica_passiva": "false",
+ "impianto_radiotv": "false",
+ "impianto_ascensore": "false",
+ "impianto_antincendio": "false",
+ "impianto_altro": "false",
+ "barriere_deroga": "false",
+ "incentivo_energetico": "nessuno",
+ "vvf_valutazione": "false",
+ "scavo": "nessuno",
+ "antincendio_deroga": "false",
+ "igienico_24_5bis": "false"
 }

@@ -16,21 +16,21 @@ groups:
 asks:
   descrizione: {type: text, question: A name for the draft in the portal's Pratiche in bozza, default: 'PROVA NON INVIARE - negozio {{business.denominazione}}'}
   oggetto: {type: text, question: The pratica in one sentence (300 characters)}
-  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', default: 'false'}
+  stagionale: {type: yes_no, question: 'Will it open only for part of the year (a season)?', propose: 'false'}
   stagione_dal: {type: text, question: The season's first day (gg/mm)}
   stagione_al: {type: text, question: The season's last day (gg/mm)}
   diritti_euro: {type: number, question: The SUAP fees in euro, default: '100', why: The 2026 table's line for a non-food shop's opening (DGC 239/2026).}
-  solo_distributori: {type: yes_no, question: 'Will it sell only through vending machines?', default: 'false'}
-  anche_ingrosso: {type: yes_no, question: 'Will it also sell wholesale (not only to the public)?', default: 'false'}
+  solo_distributori: {type: yes_no, question: 'Will it sell only through vending machines?', propose: 'false'}
+  anche_ingrosso: {type: yes_no, question: 'Will it also sell wholesale (not only to the public)?', propose: 'false'}
   superficie_vendita_mq: {type: number, question: 'The sales area in m² (where customers shop, not stores or toilets)'}
-  superficie_alimentare_mq: {type: number, question: 'Of that, m² for food', default: '0'}
-  superficie_non_alimentare_mq: {type: number, question: 'Of that, m² for everything else (non-food)', default: '0'}
-  superficie_monopolio_mq: {type: number, question: m² for tobacco and other state-monopoly goods, default: '0'}
-  in_ccn: {type: yes_no, question: 'Is it in a recognised centro commerciale naturale (C.C.N.)?', default: 'false'}
+  superficie_alimentare_mq: {type: number, question: 'Of that, m² for food', propose: '0'}
+  superficie_non_alimentare_mq: {type: number, question: 'Of that, m² for everything else (non-food)', propose: '0'}
+  superficie_monopolio_mq: {type: number, question: m² for tobacco and other state-monopoly goods, propose: '0'}
+  in_ccn: {type: yes_no, question: 'Is it in a recognised centro commerciale naturale (C.C.N.)?', propose: 'false'}
   ccn_delibera: {type: text, question: 'The C.C.N.''s recognition: delibera number'}
   ccn_delibera_data: {type: date, question: Its date}
   ccn_delibera_ente: {type: text, question: Who passed it (e.g. Giunta comunale)}
-  in_factory_outlet: {type: yes_no, question: 'Is it in a factory outlet centre?', default: 'false'}
+  in_factory_outlet: {type: yes_no, question: 'Is it in a factory outlet centre?', propose: 'false'}
   in_centro_commerciale: {type: yes_no, question: 'Is the shop inside a shopping centre?', schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_si',
     default: 'false', why: 'Napoli asks the shopping centre''s type, not mapped yet.'}
   centro_commerciale_denominazione: {type: text, question: denominazione, schema: 'modulo_acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/acconciatori_estetisti_apertura/in_centro_commerciale/[in_centro_commerciale_ctype]/centro_commerciale_denominazione'}
@@ -244,5 +244,6 @@ sections:
   theirs:
   - Procura speciale
   - Quadro riepilogativo della documentazione
+  - Scarica il documento
   - copia attestazione versamento oneri, diritti e spese
   fields: []

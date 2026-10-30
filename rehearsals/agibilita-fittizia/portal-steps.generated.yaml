@@ -26,15 +26,50 @@ asks:
   impianto_gas: {type: yes_no, question: 'Gas?', when: '{{ask.impianti}}'}
   strutture: {type: yes_no, question: 'Did the works touch the building''s structure?'}
   prestazione_energetica: {type: yes_no, question: 'Are the works subject to the minimum energy-performance requirements?'}
-  barriere: {type: yes_no, question: 'Is the building private and subject to the barriers rules (artt. 77-82 DPR 380/2001)?'}
+  barriere: {type: yes_no, question: 'Are the works subject to the barriers rules of artt. 77 ff. DPR 380/2001 and DM 236/1989 (private buildings)?'}
+  barriere_art82: {type: yes_no, question: 'Is it a private building open to the public, the works conforming to art. 82 DPR 380/2001 (as the relazione and drawings show)?'}
   catasto_variazione: {type: yes_no, question: 'Did the works change the catasto registration (a DOCFA was filed)?'}
   docfa_protocollo: {type: text, question: The DOCFA's protocol number, when: '{{ask.catasto_variazione}}'}
   docfa_data: {type: date, question: The DOCFA's date, when: '{{ask.catasto_variazione}}'}
-  civici_variazione: {type: yes_no, question: 'Did the works change the house numbers (numerazione civica)?', default: 'false'}
-  antincendio_variazione: {type: yes_no, question: 'Did the works change the building''s fire-safety conditions?', default: 'false'}
+  civici_variazione: {type: yes_no, question: 'Did the works change the house numbers (numerazione civica)?', propose: 'false'}
+  civici_richiesta: {type: choice, question: 'The request for new or updated house numbers: allegata (attached to this agibilità) or presentata (already filed with the Comune: its protocol given)?', options: [
+      allegata, presentata], when: '{{ask.civici_variazione}}'}
+  civici_protocollo: {type: text, question: The house-number request's protocol number, when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_presentata}}'}
+  civici_data: {type: date, question: The house-number request's date, when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_presentata}}'}
+  civici_doc: {type: file, question: The request for new or updated house numbers (PDF)}
+  antincendio_variazione: {type: yes_no, question: 'Did the works change the building''s fire-safety conditions, with activities subject to the Vigili del Fuoco''s control (DPR 151/2011) to be carried on?',
+    propose: 'false'}
+  collaudo: {type: choice, question: 'The works touched the structure: what closes them? certificato allegato (the collaudo statico certificate, art. 67 DPR 380/2001, attached); certificato estremi (its
+      references given: where it is, protocol and date); regolare esecuzione allegata (for repairs and local works, art. 67 c. 8-bis and 8-ter: the direttore dei lavori''s dichiarazione di regolare esecuzione,
+      attached); regolare esecuzione estremi (its references given); non soggetto (minor structural works not subject to collaudo, as the form''s box says: p.to 8.4.3 D.M. 14 gennaio 2008)', options: [
+      certificato allegato, certificato estremi, regolare esecuzione allegata, regolare esecuzione estremi, non soggetto], when: '{{ask.strutture}}'}
+  collaudo_presso: {type: text, question: 'Where the certificate or declaration is kept (reperibile presso: the office that holds it)', when: '{{ask.strutture}} {{ask.collaudo|in_certificato_estremi__regolare_esecuzione_estremi}}'}
+  collaudo_protocollo: {type: text, question: Its protocol number, when: '{{ask.strutture}} {{ask.collaudo|in_certificato_estremi__regolare_esecuzione_estremi}}'}
+  collaudo_data: {type: date, question: Its protocol date, when: '{{ask.strutture}} {{ask.collaudo|in_certificato_estremi__regolare_esecuzione_estremi}}'}
+  collaudo_doc: {type: file, question: 'The collaudo statico certificate, or the dichiarazione di regolare esecuzione (PDF)'}
+  agibilita_parziale: {type: choice, question: 'What does the agibilità cover? immobile (the whole property the works were on); edificio (single buildings or parts of the construction that work on their
+      own, art. 24 c. 4 a) DPR 380/2001); unita (single units, art. 24 c. 4 b))', options: [immobile, edificio, unita], propose: immobile}
+  elaborato_parziale_doc: {type: file, question: 'The plan of the project and its variants filed with the Comune, marking the works completed for the partial agibilità (PDF)'}
+  aqe_doc: {type: file, question: The attestato di qualificazione energetica (AQE) of the building or unit (PDF)}
+  antincendio_scia_doc: {type: file, question: The fire-prevention SCIA for the Vigili del Fuoco (art. 4 c. 1 DPR 151/2011) (PDF)}
+  sca_unica: {type: yes_no, question: 'Does the agibilità carry with it other segnalazioni, comunicazioni or attestazioni the use needs, listed in the quadro riepilogativo (a SCIA Unica, art. 19-bis c.
+      2 L. 241/1990), such as the fire SCIA attached?', propose: '{{ask.antincendio_variazione}}'}
+  impianto_scariche: {type: yes_no, question: 'A lightning-protection system (the agibilità''s own box for it)?', when: '{{ask.impianti}}'}
+  impianto_linee_vita: {type: yes_no, question: 'Safety lines on the roof (linee vita)?', when: '{{ask.impianti}}'}
+  impianti_certificazione: {type: choice, question: 'What certifies the systems ticked? dichiarazione (each has its dichiarazione di conformità or di rispondenza, DM 37/2008, attached); altro (a collaudo,
+      an atto notorio under art. 6 DPR 392/1994, or a document already filed with the Comune)', options: [dichiarazione, altro], propose: dichiarazione, when: '{{ask.impianti}}'}
+  ascensore_comunicazione: {type: choice, question: 'The lift''s messa in esercizio communication to the Comune (art. 12 DPR 162/1999): sca (this agibilità counts as it, as the form allows); presentata
+      (filed before the agibilità: its protocol given); nessuna (no lift put into service by these works)', options: [sca, presentata, nessuna]}
+  ascensore_protocollo: {type: text, question: The lift communication's protocol number, when: '{{ask.ascensore_comunicazione|is_presentata}}'}
+  ascensore_data: {type: date, question: The lift communication's date, when: '{{ask.ascensore_comunicazione|is_presentata}}'}
+  impianto_radiotv: {type: yes_no, question: 'Radio and TV systems, aerials, electronics?', when: '{{ask.impianti}}'}
+  impianto_ascensore: {type: yes_no, question: 'Lifts, goods lifts, escalators?', when: '{{ask.impianti}}'}
+  impianto_antincendio: {type: yes_no, question: 'Fire-protection systems?', when: '{{ask.impianti}}'}
+  impianto_altro: {type: yes_no, question: 'Any other kind of system (as regional rules define them)?', when: '{{ask.impianti}}'}
+  impianto_altro_quale: {type: text, question: 'Which other system, in a few words (100 characters)'}
   diritti_euro: {type: number, question: The SUE's diritti for this pratica in euro (0 when none are due)}
   data_fine_lavori: {type: date, question: When the works ended}
-  fine_completa: {type: yes_no, question: 'Were the works finished completely (not in part)?', default: 'true'}
+  fine_completa: {type: yes_no, question: 'Were the works finished completely (not in part)?', propose: 'true'}
   titolo_edilizio: {type: text, question: The title the works were done under (e.g. C.I.L.A.)}
   titolo_protocollo: {type: text, question: Its protocol number}
   titolo_data: {type: date, question: Its protocol date}
@@ -42,18 +77,11 @@ asks:
   assenso_proprietario: {type: file, question: The owner's signed assent to the works (PDF)}
   dichiarazione_conformita: {type: file, question: The installers' dichiarazioni di conformità of the systems touched (PDF), when: '{{ask.impianti}}'}
 supports:
-- value: '{{ask.strutture}}'
+- value: '{{ask.impianti_certificazione}}'
   in:
-  - 'false'
-  else: Works on the structure (collaudo statico) aren't mapped yet.
-- value: '{{ask.antincendio_variazione}}'
-  in:
-  - 'false'
-  else: Works that change fire safety aren't mapped yet.
-- value: '{{ask.civici_variazione}}'
-  in:
-  - 'false'
-  else: A change of house numbers isn't mapped yet.
+  - dichiarazione
+  if: '{{ask.impianti}}'
+  else: Systems certified by a collaudo, an atto notorio or a document already filed with the Comune aren't mapped yet.
 start: https://suap.impresainungiorno.gov.it/fnsuap/cmd/create?comune=F839&tipoSportello=E
 logged_in: https://suap.impresainungiorno.gov.it/fnsuap/
 wizard:
@@ -189,7 +217,12 @@ sections:
   - {kind: radio, when: '{{ask.fine_presentata|not}} {{ask.fine_completa|not}}', label: in forma parziale}
 - section: Presentazione della segnalazione certificata per l'agibilità
   fields:
-  - {id: 'r4c1p6reg:radio:0_clone', kind: radio, label: l'agibilità relativa all'immobile oggetto dell'intervento edilizio}
+  - {id: 'r4c1p6reg:radio:0_clone', kind: radio, when: '{{ask.sca_unica|not}} {{ask.agibilita_parziale|is_immobile}}', label: l'agibilità relativa all'immobile oggetto dell'intervento edilizio}
+  - {id: 'r5c1p8reg:radio:1_clone', kind: radio, when: '{{ask.sca_unica|not}} {{ask.agibilita_parziale|is_edificio}}', label: l'agibilità parziale relativa a singoli edifici}
+  - {id: 'r6c1p9reg:radio:2_clone', kind: radio, when: '{{ask.sca_unica|not}} {{ask.agibilita_parziale|is_unita}}', label: l'agibilità parziale relativa a singole unità immobiliari}
+  - {id: 'r8c1p12reg:radio:3_clone', kind: radio, when: '{{ask.sca_unica}} {{ask.agibilita_parziale|is_immobile}}', label: l'agibilità relativa all'immobile oggetto dell'intervento edilizio, nth: 2}
+  - {id: 'r9c1p14reg:radio:4_clone', kind: radio, when: '{{ask.sca_unica}} {{ask.agibilita_parziale|is_edificio}}', label: l'agibilità parziale relativa a singoli edifici, nth: 2}
+  - {id: 'r10c1p15reg:radio:5_clone', kind: radio, when: '{{ask.sca_unica}} {{ask.agibilita_parziale|is_unita}}', label: l'agibilità parziale relativa a singole unità immobiliari, nth: 2}
   - {id: 'r13c1p18reg:chk', kind: checkbox, label: SEZIONE B}
   - {id: 'r14c1p19reg:chk', kind: checkbox, label: le comunicazioni o segnalazioni di cui alla SEZIONE C}
 - section: Attestazione tecnica - Dati del Direttore Lavori
@@ -222,7 +255,9 @@ sections:
   theirs:
   - nei casi di cui all’articolo 24
   fields:
-  - {id: 'r4c1p4reg:radio:0_clone', kind: radio, label: L'agibilità relativa all'immobile oggetto dell'intervento edilizio}
+  - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.agibilita_parziale|is_immobile}}', label: L'agibilità relativa all'immobile oggetto dell'intervento edilizio}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.agibilita_parziale|is_edificio}}', label: L' agibilità parziale relativa a singoli edifici}
+  - {id: 'r6c1p6reg:radio:2_clone', kind: radio, when: '{{ask.agibilita_parziale|is_unita}}', label: L'agibilità parziale relativa a singole unità immobiliari}
 - section: Attestazione tecnica - Sicurezza degli impianti
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.impianti|not}}', label: NON HA interessato gli impianti}
@@ -239,23 +274,66 @@ sections:
   - {id: 'r10c1p10reg:chk', kind: checkbox, when: '{{ask.impianto_gas}}', label: Impianti per la distribuzione e l’utilizzazione di gas}
   - {kind: text, label: Subalt. n., anchor: Impianti per la distribuzione e l’utilizzazione di gas, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianto_gas}}'}
   - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Impianti per la distribuzione e l’utilizzazione di gas, block: 1, when: '{{ask.impianto_gas}}'}
+  - {id: 'r7c1p7reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_radiotv}}', label: Impianti radiotelevisivi}
+  - {kind: text, label: Subalt. n., anchor: Impianti radiotelevisivi, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianti}} {{ask.impianto_radiotv}}'}
+  - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Impianti radiotelevisivi, block: 1, when: '{{ask.impianti}} {{ask.impianto_radiotv}}'}
+  - {kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_ascensore}}', label: Impianti di sollevamento di persone o di cose}
+  - {kind: text, label: Subalt. n., anchor: Impianti di sollevamento di persone o di cose, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianti}} {{ask.impianto_ascensore}}'}
+  - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Impianti di sollevamento di persone o di cose, block: 1, when: '{{ask.impianti}} {{ask.impianto_ascensore}}'}
+  - {kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_antincendio}}', label: Impianto protezione antincendio}
+  - {kind: text, label: Subalt. n., anchor: Impianto protezione antincendio, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianti}} {{ask.impianto_antincendio}}'}
+  - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Impianto protezione antincendio, block: 1, when: '{{ask.impianti}} {{ask.impianto_antincendio}}'}
+  - {kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_scariche}}', label: Impianto protezione scariche atmosferiche}
+  - {kind: text, label: Subalt. n., anchor: Impianto protezione scariche atmosferiche, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianti}} {{ask.impianto_scariche}}'}
+  - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Impianto protezione scariche atmosferiche, block: 1, when: '{{ask.impianti}} {{ask.impianto_scariche}}'}
+  - {kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_linee_vita}}', label: Impianto linee vita}
+  - {kind: text, label: Subalt. n., anchor: Impianto linee vita, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianti}} {{ask.impianto_linee_vita}}'}
+  - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Impianto linee vita, block: 1, when: '{{ask.impianti}} {{ask.impianto_linee_vita}}'}
+  - {kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_altro}}', label: Altro impianto}
+  - {kind: text, label: 'specificare:', anchor: Altro impianto, block: 1, value: '{{ask.impianto_altro_quale}}', when: '{{ask.impianti}} {{ask.impianto_altro}}'}
+  - {kind: text, label: Subalt. n., anchor: Altro impianto, block: 1, value: '{{c:immobile.catasto_subalterno}}', when: '{{ask.impianti}} {{ask.impianto_altro}}'}
+  - {kind: checkbox, label: Dichiarazione di conformità o di rispondenza, anchor: Altro impianto, block: 1, when: '{{ask.impianti}} {{ask.impianto_altro}}'}
 - section: Attestazione tecnica - Sicurezza statica
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.strutture|not}}', label: non ha interessato le strutture dell'edificio}
-  - {id: 'r20c1p24reg:radio:6_clone', kind: radio, when: '{{ask.prestazione_energetica|not}}', label: non è soggetto all'osservanza dei requisiti minimi di prestazione energetica}
-  - {id: 'r21c1p25reg:radio:7_clone', kind: radio, when: '{{ask.prestazione_energetica}}', label: è soggetto all'osservanza dei requisiti minimi di prestazione energetica}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.strutture}}', label: ha interessato le strutture dell'edificio}
+  - {id: 'r6c1p6reg:radio:2_clone', kind: radio, when: '{{ask.strutture}} {{ask.collaudo|is_certificato_allegato}}', label: si allega certificato di collaudo statico}
+  - {id: 'r7c1p7reg:radio:3_clone', kind: radio, when: '{{ask.strutture}} {{ask.collaudo|is_certificato_estremi}}', label: si comunicano gli estremi del certificato di collaudo statico}
+  - {kind: text, label: reperibile presso, anchor: si comunicano gli estremi del certificato di collaudo statico, block: 1, value: '{{ask.collaudo_presso}}', when: '{{ask.strutture}} {{ask.collaudo|is_certificato_estremi}}'}
+  - {kind: text, label: con prot./n., anchor: si comunicano gli estremi del certificato di collaudo statico, block: 1, value: '{{ask.collaudo_protocollo}}', when: '{{ask.strutture}} {{ask.collaudo|is_certificato_estremi}}'}
+  - {kind: date, label: del, anchor: si comunicano gli estremi del certificato di collaudo statico, block: 1, value: '{{ask.collaudo_data|date_it}}', when: '{{ask.strutture}} {{ask.collaudo|is_certificato_estremi}}'}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_allegata}}', label: si allega la dichiarazione di regolare esecuzione}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_estremi}}', label: si comunicano gli estremi della dichiarazione di regolare esecuzione}
+  - {kind: text, label: reperibile presso, anchor: si comunicano gli estremi della dichiarazione di regolare esecuzione, block: 1, value: '{{ask.collaudo_presso}}', when: '{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_estremi}}'}
+  - {kind: text, label: con prot./n., anchor: si comunicano gli estremi della dichiarazione di regolare esecuzione, block: 1, value: '{{ask.collaudo_protocollo}}', when: '{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_estremi}}'}
+  - {kind: date, label: del, anchor: si comunicano gli estremi della dichiarazione di regolare esecuzione, block: 1, value: '{{ask.collaudo_data|date_it}}', when: '{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_estremi}}'}
+  - {kind: radio, when: '{{ask.strutture}} {{ask.collaudo|is_non_soggetto}}', label: non si è proceduto al collaudo statico}
+  - {kind: radio, when: '{{ask.prestazione_energetica|not}}', label: non è soggetto all'osservanza dei requisiti minimi di prestazione energetica}
+  - {kind: radio, when: '{{ask.prestazione_energetica}}', label: è soggetto all'osservanza dei requisiti minimi di prestazione energetica}
 - section: Attestazione tecnica - Barriere architettoniche, Catasto, Toponomastica
   fields:
   - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.barriere|not}}', label: non è soggetto alle prescrizioni sull'abbattimento delle barriere}
-  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.barriere}}', label: interessa un edificio privato ed è soggetto alle prescrizioni}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.barriere}} {{ask.barriere_art82|not}}', label: interessa un edificio privato ed è soggetto alle prescrizioni}
+  - {id: 'r6c1p6reg:radio:2_clone', kind: radio, when: '{{ask.barriere_art82}}', label: interessa un edificio privato aperto al pubblico}
   - {id: 'r8c1p8reg:radio:3_clone', kind: radio, when: '{{ask.catasto_variazione|not}}', label: NON comporta variazione dell'iscrizione catastale}
   - {id: 'r9c1p9reg:radio:4_clone', kind: radio, when: '{{ask.catasto_variazione}}', label: comporta variazione dell'iscrizione catastale}
   - {id: 'r11c1p11reg:txt', kind: text, value: '{{ask.docfa_protocollo}}', when: '{{ask.catasto_variazione}}', max: 9999, label: prot./n.}
   - {id: 'r11c2p13reg:calendar_input', kind: date, value: '{{ask.docfa_data|date_it}}', when: '{{ask.catasto_variazione}}', label: del}
-  - {id: 'r14c1p16reg:radio:5_clone', kind: radio, label: non comporta variazione di numerazione civica}
+  - {id: 'r14c1p16reg:radio:5_clone', kind: radio, when: '{{ask.civici_variazione|not}}', label: non comporta variazione di numerazione civica}
+  - {id: 'r15c1p17reg:radio:6_clone', kind: radio, when: '{{ask.civici_variazione}}', label: comporta variazione di numerazione civica}
+  - {id: 'r16c1p18reg:chk', kind: checkbox, when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_allegata}}', label: si allega richiesta di assegnazione}
+  - {id: 'r17c1p19reg:chk', kind: checkbox, when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_presentata}}', label: si comunicano gli estremi della richiesta di assegnazione}
+  - {kind: text, label: prot./n., anchor: si comunicano gli estremi della richiesta di assegnazione, block: 1, value: '{{ask.civici_protocollo}}', when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_presentata}}'}
+  - {kind: date, label: del, anchor: si comunicano gli estremi della richiesta di assegnazione, block: 1, value: '{{ask.civici_data|date_it}}', when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_presentata}}'}
 - section: Attestazione tecnica - Prevenzione Incendi
   fields:
-  - {id: 'r4c1p4reg:radio:0_clone', kind: radio, label: non hanno comportato variazioni alle condizioni di sicurezza antincendio}
+  - {id: 'r4c1p4reg:radio:0_clone', kind: radio, when: '{{ask.antincendio_variazione|not}}', label: non hanno comportato variazioni alle condizioni di sicurezza antincendio}
+  - {id: 'r5c1p5reg:radio:1_clone', kind: radio, when: '{{ask.antincendio_variazione}}', label: hanno comportato variazioni alle condizioni di sicurezza antincendio}
+  - {id: 'r8c1p8reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_ascensore}} {{ask.ascensore_comunicazione|is_sca}}', label: la presente segnalazione ha il valore e gli effetti di comunicazione}
+  - {id: 'r9c1p9reg:chk', kind: checkbox, when: '{{ask.impianti}} {{ask.impianto_ascensore}} {{ask.ascensore_comunicazione|is_presentata}}', label: 'la comunicazione, presentata prima della segnalazione
+      certificata di agibilità'}
+  - {id: 'r11c1p11reg:txt', kind: text, value: '{{ask.ascensore_protocollo}}', when: '{{ask.impianti}} {{ask.impianto_ascensore}} {{ask.ascensore_comunicazione|is_presentata}}', max: 30, label: prot./n.}
+  - {id: 'r11c2p13reg:calendar_input', kind: date, value: '{{ask.ascensore_data|date_it}}', when: '{{ask.impianti}} {{ask.impianto_ascensore}} {{ask.ascensore_comunicazione|is_presentata}}', label: del}
 - section: Dichiarazione relativa ai diritti
   fields:
   - {id: 'r2c1p2reg:radio:0_clone', kind: radio, when: '{{ask.diritti_euro|positive|not}}', label: non sono dovuti oneri}
@@ -272,6 +350,7 @@ sections:
   theirs:
   - Procura speciale
   - Quadro riepilogativo della documentazione
+  - Scarica il documento
   - Attestazione in merito all'apposizione dell'etichetta di "ed
   - copia attestazione versamento oneri, diritti e spese
   fields:
@@ -279,3 +358,9 @@ sections:
   - {kind: file, label: Copia dei documenti d'identità del/i titolare/i, value: '{{ask.documento_identita_cliente}}', when: '{{ask.titolo_esclusivo|not}}', accepts: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m}
   - {kind: file, label: Dichiarazione di assenso dei terzi titolari, value: '{{ask.assenso_proprietario}}', when: '{{ask.titolo_esclusivo|not}}', accepts: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m}
   - {kind: file, label: Dichiarazione di conformità degli impianti, value: '{{ask.dichiarazione_conformita}}', when: '{{ask.impianti}}', accepts: xml;dwf;dwf.p7m;svg;svg.p7m;jpg;jpg.p7m;pdf;pdf.p7m}
+  - {kind: file, label: Certificato di collaudo statico, value: '{{ask.collaudo_doc}}', when: '{{ask.strutture}} {{ask.collaudo|is_certificato_allegato}}'}
+  - {kind: file, label: Dichiarazione di regolare esecuzione, value: '{{ask.collaudo_doc}}', when: '{{ask.strutture}} {{ask.collaudo|is_regolare_esecuzione_allegata}}'}
+  - {kind: file, label: Attestato di qualificazione energetica (AQE), value: '{{ask.aqe_doc}}', when: '{{ask.prestazione_energetica}}'}
+  - {kind: file, label: Documentazione necessaria per l'assegnazione o aggiornamento di numerazione civica, value: '{{ask.civici_doc}}', when: '{{ask.civici_variazione}} {{ask.civici_richiesta|is_allegata}}'}
+  - {kind: file, label: SCIA ai sensi dell’art. 4 comma 1 del d.P.R. n. 151/2011, value: '{{ask.antincendio_scia_doc}}', when: '{{ask.antincendio_variazione}}'}
+  - {kind: file, label: 'Copia di elaborato planimetrico, del progetto ed eventuali varianti', value: '{{ask.elaborato_parziale_doc}}', when: '{{ask.agibilita_parziale|in_edificio__unita}}'}

@@ -15,8 +15,8 @@ asks:
   oggetto: {type: text, question: The works in one sentence (300 characters)}
   pdc_numero: {type: text, question: The permesso di costruire's number}
   pdc_anno: {type: text, question: Its protocollo generale year}
-  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], default: permesso di costruire}
-  nomina_aggiunta: {type: yes_no, question: 'Is the firm named alongside an earlier one (rather than the first named)?', default: 'false'}
+  titolo_tipo: {type: choice, question: 'The works'' title: what was filed or issued', options: [permesso di costruire, SCIA, DIA, CILA, variante, autorizzazione paesaggistica], propose: permesso di costruire}
+  nomina_aggiunta: {type: yes_no, question: 'Is the firm named alongside an earlier one (rather than the first named)?', propose: 'false'}
   bollo_marche: {type: yes_no, question: 'Is the imposta di bollo paid with physical marche da bollo (rather than pagoPA)?', default: 'false'}
 supports:
 - when: '{{ask.bollo_marche|not}}'

@@ -73,7 +73,8 @@ FATTI = "Quali di queste cose valgono per l'attività? Spunta quelle vere, anche
 def rules_block(spec, asks, groups):
     """A recipe's `rules:` as its steps file carries it: every fact of the table, the
     recipe's value or `{{ask.<fact>}}`, adding the ask from the table's question when the
-    pratica has none. Changes asks and groups in place."""
+    pratica has none (its yes/no facts as one checklist, worded by `question`). Changes asks
+    and groups in place."""
     try:
         t = rules.table(spec["table"])
     except ValueError as e:
@@ -93,7 +94,7 @@ def rules_block(spec, asks, groups):
         if a is None:
             if kind == "yes_no":
                 a = {"group": "fatti", "type": "yes_no", "item": fact["question"]}
-                groups.setdefault("fatti", {"question": FATTI})
+                groups.setdefault("fatti", {"question": spec.get("question", FATTI)})
             else:
                 a = {"type": kind, "question": fact["question"]}
                 if kind == "choice":
@@ -101,11 +102,12 @@ def rules_block(spec, asks, groups):
             if fact.get("how"):
                 a["how"] = fact["how"]
             asks[name] = a
-        elif a.get("type") != kind or (kind == "choice" and set(map(str, a.get("options", []))) - set(fact["values"])):
+        elif a.get("type") != kind or (kind == "choice" and {rules.fact_value(fact, o) for o in a.get("options", [])} - set(fact["values"])):
             raise GenError(f"rules: the fact {name} is also asks.{name}, a {a.get('type')}: give its value in the "
                            "recipe's rules.facts")
         out[name] = "{{ask.%s}}" % name
-    return {"table": spec["table"], "facts": out, **({"handles": spec["handles"]} if spec.get("handles") else {})}
+    return {"table": spec["table"], **({"main": spec["main"]} if spec.get("main") else {}), "facts": out,
+            **({"handles": spec["handles"]} if spec.get("handles") else {})}
 
 
 def norm(s):
@@ -340,7 +342,7 @@ def fill(entry, as_name, c, recipe, name):
                             (f" (only {count})" if count else "") + " in the crawl")
             continue
         filled.add((f["id"], f["label"]))
-        g = {k: v for k, v in d.items() if k not in ("label", "nth", "note", "via", "if_present")}
+        g = {k: v for k, v in d.items() if k not in ("label", "nth", "note", "via", "if_present", "by_label")}
         if d["kind"] == "textarea":
             g["kind"] = "text"
         if d["kind"] == "tick":
@@ -363,7 +365,9 @@ def fill(entry, as_name, c, recipe, name):
             and (pos(f.get("base_id", f["id"])) or (0, 0)) >= at for k, at in within.items()) or (
             d["kind"] in ("radio", "checkbox", "tick") and look.moves_itself(f))
         filled.update((t["id"], t["label"]) for t in twins if t)
-        if not look.added and not moved:
+        # `by_label`: rows a choice the crawl tried alone moves in another branch (the SCIA's
+        # sanatoria cases): never an id, found on the page as the answers left it.
+        if not look.added and not moved and not d.get("by_label"):
             g = {"id": f["id"], **g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}
         else:
             g = {**g, "label": d["label"], **({"nth": d["nth"]} if d.get("nth", 1) > 1 else {})}
@@ -455,6 +459,11 @@ def generate(recipe, base=HERE):
                 sc = next((x for x in o.get("scelte", []) if x["option"] == s), None) or \
                     (_ for _ in ()).throw(GenError(f"no scelta {s!r} for {label}"))
                 own = [i for i in own if i not in sc.get("drops", [])] + [i for i in sc.get("adds", []) if i not in own]
+            # A Si/No question answered Si adds its sections too (the SCIA's sanatoria quadro).
+            for q, a in (recipe.get("si_no") or {}).items():
+                sc = next((x for x in o.get("scelte", []) if x.get("type") == "SIN" and norm(x["option"]).startswith(norm(q))), None)
+                if sc and norm(a) == "si":
+                    own = [i for i in own if i not in sc.get("drops", [])] + [i for i in sc.get("adds", []) if i not in own]
             idx += [i for i in own if i not in idx]
         op = {"label": labels[0] if len(labels) == 1 else labels}
         names = [catalogue["sections"][i] for i in idx]
@@ -562,7 +571,8 @@ def generate(recipe, base=HERE):
                         out["theirs"] = out.get("theirs", []) + [title]
             for s in slots:
                 hit = any(norm(s["title"]).startswith(norm(d["label"])) for d in fields)
-                theirs = any(norm(s["title"]).startswith(norm(t)) for t in entry.get("theirs", []))
+                # The person's: the entry's own, and the signed-only slots handed to them above.
+                theirs = any(norm(s["title"]).startswith(norm(t)) for t in entry.get("theirs", []) + out.get("theirs", []))
                 if s.get("required") and not hit and not theirs:
                     problems.append(f"{name}: required slot {s['title'][:70]!r} is in no dictionary entry")
         out["fields"] = fields

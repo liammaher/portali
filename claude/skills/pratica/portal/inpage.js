@@ -28,8 +28,16 @@
 //                                  and whether it holds anything, the portal's messages. A
 //                                  stopped run's report carries it as `snapshot`
 //   __pv.held()                    what the reports leave out (the values each section typed,
-//                                  what a failed read-back wanted and found): for run.py to
-//                                  write where only the person reads it, never for Claude
+//                                  what a failed read-back wanted and found, the declarations'
+//                                  own text): for run.py to write where only the person reads
+//                                  it, never for Claude
+//   __pv.review()                  draws what the person reads before they tick over the portal:
+//                                  the declarations' own text and every value typed, from memory
+//                                  (a filled run draws it itself); "Show the draft" removes it
+//   await __pv.previewPdf()        the portal's own PDF of the draft, fetched when a run is filled
+//                                  (base64, or null): for run.py to keep for the review page. The
+//                                  document the person declares is the portal's rendering, not our
+//                                  list of values
 //
 // No report holds a value: a failed read-back says why ("empty", "different"), an error
 // names the box and never what was typed, and a portal message that echoes a value is
@@ -49,7 +57,7 @@
   const norm = (s) => (s || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "")
     .replace(/\s+/g, " ").trim().toLowerCase();
 
-  let steps, frame, report, kept, secrets = [], details = [], sealedRun = null;
+  let steps, frame, report, kept, secrets = [], details = [], declared = [], sealedRun = null, previewBlob = null;
 
   // The person's values, as patterns to scrub from anything a report says. Four characters
   // or more, in the text as given and as norm() would show it (the portal's messages are
@@ -230,12 +238,27 @@
     return b;
   }
 
+  // An attachments slot, as its box's own texts tell: its title, the types it takes
+  // ("Tipologie ammesse: pdf.p7m;..."), whether the portal says it's required. Never the name of
+  // a file in it (a cell with one reads "<name> Rimuovi").
+  function slotOf(box) {
+    const texts = win().eval(`(${steps.label_js})`)(box);
+    const types = texts.map((t) => /Tipologie ammesse:\s*([\w.;]+)/i.exec(t)).find(Boolean);
+    const accepts = types ? types[1].split(";").filter(Boolean) : [];
+    const title = texts.find((t) => t && !/^(il valore|la descrizione|tipologie ammesse|scarica il documento)/.test(norm(t)) &&
+      !/rimuovi|\.(pdf|p7m|jpe?g|png|dwf|svg|xml|zip|tiff?)\b/i.test(t)) || "";
+    return { title, accepts, signed_only: accepts.length > 0 && accepts.every((x) => x.endsWith(".p7m")),
+      required: texts.some((t) => /obbligatori/.test(norm(t))) };
+  }
+
   // ".error-message-text" is the portal's message under a field ("Il valore è obbligatorio").
   // `theirs`: a section's fields the person fills (a statement in their name); the
-  // portal's "required" under one of them isn't the run's error.
+  // portal's "required" under one of them isn't the run's error, nor under a slot that takes
+  // only signed files (.p7m): the person signs and attaches those.
   const errors = (theirs = []) => [...doc().querySelectorAll(".ui-message-error, .ui-messages-error, .ui-growl-message-error, [id*=\"dynaForm\"] .error-message-text")]
     .filter((e) => e.getClientRects().length && norm(e.textContent))
     .filter((e) => { const box = e.closest("td") && e.closest("td").querySelector("input, select, textarea");
+      if (box && (slotOf(box) || {}).signed_only) return false;
       return !(box && theirs.some((t) => box.id.endsWith("dynaForm:" + t) ||
         win().eval(`(${steps.label_js})`)(box).some((x) => norm(x).includes(norm(t))))); })
     .map((e) => norm(e.textContent));
@@ -681,6 +704,142 @@
     }
   }
 
+  // The declarations are the person's to tick, so they should read the portal's own words, not
+  // a summary of them. Each declarations section is opened (a link, as a person opens it) and
+  // its text copied, with every tick box's label and whether it is ticked. Nothing in it is
+  // clicked, typed or saved. A failure is a note in the report, never a stop: this can't stand
+  // between a saved draft and the person. The text may carry their name, so it is held like the
+  // values (held(), not the report) and run.py writes it only for the review page.
+  async function readDeclarations() {
+    const names = [...doc().querySelectorAll("a.linkmenu")].map((a) => a.textContent.replace(/\s+/g, " ").trim())
+      .filter((n) => steps.declarations.test(n));
+    const back = kept.filter((k) => !k.sec.go).map((k) => k.sec.section).pop();
+    declared = [];
+    try {
+      for (const name of names) {
+        await openSection(linkTo(name), name, 8000);
+        const cur = doc().querySelector("li#corrente");
+        if (!cur) fail(`${name}: no open section to read`);
+        // A box's own <label> first, then a radio's (PrimeFaces keeps it beside the button, in a div
+        // with a title), then the steps' label_js, which finds the portal's label in the row.
+        const label = (e) => {
+          if (e.labels && e.labels[0] && e.labels[0].innerText.trim()) return e.labels[0].innerText;
+          const own = e.type === "radio" && e.closest("div[title]") && e.closest("div[title]").querySelector("label");
+          if (own && own.innerText.trim()) return own.innerText;
+          try { return win().eval(`(${steps.label_js})`)(e)[0] || ""; } catch (x) { return ""; }
+        };
+        // The portal's Salva and Annulla are its buttons, not the declaration's words.
+        const buttons = new Set([...cur.querySelectorAll("button, input[type=submit]")]
+          .map((b) => (b.innerText || b.value || "").trim()).filter(Boolean));
+        const text = cur.innerText.split("\n").filter((l) => !buttons.has(l.trim())).join("\n");
+        declared.push({ section: name, text: text.replace(/\n{3,}/g, "\n\n").trim().slice(0, 20000),
+          // A radio is two inputs (the real one and its `_clone`): one box to the person.
+          boxes: [...cur.querySelectorAll("input[type=checkbox], input[type=radio]")].filter((e) => !/_clone$/.test(e.id))
+            .map((e) => ({ label: label(e).replace(/\s+/g, " ").trim().slice(0, 300), kind: e.type, ticked: e.checked })) });
+      }
+      report.declarations_read = declared.length;
+    } catch (e) {
+      report.declarations_read = declared.length;
+      report.declarations_note = scrub(e instanceof StepError ? e.message : `${e.name}: ${e.message}`);
+    }
+    // Back on the section the steps left open, whatever happened above.
+    try {
+      const a = names.length && back && linkTo(back);
+      if (a) await openSection(a, back, 8000);
+    } catch (e) { report.declarations_note = report.declarations_note || scrub(`could not go back to ${back}: ${e.message}`); }
+  }
+
+  // The portal's own PDF of the draft (what "Visualizza anteprima" shows). A plain GET with the
+  // person's session once a draft is open: pressing the button instead makes the whole page
+  // navigate to it, which would end this run's page and the review drawn over it.
+  async function fetchPreview() {
+    previewBlob = null;
+    delete report.preview_note;
+    try {
+      const r = await fetch(new URL(steps.preview_url || "/fnsuap/preview.do", doc().location.href).href, { credentials: "include" });
+      if (!r.ok) fail(`the portal answered ${r.status}`);
+      const bytes = new Uint8Array(await r.arrayBuffer());
+      if (String.fromCharCode(...bytes.slice(0, 5)) !== "%PDF-") fail("what it sent isn't a PDF");
+      previewBlob = new Blob([bytes], { type: "application/pdf" });
+    } catch (e) {
+      report.preview_note = scrub(e instanceof StepError ? e.message : `${e.name}: ${e.message}`);
+    }
+    report.preview_pdf = !!previewBlob;
+  }
+
+  // What the person reads before they tick, drawn over the portal in this page from what the run
+  // holds in memory (the declarations' text, every value typed): none of it passes through Claude,
+  // and they read it in the window where they will tick and sign. Text goes in with textContent
+  // only. "Show the draft" takes it away; so does the next start().
+  function showReview() {
+    document.querySelectorAll('[data-pv="review"]').forEach((e) => e.remove());
+    const el = (tag, css, text, ...kids) => {
+      const e = document.createElement(tag);
+      if (css) e.style.cssText = css;
+      if (text != null) e.textContent = text;
+      e.append(...kids);
+      return e;
+    };
+    const btn = (text, on) => {
+      const b = el("button", "font:inherit;padding:6px 14px;margin:0 8px 8px 0;cursor:pointer", text);
+      b.type = "button";
+      b.addEventListener("click", on);
+      return b;
+    };
+    // In a shadow root: the portal's own CSS (red headings, styled buttons) must not reach it.
+    const host = el("div", "all:initial;position:fixed;inset:0;z-index:2147483647");
+    host.dataset.pv = "review";
+    const shadow = host.attachShadow({ mode: "open" });
+    shadow.append(el("style", null, "*{box-sizing:border-box} button,summary{font:inherit} h1,h2,p,ul,table{margin:0}"));
+    const root = el("div", "position:absolute;inset:0;overflow:auto;background:Canvas;color:CanvasText;" +
+      "font:15px/1.5 -apple-system,system-ui,sans-serif;padding:24px 16px");
+    const page = el("div", "max-width:820px;margin:0 auto");
+    const note = el("p", "color:GrayText;margin:0 0 8px");
+    const say = (t) => { note.textContent = t; };
+    page.append(el("h1", "font-size:22px;margin:0 0 4px", "Draft saved on the portal"),
+      el("p", "margin:0 0 12px", "Nothing has been declared, signed, paid or sent. Read the declarations below as the portal words " +
+        "them before you tick any: you make them in your own name, and a false one is a crime (DPR 445/2000, art. 76)."),
+      btn("Show the draft", () => host.remove()),
+      note);
+    page.append(el("h2", "font-size:17px;margin:24px 0 8px", "The declarations you will tick"));
+    if (!declared.length) {
+      page.append(el("p", "color:GrayText", "Not copied" + (report.declarations_note ? ` (${report.declarations_note})` : "") +
+        ": open each declarations section in the portal and read it there."));
+    }
+    for (const d of declared) {
+      const lines = d.boxes.map((b) => el("li", b.ticked ? "color:#c62828;font-weight:600" : "",
+        `${b.ticked ? "☑ already ticked: " : "☐ "}${b.label}`));
+      page.append(el("details", "border:1px solid GrayText;border-radius:8px;margin:8px 0", null,
+        el("summary", "cursor:pointer;padding:8px 12px;font-weight:600", d.section),
+        el("div", "white-space:pre-wrap;padding:4px 12px 10px;overflow-wrap:anywhere", d.text),
+        el("ul", "list-style:none;margin:0;padding:0 12px 10px", null, ...lines)));
+      page.lastChild.open = true;
+    }
+    page.append(el("h2", "font-size:17px;margin:24px 0 8px", "The portal's preview"));
+    if (previewBlob) {
+      const href = URL.createObjectURL(previewBlob);
+      const dl = el("a", "display:inline-block;margin:0 0 8px", "Download the PDF");
+      dl.href = href;
+      dl.download = "anteprima.pdf";
+      const pdf = el("iframe", "width:100%;height:80vh;border:1px solid GrayText;border-radius:8px");
+      pdf.src = href;
+      page.append(el("p", "color:GrayText;margin:0 0 4px", "The document the portal will file, as it renders it."), dl, pdf);
+    } else {
+      page.append(el("p", "color:GrayText", `Not copied${report.preview_note ? ` (${report.preview_note})` : ""}: press Visualizza anteprima in the portal and read it before you sign.`));
+    }
+    page.append(el("h2", "font-size:17px;margin:24px 0 8px", "Every value we typed"));
+    for (const { sec, done } of kept.filter((k) => !k.sec.go)) {
+      const rows = done.map((f) => el("tr", "", null, el("td", "color:GrayText;padding:3px 12px 3px 0;width:42%", f.label || f.id || f.css || ""),
+        el("td", "padding:3px 0;overflow-wrap:anywhere", f.kind === "radio" || f.kind === "checkbox" ? "chosen" : String(f.typed ?? ""))));
+      page.append(el("details", "border:1px solid GrayText;border-radius:8px;margin:8px 0", null,
+        el("summary", "cursor:pointer;padding:8px 12px;font-weight:600", sec.section),
+        el("table", "width:100%;border-collapse:collapse;padding:0 12px", null, ...rows)));
+    }
+    root.append(page);
+    shadow.append(root);
+    document.body.append(host);
+  }
+
   async function run(values, resume) {
     const t0 = performance.now();
     const secs = () => +((performance.now() - t0) / 1000).toFixed(1);
@@ -710,12 +869,18 @@
       for (const [i, s] of steps.sections.entries()) {
         if (!s.go && i >= (from.section || 0)) await section(s, values.sections[i], i);
       }
-      if (steps.sections.some((s, i) => !s.go && i >= (from.section || 0)) || !steps.sections.some((s) => s.go)) await verify();
+      if (steps.sections.some((s, i) => !s.go && i >= (from.section || 0)) || !steps.sections.some((s) => s.go)) {
+        await verify();
+        await readDeclarations();
+      }
       for (const [i, s] of steps.sections.entries()) {
         if (s.go && i >= (from.section || 0)) await section(s, values.sections[i], i);
       }
+      // Before `filled`: whoever polls the report (run.py, then previewPdf) must find it done.
+      await fetchPreview();
       report.result = "filled";
       report.at = null;
+      try { showReview(); } catch (e) { /* the draft is saved; the person can still read it in the portal */ }
     } catch (e) {
       report.result = "stopped";
       report.error = e instanceof StepError ? e.message : `${e.name}: ${e.message}`;
@@ -749,8 +914,12 @@
         const kind = kindOf(e);
         const state = kind === "radio" || kind === "checkbox" ? (e.checked ? "checked" : "unchecked")
           : kind === "file" ? "file" : e.value ? "filled" : "empty";
-        return { id: e.id.replace(/^.*dynaForm:/, ""), label: label(e), kind, state,
-          ...(kind === "select" ? { options: e.options.length } : {}) };
+        // A slot's box is named by its title, never by its cell: that reads "<file name> Rimuovi"
+        // once a file is in, and its first text is the portal's "required".
+        const slot = kind === "file" || /file_dropzone/.test(e.id) ? slotOf(e) : null;
+        return { id: e.id.replace(/^.*dynaForm:/, ""), label: slot ? scrub(norm(slot.title)).slice(0, 80) : label(e), kind, state,
+          ...(kind === "select" ? { options: e.options.length } : {}),
+          ...(slot && slot.accepts.length ? { accepts: slot.accepts.join(";"), required: slot.required } : {}) };
       });
     const open = doc().querySelector("li#corrente");
     return { section: open ? scrub(norm(open.textContent)).slice(0, 80) : null, boxes,
@@ -833,8 +1002,8 @@
     start(procedure, values, resume = {}, sealed = null) {
       const raw = localStorage.getItem("pv-steps:" + procedure) || fail(`no steps installed for ${procedure}`);
       // One frame at a time: a run that ended left its own over the page, maybe from a
-      // runner loaded before this one.
-      document.querySelectorAll('iframe[data-pv="runner"]').forEach((f) => f.remove());
+      // runner loaded before this one (and its review, drawn over the portal).
+      document.querySelectorAll('iframe[data-pv="runner"], [data-pv="review"]').forEach((f) => f.remove());
       if (!sealed) sealedRun = null;
       try { sessionStorage.setItem("pv-run", JSON.stringify(sealed ? { procedure, sealed } : { procedure, values })); }
       catch (e) { /* storage off */ }
@@ -843,6 +1012,7 @@
       steps.declarations = new RegExp(steps.declarations, "i");
       hide(values);
       details = [];
+      declared = [];
       // A fix is what Claude found the page really has for one field (a moved id, a renamed
       // label): this run uses it, and run.py writes it down for the steps file.
       for (const x of resume.fixes || []) Object.assign(steps.sections[x.section].fields[x.field], x.set);
@@ -873,7 +1043,23 @@
       return report && publicReport();
     },
     open() {
-      location.href = doc().location.href;
+      // The draft's own address: a preview that loaded in the frame would have moved it.
+      location.href = (this.last() || {}).url || doc().location.href;
+    },
+    // The review over the portal again (run() draws it when a run is filled).
+    review() {
+      showReview();
+      return "shown";
+    },
+    // The portal's PDF kept in memory by a filled run, as base64: for run.py, never for Claude.
+    async previewPdf() {
+      if (!previewBlob) return null;
+      return new Promise((ok, no) => {
+        const f = new FileReader();
+        f.onload = () => ok(String(f.result).split(",")[1]);
+        f.onerror = () => no(f.error);
+        f.readAsDataURL(previewBlob);
+      });
     },
     last() {
       return report ? publicReport() : JSON.parse(sessionStorage.getItem("pv-report") || "null");
@@ -881,7 +1067,7 @@
     look,
     // What the reports leave out. run.py writes it for the person; Claude doesn't read it.
     held() {
-      return { kept: report ? report.kept || [] : [], details };
+      return { kept: report ? report.kept || [] : [], details, declarations: declared };
     },
     resume({ fixes = [], url } = {}) {
       // As run.py's resumption(): the draft, the section it stopped in, what came before.

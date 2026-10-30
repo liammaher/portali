@@ -28,5 +28,10 @@
  "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
  "elaborati_grafici": "rehearsals/cila-fittizia/files/elaborati-stato-fatto-progetto-comparativo.pdf",
  "assenso_proprietario": "rehearsals/cila-fittizia/files/assenso-immobiliare-fittizia.pdf",
- "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf"
+ "prospetto_contributo": "rehearsals/cila-fittizia/files/prospetto-contributo.pdf",
+ "sotto_200": "true",
+ "intervento": "manutenzione_straordinaria",
+ "cambio_uso": "no",
+ "paesaggio": "no",
+ "fatti": []
 }

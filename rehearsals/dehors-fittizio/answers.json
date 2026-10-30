@@ -11,5 +11,6 @@
  "dehors_larghezza_m": "2",
  "dehors_mq": "12",
  "stagionale": "false",
- "diritti_euro": "250"
+ "diritti_euro": "250",
+ "area_privata_uso_pubblico": "false"
 }

@@ -9,10 +9,14 @@
  "data_fine_prevista": "2027-02-06",
  "dettaglio_intervento": "Pedana in legno e copertura leggera in tela su struttura smontabile in alluminio, appoggiate senza ancoraggi sul terrazzo, per esigenze temporanee; rimozione integrale entro il 06/02/2027 con ripristino dello stato dei luoghi.",
  "dlgs81": false,
- "diritti_euro": "0",
+ "diritti_euro": "100",
  "documento_identita_cliente": "rehearsals/cila-fittizia/files/documento-identita-luca.pdf",
  "titolo_esclusivo": true,
  "parti_comuni": "comproprieta",
  "lavori_in_proprio": true,
- "altri_atti": false
+ "altri_atti": false,
+ "sotto_200": "true",
+ "intervento": "opere_temporanee",
+ "paesaggio": "no",
+ "fatti": []
 }

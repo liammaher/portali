@@ -70,10 +70,13 @@ class Handler(BaseHTTPRequestHandler):
                                     b'        <td><input type="text" id="form:r4c1:dynaForm:impresa_txt"></td></tr>', b"")
                 assert b"impresa_txt" not in html, "the bench page changed: update the flaky cut"
             self.send(html, "text/html; charset=utf-8")
+        elif path == "/anteprima.pdf":
+            self.send(b"%PDF-1.4\nl'anteprima del portale finto\n", "application/pdf")
         elif path.startswith("/files/") and path[7:] in LINKED:
             self.send(LINKED[path[7:]], "application/pdf")
         elif path == "/state":
-            self.send(json.dumps({"fields": PORTAL.fields, "files": [f["name"] for f in PORTAL.files]}).encode())
+            self.send(json.dumps({"fields": PORTAL.fields, "files": [f["name"] for f in PORTAL.files],
+                                  "boxes": {f["box"]: f["name"] for f in PORTAL.files}}).encode())
         else:
             self.send_error(404)
 
@@ -89,7 +92,8 @@ class Handler(BaseHTTPRequestHandler):
             for part in msg.iter_parts():
                 data = part.get_payload(decode=True) or b""
                 PORTAL.files.append({"name": part.get_filename(), "type": part.get_content_type(),
-                                     "sha256": hashlib.sha256(data).hexdigest()})
+                                     "sha256": hashlib.sha256(data).hexdigest(),
+                                     "box": part.get_param("name", header="content-disposition")})
         elif self.path == "/sent":
             PORTAL.sent = True
         self.send(b"{}")
@@ -211,10 +215,146 @@ def main():
             assert r["result"] == "filled", r
         case("a suggestion list still fading out over the next box is closed, not a stop", fading_list)
 
+        def signed_slot():
+            # The portal's "required" under a slot that takes only signed files is the person's;
+            # under a plain one it stops the run, and the snapshot names the slot by its title.
+            PORTAL.reset()
+            r = fill(browser, base, steps(base, start="/portal.html?slot=signed"), answers)
+            assert r["result"] == "filled", r
+            PORTAL.reset()
+            r = fill(browser, base, steps(base, start="/portal.html?slot=plain"), answers)
+            assert r["result"] == "stopped" and "obbligatorio" in r["error"], r
+            box = next(b for b in r["snapshot"]["boxes"] if b["id"] == "procura_input")
+            assert box["label"] == "procura speciale" and box["required"] and box["accepts"] == "pdf;pdf.p7m", box
+            assert ".pdf" not in json.dumps(r["snapshot"]), "a file's name in the snapshot"
+        case("a required slot taking only signed files is the person's; a plain one stops, named by its title", signed_slot)
+
         def theirs():
             PORTAL.reset()
             stops(fill(browser, base, steps(base, save="Firma e invio"), answers), "refused to click")
         case("the person's Firma e invio is never clicked", theirs)
+
+        decl_start = "/portal.html?decl=1"
+
+        def declarations_read():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base, start=decl_start), answers, held=held)
+            assert r["result"] == "filled", r.get("error")
+            assert r["declarations_read"] == 1 and "declarations_note" not in r, r
+            d = held[0]["declarations"]
+            assert len(d) == 1 and "consapevolezza" in d[0]["section"], d
+            assert "dichiara quanto segue" in d[0]["text"] and "art. 76" in d[0]["text"], d[0]["text"]
+            assert d[0]["boxes"] == [{"label": "Per presa visione", "kind": "checkbox", "ticked": False},
+                                     {"label": "che i locali possiedono i requisiti di sorvegliabilità", "kind": "radio",
+                                      "ticked": False}], d[0]["boxes"]  # one radio, not its clone, with its own label
+            assert "SALVA" not in d[0]["text"], d[0]["text"]
+            assert "sanzioni penali" not in json.dumps(r), "the report carries the declaration's own text"
+            assert not PORTAL.sent, "Firma e invio was clicked"
+        case("the declarations' own text is copied into held(), ticked by nothing, and not into the report", declarations_read)
+
+        def declarations_already_ticked():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base, start=decl_start + "&ticked=1"), answers, held=held)
+            assert r["result"] == "filled", r.get("error")
+            assert held[0]["declarations"][0]["boxes"][0]["ticked"] is True, held[0]["declarations"]
+        case("a declaration the portal already shows ticked is reported as ticked", declarations_already_ticked)
+
+        def declarations_stuck():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base, start=decl_start + "&stuck=1"), answers, held=held)
+            assert r["result"] == "filled", f"a declaration that won't open stopped the run: {r.get('error')}"
+            assert r["declarations_read"] == 0 and "didn't open" in r["declarations_note"], r
+            assert held[0]["declarations"] == []
+        case("a declarations section that won't open is a note, not a stop", declarations_stuck)
+
+        def no_declarations():
+            PORTAL.reset()
+            held = []
+            r = fill(browser, base, steps(base), answers, held=held)
+            assert r["result"] == "filled" and r["declarations_read"] == 0 and held[0]["declarations"] == [], r
+        case("a portal with no declarations in its menu reads none", no_declarations)
+
+        def preview_copied():
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            st = steps(base, start=decl_start) | {"preview_url": "/anteprima.pdf"}
+            install, run_js = run.page_scripts(st, values, None)
+            folder = tmp / "preview"
+            folder.mkdir(exist_ok=True)
+            (folder / "anteprima.pdf").unlink(missing_ok=True)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert report["result"] == "filled", report.get("error")
+                assert report["preview_pdf"] is True and "preview_note" not in report, report
+                ok, why = run.capture_preview(page, folder)
+                assert ok, why
+                assert (folder / "anteprima.pdf").read_bytes().startswith(b"%PDF-1.4\n"), "not the portal's PDF"
+                assert (folder / "anteprima.pdf").stat().st_mode & 0o777 == 0o600
+                assert page.query_selector('[data-pv="review"] iframe[src^="blob:"]'), "the preview isn't on the review"
+                assert page.url.startswith(base + "/"), "the preview moved the page"
+            finally:
+                page.close()
+        case("the portal's PDF is fetched with the person's session, kept private and shown on the review, with no navigation", preview_copied)
+
+        def review_drawn():
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            install, run_js = run.page_scripts(steps(base, start=decl_start), values, None)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert report["result"] == "filled", report.get("error")
+                inside = "document.querySelector('[data-pv=review]').shadowRoot"  # drawn in a shadow root
+                text = page.evaluate(f"{inside}.firstElementChild.nextElementSibling.innerText")
+                assert "Draft saved on the portal" in text and "nothing has been declared".lower() in text.lower(), text[:200]
+                assert "dichiara quanto segue" in text and "Per presa visione" in text, "the declaration isn't on the review"
+                assert "che i locali possiedono i requisiti di sorvegliabilità" in text, "the radio's own label is missing"
+                everything = page.evaluate(f"{inside}.textContent")  # the values sit in closed <details>
+                assert answers["den"] in everything and answers["impresa"] in everything, "the values typed aren't on the review"
+                assert "dichiara quanto segue" not in json.dumps(report), "the report carries the declaration"
+                page.click("text=Show the draft")
+                assert page.query_selector('[data-pv="review"]') is None, "Show the draft left the review up"
+                page.evaluate("__pv.review()")
+                assert page.query_selector('[data-pv="review"]'), "__pv.review() didn't draw it again"
+            finally:
+                page.close()
+        case("a filled run draws the declarations and every value over the portal, none of it in the report", review_drawn)
+
+        def preview_missing():
+            PORTAL.reset()
+            values = run.Values(answers, fields={"x:ruolo.tipo": "titolare"})
+            install, run_js = run.page_scripts(steps(base), values, None)
+            folder = tmp / "no-preview"
+            folder.mkdir(exist_ok=True)
+            page = browser.new_page()
+            try:
+                page.goto(base + "/")
+                page.evaluate(install)
+                page.evaluate(run_js)
+                while (report := page.evaluate("__pv.wait(5000)"))["result"] == "running":
+                    pass
+                assert report["result"] == "filled", f"a missing preview stopped the run: {report.get('error')}"
+                assert report["preview_pdf"] is False and "404" in report["preview_note"], report
+                ok, why = run.capture_preview(page, folder)
+                assert not ok and "no preview" in why, (ok, why)
+                assert not (folder / "anteprima.pdf").exists()
+                assert "Not copied" in page.evaluate("document.querySelector('[data-pv=review]').shadowRoot.textContent"), \
+                    "the review doesn't say it has no preview"
+            finally:
+                page.close()
+        case("a portal that gives no preview is a note on the review, not a stop", preview_missing)
 
 
         def recovered():
@@ -575,6 +715,33 @@ def main():
         else:
             raise AssertionError("a missing file passed the plan")
     case("a file that isn't there stops the plan", missing)
+
+    def reviewed():
+        filled = {"procedure": "test/allegati", "result": "filled", "sections": [], "total_seconds": 3.0,
+                  "url": "https://example.invalid/d", "values": [], "yours": ["Firmare"]}
+        folder = tmp / "review"
+        (folder / "private").mkdir(parents=True, exist_ok=True)
+        decl = [{"section": "Dichiarazione di consapevolezza", "text": "Il sottoscritto dichiara il vero.",
+                 "boxes": [{"label": "Per presa visione", "kind": "checkbox", "ticked": False}]}]
+        (folder / "private" / "declarations.json").write_text(json.dumps(decl))
+        (folder / "private" / "anteprima.pdf").write_bytes(b"%PDF-1.4\nfinto\n")
+        page = run.review.portal_review(filled | {"declarations_read": 1, "preview_pdf": True}, folder)
+        assert "Il sottoscritto dichiara il vero." in page and "The declarations you will tick" in page
+        assert "1 copied word for word from the portal; none ticked" in page, "no check that none is ticked"
+        assert "Download the PDF" in page and "The portal&#x27;s own PDF preview copied" in page
+        decl[0]["boxes"][0]["ticked"] = True
+        (folder / "private" / "declarations.json").write_text(json.dumps(decl))
+        page = run.review.portal_review(filled | {"declarations_read": 1}, folder)
+        assert "already ticked before you opened them" in page and "Dichiarazione di consapevolezza" in page
+        # Nothing copied (the pane, or an older run): the page says so, and never shows a stand-in.
+        pane = run.review.portal_review(filled | {"declarations_read": 2}, tmp / "nowhere")
+        assert "Declarations: not copied in this run (read in the pane" in pane, "no note for the pane"
+        assert "was not copied in this run" in pane and "The declarations you will tick" not in pane
+        assert "couldn&#x27;t be copied (the portal said no)" in run.review.portal_review(
+            filled | {"preview_note": "the portal said no"}, tmp / "nowhere")
+        stopped = run.review.portal_review(filled | {"result": "stopped", "error": "x"}, tmp / "nowhere")
+        assert "Declarations" not in stopped and "preview" not in stopped.lower(), "a stopped run reports on what it never reached"
+    case("the review page shows the declarations' text and the portal's PDF, or says it has neither", reviewed)
 
     server.shutdown()
     shutil.rmtree(tmp)

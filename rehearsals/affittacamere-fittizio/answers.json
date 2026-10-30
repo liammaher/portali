@@ -7,5 +7,8 @@
  "colazione": "Nessuna",
  "camere_doppie_bagno": "2",
  "camere_doppie_senza": "1",
- "diritti_euro": "200"
+ "diritti_euro": "200",
+ "stagionale": "false",
+ "camere_singole_bagno": "0",
+ "camere_singole_senza": "0"
 }
