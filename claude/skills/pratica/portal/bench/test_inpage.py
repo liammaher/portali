@@ -204,6 +204,22 @@ def main():
             stops(fill(browser, base, st, answers), "expected the label Visura camerale")
         case("a file box with another label stops the run", wrong_label)
 
+        def moved_id():
+            # An id that names another box now (an earlier choice shifted the rows) goes by
+            # its label: each file lands in the box its label names, and the report says so.
+            PORTAL.reset()
+            st = steps(base)
+            f = st["sections"][0]["fields"]
+            f[1]["id"], f[2]["id"] = f[2]["id"], f[1]["id"]
+            r = fill(browser, base, st, answers)
+            assert r["result"] == "filled", r.get("error")
+            boxes = {f["box"]: f["name"] for f in PORTAL.files}
+            assert boxes.get("form:r1c1:dynaForm:planimetria_input") == planimetria.name, boxes
+            assert boxes.get("form:r2c1:dynaForm:ricevuta_input") == ricevuta.name, boxes
+            assert [m["label"] for m in r.get("moved", [])] == ["Planimetria quotata", "Ricevuta ASL"], r.get("moved")
+            assert "loose" not in r, r.get("loose")
+        case("an id that names another box now goes by its label, and the report names the move", moved_id)
+
         def banner():
             PORTAL.reset()
             stops(fill(browser, base, steps(base, start="/portal.html?banner=1"), answers), "covered by div#consenso")

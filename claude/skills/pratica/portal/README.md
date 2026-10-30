@@ -97,6 +97,11 @@ person-facing flow (pre-flight questions, the review page) is in the pratica ski
   goes on from its address), waits 10 s and resumes, at most twice, each try in the report's
   `retries`. A value the portal refuses or doesn't keep, or a renamed label, still stops.
   Two runs on one login (another session's, a crawl) make these errors: one at a time.
+- **An id is checked before it's used.** A choice earlier in a section can move a crawled id
+  onto another box. The box an id names must be of the field's kind and carry its label as
+  the label lookup reads labels; else the field goes by its label, in the report's `moved`.
+  An id whose label no box carries that way keeps the older, looser check and lands in
+  `loose`: a steps file whose label is worth a look.
 
 ## What pre-flight checks in a signed file
 
